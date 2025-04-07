@@ -1,0 +1,6 @@
+---
+- name:            ''
+  file_location:   '/src/fuzzers/empty-fuzzer.c:7'
+  linkage:         ''
+  addr:            93844518901936
+...

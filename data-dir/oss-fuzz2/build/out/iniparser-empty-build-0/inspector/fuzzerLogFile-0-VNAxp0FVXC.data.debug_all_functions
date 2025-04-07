@@ -1,0 +1,231 @@
+---
+- name:            LLVMFuzzerTestOneInput
+  file_location:   '/src/fuzzers/empty-fuzzer.c:5'
+  type_arguments:  [ 93932395290728, 93932397206752, 93932395287488 ]
+  raw_name:        LLVMFuzzerTestOneInput
+  is_public:       0
+  is_private:      0
+- name:            dictionary_dump
+  file_location:   '/src/iniparser/src/dictionary.c:366'
+  type_arguments:  [ 0, 93932395290624, 93932395332592 ]
+  raw_name:        dictionary_dump
+  is_public:       0
+  is_private:      0
+- name:            dictionary_unset
+  file_location:   '/src/iniparser/src/dictionary.c:317'
+  type_arguments:  [ 0, 93932395286416, 93932395290272 ]
+  raw_name:        dictionary_unset
+  is_public:       0
+  is_private:      0
+- name:            dictionary_hash
+  file_location:   '/src/iniparser/src/dictionary.c:111'
+  type_arguments:  [ 93932395201256, 93932395290272 ]
+  raw_name:        dictionary_hash
+  is_public:       0
+  is_private:      0
+- name:            dictionary_grow
+  file_location:   '/src/iniparser/src/dictionary.c:61'
+  type_arguments:  [ 93932395290728, 93932395286416 ]
+  raw_name:        dictionary_grow
+  is_public:       0
+  is_private:      0
+- name:            xstrdup
+  file_location:   '/src/iniparser/src/dictionary.c:39'
+  type_arguments:  [ 93932395286544, 93932395290272 ]
+  raw_name:        xstrdup
+  is_public:       0
+  is_private:      0
+- name:            dictionary_set
+  file_location:   '/src/iniparser/src/dictionary.c:258'
+  type_arguments:  [ 93932395290728, 93932395286416, 93932395290272, 93932395290272 ]
+  raw_name:        dictionary_set
+  is_public:       0
+  is_private:      0
+- name:            dictionary_get
+  file_location:   '/src/iniparser/src/dictionary.c:209'
+  type_arguments:  [ 93932395290272, 93932395290624, 93932395290272, 93932395290272 ]
+  raw_name:        dictionary_get
+  is_public:       0
+  is_private:      0
+- name:            dictionary_del
+  file_location:   '/src/iniparser/src/dictionary.c:177'
+  type_arguments:  [ 0, 93932395286416 ]
+  raw_name:        dictionary_del
+  is_public:       0
+  is_private:      0
+- name:            dictionary_new
+  file_location:   '/src/iniparser/src/dictionary.c:143'
+  type_arguments:  [ 93932395286416, 93932395287488 ]
+  raw_name:        dictionary_new
+  is_public:       0
+  is_private:      0
+- name:            parse_quoted_value
+  file_location:   '/src/iniparser/src/iniparser.c:676'
+  type_arguments:  [ 0, 93932395286544, 93932393447928 ]
+  raw_name:        parse_quoted_value
+  is_public:       0
+  is_private:      0
+- name:            xstrdup
+  file_location:   '/src/iniparser/src/iniparser.c:72'
+  type_arguments:  [ 93932395286544, 93932395290272 ]
+  raw_name:        xstrdup
+  is_public:       0
+  is_private:      0
+- name:            default_error_callback
+  file_location:   '/src/iniparser/src/iniparser.c:119'
+  type_arguments:  [ 93932395290728, 93932395290272, 0 ]
+  raw_name:        default_error_callback
+  is_public:       0
+  is_private:      0
+- name:            strstrip
+  file_location:   '/src/iniparser/src/iniparser.c:94'
+  type_arguments:  [ 93932395201256, 93932395286544 ]
+  raw_name:        strstrip
+  is_public:       0
+  is_private:      0
+- name:            iniparser_freedict
+  file_location:   '/src/iniparser/src/iniparser.c:956'
+  type_arguments:  [ 0, 93932396552480 ]
+  raw_name:        iniparser_freedict
+  is_public:       0
+  is_private:      0
+- name:            iniparser_load
+  file_location:   '/src/iniparser/src/iniparser.c:928'
+  type_arguments:  [ 93932396552480, 93932395290272 ]
+  raw_name:        iniparser_load
+  is_public:       0
+  is_private:      0
+- name:            iniparser_load_file
+  file_location:   '/src/iniparser/src/iniparser.c:816'
+  type_arguments:  [ 93932396552480, 93932396544960, 93932395290272 ]
+  raw_name:        iniparser_load_file
+  is_public:       0
+  is_private:      0
+- name:            iniparser_line
+  file_location:   '/src/iniparser/src/iniparser.c:724'
+  type_arguments:  [ 93932396651200, 93932395290272, 93932395286544, 93932395286544, 
+                     93932395286544 ]
+  raw_name:        iniparser_line
+  is_public:       0
+  is_private:      0
+- name:            strlwc
+  file_location:   '/src/iniparser/src/iniparser.c:48'
+  type_arguments:  [ 93932395290272, 93932395290272, 93932395286544, 93932395201256 ]
+  raw_name:        strlwc
+  is_public:       0
+  is_private:      0
+- name:            iniparser_unset
+  file_location:   '/src/iniparser/src/iniparser.c:670'
+  type_arguments:  [ 0, 93932396552480, 93932395290272 ]
+  raw_name:        iniparser_unset
+  is_public:       0
+  is_private:      0
+- name:            iniparser_set
+  file_location:   '/src/iniparser/src/iniparser.c:645'
+  type_arguments:  [ 93932395290728, 93932396552480, 93932395290272, 93932395290272 ]
+  raw_name:        iniparser_set
+  is_public:       0
+  is_private:      0
+- name:            iniparser_getboolean
+  file_location:   '/src/iniparser/src/iniparser.c:594'
+  type_arguments:  [ 93932395290728, 93932396543984, 93932395290272, 93932395290728 ]
+  raw_name:        iniparser_getboolean
+  is_public:       0
+  is_private:      0
+- name:            iniparser_getstring
+  file_location:   '/src/iniparser/src/iniparser.c:438'
+  type_arguments:  [ 93932395290272, 93932396543984, 93932395290272, 93932395290272 ]
+  raw_name:        iniparser_getstring
+  is_public:       0
+  is_private:      0
+- name:            iniparser_getdouble
+  file_location:   '/src/iniparser/src/iniparser.c:553'
+  type_arguments:  [ 93932396876408, 93932396543984, 93932395290272, 93932396876408 ]
+  raw_name:        iniparser_getdouble
+  is_public:       0
+  is_private:      0
+- name:            iniparser_getint
+  file_location:   '/src/iniparser/src/iniparser.c:535'
+  type_arguments:  [ 93932395290728, 93932396543984, 93932395290272, 93932395290728 ]
+  raw_name:        iniparser_getint
+  is_public:       0
+  is_private:      0
+- name:            iniparser_getlongint
+  file_location:   '/src/iniparser/src/iniparser.c:479'
+  type_arguments:  [ 93932395359544, 93932396543984, 93932395290272, 93932395359544 ]
+  raw_name:        iniparser_getlongint
+  is_public:       0
+  is_private:      0
+- name:            iniparser_getuint64
+  file_location:   '/src/iniparser/src/iniparser.c:497'
+  type_arguments:  [ 93932396888032, 93932396543984, 93932395290272, 93932396888032 ]
+  raw_name:        iniparser_getuint64
+  is_public:       0
+  is_private:      0
+- name:            iniparser_getint64
+  file_location:   '/src/iniparser/src/iniparser.c:488'
+  type_arguments:  [ 93932396899728, 93932396543984, 93932395290272, 93932396899728 ]
+  raw_name:        iniparser_getint64
+  is_public:       0
+  is_private:      0
+- name:            iniparser_getseckeys
+  file_location:   '/src/iniparser/src/iniparser.c:397'
+  type_arguments:  [ 93932396943616, 93932396543984, 93932395290272, 93932396943616 ]
+  raw_name:        iniparser_getseckeys
+  is_public:       0
+  is_private:      0
+- name:            iniparser_find_entry
+  file_location:   '/src/iniparser/src/iniparser.c:623'
+  type_arguments:  [ 93932395290728, 93932396543984, 93932395290272 ]
+  raw_name:        iniparser_find_entry
+  is_public:       0
+  is_private:      0
+- name:            iniparser_getsecnkeys
+  file_location:   '/src/iniparser/src/iniparser.c:355'
+  type_arguments:  [ 93932395290728, 93932396543984, 93932395290272 ]
+  raw_name:        iniparser_getsecnkeys
+  is_public:       0
+  is_private:      0
+- name:            iniparser_dumpsection_ini
+  file_location:   '/src/iniparser/src/iniparser.c:321'
+  type_arguments:  [ 0, 93932396543984, 93932395290272, 93932396544960 ]
+  raw_name:        iniparser_dumpsection_ini
+  is_public:       0
+  is_private:      0
+- name:            escape_value
+  file_location:   '/src/iniparser/src/iniparser.c:250'
+  type_arguments:  [ 0, 93932395286544, 93932395286544 ]
+  raw_name:        escape_value
+  is_public:       0
+  is_private:      0
+- name:            iniparser_dump_ini
+  file_location:   '/src/iniparser/src/iniparser.c:281'
+  type_arguments:  [ 0, 93932396543984, 93932396544960 ]
+  raw_name:        iniparser_dump_ini
+  is_public:       0
+  is_private:      0
+- name:            iniparser_getnsec
+  file_location:   '/src/iniparser/src/iniparser.c:167'
+  type_arguments:  [ 93932395290728, 93932396543984 ]
+  raw_name:        iniparser_getnsec
+  is_public:       0
+  is_private:      0
+- name:            iniparser_getsecname
+  file_location:   '/src/iniparser/src/iniparser.c:198'
+  type_arguments:  [ 93932395290272, 93932396543984, 93932395290728 ]
+  raw_name:        iniparser_getsecname
+  is_public:       0
+  is_private:      0
+- name:            iniparser_dump
+  file_location:   '/src/iniparser/src/iniparser.c:233'
+  type_arguments:  [ 0, 93932396543984, 93932396544960 ]
+  raw_name:        iniparser_dump
+  is_public:       0
+  is_private:      0
+- name:            iniparser_set_error_callback
+  file_location:   '/src/iniparser/src/iniparser.c:140'
+  type_arguments:  [ 0, 93932396539632 ]
+  raw_name:        iniparser_set_error_callback
+  is_public:       0
+  is_private:      0
+...

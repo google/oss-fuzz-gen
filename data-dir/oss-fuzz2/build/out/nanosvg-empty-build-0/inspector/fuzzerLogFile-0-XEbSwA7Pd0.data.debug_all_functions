@@ -1,0 +1,1104 @@
+---
+- name:            stbi_zlib_compress
+  file_location:   '/src/nanosvg/./example/stb_image_write.h:264'
+  type_arguments:  [ 94252839613536, 94252839613536, 94252839536488, 94252839613184, 
+                     94252839536488 ]
+  raw_name:        stbi_zlib_compress
+  is_public:       0
+  is_private:      0
+- name:            stbi__crc32
+  file_location:   '/src/nanosvg/./example/stb_image_write.h:367'
+  type_arguments:  [ 94252837231992, 94252839613536, 94252839536488 ]
+  raw_name:        stbi__crc32
+  is_public:       0
+  is_private:      0
+- name:            stbi_write_png_to_mem
+  file_location:   '/src/nanosvg/./example/stb_image_write.h:399'
+  type_arguments:  [ 94252839613536, 94252839613536, 94252839536488, 94252839536488, 
+                     94252839536488, 94252839536488, 94252839613184 ]
+  raw_name:        stbi_write_png_to_mem
+  is_public:       0
+  is_private:      0
+- name:            LLVMFuzzerTestOneInput
+  file_location:   '/src/fuzzers/empty-fuzzer.c:5'
+  type_arguments:  [ 94252839536488, 94252838877760, 94252839685424 ]
+  raw_name:        LLVMFuzzerTestOneInput
+  is_public:       0
+  is_private:      0
+- name:            nsvg__straightJoin
+  file_location:   '/src/nanosvg/./src/nanosvgrast.h:589'
+  type_arguments:  [ 0, 94252839614624, 94252839616512, 94252839616512, 
+                     94252839616512, 94252839614248 ]
+  raw_name:        nsvg__straightJoin
+  is_public:       0
+  is_private:      0
+- name:            nsvg__addEdge
+  file_location:   '/src/nanosvg/./src/nanosvgrast.h:290'
+  type_arguments:  [ 0, 94252839614624, 94252839614248, 94252839614248, 
+                     94252839614248, 94252839614248 ]
+  raw_name:        nsvg__addEdge
+  is_public:       0
+  is_private:      0
+- name:            nsvg__miterJoin
+  file_location:   '/src/nanosvg/./src/nanosvgrast.h:512'
+  type_arguments:  [ 0, 94252839614624, 94252839616512, 94252839616512, 
+                     94252839616512, 94252839616512, 94252839614248 ]
+  raw_name:        nsvg__miterJoin
+  is_public:       0
+  is_private:      0
+- name:            nsvg__bevelJoin
+  file_location:   '/src/nanosvg/./src/nanosvgrast.h:492'
+  type_arguments:  [ 0, 94252839614624, 94252839616512, 94252839616512, 
+                     94252839616512, 94252839616512, 94252839614248 ]
+  raw_name:        nsvg__bevelJoin
+  is_public:       0
+  is_private:      0
+- name:            nsvg__roundJoin
+  file_location:   '/src/nanosvg/./src/nanosvgrast.h:548'
+  type_arguments:  [ 0, 94252839614624, 94252839616512, 94252839616512, 
+                     94252839616512, 94252839616512, 94252839614248, 94252839536488 ]
+  raw_name:        nsvg__roundJoin
+  is_public:       0
+  is_private:      0
+- name:            nsvg__absf
+  file_location:   '/src/nanosvg/./src/nanosvgrast.h:333'
+  type_arguments:  [ 94252839614248, 94252839614248 ]
+  raw_name:        nsvg__absf
+  is_public:       0
+  is_private:      0
+- name:            nsvg__roundCap
+  file_location:   '/src/nanosvg/./src/nanosvgrast.h:456'
+  type_arguments:  [ 0, 94252839614624, 94252839616512, 94252839616512, 
+                     94252839616512, 94252839614248, 94252839614248, 94252839614248, 
+                     94252839536488, 94252839536488 ]
+  raw_name:        nsvg__roundCap
+  is_public:       0
+  is_private:      0
+- name:            nsvg__squareCap
+  file_location:   '/src/nanosvg/./src/nanosvgrast.h:434'
+  type_arguments:  [ 0, 94252839614624, 94252839616512, 94252839616512, 
+                     94252839616512, 94252839614248, 94252839614248, 94252839614248, 
+                     94252839536488 ]
+  raw_name:        nsvg__squareCap
+  is_public:       0
+  is_private:      0
+- name:            nsvg__buttCap
+  file_location:   '/src/nanosvg/./src/nanosvgrast.h:416'
+  type_arguments:  [ 0, 94252839614624, 94252839616512, 94252839616512, 
+                     94252839616512, 94252839614248, 94252839614248, 94252839614248, 
+                     94252839536488 ]
+  raw_name:        nsvg__buttCap
+  is_public:       0
+  is_private:      0
+- name:            nsvg__initClosed
+  file_location:   '/src/nanosvg/./src/nanosvgrast.h:402'
+  type_arguments:  [ 0, 94252839616512, 94252839616512, 94252839616512, 
+                     94252839616512, 94252839614248 ]
+  raw_name:        nsvg__initClosed
+  is_public:       0
+  is_private:      0
+- name:            nsvg__normalize
+  file_location:   '/src/nanosvg/./src/nanosvgrast.h:322'
+  type_arguments:  [ 94252839614248, 94252839614368, 94252839614368 ]
+  raw_name:        nsvg__normalize
+  is_public:       0
+  is_private:      0
+- name:            nsvg__curveDivs
+  file_location:   '/src/nanosvg/./src/nanosvgrast.h:602'
+  type_arguments:  [ 94252839536488, 94252839614248, 94252839614248, 94252839614248 ]
+  raw_name:        nsvg__curveDivs
+  is_public:       0
+  is_private:      0
+- name:            nsvg__expandStroke
+  file_location:   '/src/nanosvg/./src/nanosvgrast.h:610'
+  type_arguments:  [ 0, 94252839614624, 94252839616512, 94252839536488, 
+                     94252839536488, 94252839536488, 94252839536488, 94252839614248 ]
+  raw_name:        nsvg__expandStroke
+  is_public:       0
+  is_private:      0
+- name:            nsvg__prepareStroke
+  file_location:   '/src/nanosvg/./src/nanosvgrast.h:681'
+  type_arguments:  [ 0, 94252839614624, 94252839614248, 94252839536488 ]
+  raw_name:        nsvg__prepareStroke
+  is_public:       0
+  is_private:      0
+- name:            nsvg__duplicatePoints
+  file_location:   '/src/nanosvg/./src/nanosvgrast.h:278'
+  type_arguments:  [ 0, 94252839614624 ]
+  raw_name:        nsvg__duplicatePoints
+  is_public:       0
+  is_private:      0
+- name:            nsvg__appendPathPoint
+  file_location:   '/src/nanosvg/./src/nanosvgrast.h:267'
+  type_arguments:  [ 0, 94252839614624, 94252839616384 ]
+  raw_name:        nsvg__appendPathPoint
+  is_public:       0
+  is_private:      0
+- name:            nsvg__div255
+  file_location:   '/src/nanosvg/./src/nanosvgrast.h:985'
+  type_arguments:  [ 94252839536488, 94252839536488 ]
+  raw_name:        nsvg__div255
+  is_public:       0
+  is_private:      0
+- name:            nsvg__fillScanline
+  file_location:   '/src/nanosvg/./src/nanosvgrast.h:894'
+  type_arguments:  [ 0, 94252839613536, 94252839536488, 94252839536488, 
+                     94252839536488, 94252839536488, 94252839613184, 94252839613184 ]
+  raw_name:        nsvg__fillScanline
+  is_public:       0
+  is_private:      0
+- name:            nsvg__nextPage
+  file_location:   '/src/nanosvg/./src/nanosvgrast.h:190'
+  type_arguments:  [ 94252839617536, 94252839614624, 94252839617536 ]
+  raw_name:        nsvg__nextPage
+  is_public:       0
+  is_private:      0
+- name:            nsvg__roundf
+  file_location:   '/src/nanosvg/./src/nanosvgrast.h:334'
+  type_arguments:  [ 94252839614248, 94252839614248 ]
+  raw_name:        nsvg__roundf
+  is_public:       0
+  is_private:      0
+- name:            nsvg__alloc
+  file_location:   '/src/nanosvg/./src/nanosvgrast.h:223'
+  type_arguments:  [ 94252839613536, 94252839614624, 94252839536488 ]
+  raw_name:        nsvg__alloc
+  is_public:       0
+  is_private:      0
+- name:            nsvg__scanlineSolid
+  file_location:   '/src/nanosvg/./src/nanosvgrast.h:990'
+  type_arguments:  [ 0, 94252839613536, 94252839536488, 94252839613536, 
+                     94252839536488, 94252839536488, 94252839614248, 94252839614248, 
+                     94252839614248, 94252839689456 ]
+  raw_name:        nsvg__scanlineSolid
+  is_public:       0
+  is_private:      0
+- name:            nsvg__clampf
+  file_location:   '/src/nanosvg/./src/nanosvgrast.h:958'
+  type_arguments:  [ 94252839614248, 94252839614248, 94252839614248, 94252839614248 ]
+  raw_name:        nsvg__clampf
+  is_public:       0
+  is_private:      0
+- name:            nsvg__fillActiveEdges
+  file_location:   '/src/nanosvg/./src/nanosvgrast.h:924'
+  type_arguments:  [ 0, 94252839613536, 94252839536488, 94252839617280, 
+                     94252839536488, 94252839613184, 94252839613184, 94252835830136 ]
+  raw_name:        nsvg__fillActiveEdges
+  is_public:       0
+  is_private:      0
+- name:            nsvg__addActive
+  file_location:   '/src/nanosvg/./src/nanosvgrast.h:858'
+  type_arguments:  [ 94252839617280, 94252839614624, 94252839616768, 94252839614248 ]
+  raw_name:        nsvg__addActive
+  is_public:       0
+  is_private:      0
+- name:            nsvg__freeActive
+  file_location:   '/src/nanosvg/./src/nanosvgrast.h:888'
+  type_arguments:  [ 0, 94252839614624, 94252839617280 ]
+  raw_name:        nsvg__freeActive
+  is_public:       0
+  is_private:      0
+- name:            nsvg__RGBA
+  file_location:   '/src/nanosvg/./src/nanosvgrast.h:960'
+  type_arguments:  [ 94252837231992, 94252839613416, 94252839613416, 94252839613416, 
+                     94252839613416 ]
+  raw_name:        nsvg__RGBA
+  is_public:       0
+  is_private:      0
+- name:            nsvg__lerpRGBA
+  file_location:   '/src/nanosvg/./src/nanosvgrast.h:965'
+  type_arguments:  [ 94252837231992, 94252837231992, 94252837231992, 94252839614248 ]
+  raw_name:        nsvg__lerpRGBA
+  is_public:       0
+  is_private:      0
+- name:            nsvg__applyOpacity
+  file_location:   '/src/nanosvg/./src/nanosvgrast.h:975'
+  type_arguments:  [ 94252837231992, 94252837231992, 94252839614248 ]
+  raw_name:        nsvg__applyOpacity
+  is_public:       0
+  is_private:      0
+- name:            nsvg__ptEquals
+  file_location:   '/src/nanosvg/./src/nanosvgrast.h:235'
+  type_arguments:  [ 94252839536488, 94252839614248, 94252839614248, 94252839614248, 
+                     94252839614248, 94252839614248 ]
+  raw_name:        nsvg__ptEquals
+  is_public:       0
+  is_private:      0
+- name:            nsvg__flattenCubicBez
+  file_location:   '/src/nanosvg/./src/nanosvgrast.h:336'
+  type_arguments:  [ 0, 94252839614624, 94252839614248, 94252839614248, 
+                     94252839614248, 94252839614248, 94252839614248, 94252839614248, 
+                     94252839614248, 94252839614248, 94252839536488, 94252839536488 ]
+  raw_name:        nsvg__flattenCubicBez
+  is_public:       0
+  is_private:      0
+- name:            nsvg__addPathPoint
+  file_location:   '/src/nanosvg/./src/nanosvgrast.h:242'
+  type_arguments:  [ 0, 94252839614624, 94252839614248, 94252839614248, 
+                     94252839536488 ]
+  raw_name:        nsvg__addPathPoint
+  is_public:       0
+  is_private:      0
+- name:            nsvg__deleteGradientData
+  file_location:   '/src/nanosvg/./src/nanosvg.h:672'
+  type_arguments:  [ 0, 94252839615392 ]
+  raw_name:        nsvg__deleteGradientData
+  is_public:       0
+  is_private:      0
+- name:            nsvg__scaleGradient
+  file_location:   '/src/nanosvg/./src/nanosvg.h:2863'
+  type_arguments:  [ 0, 94252839616256, 94252839614248, 94252839614248, 
+                     94252839614248, 94252839614248 ]
+  raw_name:        nsvg__scaleGradient
+  is_public:       0
+  is_private:      0
+- name:            nsvg__xformSetTranslation
+  file_location:   '/src/nanosvg/./src/nanosvg.h:467'
+  type_arguments:  [ 0, 94252839614368, 94252839614248, 94252839614248 ]
+  raw_name:        nsvg__xformSetTranslation
+  is_public:       0
+  is_private:      0
+- name:            nsvg__xformMultiply
+  file_location:   '/src/nanosvg/./src/nanosvg.h:503'
+  type_arguments:  [ 0, 94252839614368, 94252839614368 ]
+  raw_name:        nsvg__xformMultiply
+  is_public:       0
+  is_private:      0
+- name:            nsvg__xformSetScale
+  file_location:   '/src/nanosvg/./src/nanosvg.h:474'
+  type_arguments:  [ 0, 94252839614368, 94252839614248, 94252839614248 ]
+  raw_name:        nsvg__xformSetScale
+  is_public:       0
+  is_private:      0
+- name:            nsvg__viewAlign
+  file_location:   '/src/nanosvg/./src/nanosvg.h:2853'
+  type_arguments:  [ 94252839614248, 94252839614248, 94252839614248, 94252839536488 ]
+  raw_name:        nsvg__viewAlign
+  is_public:       0
+  is_private:      0
+- name:            nsvg__imageBounds
+  file_location:   '/src/nanosvg/./src/nanosvg.h:2833'
+  type_arguments:  [ 0, 94252839614880, 94252839614368 ]
+  raw_name:        nsvg__imageBounds
+  is_public:       0
+  is_private:      0
+- name:            nsvg__minf
+  file_location:   '/src/nanosvg/./src/nanosvg.h:231'
+  type_arguments:  [ 94252839614248, 94252839614248, 94252839614248 ]
+  raw_name:        nsvg__minf
+  is_public:       0
+  is_private:      0
+- name:            nsvg__maxf
+  file_location:   '/src/nanosvg/./src/nanosvg.h:232'
+  type_arguments:  [ 94252839614248, 94252839614248, 94252839614248 ]
+  raw_name:        nsvg__maxf
+  is_public:       0
+  is_private:      0
+- name:            nsvg__findGradientData
+  file_location:   '/src/nanosvg/./src/nanosvg.h:808'
+  type_arguments:  [ 94252839615392, 94252839614880, 94252839595168 ]
+  raw_name:        nsvg__findGradientData
+  is_public:       0
+  is_private:      0
+- name:            nsvg__createGradient
+  file_location:   '/src/nanosvg/./src/nanosvg.h:821'
+  type_arguments:  [ 94252839616256, 94252839614880, 94252839595168, 94252840760768, 
+                     94252839614368, 94252839613760 ]
+  raw_name:        nsvg__createGradient
+  is_public:       0
+  is_private:      0
+- name:            nsvg__actualOrigX
+  file_location:   '/src/nanosvg/./src/nanosvg.h:763'
+  type_arguments:  [ 94252839614248, 94252839614880 ]
+  raw_name:        nsvg__actualOrigX
+  is_public:       0
+  is_private:      0
+- name:            nsvg__actualOrigY
+  file_location:   '/src/nanosvg/./src/nanosvg.h:768'
+  type_arguments:  [ 94252839614248, 94252839614880 ]
+  raw_name:        nsvg__actualOrigY
+  is_public:       0
+  is_private:      0
+- name:            nsvg__actualWidth
+  file_location:   '/src/nanosvg/./src/nanosvg.h:773'
+  type_arguments:  [ 94252839614248, 94252839614880 ]
+  raw_name:        nsvg__actualWidth
+  is_public:       0
+  is_private:      0
+- name:            nsvg__actualHeight
+  file_location:   '/src/nanosvg/./src/nanosvg.h:778'
+  type_arguments:  [ 94252839614248, 94252839614880 ]
+  raw_name:        nsvg__actualHeight
+  is_public:       0
+  is_private:      0
+- name:            nsvg__convertToPixels
+  file_location:   '/src/nanosvg/./src/nanosvg.h:789'
+  type_arguments:  [ 94252839614248, 94252839614880, 94252839632144, 94252839614248, 
+                     94252839614248 ]
+  raw_name:        nsvg__convertToPixels
+  is_public:       0
+  is_private:      0
+- name:            nsvg__getAttr
+  file_location:   '/src/nanosvg/./src/nanosvg.h:744'
+  type_arguments:  [ 94252839690128, 94252839614880 ]
+  raw_name:        nsvg__getAttr
+  is_public:       0
+  is_private:      0
+- name:            nsvg__getLocalBounds
+  file_location:   '/src/nanosvg/./src/nanosvg.h:915'
+  type_arguments:  [ 0, 94252839614368, 94252839616000, 94252839614368 ]
+  raw_name:        nsvg__getLocalBounds
+  is_public:       0
+  is_private:      0
+- name:            nsvg__xformPoint
+  file_location:   '/src/nanosvg/./src/nanosvg.h:540'
+  type_arguments:  [ 0, 94252839614368, 94252839614368, 94252839614248, 
+                     94252839614248, 94252839614368 ]
+  raw_name:        nsvg__xformPoint
+  is_public:       0
+  is_private:      0
+- name:            nsvg__curveBounds
+  file_location:   '/src/nanosvg/./src/nanosvg.h:566'
+  type_arguments:  [ 0, 94252839614368, 94252839614368 ]
+  raw_name:        nsvg__curveBounds
+  is_public:       0
+  is_private:      0
+- name:            nsvg__ptInBounds
+  file_location:   '/src/nanosvg/./src/nanosvg.h:554'
+  type_arguments:  [ 94252839536488, 94252839614368, 94252839614368 ]
+  raw_name:        nsvg__ptInBounds
+  is_public:       0
+  is_private:      0
+- name:            nsvg__evalBezier
+  file_location:   '/src/nanosvg/./src/nanosvg.h:560'
+  type_arguments:  [ 94252839615496, 94252839615496, 94252839615496, 94252839615496, 
+                     94252839615496, 94252839615496 ]
+  raw_name:        nsvg__evalBezier
+  is_public:       0
+  is_private:      0
+- name:            nsvg__xformInverse
+  file_location:   '/src/nanosvg/./src/nanosvg.h:516'
+  type_arguments:  [ 0, 94252839614368, 94252839614368 ]
+  raw_name:        nsvg__xformInverse
+  is_public:       0
+  is_private:      0
+- name:            nsvg__xformIdentity
+  file_location:   '/src/nanosvg/./src/nanosvg.h:460'
+  type_arguments:  [ 0, 94252839614368 ]
+  raw_name:        nsvg__xformIdentity
+  is_public:       0
+  is_private:      0
+- name:            nsvg__getAverageScale
+  file_location:   '/src/nanosvg/./src/nanosvg.h:908'
+  type_arguments:  [ 94252839614248, 94252839614368 ]
+  raw_name:        nsvg__getAverageScale
+  is_public:       0
+  is_private:      0
+- name:            nsvg__vmag
+  file_location:   '/src/nanosvg/./src/nanosvg.h:2119'
+  type_arguments:  [ 94252839614248, 94252839614248, 94252839614248 ]
+  raw_name:        nsvg__vmag
+  is_public:       0
+  is_private:      0
+- name:            nsvg__vecrat
+  file_location:   '/src/nanosvg/./src/nanosvg.h:2121'
+  type_arguments:  [ 94252839614248, 94252839614248, 94252839614248, 94252839614248, 
+                     94252839614248 ]
+  raw_name:        nsvg__vecrat
+  is_public:       0
+  is_private:      0
+- name:            nsvg__xformVec
+  file_location:   '/src/nanosvg/./src/nanosvg.h:546'
+  type_arguments:  [ 0, 94252839614368, 94252839614368, 94252839614248, 
+                     94252839614248, 94252839614368 ]
+  raw_name:        nsvg__xformVec
+  is_public:       0
+  is_private:      0
+- name:            nsvg__vecang
+  file_location:   '/src/nanosvg/./src/nanosvg.h:2126'
+  type_arguments:  [ 94252839614248, 94252839614248, 94252839614248, 94252839614248, 
+                     94252839614248 ]
+  raw_name:        nsvg__vecang
+  is_public:       0
+  is_private:      0
+- name:            nsvg__sqr
+  file_location:   '/src/nanosvg/./src/nanosvg.h:2118'
+  type_arguments:  [ 94252839614248, 94252839614248 ]
+  raw_name:        nsvg__sqr
+  is_public:       0
+  is_private:      0
+- name:            nsvg__cubicBezTo
+  file_location:   '/src/nanosvg/./src/nanosvg.h:735'
+  type_arguments:  [ 0, 94252839614880, 94252839614248, 94252839614248, 
+                     94252839614248, 94252839614248, 94252839614248, 94252839614248 ]
+  raw_name:        nsvg__cubicBezTo
+  is_public:       0
+  is_private:      0
+- name:            nsvg__addPoint
+  file_location:   '/src/nanosvg/./src/nanosvg.h:699'
+  type_arguments:  [ 0, 94252839614880, 94252839614248, 94252839614248 ]
+  raw_name:        nsvg__addPoint
+  is_public:       0
+  is_private:      0
+- name:            nsvg__lineTo
+  file_location:   '/src/nanosvg/./src/nanosvg.h:721'
+  type_arguments:  [ 0, 94252839614880, 94252839614248, 94252839614248 ]
+  raw_name:        nsvg__lineTo
+  is_public:       0
+  is_private:      0
+- name:            nsvg__addShape
+  file_location:   '/src/nanosvg/./src/nanosvg.h:945'
+  type_arguments:  [ 0, 94252839614880 ]
+  raw_name:        nsvg__addShape
+  is_public:       0
+  is_private:      0
+- name:            nsvg__moveTo
+  file_location:   '/src/nanosvg/./src/nanosvg.h:711'
+  type_arguments:  [ 0, 94252839614880, 94252839614248, 94252839614248 ]
+  raw_name:        nsvg__moveTo
+  is_public:       0
+  is_private:      0
+- name:            nsvg__addPath
+  file_location:   '/src/nanosvg/./src/nanosvg.h:1029'
+  type_arguments:  [ 0, 94252839614880, 94252835830136 ]
+  raw_name:        nsvg__addPath
+  is_public:       0
+  is_private:      0
+- name:            nsvg__pathArcTo
+  file_location:   '/src/nanosvg/./src/nanosvg.h:2134'
+  type_arguments:  [ 0, 94252839614880, 94252839614368, 94252839614368, 
+                     94252839614368, 94252839536488 ]
+  raw_name:        nsvg__pathArcTo
+  is_public:       0
+  is_private:      0
+- name:            nsvg__pathQuadBezShortTo
+  file_location:   '/src/nanosvg/./src/nanosvg.h:2085'
+  type_arguments:  [ 0, 94252839614880, 94252839614368, 94252839614368, 
+                     94252839614368, 94252839614368, 94252839614368, 94252839536488 ]
+  raw_name:        nsvg__pathQuadBezShortTo
+  is_public:       0
+  is_private:      0
+- name:            nsvg__pathQuadBezTo
+  file_location:   '/src/nanosvg/./src/nanosvg.h:2051'
+  type_arguments:  [ 0, 94252839614880, 94252839614368, 94252839614368, 
+                     94252839614368, 94252839614368, 94252839614368, 94252839536488 ]
+  raw_name:        nsvg__pathQuadBezTo
+  is_public:       0
+  is_private:      0
+- name:            nsvg__pathCubicBezShortTo
+  file_location:   '/src/nanosvg/./src/nanosvg.h:2021'
+  type_arguments:  [ 0, 94252839614880, 94252839614368, 94252839614368, 
+                     94252839614368, 94252839614368, 94252839614368, 94252839536488 ]
+  raw_name:        nsvg__pathCubicBezShortTo
+  is_public:       0
+  is_private:      0
+- name:            nsvg__pathCubicBezTo
+  file_location:   '/src/nanosvg/./src/nanosvg.h:1992'
+  type_arguments:  [ 0, 94252839614880, 94252839614368, 94252839614368, 
+                     94252839614368, 94252839614368, 94252839614368, 94252839536488 ]
+  raw_name:        nsvg__pathCubicBezTo
+  is_public:       0
+  is_private:      0
+- name:            nsvg__pathVLineTo
+  file_location:   '/src/nanosvg/./src/nanosvg.h:1983'
+  type_arguments:  [ 0, 94252839614880, 94252839614368, 94252839614368, 
+                     94252839614368, 94252839536488 ]
+  raw_name:        nsvg__pathVLineTo
+  is_public:       0
+  is_private:      0
+- name:            nsvg__pathHLineTo
+  file_location:   '/src/nanosvg/./src/nanosvg.h:1974'
+  type_arguments:  [ 0, 94252839614880, 94252839614368, 94252839614368, 
+                     94252839614368, 94252839536488 ]
+  raw_name:        nsvg__pathHLineTo
+  is_public:       0
+  is_private:      0
+- name:            nsvg__pathLineTo
+  file_location:   '/src/nanosvg/./src/nanosvg.h:1962'
+  type_arguments:  [ 0, 94252839614880, 94252839614368, 94252839614368, 
+                     94252839614368, 94252839536488 ]
+  raw_name:        nsvg__pathLineTo
+  is_public:       0
+  is_private:      0
+- name:            nsvg__getArgsPerElement
+  file_location:   '/src/nanosvg/./src/nanosvg.h:1917'
+  type_arguments:  [ 94252839536488, 94252835830136 ]
+  raw_name:        nsvg__getArgsPerElement
+  is_public:       0
+  is_private:      0
+- name:            nsvg__pathMoveTo
+  file_location:   '/src/nanosvg/./src/nanosvg.h:1950'
+  type_arguments:  [ 0, 94252839614880, 94252839614368, 94252839614368, 
+                     94252839614368, 94252839536488 ]
+  raw_name:        nsvg__pathMoveTo
+  is_public:       0
+  is_private:      0
+- name:            nsvg__isCoordinate
+  file_location:   '/src/nanosvg/./src/nanosvg.h:1509'
+  type_arguments:  [ 94252839536488, 94252839595168 ]
+  raw_name:        nsvg__isCoordinate
+  is_public:       0
+  is_private:      0
+- name:            nsvg__isdigit
+  file_location:   '/src/nanosvg/./src/nanosvg.h:226'
+  type_arguments:  [ 94252839536488, 94252835830136 ]
+  raw_name:        nsvg__isdigit
+  is_public:       0
+  is_private:      0
+- name:            nsvg__getNextPathItem
+  file_location:   '/src/nanosvg/./src/nanosvg.h:1205'
+  type_arguments:  [ 94252839595168, 94252839595168, 94252839613888 ]
+  raw_name:        nsvg__getNextPathItem
+  is_public:       0
+  is_private:      0
+- name:            nsvg__isspace
+  file_location:   '/src/nanosvg/./src/nanosvg.h:221'
+  type_arguments:  [ 94252839536488, 94252835830136 ]
+  raw_name:        nsvg__isspace
+  is_public:       0
+  is_private:      0
+- name:            nsvg__parseNumber
+  file_location:   '/src/nanosvg/./src/nanosvg.h:1149'
+  type_arguments:  [ 94252839595168, 94252839595168, 94252839613888, 94252841865472 ]
+  raw_name:        nsvg__parseNumber
+  is_public:       0
+  is_private:      0
+- name:            nsvg__getNextPathItemWhenArcFlag
+  file_location:   '/src/nanosvg/./src/nanosvg.h:1192'
+  type_arguments:  [ 94252839595168, 94252839595168, 94252839613888 ]
+  raw_name:        nsvg__getNextPathItemWhenArcFlag
+  is_public:       0
+  is_private:      0
+- name:            nsvg__resetPath
+  file_location:   '/src/nanosvg/./src/nanosvg.h:694'
+  type_arguments:  [ 0, 94252839614880 ]
+  raw_name:        nsvg__resetPath
+  is_public:       0
+  is_private:      0
+- name:            nsvg__parseUnits
+  file_location:   '/src/nanosvg/./src/nanosvg.h:1486'
+  type_arguments:  [ 94252839536488, 94252839595168 ]
+  raw_name:        nsvg__parseUnits
+  is_public:       0
+  is_private:      0
+- name:            nsvg__xformSetSkewY
+  file_location:   '/src/nanosvg/./src/nanosvg.h:488'
+  type_arguments:  [ 0, 94252839614368, 94252839614248 ]
+  raw_name:        nsvg__xformSetSkewY
+  is_public:       0
+  is_private:      0
+- name:            nsvg__xformSetSkewX
+  file_location:   '/src/nanosvg/./src/nanosvg.h:481'
+  type_arguments:  [ 0, 94252839614368, 94252839614248 ]
+  raw_name:        nsvg__xformSetSkewX
+  is_public:       0
+  is_private:      0
+- name:            nsvg__xformSetRotation
+  file_location:   '/src/nanosvg/./src/nanosvg.h:495'
+  type_arguments:  [ 0, 94252839614368, 94252839614248 ]
+  raw_name:        nsvg__xformSetRotation
+  is_public:       0
+  is_private:      0
+- name:            nsvg__parseTransformArgs
+  file_location:   '/src/nanosvg/./src/nanosvg.h:1539'
+  type_arguments:  [ 94252839536488, 94252839595168, 94252839614368, 94252839536488, 
+                     94252839613184 ]
+  raw_name:        nsvg__parseTransformArgs
+  is_public:       0
+  is_private:      0
+- name:            nsvg__atof
+  file_location:   '/src/nanosvg/./src/nanosvg.h:1090'
+  type_arguments:  [ 94252839615496, 94252839595168 ]
+  raw_name:        nsvg__atof
+  is_public:       0
+  is_private:      0
+- name:            nsvg__parseSkewY
+  file_location:   '/src/nanosvg/./src/nanosvg.h:1614'
+  type_arguments:  [ 94252839536488, 94252839614368, 94252839595168 ]
+  raw_name:        nsvg__parseSkewY
+  is_public:       0
+  is_private:      0
+- name:            nsvg__parseSkewX
+  file_location:   '/src/nanosvg/./src/nanosvg.h:1603'
+  type_arguments:  [ 94252839536488, 94252839614368, 94252839595168 ]
+  raw_name:        nsvg__parseSkewX
+  is_public:       0
+  is_private:      0
+- name:            nsvg__parseRotate
+  file_location:   '/src/nanosvg/./src/nanosvg.h:1625'
+  type_arguments:  [ 94252839536488, 94252839614368, 94252839595168 ]
+  raw_name:        nsvg__parseRotate
+  is_public:       0
+  is_private:      0
+- name:            nsvg__parseScale
+  file_location:   '/src/nanosvg/./src/nanosvg.h:1591'
+  type_arguments:  [ 94252839536488, 94252839614368, 94252839595168 ]
+  raw_name:        nsvg__parseScale
+  is_public:       0
+  is_private:      0
+- name:            nsvg__parseTranslate
+  file_location:   '/src/nanosvg/./src/nanosvg.h:1578'
+  type_arguments:  [ 94252839536488, 94252839614368, 94252839595168 ]
+  raw_name:        nsvg__parseTranslate
+  is_public:       0
+  is_private:      0
+- name:            nsvg__parseMatrix
+  file_location:   '/src/nanosvg/./src/nanosvg.h:1568'
+  type_arguments:  [ 94252839536488, 94252839614368, 94252839595168 ]
+  raw_name:        nsvg__parseMatrix
+  is_public:       0
+  is_private:      0
+- name:            nsvg__getNextDashItem
+  file_location:   '/src/nanosvg/./src/nanosvg.h:1735'
+  type_arguments:  [ 94252839595168, 94252839595168, 94252839613888 ]
+  raw_name:        nsvg__getNextDashItem
+  is_public:       0
+  is_private:      0
+- name:            nsvg__parseColorName
+  file_location:   '/src/nanosvg/./src/nanosvg.h:1446'
+  type_arguments:  [ 94252837231992, 94252839595168 ]
+  raw_name:        nsvg__parseColorName
+  is_public:       0
+  is_private:      0
+- name:            nsvg__parseColorRGB
+  file_location:   '/src/nanosvg/./src/nanosvg.h:1237'
+  type_arguments:  [ 94252837231992, 94252839595168 ]
+  raw_name:        nsvg__parseColorRGB
+  is_public:       0
+  is_private:      0
+- name:            nsvg__parseColorHex
+  file_location:   '/src/nanosvg/./src/nanosvg.h:1223'
+  type_arguments:  [ 94252837231992, 94252839595168 ]
+  raw_name:        nsvg__parseColorHex
+  is_public:       0
+  is_private:      0
+- name:            nsvg__parseNameValue
+  file_location:   '/src/nanosvg/./src/nanosvg.h:1852'
+  type_arguments:  [ 94252839536488, 94252839614880, 94252839595168, 94252839595168 ]
+  raw_name:        nsvg__parseNameValue
+  is_public:       0
+  is_private:      0
+- name:            nsvg__parseAttr
+  file_location:   '/src/nanosvg/./src/nanosvg.h:1779'
+  type_arguments:  [ 94252839536488, 94252839614880, 94252839595168, 94252839595168 ]
+  raw_name:        nsvg__parseAttr
+  is_public:       0
+  is_private:      0
+- name:            nsvg__parseStyle
+  file_location:   '/src/nanosvg/./src/nanosvg.h:1884'
+  type_arguments:  [ 0, 94252839614880, 94252839595168 ]
+  raw_name:        nsvg__parseStyle
+  is_public:       0
+  is_private:      0
+- name:            nsvg__parseUrl
+  file_location:   '/src/nanosvg/./src/nanosvg.h:1688'
+  type_arguments:  [ 0, 94252839613888, 94252839595168 ]
+  raw_name:        nsvg__parseUrl
+  is_public:       0
+  is_private:      0
+- name:            nsvg__parseColor
+  file_location:   '/src/nanosvg/./src/nanosvg.h:1459'
+  type_arguments:  [ 94252837231992, 94252839595168 ]
+  raw_name:        nsvg__parseColor
+  is_public:       0
+  is_private:      0
+- name:            nsvg__parseOpacity
+  file_location:   '/src/nanosvg/./src/nanosvg.h:1471'
+  type_arguments:  [ 94252839614248, 94252839595168 ]
+  raw_name:        nsvg__parseOpacity
+  is_public:       0
+  is_private:      0
+- name:            nsvg__actualLength
+  file_location:   '/src/nanosvg/./src/nanosvg.h:783'
+  type_arguments:  [ 94252839614248, 94252839614880 ]
+  raw_name:        nsvg__actualLength
+  is_public:       0
+  is_private:      0
+- name:            nsvg__parseCoordinate
+  file_location:   '/src/nanosvg/./src/nanosvg.h:1533'
+  type_arguments:  [ 94252839614248, 94252839614880, 94252839595168, 94252839614248, 
+                     94252839614248 ]
+  raw_name:        nsvg__parseCoordinate
+  is_public:       0
+  is_private:      0
+- name:            nsvg__parseStrokeDashArray
+  file_location:   '/src/nanosvg/./src/nanosvg.h:1751'
+  type_arguments:  [ 94252839536488, 94252839614880, 94252839595168, 94252839614368 ]
+  raw_name:        nsvg__parseStrokeDashArray
+  is_public:       0
+  is_private:      0
+- name:            nsvg__parseLineCap
+  file_location:   '/src/nanosvg/./src/nanosvg.h:1701'
+  type_arguments:  [ 94252835830136, 94252839595168 ]
+  raw_name:        nsvg__parseLineCap
+  is_public:       0
+  is_private:      0
+- name:            nsvg__parseLineJoin
+  file_location:   '/src/nanosvg/./src/nanosvg.h:1713'
+  type_arguments:  [ 94252835830136, 94252839595168 ]
+  raw_name:        nsvg__parseLineJoin
+  is_public:       0
+  is_private:      0
+- name:            nsvg__parseMiterLimit
+  file_location:   '/src/nanosvg/./src/nanosvg.h:1479'
+  type_arguments:  [ 94252839614248, 94252839595168 ]
+  raw_name:        nsvg__parseMiterLimit
+  is_public:       0
+  is_private:      0
+- name:            nsvg__parseFillRule
+  file_location:   '/src/nanosvg/./src/nanosvg.h:1725'
+  type_arguments:  [ 94252835830136, 94252839595168 ]
+  raw_name:        nsvg__parseFillRule
+  is_public:       0
+  is_private:      0
+- name:            nsvg__parseTransform
+  file_location:   '/src/nanosvg/./src/nanosvg.h:1654'
+  type_arguments:  [ 0, 94252839614368, 94252839595168 ]
+  raw_name:        nsvg__parseTransform
+  is_public:       0
+  is_private:      0
+- name:            nsvg__xformPremultiply
+  file_location:   '/src/nanosvg/./src/nanosvg.h:532'
+  type_arguments:  [ 0, 94252839614368, 94252839614368 ]
+  raw_name:        nsvg__xformPremultiply
+  is_public:       0
+  is_private:      0
+- name:            nsvg__parseCoordinateRaw
+  file_location:   '/src/nanosvg/./src/nanosvg.h:1518'
+  type_arguments:  [ 94252839632144, 94252839595168 ]
+  raw_name:        nsvg__parseCoordinateRaw
+  is_public:       0
+  is_private:      0
+- name:            nsvg__coord
+  file_location:   '/src/nanosvg/./src/nanosvg.h:1527'
+  type_arguments:  [ 94252839632144, 94252839614248, 94252839536488 ]
+  raw_name:        nsvg__coord
+  is_public:       0
+  is_private:      0
+- name:            nsvg__parseSVG
+  file_location:   '/src/nanosvg/./src/nanosvg.h:2584'
+  type_arguments:  [ 0, 94252839614880, 94252839687136 ]
+  raw_name:        nsvg__parseSVG
+  is_public:       0
+  is_private:      0
+- name:            nsvg__parsePoly
+  file_location:   '/src/nanosvg/./src/nanosvg.h:2548'
+  type_arguments:  [ 0, 94252839614880, 94252839687136, 94252839536488 ]
+  raw_name:        nsvg__parsePoly
+  is_public:       0
+  is_private:      0
+- name:            nsvg__parseLine
+  file_location:   '/src/nanosvg/./src/nanosvg.h:2521'
+  type_arguments:  [ 0, 94252839614880, 94252839687136 ]
+  raw_name:        nsvg__parseLine
+  is_public:       0
+  is_private:      0
+- name:            nsvg__parseEllipse
+  file_location:   '/src/nanosvg/./src/nanosvg.h:2488'
+  type_arguments:  [ 0, 94252839614880, 94252839687136 ]
+  raw_name:        nsvg__parseEllipse
+  is_public:       0
+  is_private:      0
+- name:            nsvg__parseCircle
+  file_location:   '/src/nanosvg/./src/nanosvg.h:2458'
+  type_arguments:  [ 0, 94252839614880, 94252839687136 ]
+  raw_name:        nsvg__parseCircle
+  is_public:       0
+  is_private:      0
+- name:            nsvg__parseRect
+  file_location:   '/src/nanosvg/./src/nanosvg.h:2403'
+  type_arguments:  [ 0, 94252839614880, 94252839687136 ]
+  raw_name:        nsvg__parseRect
+  is_public:       0
+  is_private:      0
+- name:            nsvg__popAttr
+  file_location:   '/src/nanosvg/./src/nanosvg.h:757'
+  type_arguments:  [ 0, 94252839614880 ]
+  raw_name:        nsvg__popAttr
+  is_public:       0
+  is_private:      0
+- name:            nsvg__parsePath
+  file_location:   '/src/nanosvg/./src/nanosvg.h:2255'
+  type_arguments:  [ 0, 94252839614880, 94252839687136 ]
+  raw_name:        nsvg__parsePath
+  is_public:       0
+  is_private:      0
+- name:            nsvg__parseAttribs
+  file_location:   '/src/nanosvg/./src/nanosvg.h:1905'
+  type_arguments:  [ 0, 94252839614880, 94252839687136 ]
+  raw_name:        nsvg__parseAttribs
+  is_public:       0
+  is_private:      0
+- name:            nsvg__pushAttr
+  file_location:   '/src/nanosvg/./src/nanosvg.h:749'
+  type_arguments:  [ 0, 94252839614880 ]
+  raw_name:        nsvg__pushAttr
+  is_public:       0
+  is_private:      0
+- name:            nsvg__parseGradientStop
+  file_location:   '/src/nanosvg/./src/nanosvg.h:2709'
+  type_arguments:  [ 0, 94252839614880, 94252839687136 ]
+  raw_name:        nsvg__parseGradientStop
+  is_public:       0
+  is_private:      0
+- name:            nsvg__parseGradient
+  file_location:   '/src/nanosvg/./src/nanosvg.h:2639'
+  type_arguments:  [ 0, 94252839614880, 94252839687136, 94252839613640 ]
+  raw_name:        nsvg__parseGradient
+  is_public:       0
+  is_private:      0
+- name:            write3
+  file_location:   '/src/nanosvg/./example/stb_image_write.h:102'
+  type_arguments:  [ 0, 94252839679648, 94252839613416, 94252839613416, 
+                     94252839613416 ]
+  raw_name:        write3
+  is_public:       0
+  is_private:      0
+- name:            write_pixels
+  file_location:   '/src/nanosvg/./example/stb_image_write.h:109'
+  type_arguments:  [ 0, 94252839679648, 94252839536488, 94252839536488, 
+                     94252839536488, 94252839536488, 94252839536488, 94252839612528, 
+                     94252839536488, 94252839536488 ]
+  raw_name:        write_pixels
+  is_public:       0
+  is_private:      0
+- name:            writefv
+  file_location:   '/src/nanosvg/./example/stb_image_write.h:82'
+  type_arguments:  [ 0, 94252839679648, 94252839595168, 94252843549264 ]
+  raw_name:        writefv
+  is_public:       0
+  is_private:      0
+- name:            nsvg__unpremultiplyAlpha
+  file_location:   '/src/nanosvg/./src/nanosvgrast.h:1206'
+  type_arguments:  [ 0, 94252839613536, 94252839536488, 94252839536488, 
+                     94252839536488 ]
+  raw_name:        nsvg__unpremultiplyAlpha
+  is_public:       0
+  is_private:      0
+- name:            nsvg__flattenShapeStroke
+  file_location:   '/src/nanosvg/./src/nanosvgrast.h:738'
+  type_arguments:  [ 0, 94252839614624, 94252839616000, 94252839614248 ]
+  raw_name:        nsvg__flattenShapeStroke
+  is_public:       0
+  is_private:      0
+- name:            nsvg__rasterizeSortedEdges
+  file_location:   '/src/nanosvg/./src/nanosvgrast.h:1118'
+  type_arguments:  [ 0, 94252839614624, 94252839614248, 94252839614248, 
+                     94252839614248, 94252839689456, 94252835830136 ]
+  raw_name:        nsvg__rasterizeSortedEdges
+  is_public:       0
+  is_private:      0
+- name:            nsvg__initPaint
+  file_location:   '/src/nanosvg/./src/nanosvgrast.h:1266'
+  type_arguments:  [ 0, 94252839689456, 94252839688240, 94252839614248 ]
+  raw_name:        nsvg__initPaint
+  is_public:       0
+  is_private:      0
+- name:            nsvg__cmpEdge
+  file_location:   '/src/nanosvg/./src/nanosvgrast.h:847'
+  type_arguments:  [ 94252839536488, 94252839679072, 94252839679072 ]
+  raw_name:        nsvg__cmpEdge
+  is_public:       0
+  is_private:      0
+- name:            nsvg__flattenShape
+  file_location:   '/src/nanosvg/./src/nanosvgrast.h:374'
+  type_arguments:  [ 0, 94252839614624, 94252839616000, 94252839614248 ]
+  raw_name:        nsvg__flattenShape
+  is_public:       0
+  is_private:      0
+- name:            nsvg__resetPool
+  file_location:   '/src/nanosvg/./src/nanosvgrast.h:213'
+  type_arguments:  [ 0, 94252839614624 ]
+  raw_name:        nsvg__resetPool
+  is_public:       0
+  is_private:      0
+- name:            nsvgRasterize
+  file_location:   '/src/nanosvg/./src/nanosvgrast.h:1369'
+  type_arguments:  [ 0, 94252839614624, 94252839615136, 94252839614248, 
+                     94252839614248, 94252839614248, 94252839613536, 94252839536488, 
+                     94252839536488, 94252839536488 ]
+  raw_name:        nsvgRasterize
+  is_public:       0
+  is_private:      0
+- name:            nsvgDeleteRasterizer
+  file_location:   '/src/nanosvg/./src/nanosvgrast.h:169'
+  type_arguments:  [ 0, 94252839614624 ]
+  raw_name:        nsvgDeleteRasterizer
+  is_public:       0
+  is_private:      0
+- name:            nsvgCreateRasterizer
+  file_location:   '/src/nanosvg/./src/nanosvgrast.h:153'
+  type_arguments:  [ 94252839614624 ]
+  raw_name:        nsvgCreateRasterizer
+  is_public:       0
+  is_private:      0
+- name:            nsvg__deletePaint
+  file_location:   '/src/nanosvg/./src/nanosvg.h:666'
+  type_arguments:  [ 0, 94252839688240 ]
+  raw_name:        nsvg__deletePaint
+  is_public:       0
+  is_private:      0
+- name:            nsvg__deletePaths
+  file_location:   '/src/nanosvg/./src/nanosvg.h:655'
+  type_arguments:  [ 0, 94252839614144 ]
+  raw_name:        nsvg__deletePaths
+  is_public:       0
+  is_private:      0
+- name:            nsvgDuplicatePath
+  file_location:   '/src/nanosvg/./src/nanosvg.h:3050'
+  type_arguments:  [ 94252839614144, 94252839614144 ]
+  raw_name:        nsvgDuplicatePath
+  is_public:       0
+  is_private:      0
+- name:            nsvgDelete
+  file_location:   '/src/nanosvg/./src/nanosvg.h:3080'
+  type_arguments:  [ 0, 94252839615136 ]
+  raw_name:        nsvgDelete
+  is_public:       0
+  is_private:      0
+- name:            nsvgParseFromFile
+  file_location:   '/src/nanosvg/./src/nanosvg.h:3021'
+  type_arguments:  [ 94252839615136, 94252839595168, 94252839595168, 94252839614248 ]
+  raw_name:        nsvgParseFromFile
+  is_public:       0
+  is_private:      0
+- name:            nsvgParse
+  file_location:   '/src/nanosvg/./src/nanosvg.h:2994'
+  type_arguments:  [ 94252839615136, 94252839613888, 94252839595168, 94252839614248 ]
+  raw_name:        nsvgParse
+  is_public:       0
+  is_private:      0
+- name:            nsvg__createParser
+  file_location:   '/src/nanosvg/./src/nanosvg.h:617'
+  type_arguments:  [ 94252839614880 ]
+  raw_name:        nsvg__createParser
+  is_public:       0
+  is_private:      0
+- name:            nsvg__startElement
+  file_location:   '/src/nanosvg/./src/nanosvg.h:2751'
+  type_arguments:  [ 0, 94252839612528, 94252839595168, 94252839687136 ]
+  raw_name:        nsvg__startElement
+  is_public:       0
+  is_private:      0
+- name:            nsvg__endElement
+  file_location:   '/src/nanosvg/./src/nanosvg.h:2813'
+  type_arguments:  [ 0, 94252839612528, 94252839595168 ]
+  raw_name:        nsvg__endElement
+  is_public:       0
+  is_private:      0
+- name:            nsvg__content
+  file_location:   '/src/nanosvg/./src/nanosvg.h:2826'
+  type_arguments:  [ 0, 94252839612528, 94252839595168 ]
+  raw_name:        nsvg__content
+  is_public:       0
+  is_private:      0
+- name:            nsvg__parseXML
+  file_location:   '/src/nanosvg/./src/nanosvg.h:329'
+  type_arguments:  [ 94252839536488, 94252839613888, 94252839687456, 94252839687760, 
+                     94252839687760, 94252839612528 ]
+  raw_name:        nsvg__parseXML
+  is_public:       0
+  is_private:      0
+- name:            nsvg__createGradients
+  file_location:   '/src/nanosvg/./src/nanosvg.h:2964'
+  type_arguments:  [ 0, 94252839614880 ]
+  raw_name:        nsvg__createGradients
+  is_public:       0
+  is_private:      0
+- name:            nsvg__scaleToViewbox
+  file_location:   '/src/nanosvg/./src/nanosvg.h:2873'
+  type_arguments:  [ 0, 94252839614880, 94252839595168 ]
+  raw_name:        nsvg__scaleToViewbox
+  is_public:       0
+  is_private:      0
+- name:            nsvg__deleteParser
+  file_location:   '/src/nanosvg/./src/nanosvg.h:683'
+  type_arguments:  [ 0, 94252839614880 ]
+  raw_name:        nsvg__deleteParser
+  is_public:       0
+  is_private:      0
+- name:            nsvg__parseContent
+  file_location:   '/src/nanosvg/./src/nanosvg.h:241'
+  type_arguments:  [ 0, 94252839613888, 94252839687760, 94252839612528 ]
+  raw_name:        nsvg__parseContent
+  is_public:       0
+  is_private:      0
+- name:            nsvg__parseElement
+  file_location:   '/src/nanosvg/./src/nanosvg.h:253'
+  type_arguments:  [ 0, 94252839613888, 94252839687456, 94252839687760, 
+                     94252839612528 ]
+  raw_name:        nsvg__parseElement
+  is_public:       0
+  is_private:      0
+- name:            stbi_write_png
+  file_location:   '/src/nanosvg/./example/stb_image_write.h:489'
+  type_arguments:  [ 94252839536488, 94252839595168, 94252839536488, 94252839536488, 
+                     94252839536488, 94252839679072, 94252839536488 ]
+  raw_name:        stbi_write_png
+  is_public:       0
+  is_private:      0
+- name:            stbi__paeth
+  file_location:   '/src/nanosvg/./example/stb_image_write.h:391'
+  type_arguments:  [ 94252839613416, 94252839536488, 94252839536488, 94252839536488 ]
+  raw_name:        stbi__paeth
+  is_public:       0
+  is_private:      0
+- name:            stbi__wpcrc
+  file_location:   '/src/nanosvg/./example/stb_image_write.h:385'
+  type_arguments:  [ 0, 94252839686832, 94252839536488 ]
+  raw_name:        stbi__wpcrc
+  is_public:       0
+  is_private:      0
+- name:            stbi__sbgrowf
+  file_location:   '/src/nanosvg/./example/stb_image_write.h:197'
+  type_arguments:  [ 94252839612528, 94252839613312, 94252839536488, 94252839536488 ]
+  raw_name:        stbi__sbgrowf
+  is_public:       0
+  is_private:      0
+- name:            stbi__zlib_flushf
+  file_location:   '/src/nanosvg/./example/stb_image_write.h:210'
+  type_arguments:  [ 94252839613536, 94252839613536, 94252845284320, 94252839613184 ]
+  raw_name:        stbi__zlib_flushf
+  is_public:       0
+  is_private:      0
+- name:            stbi__zhash
+  file_location:   '/src/nanosvg/./example/stb_image_write.h:238'
+  type_arguments:  [ 94252837231992, 94252839613536 ]
+  raw_name:        stbi__zhash
+  is_public:       0
+  is_private:      0
+- name:            stbi__zlib_countm
+  file_location:   '/src/nanosvg/./example/stb_image_write.h:230'
+  type_arguments:  [ 94252837231992, 94252839613536, 94252839613536, 94252839536488 ]
+  raw_name:        stbi__zlib_countm
+  is_public:       0
+  is_private:      0
+- name:            stbi__zlib_bitrev
+  file_location:   '/src/nanosvg/./example/stb_image_write.h:220'
+  type_arguments:  [ 94252839536488, 94252839536488, 94252839536488 ]
+  raw_name:        stbi__zlib_bitrev
+  is_public:       0
+  is_private:      0
+- name:            stbi_write_tga
+  file_location:   '/src/nanosvg/./example/stb_image_write.h:177'
+  type_arguments:  [ 94252839536488, 94252839595168, 94252839536488, 94252839536488, 
+                     94252839536488, 94252839679072 ]
+  raw_name:        stbi_write_tga
+  is_public:       0
+  is_private:      0
+- name:            outfile
+  file_location:   '/src/nanosvg/./example/stb_image_write.h:152'
+  type_arguments:  [ 94252839536488, 94252839595168, 94252839536488, 94252839536488, 
+                     94252839536488, 94252839536488, 94252839536488, 94252839612528, 
+                     94252839536488, 94252839536488, 94252839595168, 0 ]
+  raw_name:        outfile
+  is_public:       0
+  is_private:      0
+- name:            stbi_write_bmp
+  file_location:   '/src/nanosvg/./example/stb_image_write.h:168'
+  type_arguments:  [ 94252839536488, 94252839595168, 94252839536488, 94252839536488, 
+                     94252839536488, 94252839679072 ]
+  raw_name:        stbi_write_bmp
+  is_public:       0
+  is_private:      0
+...

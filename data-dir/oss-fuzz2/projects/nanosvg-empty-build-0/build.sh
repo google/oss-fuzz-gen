@@ -1,0 +1,13 @@
+#!/bin/bash
+find . -name "*.c" -exec $CC $CFLAGS -I./src -c {} \;
+find . -name "*.o" -exec cp {} . \;
+
+rm -f ./test*.o
+llvm-ar rcs libfuzz.a *.o
+
+
+for fuzzer in $SRC/fuzzers/*; do
+  fuzzer_target=$(basename $fuzzer)
+  fuzzer_target="${fuzzer_target%.*}"
+  $CC $CFLAGS $LIB_FUZZING_ENGINE ${fuzzer} -Wl,--whole-archive $SRC/nanosvg/libfuzz.a -Wl,--allow-multiple-definition -I$SRC/nanosvg/src -I$SRC/nanosvg/example -o $OUT/${fuzzer_target}
+done

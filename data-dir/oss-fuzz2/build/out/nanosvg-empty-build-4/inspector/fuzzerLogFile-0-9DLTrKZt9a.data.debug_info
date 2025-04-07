@@ -1,0 +1,23 @@
+<--- Debug Information for Module 2.0 --->
+Compile unit: DW_LANG_C11 from /src/nanosvg//src/fuzzers/empty-fuzzer.c
+Compile unit: DW_LANG_C11 from /src/nanosvg/empty_wrapper.c
+
+## Functions defined in module
+Subprogram: LLVMFuzzerTestOneInput
+ from /src/fuzzers/empty-fuzzer.c:5
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type, DW_TAG_typedef,  uint8_t
+ - Operand Type: Name: {  size_t}Type:  from /usr/local/lib/clang/18/include/__stddef_size_t.h:18DW_TAG_typedef,  size_t
+
+
+## Global variables in module
+Global variable:  from /src/fuzzers/empty-fuzzer.c:7
+
+## Types defined in module
+Type: Name: {  char} DW_ATE_signed_char
+Type: Name: {  int} DW_ATE_signed
+Type: Name: {  uint8_t} from /usr/include/x86_64-linux-gnu/bits/stdint-uintn.h:24 DW_TAG_typedef
+Type: Name: {  __uint8_t} from /usr/include/x86_64-linux-gnu/bits/types.h:38 DW_TAG_typedef
+Type: Name: {  unsigned char} DW_ATE_unsigned_char
+Type: Name: {  size_t} from /usr/local/lib/clang/18/include/__stddef_size_t.h:18 DW_TAG_typedef
+Type: Name: {  unsigned long} DW_ATE_unsigned

@@ -1,0 +1,53 @@
+---
+Fuzzer filename: '/src/fuzzers/empty-fuzzer.c'
+All functions:
+  Function list name: All functions
+  Elements:
+    - functionName:    LLVMFuzzerTestOneInput
+      functionSourceFile: '/src/fuzzers/empty-fuzzer.c'
+      linkageType:     externalLinkage
+      functionLinenumber: 6
+      functionLinenumberEnd: 13
+      functionDepth:   0
+      returnType:      int
+      argCount:        2
+      argTypes:
+        - 'N/A'
+        - size_t
+      constantsTouched: []
+      argNames:
+        - data
+        - size
+      BBCount:         3
+      ICount:          18
+      EdgeCount:       3
+      CyclomaticComplexity: 2
+      functionsReached:
+        - printf
+      functionUses:    0
+      BranchProfiles:  []
+      Callsites:
+        - Src:             'fuzzers/empty-fuzzer.c:7,5'
+          Dst:             printf
+    - functionName:    printf
+      functionSourceFile: ''
+      linkageType:     externalLinkage
+      functionLinenumber: -1
+      functionLinenumberEnd: 0
+      functionDepth:   0
+      returnType:      int
+      argCount:        1
+      argTypes:
+        - 'N/A'
+      constantsTouched: []
+      argNames:
+        - ''
+      BBCount:         0
+      ICount:          0
+      EdgeCount:       0
+      CyclomaticComplexity: 2
+      functionsReached: []
+      functionUses:    1
+      BranchProfiles:  []
+      Callsites:       []
+...

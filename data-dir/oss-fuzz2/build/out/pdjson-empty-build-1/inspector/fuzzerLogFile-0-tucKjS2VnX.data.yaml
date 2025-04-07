@@ -1,0 +1,4504 @@
+---
+Fuzzer filename: '/src/fuzzers/empty-fuzzer.c'
+All functions:
+  Function list name: All functions
+  Elements:
+    - functionName:    LLVMFuzzerTestOneInput
+      functionSourceFile: '/src/fuzzers/empty-fuzzer.c'
+      linkageType:     externalLinkage
+      functionLinenumber: 6
+      functionLinenumberEnd: 13
+      functionDepth:   0
+      returnType:      int
+      argCount:        2
+      argTypes:
+        - 'N/A'
+        - size_t
+      constantsTouched: []
+      argNames:
+        - data
+        - size
+      BBCount:         3
+      ICount:          18
+      EdgeCount:       3
+      CyclomaticComplexity: 2
+      functionsReached:
+        - printf
+      functionUses:    0
+      BranchProfiles:  []
+      Callsites:
+        - Src:             'fuzzers/empty-fuzzer.c:7,5'
+          Dst:             printf
+    - functionName:    printf
+      functionSourceFile: ''
+      linkageType:     externalLinkage
+      functionLinenumber: -1
+      functionLinenumberEnd: 0
+      functionDepth:   0
+      returnType:      int
+      argCount:        1
+      argTypes:
+        - 'N/A'
+      constantsTouched: []
+      argNames:
+        - ''
+      BBCount:         0
+      ICount:          0
+      EdgeCount:       0
+      CyclomaticComplexity: 2
+      functionsReached: []
+      functionUses:    15
+      BranchProfiles:  []
+      Callsites:       []
+    - functionName:    read_digits
+      functionSourceFile: '/src/pdjson/./pdjson.c'
+      linkageType:     InternalLinkage
+      functionLinenumber: 535
+      functionLinenumberEnd: 555
+      functionDepth:   0
+      returnType:      int
+      argCount:        1
+      argTypes:
+        - 'N/A'
+      constantsTouched: []
+      argNames:
+        - json
+      BBCount:         20
+      ICount:          127
+      EdgeCount:       26
+      CyclomaticComplexity: 8
+      functionsReached:
+        - is_digit
+        - pushchar
+        - snprintf
+      functionUses:    4
+      BranchProfiles:
+        - Branch String:   './pdjson.c:538,5'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:539,22'
+              BranchSideFuncs:
+                - pushchar
+                - is_digit
+                - snprintf
+                - snprintf
+            - BranchSide:      './pdjson.c:545,9'
+              BranchSideFuncs:
+                - snprintf
+                - snprintf
+        - Branch String:   './pdjson.c:539,13'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:540,13'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:542,14'
+              BranchSideFuncs:
+                - is_digit
+                - snprintf
+                - snprintf
+                - pushchar
+        - Branch String:   './pdjson.c:545,9'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:546,13'
+              BranchSideFuncs:
+                - snprintf
+                - snprintf
+            - BranchSide:      './pdjson.c:554,5'
+              BranchSideFuncs: []
+        - Branch String:   './pdjson.c:546,13'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:547,13'
+              BranchSideFuncs:
+                - snprintf
+            - BranchSide:      './pdjson.c:549,13'
+              BranchSideFuncs:
+                - snprintf
+        - Branch String:   './pdjson.c:547,13'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:547,13'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:548,9'
+              BranchSideFuncs: []
+      Callsites:
+        - Src:             './pdjson.c:538,12'
+          Dst:             is_digit
+        - Src:             './pdjson.c:539,13'
+          Dst:             pushchar
+        - Src:             './pdjson.c:547,13'
+          Dst:             snprintf
+        - Src:             './pdjson.c:549,13'
+          Dst:             snprintf
+    - functionName:    is_digit
+      functionSourceFile: '/src/pdjson/./pdjson.c'
+      linkageType:     InternalLinkage
+      functionLinenumber: 529
+      functionLinenumberEnd: 530
+      functionDepth:   0
+      returnType:      int
+      argCount:        1
+      argTypes:
+        - int
+      constantsTouched: []
+      argNames:
+        - c
+      BBCount:         4
+      ICount:          24
+      EdgeCount:       4
+      CyclomaticComplexity: 2
+      functionsReached: []
+      functionUses:    4
+      BranchProfiles:
+        - Branch String:   './pdjson.c:530,26'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:530,29'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:530,26'
+              BranchSideFuncs: []
+      Callsites:       []
+    - functionName:    pushchar
+      functionSourceFile: '/src/pdjson/./pdjson.c'
+      linkageType:     InternalLinkage
+      functionLinenumber: 165
+      functionLinenumberEnd: 179
+      functionDepth:   0
+      returnType:      int
+      argCount:        2
+      argTypes:
+        - 'N/A'
+        - int
+      constantsTouched: []
+      argNames:
+        - json
+        - c
+      BBCount:         13
+      ICount:          117
+      EdgeCount:       16
+      CyclomaticComplexity: 5
+      functionsReached:
+        - snprintf
+      functionUses:    21
+      BranchProfiles:
+        - Branch String:   './pdjson.c:166,9'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:167,23'
+              BranchSideFuncs:
+                - snprintf
+            - BranchSide:      './pdjson.c:177,51'
+              BranchSideFuncs: []
+        - Branch String:   './pdjson.c:169,13'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:170,13'
+              BranchSideFuncs:
+                - snprintf
+            - BranchSide:      './pdjson.c:173,38'
+              BranchSideFuncs: []
+        - Branch String:   './pdjson.c:170,13'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:170,13'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:171,13'
+              BranchSideFuncs: []
+      Callsites:
+        - Src:             './pdjson.c:170,13'
+          Dst:             snprintf
+    - functionName:    snprintf
+      functionSourceFile: ''
+      linkageType:     externalLinkage
+      functionLinenumber: -1
+      functionLinenumberEnd: 0
+      functionDepth:   0
+      returnType:      int
+      argCount:        3
+      argTypes:
+        - 'N/A'
+        - size_t
+        - 'N/A'
+      constantsTouched: []
+      argNames:
+        - ''
+        - ''
+        - ''
+      BBCount:         0
+      ICount:          0
+      EdgeCount:       0
+      CyclomaticComplexity: 2
+      functionsReached: []
+      functionUses:    38
+      BranchProfiles:  []
+      Callsites:       []
+    - functionName:    is_legal_utf8
+      functionSourceFile: '/src/pdjson/./pdjson.c'
+      linkageType:     InternalLinkage
+      functionLinenumber: 418
+      functionLinenumberEnd: 459
+      functionDepth:   0
+      returnType:      int
+      argCount:        2
+      argTypes:
+        - 'N/A'
+        - int
+      constantsTouched: []
+      argNames:
+        - bytes
+        - length
+      BBCount:         62
+      ICount:          284
+      EdgeCount:       77
+      CyclomaticComplexity: 17
+      functionsReached: []
+      functionUses:    1
+      BranchProfiles:
+        - Branch String:   './pdjson.c:419,20'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:419,36'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:419,28'
+              BranchSideFuncs: []
+        - Branch String:   './pdjson.c:419,9'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:419,36'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:422,35'
+              BranchSideFuncs: []
+        - Branch String:   './pdjson.c:423,5'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:426,9'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:429,20'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:432,20'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:435,15'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:456,14'
+              BranchSideFuncs: []
+        - Branch String:   './pdjson.c:429,38'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:429,51'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:429,41'
+              BranchSideFuncs: []
+        - Branch String:   './pdjson.c:429,13'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:429,51'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:429,45'
+              BranchSideFuncs: []
+        - Branch String:   './pdjson.c:432,38'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:432,51'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:432,41'
+              BranchSideFuncs: []
+        - Branch String:   './pdjson.c:432,13'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:432,51'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:432,45'
+              BranchSideFuncs: []
+        - Branch String:   './pdjson.c:436,9'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:439,17'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:442,17'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:445,17'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:448,17'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:451,17'
+              BranchSideFuncs: []
+        - Branch String:   './pdjson.c:439,26'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:439,39'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:439,29'
+              BranchSideFuncs: []
+        - Branch String:   './pdjson.c:439,17'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:439,39'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:440,13'
+              BranchSideFuncs: []
+        - Branch String:   './pdjson.c:442,26'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:442,39'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:442,29'
+              BranchSideFuncs: []
+        - Branch String:   './pdjson.c:442,17'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:442,39'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:443,13'
+              BranchSideFuncs: []
+        - Branch String:   './pdjson.c:445,26'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:445,39'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:445,29'
+              BranchSideFuncs: []
+        - Branch String:   './pdjson.c:445,17'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:445,39'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:446,13'
+              BranchSideFuncs: []
+        - Branch String:   './pdjson.c:448,26'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:448,39'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:448,29'
+              BranchSideFuncs: []
+        - Branch String:   './pdjson.c:448,17'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:448,39'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:449,13'
+              BranchSideFuncs: []
+        - Branch String:   './pdjson.c:451,26'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:451,39'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:451,29'
+              BranchSideFuncs: []
+        - Branch String:   './pdjson.c:451,17'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:451,39'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:452,13'
+              BranchSideFuncs: []
+        - Branch String:   './pdjson.c:456,28'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:456,32'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:457,5'
+              BranchSideFuncs: []
+        - Branch String:   './pdjson.c:456,13'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:456,46'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:457,5'
+              BranchSideFuncs: []
+      Callsites:       []
+    - functionName:    utf8_seq_length
+      functionSourceFile: '/src/pdjson/./pdjson.c'
+      linkageType:     InternalLinkage
+      functionLinenumber: 378
+      functionLinenumberEnd: 414
+      functionDepth:   0
+      returnType:      int
+      argCount:        1
+      argTypes:
+        - char
+      constantsTouched: []
+      argNames:
+        - byte
+      BBCount:         29
+      ICount:          137
+      EdgeCount:       39
+      CyclomaticComplexity: 12
+      functionsReached: []
+      functionUses:    1
+      BranchProfiles:
+        - Branch String:   './pdjson.c:380,9'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:380,19'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:382,17'
+              BranchSideFuncs: []
+        - Branch String:   './pdjson.c:382,19'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:382,22'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:388,14'
+              BranchSideFuncs: []
+        - Branch String:   './pdjson.c:382,9'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:386,9'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:388,14'
+              BranchSideFuncs: []
+        - Branch String:   './pdjson.c:388,24'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:388,27'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:391,9'
+              BranchSideFuncs: []
+        - Branch String:   './pdjson.c:388,14'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:391,9'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:393,22'
+              BranchSideFuncs: []
+        - Branch String:   './pdjson.c:393,24'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:393,27'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:398,22'
+              BranchSideFuncs: []
+        - Branch String:   './pdjson.c:393,14'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:396,9'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:398,22'
+              BranchSideFuncs: []
+        - Branch String:   './pdjson.c:398,24'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:398,27'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:403,22'
+              BranchSideFuncs: []
+        - Branch String:   './pdjson.c:398,14'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:401,9'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:403,22'
+              BranchSideFuncs: []
+        - Branch String:   './pdjson.c:403,24'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:403,27'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:412,9'
+              BranchSideFuncs: []
+        - Branch String:   './pdjson.c:403,14'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:406,9'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:412,9'
+              BranchSideFuncs: []
+      Callsites:       []
+    - functionName:    hexchar
+      functionSourceFile: '/src/pdjson/./pdjson.c'
+      linkageType:     InternalLinkage
+      functionLinenumber: 223
+      functionLinenumberEnd: 250
+      functionDepth:   0
+      returnType:      int
+      argCount:        1
+      argTypes:
+        - int
+      constantsTouched: []
+      argNames:
+        - c
+      BBCount:         31
+      ICount:          128
+      EdgeCount:       60
+      CyclomaticComplexity: 31
+      functionsReached: []
+      functionUses:    1
+      BranchProfiles:
+        - Branch String:   './pdjson.c:224,5'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:225,15'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:226,15'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:227,15'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:228,15'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:229,15'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:230,15'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:231,15'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:232,15'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:233,15'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:234,15'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:236,15'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:236,15'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:238,15'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:238,15'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:240,15'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:240,15'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:242,15'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:242,15'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:244,15'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:244,15'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:246,15'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:246,15'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:248,9'
+              BranchSideFuncs: []
+      Callsites:       []
+    - functionName:    encode_utf8
+      functionSourceFile: '/src/pdjson/./pdjson.c'
+      linkageType:     InternalLinkage
+      functionLinenumber: 197
+      functionLinenumberEnd: 220
+      functionDepth:   0
+      returnType:      int
+      argCount:        2
+      argTypes:
+        - 'N/A'
+        - size_t
+      constantsTouched: []
+      argNames:
+        - json
+        - c
+      BBCount:         38
+      ICount:          252
+      EdgeCount:       52
+      CyclomaticComplexity: 16
+      functionsReached:
+        - pushchar
+        - snprintf
+      functionUses:    1
+      BranchProfiles:
+        - Branch String:   './pdjson.c:198,9'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:199,25'
+              BranchSideFuncs:
+                - pushchar
+            - BranchSide:      './pdjson.c:200,16'
+              BranchSideFuncs:
+                - snprintf
+                - pushchar
+                - pushchar
+                - pushchar
+                - pushchar
+                - pushchar
+                - pushchar
+                - pushchar
+                - snprintf
+                - pushchar
+                - pushchar
+        - Branch String:   './pdjson.c:200,16'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:201,28'
+              BranchSideFuncs:
+                - pushchar
+                - pushchar
+            - BranchSide:      './pdjson.c:203,16'
+              BranchSideFuncs:
+                - snprintf
+                - pushchar
+                - pushchar
+                - pushchar
+                - pushchar
+                - pushchar
+                - pushchar
+                - pushchar
+                - snprintf
+        - Branch String:   './pdjson.c:201,64'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:201,16'
+              BranchSideFuncs:
+                - pushchar
+            - BranchSide:      './pdjson.c:202,28'
+              BranchSideFuncs:
+                - pushchar
+        - Branch String:   './pdjson.c:203,16'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:204,13'
+              BranchSideFuncs:
+                - pushchar
+                - pushchar
+                - pushchar
+                - snprintf
+            - BranchSide:      './pdjson.c:211,16'
+              BranchSideFuncs:
+                - snprintf
+                - pushchar
+                - pushchar
+                - pushchar
+                - pushchar
+        - Branch String:   './pdjson.c:204,25'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:204,28'
+              BranchSideFuncs:
+                - pushchar
+                - pushchar
+                - pushchar
+                - snprintf
+            - BranchSide:      './pdjson.c:208,28'
+              BranchSideFuncs:
+                - pushchar
+                - pushchar
+                - pushchar
+        - Branch String:   './pdjson.c:204,13'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:205,13'
+              BranchSideFuncs:
+                - snprintf
+            - BranchSide:      './pdjson.c:208,28'
+              BranchSideFuncs:
+                - pushchar
+                - pushchar
+                - pushchar
+        - Branch String:   './pdjson.c:205,13'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:205,13'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:206,13'
+              BranchSideFuncs: []
+        - Branch String:   './pdjson.c:208,65'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:208,16'
+              BranchSideFuncs:
+                - pushchar
+                - pushchar
+            - BranchSide:      './pdjson.c:209,28'
+              BranchSideFuncs:
+                - pushchar
+                - pushchar
+        - Branch String:   './pdjson.c:209,65'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:208,16'
+              BranchSideFuncs:
+                - pushchar
+            - BranchSide:      './pdjson.c:210,28'
+              BranchSideFuncs:
+                - pushchar
+        - Branch String:   './pdjson.c:211,16'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:212,28'
+              BranchSideFuncs:
+                - pushchar
+                - pushchar
+                - pushchar
+                - pushchar
+            - BranchSide:      './pdjson.c:217,9'
+              BranchSideFuncs:
+                - snprintf
+        - Branch String:   './pdjson.c:212,65'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:212,16'
+              BranchSideFuncs:
+                - pushchar
+                - pushchar
+                - pushchar
+            - BranchSide:      './pdjson.c:213,27'
+              BranchSideFuncs:
+                - pushchar
+                - pushchar
+                - pushchar
+        - Branch String:   './pdjson.c:213,64'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:212,16'
+              BranchSideFuncs:
+                - pushchar
+                - pushchar
+            - BranchSide:      './pdjson.c:214,27'
+              BranchSideFuncs:
+                - pushchar
+                - pushchar
+        - Branch String:   './pdjson.c:214,64'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:212,16'
+              BranchSideFuncs:
+                - pushchar
+            - BranchSide:      './pdjson.c:215,27'
+              BranchSideFuncs:
+                - pushchar
+        - Branch String:   './pdjson.c:217,9'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:217,9'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:218,9'
+              BranchSideFuncs: []
+      Callsites:
+        - Src:             './pdjson.c:199,16'
+          Dst:             pushchar
+        - Src:             './pdjson.c:201,19'
+          Dst:             pushchar
+        - Src:             './pdjson.c:202,19'
+          Dst:             pushchar
+        - Src:             './pdjson.c:205,13'
+          Dst:             snprintf
+        - Src:             './pdjson.c:208,19'
+          Dst:             pushchar
+        - Src:             './pdjson.c:209,19'
+          Dst:             pushchar
+        - Src:             './pdjson.c:210,19'
+          Dst:             pushchar
+        - Src:             './pdjson.c:212,19'
+          Dst:             pushchar
+        - Src:             './pdjson.c:213,18'
+          Dst:             pushchar
+        - Src:             './pdjson.c:214,18'
+          Dst:             pushchar
+        - Src:             './pdjson.c:215,18'
+          Dst:             pushchar
+        - Src:             './pdjson.c:217,9'
+          Dst:             snprintf
+    - functionName:    read_unicode_cp
+      functionSourceFile: '/src/pdjson/./pdjson.c'
+      linkageType:     InternalLinkage
+      functionLinenumber: 254
+      functionLinenumberEnd: 276
+      functionDepth:   0
+      returnType:      size_t
+      argCount:        1
+      argTypes:
+        - 'N/A'
+      constantsTouched: []
+      argNames:
+        - json
+      BBCount:         19
+      ICount:          133
+      EdgeCount:       24
+      CyclomaticComplexity: 7
+      functionsReached:
+        - hexchar
+        - snprintf
+      functionUses:    2
+      BranchProfiles:
+        - Branch String:   './pdjson.c:258,5'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:259,17'
+              BranchSideFuncs:
+                - hexchar
+                - snprintf
+                - snprintf
+            - BranchSide:      './pdjson.c:275,12'
+              BranchSideFuncs: []
+        - Branch String:   './pdjson.c:262,13'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:263,13'
+              BranchSideFuncs:
+                - snprintf
+            - BranchSide:      './pdjson.c:265,34'
+              BranchSideFuncs:
+                - hexchar
+                - snprintf
+                - snprintf
+        - Branch String:   './pdjson.c:263,13'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:263,13'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:264,13'
+              BranchSideFuncs: []
+        - Branch String:   './pdjson.c:266,13'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:266,13'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:267,13'
+              BranchSideFuncs: []
+      Callsites:
+        - Src:             './pdjson.c:263,13'
+          Dst:             snprintf
+        - Src:             './pdjson.c:265,26'
+          Dst:             hexchar
+        - Src:             './pdjson.c:266,13'
+          Dst:             snprintf
+    - functionName:    read_unicode
+      functionSourceFile: '/src/pdjson/./pdjson.c'
+      linkageType:     InternalLinkage
+      functionLinenumber: 279
+      functionLinenumberEnd: 329
+      functionDepth:   0
+      returnType:      int
+      argCount:        1
+      argTypes:
+        - 'N/A'
+      constantsTouched: []
+      argNames:
+        - json
+      BBCount:         52
+      ICount:          312
+      EdgeCount:       70
+      CyclomaticComplexity: 20
+      functionsReached:
+        - encode_utf8
+        - read_unicode_cp
+        - snprintf
+      functionUses:    1
+      BranchProfiles:
+        - Branch String:   './pdjson.c:282,9'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:283,9'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:286,9'
+              BranchSideFuncs:
+                - encode_utf8
+                - snprintf
+                - read_unicode_cp
+                - snprintf
+                - snprintf
+                - snprintf
+                - snprintf
+                - snprintf
+        - Branch String:   './pdjson.c:286,22'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:286,25'
+              BranchSideFuncs:
+                - encode_utf8
+                - snprintf
+                - read_unicode_cp
+                - snprintf
+                - snprintf
+                - snprintf
+                - snprintf
+                - snprintf
+            - BranchSide:      './pdjson.c:323,16'
+              BranchSideFuncs:
+                - encode_utf8
+                - snprintf
+        - Branch String:   './pdjson.c:286,9'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:290,13'
+              BranchSideFuncs:
+                - read_unicode_cp
+                - encode_utf8
+                - snprintf
+                - snprintf
+                - snprintf
+                - snprintf
+                - snprintf
+            - BranchSide:      './pdjson.c:323,16'
+              BranchSideFuncs:
+                - encode_utf8
+                - snprintf
+        - Branch String:   './pdjson.c:293,13'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:294,13'
+              BranchSideFuncs:
+                - snprintf
+            - BranchSide:      './pdjson.c:296,20'
+              BranchSideFuncs:
+                - read_unicode_cp
+                - encode_utf8
+                - snprintf
+                - snprintf
+                - snprintf
+                - snprintf
+        - Branch String:   './pdjson.c:294,13'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:294,13'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:295,13'
+              BranchSideFuncs: []
+        - Branch String:   './pdjson.c:297,13'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:297,13'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:299,13'
+              BranchSideFuncs: []
+        - Branch String:   './pdjson.c:303,13'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:304,13'
+              BranchSideFuncs:
+                - snprintf
+            - BranchSide:      './pdjson.c:306,20'
+              BranchSideFuncs:
+                - read_unicode_cp
+                - encode_utf8
+                - snprintf
+                - snprintf
+        - Branch String:   './pdjson.c:304,13'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:304,13'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:305,13'
+              BranchSideFuncs: []
+        - Branch String:   './pdjson.c:307,13'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:307,13'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:309,13'
+              BranchSideFuncs: []
+        - Branch String:   './pdjson.c:312,13'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:313,13'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:316,13'
+              BranchSideFuncs:
+                - encode_utf8
+                - snprintf
+        - Branch String:   './pdjson.c:316,24'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:316,27'
+              BranchSideFuncs:
+                - snprintf
+            - BranchSide:      './pdjson.c:317,13'
+              BranchSideFuncs:
+                - snprintf
+        - Branch String:   './pdjson.c:316,13'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:317,13'
+              BranchSideFuncs:
+                - snprintf
+            - BranchSide:      './pdjson.c:322,16'
+              BranchSideFuncs:
+                - encode_utf8
+        - Branch String:   './pdjson.c:317,13'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:317,13'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:319,13'
+              BranchSideFuncs: []
+        - Branch String:   './pdjson.c:324,13'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:324,13'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:325,13'
+              BranchSideFuncs: []
+      Callsites:
+        - Src:             './pdjson.c:282,15'
+          Dst:             read_unicode_cp
+        - Src:             './pdjson.c:294,13'
+          Dst:             snprintf
+        - Src:             './pdjson.c:297,13'
+          Dst:             snprintf
+        - Src:             './pdjson.c:304,13'
+          Dst:             snprintf
+        - Src:             './pdjson.c:307,13'
+          Dst:             snprintf
+        - Src:             './pdjson.c:312,18'
+          Dst:             read_unicode_cp
+        - Src:             './pdjson.c:317,13'
+          Dst:             snprintf
+        - Src:             './pdjson.c:324,13'
+          Dst:             snprintf
+        - Src:             './pdjson.c:328,12'
+          Dst:             encode_utf8
+    - functionName:    char_needs_escaping
+      functionSourceFile: '/src/pdjson/./pdjson.c'
+      linkageType:     InternalLinkage
+      functionLinenumber: 368
+      functionLinenumberEnd: 374
+      functionDepth:   0
+      returnType:      int
+      argCount:        1
+      argTypes:
+        - int
+      constantsTouched: []
+      argNames:
+        - c
+      BBCount:         12
+      ICount:          49
+      EdgeCount:       15
+      CyclomaticComplexity: 5
+      functionsReached: []
+      functionUses:    1
+      BranchProfiles:
+        - Branch String:   './pdjson.c:369,18'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:369,22'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:373,5'
+              BranchSideFuncs: []
+        - Branch String:   './pdjson.c:369,31'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:369,34'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:370,9'
+              BranchSideFuncs: []
+        - Branch String:   './pdjson.c:369,44'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:369,47'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:370,9'
+              BranchSideFuncs: []
+        - Branch String:   './pdjson.c:369,9'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:370,9'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:373,5'
+              BranchSideFuncs: []
+      Callsites:       []
+    - functionName:    read_utf8
+      functionSourceFile: '/src/pdjson/./pdjson.c'
+      linkageType:     InternalLinkage
+      functionLinenumber: 463
+      functionLinenumberEnd: 491
+      functionDepth:   0
+      returnType:      int
+      argCount:        2
+      argTypes:
+        - 'N/A'
+        - int
+      constantsTouched: []
+      argNames:
+        - json
+        - next_char
+      BBCount:         24
+      ICount:          159
+      EdgeCount:       31
+      CyclomaticComplexity: 9
+      functionsReached:
+        - is_legal_utf8
+        - pushchar
+        - snprintf
+        - utf8_seq_length
+      functionUses:    1
+      BranchProfiles:
+        - Branch String:   './pdjson.c:465,9'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:467,9'
+              BranchSideFuncs:
+                - is_legal_utf8
+                - snprintf
+                - pushchar
+            - BranchSide:      './pdjson.c:472,17'
+              BranchSideFuncs:
+                - is_legal_utf8
+                - snprintf
+                - pushchar
+        - Branch String:   './pdjson.c:467,9'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:467,9'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:468,9'
+              BranchSideFuncs: []
+        - Branch String:   './pdjson.c:474,5'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:476,21'
+              BranchSideFuncs:
+                - is_legal_utf8
+                - snprintf
+                - pushchar
+            - BranchSide:      './pdjson.c:479,41'
+              BranchSideFuncs:
+                - is_legal_utf8
+                - snprintf
+                - pushchar
+        - Branch String:   './pdjson.c:479,9'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:481,9'
+              BranchSideFuncs:
+                - pushchar
+            - BranchSide:      './pdjson.c:485,12'
+              BranchSideFuncs:
+                - pushchar
+        - Branch String:   './pdjson.c:481,9'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:481,9'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:482,9'
+              BranchSideFuncs: []
+        - Branch String:   './pdjson.c:485,5'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:487,22'
+              BranchSideFuncs:
+                - pushchar
+            - BranchSide:      './pdjson.c:490,5'
+              BranchSideFuncs: []
+        - Branch String:   './pdjson.c:487,13'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:488,13'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:489,5'
+              BranchSideFuncs:
+                - pushchar
+      Callsites:
+        - Src:             './pdjson.c:464,17'
+          Dst:             utf8_seq_length
+        - Src:             './pdjson.c:467,9'
+          Dst:             snprintf
+        - Src:             './pdjson.c:479,10'
+          Dst:             is_legal_utf8
+        - Src:             './pdjson.c:481,9'
+          Dst:             snprintf
+        - Src:             './pdjson.c:487,13'
+          Dst:             pushchar
+    - functionName:    read_escaped
+      functionSourceFile: '/src/pdjson/./pdjson.c'
+      linkageType:     InternalLinkage
+      functionLinenumber: 333
+      functionLinenumberEnd: 364
+      functionDepth:   0
+      returnType:      int
+      argCount:        1
+      argTypes:
+        - 'N/A'
+      constantsTouched: []
+      argNames:
+        - json
+      BBCount:         31
+      ICount:          177
+      EdgeCount:       36
+      CyclomaticComplexity: 7
+      functionsReached:
+        - pushchar
+        - read_unicode
+        - snprintf
+        - strchr
+      functionUses:    1
+      BranchProfiles:
+        - Branch String:   './pdjson.c:335,9'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:336,9'
+              BranchSideFuncs:
+                - snprintf
+            - BranchSide:      './pdjson.c:338,16'
+              BranchSideFuncs:
+                - strchr
+                - pushchar
+                - snprintf
+                - read_unicode
+        - Branch String:   './pdjson.c:336,9'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:336,9'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:337,9'
+              BranchSideFuncs: []
+        - Branch String:   './pdjson.c:338,16'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:339,26'
+              BranchSideFuncs:
+                - read_unicode
+            - BranchSide:      './pdjson.c:342,17'
+              BranchSideFuncs:
+                - strchr
+                - pushchar
+                - snprintf
+        - Branch String:   './pdjson.c:339,13'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:340,13'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:341,5'
+              BranchSideFuncs: []
+        - Branch String:   './pdjson.c:342,9'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:352,29'
+              BranchSideFuncs:
+                - strchr
+                - pushchar
+            - BranchSide:      './pdjson.c:352,29'
+              BranchSideFuncs:
+                - strchr
+                - pushchar
+            - BranchSide:      './pdjson.c:352,29'
+              BranchSideFuncs:
+                - strchr
+                - pushchar
+            - BranchSide:      './pdjson.c:352,29'
+              BranchSideFuncs:
+                - strchr
+                - pushchar
+            - BranchSide:      './pdjson.c:352,29'
+              BranchSideFuncs:
+                - strchr
+                - pushchar
+            - BranchSide:      './pdjson.c:352,29'
+              BranchSideFuncs:
+                - strchr
+                - pushchar
+            - BranchSide:      './pdjson.c:352,29'
+              BranchSideFuncs:
+                - strchr
+                - pushchar
+            - BranchSide:      './pdjson.c:352,29'
+              BranchSideFuncs:
+                - strchr
+                - pushchar
+            - BranchSide:      './pdjson.c:359,13'
+              BranchSideFuncs:
+                - snprintf
+        - Branch String:   './pdjson.c:354,21'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:355,21'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:357,13'
+              BranchSideFuncs: []
+        - Branch String:   './pdjson.c:359,13'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:359,13'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:360,13'
+              BranchSideFuncs: []
+      Callsites:
+        - Src:             './pdjson.c:336,9'
+          Dst:             snprintf
+        - Src:             './pdjson.c:339,13'
+          Dst:             read_unicode
+        - Src:             './pdjson.c:353,33'
+          Dst:             strchr
+        - Src:             './pdjson.c:354,21'
+          Dst:             pushchar
+        - Src:             './pdjson.c:359,13'
+          Dst:             snprintf
+    - functionName:    strchr
+      functionSourceFile: ''
+      linkageType:     externalLinkage
+      functionLinenumber: -1
+      functionLinenumberEnd: 0
+      functionDepth:   0
+      returnType:      'N/A'
+      argCount:        2
+      argTypes:
+        - 'N/A'
+        - int
+      constantsTouched: []
+      argNames:
+        - ''
+        - ''
+      BBCount:         0
+      ICount:          0
+      EdgeCount:       0
+      CyclomaticComplexity: 2
+      functionsReached: []
+      functionUses:    3
+      BranchProfiles:  []
+      Callsites:       []
+    - functionName:    read_number
+      functionSourceFile: '/src/pdjson/./pdjson.c'
+      linkageType:     InternalLinkage
+      functionLinenumber: 559
+      functionLinenumberEnd: 625
+      functionDepth:   0
+      returnType:      int
+      argCount:        2
+      argTypes:
+        - 'N/A'
+        - int
+      constantsTouched: []
+      argNames:
+        - json
+        - c
+      BBCount:         73
+      ICount:          431
+      EdgeCount:       100
+      CyclomaticComplexity: 29
+      functionsReached:
+        - is_digit
+        - pushchar
+        - read_digits
+        - read_number
+        - snprintf
+        - strchr
+      functionUses:    2
+      BranchProfiles:
+        - Branch String:   './pdjson.c:560,9'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:561,9'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:562,9'
+              BranchSideFuncs:
+                - strchr
+                - strchr
+                - pushchar
+                - pushchar
+                - is_digit
+                - snprintf
+                - snprintf
+                - read_digits
+                - pushchar
+                - read_digits
+                - pushchar
+                - read_digits
+                - pushchar
+                - is_digit
+                - read_digits
+                - is_digit
+                - snprintf
+                - snprintf
+                - read_number
+        - Branch String:   './pdjson.c:562,9'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:563,13'
+              BranchSideFuncs:
+                - is_digit
+                - snprintf
+                - snprintf
+                - read_number
+            - BranchSide:      './pdjson.c:574,36'
+              BranchSideFuncs:
+                - strchr
+                - strchr
+                - pushchar
+                - pushchar
+                - is_digit
+                - snprintf
+                - snprintf
+                - read_digits
+                - pushchar
+                - read_digits
+                - pushchar
+                - read_digits
+                - pushchar
+                - is_digit
+                - read_digits
+        - Branch String:   './pdjson.c:564,13'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:565,32'
+              BranchSideFuncs:
+                - read_number
+            - BranchSide:      './pdjson.c:567,17'
+              BranchSideFuncs:
+                - snprintf
+                - snprintf
+        - Branch String:   './pdjson.c:567,17'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:568,17'
+              BranchSideFuncs:
+                - snprintf
+            - BranchSide:      './pdjson.c:570,17'
+              BranchSideFuncs:
+                - snprintf
+        - Branch String:   './pdjson.c:568,17'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:568,17'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:569,13'
+              BranchSideFuncs: []
+        - Branch String:   './pdjson.c:576,13'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:577,29'
+              BranchSideFuncs:
+                - read_digits
+                - strchr
+                - pushchar
+                - pushchar
+                - is_digit
+                - snprintf
+                - snprintf
+                - read_digits
+                - pushchar
+                - read_digits
+                - pushchar
+                - read_digits
+                - pushchar
+            - BranchSide:      './pdjson.c:580,5'
+              BranchSideFuncs:
+                - strchr
+                - pushchar
+                - pushchar
+                - is_digit
+                - snprintf
+                - snprintf
+                - read_digits
+                - pushchar
+                - read_digits
+                - pushchar
+                - read_digits
+                - pushchar
+        - Branch String:   './pdjson.c:577,17'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:578,17'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:579,9'
+              BranchSideFuncs:
+                - strchr
+                - pushchar
+                - pushchar
+                - is_digit
+                - snprintf
+                - snprintf
+                - read_digits
+                - pushchar
+                - read_digits
+                - pushchar
+                - read_digits
+                - pushchar
+        - Branch String:   './pdjson.c:583,9'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:584,22'
+              BranchSideFuncs:
+                - pushchar
+            - BranchSide:      './pdjson.c:589,9'
+              BranchSideFuncs:
+                - pushchar
+                - pushchar
+                - is_digit
+                - snprintf
+                - snprintf
+                - read_digits
+                - pushchar
+                - read_digits
+                - pushchar
+                - read_digits
+        - Branch String:   './pdjson.c:584,13'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:585,13'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:587,13'
+              BranchSideFuncs: []
+        - Branch String:   './pdjson.c:589,9'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:590,9'
+              BranchSideFuncs:
+                - pushchar
+                - read_digits
+                - pushchar
+                - pushchar
+                - is_digit
+                - snprintf
+                - snprintf
+                - read_digits
+                - pushchar
+                - read_digits
+            - BranchSide:      './pdjson.c:597,9'
+              BranchSideFuncs:
+                - pushchar
+                - pushchar
+                - is_digit
+                - snprintf
+                - snprintf
+                - read_digits
+                - pushchar
+                - read_digits
+        - Branch String:   './pdjson.c:591,13'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:592,13'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:593,25'
+              BranchSideFuncs:
+                - read_digits
+                - pushchar
+                - pushchar
+                - is_digit
+                - snprintf
+                - snprintf
+                - read_digits
+                - pushchar
+                - read_digits
+        - Branch String:   './pdjson.c:593,13'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:594,13'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:595,5'
+              BranchSideFuncs:
+                - pushchar
+                - pushchar
+                - is_digit
+                - snprintf
+                - snprintf
+                - read_digits
+                - pushchar
+                - read_digits
+        - Branch String:   './pdjson.c:598,18'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:598,21'
+              BranchSideFuncs:
+                - pushchar
+                - is_digit
+                - snprintf
+                - snprintf
+                - read_digits
+                - pushchar
+                - pushchar
+                - read_digits
+            - BranchSide:      './pdjson.c:599,9'
+              BranchSideFuncs:
+                - pushchar
+                - is_digit
+                - snprintf
+                - snprintf
+                - read_digits
+                - pushchar
+                - pushchar
+                - read_digits
+        - Branch String:   './pdjson.c:598,9'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:599,9'
+              BranchSideFuncs:
+                - pushchar
+                - is_digit
+                - snprintf
+                - snprintf
+                - read_digits
+                - pushchar
+                - pushchar
+                - read_digits
+            - BranchSide:      './pdjson.c:621,18'
+              BranchSideFuncs:
+                - pushchar
+        - Branch String:   './pdjson.c:600,13'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:601,13'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:602,13'
+              BranchSideFuncs:
+                - is_digit
+                - snprintf
+                - snprintf
+                - read_digits
+                - pushchar
+                - pushchar
+                - read_digits
+        - Branch String:   './pdjson.c:603,22'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:603,25'
+              BranchSideFuncs:
+                - pushchar
+                - read_digits
+                - pushchar
+            - BranchSide:      './pdjson.c:604,13'
+              BranchSideFuncs:
+                - pushchar
+                - read_digits
+                - pushchar
+        - Branch String:   './pdjson.c:603,13'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:604,13'
+              BranchSideFuncs:
+                - pushchar
+                - read_digits
+                - pushchar
+            - BranchSide:      './pdjson.c:609,29'
+              BranchSideFuncs:
+                - is_digit
+                - snprintf
+                - snprintf
+                - read_digits
+                - pushchar
+        - Branch String:   './pdjson.c:605,17'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:606,17'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:607,29'
+              BranchSideFuncs:
+                - read_digits
+                - pushchar
+        - Branch String:   './pdjson.c:607,17'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:608,17'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:609,9'
+              BranchSideFuncs:
+                - pushchar
+        - Branch String:   './pdjson.c:609,20'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:610,29'
+              BranchSideFuncs:
+                - read_digits
+                - pushchar
+            - BranchSide:      './pdjson.c:613,17'
+              BranchSideFuncs:
+                - snprintf
+                - snprintf
+        - Branch String:   './pdjson.c:610,17'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:611,17'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:612,9'
+              BranchSideFuncs:
+                - pushchar
+        - Branch String:   './pdjson.c:613,17'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:614,17'
+              BranchSideFuncs:
+                - snprintf
+            - BranchSide:      './pdjson.c:616,17'
+              BranchSideFuncs:
+                - snprintf
+        - Branch String:   './pdjson.c:614,17'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:614,17'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:615,13'
+              BranchSideFuncs: []
+        - Branch String:   './pdjson.c:621,9'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:622,9'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:624,9'
+              BranchSideFuncs: []
+      Callsites:
+        - Src:             './pdjson.c:560,9'
+          Dst:             pushchar
+        - Src:             './pdjson.c:564,13'
+          Dst:             is_digit
+        - Src:             './pdjson.c:565,20'
+          Dst:             read_number
+        - Src:             './pdjson.c:568,17'
+          Dst:             snprintf
+        - Src:             './pdjson.c:570,17'
+          Dst:             snprintf
+        - Src:             './pdjson.c:574,16'
+          Dst:             strchr
+        - Src:             './pdjson.c:576,13'
+          Dst:             is_digit
+        - Src:             './pdjson.c:577,17'
+          Dst:             read_digits
+        - Src:             './pdjson.c:583,9'
+          Dst:             strchr
+        - Src:             './pdjson.c:584,13'
+          Dst:             pushchar
+        - Src:             './pdjson.c:591,13'
+          Dst:             pushchar
+        - Src:             './pdjson.c:593,13'
+          Dst:             read_digits
+        - Src:             './pdjson.c:600,13'
+          Dst:             pushchar
+        - Src:             './pdjson.c:605,17'
+          Dst:             pushchar
+        - Src:             './pdjson.c:607,17'
+          Dst:             read_digits
+        - Src:             './pdjson.c:609,20'
+          Dst:             is_digit
+        - Src:             './pdjson.c:610,17'
+          Dst:             read_digits
+        - Src:             './pdjson.c:614,17'
+          Dst:             snprintf
+        - Src:             './pdjson.c:616,17'
+          Dst:             snprintf
+        - Src:             './pdjson.c:621,9'
+          Dst:             pushchar
+    - functionName:    init_string
+      functionSourceFile: '/src/pdjson/./pdjson.c'
+      linkageType:     InternalLinkage
+      functionLinenumber: 182
+      functionLinenumberEnd: 194
+      functionDepth:   0
+      returnType:      int
+      argCount:        1
+      argTypes:
+        - 'N/A'
+      constantsTouched: []
+      argNames:
+        - json
+      BBCount:         12
+      ICount:          93
+      EdgeCount:       15
+      CyclomaticComplexity: 5
+      functionsReached:
+        - snprintf
+      functionUses:    2
+      BranchProfiles:
+        - Branch String:   './pdjson.c:184,9'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:185,9'
+              BranchSideFuncs:
+                - snprintf
+            - BranchSide:      './pdjson.c:192,5'
+              BranchSideFuncs: []
+        - Branch String:   './pdjson.c:187,13'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:188,13'
+              BranchSideFuncs:
+                - snprintf
+            - BranchSide:      './pdjson.c:191,5'
+              BranchSideFuncs: []
+        - Branch String:   './pdjson.c:188,13'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:188,13'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:189,13'
+              BranchSideFuncs: []
+      Callsites:
+        - Src:             './pdjson.c:188,13'
+          Dst:             snprintf
+    - functionName:    is_match
+      functionSourceFile: '/src/pdjson/./pdjson.c'
+      linkageType:     InternalLinkage
+      functionLinenumber: 149
+      functionLinenumberEnd: 162
+      functionDepth:   0
+      returnType:      int
+      argCount:        3
+      argTypes:
+        - 'N/A'
+        - 'N/A'
+        - int
+      constantsTouched: []
+      argNames:
+        - json
+        - pattern
+        - type
+      BBCount:         19
+      ICount:          127
+      EdgeCount:       24
+      CyclomaticComplexity: 7
+      functionsReached:
+        - snprintf
+      functionUses:    3
+      BranchProfiles:
+        - Branch String:   './pdjson.c:151,5'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:152,14'
+              BranchSideFuncs:
+                - snprintf
+                - snprintf
+            - BranchSide:      './pdjson.c:161,12'
+              BranchSideFuncs: []
+        - Branch String:   './pdjson.c:152,13'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:153,17'
+              BranchSideFuncs:
+                - snprintf
+                - snprintf
+            - BranchSide:      './pdjson.c:160,5'
+              BranchSideFuncs:
+                - snprintf
+                - snprintf
+        - Branch String:   './pdjson.c:153,17'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:154,17'
+              BranchSideFuncs:
+                - snprintf
+            - BranchSide:      './pdjson.c:156,17'
+              BranchSideFuncs:
+                - snprintf
+        - Branch String:   './pdjson.c:154,17'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:154,17'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:155,13'
+              BranchSideFuncs: []
+      Callsites:
+        - Src:             './pdjson.c:154,17'
+          Dst:             snprintf
+        - Src:             './pdjson.c:156,17'
+          Dst:             snprintf
+    - functionName:    read_string
+      functionSourceFile: '/src/pdjson/./pdjson.c'
+      linkageType:     InternalLinkage
+      functionLinenumber: 495
+      functionLinenumberEnd: 525
+      functionDepth:   0
+      returnType:      int
+      argCount:        1
+      argTypes:
+        - 'N/A'
+      constantsTouched: []
+      argNames:
+        - json
+      BBCount:         35
+      ICount:          178
+      EdgeCount:       47
+      CyclomaticComplexity: 14
+      functionsReached:
+        - char_needs_escaping
+        - init_string
+        - pushchar
+        - read_escaped
+        - read_utf8
+        - snprintf
+      functionUses:    1
+      BranchProfiles:
+        - Branch String:   './pdjson.c:496,9'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:497,9'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:498,5'
+              BranchSideFuncs:
+                - char_needs_escaping
+                - pushchar
+                - snprintf
+                - read_utf8
+                - read_escaped
+                - pushchar
+                - snprintf
+        - Branch String:   './pdjson.c:500,13'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:501,13'
+              BranchSideFuncs:
+                - snprintf
+            - BranchSide:      './pdjson.c:503,20'
+              BranchSideFuncs:
+                - char_needs_escaping
+                - pushchar
+                - snprintf
+                - snprintf
+                - read_utf8
+                - read_escaped
+                - pushchar
+        - Branch String:   './pdjson.c:501,13'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:501,13'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:502,13'
+              BranchSideFuncs: []
+        - Branch String:   './pdjson.c:503,20'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:504,26'
+              BranchSideFuncs:
+                - pushchar
+            - BranchSide:      './pdjson.c:508,20'
+              BranchSideFuncs:
+                - char_needs_escaping
+                - pushchar
+                - pushchar
+                - snprintf
+                - snprintf
+                - read_utf8
+                - read_escaped
+        - Branch String:   './pdjson.c:504,17'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:505,17'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:507,17'
+              BranchSideFuncs: []
+        - Branch String:   './pdjson.c:508,20'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:509,30'
+              BranchSideFuncs:
+                - read_escaped
+                - char_needs_escaping
+                - pushchar
+                - snprintf
+                - read_utf8
+                - pushchar
+                - snprintf
+            - BranchSide:      './pdjson.c:511,31'
+              BranchSideFuncs:
+                - char_needs_escaping
+                - pushchar
+                - read_escaped
+                - pushchar
+                - snprintf
+                - snprintf
+                - read_utf8
+        - Branch String:   './pdjson.c:509,17'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:510,17'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:511,9'
+              BranchSideFuncs:
+                - char_needs_escaping
+                - pushchar
+                - snprintf
+                - read_utf8
+                - read_escaped
+                - pushchar
+                - snprintf
+        - Branch String:   './pdjson.c:511,20'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:512,27'
+              BranchSideFuncs:
+                - read_utf8
+                - char_needs_escaping
+                - pushchar
+                - snprintf
+                - read_escaped
+                - pushchar
+                - snprintf
+            - BranchSide:      './pdjson.c:515,37'
+              BranchSideFuncs:
+                - char_needs_escaping
+                - pushchar
+                - read_utf8
+                - read_escaped
+                - pushchar
+                - snprintf
+                - snprintf
+        - Branch String:   './pdjson.c:512,17'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:513,17'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:514,9'
+              BranchSideFuncs:
+                - char_needs_escaping
+                - pushchar
+                - snprintf
+                - read_utf8
+                - read_escaped
+                - pushchar
+                - snprintf
+        - Branch String:   './pdjson.c:515,17'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:516,17'
+              BranchSideFuncs:
+                - snprintf
+            - BranchSide:      './pdjson.c:520,26'
+              BranchSideFuncs:
+                - pushchar
+                - char_needs_escaping
+                - snprintf
+                - read_utf8
+                - read_escaped
+                - pushchar
+                - snprintf
+        - Branch String:   './pdjson.c:516,17'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:516,17'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:517,17'
+              BranchSideFuncs: []
+        - Branch String:   './pdjson.c:520,17'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:0,0'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:521,17'
+              BranchSideFuncs: []
+      Callsites:
+        - Src:             './pdjson.c:496,9'
+          Dst:             init_string
+        - Src:             './pdjson.c:501,13'
+          Dst:             snprintf
+        - Src:             './pdjson.c:504,17'
+          Dst:             pushchar
+        - Src:             './pdjson.c:509,17'
+          Dst:             read_escaped
+        - Src:             './pdjson.c:512,17'
+          Dst:             read_utf8
+        - Src:             './pdjson.c:515,17'
+          Dst:             char_needs_escaping
+        - Src:             './pdjson.c:516,17'
+          Dst:             snprintf
+        - Src:             './pdjson.c:520,17'
+          Dst:             pushchar
+    - functionName:    push
+      functionSourceFile: '/src/pdjson/./pdjson.c'
+      linkageType:     InternalLinkage
+      functionLinenumber: 53
+      functionLinenumberEnd: 80
+      functionDepth:   0
+      returnType:      int
+      argCount:        2
+      argTypes:
+        - 'N/A'
+        - int
+      constantsTouched: []
+      argNames:
+        - json
+        - type
+      BBCount:         12
+      ICount:          123
+      EdgeCount:       15
+      CyclomaticComplexity: 5
+      functionsReached:
+        - snprintf
+      functionUses:    2
+      BranchProfiles:
+        - Branch String:   './pdjson.c:63,9'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:65,24'
+              BranchSideFuncs:
+                - snprintf
+            - BranchSide:      './pdjson.c:76,41'
+              BranchSideFuncs: []
+        - Branch String:   './pdjson.c:67,13'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:68,13'
+              BranchSideFuncs:
+                - snprintf
+            - BranchSide:      './pdjson.c:72,9'
+              BranchSideFuncs: []
+        - Branch String:   './pdjson.c:68,13'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:68,13'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:69,13'
+              BranchSideFuncs: []
+      Callsites:
+        - Src:             './pdjson.c:68,13'
+          Dst:             snprintf
+    - functionName:    json_close
+      functionSourceFile: '/src/pdjson/./pdjson.c'
+      linkageType:     InternalLinkage
+      functionLinenumber: 989
+      functionLinenumberEnd: 992
+      functionDepth:   0
+      returnType:      void
+      argCount:        1
+      argTypes:
+        - 'N/A'
+      constantsTouched: []
+      argNames:
+        - json
+      BBCount:         3
+      ICount:          35
+      EdgeCount:       3
+      CyclomaticComplexity: 2
+      functionsReached: []
+      functionUses:    0
+      BranchProfiles:  []
+      Callsites:       []
+    - functionName:    json_set_streaming
+      functionSourceFile: '/src/pdjson/./pdjson.c'
+      linkageType:     InternalLinkage
+      functionLinenumber: 981
+      functionLinenumberEnd: 986
+      functionDepth:   0
+      returnType:      void
+      argCount:        2
+      argTypes:
+        - 'N/A'
+        - bool
+      constantsTouched: []
+      argNames:
+        - json
+        - streaming
+      BBCount:         4
+      ICount:          32
+      EdgeCount:       4
+      CyclomaticComplexity: 2
+      functionsReached: []
+      functionUses:    0
+      BranchProfiles:
+        - Branch String:   './pdjson.c:982,9'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:983,9'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:985,9'
+              BranchSideFuncs: []
+      Callsites:       []
+    - functionName:    json_set_allocator
+      functionSourceFile: '/src/pdjson/./pdjson.c'
+      linkageType:     InternalLinkage
+      functionLinenumber: 976
+      functionLinenumberEnd: 978
+      functionDepth:   0
+      returnType:      void
+      argCount:        2
+      argTypes:
+        - 'N/A'
+        - 'N/A'
+      constantsTouched: []
+      argNames:
+        - json
+        - a
+      BBCount:         1
+      ICount:          14
+      EdgeCount:       1
+      CyclomaticComplexity: 2
+      functionsReached: []
+      functionUses:    0
+      BranchProfiles:  []
+      Callsites:       []
+    - functionName:    user_peek
+      functionSourceFile: '/src/pdjson/./pdjson.c'
+      linkageType:     InternalLinkage
+      functionLinenumber: 961
+      functionLinenumberEnd: 962
+      functionDepth:   0
+      returnType:      int
+      argCount:        1
+      argTypes:
+        - 'N/A'
+      constantsTouched: []
+      argNames:
+        - json
+      BBCount:         3
+      ICount:          25
+      EdgeCount:       3
+      CyclomaticComplexity: 2
+      functionsReached: []
+      functionUses:    1
+      BranchProfiles:  []
+      Callsites:       []
+    - functionName:    user_get
+      functionSourceFile: '/src/pdjson/./pdjson.c'
+      linkageType:     InternalLinkage
+      functionLinenumber: 953
+      functionLinenumberEnd: 957
+      functionDepth:   0
+      returnType:      int
+      argCount:        1
+      argTypes:
+        - 'N/A'
+      constantsTouched: []
+      argNames:
+        - json
+      BBCount:         6
+      ICount:          46
+      EdgeCount:       7
+      CyclomaticComplexity: 3
+      functionsReached: []
+      functionUses:    1
+      BranchProfiles:
+        - Branch String:   './pdjson.c:955,9'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:955,9'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:956,9'
+              BranchSideFuncs: []
+      Callsites:       []
+    - functionName:    json_open_user
+      functionSourceFile: '/src/pdjson/./pdjson.c'
+      linkageType:     InternalLinkage
+      functionLinenumber: 966
+      functionLinenumberEnd: 973
+      functionDepth:   0
+      returnType:      void
+      argCount:        4
+      argTypes:
+        - 'N/A'
+        - 'N/A'
+        - 'N/A'
+        - 'N/A'
+      constantsTouched: []
+      argNames:
+        - json
+        - get
+        - peek
+        - user
+      BBCount:         3
+      ICount:          51
+      EdgeCount:       3
+      CyclomaticComplexity: 2
+      functionsReached:
+        - init
+      functionUses:    0
+      BranchProfiles:  []
+      Callsites:
+        - Src:             './pdjson.c:967,5'
+          Dst:             init
+    - functionName:    init
+      functionSourceFile: '/src/pdjson/./pdjson.c'
+      linkageType:     InternalLinkage
+      functionLinenumber: 126
+      functionLinenumberEnd: 145
+      functionDepth:   0
+      returnType:      void
+      argCount:        1
+      argTypes:
+        - 'N/A'
+      constantsTouched: []
+      argNames:
+        - json
+      BBCount:         1
+      ICount:          60
+      EdgeCount:       1
+      CyclomaticComplexity: 2
+      functionsReached: []
+      functionUses:    3
+      BranchProfiles:  []
+      Callsites:       []
+    - functionName:    realloc
+      functionSourceFile: ''
+      linkageType:     externalLinkage
+      functionLinenumber: -1
+      functionLinenumberEnd: 0
+      functionDepth:   0
+      returnType:      'N/A'
+      argCount:        2
+      argTypes:
+        - 'N/A'
+        - size_t
+      constantsTouched: []
+      argNames:
+        - ''
+        - ''
+      BBCount:         0
+      ICount:          0
+      EdgeCount:       0
+      CyclomaticComplexity: 2
+      functionsReached: []
+      functionUses:    1
+      BranchProfiles:  []
+      Callsites:       []
+    - functionName:    stream_peek
+      functionSourceFile: '/src/pdjson/./pdjson.c'
+      linkageType:     InternalLinkage
+      functionLinenumber: 119
+      functionLinenumberEnd: 122
+      functionDepth:   0
+      returnType:      int
+      argCount:        1
+      argTypes:
+        - 'N/A'
+      constantsTouched: []
+      argNames:
+        - source
+      BBCount:         3
+      ICount:          29
+      EdgeCount:       3
+      CyclomaticComplexity: 2
+      functionsReached:
+        - fgetc
+        - ungetc
+      functionUses:    1
+      BranchProfiles:  []
+      Callsites:
+        - Src:             './pdjson.c:120,13'
+          Dst:             fgetc
+        - Src:             './pdjson.c:121,5'
+          Dst:             ungetc
+    - functionName:    fgetc
+      functionSourceFile: ''
+      linkageType:     externalLinkage
+      functionLinenumber: -1
+      functionLinenumberEnd: 0
+      functionDepth:   0
+      returnType:      int
+      argCount:        1
+      argTypes:
+        - 'N/A'
+      constantsTouched: []
+      argNames:
+        - ''
+      BBCount:         0
+      ICount:          0
+      EdgeCount:       0
+      CyclomaticComplexity: 2
+      functionsReached: []
+      functionUses:    2
+      BranchProfiles:  []
+      Callsites:       []
+    - functionName:    ungetc
+      functionSourceFile: ''
+      linkageType:     externalLinkage
+      functionLinenumber: -1
+      functionLinenumberEnd: 0
+      functionDepth:   0
+      returnType:      int
+      argCount:        2
+      argTypes:
+        - int
+        - 'N/A'
+      constantsTouched: []
+      argNames:
+        - ''
+        - ''
+      BBCount:         0
+      ICount:          0
+      EdgeCount:       0
+      CyclomaticComplexity: 2
+      functionsReached: []
+      functionUses:    1
+      BranchProfiles:  []
+      Callsites:       []
+    - functionName:    stream_get
+      functionSourceFile: '/src/pdjson/./pdjson.c'
+      linkageType:     InternalLinkage
+      functionLinenumber: 111
+      functionLinenumberEnd: 115
+      functionDepth:   0
+      returnType:      int
+      argCount:        1
+      argTypes:
+        - 'N/A'
+      constantsTouched: []
+      argNames:
+        - source
+      BBCount:         6
+      ICount:          40
+      EdgeCount:       7
+      CyclomaticComplexity: 3
+      functionsReached:
+        - fgetc
+      functionUses:    1
+      BranchProfiles:
+        - Branch String:   './pdjson.c:113,9'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:113,9'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:114,9'
+              BranchSideFuncs: []
+      Callsites:
+        - Src:             './pdjson.c:112,13'
+          Dst:             fgetc
+    - functionName:    json_open_stream
+      functionSourceFile: '/src/pdjson/./pdjson.c'
+      linkageType:     InternalLinkage
+      functionLinenumber: 945
+      functionLinenumberEnd: 950
+      functionDepth:   0
+      returnType:      void
+      argCount:        2
+      argTypes:
+        - 'N/A'
+        - 'N/A'
+      constantsTouched: []
+      argNames:
+        - json
+        - stream
+      BBCount:         3
+      ICount:          33
+      EdgeCount:       3
+      CyclomaticComplexity: 2
+      functionsReached:
+        - init
+      functionUses:    0
+      BranchProfiles:  []
+      Callsites:
+        - Src:             './pdjson.c:946,5'
+          Dst:             init
+    - functionName:    json_open_string
+      functionSourceFile: '/src/pdjson/./pdjson.c'
+      linkageType:     InternalLinkage
+      functionLinenumber: 940
+      functionLinenumberEnd: 942
+      functionDepth:   0
+      returnType:      void
+      argCount:        2
+      argTypes:
+        - 'N/A'
+        - 'N/A'
+      constantsTouched: []
+      argNames:
+        - json
+        - string
+      BBCount:         3
+      ICount:          22
+      EdgeCount:       3
+      CyclomaticComplexity: 2
+      functionsReached:
+        - json_open_buffer
+        - strlen
+      functionUses:    0
+      BranchProfiles:  []
+      Callsites:
+        - Src:             './pdjson.c:941,36'
+          Dst:             strlen
+        - Src:             './pdjson.c:941,5'
+          Dst:             json_open_buffer
+    - functionName:    strlen
+      functionSourceFile: ''
+      linkageType:     externalLinkage
+      functionLinenumber: -1
+      functionLinenumberEnd: 0
+      functionDepth:   0
+      returnType:      size_t
+      argCount:        1
+      argTypes:
+        - 'N/A'
+      constantsTouched: []
+      argNames:
+        - ''
+      BBCount:         0
+      ICount:          0
+      EdgeCount:       0
+      CyclomaticComplexity: 2
+      functionsReached: []
+      functionUses:    1
+      BranchProfiles:  []
+      Callsites:       []
+    - functionName:    json_open_buffer
+      functionSourceFile: '/src/pdjson/./pdjson.c'
+      linkageType:     InternalLinkage
+      functionLinenumber: 931
+      functionLinenumberEnd: 937
+      functionDepth:   0
+      returnType:      void
+      argCount:        3
+      argTypes:
+        - 'N/A'
+        - 'N/A'
+        - size_t
+      constantsTouched: []
+      argNames:
+        - json
+        - buffer
+        - size
+      BBCount:         3
+      ICount:          42
+      EdgeCount:       3
+      CyclomaticComplexity: 2
+      functionsReached:
+        - init
+      functionUses:    1
+      BranchProfiles:  []
+      Callsites:
+        - Src:             './pdjson.c:932,5'
+          Dst:             init
+    - functionName:    buffer_get
+      functionSourceFile: '/src/pdjson/./pdjson.c'
+      linkageType:     InternalLinkage
+      functionLinenumber: 103
+      functionLinenumberEnd: 107
+      functionDepth:   0
+      returnType:      int
+      argCount:        1
+      argTypes:
+        - 'N/A'
+      constantsTouched: []
+      argNames:
+        - source
+      BBCount:         6
+      ICount:          42
+      EdgeCount:       7
+      CyclomaticComplexity: 3
+      functionsReached: []
+      functionUses:    1
+      BranchProfiles:
+        - Branch String:   './pdjson.c:105,9'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:105,9'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:106,9'
+              BranchSideFuncs: []
+      Callsites:       []
+    - functionName:    buffer_peek
+      functionSourceFile: '/src/pdjson/./pdjson.c'
+      linkageType:     InternalLinkage
+      functionLinenumber: 95
+      functionLinenumberEnd: 100
+      functionDepth:   0
+      returnType:      int
+      argCount:        1
+      argTypes:
+        - 'N/A'
+      constantsTouched: []
+      argNames:
+        - source
+      BBCount:         4
+      ICount:          39
+      EdgeCount:       4
+      CyclomaticComplexity: 2
+      functionsReached: []
+      functionUses:    1
+      BranchProfiles:
+        - Branch String:   './pdjson.c:96,9'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:97,16'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:99,9'
+              BranchSideFuncs: []
+      Callsites:       []
+    - functionName:    json_source_peek
+      functionSourceFile: '/src/pdjson/./pdjson.c'
+      linkageType:     InternalLinkage
+      functionLinenumber: 926
+      functionLinenumberEnd: 927
+      functionDepth:   0
+      returnType:      int
+      argCount:        1
+      argTypes:
+        - 'N/A'
+      constantsTouched: []
+      argNames:
+        - json
+      BBCount:         3
+      ICount:          23
+      EdgeCount:       3
+      CyclomaticComplexity: 2
+      functionsReached: []
+      functionUses:    0
+      BranchProfiles:  []
+      Callsites:       []
+    - functionName:    json_source_get
+      functionSourceFile: '/src/pdjson/./pdjson.c'
+      linkageType:     InternalLinkage
+      functionLinenumber: 918
+      functionLinenumberEnd: 922
+      functionDepth:   0
+      returnType:      int
+      argCount:        1
+      argTypes:
+        - 'N/A'
+      constantsTouched: []
+      argNames:
+        - json
+      BBCount:         6
+      ICount:          44
+      EdgeCount:       7
+      CyclomaticComplexity: 3
+      functionsReached: []
+      functionUses:    0
+      BranchProfiles:
+        - Branch String:   './pdjson.c:920,9'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:920,9'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:921,9'
+              BranchSideFuncs: []
+      Callsites:       []
+    - functionName:    json_get_context
+      functionSourceFile: '/src/pdjson/./pdjson.c'
+      linkageType:     InternalLinkage
+      functionLinenumber: 907
+      functionLinenumberEnd: 915
+      functionDepth:   0
+      returnType:      int
+      argCount:        2
+      argTypes:
+        - 'N/A'
+        - 'N/A'
+      constantsTouched: []
+      argNames:
+        - json
+        - count
+      BBCount:         7
+      ICount:          56
+      EdgeCount:       8
+      CyclomaticComplexity: 3
+      functionsReached: []
+      functionUses:    0
+      BranchProfiles:
+        - Branch String:   './pdjson.c:908,9'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:909,9'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:911,9'
+              BranchSideFuncs: []
+        - Branch String:   './pdjson.c:911,9'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:912,18'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:914,12'
+              BranchSideFuncs: []
+      Callsites:       []
+    - functionName:    json_get_depth
+      functionSourceFile: '/src/pdjson/./pdjson.c'
+      linkageType:     InternalLinkage
+      functionLinenumber: 893
+      functionLinenumberEnd: 894
+      functionDepth:   0
+      returnType:      size_t
+      argCount:        1
+      argTypes:
+        - 'N/A'
+      constantsTouched: []
+      argNames:
+        - json
+      BBCount:         1
+      ICount:          11
+      EdgeCount:       1
+      CyclomaticComplexity: 2
+      functionsReached: []
+      functionUses:    4
+      BranchProfiles:  []
+      Callsites:       []
+    - functionName:    json_get_position
+      functionSourceFile: '/src/pdjson/./pdjson.c'
+      linkageType:     InternalLinkage
+      functionLinenumber: 888
+      functionLinenumberEnd: 889
+      functionDepth:   0
+      returnType:      size_t
+      argCount:        1
+      argTypes:
+        - 'N/A'
+      constantsTouched: []
+      argNames:
+        - json
+      BBCount:         1
+      ICount:          11
+      EdgeCount:       1
+      CyclomaticComplexity: 2
+      functionsReached: []
+      functionUses:    0
+      BranchProfiles:  []
+      Callsites:       []
+    - functionName:    json_get_lineno
+      functionSourceFile: '/src/pdjson/./pdjson.c'
+      linkageType:     InternalLinkage
+      functionLinenumber: 883
+      functionLinenumberEnd: 884
+      functionDepth:   0
+      returnType:      size_t
+      argCount:        1
+      argTypes:
+        - 'N/A'
+      constantsTouched: []
+      argNames:
+        - json
+      BBCount:         1
+      ICount:          10
+      EdgeCount:       1
+      CyclomaticComplexity: 2
+      functionsReached: []
+      functionUses:    1
+      BranchProfiles:  []
+      Callsites:       []
+    - functionName:    json_get_error
+      functionSourceFile: '/src/pdjson/./pdjson.c'
+      linkageType:     InternalLinkage
+      functionLinenumber: 878
+      functionLinenumberEnd: 879
+      functionDepth:   0
+      returnType:      'N/A'
+      argCount:        1
+      argTypes:
+        - 'N/A'
+      constantsTouched: []
+      argNames:
+        - json
+      BBCount:         4
+      ICount:          26
+      EdgeCount:       4
+      CyclomaticComplexity: 2
+      functionsReached: []
+      functionUses:    3
+      BranchProfiles:
+        - Branch String:   './pdjson.c:879,12'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:879,44'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:879,12'
+              BranchSideFuncs: []
+      Callsites:       []
+    - functionName:    json_get_number
+      functionSourceFile: '/src/pdjson/./pdjson.c'
+      linkageType:     InternalLinkage
+      functionLinenumber: 872
+      functionLinenumberEnd: 874
+      functionDepth:   0
+      returnType:      double
+      argCount:        1
+      argTypes:
+        - 'N/A'
+      constantsTouched: []
+      argNames:
+        - json
+      BBCount:         6
+      ICount:          35
+      EdgeCount:       7
+      CyclomaticComplexity: 3
+      functionsReached:
+        - strtod
+      functionUses:    0
+      BranchProfiles:
+        - Branch String:   './pdjson.c:874,12'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:874,12'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:874,35'
+              BranchSideFuncs:
+                - strtod
+      Callsites:
+        - Src:             './pdjson.c:874,28'
+          Dst:             strtod
+    - functionName:    strtod
+      functionSourceFile: ''
+      linkageType:     externalLinkage
+      functionLinenumber: -1
+      functionLinenumberEnd: 0
+      functionDepth:   0
+      returnType:      double
+      argCount:        2
+      argTypes:
+        - 'N/A'
+        - 'N/A'
+      constantsTouched: []
+      argNames:
+        - ''
+        - ''
+      BBCount:         0
+      ICount:          0
+      EdgeCount:       0
+      CyclomaticComplexity: 2
+      functionsReached: []
+      functionUses:    1
+      BranchProfiles:  []
+      Callsites:       []
+    - functionName:    json_get_string
+      functionSourceFile: '/src/pdjson/./pdjson.c'
+      linkageType:     InternalLinkage
+      functionLinenumber: 862
+      functionLinenumberEnd: 869
+      functionDepth:   0
+      returnType:      'N/A'
+      argCount:        2
+      argTypes:
+        - 'N/A'
+        - 'N/A'
+      constantsTouched: []
+      argNames:
+        - json
+        - length
+      BBCount:         7
+      ICount:          49
+      EdgeCount:       8
+      CyclomaticComplexity: 3
+      functionsReached: []
+      functionUses:    3
+      BranchProfiles:
+        - Branch String:   './pdjson.c:863,9'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:864,19'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:865,9'
+              BranchSideFuncs: []
+        - Branch String:   './pdjson.c:865,9'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:866,9'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:868,16'
+              BranchSideFuncs: []
+      Callsites:       []
+    - functionName:    json_skip_until
+      functionSourceFile: '/src/pdjson/./pdjson.c'
+      linkageType:     InternalLinkage
+      functionLinenumber: 847
+      functionLinenumberEnd: 859
+      functionDepth:   0
+      returnType:      int
+      argCount:        2
+      argTypes:
+        - 'N/A'
+        - int
+      constantsTouched: []
+      argNames:
+        - json
+        - type
+      BBCount:         13
+      ICount:          59
+      EdgeCount:       16
+      CyclomaticComplexity: 5
+      functionsReached:
+        - json_skip
+      functionUses:    0
+      BranchProfiles:
+        - Branch String:   './pdjson.c:851,32'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:851,35'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:852,20'
+              BranchSideFuncs: []
+        - Branch String:   './pdjson.c:851,13'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:852,20'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:854,13'
+              BranchSideFuncs:
+                - json_skip
+        - Branch String:   './pdjson.c:854,13'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:848,5'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:855,13'
+              BranchSideFuncs: []
+      Callsites:
+        - Src:             './pdjson.c:849,31'
+          Dst:             json_skip
+    - functionName:    json_skip
+      functionSourceFile: '/src/pdjson/./pdjson.c'
+      linkageType:     InternalLinkage
+      functionLinenumber: 820
+      functionLinenumberEnd: 844
+      functionDepth:   0
+      returnType:      int
+      argCount:        1
+      argTypes:
+        - 'N/A'
+      constantsTouched: []
+      argNames:
+        - json
+      BBCount:         34
+      ICount:          153
+      EdgeCount:       44
+      CyclomaticComplexity: 12
+      functionsReached:
+        - json_next
+      functionUses:    1
+      BranchProfiles:
+        - Branch String:   './pdjson.c:826,32'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:826,35'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:827,20'
+              BranchSideFuncs: []
+        - Branch String:   './pdjson.c:826,13'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:827,20'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:829,13'
+              BranchSideFuncs:
+                - json_next
+        - Branch String:   './pdjson.c:829,13'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:830,13'
+              BranchSideFuncs:
+                - json_next
+            - BranchSide:      './pdjson.c:831,20'
+              BranchSideFuncs:
+                - json_next
+        - Branch String:   './pdjson.c:831,43'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:831,46'
+              BranchSideFuncs:
+                - json_next
+            - BranchSide:      './pdjson.c:833,20'
+              BranchSideFuncs:
+                - json_next
+        - Branch String:   './pdjson.c:831,20'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:832,13'
+              BranchSideFuncs:
+                - json_next
+            - BranchSide:      './pdjson.c:833,20'
+              BranchSideFuncs:
+                - json_next
+        - Branch String:   './pdjson.c:833,20'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:834,13'
+              BranchSideFuncs:
+                - json_next
+            - BranchSide:      './pdjson.c:835,20'
+              BranchSideFuncs:
+                - json_next
+        - Branch String:   './pdjson.c:839,22'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:839,26'
+              BranchSideFuncs:
+                - json_next
+            - BranchSide:      './pdjson.c:841,5'
+              BranchSideFuncs:
+                - json_next
+        - Branch String:   './pdjson.c:839,13'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:840,13'
+              BranchSideFuncs:
+                - json_next
+            - BranchSide:      './pdjson.c:841,5'
+              BranchSideFuncs:
+                - json_next
+      Callsites:
+        - Src:             './pdjson.c:821,27'
+          Dst:             json_next
+        - Src:             './pdjson.c:825,47'
+          Dst:             json_next
+    - functionName:    json_next
+      functionSourceFile: '/src/pdjson/./pdjson.c'
+      linkageType:     InternalLinkage
+      functionLinenumber: 702
+      functionLinenumberEnd: 809
+      functionDepth:   0
+      returnType:      int
+      argCount:        1
+      argTypes:
+        - 'N/A'
+      constantsTouched: []
+      argNames:
+        - json
+      BBCount:         102
+      ICount:          675
+      EdgeCount:       140
+      CyclomaticComplexity: 40
+      functionsReached:
+        - json_isspace
+        - next
+        - pop
+        - read_value
+        - snprintf
+      functionUses:    7
+      BranchProfiles:
+        - Branch String:   './pdjson.c:703,9'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:704,9'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:705,9'
+              BranchSideFuncs:
+                - next
+                - snprintf
+                - next
+                - read_value
+                - snprintf
+                - next
+                - read_value
+                - snprintf
+                - pop
+                - snprintf
+                - read_value
+                - snprintf
+                - pop
+                - snprintf
+                - snprintf
+                - pop
+                - next
+                - read_value
+                - read_value
+                - pop
+                - read_value
+                - json_isspace
+                - json_isspace
+                - snprintf
+        - Branch String:   './pdjson.c:705,9'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:706,31'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:710,9'
+              BranchSideFuncs:
+                - next
+                - snprintf
+                - next
+                - read_value
+                - snprintf
+                - next
+                - read_value
+                - snprintf
+                - pop
+                - snprintf
+                - read_value
+                - snprintf
+                - pop
+                - snprintf
+                - snprintf
+                - pop
+                - next
+                - read_value
+                - read_value
+                - pop
+                - read_value
+                - json_isspace
+                - json_isspace
+                - snprintf
+        - Branch String:   './pdjson.c:710,27'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:710,30'
+              BranchSideFuncs:
+                - next
+                - snprintf
+                - next
+                - read_value
+                - snprintf
+                - next
+                - read_value
+                - snprintf
+                - pop
+                - snprintf
+                - read_value
+                - snprintf
+                - pop
+                - snprintf
+                - snprintf
+                - pop
+                - next
+                - read_value
+                - read_value
+                - pop
+                - read_value
+                - json_isspace
+                - json_isspace
+                - snprintf
+            - BranchSide:      './pdjson.c:735,18'
+              BranchSideFuncs:
+                - next
+                - snprintf
+                - next
+                - read_value
+                - snprintf
+                - next
+                - read_value
+                - snprintf
+                - pop
+                - snprintf
+                - read_value
+                - snprintf
+                - pop
+                - snprintf
+                - snprintf
+                - pop
+                - next
+                - read_value
+                - read_value
+                - pop
+                - read_value
+        - Branch String:   './pdjson.c:710,9'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:717,15'
+              BranchSideFuncs:
+                - json_isspace
+                - json_isspace
+                - snprintf
+            - BranchSide:      './pdjson.c:735,18'
+              BranchSideFuncs:
+                - next
+                - snprintf
+                - next
+                - read_value
+                - snprintf
+                - next
+                - read_value
+                - snprintf
+                - pop
+                - snprintf
+                - read_value
+                - snprintf
+                - pop
+                - snprintf
+                - snprintf
+                - pop
+                - next
+                - read_value
+                - read_value
+                - pop
+                - read_value
+        - Branch String:   './pdjson.c:717,13'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:720,13'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:733,9'
+              BranchSideFuncs: []
+        - Branch String:   './pdjson.c:722,21'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:723,25'
+              BranchSideFuncs:
+                - json_isspace
+                - snprintf
+                - json_isspace
+            - BranchSide:      './pdjson.c:725,13'
+              BranchSideFuncs:
+                - json_isspace
+                - snprintf
+                - json_isspace
+        - Branch String:   './pdjson.c:725,13'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:721,21'
+              BranchSideFuncs:
+                - json_isspace
+                - json_isspace
+                - snprintf
+            - BranchSide:      './pdjson.c:727,17'
+              BranchSideFuncs:
+                - snprintf
+        - Branch String:   './pdjson.c:727,17'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:728,17'
+              BranchSideFuncs:
+                - snprintf
+            - BranchSide:      './pdjson.c:731,9'
+              BranchSideFuncs: []
+        - Branch String:   './pdjson.c:728,17'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:728,17'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:729,17'
+              BranchSideFuncs: []
+        - Branch String:   './pdjson.c:736,9'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:737,13'
+              BranchSideFuncs:
+                - read_value
+            - BranchSide:      './pdjson.c:742,9'
+              BranchSideFuncs:
+                - snprintf
+                - next
+                - read_value
+                - snprintf
+                - next
+                - read_value
+                - snprintf
+                - pop
+                - snprintf
+                - read_value
+                - snprintf
+                - pop
+                - snprintf
+                - snprintf
+                - pop
+                - next
+                - read_value
+                - read_value
+                - pop
+        - Branch String:   './pdjson.c:737,22'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:737,26'
+              BranchSideFuncs:
+                - read_value
+            - BranchSide:      './pdjson.c:740,27'
+              BranchSideFuncs:
+                - read_value
+        - Branch String:   './pdjson.c:737,13'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:738,13'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:740,27'
+              BranchSideFuncs:
+                - read_value
+        - Branch String:   './pdjson.c:742,9'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:743,13'
+              BranchSideFuncs:
+                - snprintf
+                - snprintf
+                - pop
+                - next
+                - read_value
+                - read_value
+                - pop
+            - BranchSide:      './pdjson.c:762,16'
+              BranchSideFuncs:
+                - snprintf
+                - next
+                - read_value
+                - snprintf
+                - next
+                - read_value
+                - snprintf
+                - pop
+                - snprintf
+                - read_value
+                - snprintf
+                - pop
+        - Branch String:   './pdjson.c:743,13'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:744,17'
+              BranchSideFuncs:
+                - read_value
+                - pop
+            - BranchSide:      './pdjson.c:749,20'
+              BranchSideFuncs:
+                - snprintf
+                - snprintf
+                - pop
+                - next
+                - read_value
+        - Branch String:   './pdjson.c:744,17'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:745,28'
+              BranchSideFuncs:
+                - pop
+            - BranchSide:      './pdjson.c:747,13'
+              BranchSideFuncs:
+                - read_value
+        - Branch String:   './pdjson.c:749,20'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:750,13'
+              BranchSideFuncs:
+                - next
+                - read_value
+            - BranchSide:      './pdjson.c:752,20'
+              BranchSideFuncs:
+                - snprintf
+                - snprintf
+                - pop
+        - Branch String:   './pdjson.c:752,20'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:753,24'
+              BranchSideFuncs:
+                - pop
+            - BranchSide:      './pdjson.c:755,17'
+              BranchSideFuncs:
+                - snprintf
+                - snprintf
+        - Branch String:   './pdjson.c:755,17'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:756,17'
+              BranchSideFuncs:
+                - snprintf
+            - BranchSide:      './pdjson.c:758,17'
+              BranchSideFuncs:
+                - snprintf
+        - Branch String:   './pdjson.c:756,17'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:756,17'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:757,13'
+              BranchSideFuncs: []
+        - Branch String:   './pdjson.c:763,13'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:764,17'
+              BranchSideFuncs:
+                - read_value
+                - snprintf
+                - pop
+            - BranchSide:      './pdjson.c:778,21'
+              BranchSideFuncs:
+                - snprintf
+                - next
+                - read_value
+                - snprintf
+                - next
+                - read_value
+                - snprintf
+                - pop
+                - snprintf
+        - Branch String:   './pdjson.c:764,17'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:765,28'
+              BranchSideFuncs:
+                - pop
+            - BranchSide:      './pdjson.c:769,47'
+              BranchSideFuncs:
+                - read_value
+                - snprintf
+        - Branch String:   './pdjson.c:770,17'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:771,21'
+              BranchSideFuncs:
+                - snprintf
+            - BranchSide:      './pdjson.c:775,17'
+              BranchSideFuncs: []
+        - Branch String:   './pdjson.c:771,21'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:772,21'
+              BranchSideFuncs:
+                - snprintf
+            - BranchSide:      './pdjson.c:773,17'
+              BranchSideFuncs: []
+        - Branch String:   './pdjson.c:772,21'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:772,21'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:772,21'
+              BranchSideFuncs:
+                - snprintf
+        - Branch String:   './pdjson.c:778,20'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:780,17'
+              BranchSideFuncs:
+                - next
+                - read_value
+                - snprintf
+                - pop
+                - snprintf
+            - BranchSide:      './pdjson.c:796,21'
+              BranchSideFuncs:
+                - snprintf
+                - next
+                - read_value
+                - snprintf
+        - Branch String:   './pdjson.c:780,26'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:780,29'
+              BranchSideFuncs:
+                - next
+                - read_value
+                - snprintf
+                - pop
+                - snprintf
+            - BranchSide:      './pdjson.c:783,24'
+              BranchSideFuncs:
+                - next
+                - read_value
+                - snprintf
+                - pop
+        - Branch String:   './pdjson.c:780,17'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:781,17'
+              BranchSideFuncs:
+                - snprintf
+            - BranchSide:      './pdjson.c:783,24'
+              BranchSideFuncs:
+                - next
+                - read_value
+                - snprintf
+                - pop
+        - Branch String:   './pdjson.c:781,17'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:781,17'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:782,17'
+              BranchSideFuncs: []
+        - Branch String:   './pdjson.c:783,24'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:784,28'
+              BranchSideFuncs:
+                - pop
+            - BranchSide:      './pdjson.c:786,51'
+              BranchSideFuncs:
+                - next
+                - read_value
+                - snprintf
+        - Branch String:   './pdjson.c:787,21'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:788,25'
+              BranchSideFuncs:
+                - snprintf
+            - BranchSide:      './pdjson.c:792,21'
+              BranchSideFuncs: []
+        - Branch String:   './pdjson.c:788,25'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:789,25'
+              BranchSideFuncs:
+                - snprintf
+            - BranchSide:      './pdjson.c:790,21'
+              BranchSideFuncs: []
+        - Branch String:   './pdjson.c:789,25'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:789,25'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:789,25'
+              BranchSideFuncs:
+                - snprintf
+        - Branch String:   './pdjson.c:798,17'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:799,17'
+              BranchSideFuncs:
+                - snprintf
+            - BranchSide:      './pdjson.c:802,17'
+              BranchSideFuncs:
+                - next
+                - read_value
+        - Branch String:   './pdjson.c:799,17'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:799,17'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:800,17'
+              BranchSideFuncs: []
+        - Branch String:   './pdjson.c:807,5'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:807,5'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:808,5'
+              BranchSideFuncs: []
+      Callsites:
+        - Src:             './pdjson.c:722,21'
+          Dst:             json_isspace
+        - Src:             './pdjson.c:725,22'
+          Dst:             json_isspace
+        - Src:             './pdjson.c:728,17'
+          Dst:             snprintf
+        - Src:             './pdjson.c:735,13'
+          Dst:             next
+        - Src:             './pdjson.c:740,16'
+          Dst:             read_value
+        - Src:             './pdjson.c:745,24'
+          Dst:             pop
+        - Src:             './pdjson.c:748,20'
+          Dst:             read_value
+        - Src:             './pdjson.c:751,37'
+          Dst:             next
+        - Src:             './pdjson.c:751,20'
+          Dst:             read_value
+        - Src:             './pdjson.c:753,20'
+          Dst:             pop
+        - Src:             './pdjson.c:756,17'
+          Dst:             snprintf
+        - Src:             './pdjson.c:758,17'
+          Dst:             snprintf
+        - Src:             './pdjson.c:765,24'
+          Dst:             pop
+        - Src:             './pdjson.c:769,36'
+          Dst:             read_value
+        - Src:             './pdjson.c:772,21'
+          Dst:             snprintf
+        - Src:             './pdjson.c:781,17'
+          Dst:             snprintf
+        - Src:             './pdjson.c:784,24'
+          Dst:             pop
+        - Src:             './pdjson.c:786,57'
+          Dst:             next
+        - Src:             './pdjson.c:786,40'
+          Dst:             read_value
+        - Src:             './pdjson.c:789,25'
+          Dst:             snprintf
+        - Src:             './pdjson.c:799,17'
+          Dst:             snprintf
+        - Src:             './pdjson.c:803,41'
+          Dst:             next
+        - Src:             './pdjson.c:803,24'
+          Dst:             read_value
+        - Src:             './pdjson.c:807,5'
+          Dst:             snprintf
+    - functionName:    json_isspace
+      functionSourceFile: '/src/pdjson/./pdjson.c'
+      linkageType:     InternalLinkage
+      functionLinenumber: 629
+      functionLinenumberEnd: 639
+      functionDepth:   0
+      returnType:      bool
+      argCount:        1
+      argTypes:
+        - int
+      constantsTouched: []
+      argNames:
+        - c
+      BBCount:         8
+      ICount:          36
+      EdgeCount:       14
+      CyclomaticComplexity: 8
+      functionsReached: []
+      functionUses:    3
+      BranchProfiles:
+        - Branch String:   './pdjson.c:630,5'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:635,9'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:635,9'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:635,9'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:635,9'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:638,5'
+              BranchSideFuncs: []
+      Callsites:       []
+    - functionName:    next
+      functionSourceFile: '/src/pdjson/./pdjson.c'
+      linkageType:     InternalLinkage
+      functionLinenumber: 643
+      functionLinenumberEnd: 648
+      functionDepth:   0
+      returnType:      int
+      argCount:        1
+      argTypes:
+        - 'N/A'
+      constantsTouched: []
+      argNames:
+        - json
+      BBCount:         9
+      ICount:          51
+      EdgeCount:       11
+      CyclomaticComplexity: 4
+      functionsReached:
+        - json_isspace
+      functionUses:    4
+      BranchProfiles:
+        - Branch String:   './pdjson.c:645,4'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:646,12'
+              BranchSideFuncs:
+                - json_isspace
+            - BranchSide:      './pdjson.c:648,11'
+              BranchSideFuncs: []
+        - Branch String:   './pdjson.c:646,12'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:645,4'
+              BranchSideFuncs:
+                - json_isspace
+            - BranchSide:      './pdjson.c:647,12'
+              BranchSideFuncs:
+                - json_isspace
+      Callsites:
+        - Src:             './pdjson.c:645,11'
+          Dst:             json_isspace
+    - functionName:    read_value
+      functionSourceFile: '/src/pdjson/./pdjson.c'
+      linkageType:     InternalLinkage
+      functionLinenumber: 653
+      functionLinenumberEnd: 689
+      functionDepth:   0
+      returnType:      int
+      argCount:        2
+      argTypes:
+        - 'N/A'
+        - int
+      constantsTouched: []
+      argNames:
+        - json
+        - c
+      BBCount:         32
+      ICount:          185
+      EdgeCount:       34
+      CyclomaticComplexity: 4
+      functionsReached:
+        - init_string
+        - is_match
+        - push
+        - read_number
+        - read_string
+        - snprintf
+      functionUses:    6
+      BranchProfiles:
+        - Branch String:   './pdjson.c:655,5'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:657,9'
+              BranchSideFuncs:
+                - snprintf
+            - BranchSide:      './pdjson.c:660,21'
+              BranchSideFuncs:
+                - push
+            - BranchSide:      './pdjson.c:662,21'
+              BranchSideFuncs:
+                - push
+            - BranchSide:      './pdjson.c:664,28'
+              BranchSideFuncs:
+                - read_string
+            - BranchSide:      './pdjson.c:666,25'
+              BranchSideFuncs:
+                - is_match
+            - BranchSide:      './pdjson.c:668,25'
+              BranchSideFuncs:
+                - is_match
+            - BranchSide:      './pdjson.c:670,25'
+              BranchSideFuncs:
+                - is_match
+            - BranchSide:      './pdjson.c:682,25'
+              BranchSideFuncs:
+                - init_string
+                - read_number
+            - BranchSide:      './pdjson.c:682,25'
+              BranchSideFuncs:
+                - init_string
+                - read_number
+            - BranchSide:      './pdjson.c:682,25'
+              BranchSideFuncs:
+                - init_string
+                - read_number
+            - BranchSide:      './pdjson.c:682,25'
+              BranchSideFuncs:
+                - init_string
+                - read_number
+            - BranchSide:      './pdjson.c:682,25'
+              BranchSideFuncs:
+                - init_string
+                - read_number
+            - BranchSide:      './pdjson.c:682,25'
+              BranchSideFuncs:
+                - init_string
+                - read_number
+            - BranchSide:      './pdjson.c:682,25'
+              BranchSideFuncs:
+                - init_string
+                - read_number
+            - BranchSide:      './pdjson.c:682,25'
+              BranchSideFuncs:
+                - init_string
+                - read_number
+            - BranchSide:      './pdjson.c:682,25'
+              BranchSideFuncs:
+                - init_string
+                - read_number
+            - BranchSide:      './pdjson.c:682,25'
+              BranchSideFuncs:
+                - init_string
+                - read_number
+            - BranchSide:      './pdjson.c:682,25'
+              BranchSideFuncs:
+                - init_string
+                - read_number
+            - BranchSide:      './pdjson.c:686,9'
+              BranchSideFuncs:
+                - snprintf
+        - Branch String:   './pdjson.c:657,9'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:657,9'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:658,9'
+              BranchSideFuncs: []
+        - Branch String:   './pdjson.c:682,13'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:683,13'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:684,28'
+              BranchSideFuncs:
+                - read_number
+        - Branch String:   './pdjson.c:686,9'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:686,9'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:687,9'
+              BranchSideFuncs: []
+      Callsites:
+        - Src:             './pdjson.c:657,9'
+          Dst:             snprintf
+        - Src:             './pdjson.c:660,16'
+          Dst:             push
+        - Src:             './pdjson.c:662,16'
+          Dst:             push
+        - Src:             './pdjson.c:664,16'
+          Dst:             read_string
+        - Src:             './pdjson.c:666,16'
+          Dst:             is_match
+        - Src:             './pdjson.c:668,16'
+          Dst:             is_match
+        - Src:             './pdjson.c:670,16'
+          Dst:             is_match
+        - Src:             './pdjson.c:682,13'
+          Dst:             init_string
+        - Src:             './pdjson.c:684,16'
+          Dst:             read_number
+        - Src:             './pdjson.c:686,9'
+          Dst:             snprintf
+    - functionName:    pop
+      functionSourceFile: '/src/pdjson/./pdjson.c'
+      linkageType:     InternalLinkage
+      functionLinenumber: 85
+      functionLinenumberEnd: 92
+      functionDepth:   0
+      returnType:      int
+      argCount:        3
+      argTypes:
+        - 'N/A'
+        - int
+        - int
+      constantsTouched: []
+      argNames:
+        - json
+        - c
+        - expected
+      BBCount:         12
+      ICount:          90
+      EdgeCount:       15
+      CyclomaticComplexity: 5
+      functionsReached:
+        - snprintf
+      functionUses:    4
+      BranchProfiles:
+        - Branch String:   './pdjson.c:86,29'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:86,32'
+              BranchSideFuncs:
+                - snprintf
+            - BranchSide:      './pdjson.c:87,9'
+              BranchSideFuncs:
+                - snprintf
+        - Branch String:   './pdjson.c:86,9'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:87,9'
+              BranchSideFuncs:
+                - snprintf
+            - BranchSide:      './pdjson.c:90,5'
+              BranchSideFuncs: []
+        - Branch String:   './pdjson.c:87,9'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:87,9'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:88,9'
+              BranchSideFuncs: []
+      Callsites:
+        - Src:             './pdjson.c:87,9'
+          Dst:             snprintf
+    - functionName:    json_reset
+      functionSourceFile: '/src/pdjson/./pdjson.c'
+      linkageType:     InternalLinkage
+      functionLinenumber: 812
+      functionLinenumberEnd: 817
+      functionDepth:   0
+      returnType:      void
+      argCount:        1
+      argTypes:
+        - 'N/A'
+      constantsTouched: []
+      argNames:
+        - json
+      BBCount:         1
+      ICount:          22
+      EdgeCount:       1
+      CyclomaticComplexity: 2
+      functionsReached: []
+      functionUses:    0
+      BranchProfiles:  []
+      Callsites:       []
+    - functionName:    json_peek
+      functionSourceFile: '/src/pdjson/./pdjson.c'
+      linkageType:     InternalLinkage
+      functionLinenumber: 692
+      functionLinenumberEnd: 698
+      functionDepth:   0
+      returnType:      int
+      argCount:        1
+      argTypes:
+        - 'N/A'
+      constantsTouched: []
+      argNames:
+        - json
+      BBCount:         6
+      ICount:          41
+      EdgeCount:       7
+      CyclomaticComplexity: 3
+      functionsReached:
+        - json_next
+      functionUses:    2
+      BranchProfiles:
+        - Branch String:   './pdjson.c:694,9'
+          Branch Sides:
+            - BranchSide:      './pdjson.c:695,16'
+              BranchSideFuncs: []
+            - BranchSide:      './pdjson.c:697,39'
+              BranchSideFuncs:
+                - json_next
+      Callsites:
+        - Src:             './pdjson.c:697,29'
+          Dst:             json_next
+    - functionName:    main
+      functionSourceFile: ''
+      linkageType:     externalLinkage
+      functionLinenumber: -1
+      functionLinenumberEnd: 0
+      functionDepth:   0
+      returnType:      int
+      argCount:        2
+      argTypes:
+        - int
+        - 'N/A'
+      constantsTouched: []
+      argNames:
+        - ''
+        - ''
+      BBCount:         0
+      ICount:          0
+      EdgeCount:       0
+      CyclomaticComplexity: 2
+      functionsReached: []
+      functionUses:    0
+      BranchProfiles:  []
+      Callsites:       []
+    - functionName:    read_file
+      functionSourceFile: '/src/pdjson/./tests/pretty.c'
+      linkageType:     InternalLinkage
+      functionLinenumber: 92
+      functionLinenumberEnd: 109
+      functionDepth:   0
+      returnType:      size_t
+      argCount:        2
+      argTypes:
+        - 'N/A'
+        - 'N/A'
+      constantsTouched: []
+      argNames:
+        - fname
+        - content
+      BBCount:         15
+      ICount:          101
+      EdgeCount:       20
+      CyclomaticComplexity: 7
+      functionsReached:
+        - __errno_location
+        - fclose
+        - ferror
+        - fopen
+        - fread
+        - fseek
+        - ftell
+        - perror
+        - strerror
+      functionUses:    0
+      BranchProfiles:
+        - Branch String:   './tests/pretty.c:94,9'
+          Branch Sides:
+            - BranchSide:      './tests/pretty.c:94,13'
+              BranchSideFuncs:
+                - fseek
+                - ftell
+                - fseek
+                - malloc
+                - fread
+                - ferror
+                - fclose
+                - __errno_location
+                - strerror
+                - perror
+            - BranchSide:      './tests/pretty.c:95,20'
+              BranchSideFuncs:
+                - fseek
+                - ftell
+                - fseek
+                - malloc
+                - fread
+                - ferror
+                - fclose
+                - __errno_location
+                - strerror
+                - perror
+        - Branch String:   './tests/pretty.c:95,9'
+          Branch Sides:
+            - BranchSide:      './tests/pretty.c:95,37'
+              BranchSideFuncs:
+                - __errno_location
+                - strerror
+                - perror
+            - BranchSide:      './tests/pretty.c:96,24'
+              BranchSideFuncs:
+                - ftell
+                - fseek
+                - malloc
+                - fread
+                - ferror
+                - fclose
+                - __errno_location
+                - strerror
+                - perror
+        - Branch String:   './tests/pretty.c:97,9'
+          Branch Sides:
+            - BranchSide:      './tests/pretty.c:97,23'
+              BranchSideFuncs:
+                - __errno_location
+                - strerror
+                - perror
+            - BranchSide:      './tests/pretty.c:98,20'
+              BranchSideFuncs:
+                - fseek
+                - malloc
+                - fread
+                - ferror
+                - fclose
+                - __errno_location
+                - strerror
+                - perror
+        - Branch String:   './tests/pretty.c:98,9'
+          Branch Sides:
+            - BranchSide:      './tests/pretty.c:98,37'
+              BranchSideFuncs:
+                - __errno_location
+                - strerror
+                - perror
+            - BranchSide:      './tests/pretty.c:99,23'
+              BranchSideFuncs:
+                - malloc
+                - fread
+                - ferror
+                - fclose
+                - __errno_location
+                - strerror
+                - perror
+        - Branch String:   './tests/pretty.c:101,9'
+          Branch Sides:
+            - BranchSide:      './tests/pretty.c:101,20'
+              BranchSideFuncs:
+                - __errno_location
+                - strerror
+                - perror
+            - BranchSide:      './tests/pretty.c:102,12'
+              BranchSideFuncs:
+                - fclose
+      Callsites:
+        - Src:             './tests/pretty.c:93,15'
+          Dst:             fopen
+        - Src:             './tests/pretty.c:95,14'
+          Dst:             fseek
+        - Src:             './tests/pretty.c:96,18'
+          Dst:             ftell
+        - Src:             './tests/pretty.c:98,14'
+          Dst:             fseek
+        - Src:             './tests/pretty.c:100,5'
+          Dst:             fread
+        - Src:             './tests/pretty.c:101,9'
+          Dst:             ferror
+        - Src:             './tests/pretty.c:102,5'
+          Dst:             fclose
+        - Src:             './tests/pretty.c:107,21'
+          Dst:             __errno_location
+        - Src:             './tests/pretty.c:107,12'
+          Dst:             strerror
+        - Src:             './tests/pretty.c:107,5'
+          Dst:             perror
+    - functionName:    fopen
+      functionSourceFile: ''
+      linkageType:     externalLinkage
+      functionLinenumber: -1
+      functionLinenumberEnd: 0
+      functionDepth:   0
+      returnType:      'N/A'
+      argCount:        2
+      argTypes:
+        - 'N/A'
+        - 'N/A'
+      constantsTouched: []
+      argNames:
+        - ''
+        - ''
+      BBCount:         0
+      ICount:          0
+      EdgeCount:       0
+      CyclomaticComplexity: 2
+      functionsReached: []
+      functionUses:    1
+      BranchProfiles:  []
+      Callsites:       []
+    - functionName:    fseek
+      functionSourceFile: ''
+      linkageType:     externalLinkage
+      functionLinenumber: -1
+      functionLinenumberEnd: 0
+      functionDepth:   0
+      returnType:      int
+      argCount:        3
+      argTypes:
+        - 'N/A'
+        - size_t
+        - int
+      constantsTouched: []
+      argNames:
+        - ''
+        - ''
+        - ''
+      BBCount:         0
+      ICount:          0
+      EdgeCount:       0
+      CyclomaticComplexity: 2
+      functionsReached: []
+      functionUses:    2
+      BranchProfiles:  []
+      Callsites:       []
+    - functionName:    ftell
+      functionSourceFile: ''
+      linkageType:     externalLinkage
+      functionLinenumber: -1
+      functionLinenumberEnd: 0
+      functionDepth:   0
+      returnType:      size_t
+      argCount:        1
+      argTypes:
+        - 'N/A'
+      constantsTouched: []
+      argNames:
+        - ''
+      BBCount:         0
+      ICount:          0
+      EdgeCount:       0
+      CyclomaticComplexity: 2
+      functionsReached: []
+      functionUses:    1
+      BranchProfiles:  []
+      Callsites:       []
+    - functionName:    fread
+      functionSourceFile: ''
+      linkageType:     externalLinkage
+      functionLinenumber: -1
+      functionLinenumberEnd: 0
+      functionDepth:   0
+      returnType:      size_t
+      argCount:        4
+      argTypes:
+        - 'N/A'
+        - size_t
+        - size_t
+        - 'N/A'
+      constantsTouched: []
+      argNames:
+        - ''
+        - ''
+        - ''
+        - ''
+      BBCount:         0
+      ICount:          0
+      EdgeCount:       0
+      CyclomaticComplexity: 2
+      functionsReached: []
+      functionUses:    1
+      BranchProfiles:  []
+      Callsites:       []
+    - functionName:    ferror
+      functionSourceFile: ''
+      linkageType:     externalLinkage
+      functionLinenumber: -1
+      functionLinenumberEnd: 0
+      functionDepth:   0
+      returnType:      int
+      argCount:        1
+      argTypes:
+        - 'N/A'
+      constantsTouched: []
+      argNames:
+        - ''
+      BBCount:         0
+      ICount:          0
+      EdgeCount:       0
+      CyclomaticComplexity: 2
+      functionsReached: []
+      functionUses:    1
+      BranchProfiles:  []
+      Callsites:       []
+    - functionName:    fclose
+      functionSourceFile: ''
+      linkageType:     externalLinkage
+      functionLinenumber: -1
+      functionLinenumberEnd: 0
+      functionDepth:   0
+      returnType:      int
+      argCount:        1
+      argTypes:
+        - 'N/A'
+      constantsTouched: []
+      argNames:
+        - ''
+      BBCount:         0
+      ICount:          0
+      EdgeCount:       0
+      CyclomaticComplexity: 2
+      functionsReached: []
+      functionUses:    1
+      BranchProfiles:  []
+      Callsites:       []
+    - functionName:    __errno_location
+      functionSourceFile: ''
+      linkageType:     externalLinkage
+      functionLinenumber: -1
+      functionLinenumberEnd: 0
+      functionDepth:   0
+      returnType:      'N/A'
+      argCount:        0
+      argTypes:        []
+      constantsTouched: []
+      argNames:        []
+      BBCount:         0
+      ICount:          0
+      EdgeCount:       0
+      CyclomaticComplexity: 2
+      functionsReached: []
+      functionUses:    1
+      BranchProfiles:  []
+      Callsites:       []
+    - functionName:    strerror
+      functionSourceFile: ''
+      linkageType:     externalLinkage
+      functionLinenumber: -1
+      functionLinenumberEnd: 0
+      functionDepth:   0
+      returnType:      'N/A'
+      argCount:        1
+      argTypes:
+        - int
+      constantsTouched: []
+      argNames:
+        - ''
+      BBCount:         0
+      ICount:          0
+      EdgeCount:       0
+      CyclomaticComplexity: 2
+      functionsReached: []
+      functionUses:    1
+      BranchProfiles:  []
+      Callsites:       []
+    - functionName:    perror
+      functionSourceFile: ''
+      linkageType:     externalLinkage
+      functionLinenumber: -1
+      functionLinenumberEnd: 0
+      functionDepth:   0
+      returnType:      void
+      argCount:        1
+      argTypes:
+        - 'N/A'
+      constantsTouched: []
+      argNames:
+        - ''
+      BBCount:         0
+      ICount:          0
+      EdgeCount:       0
+      CyclomaticComplexity: 2
+      functionsReached: []
+      functionUses:    1
+      BranchProfiles:  []
+      Callsites:       []
+    - functionName:    pretty_object
+      functionSourceFile: '/src/pdjson/./tests/pretty.c'
+      linkageType:     InternalLinkage
+      functionLinenumber: 34
+      functionLinenumberEnd: 51
+      functionDepth:   0
+      returnType:      void
+      argCount:        1
+      argTypes:
+        - 'N/A'
+      constantsTouched: []
+      argNames:
+        - json
+      BBCount:         12
+      ICount:          75
+      EdgeCount:       15
+      CyclomaticComplexity: 5
+      functionsReached:
+        - indent
+        - json_get_depth
+        - json_get_error
+        - json_get_string
+        - json_next
+        - json_peek
+        - pretty
+        - printf
+      functionUses:    1
+      BranchProfiles:
+        - Branch String:   './tests/pretty.c:37,47'
+          Branch Sides:
+            - BranchSide:      './tests/pretty.c:37,66'
+              BranchSideFuncs:
+                - json_get_error
+                - json_next
+                - printf
+                - json_get_depth
+                - indent
+                - printf
+                - printf
+                - json_get_depth
+                - indent
+                - json_next
+                - json_get_string
+                - printf
+                - pretty
+                - json_peek
+            - BranchSide:      './tests/pretty.c:37,5'
+              BranchSideFuncs:
+                - json_next
+                - printf
+                - json_get_depth
+                - indent
+                - printf
+                - printf
+                - json_get_depth
+                - indent
+                - json_next
+                - json_get_string
+                - printf
+                - pretty
+                - json_peek
+                - json_get_error
+        - Branch String:   './tests/pretty.c:37,5'
+          Branch Sides:
+            - BranchSide:      './tests/pretty.c:38,14'
+              BranchSideFuncs:
+                - printf
+                - json_get_depth
+                - indent
+                - json_next
+                - json_get_string
+                - printf
+                - pretty
+                - json_peek
+                - json_next
+                - printf
+                - json_get_depth
+                - indent
+                - printf
+                - json_get_error
+            - BranchSide:      './tests/pretty.c:47,15'
+              BranchSideFuncs:
+                - json_next
+                - printf
+                - json_get_depth
+                - indent
+                - printf
+        - Branch String:   './tests/pretty.c:38,13'
+          Branch Sides:
+            - BranchSide:      './tests/pretty.c:39,13'
+              BranchSideFuncs:
+                - json_get_depth
+                - indent
+                - json_next
+                - json_get_string
+                - printf
+                - pretty
+                - json_peek
+                - json_next
+                - printf
+                - json_get_depth
+                - indent
+                - printf
+                - printf
+                - json_get_error
+            - BranchSide:      './tests/pretty.c:41,19'
+              BranchSideFuncs:
+                - json_get_depth
+                - indent
+                - json_next
+                - json_get_string
+                - printf
+                - pretty
+                - json_peek
+                - json_next
+                - printf
+                - json_get_depth
+                - indent
+                - printf
+                - printf
+                - json_get_error
+      Callsites:
+        - Src:             './tests/pretty.c:35,5'
+          Dst:             printf
+        - Src:             './tests/pretty.c:37,12'
+          Dst:             json_peek
+        - Src:             './tests/pretty.c:37,51'
+          Dst:             json_get_error
+        - Src:             './tests/pretty.c:39,13'
+          Dst:             printf
+        - Src:             './tests/pretty.c:42,16'
+          Dst:             json_get_depth
+        - Src:             './tests/pretty.c:42,9'
+          Dst:             indent
+        - Src:             './tests/pretty.c:43,9'
+          Dst:             json_next
+        - Src:             './tests/pretty.c:44,28'
+          Dst:             json_get_string
+        - Src:             './tests/pretty.c:44,9'
+          Dst:             printf
+        - Src:             './tests/pretty.c:45,9'
+          Dst:             pretty
+        - Src:             './tests/pretty.c:47,5'
+          Dst:             json_next
+        - Src:             './tests/pretty.c:48,5'
+          Dst:             printf
+        - Src:             './tests/pretty.c:49,12'
+          Dst:             json_get_depth
+        - Src:             './tests/pretty.c:49,5'
+          Dst:             indent
+        - Src:             './tests/pretty.c:50,5'
+          Dst:             printf
+    - functionName:    indent
+      functionSourceFile: '/src/pdjson/./tests/pretty.c'
+      linkageType:     InternalLinkage
+      functionLinenumber: 8
+      functionLinenumberEnd: 11
+      functionDepth:   0
+      returnType:      void
+      argCount:        1
+      argTypes:
+        - int
+      constantsTouched: []
+      argNames:
+        - n
+      BBCount:         7
+      ICount:          36
+      EdgeCount:       8
+      CyclomaticComplexity: 3
+      functionsReached:
+        - putchar
+      functionUses:    4
+      BranchProfiles:
+        - Branch String:   './tests/pretty.c:9,5'
+          Branch Sides:
+            - BranchSide:      './tests/pretty.c:10,9'
+              BranchSideFuncs:
+                - putchar
+            - BranchSide:      './tests/pretty.c:11,1'
+              BranchSideFuncs: []
+      Callsites:
+        - Src:             './tests/pretty.c:10,9'
+          Dst:             putchar
+    - functionName:    pretty
+      functionSourceFile: '/src/pdjson/./tests/pretty.c'
+      linkageType:     InternalLinkage
+      functionLinenumber: 54
+      functionLinenumberEnd: 89
+      functionDepth:   0
+      returnType:      void
+      argCount:        1
+      argTypes:
+        - 'N/A'
+      constantsTouched: []
+      argNames:
+        - json
+      BBCount:         17
+      ICount:          92
+      EdgeCount:       32
+      CyclomaticComplexity: 17
+      functionsReached:
+        - exit
+        - fprintf
+        - json_get_error
+        - json_get_lineno
+        - json_get_string
+        - json_next
+        - pretty_array
+        - pretty_object
+        - printf
+      functionUses:    2
+      BranchProfiles:
+        - Branch String:   './tests/pretty.c:56,5'
+          Branch Sides:
+            - BranchSide:      './tests/pretty.c:56,5'
+              BranchSideFuncs: []
+            - BranchSide:      './tests/pretty.c:58,9'
+              BranchSideFuncs: []
+            - BranchSide:      './tests/pretty.c:60,9'
+              BranchSideFuncs:
+                - printf
+            - BranchSide:      './tests/pretty.c:63,9'
+              BranchSideFuncs:
+                - printf
+            - BranchSide:      './tests/pretty.c:66,9'
+              BranchSideFuncs:
+                - printf
+            - BranchSide:      './tests/pretty.c:69,38'
+              BranchSideFuncs:
+                - json_get_string
+                - printf
+            - BranchSide:      './tests/pretty.c:72,42'
+              BranchSideFuncs:
+                - json_get_string
+                - printf
+            - BranchSide:      './tests/pretty.c:75,22'
+              BranchSideFuncs:
+                - pretty_array
+            - BranchSide:      './tests/pretty.c:78,23'
+              BranchSideFuncs:
+                - pretty_object
+            - BranchSide:      './tests/pretty.c:82,9'
+              BranchSideFuncs: []
+            - BranchSide:      './tests/pretty.c:82,9'
+              BranchSideFuncs: []
+            - BranchSide:      './tests/pretty.c:84,21'
+              BranchSideFuncs:
+                - json_get_lineno
+                - json_get_error
+                - fprintf
+                - exit
+      Callsites:
+        - Src:             './tests/pretty.c:55,27'
+          Dst:             json_next
+        - Src:             './tests/pretty.c:60,9'
+          Dst:             printf
+        - Src:             './tests/pretty.c:63,9'
+          Dst:             printf
+        - Src:             './tests/pretty.c:66,9'
+          Dst:             printf
+        - Src:             './tests/pretty.c:69,22'
+          Dst:             json_get_string
+        - Src:             './tests/pretty.c:69,9'
+          Dst:             printf
+        - Src:             './tests/pretty.c:72,26'
+          Dst:             json_get_string
+        - Src:             './tests/pretty.c:72,9'
+          Dst:             printf
+        - Src:             './tests/pretty.c:75,9'
+          Dst:             pretty_array
+        - Src:             './tests/pretty.c:78,9'
+          Dst:             pretty_object
+        - Src:             './tests/pretty.c:85,21'
+          Dst:             json_get_lineno
+        - Src:             './tests/pretty.c:86,21'
+          Dst:             json_get_error
+        - Src:             './tests/pretty.c:84,13'
+          Dst:             fprintf
+        - Src:             './tests/pretty.c:87,13'
+          Dst:             exit
+    - functionName:    pretty_array
+      functionSourceFile: '/src/pdjson/./tests/pretty.c'
+      linkageType:     InternalLinkage
+      functionLinenumber: 16
+      functionLinenumberEnd: 31
+      functionDepth:   0
+      returnType:      void
+      argCount:        1
+      argTypes:
+        - 'N/A'
+      constantsTouched: []
+      argNames:
+        - json
+      BBCount:         12
+      ICount:          70
+      EdgeCount:       15
+      CyclomaticComplexity: 5
+      functionsReached:
+        - indent
+        - json_get_depth
+        - json_get_error
+        - json_next
+        - json_peek
+        - pretty
+        - printf
+      functionUses:    1
+      BranchProfiles:
+        - Branch String:   './tests/pretty.c:19,46'
+          Branch Sides:
+            - BranchSide:      './tests/pretty.c:19,65'
+              BranchSideFuncs:
+                - json_get_error
+                - json_next
+                - printf
+                - json_get_depth
+                - indent
+                - printf
+                - printf
+                - json_get_depth
+                - indent
+                - pretty
+                - json_peek
+            - BranchSide:      './tests/pretty.c:19,5'
+              BranchSideFuncs:
+                - json_next
+                - printf
+                - json_get_depth
+                - indent
+                - printf
+                - printf
+                - json_get_depth
+                - indent
+                - pretty
+                - json_peek
+                - json_get_error
+        - Branch String:   './tests/pretty.c:19,5'
+          Branch Sides:
+            - BranchSide:      './tests/pretty.c:20,14'
+              BranchSideFuncs:
+                - printf
+                - json_get_depth
+                - indent
+                - pretty
+                - json_peek
+                - json_next
+                - printf
+                - json_get_depth
+                - indent
+                - printf
+                - json_get_error
+            - BranchSide:      './tests/pretty.c:27,15'
+              BranchSideFuncs:
+                - json_next
+                - printf
+                - json_get_depth
+                - indent
+                - printf
+        - Branch String:   './tests/pretty.c:20,13'
+          Branch Sides:
+            - BranchSide:      './tests/pretty.c:21,13'
+              BranchSideFuncs:
+                - json_get_depth
+                - indent
+                - pretty
+                - json_peek
+                - json_next
+                - printf
+                - json_get_depth
+                - indent
+                - printf
+                - printf
+                - json_get_error
+            - BranchSide:      './tests/pretty.c:23,19'
+              BranchSideFuncs:
+                - json_get_depth
+                - indent
+                - pretty
+                - json_peek
+                - json_next
+                - printf
+                - json_get_depth
+                - indent
+                - printf
+                - printf
+                - json_get_error
+      Callsites:
+        - Src:             './tests/pretty.c:17,5'
+          Dst:             printf
+        - Src:             './tests/pretty.c:19,12'
+          Dst:             json_peek
+        - Src:             './tests/pretty.c:19,50'
+          Dst:             json_get_error
+        - Src:             './tests/pretty.c:21,13'
+          Dst:             printf
+        - Src:             './tests/pretty.c:24,16'
+          Dst:             json_get_depth
+        - Src:             './tests/pretty.c:24,9'
+          Dst:             indent
+        - Src:             './tests/pretty.c:25,9'
+          Dst:             pretty
+        - Src:             './tests/pretty.c:27,5'
+          Dst:             json_next
+        - Src:             './tests/pretty.c:28,5'
+          Dst:             printf
+        - Src:             './tests/pretty.c:29,12'
+          Dst:             json_get_depth
+        - Src:             './tests/pretty.c:29,5'
+          Dst:             indent
+        - Src:             './tests/pretty.c:30,5'
+          Dst:             printf
+    - functionName:    fprintf
+      functionSourceFile: ''
+      linkageType:     externalLinkage
+      functionLinenumber: -1
+      functionLinenumberEnd: 0
+      functionDepth:   0
+      returnType:      int
+      argCount:        2
+      argTypes:
+        - 'N/A'
+        - 'N/A'
+      constantsTouched: []
+      argNames:
+        - ''
+        - ''
+      BBCount:         0
+      ICount:          0
+      EdgeCount:       0
+      CyclomaticComplexity: 2
+      functionsReached: []
+      functionUses:    1
+      BranchProfiles:  []
+      Callsites:       []
+    - functionName:    exit
+      functionSourceFile: ''
+      linkageType:     externalLinkage
+      functionLinenumber: -1
+      functionLinenumberEnd: 0
+      functionDepth:   0
+      returnType:      void
+      argCount:        1
+      argTypes:
+        - int
+      constantsTouched: []
+      argNames:
+        - ''
+      BBCount:         0
+      ICount:          0
+      EdgeCount:       0
+      CyclomaticComplexity: 2
+      functionsReached: []
+      functionUses:    1
+      BranchProfiles:  []
+      Callsites:       []
+    - functionName:    putchar
+      functionSourceFile: ''
+      linkageType:     externalLinkage
+      functionLinenumber: -1
+      functionLinenumberEnd: 0
+      functionDepth:   0
+      returnType:      int
+      argCount:        1
+      argTypes:
+        - int
+      constantsTouched: []
+      argNames:
+        - ''
+      BBCount:         0
+      ICount:          0
+      EdgeCount:       0
+      CyclomaticComplexity: 2
+      functionsReached: []
+      functionUses:    1
+      BranchProfiles:  []
+      Callsites:       []
+...

@@ -1,0 +1,2458 @@
+---
+- name:            lgw_gps_sync
+  file_location:   '/src/lorawan-parser/lib/libloragw/src/loragw_gps.c:465'
+  type_arguments:  [ 94204314536648, 94204325653328, 94204313132192, 94204325273360 ]
+  raw_name:        lgw_gps_sync
+  is_public:       0
+  is_private:      0
+- name:            LLVMFuzzerTestOneInput
+  file_location:   '/src/fuzzers/empty-fuzzer.c:5'
+  type_arguments:  [ 94204314536648, 94204315470544, 94204317747280 ]
+  raw_name:        LLVMFuzzerTestOneInput
+  is_public:       0
+  is_private:      0
+- name:            lw_test
+  file_location:   '/src/lorawan-parser/lw/lw.c:1689'
+  type_arguments:  [ 0 ]
+  raw_name:        lw_test
+  is_public:       0
+  is_private:      0
+- name:            lw_add
+  file_location:   '/src/lorawan-parser/lw/lw.c:435'
+  type_arguments:  [ 94204314536648, 94204313007968 ]
+  raw_name:        lw_add
+  is_public:       0
+  is_private:      0
+- name:            lw_parse
+  file_location:   '/src/lorawan-parser/lw/lw.c:976'
+  type_arguments:  [ 94204314536648, 94204314647104, 94204313131808, 94204314536648 ]
+  raw_name:        lw_parse
+  is_public:       0
+  is_private:      0
+- name:            lw_tx_maccmd
+  file_location:   '/src/lorawan-parser/lw/lw.c:555'
+  type_arguments:  [ 94204314536648, 94204313131808, 94204316906880 ]
+  raw_name:        lw_tx_maccmd
+  is_public:       0
+  is_private:      0
+- name:            lw_get_node
+  file_location:   '/src/lorawan-parser/lw/lw.c:407'
+  type_arguments:  [ 94204313007968, 94204313131808 ]
+  raw_name:        lw_get_node
+  is_public:       0
+  is_private:      0
+- name:            lw_mtype_join_request
+  file_location:   '/src/lorawan-parser/lw/lw.c:1146'
+  type_arguments:  [ 94204314536648, 94204314647104, 94204313007968, 94204313131808, 
+                     94204314536648 ]
+  raw_name:        lw_mtype_join_request
+  is_public:       0
+  is_private:      0
+- name:            lw_auto_add
+  file_location:   '/src/lorawan-parser/lw/lw.c:868'
+  type_arguments:  [ 94204314536648, 94204314647104, 94204313131808, 94204314536648 ]
+  raw_name:        lw_auto_add
+  is_public:       0
+  is_private:      0
+- name:            lw_mtype_join_accept
+  file_location:   '/src/lorawan-parser/lw/lw.c:1058'
+  type_arguments:  [ 94204314536648, 94204314647104, 94204313007968, 94204313131808, 
+                     94204314536648 ]
+  raw_name:        lw_mtype_join_accept
+  is_public:       0
+  is_private:      0
+- name:            lw_mtype_msg_up
+  file_location:   '/src/lorawan-parser/lw/lw.c:1191'
+  type_arguments:  [ 94204314536648, 94204314647104, 94204313007968, 94204313131808, 
+                     94204314536648 ]
+  raw_name:        lw_mtype_msg_up
+  is_public:       0
+  is_private:      0
+- name:            lw_msg_mic
+  file_location:   '/src/lorawan-parser/lw/lw.c:1502'
+  type_arguments:  [ 0, 94204314850512, 94204314850640 ]
+  raw_name:        lw_msg_mic
+  is_public:       0
+  is_private:      0
+- name:            lw_encrypt
+  file_location:   '/src/lorawan-parser/lw/lw.c:1591'
+  type_arguments:  [ 94204314536648, 94204313131808, 94204314850640 ]
+  raw_name:        lw_encrypt
+  is_public:       0
+  is_private:      0
+- name:            lw_write_dw
+  file_location:   '/src/lorawan-parser/lw/lw.c:1480'
+  type_arguments:  [ 0, 94204313131808, 94204313132192 ]
+  raw_name:        lw_write_dw
+  is_public:       0
+  is_private:      0
+- name:            lw_block_xor
+  file_location:   '/src/lorawan-parser/lw/lw.c:1580'
+  type_arguments:  [ 0, 94204315470544, 94204315470544, 94204313131808, 
+                     94204313131680 ]
+  raw_name:        lw_block_xor
+  is_public:       0
+  is_private:      0
+- name:            lw_join_decrypt
+  file_location:   '/src/lorawan-parser/lw/lw.c:1561'
+  type_arguments:  [ 94204314536648, 94204313131808, 94204314850640 ]
+  raw_name:        lw_join_decrypt
+  is_public:       0
+  is_private:      0
+- name:            lw_join_mic
+  file_location:   '/src/lorawan-parser/lw/lw.c:1526'
+  type_arguments:  [ 0, 94204314850512, 94204314850640 ]
+  raw_name:        lw_join_mic
+  is_public:       0
+  is_private:      0
+- name:            lw_get_skeys
+  file_location:   '/src/lorawan-parser/lw/lw.c:1635'
+  type_arguments:  [ 0, 94204313131808, 94204313131808, 94204336146960 ]
+  raw_name:        lw_get_skeys
+  is_public:       0
+  is_private:      0
+- name:            lw_check_zero
+  file_location:   '/src/lorawan-parser/lw/lw.c:1469'
+  type_arguments:  [ 94204314536648, 94204313131808, 94204314536648 ]
+  raw_name:        lw_check_zero
+  is_public:       0
+  is_private:      0
+- name:            lw_set_deveui
+  file_location:   '/src/lorawan-parser/lw/lw.c:420'
+  type_arguments:  [ 0, 94204313131808 ]
+  raw_name:        lw_set_deveui
+  is_public:       0
+  is_private:      0
+- name:            lw_get_band_name
+  file_location:   '/src/lorawan-parser/lw/lw.c:1671'
+  type_arguments:  [ 94204315470160, 94204313132320 ]
+  raw_name:        lw_get_band_name
+  is_public:       0
+  is_private:      0
+- name:            lw_get_band_type
+  file_location:   '/src/lorawan-parser/lw/lw.c:1660'
+  type_arguments:  [ 94204313132320, 94204315470160 ]
+  raw_name:        lw_get_band_type
+  is_public:       0
+  is_private:      0
+- name:            lw_read_dw
+  file_location:   '/src/lorawan-parser/lw/lw.c:1490'
+  type_arguments:  [ 94204313132192, 94204313131808 ]
+  raw_name:        lw_read_dw
+  is_public:       0
+  is_private:      0
+- name:            lw_cpy
+  file_location:   '/src/lorawan-parser/lw/lw.c:1461'
+  type_arguments:  [ 0, 94204313131808, 94204313131808, 94204314536648 ]
+  raw_name:        lw_cpy
+  is_public:       0
+  is_private:      0
+- name:            lw_get_rf_name
+  file_location:   '/src/lorawan-parser/lw/lw.c:1448'
+  type_arguments:  [ 94204315470160, 94204313131328, 94204313132192, 94204313131328, 
+                     94204313131328 ]
+  raw_name:        lw_get_rf_name
+  is_public:       0
+  is_private:      0
+- name:            lgw_util_get_sf
+  file_location:   '/src/lorawan-parser/lw/lw.c:1356'
+  type_arguments:  [ 94204313131328, 94204313131328 ]
+  raw_name:        lgw_util_get_sf
+  is_public:       0
+  is_private:      0
+- name:            lgw_util_get_bw
+  file_location:   '/src/lorawan-parser/lw/lw.c:1368'
+  type_arguments:  [ 94204313131680, 94204313131328 ]
+  raw_name:        lgw_util_get_bw
+  is_public:       0
+  is_private:      0
+- name:            lgw_util_get_cr
+  file_location:   '/src/lorawan-parser/lw/lw.c:1385'
+  type_arguments:  [ 94204313131328, 94204313131328 ]
+  raw_name:        lgw_util_get_cr
+  is_public:       0
+  is_private:      0
+- name:            lw_join_encrypt
+  file_location:   '/src/lorawan-parser/lw/lw.c:1541'
+  type_arguments:  [ 94204314536648, 94204313131808, 94204314850640 ]
+  raw_name:        lw_join_encrypt
+  is_public:       0
+  is_private:      0
+- name:            lw_get_rf
+  file_location:   '/src/lorawan-parser/lw/lw.c:1426'
+  type_arguments:  [ 94204314645440, 94204313131328, 94204313131808, 94204314440256, 
+                     94204313131808, 94204313131808 ]
+  raw_name:        lw_get_rf
+  is_public:       0
+  is_private:      0
+- name:            lw_pack
+  file_location:   '/src/lorawan-parser/lw/lw.c:731'
+  type_arguments:  [ 94204314536648, 94204314647104, 94204313131808, 94204316501984 ]
+  raw_name:        lw_pack
+  is_public:       0
+  is_private:      0
+- name:            lw_get_dr
+  file_location:   '/src/lorawan-parser/lw/lw.c:1405'
+  type_arguments:  [ 94204314645440, 94204313131328, 94204313132192, 94204313131328 ]
+  raw_name:        lw_get_dr
+  is_public:       0
+  is_private:      0
+- name:            lw_answer
+  file_location:   '/src/lorawan-parser/lw/lw.c:624'
+  type_arguments:  [ 94204314536648, 94204314647104, 94204316715008, 94204316715264 ]
+  raw_name:        lw_answer
+  is_public:       0
+  is_private:      0
+- name:            lw_maccmd_valid
+  file_location:   '/src/lorawan-parser/lw/lw.c:587'
+  type_arguments:  [ 94204314536648, 94204313131328, 94204313131808, 94204314536648 ]
+  raw_name:        lw_maccmd_valid
+  is_public:       0
+  is_private:      0
+- name:            lw_set_key
+  file_location:   '/src/lorawan-parser/lw/lw.c:541'
+  type_arguments:  [ 94204314536648, 94204316936032 ]
+  raw_name:        lw_set_key
+  is_public:       0
+  is_private:      0
+- name:            lw_add_tx
+  file_location:   '/src/lorawan-parser/lw/lw.c:518'
+  type_arguments:  [ 94204314536648, 94204313131808, 94204313131328, 94204313131808, 
+                     94204313131680 ]
+  raw_name:        lw_add_tx
+  is_public:       0
+  is_private:      0
+- name:            lw_del
+  file_location:   '/src/lorawan-parser/lw/lw.c:497'
+  type_arguments:  [ 94204314536648, 94204313131808 ]
+  raw_name:        lw_del
+  is_public:       0
+  is_private:      0
+- name:            lw_init
+  file_location:   '/src/lorawan-parser/lw/lw.c:380'
+  type_arguments:  [ 94204314536648, 94204313132320 ]
+  raw_name:        lw_init
+  is_public:       0
+  is_private:      0
+- name:            lw_get_region
+  file_location:   '/src/lorawan-parser/lw/lw.c:346'
+  type_arguments:  [ 94204315469776, 94204313132320 ]
+  raw_name:        lw_get_region
+  is_public:       0
+  is_private:      0
+- name:            lw_get_server_maccmd_len
+  file_location:   '/src/lorawan-parser/lw/lw.c:368'
+  type_arguments:  [ 94204314645440, 94204313131328 ]
+  raw_name:        lw_get_server_maccmd_len
+  is_public:       0
+  is_private:      0
+- name:            lw_get_node_maccmd_len
+  file_location:   '/src/lorawan-parser/lw/lw.c:357'
+  type_arguments:  [ 94204314645440, 94204313131328 ]
+  raw_name:        lw_get_node_maccmd_len
+  is_public:       0
+  is_private:      0
+- name:            lw_mtype_proprietary
+  file_location:   '/src/lorawan-parser/lw/lw.c:1350'
+  type_arguments:  [ 94204314536648, 94204314647104, 94204313007968, 94204313131808, 
+                     94204314536648 ]
+  raw_name:        lw_mtype_proprietary
+  is_public:       0
+  is_private:      0
+- name:            lw_mtype_rfu
+  file_location:   '/src/lorawan-parser/lw/lw.c:1345'
+  type_arguments:  [ 94204314536648, 94204314647104, 94204313007968, 94204313131808, 
+                     94204314536648 ]
+  raw_name:        lw_mtype_rfu
+  is_public:       0
+  is_private:      0
+- name:            lw_mtype_cmsg_down
+  file_location:   '/src/lorawan-parser/lw/lw.c:1340'
+  type_arguments:  [ 94204314536648, 94204314647104, 94204313007968, 94204313131808, 
+                     94204314536648 ]
+  raw_name:        lw_mtype_cmsg_down
+  is_public:       0
+  is_private:      0
+- name:            lw_mtype_cmsg_up
+  file_location:   '/src/lorawan-parser/lw/lw.c:1335'
+  type_arguments:  [ 94204314536648, 94204314647104, 94204313007968, 94204313131808, 
+                     94204314536648 ]
+  raw_name:        lw_mtype_cmsg_up
+  is_public:       0
+  is_private:      0
+- name:            lw_mtype_msg_down
+  file_location:   '/src/lorawan-parser/lw/lw.c:1330'
+  type_arguments:  [ 94204314536648, 94204314647104, 94204313007968, 94204313131808, 
+                     94204314536648 ]
+  raw_name:        lw_mtype_msg_down
+  is_public:       0
+  is_private:      0
+- name:            lw_log_txpkt
+  file_location:   '/src/lorawan-parser/lw/lw-log.c:929'
+  type_arguments:  [ 0, 94204317846192 ]
+  raw_name:        lw_log_txpkt
+  is_public:       0
+  is_private:      0
+- name:            lw_get_sf
+  file_location:   '/src/lorawan-parser/lw/lw-log.c:865'
+  type_arguments:  [ 94204313131328, 94204313131328 ]
+  raw_name:        lw_get_sf
+  is_public:       0
+  is_private:      0
+- name:            lw_get_bw
+  file_location:   '/src/lorawan-parser/lw/lw-log.c:877'
+  type_arguments:  [ 94204313131680, 94204313131328 ]
+  raw_name:        lw_get_bw
+  is_public:       0
+  is_private:      0
+- name:            lw_log_rxpkt
+  file_location:   '/src/lorawan-parser/lw/lw-log.c:894'
+  type_arguments:  [ 0, 94204317843680 ]
+  raw_name:        lw_log_rxpkt
+  is_public:       0
+  is_private:      0
+- name:            lw_log_frame
+  file_location:   '/src/lorawan-parser/lw/lw-log.c:707'
+  type_arguments:  [ 0, 94204317811280, 94204313131936 ]
+  raw_name:        lw_log_frame
+  is_public:       0
+  is_private:      0
+- name:            lw_log_all_node
+  file_location:   '/src/lorawan-parser/lw/lw-log.c:673'
+  type_arguments:  [ 0 ]
+  raw_name:        lw_log_all_node
+  is_public:       0
+  is_private:      0
+- name:            lw_log
+  file_location:   '/src/lorawan-parser/lw/lw-log.c:570'
+  type_arguments:  [ 0, 94204317811280, 94204313131808, 94204314536648 ]
+  raw_name:        lw_log
+  is_public:       0
+  is_private:      0
+- name:            lw_log_maccmd
+  file_location:   '/src/lorawan-parser/lw/lw-log.c:104'
+  type_arguments:  [ 94204314536648, 94204313131328, 94204318299920, 94204313131808, 
+                     94204314536648 ]
+  raw_name:        lw_log_maccmd
+  is_public:       0
+  is_private:      0
+- name:            lw_maccmd_str
+  file_location:   '/src/lorawan-parser/lw/lw-log.c:79'
+  type_arguments:  [ 94204315470160, 94204313131328, 94204313131328 ]
+  raw_name:        lw_maccmd_str
+  is_public:       0
+  is_private:      0
+- name:            lw_unknown_pl
+  file_location:   '/src/lorawan-parser/lw/lw-log.c:99'
+  type_arguments:  [ 0 ]
+  raw_name:        lw_unknown_pl
+  is_public:       0
+  is_private:      0
+- name:            aes_cbc_decrypt
+  file_location:   '/src/lorawan-parser/lib/aes.c:636'
+  type_arguments:  [ 94204319044112, 94204319044368, 94204319045136, 94204314536648, 
+                     94204319045136, 94204319045392 ]
+  raw_name:        aes_cbc_decrypt
+  is_public:       0
+  is_private:      0
+- name:            aes_decrypt
+  file_location:   '/src/lorawan-parser/lib/aes.c:607'
+  type_arguments:  [ 94204319044112, 94204319044368, 94204319045136, 94204319045392 ]
+  raw_name:        aes_decrypt
+  is_public:       0
+  is_private:      0
+- name:            xor_block
+  file_location:   '/src/lorawan-parser/lib/aes.c:344'
+  type_arguments:  [ 0, 94204313131936, 94204319045952 ]
+  raw_name:        xor_block
+  is_public:       0
+  is_private:      0
+- name:            copy_and_key
+  file_location:   '/src/lorawan-parser/lib/aes.c:371'
+  type_arguments:  [ 0, 94204313131936, 94204319045952, 94204319045952 ]
+  raw_name:        copy_and_key
+  is_public:       0
+  is_private:      0
+- name:            inv_shift_sub_rows
+  file_location:   '/src/lorawan-parser/lib/aes.c:422'
+  type_arguments:  [ 0, 94204319046080 ]
+  raw_name:        inv_shift_sub_rows
+  is_public:       0
+  is_private:      0
+- name:            add_round_key
+  file_location:   '/src/lorawan-parser/lib/aes.c:401'
+  type_arguments:  [ 0, 94204319046080, 94204315826320 ]
+  raw_name:        add_round_key
+  is_public:       0
+  is_private:      0
+- name:            inv_mix_sub_columns
+  file_location:   '/src/lorawan-parser/lib/aes.c:468'
+  type_arguments:  [ 0, 94204319046080 ]
+  raw_name:        inv_mix_sub_columns
+  is_public:       0
+  is_private:      0
+- name:            aes_cbc_encrypt
+  file_location:   '/src/lorawan-parser/lib/aes.c:584'
+  type_arguments:  [ 94204319044112, 94204319044368, 94204319045136, 94204314536648, 
+                     94204319045136, 94204319045392 ]
+  raw_name:        aes_cbc_encrypt
+  is_public:       0
+  is_private:      0
+- name:            aes_encrypt
+  file_location:   '/src/lorawan-parser/lib/aes.c:555'
+  type_arguments:  [ 94204319044112, 94204319044368, 94204319045136, 94204319045392 ]
+  raw_name:        aes_encrypt
+  is_public:       0
+  is_private:      0
+- name:            mix_sub_columns
+  file_location:   '/src/lorawan-parser/lib/aes.c:439'
+  type_arguments:  [ 0, 94204319046080 ]
+  raw_name:        mix_sub_columns
+  is_public:       0
+  is_private:      0
+- name:            shift_sub_rows
+  file_location:   '/src/lorawan-parser/lib/aes.c:406'
+  type_arguments:  [ 0, 94204319046080 ]
+  raw_name:        shift_sub_rows
+  is_public:       0
+  is_private:      0
+- name:            aes_set_key
+  file_location:   '/src/lorawan-parser/lib/aes.c:500'
+  type_arguments:  [ 94204319044112, 94204319044368, 94204319118080, 94204319118208 ]
+  raw_name:        aes_set_key
+  is_public:       0
+  is_private:      0
+- name:            b64_to_bin
+  file_location:   '/src/lorawan-parser/lib/base64.c:289'
+  type_arguments:  [ 94204314536648, 94204315470160, 94204314536648, 94204313131808, 
+                     94204314536648 ]
+  raw_name:        b64_to_bin
+  is_public:       0
+  is_private:      0
+- name:            b64_to_bin_nopad
+  file_location:   '/src/lorawan-parser/lib/base64.c:172'
+  type_arguments:  [ 94204314536648, 94204315470160, 94204314536648, 94204313131808, 
+                     94204314536648 ]
+  raw_name:        b64_to_bin_nopad
+  is_public:       0
+  is_private:      0
+- name:            char_to_code
+  file_location:   '/src/lorawan-parser/lib/base64.c:78'
+  type_arguments:  [ 94204313131328, 94204313109688 ]
+  raw_name:        char_to_code
+  is_public:       0
+  is_private:      0
+- name:            bin_to_b64
+  file_location:   '/src/lorawan-parser/lib/base64.c:251'
+  type_arguments:  [ 94204314536648, 94204315470544, 94204314536648, 94204317809936, 
+                     94204314536648 ]
+  raw_name:        bin_to_b64
+  is_public:       0
+  is_private:      0
+- name:            bin_to_b64_nopad
+  file_location:   '/src/lorawan-parser/lib/base64.c:98'
+  type_arguments:  [ 94204314536648, 94204315470544, 94204314536648, 94204317809936, 
+                     94204314536648 ]
+  raw_name:        bin_to_b64_nopad
+  is_public:       0
+  is_private:      0
+- name:            code_to_char
+  file_location:   '/src/lorawan-parser/lib/base64.c:61'
+  type_arguments:  [ 94204313109688, 94204313131328 ]
+  raw_name:        code_to_char
+  is_public:       0
+  is_private:      0
+- name:            AES_CMAC_Final
+  file_location:   '/src/lorawan-parser/lib/cmac.c:108'
+  type_arguments:  [ 0, 94204319628176, 94204319645888 ]
+  raw_name:        AES_CMAC_Final
+  is_public:       0
+  is_private:      0
+- name:            AES_CMAC_Update
+  file_location:   '/src/lorawan-parser/lib/cmac.c:74'
+  type_arguments:  [ 0, 94204319645888, 94204319647488, 94204319646848 ]
+  raw_name:        AES_CMAC_Update
+  is_public:       0
+  is_private:      0
+- name:            AES_CMAC_SetKey
+  file_location:   '/src/lorawan-parser/lib/cmac.c:68'
+  type_arguments:  [ 0, 94204319645888, 94204319647488 ]
+  raw_name:        AES_CMAC_SetKey
+  is_public:       0
+  is_private:      0
+- name:            AES_CMAC_Init
+  file_location:   '/src/lorawan-parser/lib/cmac.c:61'
+  type_arguments:  [ 0, 94204319645888 ]
+  raw_name:        AES_CMAC_Init
+  is_public:       0
+  is_private:      0
+- name:            to_surrogate_pair
+  file_location:   '/src/lorawan-parser/lib/json.c:317'
+  type_arguments:  [ 0, 94204317747664, 94204320397504, 94204320397504 ]
+  raw_name:        to_surrogate_pair
+  is_public:       0
+  is_private:      0
+- name:            write_hex16
+  file_location:   '/src/lorawan-parser/lib/json.c:1301'
+  type_arguments:  [ 94204314536648, 94204317809936, 94204313131680 ]
+  raw_name:        write_hex16
+  is_public:       0
+  is_private:      0
+- name:            utf8_read_char
+  file_location:   '/src/lorawan-parser/lib/json.c:226'
+  type_arguments:  [ 94204314536648, 94204315470160, 94204320397632 ]
+  raw_name:        utf8_read_char
+  is_public:       0
+  is_private:      0
+- name:            utf8_validate_cz
+  file_location:   '/src/lorawan-parser/lib/json.c:151'
+  type_arguments:  [ 94204314536648, 94204315470160 ]
+  raw_name:        utf8_validate_cz
+  is_public:       0
+  is_private:      0
+- name:            emit_object_indented
+  file_location:   '/src/lorawan-parser/lib/json.c:1080'
+  type_arguments:  [ 0, 94204320395952, 94204320395072, 94204315470160, 
+                     94204314536648 ]
+  raw_name:        emit_object_indented
+  is_public:       0
+  is_private:      0
+- name:            sb_puts
+  file_location:   '/src/lorawan-parser/lib/json.c:100'
+  type_arguments:  [ 0, 94204320395952, 94204315470160 ]
+  raw_name:        sb_puts
+  is_public:       0
+  is_private:      0
+- name:            emit_string
+  file_location:   '/src/lorawan-parser/lib/json.c:1106'
+  type_arguments:  [ 0, 94204320395952, 94204315470160 ]
+  raw_name:        emit_string
+  is_public:       0
+  is_private:      0
+- name:            emit_value_indented
+  file_location:   '/src/lorawan-parser/lib/json.c:1001'
+  type_arguments:  [ 0, 94204320395952, 94204320395072, 94204315470160, 
+                     94204314536648 ]
+  raw_name:        emit_value_indented
+  is_public:       0
+  is_private:      0
+- name:            sb_grow
+  file_location:   '/src/lorawan-parser/lib/json.c:71'
+  type_arguments:  [ 0, 94204320395952, 94204314536648 ]
+  raw_name:        sb_grow
+  is_public:       0
+  is_private:      0
+- name:            tag_is_valid
+  file_location:   '/src/lorawan-parser/lib/json.c:1242'
+  type_arguments:  [ 94204315491768, 94204312934040 ]
+  raw_name:        tag_is_valid
+  is_public:       0
+  is_private:      0
+- name:            emit_number
+  file_location:   '/src/lorawan-parser/lib/json.c:1225'
+  type_arguments:  [ 0, 94204320395952, 94204318302760 ]
+  raw_name:        emit_number
+  is_public:       0
+  is_private:      0
+- name:            emit_array_indented
+  file_location:   '/src/lorawan-parser/lib/json.c:1041'
+  type_arguments:  [ 0, 94204320395952, 94204320395072, 94204315470160, 
+                     94204314536648 ]
+  raw_name:        emit_array_indented
+  is_public:       0
+  is_private:      0
+- name:            number_is_valid
+  file_location:   '/src/lorawan-parser/lib/json.c:1247'
+  type_arguments:  [ 94204315491768, 94204315470160 ]
+  raw_name:        number_is_valid
+  is_public:       0
+  is_private:      0
+- name:            parse_number
+  file_location:   '/src/lorawan-parser/lib/json.c:918'
+  type_arguments:  [ 94204315491768, 94204320394336, 94204317966576 ]
+  raw_name:        parse_number
+  is_public:       0
+  is_private:      0
+- name:            utf8_validate
+  file_location:   '/src/lorawan-parser/lib/json.c:206'
+  type_arguments:  [ 94204315491768, 94204315470160 ]
+  raw_name:        utf8_validate
+  is_public:       0
+  is_private:      0
+- name:            sb_put
+  file_location:   '/src/lorawan-parser/lib/json.c:87'
+  type_arguments:  [ 0, 94204320395952, 94204315470160, 94204314536648 ]
+  raw_name:        sb_put
+  is_public:       0
+  is_private:      0
+- name:            emit_object
+  file_location:   '/src/lorawan-parser/lib/json.c:1065'
+  type_arguments:  [ 0, 94204320395952, 94204320395072 ]
+  raw_name:        emit_object
+  is_public:       0
+  is_private:      0
+- name:            json_first_child
+  file_location:   '/src/lorawan-parser/lib/json.c:479'
+  type_arguments:  [ 94204317747536, 94204320395072 ]
+  raw_name:        json_first_child
+  is_public:       0
+  is_private:      0
+- name:            emit_value
+  file_location:   '/src/lorawan-parser/lib/json.c:974'
+  type_arguments:  [ 0, 94204320395952, 94204320395072 ]
+  raw_name:        emit_value
+  is_public:       0
+  is_private:      0
+- name:            emit_array
+  file_location:   '/src/lorawan-parser/lib/json.c:1028'
+  type_arguments:  [ 0, 94204320395952, 94204320395072 ]
+  raw_name:        emit_array
+  is_public:       0
+  is_private:      0
+- name:            sb_free
+  file_location:   '/src/lorawan-parser/lib/json.c:112'
+  type_arguments:  [ 0, 94204320395952 ]
+  raw_name:        sb_free
+  is_public:       0
+  is_private:      0
+- name:            utf8_write_char
+  file_location:   '/src/lorawan-parser/lib/json.c:265'
+  type_arguments:  [ 94204314536648, 94204317747664, 94204317809936 ]
+  raw_name:        utf8_write_char
+  is_public:       0
+  is_private:      0
+- name:            from_surrogate_pair
+  file_location:   '/src/lorawan-parser/lib/json.c:302'
+  type_arguments:  [ 94204315491768, 94204313131680, 94204313131680, 94204320397632 ]
+  raw_name:        from_surrogate_pair
+  is_public:       0
+  is_private:      0
+- name:            parse_hex16
+  file_location:   '/src/lorawan-parser/lib/json.c:1268'
+  type_arguments:  [ 94204315491768, 94204320394336, 94204320397504 ]
+  raw_name:        parse_hex16
+  is_public:       0
+  is_private:      0
+- name:            parse_object
+  file_location:   '/src/lorawan-parser/lib/json.c:737'
+  type_arguments:  [ 94204315491768, 94204320394336, 94204320394464 ]
+  raw_name:        parse_object
+  is_public:       0
+  is_private:      0
+- name:            json_mkobject
+  file_location:   '/src/lorawan-parser/lib/json.c:531'
+  type_arguments:  [ 94204317747536 ]
+  raw_name:        json_mkobject
+  is_public:       0
+  is_private:      0
+- name:            skip_space
+  file_location:   '/src/lorawan-parser/lib/json.c:966'
+  type_arguments:  [ 0, 94204320394336 ]
+  raw_name:        skip_space
+  is_public:       0
+  is_private:      0
+- name:            parse_string
+  file_location:   '/src/lorawan-parser/lib/json.c:793'
+  type_arguments:  [ 94204315491768, 94204320394336, 94204320977824 ]
+  raw_name:        parse_string
+  is_public:       0
+  is_private:      0
+- name:            parse_value
+  file_location:   '/src/lorawan-parser/lib/json.c:623'
+  type_arguments:  [ 94204315491768, 94204320394336, 94204320394464 ]
+  raw_name:        parse_value
+  is_public:       0
+  is_private:      0
+- name:            append_member
+  file_location:   '/src/lorawan-parser/lib/json.c:562'
+  type_arguments:  [ 0, 94204317747536, 94204317809936, 94204317747536 ]
+  raw_name:        append_member
+  is_public:       0
+  is_private:      0
+- name:            json_delete
+  file_location:   '/src/lorawan-parser/lib/json.c:407'
+  type_arguments:  [ 0, 94204317747536 ]
+  raw_name:        json_delete
+  is_public:       0
+  is_private:      0
+- name:            json_remove_from_parent
+  file_location:   '/src/lorawan-parser/lib/json.c:601'
+  type_arguments:  [ 0, 94204317747536 ]
+  raw_name:        json_remove_from_parent
+  is_public:       0
+  is_private:      0
+- name:            append_node
+  file_location:   '/src/lorawan-parser/lib/json.c:536'
+  type_arguments:  [ 0, 94204317747536, 94204317747536 ]
+  raw_name:        append_node
+  is_public:       0
+  is_private:      0
+- name:            expect_literal
+  file_location:   '/src/lorawan-parser/lib/json.c:1252'
+  type_arguments:  [ 94204315491768, 94204320394336, 94204315470160 ]
+  raw_name:        expect_literal
+  is_public:       0
+  is_private:      0
+- name:            json_mknull
+  file_location:   '/src/lorawan-parser/lib/json.c:495'
+  type_arguments:  [ 94204317747536 ]
+  raw_name:        json_mknull
+  is_public:       0
+  is_private:      0
+- name:            json_mkbool
+  file_location:   '/src/lorawan-parser/lib/json.c:500'
+  type_arguments:  [ 94204317747536, 94204315491768 ]
+  raw_name:        json_mkbool
+  is_public:       0
+  is_private:      0
+- name:            mkstring
+  file_location:   '/src/lorawan-parser/lib/json.c:507'
+  type_arguments:  [ 94204317747536, 94204317809936 ]
+  raw_name:        mkstring
+  is_public:       0
+  is_private:      0
+- name:            parse_array
+  file_location:   '/src/lorawan-parser/lib/json.c:693'
+  type_arguments:  [ 94204315491768, 94204320394336, 94204320394464 ]
+  raw_name:        parse_array
+  is_public:       0
+  is_private:      0
+- name:            json_mknumber
+  file_location:   '/src/lorawan-parser/lib/json.c:519'
+  type_arguments:  [ 94204317747536, 94204318302760 ]
+  raw_name:        json_mknumber
+  is_public:       0
+  is_private:      0
+- name:            mknode
+  file_location:   '/src/lorawan-parser/lib/json.c:486'
+  type_arguments:  [ 94204317747536, 94204317748560 ]
+  raw_name:        mknode
+  is_public:       0
+  is_private:      0
+- name:            json_mkarray
+  file_location:   '/src/lorawan-parser/lib/json.c:526'
+  type_arguments:  [ 94204317747536 ]
+  raw_name:        json_mkarray
+  is_public:       0
+  is_private:      0
+- name:            json_append_element
+  file_location:   '/src/lorawan-parser/lib/json.c:568'
+  type_arguments:  [ 0, 94204317747536, 94204317747536 ]
+  raw_name:        json_append_element
+  is_public:       0
+  is_private:      0
+- name:            sb_init
+  file_location:   '/src/lorawan-parser/lib/json.c:56'
+  type_arguments:  [ 0, 94204320395952 ]
+  raw_name:        sb_init
+  is_public:       0
+  is_private:      0
+- name:            sb_finish
+  file_location:   '/src/lorawan-parser/lib/json.c:105'
+  type_arguments:  [ 94204317809936, 94204320395952 ]
+  raw_name:        sb_finish
+  is_public:       0
+  is_private:      0
+- name:            json_check
+  file_location:   '/src/lorawan-parser/lib/json.c:1313'
+  type_arguments:  [ 94204315491768, 94204320395072, 94204317809936 ]
+  raw_name:        json_check
+  is_public:       0
+  is_private:      0
+- name:            json_prepend_member
+  file_location:   '/src/lorawan-parser/lib/json.c:592'
+  type_arguments:  [ 0, 94204317747536, 94204315470160, 94204317747536 ]
+  raw_name:        json_prepend_member
+  is_public:       0
+  is_private:      0
+- name:            json_strdup
+  file_location:   '/src/lorawan-parser/lib/json.c:38'
+  type_arguments:  [ 94204317809936, 94204315470160 ]
+  raw_name:        json_strdup
+  is_public:       0
+  is_private:      0
+- name:            prepend_node
+  file_location:   '/src/lorawan-parser/lib/json.c:549'
+  type_arguments:  [ 0, 94204317747536, 94204317747536 ]
+  raw_name:        prepend_node
+  is_public:       0
+  is_private:      0
+- name:            json_append_member
+  file_location:   '/src/lorawan-parser/lib/json.c:584'
+  type_arguments:  [ 0, 94204317747536, 94204315470160, 94204317747536 ]
+  raw_name:        json_append_member
+  is_public:       0
+  is_private:      0
+- name:            json_prepend_element
+  file_location:   '/src/lorawan-parser/lib/json.c:576'
+  type_arguments:  [ 0, 94204317747536, 94204317747536 ]
+  raw_name:        json_prepend_element
+  is_public:       0
+  is_private:      0
+- name:            json_mkstring
+  file_location:   '/src/lorawan-parser/lib/json.c:514'
+  type_arguments:  [ 94204317747536, 94204315470160 ]
+  raw_name:        json_mkstring
+  is_public:       0
+  is_private:      0
+- name:            json_find_member
+  file_location:   '/src/lorawan-parser/lib/json.c:465'
+  type_arguments:  [ 94204317747536, 94204317747536, 94204315470160 ]
+  raw_name:        json_find_member
+  is_public:       0
+  is_private:      0
+- name:            json_find_element
+  file_location:   '/src/lorawan-parser/lib/json.c:448'
+  type_arguments:  [ 94204317747536, 94204317747536, 94204314536648 ]
+  raw_name:        json_find_element
+  is_public:       0
+  is_private:      0
+- name:            json_validate
+  file_location:   '/src/lorawan-parser/lib/json.c:433'
+  type_arguments:  [ 94204315491768, 94204315470160 ]
+  raw_name:        json_validate
+  is_public:       0
+  is_private:      0
+- name:            json_encode_string
+  file_location:   '/src/lorawan-parser/lib/json.c:384'
+  type_arguments:  [ 94204317809936, 94204315470160 ]
+  raw_name:        json_encode_string
+  is_public:       0
+  is_private:      0
+- name:            json_stringify
+  file_location:   '/src/lorawan-parser/lib/json.c:394'
+  type_arguments:  [ 94204317809936, 94204320395072, 94204315470160 ]
+  raw_name:        json_stringify
+  is_public:       0
+  is_private:      0
+- name:            json_encode
+  file_location:   '/src/lorawan-parser/lib/json.c:379'
+  type_arguments:  [ 94204317809936, 94204320395072 ]
+  raw_name:        json_encode
+  is_public:       0
+  is_private:      0
+- name:            json_decode
+  file_location:   '/src/lorawan-parser/lib/json.c:361'
+  type_arguments:  [ 94204317747536, 94204315470160 ]
+  raw_name:        json_decode
+  is_public:       0
+  is_private:      0
+- name:            log_line
+  file_location:   '/src/lorawan-parser/lib/log.c:224'
+  type_arguments:  [ 0 ]
+  raw_name:        log_line
+  is_public:       0
+  is_private:      0
+- name:            log_puts
+  file_location:   '/src/lorawan-parser/lib/log.c:43'
+  type_arguments:  [ 94204314536648, 94204314536648, 94204317809936, 0 ]
+  raw_name:        log_puts
+  is_public:       0
+  is_private:      0
+- name:            log_init
+  file_location:   '/src/lorawan-parser/lib/log.c:30'
+  type_arguments:  [ 94204314536648, 94204321779568 ]
+  raw_name:        log_init
+  is_public:       0
+  is_private:      0
+- name:            netutil_eui48_to_eui64
+  file_location:   '/src/lorawan-parser/lib/netutil.c:68'
+  type_arguments:  [ 0, 94204322053024, 94204313131808, 94204313131808 ]
+  raw_name:        netutil_eui48_to_eui64
+  is_public:       0
+  is_private:      0
+- name:            netutil_get_mac_addr
+  file_location:   '/src/lorawan-parser/lib/netutil.c:9'
+  type_arguments:  [ 94204314536648, 94204317809936, 94204313131808 ]
+  raw_name:        netutil_get_mac_addr
+  is_public:       0
+  is_private:      0
+- name:            json_serialize_string
+  file_location:   '/src/lorawan-parser/lib/parson.c:835'
+  type_arguments:  [ 94204314536648, 94204315470160, 94204317809936 ]
+  raw_name:        json_serialize_string
+  is_public:       0
+  is_private:      0
+- name:            append_string
+  file_location:   '/src/lorawan-parser/lib/parson.c:872'
+  type_arguments:  [ 94204314536648, 94204317809936, 94204315470160 ]
+  raw_name:        append_string
+  is_public:       0
+  is_private:      0
+- name:            append_indent
+  file_location:   '/src/lorawan-parser/lib/parson.c:863'
+  type_arguments:  [ 94204314536648, 94204317809936, 94204314536648 ]
+  raw_name:        append_indent
+  is_public:       0
+  is_private:      0
+- name:            num_bytes_in_utf8_sequence
+  file_location:   '/src/lorawan-parser/lib/parson.c:146'
+  type_arguments:  [ 94204314536648, 94204313131080 ]
+  raw_name:        num_bytes_in_utf8_sequence
+  is_public:       0
+  is_private:      0
+- name:            verify_utf8_sequence
+  file_location:   '/src/lorawan-parser/lib/parson.c:161'
+  type_arguments:  [ 94204314536648, 94204319044368, 94204316501984 ]
+  raw_name:        verify_utf8_sequence
+  is_public:       0
+  is_private:      0
+- name:            is_decimal
+  file_location:   '/src/lorawan-parser/lib/parson.c:215'
+  type_arguments:  [ 94204314536648, 94204315470160, 94204317747280 ]
+  raw_name:        is_decimal
+  is_public:       0
+  is_private:      0
+- name:            json_array_resize
+  file_location:   '/src/lorawan-parser/lib/parson.c:402'
+  type_arguments:  [ 94204322922240, 94204320282368, 94204317747280 ]
+  raw_name:        json_array_resize
+  is_public:       0
+  is_private:      0
+- name:            is_utf16_hex
+  file_location:   '/src/lorawan-parser/lib/parson.c:142'
+  type_arguments:  [ 94204314536648, 94204319044368 ]
+  raw_name:        is_utf16_hex
+  is_public:       0
+  is_private:      0
+- name:            parse_utf_16
+  file_location:   '/src/lorawan-parser/lib/parson.c:453'
+  type_arguments:  [ 94204314536648, 94204320394336, 94204320977824 ]
+  raw_name:        parse_utf_16
+  is_public:       0
+  is_private:      0
+- name:            process_string
+  file_location:   '/src/lorawan-parser/lib/parson.c:495'
+  type_arguments:  [ 94204317809936, 94204315470160, 94204317747280 ]
+  raw_name:        process_string
+  is_public:       0
+  is_private:      0
+- name:            skip_quotes
+  file_location:   '/src/lorawan-parser/lib/parson.c:438'
+  type_arguments:  [ 0, 94204320394336 ]
+  raw_name:        skip_quotes
+  is_public:       0
+  is_private:      0
+- name:            json_object_resize
+  file_location:   '/src/lorawan-parser/lib/parson.c:324'
+  type_arguments:  [ 94204322922240, 94204320282112, 94204317747280 ]
+  raw_name:        json_object_resize
+  is_public:       0
+  is_private:      0
+- name:            get_quoted_string
+  file_location:   '/src/lorawan-parser/lib/parson.c:545'
+  type_arguments:  [ 94204317809936, 94204320394336 ]
+  raw_name:        get_quoted_string
+  is_public:       0
+  is_private:      0
+- name:            parse_null_value
+  file_location:   '/src/lorawan-parser/lib/parson.c:705'
+  type_arguments:  [ 94204320292176, 94204320394336 ]
+  raw_name:        parse_null_value
+  is_public:       0
+  is_private:      0
+- name:            json_value_init_null
+  file_location:   '/src/lorawan-parser/lib/parson.c:1133'
+  type_arguments:  [ 94204320292176 ]
+  raw_name:        json_value_init_null
+  is_public:       0
+  is_private:      0
+- name:            parse_number_value
+  file_location:   '/src/lorawan-parser/lib/parson.c:692'
+  type_arguments:  [ 94204320292176, 94204320394336 ]
+  raw_name:        parse_number_value
+  is_public:       0
+  is_private:      0
+- name:            json_value_init_number
+  file_location:   '/src/lorawan-parser/lib/parson.c:1115'
+  type_arguments:  [ 94204320292176, 94204318302760 ]
+  raw_name:        json_value_init_number
+  is_public:       0
+  is_private:      0
+- name:            parse_boolean_value
+  file_location:   '/src/lorawan-parser/lib/parson.c:679'
+  type_arguments:  [ 94204320292176, 94204320394336 ]
+  raw_name:        parse_boolean_value
+  is_public:       0
+  is_private:      0
+- name:            json_value_init_boolean
+  file_location:   '/src/lorawan-parser/lib/parson.c:1124'
+  type_arguments:  [ 94204320292176, 94204314536648 ]
+  raw_name:        json_value_init_boolean
+  is_public:       0
+  is_private:      0
+- name:            parse_string_value
+  file_location:   '/src/lorawan-parser/lib/parson.c:666'
+  type_arguments:  [ 94204320292176, 94204320394336 ]
+  raw_name:        parse_string_value
+  is_public:       0
+  is_private:      0
+- name:            json_value_init_string_no_copy
+  file_location:   '/src/lorawan-parser/lib/parson.c:428'
+  type_arguments:  [ 94204320292176, 94204317809936 ]
+  raw_name:        json_value_init_string_no_copy
+  is_public:       0
+  is_private:      0
+- name:            parse_array_value
+  file_location:   '/src/lorawan-parser/lib/parson.c:628'
+  type_arguments:  [ 94204320292176, 94204320394336, 94204317747280 ]
+  raw_name:        parse_array_value
+  is_public:       0
+  is_private:      0
+- name:            json_value_init_array
+  file_location:   '/src/lorawan-parser/lib/parson.c:1084'
+  type_arguments:  [ 94204320292176 ]
+  raw_name:        json_value_init_array
+  is_public:       0
+  is_private:      0
+- name:            json_value_get_array
+  file_location:   '/src/lorawan-parser/lib/parson.c:1038'
+  type_arguments:  [ 94204320282368, 94204322917568 ]
+  raw_name:        json_value_get_array
+  is_public:       0
+  is_private:      0
+- name:            parse_value
+  file_location:   '/src/lorawan-parser/lib/parson.c:555'
+  type_arguments:  [ 94204320292176, 94204320394336, 94204317747280 ]
+  raw_name:        parse_value
+  is_public:       0
+  is_private:      0
+- name:            json_value_free
+  file_location:   '/src/lorawan-parser/lib/parson.c:1054'
+  type_arguments:  [ 0, 94204320292176 ]
+  raw_name:        json_value_free
+  is_public:       0
+  is_private:      0
+- name:            json_array_add
+  file_location:   '/src/lorawan-parser/lib/parson.c:389'
+  type_arguments:  [ 94204322922240, 94204320282368, 94204320292176 ]
+  raw_name:        json_array_add
+  is_public:       0
+  is_private:      0
+- name:            json_array_get_count
+  file_location:   '/src/lorawan-parser/lib/parson.c:1025'
+  type_arguments:  [ 94204317747280, 94204322919408 ]
+  raw_name:        json_array_get_count
+  is_public:       0
+  is_private:      0
+- name:            json_value_get_type
+  file_location:   '/src/lorawan-parser/lib/parson.c:1030'
+  type_arguments:  [ 94204320283456, 94204322917568 ]
+  raw_name:        json_value_get_type
+  is_public:       0
+  is_private:      0
+- name:            json_object_free
+  file_location:   '/src/lorawan-parser/lib/parson.c:368'
+  type_arguments:  [ 0, 94204320282112 ]
+  raw_name:        json_object_free
+  is_public:       0
+  is_private:      0
+- name:            json_array_free
+  file_location:   '/src/lorawan-parser/lib/parson.c:420'
+  type_arguments:  [ 0, 94204320282368 ]
+  raw_name:        json_array_free
+  is_public:       0
+  is_private:      0
+- name:            parse_object_value
+  file_location:   '/src/lorawan-parser/lib/parson.c:579'
+  type_arguments:  [ 94204320292176, 94204320394336, 94204317747280 ]
+  raw_name:        parse_object_value
+  is_public:       0
+  is_private:      0
+- name:            json_value_init_object
+  file_location:   '/src/lorawan-parser/lib/parson.c:1071'
+  type_arguments:  [ 94204320292176 ]
+  raw_name:        json_value_init_object
+  is_public:       0
+  is_private:      0
+- name:            json_value_get_object
+  file_location:   '/src/lorawan-parser/lib/parson.c:1034'
+  type_arguments:  [ 94204320282112, 94204322917568 ]
+  raw_name:        json_value_get_object
+  is_public:       0
+  is_private:      0
+- name:            json_object_add
+  file_location:   '/src/lorawan-parser/lib/parson.c:301'
+  type_arguments:  [ 94204322922240, 94204320282112, 94204315470160, 94204320292176 ]
+  raw_name:        json_object_add
+  is_public:       0
+  is_private:      0
+- name:            json_object_get_count
+  file_location:   '/src/lorawan-parser/lib/parson.c:988'
+  type_arguments:  [ 94204317747280, 94204322916960 ]
+  raw_name:        json_object_get_count
+  is_public:       0
+  is_private:      0
+- name:            json_object_get_value
+  file_location:   '/src/lorawan-parser/lib/parson.c:934'
+  type_arguments:  [ 94204320292176, 94204322916960, 94204315470160 ]
+  raw_name:        json_object_get_value
+  is_public:       0
+  is_private:      0
+- name:            parson_strdup
+  file_location:   '/src/lorawan-parser/lib/parson.c:138'
+  type_arguments:  [ 94204317809936, 94204315470160 ]
+  raw_name:        parson_strdup
+  is_public:       0
+  is_private:      0
+- name:            parson_strndup
+  file_location:   '/src/lorawan-parser/lib/parson.c:129'
+  type_arguments:  [ 94204317809936, 94204315470160, 94204317747280 ]
+  raw_name:        parson_strndup
+  is_public:       0
+  is_private:      0
+- name:            json_object_nget_value
+  file_location:   '/src/lorawan-parser/lib/parson.c:356'
+  type_arguments:  [ 94204320292176, 94204322916960, 94204315470160, 94204317747280 ]
+  raw_name:        json_object_nget_value
+  is_public:       0
+  is_private:      0
+- name:            json_object_init
+  file_location:   '/src/lorawan-parser/lib/parson.c:290'
+  type_arguments:  [ 94204320282112 ]
+  raw_name:        json_object_init
+  is_public:       0
+  is_private:      0
+- name:            json_array_init
+  file_location:   '/src/lorawan-parser/lib/parson.c:379'
+  type_arguments:  [ 94204320282368 ]
+  raw_name:        json_array_init
+  is_public:       0
+  is_private:      0
+- name:            json_set_allocation_functions
+  file_location:   '/src/lorawan-parser/lib/parson.c:1746'
+  type_arguments:  [ 0, 94204320300144, 94204320300576 ]
+  raw_name:        json_set_allocation_functions
+  is_public:       0
+  is_private:      0
+- name:            json_boolean
+  file_location:   '/src/lorawan-parser/lib/parson.c:1742'
+  type_arguments:  [ 94204314536648, 94204322917568 ]
+  raw_name:        json_boolean
+  is_public:       0
+  is_private:      0
+- name:            json_value_get_boolean
+  file_location:   '/src/lorawan-parser/lib/parson.c:1050'
+  type_arguments:  [ 94204314536648, 94204322917568 ]
+  raw_name:        json_value_get_boolean
+  is_public:       0
+  is_private:      0
+- name:            json_number
+  file_location:   '/src/lorawan-parser/lib/parson.c:1738'
+  type_arguments:  [ 94204318302760, 94204322917568 ]
+  raw_name:        json_number
+  is_public:       0
+  is_private:      0
+- name:            json_value_get_number
+  file_location:   '/src/lorawan-parser/lib/parson.c:1046'
+  type_arguments:  [ 94204318302760, 94204322917568 ]
+  raw_name:        json_value_get_number
+  is_public:       0
+  is_private:      0
+- name:            json_string
+  file_location:   '/src/lorawan-parser/lib/parson.c:1734'
+  type_arguments:  [ 94204315470160, 94204322917568 ]
+  raw_name:        json_string
+  is_public:       0
+  is_private:      0
+- name:            json_value_get_string
+  file_location:   '/src/lorawan-parser/lib/parson.c:1042'
+  type_arguments:  [ 94204315470160, 94204322917568 ]
+  raw_name:        json_value_get_string
+  is_public:       0
+  is_private:      0
+- name:            json_array
+  file_location:   '/src/lorawan-parser/lib/parson.c:1730'
+  type_arguments:  [ 94204320282368, 94204322917568 ]
+  raw_name:        json_array
+  is_public:       0
+  is_private:      0
+- name:            json_object
+  file_location:   '/src/lorawan-parser/lib/parson.c:1726'
+  type_arguments:  [ 94204320282112, 94204322917568 ]
+  raw_name:        json_object
+  is_public:       0
+  is_private:      0
+- name:            json_type
+  file_location:   '/src/lorawan-parser/lib/parson.c:1722'
+  type_arguments:  [ 94204320283456, 94204322917568 ]
+  raw_name:        json_type
+  is_public:       0
+  is_private:      0
+- name:            json_value_equals
+  file_location:   '/src/lorawan-parser/lib/parson.c:1661'
+  type_arguments:  [ 94204314536648, 94204322917568, 94204322917568 ]
+  raw_name:        json_value_equals
+  is_public:       0
+  is_private:      0
+- name:            json_array_get_value
+  file_location:   '/src/lorawan-parser/lib/parson.c:999'
+  type_arguments:  [ 94204320292176, 94204322919408, 94204317747280 ]
+  raw_name:        json_array_get_value
+  is_public:       0
+  is_private:      0
+- name:            json_object_get_name
+  file_location:   '/src/lorawan-parser/lib/parson.c:992'
+  type_arguments:  [ 94204315470160, 94204322916960, 94204317747280 ]
+  raw_name:        json_object_get_name
+  is_public:       0
+  is_private:      0
+- name:            json_object_clear
+  file_location:   '/src/lorawan-parser/lib/parson.c:1594'
+  type_arguments:  [ 94204322922240, 94204320282112 ]
+  raw_name:        json_object_clear
+  is_public:       0
+  is_private:      0
+- name:            json_object_dotremove
+  file_location:   '/src/lorawan-parser/lib/parson.c:1576'
+  type_arguments:  [ 94204322922240, 94204320282112, 94204315470160 ]
+  raw_name:        json_object_dotremove
+  is_public:       0
+  is_private:      0
+- name:            json_object_remove
+  file_location:   '/src/lorawan-parser/lib/parson.c:1556'
+  type_arguments:  [ 94204322922240, 94204320282112, 94204315470160 ]
+  raw_name:        json_object_remove
+  is_public:       0
+  is_private:      0
+- name:            json_object_get_object
+  file_location:   '/src/lorawan-parser/lib/parson.c:948'
+  type_arguments:  [ 94204320282112, 94204322916960, 94204315470160 ]
+  raw_name:        json_object_get_object
+  is_public:       0
+  is_private:      0
+- name:            json_object_dotset_null
+  file_location:   '/src/lorawan-parser/lib/parson.c:1545'
+  type_arguments:  [ 94204322922240, 94204320282112, 94204315470160 ]
+  raw_name:        json_object_dotset_null
+  is_public:       0
+  is_private:      0
+- name:            json_object_dotset_value
+  file_location:   '/src/lorawan-parser/lib/parson.c:1481'
+  type_arguments:  [ 94204322922240, 94204320282112, 94204315470160, 94204320292176 ]
+  raw_name:        json_object_dotset_value
+  is_public:       0
+  is_private:      0
+- name:            json_object_set_value
+  file_location:   '/src/lorawan-parser/lib/parson.c:1446'
+  type_arguments:  [ 94204322922240, 94204320282112, 94204315470160, 94204320292176 ]
+  raw_name:        json_object_set_value
+  is_public:       0
+  is_private:      0
+- name:            json_object_dotset_boolean
+  file_location:   '/src/lorawan-parser/lib/parson.c:1534'
+  type_arguments:  [ 94204322922240, 94204320282112, 94204315470160, 94204314536648 ]
+  raw_name:        json_object_dotset_boolean
+  is_public:       0
+  is_private:      0
+- name:            json_object_dotset_number
+  file_location:   '/src/lorawan-parser/lib/parson.c:1523'
+  type_arguments:  [ 94204322922240, 94204320282112, 94204315470160, 94204318302760 ]
+  raw_name:        json_object_dotset_number
+  is_public:       0
+  is_private:      0
+- name:            json_object_dotset_string
+  file_location:   '/src/lorawan-parser/lib/parson.c:1512'
+  type_arguments:  [ 94204322922240, 94204320282112, 94204315470160, 94204315470160 ]
+  raw_name:        json_object_dotset_string
+  is_public:       0
+  is_private:      0
+- name:            json_value_init_string
+  file_location:   '/src/lorawan-parser/lib/parson.c:1097'
+  type_arguments:  [ 94204320292176, 94204315470160 ]
+  raw_name:        json_value_init_string
+  is_public:       0
+  is_private:      0
+- name:            is_valid_utf8
+  file_location:   '/src/lorawan-parser/lib/parson.c:203'
+  type_arguments:  [ 94204314536648, 94204315470160, 94204317747280 ]
+  raw_name:        is_valid_utf8
+  is_public:       0
+  is_private:      0
+- name:            json_object_set_null
+  file_location:   '/src/lorawan-parser/lib/parson.c:1477'
+  type_arguments:  [ 94204322922240, 94204320282112, 94204315470160 ]
+  raw_name:        json_object_set_null
+  is_public:       0
+  is_private:      0
+- name:            json_object_set_boolean
+  file_location:   '/src/lorawan-parser/lib/parson.c:1473'
+  type_arguments:  [ 94204322922240, 94204320282112, 94204315470160, 94204314536648 ]
+  raw_name:        json_object_set_boolean
+  is_public:       0
+  is_private:      0
+- name:            json_object_set_number
+  file_location:   '/src/lorawan-parser/lib/parson.c:1469'
+  type_arguments:  [ 94204322922240, 94204320282112, 94204315470160, 94204318302760 ]
+  raw_name:        json_object_set_number
+  is_public:       0
+  is_private:      0
+- name:            json_object_set_string
+  file_location:   '/src/lorawan-parser/lib/parson.c:1465'
+  type_arguments:  [ 94204322922240, 94204320282112, 94204315470160, 94204315470160 ]
+  raw_name:        json_object_set_string
+  is_public:       0
+  is_private:      0
+- name:            json_array_append_null
+  file_location:   '/src/lorawan-parser/lib/parson.c:1435'
+  type_arguments:  [ 94204322922240, 94204320282368 ]
+  raw_name:        json_array_append_null
+  is_public:       0
+  is_private:      0
+- name:            json_array_append_value
+  file_location:   '/src/lorawan-parser/lib/parson.c:1396'
+  type_arguments:  [ 94204322922240, 94204320282368, 94204320292176 ]
+  raw_name:        json_array_append_value
+  is_public:       0
+  is_private:      0
+- name:            json_array_append_boolean
+  file_location:   '/src/lorawan-parser/lib/parson.c:1424'
+  type_arguments:  [ 94204322922240, 94204320282368, 94204314536648 ]
+  raw_name:        json_array_append_boolean
+  is_public:       0
+  is_private:      0
+- name:            json_array_append_number
+  file_location:   '/src/lorawan-parser/lib/parson.c:1413'
+  type_arguments:  [ 94204322922240, 94204320282368, 94204318302760 ]
+  raw_name:        json_array_append_number
+  is_public:       0
+  is_private:      0
+- name:            json_array_append_string
+  file_location:   '/src/lorawan-parser/lib/parson.c:1402'
+  type_arguments:  [ 94204322922240, 94204320282368, 94204315470160 ]
+  raw_name:        json_array_append_string
+  is_public:       0
+  is_private:      0
+- name:            json_array_clear
+  file_location:   '/src/lorawan-parser/lib/parson.c:1385'
+  type_arguments:  [ 94204322922240, 94204320282368 ]
+  raw_name:        json_array_clear
+  is_public:       0
+  is_private:      0
+- name:            json_array_replace_null
+  file_location:   '/src/lorawan-parser/lib/parson.c:1374'
+  type_arguments:  [ 94204322922240, 94204320282368, 94204317747280 ]
+  raw_name:        json_array_replace_null
+  is_public:       0
+  is_private:      0
+- name:            json_array_replace_value
+  file_location:   '/src/lorawan-parser/lib/parson.c:1332'
+  type_arguments:  [ 94204322922240, 94204320282368, 94204317747280, 94204320292176 ]
+  raw_name:        json_array_replace_value
+  is_public:       0
+  is_private:      0
+- name:            json_array_replace_boolean
+  file_location:   '/src/lorawan-parser/lib/parson.c:1363'
+  type_arguments:  [ 94204322922240, 94204320282368, 94204317747280, 94204314536648 ]
+  raw_name:        json_array_replace_boolean
+  is_public:       0
+  is_private:      0
+- name:            json_array_replace_number
+  file_location:   '/src/lorawan-parser/lib/parson.c:1352'
+  type_arguments:  [ 94204322922240, 94204320282368, 94204317747280, 94204318302760 ]
+  raw_name:        json_array_replace_number
+  is_public:       0
+  is_private:      0
+- name:            json_array_replace_string
+  file_location:   '/src/lorawan-parser/lib/parson.c:1341'
+  type_arguments:  [ 94204322922240, 94204320282368, 94204317747280, 94204315470160 ]
+  raw_name:        json_array_replace_string
+  is_public:       0
+  is_private:      0
+- name:            json_array_remove
+  file_location:   '/src/lorawan-parser/lib/parson.c:1319'
+  type_arguments:  [ 94204322922240, 94204320282368, 94204317747280 ]
+  raw_name:        json_array_remove
+  is_public:       0
+  is_private:      0
+- name:            json_serialize_to_string_pretty
+  file_location:   '/src/lorawan-parser/lib/parson.c:1300'
+  type_arguments:  [ 94204317809936, 94204322917568 ]
+  raw_name:        json_serialize_to_string_pretty
+  is_public:       0
+  is_private:      0
+- name:            json_serialization_size_pretty
+  file_location:   '/src/lorawan-parser/lib/parson.c:1264'
+  type_arguments:  [ 94204317747280, 94204322917568 ]
+  raw_name:        json_serialization_size_pretty
+  is_public:       0
+  is_private:      0
+- name:            json_serialize_to_buffer_pretty
+  file_location:   '/src/lorawan-parser/lib/parson.c:1269'
+  type_arguments:  [ 94204322922240, 94204322917568, 94204317809936, 94204317747280 ]
+  raw_name:        json_serialize_to_buffer_pretty
+  is_public:       0
+  is_private:      0
+- name:            json_free_serialized_string
+  file_location:   '/src/lorawan-parser/lib/parson.c:1315'
+  type_arguments:  [ 0, 94204317809936 ]
+  raw_name:        json_free_serialized_string
+  is_public:       0
+  is_private:      0
+- name:            json_serialize_to_buffer_r
+  file_location:   '/src/lorawan-parser/lib/parson.c:725'
+  type_arguments:  [ 94204314536648, 94204322917568, 94204317809936, 94204314536648, 
+                     94204314536648, 94204317809936 ]
+  raw_name:        json_serialize_to_buffer_r
+  is_public:       0
+  is_private:      0
+- name:            json_serialize_to_file_pretty
+  file_location:   '/src/lorawan-parser/lib/parson.c:1280'
+  type_arguments:  [ 94204322922240, 94204322917568, 94204315470160 ]
+  raw_name:        json_serialize_to_file_pretty
+  is_public:       0
+  is_private:      0
+- name:            json_serialize_to_string
+  file_location:   '/src/lorawan-parser/lib/parson.c:1250'
+  type_arguments:  [ 94204317809936, 94204322917568 ]
+  raw_name:        json_serialize_to_string
+  is_public:       0
+  is_private:      0
+- name:            json_serialization_size
+  file_location:   '/src/lorawan-parser/lib/parson.c:1213'
+  type_arguments:  [ 94204317747280, 94204322917568 ]
+  raw_name:        json_serialization_size
+  is_public:       0
+  is_private:      0
+- name:            json_serialize_to_buffer
+  file_location:   '/src/lorawan-parser/lib/parson.c:1218'
+  type_arguments:  [ 94204322922240, 94204322917568, 94204317809936, 94204317747280 ]
+  raw_name:        json_serialize_to_buffer
+  is_public:       0
+  is_private:      0
+- name:            json_serialize_to_file
+  file_location:   '/src/lorawan-parser/lib/parson.c:1230'
+  type_arguments:  [ 94204322922240, 94204322917568, 94204315470160 ]
+  raw_name:        json_serialize_to_file
+  is_public:       0
+  is_private:      0
+- name:            json_value_deep_copy
+  file_location:   '/src/lorawan-parser/lib/parson.c:1141'
+  type_arguments:  [ 94204320292176, 94204322917568 ]
+  raw_name:        json_value_deep_copy
+  is_public:       0
+  is_private:      0
+- name:            json_array_get_boolean
+  file_location:   '/src/lorawan-parser/lib/parson.c:1021'
+  type_arguments:  [ 94204314536648, 94204322919408, 94204317747280 ]
+  raw_name:        json_array_get_boolean
+  is_public:       0
+  is_private:      0
+- name:            json_array_get_array
+  file_location:   '/src/lorawan-parser/lib/parson.c:1017'
+  type_arguments:  [ 94204320282368, 94204322919408, 94204317747280 ]
+  raw_name:        json_array_get_array
+  is_public:       0
+  is_private:      0
+- name:            json_array_get_object
+  file_location:   '/src/lorawan-parser/lib/parson.c:1013'
+  type_arguments:  [ 94204320282112, 94204322919408, 94204317747280 ]
+  raw_name:        json_array_get_object
+  is_public:       0
+  is_private:      0
+- name:            json_array_get_number
+  file_location:   '/src/lorawan-parser/lib/parson.c:1009'
+  type_arguments:  [ 94204318302760, 94204322919408, 94204317747280 ]
+  raw_name:        json_array_get_number
+  is_public:       0
+  is_private:      0
+- name:            json_array_get_string
+  file_location:   '/src/lorawan-parser/lib/parson.c:1005'
+  type_arguments:  [ 94204315470160, 94204322919408, 94204317747280 ]
+  raw_name:        json_array_get_string
+  is_public:       0
+  is_private:      0
+- name:            json_object_dotget_boolean
+  file_location:   '/src/lorawan-parser/lib/parson.c:984'
+  type_arguments:  [ 94204314536648, 94204322916960, 94204315470160 ]
+  raw_name:        json_object_dotget_boolean
+  is_public:       0
+  is_private:      0
+- name:            json_object_dotget_value
+  file_location:   '/src/lorawan-parser/lib/parson.c:960'
+  type_arguments:  [ 94204320292176, 94204322916960, 94204315470160 ]
+  raw_name:        json_object_dotget_value
+  is_public:       0
+  is_private:      0
+- name:            json_object_dotget_array
+  file_location:   '/src/lorawan-parser/lib/parson.c:980'
+  type_arguments:  [ 94204320282368, 94204322916960, 94204315470160 ]
+  raw_name:        json_object_dotget_array
+  is_public:       0
+  is_private:      0
+- name:            json_object_dotget_object
+  file_location:   '/src/lorawan-parser/lib/parson.c:976'
+  type_arguments:  [ 94204320282112, 94204322916960, 94204315470160 ]
+  raw_name:        json_object_dotget_object
+  is_public:       0
+  is_private:      0
+- name:            json_object_dotget_number
+  file_location:   '/src/lorawan-parser/lib/parson.c:972'
+  type_arguments:  [ 94204318302760, 94204322916960, 94204315470160 ]
+  raw_name:        json_object_dotget_number
+  is_public:       0
+  is_private:      0
+- name:            json_object_dotget_string
+  file_location:   '/src/lorawan-parser/lib/parson.c:968'
+  type_arguments:  [ 94204315470160, 94204322916960, 94204315470160 ]
+  raw_name:        json_object_dotget_string
+  is_public:       0
+  is_private:      0
+- name:            json_object_get_boolean
+  file_location:   '/src/lorawan-parser/lib/parson.c:956'
+  type_arguments:  [ 94204314536648, 94204322916960, 94204315470160 ]
+  raw_name:        json_object_get_boolean
+  is_public:       0
+  is_private:      0
+- name:            json_object_get_array
+  file_location:   '/src/lorawan-parser/lib/parson.c:952'
+  type_arguments:  [ 94204320282368, 94204322916960, 94204315470160 ]
+  raw_name:        json_object_get_array
+  is_public:       0
+  is_private:      0
+- name:            json_object_get_number
+  file_location:   '/src/lorawan-parser/lib/parson.c:944'
+  type_arguments:  [ 94204318302760, 94204322916960, 94204315470160 ]
+  raw_name:        json_object_get_number
+  is_public:       0
+  is_private:      0
+- name:            json_object_get_string
+  file_location:   '/src/lorawan-parser/lib/parson.c:940'
+  type_arguments:  [ 94204315470160, 94204322916960, 94204315470160 ]
+  raw_name:        json_object_get_string
+  is_public:       0
+  is_private:      0
+- name:            remove_comments
+  file_location:   '/src/lorawan-parser/lib/parson.c:258'
+  type_arguments:  [ 0, 94204317809936, 94204315470160, 94204315470160 ]
+  raw_name:        remove_comments
+  is_public:       0
+  is_private:      0
+- name:            json_parse_string_with_comments
+  file_location:   '/src/lorawan-parser/lib/parson.c:912'
+  type_arguments:  [ 94204320292176, 94204315470160 ]
+  raw_name:        json_parse_string_with_comments
+  is_public:       0
+  is_private:      0
+- name:            json_parse_file_with_comments
+  file_location:   '/src/lorawan-parser/lib/parson.c:893'
+  type_arguments:  [ 94204320292176, 94204315470160 ]
+  raw_name:        json_parse_file_with_comments
+  is_public:       0
+  is_private:      0
+- name:            read_file
+  file_location:   '/src/lorawan-parser/lib/parson.c:226'
+  type_arguments:  [ 94204317809936, 94204315470160 ]
+  raw_name:        read_file
+  is_public:       0
+  is_private:      0
+- name:            json_parse_string
+  file_location:   '/src/lorawan-parser/lib/parson.c:903'
+  type_arguments:  [ 94204320292176, 94204315470160 ]
+  raw_name:        json_parse_string
+  is_public:       0
+  is_private:      0
+- name:            json_parse_file
+  file_location:   '/src/lorawan-parser/lib/parson.c:883'
+  type_arguments:  [ 94204320292176, 94204315470160 ]
+  raw_name:        json_parse_file
+  is_public:       0
+  is_private:      0
+- name:            str2hex
+  file_location:   '/src/lorawan-parser/lib/str2hex.c:71'
+  type_arguments:  [ 94204314536648, 94204317809936, 94204313131808, 94204314536648 ]
+  raw_name:        str2hex
+  is_public:       0
+  is_private:      0
+- name:            word2hex
+  file_location:   '/src/lorawan-parser/lib/str2hex.c:33'
+  type_arguments:  [ 94204314536648, 94204317809936, 94204313131808, 94204314536648 ]
+  raw_name:        word2hex
+  is_public:       0
+  is_private:      0
+- name:            char2hex
+  file_location:   '/src/lorawan-parser/lib/str2hex.c:22'
+  type_arguments:  [ 94204314536648, 94204313109688 ]
+  raw_name:        char2hex
+  is_public:       0
+  is_private:      0
+- name:            wait_ms
+  file_location:   '/src/lorawan-parser/lib/libloragw/src/loragw_aux.c:45'
+  type_arguments:  [ 0, 94204317257752 ]
+  raw_name:        wait_ms
+  is_public:       0
+  is_private:      0
+- name:            lgw_utc2cnt
+  file_location:   '/src/lorawan-parser/lib/libloragw/src/loragw_gps.c:559'
+  type_arguments:  [ 94204314536648, 94204325647840, 94204325273360, 94204314440256 ]
+  raw_name:        lgw_utc2cnt
+  is_public:       0
+  is_private:      0
+- name:            lgw_cnt2utc
+  file_location:   '/src/lorawan-parser/lib/libloragw/src/loragw_gps.c:529'
+  type_arguments:  [ 94204314536648, 94204325647840, 94204313132192, 94204325654368 ]
+  raw_name:        lgw_cnt2utc
+  is_public:       0
+  is_private:      0
+- name:            lgw_gps_get
+  file_location:   '/src/lorawan-parser/lib/libloragw/src/loragw_gps.c:416'
+  type_arguments:  [ 94204314536648, 94204325654368, 94204325754192, 94204325754192 ]
+  raw_name:        lgw_gps_get
+  is_public:       0
+  is_private:      0
+- name:            lgw_parse_nmea
+  file_location:   '/src/lorawan-parser/lib/libloragw/src/loragw_gps.c:323'
+  type_arguments:  [ 94204325651152, 94204317809936, 94204314536648 ]
+  raw_name:        lgw_parse_nmea
+  is_public:       0
+  is_private:      0
+- name:            match_label
+  file_location:   '/src/lorawan-parser/lib/libloragw/src/loragw_gps.c:199'
+  type_arguments:  [ 94204315491768, 94204317809936, 94204317809936, 94204314536648, 
+                     94204313109688 ]
+  raw_name:        match_label
+  is_public:       0
+  is_private:      0
+- name:            validate_nmea_checksum
+  file_location:   '/src/lorawan-parser/lib/libloragw/src/loragw_gps.c:166'
+  type_arguments:  [ 94204315491768, 94204317809936, 94204314536648 ]
+  raw_name:        validate_nmea_checksum
+  is_public:       0
+  is_private:      0
+- name:            str_chop
+  file_location:   '/src/lorawan-parser/lib/libloragw/src/loragw_gps.c:220'
+  type_arguments:  [ 94204314536648, 94204317809936, 94204314536648, 94204313109688, 
+                     94204316501984, 94204314536648 ]
+  raw_name:        str_chop
+  is_public:       0
+  is_private:      0
+- name:            nmea_checksum
+  file_location:   '/src/lorawan-parser/lib/libloragw/src/loragw_gps.c:115'
+  type_arguments:  [ 94204314536648, 94204317809936, 94204314536648, 94204317809936 ]
+  raw_name:        nmea_checksum
+  is_public:       0
+  is_private:      0
+- name:            nibble_to_hexchar
+  file_location:   '/src/lorawan-parser/lib/libloragw/src/loragw_gps.c:149'
+  type_arguments:  [ 94204313109688, 94204313131328 ]
+  raw_name:        nibble_to_hexchar
+  is_public:       0
+  is_private:      0
+- name:            lgw_gps_enable
+  file_location:   '/src/lorawan-parser/lib/libloragw/src/loragw_gps.c:253'
+  type_arguments:  [ 94204314536648, 94204317809936, 94204317809936, 94204325863056, 
+                     94204316501984 ]
+  raw_name:        lgw_gps_enable
+  is_public:       0
+  is_private:      0
+- name:            lgw_time_on_air
+  file_location:   '/src/lorawan-parser/lib/libloragw/src/loragw_hal.c:1560'
+  type_arguments:  [ 94204313132192, 94204326594368, 94204315491768 ]
+  raw_name:        lgw_time_on_air
+  is_public:       0
+  is_private:      0
+- name:            lgw_version_info
+  file_location:   '/src/lorawan-parser/lib/libloragw/src/loragw_hal.c:1554'
+  type_arguments:  [ 94204315470160 ]
+  raw_name:        lgw_version_info
+  is_public:       0
+  is_private:      0
+- name:            lgw_get_trigcnt
+  file_location:   '/src/lorawan-parser/lib/libloragw/src/loragw_hal.c:1539'
+  type_arguments:  [ 94204314536648, 94204314440256 ]
+  raw_name:        lgw_get_trigcnt
+  is_public:       0
+  is_private:      0
+- name:            lgw_status
+  file_location:   '/src/lorawan-parser/lib/libloragw/src/loragw_hal.c:1496'
+  type_arguments:  [ 94204314536648, 94204313131328, 94204313131808 ]
+  raw_name:        lgw_status
+  is_public:       0
+  is_private:      0
+- name:            lgw_abort_tx
+  file_location:   '/src/lorawan-parser/lib/libloragw/src/loragw_hal.c:1528'
+  type_arguments:  [ 94204314536648 ]
+  raw_name:        lgw_abort_tx
+  is_public:       0
+  is_private:      0
+- name:            lgw_send
+  file_location:   '/src/lorawan-parser/lib/libloragw/src/loragw_hal.c:1208'
+  type_arguments:  [ 94204314536648, 94204326561376 ]
+  raw_name:        lgw_send
+  is_public:       0
+  is_private:      0
+- name:            lgw_receive
+  file_location:   '/src/lorawan-parser/lib/libloragw/src/loragw_hal.c:1000'
+  type_arguments:  [ 94204314536648, 94204313131328, 94204326979328 ]
+  raw_name:        lgw_receive
+  is_public:       0
+  is_private:      0
+- name:            lgw_stop
+  file_location:   '/src/lorawan-parser/lib/libloragw/src/loragw_hal.c:990'
+  type_arguments:  [ 94204314536648 ]
+  raw_name:        lgw_stop
+  is_public:       0
+  is_private:      0
+- name:            lgw_start
+  file_location:   '/src/lorawan-parser/lib/libloragw/src/loragw_hal.c:608'
+  type_arguments:  [ 94204314536648 ]
+  raw_name:        lgw_start
+  is_public:       0
+  is_private:      0
+- name:            load_firmware
+  file_location:   '/src/lorawan-parser/lib/libloragw/src/loragw_hal.c:174'
+  type_arguments:  [ 94204314536648, 94204313131328, 94204313131808, 94204313131680 ]
+  raw_name:        load_firmware
+  is_public:       0
+  is_private:      0
+- name:            lgw_constant_adjust
+  file_location:   '/src/lorawan-parser/lib/libloragw/src/loragw_hal.c:227'
+  type_arguments:  [ 0 ]
+  raw_name:        lgw_constant_adjust
+  is_public:       0
+  is_private:      0
+- name:            lgw_txgain_setconf
+  file_location:   '/src/lorawan-parser/lib/libloragw/src/loragw_hal.c:562'
+  type_arguments:  [ 94204314536648, 94204326829696 ]
+  raw_name:        lgw_txgain_setconf
+  is_public:       0
+  is_private:      0
+- name:            lgw_rxif_setconf
+  file_location:   '/src/lorawan-parser/lib/libloragw/src/loragw_hal.c:422'
+  type_arguments:  [ 94204314536648, 94204313131328, 94204326878800 ]
+  raw_name:        lgw_rxif_setconf
+  is_public:       0
+  is_private:      0
+- name:            lgw_rxrf_setconf
+  file_location:   '/src/lorawan-parser/lib/libloragw/src/loragw_hal.c:388'
+  type_arguments:  [ 94204314536648, 94204313131328, 94204327703584 ]
+  raw_name:        lgw_rxrf_setconf
+  is_public:       0
+  is_private:      0
+- name:            lgw_lbt_setconf
+  file_location:   '/src/lorawan-parser/lib/libloragw/src/loragw_hal.c:368'
+  type_arguments:  [ 94204314536648, 94204327727920 ]
+  raw_name:        lgw_lbt_setconf
+  is_public:       0
+  is_private:      0
+- name:            lgw_board_setconf
+  file_location:   '/src/lorawan-parser/lib/libloragw/src/loragw_hal.c:349'
+  type_arguments:  [ 94204314536648, 94204327738688 ]
+  raw_name:        lgw_board_setconf
+  is_public:       0
+  is_private:      0
+- name:            lgw_reg_rb
+  file_location:   '/src/lorawan-parser/lib/libloragw/src/loragw_reg.c:762'
+  type_arguments:  [ 94204314536648, 94204313131680, 94204313131808, 94204313131680 ]
+  raw_name:        lgw_reg_rb
+  is_public:       0
+  is_private:      0
+- name:            page_switch
+  file_location:   '/src/lorawan-parser/lib/libloragw/src/loragw_reg.c:398'
+  type_arguments:  [ 94204314536648, 94204313131328 ]
+  raw_name:        page_switch
+  is_public:       0
+  is_private:      0
+- name:            lgw_reg_wb
+  file_location:   '/src/lorawan-parser/lib/libloragw/src/loragw_reg.c:713'
+  type_arguments:  [ 94204314536648, 94204313131680, 94204313131808, 94204313131680 ]
+  raw_name:        lgw_reg_wb
+  is_public:       0
+  is_private:      0
+- name:            lgw_reg_w
+  file_location:   '/src/lorawan-parser/lib/libloragw/src/loragw_reg.c:621'
+  type_arguments:  [ 94204314536648, 94204313131680, 94204325651408 ]
+  raw_name:        lgw_reg_w
+  is_public:       0
+  is_private:      0
+- name:            lgw_soft_reset
+  file_location:   '/src/lorawan-parser/lib/libloragw/src/loragw_reg.c:574'
+  type_arguments:  [ 94204314536648 ]
+  raw_name:        lgw_soft_reset
+  is_public:       0
+  is_private:      0
+- name:            reg_w_align32
+  file_location:   '/src/lorawan-parser/lib/libloragw/src/loragw_reg.c:420'
+  type_arguments:  [ 94204314536648, 94204313131936, 94204313131328, 94204313131328, 
+                     94204326555664, 94204325651408 ]
+  raw_name:        reg_w_align32
+  is_public:       0
+  is_private:      0
+- name:            lgw_reg_r
+  file_location:   '/src/lorawan-parser/lib/libloragw/src/loragw_reg.c:675'
+  type_arguments:  [ 94204314536648, 94204313131680, 94204328103392 ]
+  raw_name:        lgw_reg_r
+  is_public:       0
+  is_private:      0
+- name:            reg_r_align32
+  file_location:   '/src/lorawan-parser/lib/libloragw/src/loragw_reg.c:456'
+  type_arguments:  [ 94204314536648, 94204313131936, 94204313131328, 94204313131328, 
+                     94204326555664, 94204328103392 ]
+  raw_name:        reg_r_align32
+  is_public:       0
+  is_private:      0
+- name:            lgw_reg_check
+  file_location:   '/src/lorawan-parser/lib/libloragw/src/loragw_reg.c:588'
+  type_arguments:  [ 94204314536648, 94204328259008 ]
+  raw_name:        lgw_reg_check
+  is_public:       0
+  is_private:      0
+- name:            lgw_disconnect
+  file_location:   '/src/lorawan-parser/lib/libloragw/src/loragw_reg.c:559'
+  type_arguments:  [ 94204314536648 ]
+  raw_name:        lgw_disconnect
+  is_public:       0
+  is_private:      0
+- name:            lgw_connect
+  file_location:   '/src/lorawan-parser/lib/libloragw/src/loragw_reg.c:500'
+  type_arguments:  [ 94204314536648 ]
+  raw_name:        lgw_connect
+  is_public:       0
+  is_private:      0
+- name:            check_fpga_version
+  file_location:   '/src/lorawan-parser/lib/libloragw/src/loragw_reg.c:406'
+  type_arguments:  [ 94204315491768, 94204313131328 ]
+  raw_name:        check_fpga_version
+  is_public:       0
+  is_private:      0
+- name:            lgw_spi_rb
+  file_location:   '/src/lorawan-parser/lib/libloragw/src/loragw_spi.native.c:328'
+  type_arguments:  [ 94204314536648, 94204313131936, 94204313131328, 94204313131328, 
+                     94204313131328, 94204313131808, 94204313131680 ]
+  raw_name:        lgw_spi_rb
+  is_public:       0
+  is_private:      0
+- name:            lgw_spi_wb
+  file_location:   '/src/lorawan-parser/lib/libloragw/src/loragw_spi.native.c:266'
+  type_arguments:  [ 94204314536648, 94204313131936, 94204313131328, 94204313131328, 
+                     94204313131328, 94204313131808, 94204313131680 ]
+  raw_name:        lgw_spi_wb
+  is_public:       0
+  is_private:      0
+- name:            lgw_spi_r
+  file_location:   '/src/lorawan-parser/lib/libloragw/src/loragw_spi.native.c:215'
+  type_arguments:  [ 94204314536648, 94204313131936, 94204313131328, 94204313131328, 
+                     94204313131328, 94204313131808 ]
+  raw_name:        lgw_spi_r
+  is_public:       0
+  is_private:      0
+- name:            lgw_spi_w
+  file_location:   '/src/lorawan-parser/lib/libloragw/src/loragw_spi.native.c:166'
+  type_arguments:  [ 94204314536648, 94204313131936, 94204313131328, 94204313131328, 
+                     94204313131328, 94204313131328 ]
+  raw_name:        lgw_spi_w
+  is_public:       0
+  is_private:      0
+- name:            lgw_spi_close
+  file_location:   '/src/lorawan-parser/lib/libloragw/src/loragw_spi.native.c:141'
+  type_arguments:  [ 94204314536648, 94204313131936 ]
+  raw_name:        lgw_spi_close
+  is_public:       0
+  is_private:      0
+- name:            lgw_spi_open
+  file_location:   '/src/lorawan-parser/lib/libloragw/src/loragw_spi.native.c:64'
+  type_arguments:  [ 94204314536648, 94204328731440 ]
+  raw_name:        lgw_spi_open
+  is_public:       0
+  is_private:      0
+- name:            lgw_fpga_reg_rb
+  file_location:   '/src/lorawan-parser/lib/libloragw/src/loragw_fpga.c:250'
+  type_arguments:  [ 94204314536648, 94204313131680, 94204313131808, 94204313131680 ]
+  raw_name:        lgw_fpga_reg_rb
+  is_public:       0
+  is_private:      0
+- name:            lgw_fpga_reg_wb
+  file_location:   '/src/lorawan-parser/lib/libloragw/src/loragw_fpga.c:206'
+  type_arguments:  [ 94204314536648, 94204313131680, 94204313131808, 94204313131680 ]
+  raw_name:        lgw_fpga_reg_wb
+  is_public:       0
+  is_private:      0
+- name:            lgw_fpga_reg_w
+  file_location:   '/src/lorawan-parser/lib/libloragw/src/loragw_fpga.c:135'
+  type_arguments:  [ 94204314536648, 94204313131680, 94204325651408 ]
+  raw_name:        lgw_fpga_reg_w
+  is_public:       0
+  is_private:      0
+- name:            lgw_fpga_reg_r
+  file_location:   '/src/lorawan-parser/lib/libloragw/src/loragw_fpga.c:173'
+  type_arguments:  [ 94204314536648, 94204313131680, 94204328103392 ]
+  raw_name:        lgw_fpga_reg_r
+  is_public:       0
+  is_private:      0
+- name:            lgw_fpga_configure
+  file_location:   '/src/lorawan-parser/lib/libloragw/src/loragw_fpga.c:97'
+  type_arguments:  [ 94204314536648 ]
+  raw_name:        lgw_fpga_configure
+  is_public:       0
+  is_private:      0
+- name:            lbt_is_channel_free
+  file_location:   '/src/lorawan-parser/lib/libloragw/src/loragw_lbt.c:200'
+  type_arguments:  [ 94204314536648, 94204323456256, 94204323456384 ]
+  raw_name:        lbt_is_channel_free
+  is_public:       0
+  is_private:      0
+- name:            is_equal_freq
+  file_location:   '/src/lorawan-parser/lib/libloragw/src/loragw_lbt.c:83'
+  type_arguments:  [ 94204315491768, 94204313132192, 94204313132192 ]
+  raw_name:        is_equal_freq
+  is_public:       0
+  is_private:      0
+- name:            lbt_start
+  file_location:   '/src/lorawan-parser/lib/libloragw/src/loragw_lbt.c:186'
+  type_arguments:  [ 94204314536648 ]
+  raw_name:        lbt_start
+  is_public:       0
+  is_private:      0
+- name:            lbt_setup
+  file_location:   '/src/lorawan-parser/lib/libloragw/src/loragw_lbt.c:140'
+  type_arguments:  [ 94204314536648, 94204313132192, 94204313131328, 94204313131680, 
+                     94204313131328 ]
+  raw_name:        lbt_setup
+  is_public:       0
+  is_private:      0
+- name:            lbt_setconf
+  file_location:   '/src/lorawan-parser/lib/libloragw/src/loragw_lbt.c:103'
+  type_arguments:  [ 94204314536648, 94204329562240 ]
+  raw_name:        lbt_setconf
+  is_public:       0
+  is_private:      0
+- name:            lgw_setup_sx127x
+  file_location:   '/src/lorawan-parser/lib/libloragw/src/loragw_radio.c:581'
+  type_arguments:  [ 94204314536648, 94204313132192, 94204313131328 ]
+  raw_name:        lgw_setup_sx127x
+  is_public:       0
+  is_private:      0
+- name:            reset_sx127x
+  file_location:   '/src/lorawan-parser/lib/libloragw/src/loragw_radio.c:453'
+  type_arguments:  [ 94204314536648, 94204326561824 ]
+  raw_name:        reset_sx127x
+  is_public:       0
+  is_private:      0
+- name:            lgw_sx127x_reg_r
+  file_location:   '/src/lorawan-parser/lib/libloragw/src/loragw_radio.c:575'
+  type_arguments:  [ 94204314536648, 94204313131328, 94204313131808 ]
+  raw_name:        lgw_sx127x_reg_r
+  is_public:       0
+  is_private:      0
+- name:            setup_sx1272_LoRa
+  file_location:   '/src/lorawan-parser/lib/libloragw/src/loragw_radio.c:257'
+  type_arguments:  [ 94204314536648, 94204313132192 ]
+  raw_name:        setup_sx1272_LoRa
+  is_public:       0
+  is_private:      0
+- name:            setup_sx1276_LoRa
+  file_location:   '/src/lorawan-parser/lib/libloragw/src/loragw_radio.c:393'
+  type_arguments:  [ 94204314536648, 94204313132192 ]
+  raw_name:        setup_sx1276_LoRa
+  is_public:       0
+  is_private:      0
+- name:            setup_sx1272_FSK
+  file_location:   '/src/lorawan-parser/lib/libloragw/src/loragw_radio.c:182'
+  type_arguments:  [ 94204314536648, 94204313132192 ]
+  raw_name:        setup_sx1272_FSK
+  is_public:       0
+  is_private:      0
+- name:            setup_sx1276_FSK
+  file_location:   '/src/lorawan-parser/lib/libloragw/src/loragw_radio.c:318'
+  type_arguments:  [ 94204314536648, 94204313132192 ]
+  raw_name:        setup_sx1276_FSK
+  is_public:       0
+  is_private:      0
+- name:            lgw_sx127x_reg_w
+  file_location:   '/src/lorawan-parser/lib/libloragw/src/loragw_radio.c:569'
+  type_arguments:  [ 94204314536648, 94204313131328, 94204313131328 ]
+  raw_name:        lgw_sx127x_reg_w
+  is_public:       0
+  is_private:      0
+- name:            setup_sx125x
+  file_location:   '/src/lorawan-parser/lib/libloragw/src/loragw_radio.c:484'
+  type_arguments:  [ 94204314536648, 94204313131328, 94204313131328, 94204315491768, 
+                     94204313131328, 94204313132192 ]
+  raw_name:        setup_sx125x
+  is_public:       0
+  is_private:      0
+- name:            sx125x_write
+  file_location:   '/src/lorawan-parser/lib/libloragw/src/loragw_radio.c:90'
+  type_arguments:  [ 0, 94204313131328, 94204313131328, 94204313131328 ]
+  raw_name:        sx125x_write
+  is_public:       0
+  is_private:      0
+- name:            sx125x_read
+  file_location:   '/src/lorawan-parser/lib/libloragw/src/loragw_radio.c:134'
+  type_arguments:  [ 94204313131328, 94204313131328, 94204313131328 ]
+  raw_name:        sx125x_read
+  is_public:       0
+  is_private:      0
+- name:            json_serialize_string
+  file_location:   '/src/lorawan-parser/lib/parson.c:835'
+  type_arguments:  [ 94204314536648, 94204315470160, 94204317809936 ]
+  raw_name:        json_serialize_string
+  is_public:       0
+  is_private:      0
+- name:            append_string
+  file_location:   '/src/lorawan-parser/lib/parson.c:872'
+  type_arguments:  [ 94204314536648, 94204317809936, 94204315470160 ]
+  raw_name:        append_string
+  is_public:       0
+  is_private:      0
+- name:            append_indent
+  file_location:   '/src/lorawan-parser/lib/parson.c:863'
+  type_arguments:  [ 94204314536648, 94204317809936, 94204314536648 ]
+  raw_name:        append_indent
+  is_public:       0
+  is_private:      0
+- name:            num_bytes_in_utf8_sequence
+  file_location:   '/src/lorawan-parser/lib/parson.c:146'
+  type_arguments:  [ 94204314536648, 94204313131080 ]
+  raw_name:        num_bytes_in_utf8_sequence
+  is_public:       0
+  is_private:      0
+- name:            verify_utf8_sequence
+  file_location:   '/src/lorawan-parser/lib/parson.c:161'
+  type_arguments:  [ 94204314536648, 94204319044368, 94204316501984 ]
+  raw_name:        verify_utf8_sequence
+  is_public:       0
+  is_private:      0
+- name:            is_decimal
+  file_location:   '/src/lorawan-parser/lib/parson.c:215'
+  type_arguments:  [ 94204314536648, 94204315470160, 94204317747280 ]
+  raw_name:        is_decimal
+  is_public:       0
+  is_private:      0
+- name:            json_array_resize
+  file_location:   '/src/lorawan-parser/lib/parson.c:402'
+  type_arguments:  [ 94204322922240, 94204330720416, 94204317747280 ]
+  raw_name:        json_array_resize
+  is_public:       0
+  is_private:      0
+- name:            is_utf16_hex
+  file_location:   '/src/lorawan-parser/lib/parson.c:142'
+  type_arguments:  [ 94204314536648, 94204319044368 ]
+  raw_name:        is_utf16_hex
+  is_public:       0
+  is_private:      0
+- name:            parse_utf_16
+  file_location:   '/src/lorawan-parser/lib/parson.c:453'
+  type_arguments:  [ 94204314536648, 94204320394336, 94204320977824 ]
+  raw_name:        parse_utf_16
+  is_public:       0
+  is_private:      0
+- name:            process_string
+  file_location:   '/src/lorawan-parser/lib/parson.c:495'
+  type_arguments:  [ 94204317809936, 94204315470160, 94204317747280 ]
+  raw_name:        process_string
+  is_public:       0
+  is_private:      0
+- name:            skip_quotes
+  file_location:   '/src/lorawan-parser/lib/parson.c:438'
+  type_arguments:  [ 0, 94204320394336 ]
+  raw_name:        skip_quotes
+  is_public:       0
+  is_private:      0
+- name:            json_object_resize
+  file_location:   '/src/lorawan-parser/lib/parson.c:324'
+  type_arguments:  [ 94204322922240, 94204330720160, 94204317747280 ]
+  raw_name:        json_object_resize
+  is_public:       0
+  is_private:      0
+- name:            get_quoted_string
+  file_location:   '/src/lorawan-parser/lib/parson.c:545'
+  type_arguments:  [ 94204317809936, 94204320394336 ]
+  raw_name:        get_quoted_string
+  is_public:       0
+  is_private:      0
+- name:            parse_null_value
+  file_location:   '/src/lorawan-parser/lib/parson.c:705'
+  type_arguments:  [ 94204330729696, 94204320394336 ]
+  raw_name:        parse_null_value
+  is_public:       0
+  is_private:      0
+- name:            parse_number_value
+  file_location:   '/src/lorawan-parser/lib/parson.c:692'
+  type_arguments:  [ 94204330729696, 94204320394336 ]
+  raw_name:        parse_number_value
+  is_public:       0
+  is_private:      0
+- name:            parse_boolean_value
+  file_location:   '/src/lorawan-parser/lib/parson.c:679'
+  type_arguments:  [ 94204330729696, 94204320394336 ]
+  raw_name:        parse_boolean_value
+  is_public:       0
+  is_private:      0
+- name:            parse_string_value
+  file_location:   '/src/lorawan-parser/lib/parson.c:666'
+  type_arguments:  [ 94204330729696, 94204320394336 ]
+  raw_name:        parse_string_value
+  is_public:       0
+  is_private:      0
+- name:            json_value_init_string_no_copy
+  file_location:   '/src/lorawan-parser/lib/parson.c:428'
+  type_arguments:  [ 94204330729696, 94204317809936 ]
+  raw_name:        json_value_init_string_no_copy
+  is_public:       0
+  is_private:      0
+- name:            parse_array_value
+  file_location:   '/src/lorawan-parser/lib/parson.c:628'
+  type_arguments:  [ 94204330729696, 94204320394336, 94204317747280 ]
+  raw_name:        parse_array_value
+  is_public:       0
+  is_private:      0
+- name:            parse_value
+  file_location:   '/src/lorawan-parser/lib/parson.c:555'
+  type_arguments:  [ 94204330729696, 94204320394336, 94204317747280 ]
+  raw_name:        parse_value
+  is_public:       0
+  is_private:      0
+- name:            json_array_add
+  file_location:   '/src/lorawan-parser/lib/parson.c:389'
+  type_arguments:  [ 94204322922240, 94204330720416, 94204330729696 ]
+  raw_name:        json_array_add
+  is_public:       0
+  is_private:      0
+- name:            parse_object_value
+  file_location:   '/src/lorawan-parser/lib/parson.c:579'
+  type_arguments:  [ 94204330729696, 94204320394336, 94204317747280 ]
+  raw_name:        parse_object_value
+  is_public:       0
+  is_private:      0
+- name:            json_object_add
+  file_location:   '/src/lorawan-parser/lib/parson.c:301'
+  type_arguments:  [ 94204322922240, 94204330720160, 94204315470160, 94204330729696 ]
+  raw_name:        json_object_add
+  is_public:       0
+  is_private:      0
+- name:            parson_strdup
+  file_location:   '/src/lorawan-parser/lib/parson.c:138'
+  type_arguments:  [ 94204317809936, 94204315470160 ]
+  raw_name:        parson_strdup
+  is_public:       0
+  is_private:      0
+- name:            parson_strndup
+  file_location:   '/src/lorawan-parser/lib/parson.c:129'
+  type_arguments:  [ 94204317809936, 94204315470160, 94204317747280 ]
+  raw_name:        parson_strndup
+  is_public:       0
+  is_private:      0
+- name:            json_serialize_to_buffer_r
+  file_location:   '/src/lorawan-parser/lib/parson.c:725'
+  type_arguments:  [ 94204314536648, 94204330742176, 94204317809936, 94204314536648, 
+                     94204314536648, 94204317809936 ]
+  raw_name:        json_serialize_to_buffer_r
+  is_public:       0
+  is_private:      0
+- name:            is_valid_utf8
+  file_location:   '/src/lorawan-parser/lib/parson.c:203'
+  type_arguments:  [ 94204314536648, 94204315470160, 94204317747280 ]
+  raw_name:        is_valid_utf8
+  is_public:       0
+  is_private:      0
+- name:            json_array_init
+  file_location:   '/src/lorawan-parser/lib/parson.c:379'
+  type_arguments:  [ 94204330720416 ]
+  raw_name:        json_array_init
+  is_public:       0
+  is_private:      0
+- name:            json_object_init
+  file_location:   '/src/lorawan-parser/lib/parson.c:290'
+  type_arguments:  [ 94204330720160 ]
+  raw_name:        json_object_init
+  is_public:       0
+  is_private:      0
+- name:            json_array_free
+  file_location:   '/src/lorawan-parser/lib/parson.c:420'
+  type_arguments:  [ 0, 94204330720416 ]
+  raw_name:        json_array_free
+  is_public:       0
+  is_private:      0
+- name:            json_object_free
+  file_location:   '/src/lorawan-parser/lib/parson.c:368'
+  type_arguments:  [ 0, 94204330720160 ]
+  raw_name:        json_object_free
+  is_public:       0
+  is_private:      0
+- name:            json_object_nget_value
+  file_location:   '/src/lorawan-parser/lib/parson.c:356'
+  type_arguments:  [ 94204330729696, 94204330741680, 94204315470160, 94204317747280 ]
+  raw_name:        json_object_nget_value
+  is_public:       0
+  is_private:      0
+- name:            remove_comments
+  file_location:   '/src/lorawan-parser/lib/parson.c:258'
+  type_arguments:  [ 0, 94204317809936, 94204315470160, 94204315470160 ]
+  raw_name:        remove_comments
+  is_public:       0
+  is_private:      0
+- name:            read_file
+  file_location:   '/src/lorawan-parser/lib/parson.c:226'
+  type_arguments:  [ 94204317809936, 94204315470160 ]
+  raw_name:        read_file
+  is_public:       0
+  is_private:      0
+- name:            inv_mix_sub_columns
+  file_location:   '/src/lorawan-parser/lib/aes.c:468'
+  type_arguments:  [ 0, 94204319046080 ]
+  raw_name:        inv_mix_sub_columns
+  is_public:       0
+  is_private:      0
+- name:            inv_shift_sub_rows
+  file_location:   '/src/lorawan-parser/lib/aes.c:422'
+  type_arguments:  [ 0, 94204319046080 ]
+  raw_name:        inv_shift_sub_rows
+  is_public:       0
+  is_private:      0
+- name:            xor_block
+  file_location:   '/src/lorawan-parser/lib/aes.c:344'
+  type_arguments:  [ 0, 94204313131936, 94204319045952 ]
+  raw_name:        xor_block
+  is_public:       0
+  is_private:      0
+- name:            shift_sub_rows
+  file_location:   '/src/lorawan-parser/lib/aes.c:406'
+  type_arguments:  [ 0, 94204319046080 ]
+  raw_name:        shift_sub_rows
+  is_public:       0
+  is_private:      0
+- name:            add_round_key
+  file_location:   '/src/lorawan-parser/lib/aes.c:401'
+  type_arguments:  [ 0, 94204319046080, 94204315826320 ]
+  raw_name:        add_round_key
+  is_public:       0
+  is_private:      0
+- name:            mix_sub_columns
+  file_location:   '/src/lorawan-parser/lib/aes.c:439'
+  type_arguments:  [ 0, 94204319046080 ]
+  raw_name:        mix_sub_columns
+  is_public:       0
+  is_private:      0
+- name:            copy_and_key
+  file_location:   '/src/lorawan-parser/lib/aes.c:371'
+  type_arguments:  [ 0, 94204313131936, 94204319045952, 94204319045952 ]
+  raw_name:        copy_and_key
+  is_public:       0
+  is_private:      0
+- name:            to_surrogate_pair
+  file_location:   '/src/lorawan-parser/lib/json.c:317'
+  type_arguments:  [ 0, 94204317747664, 94204320397504, 94204320397504 ]
+  raw_name:        to_surrogate_pair
+  is_public:       0
+  is_private:      0
+- name:            write_hex16
+  file_location:   '/src/lorawan-parser/lib/json.c:1301'
+  type_arguments:  [ 94204314536648, 94204317809936, 94204313131680 ]
+  raw_name:        write_hex16
+  is_public:       0
+  is_private:      0
+- name:            utf8_read_char
+  file_location:   '/src/lorawan-parser/lib/json.c:226'
+  type_arguments:  [ 94204314536648, 94204315470160, 94204320397632 ]
+  raw_name:        utf8_read_char
+  is_public:       0
+  is_private:      0
+- name:            utf8_validate_cz
+  file_location:   '/src/lorawan-parser/lib/json.c:151'
+  type_arguments:  [ 94204314536648, 94204315470160 ]
+  raw_name:        utf8_validate_cz
+  is_public:       0
+  is_private:      0
+- name:            emit_object_indented
+  file_location:   '/src/lorawan-parser/lib/json.c:1080'
+  type_arguments:  [ 0, 94204334725248, 94204334724544, 94204315470160, 
+                     94204314536648 ]
+  raw_name:        emit_object_indented
+  is_public:       0
+  is_private:      0
+- name:            sb_puts
+  file_location:   '/src/lorawan-parser/lib/json.c:100'
+  type_arguments:  [ 0, 94204334725248, 94204315470160 ]
+  raw_name:        sb_puts
+  is_public:       0
+  is_private:      0
+- name:            emit_string
+  file_location:   '/src/lorawan-parser/lib/json.c:1106'
+  type_arguments:  [ 0, 94204334725248, 94204315470160 ]
+  raw_name:        emit_string
+  is_public:       0
+  is_private:      0
+- name:            emit_value_indented
+  file_location:   '/src/lorawan-parser/lib/json.c:1001'
+  type_arguments:  [ 0, 94204334725248, 94204334724544, 94204315470160, 
+                     94204314536648 ]
+  raw_name:        emit_value_indented
+  is_public:       0
+  is_private:      0
+- name:            sb_grow
+  file_location:   '/src/lorawan-parser/lib/json.c:71'
+  type_arguments:  [ 0, 94204334725248, 94204314536648 ]
+  raw_name:        sb_grow
+  is_public:       0
+  is_private:      0
+- name:            tag_is_valid
+  file_location:   '/src/lorawan-parser/lib/json.c:1242'
+  type_arguments:  [ 94204315491768, 94204312934040 ]
+  raw_name:        tag_is_valid
+  is_public:       0
+  is_private:      0
+- name:            emit_number
+  file_location:   '/src/lorawan-parser/lib/json.c:1225'
+  type_arguments:  [ 0, 94204334725248, 94204318302760 ]
+  raw_name:        emit_number
+  is_public:       0
+  is_private:      0
+- name:            emit_array_indented
+  file_location:   '/src/lorawan-parser/lib/json.c:1041'
+  type_arguments:  [ 0, 94204334725248, 94204334724544, 94204315470160, 
+                     94204314536648 ]
+  raw_name:        emit_array_indented
+  is_public:       0
+  is_private:      0
+- name:            number_is_valid
+  file_location:   '/src/lorawan-parser/lib/json.c:1247'
+  type_arguments:  [ 94204315491768, 94204315470160 ]
+  raw_name:        number_is_valid
+  is_public:       0
+  is_private:      0
+- name:            parse_number
+  file_location:   '/src/lorawan-parser/lib/json.c:918'
+  type_arguments:  [ 94204315491768, 94204320394336, 94204317966576 ]
+  raw_name:        parse_number
+  is_public:       0
+  is_private:      0
+- name:            utf8_validate
+  file_location:   '/src/lorawan-parser/lib/json.c:206'
+  type_arguments:  [ 94204315491768, 94204315470160 ]
+  raw_name:        utf8_validate
+  is_public:       0
+  is_private:      0
+- name:            sb_put
+  file_location:   '/src/lorawan-parser/lib/json.c:87'
+  type_arguments:  [ 0, 94204334725248, 94204315470160, 94204314536648 ]
+  raw_name:        sb_put
+  is_public:       0
+  is_private:      0
+- name:            emit_object
+  file_location:   '/src/lorawan-parser/lib/json.c:1065'
+  type_arguments:  [ 0, 94204334725248, 94204334724544 ]
+  raw_name:        emit_object
+  is_public:       0
+  is_private:      0
+- name:            emit_value
+  file_location:   '/src/lorawan-parser/lib/json.c:974'
+  type_arguments:  [ 0, 94204334725248, 94204334724544 ]
+  raw_name:        emit_value
+  is_public:       0
+  is_private:      0
+- name:            emit_array
+  file_location:   '/src/lorawan-parser/lib/json.c:1028'
+  type_arguments:  [ 0, 94204334725248, 94204334724544 ]
+  raw_name:        emit_array
+  is_public:       0
+  is_private:      0
+- name:            sb_free
+  file_location:   '/src/lorawan-parser/lib/json.c:112'
+  type_arguments:  [ 0, 94204334725248 ]
+  raw_name:        sb_free
+  is_public:       0
+  is_private:      0
+- name:            utf8_write_char
+  file_location:   '/src/lorawan-parser/lib/json.c:265'
+  type_arguments:  [ 94204314536648, 94204317747664, 94204317809936 ]
+  raw_name:        utf8_write_char
+  is_public:       0
+  is_private:      0
+- name:            from_surrogate_pair
+  file_location:   '/src/lorawan-parser/lib/json.c:302'
+  type_arguments:  [ 94204315491768, 94204313131680, 94204313131680, 94204320397632 ]
+  raw_name:        from_surrogate_pair
+  is_public:       0
+  is_private:      0
+- name:            parse_hex16
+  file_location:   '/src/lorawan-parser/lib/json.c:1268'
+  type_arguments:  [ 94204315491768, 94204320394336, 94204320397504 ]
+  raw_name:        parse_hex16
+  is_public:       0
+  is_private:      0
+- name:            parse_object
+  file_location:   '/src/lorawan-parser/lib/json.c:737'
+  type_arguments:  [ 94204315491768, 94204320394336, 94204334723936 ]
+  raw_name:        parse_object
+  is_public:       0
+  is_private:      0
+- name:            skip_space
+  file_location:   '/src/lorawan-parser/lib/json.c:966'
+  type_arguments:  [ 0, 94204320394336 ]
+  raw_name:        skip_space
+  is_public:       0
+  is_private:      0
+- name:            parse_string
+  file_location:   '/src/lorawan-parser/lib/json.c:793'
+  type_arguments:  [ 94204315491768, 94204320394336, 94204320977824 ]
+  raw_name:        parse_string
+  is_public:       0
+  is_private:      0
+- name:            parse_value
+  file_location:   '/src/lorawan-parser/lib/json.c:623'
+  type_arguments:  [ 94204315491768, 94204320394336, 94204334723936 ]
+  raw_name:        parse_value
+  is_public:       0
+  is_private:      0
+- name:            append_member
+  file_location:   '/src/lorawan-parser/lib/json.c:562'
+  type_arguments:  [ 0, 94204334716624, 94204317809936, 94204334716624 ]
+  raw_name:        append_member
+  is_public:       0
+  is_private:      0
+- name:            append_node
+  file_location:   '/src/lorawan-parser/lib/json.c:536'
+  type_arguments:  [ 0, 94204334716624, 94204334716624 ]
+  raw_name:        append_node
+  is_public:       0
+  is_private:      0
+- name:            expect_literal
+  file_location:   '/src/lorawan-parser/lib/json.c:1252'
+  type_arguments:  [ 94204315491768, 94204320394336, 94204315470160 ]
+  raw_name:        expect_literal
+  is_public:       0
+  is_private:      0
+- name:            mkstring
+  file_location:   '/src/lorawan-parser/lib/json.c:507'
+  type_arguments:  [ 94204334716624, 94204317809936 ]
+  raw_name:        mkstring
+  is_public:       0
+  is_private:      0
+- name:            parse_array
+  file_location:   '/src/lorawan-parser/lib/json.c:693'
+  type_arguments:  [ 94204315491768, 94204320394336, 94204334723936 ]
+  raw_name:        parse_array
+  is_public:       0
+  is_private:      0
+- name:            mknode
+  file_location:   '/src/lorawan-parser/lib/json.c:486'
+  type_arguments:  [ 94204334716624, 94204317748560 ]
+  raw_name:        mknode
+  is_public:       0
+  is_private:      0
+- name:            sb_init
+  file_location:   '/src/lorawan-parser/lib/json.c:56'
+  type_arguments:  [ 0, 94204334725248 ]
+  raw_name:        sb_init
+  is_public:       0
+  is_private:      0
+- name:            sb_finish
+  file_location:   '/src/lorawan-parser/lib/json.c:105'
+  type_arguments:  [ 94204317809936, 94204334725248 ]
+  raw_name:        sb_finish
+  is_public:       0
+  is_private:      0
+- name:            prepend_node
+  file_location:   '/src/lorawan-parser/lib/json.c:549'
+  type_arguments:  [ 0, 94204334716624, 94204334716624 ]
+  raw_name:        prepend_node
+  is_public:       0
+  is_private:      0
+- name:            json_strdup
+  file_location:   '/src/lorawan-parser/lib/json.c:38'
+  type_arguments:  [ 94204317809936, 94204315470160 ]
+  raw_name:        json_strdup
+  is_public:       0
+  is_private:      0
+...

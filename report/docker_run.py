@@ -238,8 +238,8 @@ def run_new(cmd=None):
   # - we will use the oss-fuzz project of our workdir, which is
   #   the only one that has the projets.
   environ = os.environ.copy()
-  environ['LLM_NUM_EVA'] = '4'
-  environ['LLM_NUM_EXP'] = '4'
+  #environ['LLM_NUM_EVA'] = '4'
+  #environ['LLM_NUM_EXP'] = '4'
 
   # We need to make sure that we use our version of OSS-Fuzz
   #environ['OFG_CLEAN_UP_OSS_FUZZ'] = '0'

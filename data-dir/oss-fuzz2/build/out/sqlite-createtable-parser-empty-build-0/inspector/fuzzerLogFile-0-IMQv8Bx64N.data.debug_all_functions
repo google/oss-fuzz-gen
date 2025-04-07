@@ -1,0 +1,530 @@
+---
+- name:            LLVMFuzzerTestOneInput
+  file_location:   '/src/fuzzers/empty-fuzzer.c:5'
+  type_arguments:  [ 94008494606472, 94008496156016, 94008494608496 ]
+  raw_name:        LLVMFuzzerTestOneInput
+  is_public:       0
+  is_private:      0
+- name:            sql3lexer_checkskip
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:422'
+  type_arguments:  [ 94008494625032, 94008494623248 ]
+  raw_name:        sql3lexer_checkskip
+  is_public:       0
+  is_private:      0
+- name:            symbol_is_toskip
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:186'
+  type_arguments:  [ 94008494625032, 94008494630224 ]
+  raw_name:        symbol_is_toskip
+  is_public:       0
+  is_private:      0
+- name:            symbol_is_comment
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:191'
+  type_arguments:  [ 94008494625032, 94008494630224, 94008494623248 ]
+  raw_name:        symbol_is_comment
+  is_public:       0
+  is_private:      0
+- name:            sql3lexer_comment
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:322'
+  type_arguments:  [ 94008494622992, 94008494623248 ]
+  raw_name:        sql3lexer_comment
+  is_public:       0
+  is_private:      0
+- name:            symbol_is_newline
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:182'
+  type_arguments:  [ 94008494625032, 94008494630224 ]
+  raw_name:        symbol_is_newline
+  is_public:       0
+  is_private:      0
+- name:            symbol_is_space
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:178'
+  type_arguments:  [ 94008494625032, 94008494630224 ]
+  raw_name:        symbol_is_space
+  is_public:       0
+  is_private:      0
+- name:            sql3parse_foreignkey_clause
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:493'
+  type_arguments:  [ 94008494609136, 94008494623248 ]
+  raw_name:        sql3parse_foreignkey_clause
+  is_public:       0
+  is_private:      0
+- name:            sql3lexer_next
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:432'
+  type_arguments:  [ 94008494622992, 94008494623248 ]
+  raw_name:        sql3lexer_next
+  is_public:       0
+  is_private:      0
+- name:            sql3lexer_peek
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:447'
+  type_arguments:  [ 94008494622992, 94008494623248 ]
+  raw_name:        sql3lexer_peek
+  is_public:       0
+  is_private:      0
+- name:            symbol_is_punctuation
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:218'
+  type_arguments:  [ 94008494625032, 94008494630224 ]
+  raw_name:        symbol_is_punctuation
+  is_public:       0
+  is_private:      0
+- name:            sql3lexer_punctuation
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:365'
+  type_arguments:  [ 94008494622992, 94008494623248 ]
+  raw_name:        sql3lexer_punctuation
+  is_public:       0
+  is_private:      0
+- name:            symbol_is_alpha
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:197'
+  type_arguments:  [ 94008494625032, 94008494630224 ]
+  raw_name:        symbol_is_alpha
+  is_public:       0
+  is_private:      0
+- name:            sql3lexer_alpha
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:379'
+  type_arguments:  [ 94008494622992, 94008494623248 ]
+  raw_name:        sql3lexer_alpha
+  is_public:       0
+  is_private:      0
+- name:            symbol_is_escape
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:207'
+  type_arguments:  [ 94008494625032, 94008494630224 ]
+  raw_name:        symbol_is_escape
+  is_public:       0
+  is_private:      0
+- name:            sql3lexer_escape
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:399'
+  type_arguments:  [ 94008494622992, 94008494623248 ]
+  raw_name:        sql3lexer_escape
+  is_public:       0
+  is_private:      0
+- name:            symbol_is_identifier
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:202'
+  type_arguments:  [ 94008494625032, 94008494630224 ]
+  raw_name:        symbol_is_identifier
+  is_public:       0
+  is_private:      0
+- name:            sql3lexer_keyword
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:234'
+  type_arguments:  [ 94008494622992, 94008494606240, 94008494608496 ]
+  raw_name:        sql3lexer_keyword
+  is_public:       0
+  is_private:      0
+- name:            str_nocasencmp
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:166'
+  type_arguments:  [ 94008494606472, 94008494606240, 94008494606240, 94008494608496 ]
+  raw_name:        str_nocasencmp
+  is_public:       0
+  is_private:      0
+- name:            sql3parse_literal
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:753'
+  type_arguments:  [ 94008494607392, 94008494623248 ]
+  raw_name:        sql3parse_literal
+  is_public:       0
+  is_private:      0
+- name:            sql3parse_expression
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:797'
+  type_arguments:  [ 94008494607392, 94008494623248 ]
+  raw_name:        sql3parse_expression
+  is_public:       0
+  is_private:      0
+- name:            sql3parse_optionalconflitclause
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:471'
+  type_arguments:  [ 94008494633552, 94008494623248, 94008494774448 ]
+  raw_name:        sql3parse_optionalconflitclause
+  is_public:       0
+  is_private:      0
+- name:            sql3parse_optionalorder
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:458'
+  type_arguments:  [ 94008494633552, 94008494623248, 94008494924176 ]
+  raw_name:        sql3parse_optionalorder
+  is_public:       0
+  is_private:      0
+- name:            sql3parse_column_constraints
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:863'
+  type_arguments:  [ 94008494633552, 94008494623248, 94008494625920 ]
+  raw_name:        sql3parse_column_constraints
+  is_public:       0
+  is_private:      0
+- name:            token_is_column_constraint
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:222'
+  type_arguments:  [ 94008494625032, 94008494622992 ]
+  raw_name:        token_is_column_constraint
+  is_public:       0
+  is_private:      0
+- name:            sql3parse_column_type
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:821'
+  type_arguments:  [ 94008494633552, 94008494623248, 94008494625920 ]
+  raw_name:        sql3parse_column_type
+  is_public:       0
+  is_private:      0
+- name:            sql3parse_table_options
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:600'
+  type_arguments:  [ 94008494633552, 94008494623248 ]
+  raw_name:        sql3parse_table_options
+  is_public:       0
+  is_private:      0
+- name:            sql3parse_table_constraint
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:640'
+  type_arguments:  [ 94008494606912, 94008494623248 ]
+  raw_name:        sql3parse_table_constraint
+  is_public:       0
+  is_private:      0
+- name:            token_is_table_constraint
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:227'
+  type_arguments:  [ 94008494625032, 94008494622992 ]
+  raw_name:        token_is_table_constraint
+  is_public:       0
+  is_private:      0
+- name:            sql3parse_column
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:943'
+  type_arguments:  [ 94008494625920, 94008494623248 ]
+  raw_name:        sql3parse_column
+  is_public:       0
+  is_private:      0
+- name:            sql3parse_schema_identifier
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:976'
+  type_arguments:  [ 94008494633552, 94008494623248 ]
+  raw_name:        sql3parse_schema_identifier
+  is_public:       0
+  is_private:      0
+- name:            sql3string_ptr
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:148'
+  type_arguments:  [ 94008494606240, 94008494608752, 94008493178704 ]
+  raw_name:        sql3string_ptr
+  is_public:       0
+  is_private:      0
+- name:            sql3parse_alter
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:1009'
+  type_arguments:  [ 94008494633552, 94008494623248 ]
+  raw_name:        sql3parse_alter
+  is_public:       0
+  is_private:      0
+- name:            sql3parse_create
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:1110'
+  type_arguments:  [ 94008494633552, 94008494623248 ]
+  raw_name:        sql3parse_create
+  is_public:       0
+  is_private:      0
+- name:            sql3parse
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:1238'
+  type_arguments:  [ 94008494633552, 94008494623248 ]
+  raw_name:        sql3parse
+  is_public:       0
+  is_private:      0
+- name:            sql3parse_table
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:1527'
+  type_arguments:  [ 94008494624320, 94008494606240, 94008494608496, 94008495536032 ]
+  raw_name:        sql3parse_table
+  is_public:       0
+  is_private:      0
+- name:            sql3idxcolumn_order
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:1521'
+  type_arguments:  [ 94008494611792, 94008494610960 ]
+  raw_name:        sql3idxcolumn_order
+  is_public:       0
+  is_private:      0
+- name:            sql3idxcolumn_collate
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:1516'
+  type_arguments:  [ 94008494608752, 94008494610960 ]
+  raw_name:        sql3idxcolumn_collate
+  is_public:       0
+  is_private:      0
+- name:            sql3idxcolumn_name
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:1511'
+  type_arguments:  [ 94008494608752, 94008494610960 ]
+  raw_name:        sql3idxcolumn_name
+  is_public:       0
+  is_private:      0
+- name:            sql3foreignkey_deferrable
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:1505'
+  type_arguments:  [ 94008494610352, 94008494609136 ]
+  raw_name:        sql3foreignkey_deferrable
+  is_public:       0
+  is_private:      0
+- name:            sql3foreignkey_match
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:1500'
+  type_arguments:  [ 94008494608752, 94008494609136 ]
+  raw_name:        sql3foreignkey_match
+  is_public:       0
+  is_private:      0
+- name:            sql3foreignkey_onupdate_action
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:1496'
+  type_arguments:  [ 94008494609840, 94008494609136 ]
+  raw_name:        sql3foreignkey_onupdate_action
+  is_public:       0
+  is_private:      0
+- name:            sql3foreignkey_ondelete_action
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:1492'
+  type_arguments:  [ 94008494609840, 94008494609136 ]
+  raw_name:        sql3foreignkey_ondelete_action
+  is_public:       0
+  is_private:      0
+- name:            sql3foreignkey_get_column
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:1485'
+  type_arguments:  [ 94008494608752, 94008494609136, 94008494608496 ]
+  raw_name:        sql3foreignkey_get_column
+  is_public:       0
+  is_private:      0
+- name:            sql3foreignkey_num_columns
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:1481'
+  type_arguments:  [ 94008494608496, 94008494609136 ]
+  raw_name:        sql3foreignkey_num_columns
+  is_public:       0
+  is_private:      0
+- name:            sql3foreignkey_table
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:1476'
+  type_arguments:  [ 94008494608752, 94008494609136 ]
+  raw_name:        sql3foreignkey_table
+  is_public:       0
+  is_private:      0
+- name:            sql3column_foreignkey_clause
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:1470'
+  type_arguments:  [ 94008494609136, 94008494625920 ]
+  raw_name:        sql3column_foreignkey_clause
+  is_public:       0
+  is_private:      0
+- name:            sql3column_collate_name
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:1465'
+  type_arguments:  [ 94008494608752, 94008494625920 ]
+  raw_name:        sql3column_collate_name
+  is_public:       0
+  is_private:      0
+- name:            sql3column_default_expr
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:1460'
+  type_arguments:  [ 94008494608752, 94008494625920 ]
+  raw_name:        sql3column_default_expr
+  is_public:       0
+  is_private:      0
+- name:            sql3column_check_expr
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:1455'
+  type_arguments:  [ 94008494608752, 94008494625920 ]
+  raw_name:        sql3column_check_expr
+  is_public:       0
+  is_private:      0
+- name:            sql3column_unique_conflictclause
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:1451'
+  type_arguments:  [ 94008494611216, 94008494625920 ]
+  raw_name:        sql3column_unique_conflictclause
+  is_public:       0
+  is_private:      0
+- name:            sql3column_notnull_conflictclause
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:1447'
+  type_arguments:  [ 94008494611216, 94008494625920 ]
+  raw_name:        sql3column_notnull_conflictclause
+  is_public:       0
+  is_private:      0
+- name:            sql3column_pk_conflictclause
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:1443'
+  type_arguments:  [ 94008494611216, 94008494625920 ]
+  raw_name:        sql3column_pk_conflictclause
+  is_public:       0
+  is_private:      0
+- name:            sql3column_pk_order
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:1439'
+  type_arguments:  [ 94008494611792, 94008494625920 ]
+  raw_name:        sql3column_pk_order
+  is_public:       0
+  is_private:      0
+- name:            sql3column_is_unique
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:1435'
+  type_arguments:  [ 94008494625032, 94008494625920 ]
+  raw_name:        sql3column_is_unique
+  is_public:       0
+  is_private:      0
+- name:            sql3column_is_notnull
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:1431'
+  type_arguments:  [ 94008494625032, 94008494625920 ]
+  raw_name:        sql3column_is_notnull
+  is_public:       0
+  is_private:      0
+- name:            sql3column_is_autoincrement
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:1427'
+  type_arguments:  [ 94008494625032, 94008494625920 ]
+  raw_name:        sql3column_is_autoincrement
+  is_public:       0
+  is_private:      0
+- name:            sql3column_is_primarykey
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:1423'
+  type_arguments:  [ 94008494625032, 94008494625920 ]
+  raw_name:        sql3column_is_primarykey
+  is_public:       0
+  is_private:      0
+- name:            sql3column_comment
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:1418'
+  type_arguments:  [ 94008494608752, 94008494625920 ]
+  raw_name:        sql3column_comment
+  is_public:       0
+  is_private:      0
+- name:            sql3column_constraint_name
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:1413'
+  type_arguments:  [ 94008494608752, 94008494625920 ]
+  raw_name:        sql3column_constraint_name
+  is_public:       0
+  is_private:      0
+- name:            sql3column_length
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:1408'
+  type_arguments:  [ 94008494608752, 94008494625920 ]
+  raw_name:        sql3column_length
+  is_public:       0
+  is_private:      0
+- name:            sql3column_type
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:1403'
+  type_arguments:  [ 94008494608752, 94008494625920 ]
+  raw_name:        sql3column_type
+  is_public:       0
+  is_private:      0
+- name:            sql3column_name
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:1398'
+  type_arguments:  [ 94008494608752, 94008494625920 ]
+  raw_name:        sql3column_name
+  is_public:       0
+  is_private:      0
+- name:            sql3table_constraint_foreignkey_clause
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:1391'
+  type_arguments:  [ 94008494609136, 94008494606912 ]
+  raw_name:        sql3table_constraint_foreignkey_clause
+  is_public:       0
+  is_private:      0
+- name:            sql3table_constraint_get_fkcolumn
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:1384'
+  type_arguments:  [ 94008494608752, 94008494606912, 94008494608496 ]
+  raw_name:        sql3table_constraint_get_fkcolumn
+  is_public:       0
+  is_private:      0
+- name:            sql3table_constraint_num_fkcolumns
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:1379'
+  type_arguments:  [ 94008494608496, 94008494606912 ]
+  raw_name:        sql3table_constraint_num_fkcolumns
+  is_public:       0
+  is_private:      0
+- name:            sql3table_constraint_check_expr
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:1373'
+  type_arguments:  [ 94008494608752, 94008494606912 ]
+  raw_name:        sql3table_constraint_check_expr
+  is_public:       0
+  is_private:      0
+- name:            sql3table_constraint_conflict_clause
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:1368'
+  type_arguments:  [ 94008494611216, 94008494606912 ]
+  raw_name:        sql3table_constraint_conflict_clause
+  is_public:       0
+  is_private:      0
+- name:            sql3table_constraint_get_idxcolumn
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:1362'
+  type_arguments:  [ 94008494610960, 94008494606912, 94008494608496 ]
+  raw_name:        sql3table_constraint_get_idxcolumn
+  is_public:       0
+  is_private:      0
+- name:            sql3table_constraint_num_idxcolumns
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:1357'
+  type_arguments:  [ 94008494608496, 94008494606912 ]
+  raw_name:        sql3table_constraint_num_idxcolumns
+  is_public:       0
+  is_private:      0
+- name:            sql3table_constraint_type
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:1353'
+  type_arguments:  [ 94008494607136, 94008494606912 ]
+  raw_name:        sql3table_constraint_type
+  is_public:       0
+  is_private:      0
+- name:            sql3table_constraint_name
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:1348'
+  type_arguments:  [ 94008494608752, 94008494606912 ]
+  raw_name:        sql3table_constraint_name
+  is_public:       0
+  is_private:      0
+- name:            sql3table_free
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:1313'
+  type_arguments:  [ 0, 94008494624320 ]
+  raw_name:        sql3table_free
+  is_public:       0
+  is_private:      0
+- name:            sql3table_type
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:1309'
+  type_arguments:  [ 94008494626688, 94008494624320 ]
+  raw_name:        sql3table_type
+  is_public:       0
+  is_private:      0
+- name:            sql3table_get_constraint
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:1304'
+  type_arguments:  [ 94008494606912, 94008494624320, 94008494608496 ]
+  raw_name:        sql3table_get_constraint
+  is_public:       0
+  is_private:      0
+- name:            sql3table_num_constraints
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:1300'
+  type_arguments:  [ 94008494608496, 94008494624320 ]
+  raw_name:        sql3table_num_constraints
+  is_public:       0
+  is_private:      0
+- name:            sql3table_get_column
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:1295'
+  type_arguments:  [ 94008494625920, 94008494624320, 94008494608496 ]
+  raw_name:        sql3table_get_column
+  is_public:       0
+  is_private:      0
+- name:            sql3table_num_columns
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:1291'
+  type_arguments:  [ 94008494608496, 94008494624320 ]
+  raw_name:        sql3table_num_columns
+  is_public:       0
+  is_private:      0
+- name:            sql3table_is_strict
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:1287'
+  type_arguments:  [ 94008494625032, 94008494624320 ]
+  raw_name:        sql3table_is_strict
+  is_public:       0
+  is_private:      0
+- name:            sql3table_is_withoutrowid
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:1283'
+  type_arguments:  [ 94008494625032, 94008494624320 ]
+  raw_name:        sql3table_is_withoutrowid
+  is_public:       0
+  is_private:      0
+- name:            sql3table_is_ifnotexists
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:1279'
+  type_arguments:  [ 94008494625032, 94008494624320 ]
+  raw_name:        sql3table_is_ifnotexists
+  is_public:       0
+  is_private:      0
+- name:            sql3table_is_temporary
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:1275'
+  type_arguments:  [ 94008494625032, 94008494624320 ]
+  raw_name:        sql3table_is_temporary
+  is_public:       0
+  is_private:      0
+- name:            sql3table_new_name
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:1270'
+  type_arguments:  [ 94008494608752, 94008494624320 ]
+  raw_name:        sql3table_new_name
+  is_public:       0
+  is_private:      0
+- name:            sql3table_current_name
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:1265'
+  type_arguments:  [ 94008494608752, 94008494624320 ]
+  raw_name:        sql3table_current_name
+  is_public:       0
+  is_private:      0
+- name:            sql3table_comment
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:1260'
+  type_arguments:  [ 94008494608752, 94008494624320 ]
+  raw_name:        sql3table_comment
+  is_public:       0
+  is_private:      0
+- name:            sql3table_name
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:1255'
+  type_arguments:  [ 94008494608752, 94008494624320 ]
+  raw_name:        sql3table_name
+  is_public:       0
+  is_private:      0
+- name:            sql3table_schema
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:1250'
+  type_arguments:  [ 94008494608752, 94008494624320 ]
+  raw_name:        sql3table_schema
+  is_public:       0
+  is_private:      0
+- name:            sql3string_cstring
+  file_location:   '/src/sqlite-createtable-parser/./sql3parse_table.c:153'
+  type_arguments:  [ 94008494606240, 94008494608752 ]
+  raw_name:        sql3string_cstring
+  is_public:       0
+  is_private:      0
+...

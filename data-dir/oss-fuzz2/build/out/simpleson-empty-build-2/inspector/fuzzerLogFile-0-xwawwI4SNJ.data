@@ -1,0 +1,3 @@
+Call tree
+LLVMFuzzerTestOneInput /src/fuzzers/empty-fuzzer.cpp linenumber=-1
+====================================

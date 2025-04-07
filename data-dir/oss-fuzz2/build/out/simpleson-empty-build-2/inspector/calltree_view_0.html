@@ -1,0 +1,74 @@
+<html>
+ <head>
+  <!-- Google tag (gtag.js) -->
+  <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-8WTFM1Y62J">
+  </script>
+  <script>
+   window.dataLayer = window.dataLayer || [];
+                  function gtag(){dataLayer.push(arguments);}
+                  gtag('js', new Date());
+
+                  gtag('config', 'G-8WTFM1Y62J');
+  </script>
+  <link href="prism.css" rel="stylesheet"/>
+  <link href="https://unpkg.com/dracula-prism/dist/css/dracula-prism.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <script crossorigin="anonymous" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" src="https://code.jquery.com/jquery-3.6.0.min.js">
+  </script>
+  <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js">
+  </script>
+  <link href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css" rel="stylesheet"/>
+  <link href="styles.css" rel="stylesheet"/>
+  <link href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css" rel="stylesheet"/>
+  <div class="top-navbar">
+   <div class="top-navbar-title-wrapper">
+    <div class="top-navbar-title" style="margin-bottom: 10px; font-size:25px">
+     Fuzz introspector: empty-fuzzer
+    </div>
+    <div style="margin:0; font-size: 10px">
+     For issues and ideas:
+     <a href="https://github.com/ossf/fuzz-introspector/issues" style="color:#FFFFFF;">
+      https://github.com/ossf/fuzz-introspector/issues
+     </a>
+    </div>
+   </div>
+  </div>
+  <div class="content-wrapper calltree-page">
+   <div class="content-section calltree-content-section">
+    <h1>
+     Fuzzer calltree
+    </h1>
+    <div id="calltree-wrapper">
+     <div class="call-tree-section-wrapper">
+      <div class="gold-background coverage-line">
+       <span class="coverage-line-inner" data-calltree-idx="00000" data-paddingleft="100px" style="padding-left: 100px">
+        <span class="node-depth-wrapper">
+         0
+        </span>
+        <code class="language-clike">
+         LLVMFuzzerTestOneInput
+        </code>
+        <span class="coverage-line-filename">
+         <a href="/covreport/empty-fuzzer/linux/src/fuzzers/empty-fuzzer.cpp.html#L6">
+          [function]
+         </a>
+         <a href="#">
+          [call site]
+         </a>
+         <span class="calltree-idx">
+          00000
+         </span>
+        </span>
+       </span>
+      </div>
+     </div>
+     <div id="side-overview-wrapper">
+     </div>
+    </div>
+   </div>
+  </div>
+  <script src="calltree.js">
+  </script>
+ </body>
+</html>

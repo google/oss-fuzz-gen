@@ -1,0 +1,1849 @@
+---
+Fuzzer filename: '/src/fuzzers/empty-fuzzer.c'
+All functions:
+  Function list name: All functions
+  Elements:
+    - functionName:    LLVMFuzzerTestOneInput
+      functionSourceFile: '/src/fuzzers/empty-fuzzer.c'
+      linkageType:     externalLinkage
+      functionLinenumber: 6
+      functionLinenumberEnd: 13
+      functionDepth:   0
+      returnType:      int
+      argCount:        2
+      argTypes:
+        - 'N/A'
+        - size_t
+      constantsTouched: []
+      argNames:
+        - data
+        - size
+      BBCount:         3
+      ICount:          18
+      EdgeCount:       3
+      CyclomaticComplexity: 2
+      functionsReached:
+        - printf
+      functionUses:    0
+      BranchProfiles:  []
+      Callsites:
+        - Src:             'fuzzers/empty-fuzzer.c:7,5'
+          Dst:             printf
+    - functionName:    printf
+      functionSourceFile: ''
+      linkageType:     externalLinkage
+      functionLinenumber: -1
+      functionLinenumberEnd: 0
+      functionDepth:   0
+      returnType:      int
+      argCount:        1
+      argTypes:
+        - 'N/A'
+      constantsTouched: []
+      argNames:
+        - ''
+      BBCount:         0
+      ICount:          0
+      EdgeCount:       0
+      CyclomaticComplexity: 2
+      functionsReached: []
+      functionUses:    7
+      BranchProfiles:  []
+      Callsites:       []
+    - functionName:    main
+      functionSourceFile: ''
+      linkageType:     externalLinkage
+      functionLinenumber: -1
+      functionLinenumberEnd: 0
+      functionDepth:   0
+      returnType:      int
+      argCount:        0
+      argTypes:        []
+      constantsTouched: []
+      argNames:        []
+      BBCount:         0
+      ICount:          0
+      EdgeCount:       0
+      CyclomaticComplexity: 2
+      functionsReached: []
+      functionUses:    0
+      BranchProfiles:  []
+      Callsites:       []
+    - functionName:    get_token_to_eol
+      functionSourceFile: '/src/picohttpparser/./picohttpparser.c'
+      linkageType:     InternalLinkage
+      functionLinenumber: 135
+      functionLinenumberEnd: 195
+      functionDepth:   0
+      returnType:      'N/A'
+      argCount:        5
+      argTypes:
+        - 'N/A'
+        - 'N/A'
+        - 'N/A'
+        - 'N/A'
+        - 'N/A'
+      constantsTouched: []
+      argNames:
+        - buf
+        - buf_end
+        - token
+        - token_len
+        - ret
+      BBCount:         72
+      ICount:          471
+      EdgeCount:       92
+      CyclomaticComplexity: 22
+      functionsReached: []
+      functionUses:    2
+      BranchProfiles:
+        - Branch String:   './picohttpparser.c:148,5'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:155,9'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:172,5'
+              BranchSideFuncs: []
+        - Branch String:   './picohttpparser.c:155,9'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:155,9'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:156,9'
+              BranchSideFuncs: []
+        - Branch String:   './picohttpparser.c:156,9'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:156,9'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:157,9'
+              BranchSideFuncs: []
+        - Branch String:   './picohttpparser.c:157,9'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:157,9'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:158,9'
+              BranchSideFuncs: []
+        - Branch String:   './picohttpparser.c:158,9'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:158,9'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:159,9'
+              BranchSideFuncs: []
+        - Branch String:   './picohttpparser.c:159,9'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:159,9'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:160,9'
+              BranchSideFuncs: []
+        - Branch String:   './picohttpparser.c:160,9'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:160,9'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:161,9'
+              BranchSideFuncs: []
+        - Branch String:   './picohttpparser.c:161,9'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:161,9'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:162,9'
+              BranchSideFuncs: []
+        - Branch String:   './picohttpparser.c:162,9'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:162,9'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:164,9'
+              BranchSideFuncs: []
+        - Branch String:   './picohttpparser.c:166,51'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:166,54'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:166,81'
+              BranchSideFuncs: []
+        - Branch String:   './picohttpparser.c:166,78'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:166,81'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:167,13'
+              BranchSideFuncs: []
+        - Branch String:   './picohttpparser.c:166,13'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:167,13'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:169,9'
+              BranchSideFuncs: []
+        - Branch String:   './picohttpparser.c:173,9'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:173,9'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:174,13'
+              BranchSideFuncs: []
+        - Branch String:   './picohttpparser.c:174,13'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:175,18'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:179,5'
+              BranchSideFuncs: []
+        - Branch String:   './picohttpparser.c:175,55'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:175,58'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:175,85'
+              BranchSideFuncs: []
+        - Branch String:   './picohttpparser.c:175,82'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:175,85'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:176,17'
+              BranchSideFuncs: []
+        - Branch String:   './picohttpparser.c:175,17'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:176,17'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:178,9'
+              BranchSideFuncs: []
+        - Branch String:   './picohttpparser.c:181,9'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:182,9'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:185,17'
+              BranchSideFuncs: []
+        - Branch String:   './picohttpparser.c:183,9'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:183,9'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:183,9'
+              BranchSideFuncs: []
+        - Branch String:   './picohttpparser.c:183,9'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:183,9'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:184,22'
+              BranchSideFuncs: []
+        - Branch String:   './picohttpparser.c:185,16'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:186,22'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:189,10'
+              BranchSideFuncs: []
+      Callsites:       []
+    - functionName:    parse_http_version
+      functionSourceFile: '/src/picohttpparser/./picohttpparser.c'
+      linkageType:     InternalLinkage
+      functionLinenumber: 281
+      functionLinenumberEnd: 296
+      functionDepth:   0
+      returnType:      'N/A'
+      argCount:        4
+      argTypes:
+        - 'N/A'
+        - 'N/A'
+        - 'N/A'
+        - 'N/A'
+      constantsTouched: []
+      argNames:
+        - buf
+        - buf_end
+        - minor_version
+        - ret
+      BBCount:         23
+      ICount:          180
+      EdgeCount:       32
+      CyclomaticComplexity: 11
+      functionsReached: []
+      functionUses:    2
+      BranchProfiles:
+        - Branch String:   './picohttpparser.c:283,9'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:284,10'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:287,5'
+              BranchSideFuncs: []
+        - Branch String:   './picohttpparser.c:287,5'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:287,5'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:288,5'
+              BranchSideFuncs: []
+        - Branch String:   './picohttpparser.c:288,5'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:288,5'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:289,5'
+              BranchSideFuncs: []
+        - Branch String:   './picohttpparser.c:289,5'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:289,5'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:290,5'
+              BranchSideFuncs: []
+        - Branch String:   './picohttpparser.c:290,5'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:290,5'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:291,5'
+              BranchSideFuncs: []
+        - Branch String:   './picohttpparser.c:291,5'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:291,5'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:292,5'
+              BranchSideFuncs: []
+        - Branch String:   './picohttpparser.c:292,5'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:292,5'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:293,5'
+              BranchSideFuncs: []
+        - Branch String:   './picohttpparser.c:293,5'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:293,5'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:294,5'
+              BranchSideFuncs: []
+        - Branch String:   './picohttpparser.c:294,5'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:294,5'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:294,5'
+              BranchSideFuncs: []
+        - Branch String:   './picohttpparser.c:294,5'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:294,5'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:294,5'
+              BranchSideFuncs: []
+      Callsites:       []
+    - functionName:    findchar_fast
+      functionSourceFile: '/src/picohttpparser/./picohttpparser.c'
+      linkageType:     InternalLinkage
+      functionLinenumber: 106
+      functionLinenumberEnd: 131
+      functionDepth:   0
+      returnType:      'N/A'
+      argCount:        5
+      argTypes:
+        - 'N/A'
+        - 'N/A'
+        - 'N/A'
+        - size_t
+        - 'N/A'
+      constantsTouched: []
+      argNames:
+        - buf
+        - buf_end
+        - ranges
+        - ranges_size
+        - found
+      BBCount:         1
+      ICount:          25
+      EdgeCount:       1
+      CyclomaticComplexity: 2
+      functionsReached: []
+      functionUses:    2
+      BranchProfiles:  []
+      Callsites:       []
+    - functionName:    parse_token
+      functionSourceFile: '/src/picohttpparser/./picohttpparser.c'
+      linkageType:     InternalLinkage
+      functionLinenumber: 247
+      functionLinenumberEnd: 277
+      functionDepth:   0
+      returnType:      'N/A'
+      argCount:        6
+      argTypes:
+        - 'N/A'
+        - 'N/A'
+        - 'N/A'
+        - 'N/A'
+        - char
+        - 'N/A'
+      constantsTouched: []
+      argNames:
+        - buf
+        - buf_end
+        - token
+        - token_len
+        - next_char
+        - ret
+      BBCount:         18
+      ICount:          125
+      EdgeCount:       23
+      CyclomaticComplexity: 7
+      functionsReached:
+        - findchar_fast
+      functionUses:    2
+      BranchProfiles:
+        - Branch String:   './picohttpparser.c:261,9'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:262,9'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:264,5'
+              BranchSideFuncs: []
+        - Branch String:   './picohttpparser.c:262,9'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:262,9'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:263,5'
+              BranchSideFuncs: []
+        - Branch String:   './picohttpparser.c:265,13'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:266,13'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:267,21'
+              BranchSideFuncs: []
+        - Branch String:   './picohttpparser.c:272,9'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:264,5'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:272,9'
+              BranchSideFuncs: []
+      Callsites:
+        - Src:             './picohttpparser.c:260,11'
+          Dst:             findchar_fast
+    - functionName:    phr_decode_chunked_is_in_data
+      functionSourceFile: '/src/picohttpparser/./picohttpparser.c'
+      linkageType:     InternalLinkage
+      functionLinenumber: 679
+      functionLinenumberEnd: 680
+      functionDepth:   0
+      returnType:      int
+      argCount:        1
+      argTypes:
+        - 'N/A'
+      constantsTouched: []
+      argNames:
+        - decoder
+      BBCount:         1
+      ICount:          14
+      EdgeCount:       1
+      CyclomaticComplexity: 2
+      functionsReached: []
+      functionUses:    0
+      BranchProfiles:  []
+      Callsites:       []
+    - functionName:    decode_hex
+      functionSourceFile: '/src/picohttpparser/./picohttpparser.c'
+      linkageType:     InternalLinkage
+      functionLinenumber: 531
+      functionLinenumberEnd: 541
+      functionDepth:   0
+      returnType:      int
+      argCount:        1
+      argTypes:
+        - int
+      constantsTouched: []
+      argNames:
+        - ch
+      BBCount:         17
+      ICount:          82
+      EdgeCount:       22
+      CyclomaticComplexity: 7
+      functionsReached: []
+      functionUses:    1
+      BranchProfiles:
+        - Branch String:   './picohttpparser.c:532,19'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:532,22'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:534,23'
+              BranchSideFuncs: []
+        - Branch String:   './picohttpparser.c:532,9'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:533,16'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:534,23'
+              BranchSideFuncs: []
+        - Branch String:   './picohttpparser.c:534,26'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:534,29'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:536,23'
+              BranchSideFuncs: []
+        - Branch String:   './picohttpparser.c:534,16'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:535,16'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:536,23'
+              BranchSideFuncs: []
+        - Branch String:   './picohttpparser.c:536,26'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:536,29'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:539,9'
+              BranchSideFuncs: []
+        - Branch String:   './picohttpparser.c:536,16'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:537,16'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:539,9'
+              BranchSideFuncs: []
+      Callsites:       []
+    - functionName:    phr_decode_chunked
+      functionSourceFile: '/src/picohttpparser/./picohttpparser.c'
+      linkageType:     InternalLinkage
+      functionLinenumber: 544
+      functionLinenumberEnd: 675
+      functionDepth:   0
+      returnType:      size_t
+      argCount:        3
+      argTypes:
+        - 'N/A'
+        - 'N/A'
+        - 'N/A'
+      constantsTouched: []
+      argNames:
+        - decoder
+        - buf
+        - _bufsz
+      BBCount:         92
+      ICount:          554
+      EdgeCount:       112
+      CyclomaticComplexity: 22
+      functionsReached:
+        - __assert_fail
+        - decode_hex
+      functionUses:    0
+      BranchProfiles:
+        - Branch String:   './picohttpparser.c:551,9'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:553,13'
+              BranchSideFuncs:
+                - decode_hex
+                - __assert_fail
+            - BranchSide:      './picohttpparser.c:588,13'
+              BranchSideFuncs:
+                - decode_hex
+                - __assert_fail
+            - BranchSide:      './picohttpparser.c:606,28'
+              BranchSideFuncs:
+                - decode_hex
+                - __assert_fail
+            - BranchSide:      './picohttpparser.c:624,13'
+              BranchSideFuncs:
+                - decode_hex
+                - __assert_fail
+            - BranchSide:      './picohttpparser.c:638,13'
+              BranchSideFuncs:
+                - decode_hex
+                - __assert_fail
+            - BranchSide:      './picohttpparser.c:649,13'
+              BranchSideFuncs:
+                - decode_hex
+                - __assert_fail
+            - BranchSide:      './picohttpparser.c:659,13'
+              BranchSideFuncs:
+                - __assert_fail
+        - Branch String:   './picohttpparser.c:555,21'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:556,21'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:557,37'
+              BranchSideFuncs:
+                - decode_hex
+                - __assert_fail
+        - Branch String:   './picohttpparser.c:557,21'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:558,25'
+              BranchSideFuncs:
+                - decode_hex
+                - __assert_fail
+            - BranchSide:      './picohttpparser.c:576,21'
+              BranchSideFuncs:
+                - decode_hex
+                - __assert_fail
+        - Branch String:   './picohttpparser.c:558,25'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:559,29'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:563,29'
+              BranchSideFuncs:
+                - decode_hex
+                - __assert_fail
+        - Branch String:   './picohttpparser.c:563,21'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:569,25'
+              BranchSideFuncs:
+                - decode_hex
+                - __assert_fail
+            - BranchSide:      './picohttpparser.c:569,25'
+              BranchSideFuncs:
+                - decode_hex
+                - __assert_fail
+            - BranchSide:      './picohttpparser.c:569,25'
+              BranchSideFuncs:
+                - decode_hex
+                - __assert_fail
+            - BranchSide:      './picohttpparser.c:569,25'
+              BranchSideFuncs:
+                - decode_hex
+                - __assert_fail
+            - BranchSide:      './picohttpparser.c:569,25'
+              BranchSideFuncs:
+                - decode_hex
+                - __assert_fail
+            - BranchSide:      './picohttpparser.c:571,29'
+              BranchSideFuncs: []
+        - Branch String:   './picohttpparser.c:576,21'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:577,25'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:580,48'
+              BranchSideFuncs:
+                - decode_hex
+                - __assert_fail
+        - Branch String:   './picohttpparser.c:589,21'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:590,21'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:591,21'
+              BranchSideFuncs:
+                - decode_hex
+                - __assert_fail
+        - Branch String:   './picohttpparser.c:591,21'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:592,21'
+              BranchSideFuncs:
+                - decode_hex
+                - __assert_fail
+            - BranchSide:      './picohttpparser.c:593,13'
+              BranchSideFuncs:
+                - decode_hex
+                - __assert_fail
+        - Branch String:   './picohttpparser.c:595,17'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:596,21'
+              BranchSideFuncs:
+                - decode_hex
+                - __assert_fail
+            - BranchSide:      './picohttpparser.c:603,13'
+              BranchSideFuncs:
+                - decode_hex
+                - __assert_fail
+        - Branch String:   './picohttpparser.c:596,21'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:597,21'
+              BranchSideFuncs:
+                - decode_hex
+                - __assert_fail
+            - BranchSide:      './picohttpparser.c:600,21'
+              BranchSideFuncs: []
+        - Branch String:   './picohttpparser.c:607,17'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:608,21'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:615,17'
+              BranchSideFuncs:
+                - decode_hex
+                - __assert_fail
+        - Branch String:   './picohttpparser.c:608,21'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:609,29'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:610,24'
+              BranchSideFuncs: []
+        - Branch String:   './picohttpparser.c:615,17'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:616,25'
+              BranchSideFuncs:
+                - decode_hex
+                - __assert_fail
+            - BranchSide:      './picohttpparser.c:617,20'
+              BranchSideFuncs:
+                - decode_hex
+                - __assert_fail
+        - Branch String:   './picohttpparser.c:625,21'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:626,21'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:627,21'
+              BranchSideFuncs:
+                - decode_hex
+                - __assert_fail
+        - Branch String:   './picohttpparser.c:627,21'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:628,21'
+              BranchSideFuncs:
+                - decode_hex
+                - __assert_fail
+            - BranchSide:      './picohttpparser.c:629,13'
+              BranchSideFuncs:
+                - decode_hex
+                - __assert_fail
+        - Branch String:   './picohttpparser.c:630,17'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:631,21'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:634,13'
+              BranchSideFuncs:
+                - decode_hex
+                - __assert_fail
+        - Branch String:   './picohttpparser.c:639,21'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:640,21'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:641,21'
+              BranchSideFuncs:
+                - decode_hex
+                - __assert_fail
+        - Branch String:   './picohttpparser.c:641,21'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:642,21'
+              BranchSideFuncs:
+                - decode_hex
+                - __assert_fail
+            - BranchSide:      './picohttpparser.c:643,13'
+              BranchSideFuncs:
+                - decode_hex
+                - __assert_fail
+        - Branch String:   './picohttpparser.c:644,17'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:645,17'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:646,13'
+              BranchSideFuncs:
+                - decode_hex
+                - __assert_fail
+        - Branch String:   './picohttpparser.c:650,21'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:651,21'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:652,21'
+              BranchSideFuncs:
+                - decode_hex
+                - __assert_fail
+        - Branch String:   './picohttpparser.c:652,21'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:653,21'
+              BranchSideFuncs:
+                - decode_hex
+                - __assert_fail
+            - BranchSide:      './picohttpparser.c:654,13'
+              BranchSideFuncs:
+                - decode_hex
+                - __assert_fail
+        - Branch String:   './picohttpparser.c:666,9'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:667,17'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:668,15'
+              BranchSideFuncs: []
+        - Branch String:   './picohttpparser.c:670,9'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:670,9'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:671,37'
+              BranchSideFuncs: []
+        - Branch String:   './picohttpparser.c:672,52'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:672,55'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:674,5'
+              BranchSideFuncs: []
+        - Branch String:   './picohttpparser.c:672,13'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:673,17'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:674,5'
+              BranchSideFuncs: []
+      Callsites:
+        - Src:             './picohttpparser.c:557,26'
+          Dst:             decode_hex
+        - Src:             './picohttpparser.c:659,13'
+          Dst:             __assert_fail
+    - functionName:    __assert_fail
+      functionSourceFile: ''
+      linkageType:     externalLinkage
+      functionLinenumber: -1
+      functionLinenumberEnd: 0
+      functionDepth:   0
+      returnType:      void
+      argCount:        4
+      argTypes:
+        - 'N/A'
+        - 'N/A'
+        - int
+        - 'N/A'
+      constantsTouched: []
+      argNames:
+        - ''
+        - ''
+        - ''
+        - ''
+      BBCount:         0
+      ICount:          0
+      EdgeCount:       0
+      CyclomaticComplexity: 2
+      functionsReached: []
+      functionUses:    1
+      BranchProfiles:  []
+      Callsites:       []
+    - functionName:    parse_headers
+      functionSourceFile: '/src/picohttpparser/./picohttpparser.c'
+      linkageType:     InternalLinkage
+      functionLinenumber: 300
+      functionLinenumberEnd: 353
+      functionDepth:   0
+      returnType:      'N/A'
+      argCount:        6
+      argTypes:
+        - 'N/A'
+        - 'N/A'
+        - 'N/A'
+        - 'N/A'
+        - size_t
+        - 'N/A'
+      constantsTouched: []
+      argNames:
+        - buf
+        - buf_end
+        - headers
+        - num_headers
+        - max_headers
+        - ret
+      BBCount:         55
+      ICount:          338
+      EdgeCount:       73
+      CyclomaticComplexity: 20
+      functionsReached:
+        - get_token_to_eol
+        - parse_token
+      functionUses:    3
+      BranchProfiles:
+        - Branch String:   './picohttpparser.c:302,9'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:302,9'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:303,14'
+              BranchSideFuncs:
+                - parse_token
+                - get_token_to_eol
+        - Branch String:   './picohttpparser.c:303,13'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:304,13'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:307,21'
+              BranchSideFuncs:
+                - parse_token
+                - get_token_to_eol
+        - Branch String:   './picohttpparser.c:305,13'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:305,13'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:305,13'
+              BranchSideFuncs: []
+        - Branch String:   './picohttpparser.c:305,13'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:305,13'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:306,13'
+              BranchSideFuncs: []
+        - Branch String:   './picohttpparser.c:311,13'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:312,14'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:315,16'
+              BranchSideFuncs:
+                - parse_token
+                - get_token_to_eol
+        - Branch String:   './picohttpparser.c:315,33'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:315,38'
+              BranchSideFuncs:
+                - parse_token
+                - get_token_to_eol
+            - BranchSide:      './picohttpparser.c:318,36'
+              BranchSideFuncs:
+                - parse_token
+                - get_token_to_eol
+        - Branch String:   './picohttpparser.c:315,49'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:315,53'
+              BranchSideFuncs:
+                - get_token_to_eol
+                - parse_token
+            - BranchSide:      './picohttpparser.c:333,13'
+              BranchSideFuncs:
+                - get_token_to_eol
+                - parse_token
+        - Branch String:   './picohttpparser.c:315,13'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:318,36'
+              BranchSideFuncs:
+                - get_token_to_eol
+                - parse_token
+            - BranchSide:      './picohttpparser.c:333,13'
+              BranchSideFuncs:
+                - get_token_to_eol
+                - parse_token
+        - Branch String:   './picohttpparser.c:318,17'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:319,17'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:321,17'
+              BranchSideFuncs:
+                - get_token_to_eol
+                - parse_token
+        - Branch String:   './picohttpparser.c:321,17'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:322,18'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:325,13'
+              BranchSideFuncs:
+                - get_token_to_eol
+                - parse_token
+        - Branch String:   './picohttpparser.c:327,17'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:327,17'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:328,24'
+              BranchSideFuncs:
+                - get_token_to_eol
+                - parse_token
+        - Branch String:   './picohttpparser.c:328,35'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:328,39'
+              BranchSideFuncs:
+                - get_token_to_eol
+                - parse_token
+            - BranchSide:      './picohttpparser.c:331,13'
+              BranchSideFuncs:
+                - get_token_to_eol
+                - parse_token
+        - Branch String:   './picohttpparser.c:328,21'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:329,21'
+              BranchSideFuncs:
+                - get_token_to_eol
+                - parse_token
+            - BranchSide:      './picohttpparser.c:331,13'
+              BranchSideFuncs:
+                - get_token_to_eol
+                - parse_token
+        - Branch String:   './picohttpparser.c:338,13'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:339,13'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:342,33'
+              BranchSideFuncs:
+                - parse_token
+                - get_token_to_eol
+        - Branch String:   './picohttpparser.c:343,9'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:344,30'
+              BranchSideFuncs:
+                - parse_token
+                - get_token_to_eol
+            - BranchSide:      './picohttpparser.c:349,39'
+              BranchSideFuncs:
+                - parse_token
+                - get_token_to_eol
+        - Branch String:   './picohttpparser.c:345,28'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:345,31'
+              BranchSideFuncs:
+                - parse_token
+                - get_token_to_eol
+            - BranchSide:      './picohttpparser.c:348,9'
+              BranchSideFuncs:
+                - parse_token
+                - get_token_to_eol
+        - Branch String:   './picohttpparser.c:345,17'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:346,17'
+              BranchSideFuncs:
+                - parse_token
+                - get_token_to_eol
+            - BranchSide:      './picohttpparser.c:348,9'
+              BranchSideFuncs:
+                - parse_token
+                - get_token_to_eol
+      Callsites:
+        - Src:             './picohttpparser.c:318,24'
+          Dst:             parse_token
+        - Src:             './picohttpparser.c:338,20'
+          Dst:             get_token_to_eol
+    - functionName:    phr_parse_headers
+      functionSourceFile: '/src/picohttpparser/./picohttpparser.c'
+      linkageType:     InternalLinkage
+      functionLinenumber: 501
+      functionLinenumberEnd: 519
+      functionDepth:   0
+      returnType:      int
+      argCount:        5
+      argTypes:
+        - 'N/A'
+        - size_t
+        - 'N/A'
+        - 'N/A'
+        - size_t
+      constantsTouched: []
+      argNames:
+        - buf_start
+        - len
+        - headers
+        - num_headers
+        - last_len
+      BBCount:         11
+      ICount:          97
+      EdgeCount:       14
+      CyclomaticComplexity: 5
+      functionsReached:
+        - is_complete
+        - parse_headers
+      functionUses:    0
+      BranchProfiles:
+        - Branch String:   './picohttpparser.c:510,23'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:510,38'
+              BranchSideFuncs:
+                - is_complete
+                - parse_headers
+            - BranchSide:      './picohttpparser.c:514,30'
+              BranchSideFuncs:
+                - parse_headers
+        - Branch String:   './picohttpparser.c:510,9'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:511,16'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:514,30'
+              BranchSideFuncs:
+                - parse_headers
+        - Branch String:   './picohttpparser.c:514,9'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:515,16'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:518,18'
+              BranchSideFuncs: []
+      Callsites:
+        - Src:             './picohttpparser.c:510,26'
+          Dst:             is_complete
+        - Src:             './picohttpparser.c:514,16'
+          Dst:             parse_headers
+    - functionName:    is_complete
+      functionSourceFile: '/src/picohttpparser/./picohttpparser.c'
+      linkageType:     InternalLinkage
+      functionLinenumber: 198
+      functionLinenumberEnd: 223
+      functionDepth:   0
+      returnType:      'N/A'
+      argCount:        4
+      argTypes:
+        - 'N/A'
+        - 'N/A'
+        - size_t
+        - 'N/A'
+      constantsTouched: []
+      argNames:
+        - buf
+        - buf_end
+        - last_len
+        - ret
+      BBCount:         22
+      ICount:          143
+      EdgeCount:       29
+      CyclomaticComplexity: 9
+      functionsReached: []
+      functionUses:    3
+      BranchProfiles:
+        - Branch String:   './picohttpparser.c:200,11'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:200,26'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:200,32'
+              BranchSideFuncs: []
+        - Branch String:   './picohttpparser.c:203,9'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:203,9'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:204,14'
+              BranchSideFuncs: []
+        - Branch String:   './picohttpparser.c:204,13'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:205,13'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:209,21'
+              BranchSideFuncs: []
+        - Branch String:   './picohttpparser.c:206,13'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:206,13'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:207,13'
+              BranchSideFuncs: []
+        - Branch String:   './picohttpparser.c:207,13'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:207,13'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:207,13'
+              BranchSideFuncs: []
+        - Branch String:   './picohttpparser.c:207,13'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:207,13'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:208,13'
+              BranchSideFuncs: []
+        - Branch String:   './picohttpparser.c:209,20'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:210,13'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:213,13'
+              BranchSideFuncs: []
+        - Branch String:   './picohttpparser.c:216,13'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:202,5'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:217,20'
+              BranchSideFuncs: []
+      Callsites:       []
+    - functionName:    parse_response
+      functionSourceFile: '/src/picohttpparser/./picohttpparser.c'
+      linkageType:     InternalLinkage
+      functionLinenumber: 431
+      functionLinenumberEnd: 472
+      functionDepth:   0
+      returnType:      'N/A'
+      argCount:        10
+      argTypes:
+        - 'N/A'
+        - 'N/A'
+        - 'N/A'
+        - 'N/A'
+        - 'N/A'
+        - 'N/A'
+        - 'N/A'
+        - 'N/A'
+        - size_t
+        - 'N/A'
+      constantsTouched: []
+      argNames:
+        - buf
+        - buf_end
+        - minor_version
+        - status
+        - msg
+        - msg_len
+        - headers
+        - num_headers
+        - max_headers
+        - ret
+      BBCount:         45
+      ICount:          303
+      EdgeCount:       60
+      CyclomaticComplexity: 17
+      functionsReached:
+        - get_token_to_eol
+        - parse_headers
+        - parse_http_version
+      functionUses:    1
+      BranchProfiles:
+        - Branch String:   './picohttpparser.c:433,9'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:434,9'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:437,10'
+              BranchSideFuncs:
+                - get_token_to_eol
+                - parse_headers
+        - Branch String:   './picohttpparser.c:437,9'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:438,10'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:441,5'
+              BranchSideFuncs:
+                - get_token_to_eol
+                - parse_headers
+        - Branch String:   './picohttpparser.c:443,9'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:443,9'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:444,5'
+              BranchSideFuncs:
+                - get_token_to_eol
+                - parse_headers
+        - Branch String:   './picohttpparser.c:444,5'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:442,9'
+              BranchSideFuncs:
+                - get_token_to_eol
+                - parse_headers
+            - BranchSide:      './picohttpparser.c:446,9'
+              BranchSideFuncs:
+                - get_token_to_eol
+                - parse_headers
+        - Branch String:   './picohttpparser.c:446,9'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:447,10'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:450,5'
+              BranchSideFuncs:
+                - get_token_to_eol
+                - parse_headers
+        - Branch String:   './picohttpparser.c:450,5'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:450,5'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:450,5'
+              BranchSideFuncs:
+                - get_token_to_eol
+                - parse_headers
+        - Branch String:   './picohttpparser.c:450,5'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:450,5'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:450,5'
+              BranchSideFuncs:
+                - get_token_to_eol
+                - parse_headers
+        - Branch String:   './picohttpparser.c:450,5'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:450,5'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:450,5'
+              BranchSideFuncs:
+                - get_token_to_eol
+                - parse_headers
+        - Branch String:   './picohttpparser.c:450,5'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:450,5'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:450,5'
+              BranchSideFuncs:
+                - get_token_to_eol
+                - parse_headers
+        - Branch String:   './picohttpparser.c:450,5'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:450,5'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:450,5'
+              BranchSideFuncs:
+                - get_token_to_eol
+                - parse_headers
+        - Branch String:   './picohttpparser.c:450,5'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:450,5'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:453,33'
+              BranchSideFuncs:
+                - get_token_to_eol
+                - parse_headers
+        - Branch String:   './picohttpparser.c:453,9'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:454,9'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:456,10'
+              BranchSideFuncs:
+                - parse_headers
+        - Branch String:   './picohttpparser.c:456,9'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:458,5'
+              BranchSideFuncs:
+                - parse_headers
+            - BranchSide:      './picohttpparser.c:458,18'
+              BranchSideFuncs:
+                - parse_headers
+        - Branch String:   './picohttpparser.c:458,16'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:461,9'
+              BranchSideFuncs:
+                - parse_headers
+            - BranchSide:      './picohttpparser.c:467,10'
+              BranchSideFuncs: []
+        - Branch String:   './picohttpparser.c:464,9'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:462,16'
+              BranchSideFuncs:
+                - parse_headers
+            - BranchSide:      './picohttpparser.c:465,5'
+              BranchSideFuncs:
+                - parse_headers
+      Callsites:
+        - Src:             './picohttpparser.c:433,16'
+          Dst:             parse_http_version
+        - Src:             './picohttpparser.c:453,16'
+          Dst:             get_token_to_eol
+        - Src:             './picohttpparser.c:471,12'
+          Dst:             parse_headers
+    - functionName:    phr_parse_response
+      functionSourceFile: '/src/picohttpparser/./picohttpparser.c'
+      linkageType:     InternalLinkage
+      functionLinenumber: 476
+      functionLinenumberEnd: 498
+      functionDepth:   0
+      returnType:      int
+      argCount:        9
+      argTypes:
+        - 'N/A'
+        - size_t
+        - 'N/A'
+        - 'N/A'
+        - 'N/A'
+        - 'N/A'
+        - 'N/A'
+        - 'N/A'
+        - size_t
+      constantsTouched: []
+      argNames:
+        - buf_start
+        - len
+        - minor_version
+        - status
+        - msg
+        - msg_len
+        - headers
+        - num_headers
+        - last_len
+      BBCount:         11
+      ICount:          121
+      EdgeCount:       14
+      CyclomaticComplexity: 5
+      functionsReached:
+        - is_complete
+        - parse_response
+      functionUses:    0
+      BranchProfiles:
+        - Branch String:   './picohttpparser.c:489,23'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:489,38'
+              BranchSideFuncs:
+                - is_complete
+                - parse_response
+            - BranchSide:      './picohttpparser.c:493,31'
+              BranchSideFuncs:
+                - parse_response
+        - Branch String:   './picohttpparser.c:489,9'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:490,16'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:493,31'
+              BranchSideFuncs:
+                - parse_response
+        - Branch String:   './picohttpparser.c:493,9'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:494,16'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:497,18'
+              BranchSideFuncs: []
+      Callsites:
+        - Src:             './picohttpparser.c:489,26'
+          Dst:             is_complete
+        - Src:             './picohttpparser.c:493,16'
+          Dst:             parse_response
+    - functionName:    parse_request
+      functionSourceFile: '/src/picohttpparser/./picohttpparser.c'
+      linkageType:     InternalLinkage
+      functionLinenumber: 358
+      functionLinenumberEnd: 399
+      functionDepth:   0
+      returnType:      'N/A'
+      argCount:        11
+      argTypes:
+        - 'N/A'
+        - 'N/A'
+        - 'N/A'
+        - 'N/A'
+        - 'N/A'
+        - 'N/A'
+        - 'N/A'
+        - 'N/A'
+        - 'N/A'
+        - size_t
+        - 'N/A'
+      constantsTouched: []
+      argNames:
+        - buf
+        - buf_end
+        - method
+        - method_len
+        - path
+        - path_len
+        - minor_version
+        - headers
+        - num_headers
+        - max_headers
+        - ret
+      BBCount:         69
+      ICount:          400
+      EdgeCount:       93
+      CyclomaticComplexity: 26
+      functionsReached:
+        - findchar_fast
+        - parse_headers
+        - parse_http_version
+        - parse_token
+      functionUses:    1
+      BranchProfiles:
+        - Branch String:   './picohttpparser.c:360,5'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:360,5'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:361,10'
+              BranchSideFuncs:
+                - parse_token
+                - findchar_fast
+                - parse_http_version
+                - parse_headers
+        - Branch String:   './picohttpparser.c:361,9'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:362,9'
+              BranchSideFuncs:
+                - parse_token
+                - findchar_fast
+                - parse_http_version
+                - parse_headers
+            - BranchSide:      './picohttpparser.c:364,17'
+              BranchSideFuncs:
+                - parse_token
+                - findchar_fast
+                - parse_http_version
+                - parse_headers
+        - Branch String:   './picohttpparser.c:363,9'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:363,9'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:363,9'
+              BranchSideFuncs:
+                - parse_token
+                - findchar_fast
+                - parse_http_version
+                - parse_headers
+        - Branch String:   './picohttpparser.c:363,9'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:363,9'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:364,5'
+              BranchSideFuncs:
+                - parse_token
+                - findchar_fast
+                - parse_http_version
+                - parse_headers
+        - Branch String:   './picohttpparser.c:369,9'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:370,9'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:372,5'
+              BranchSideFuncs:
+                - findchar_fast
+                - parse_http_version
+                - parse_headers
+        - Branch String:   './picohttpparser.c:374,9'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:374,9'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:375,5'
+              BranchSideFuncs:
+                - findchar_fast
+                - parse_http_version
+                - parse_headers
+        - Branch String:   './picohttpparser.c:375,5'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:373,9'
+              BranchSideFuncs:
+                - findchar_fast
+                - parse_http_version
+                - parse_headers
+            - BranchSide:      './picohttpparser.c:376,5'
+              BranchSideFuncs:
+                - findchar_fast
+                - parse_http_version
+                - parse_headers
+        - Branch String:   './picohttpparser.c:376,5'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:376,5'
+              BranchSideFuncs:
+                - parse_http_version
+                - parse_headers
+            - BranchSide:      './picohttpparser.c:376,5'
+              BranchSideFuncs:
+                - parse_http_version
+                - parse_headers
+        - Branch String:   './picohttpparser.c:376,5'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:376,5'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:376,5'
+              BranchSideFuncs:
+                - parse_http_version
+                - parse_headers
+        - Branch String:   './picohttpparser.c:376,5'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:376,5'
+              BranchSideFuncs:
+                - parse_http_version
+                - parse_headers
+            - BranchSide:      './picohttpparser.c:376,5'
+              BranchSideFuncs:
+                - parse_http_version
+                - parse_headers
+        - Branch String:   './picohttpparser.c:376,5'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:376,5'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:376,5'
+              BranchSideFuncs:
+                - parse_http_version
+                - parse_headers
+        - Branch String:   './picohttpparser.c:376,5'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:376,5'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:376,5'
+              BranchSideFuncs:
+                - parse_http_version
+                - parse_headers
+        - Branch String:   './picohttpparser.c:379,9'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:379,9'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:380,5'
+              BranchSideFuncs:
+                - parse_http_version
+                - parse_headers
+        - Branch String:   './picohttpparser.c:380,5'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:378,9'
+              BranchSideFuncs:
+                - parse_http_version
+                - parse_headers
+            - BranchSide:      './picohttpparser.c:381,10'
+              BranchSideFuncs:
+                - parse_http_version
+                - parse_headers
+        - Branch String:   './picohttpparser.c:381,26'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:381,30'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:382,10'
+              BranchSideFuncs: []
+        - Branch String:   './picohttpparser.c:381,9'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:382,10'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:385,35'
+              BranchSideFuncs:
+                - parse_http_version
+                - parse_headers
+        - Branch String:   './picohttpparser.c:385,9'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:386,9'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:388,10'
+              BranchSideFuncs:
+                - parse_headers
+        - Branch String:   './picohttpparser.c:388,9'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:389,9'
+              BranchSideFuncs:
+                - parse_headers
+            - BranchSide:      './picohttpparser.c:391,17'
+              BranchSideFuncs:
+                - parse_headers
+        - Branch String:   './picohttpparser.c:390,9'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:390,9'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:390,9'
+              BranchSideFuncs:
+                - parse_headers
+        - Branch String:   './picohttpparser.c:390,9'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:390,9'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:391,5'
+              BranchSideFuncs:
+                - parse_headers
+        - Branch String:   './picohttpparser.c:391,16'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:392,9'
+              BranchSideFuncs:
+                - parse_headers
+            - BranchSide:      './picohttpparser.c:394,10'
+              BranchSideFuncs: []
+      Callsites:
+        - Src:             './picohttpparser.c:369,16'
+          Dst:             parse_token
+        - Src:             './picohttpparser.c:376,5'
+          Dst:             findchar_fast
+        - Src:             './picohttpparser.c:385,16'
+          Dst:             parse_http_version
+        - Src:             './picohttpparser.c:398,12'
+          Dst:             parse_headers
+    - functionName:    phr_parse_request
+      functionSourceFile: '/src/picohttpparser/./picohttpparser.c'
+      linkageType:     InternalLinkage
+      functionLinenumber: 403
+      functionLinenumberEnd: 427
+      functionDepth:   0
+      returnType:      int
+      argCount:        10
+      argTypes:
+        - 'N/A'
+        - size_t
+        - 'N/A'
+        - 'N/A'
+        - 'N/A'
+        - 'N/A'
+        - 'N/A'
+        - 'N/A'
+        - 'N/A'
+        - size_t
+      constantsTouched: []
+      argNames:
+        - buf_start
+        - len
+        - method
+        - method_len
+        - path
+        - path_len
+        - minor_version
+        - headers
+        - num_headers
+        - last_len
+      BBCount:         11
+      ICount:          127
+      EdgeCount:       14
+      CyclomaticComplexity: 5
+      functionsReached:
+        - is_complete
+        - parse_request
+      functionUses:    0
+      BranchProfiles:
+        - Branch String:   './picohttpparser.c:417,23'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:417,38'
+              BranchSideFuncs:
+                - is_complete
+                - parse_request
+            - BranchSide:      './picohttpparser.c:421,30'
+              BranchSideFuncs:
+                - parse_request
+        - Branch String:   './picohttpparser.c:417,9'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:418,16'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:421,30'
+              BranchSideFuncs:
+                - parse_request
+        - Branch String:   './picohttpparser.c:421,9'
+          Branch Sides:
+            - BranchSide:      './picohttpparser.c:423,16'
+              BranchSideFuncs: []
+            - BranchSide:      './picohttpparser.c:426,18'
+              BranchSideFuncs: []
+      Callsites:
+        - Src:             './picohttpparser.c:417,26'
+          Dst:             is_complete
+        - Src:             './picohttpparser.c:421,16'
+          Dst:             parse_request
+    - functionName:    subtest
+      functionSourceFile: '/src/picohttpparser/./picotest/picotest.c'
+      linkageType:     InternalLinkage
+      functionLinenumber: 81
+      functionLinenumberEnd: 99
+      functionDepth:   0
+      returnType:      void
+      argCount:        2
+      argTypes:
+        - 'N/A'
+        - 'N/A'
+      constantsTouched: []
+      argNames:
+        - name
+        - cb
+      BBCount:         6
+      ICount:          64
+      EdgeCount:       7
+      CyclomaticComplexity: 3
+      functionsReached:
+        - _ok
+        - done_testing
+        - note
+      functionUses:    0
+      BranchProfiles:
+        - Branch String:   './picotest/picotest.c:96,9'
+          Branch Sides:
+            - BranchSide:      './picotest/picotest.c:96,9'
+              BranchSideFuncs:
+                - _ok
+            - BranchSide:      './picotest/picotest.c:97,9'
+              BranchSideFuncs:
+                - _ok
+      Callsites:
+        - Src:             './picotest/picotest.c:88,5'
+          Dst:             note
+        - Src:             './picotest/picotest.c:92,5'
+          Dst:             done_testing
+        - Src:             './picotest/picotest.c:98,5'
+          Dst:             _ok
+    - functionName:    note
+      functionSourceFile: '/src/picohttpparser/./picotest/picotest.c'
+      linkageType:     InternalLinkage
+      functionLinenumber: 43
+      functionLinenumberEnd: 54
+      functionDepth:   0
+      returnType:      void
+      argCount:        1
+      argTypes:
+        - 'N/A'
+      constantsTouched: []
+      argNames:
+        - fmt
+      BBCount:         3
+      ICount:          26
+      EdgeCount:       3
+      CyclomaticComplexity: 2
+      functionsReached:
+        - indent
+        - printf
+        - vprintf
+      functionUses:    1
+      BranchProfiles:  []
+      Callsites:
+        - Src:             './picotest/picotest.c:46,5'
+          Dst:             indent
+        - Src:             './picotest/picotest.c:47,5'
+          Dst:             printf
+        - Src:             './picotest/picotest.c:50,5'
+          Dst:             vprintf
+        - Src:             './picotest/picotest.c:53,5'
+          Dst:             printf
+    - functionName:    done_testing
+      functionSourceFile: '/src/picohttpparser/./picotest/picotest.c'
+      linkageType:     InternalLinkage
+      functionLinenumber: 74
+      functionLinenumberEnd: 77
+      functionDepth:   0
+      returnType:      int
+      argCount:        0
+      argTypes:        []
+      constantsTouched: []
+      argNames:        []
+      BBCount:         3
+      ICount:          19
+      EdgeCount:       3
+      CyclomaticComplexity: 2
+      functionsReached:
+        - indent
+        - printf
+      functionUses:    1
+      BranchProfiles:
+        - Branch String:   './picotest/picotest.c:75,5'
+          Branch Sides:
+            - BranchSide:      './picotest/picotest.c:75,5'
+              BranchSideFuncs:
+                - indent
+                - printf
+            - BranchSide:      './picotest/picotest.c:75,5'
+              BranchSideFuncs:
+                - indent
+                - printf
+      Callsites:
+        - Src:             './picotest/picotest.c:75,5'
+          Dst:             indent
+        - Src:             './picotest/picotest.c:76,5'
+          Dst:             printf
+    - functionName:    _ok
+      functionSourceFile: '/src/picohttpparser/./picotest/picotest.c'
+      linkageType:     InternalLinkage
+      functionLinenumber: 58
+      functionLinenumberEnd: 71
+      functionDepth:   0
+      returnType:      void
+      argCount:        2
+      argTypes:
+        - int
+        - 'N/A'
+      constantsTouched: []
+      argNames:
+        - cond
+        - fmt
+      BBCount:         6
+      ICount:          54
+      EdgeCount:       7
+      CyclomaticComplexity: 3
+      functionsReached:
+        - indent
+        - printf
+        - vprintf
+      functionUses:    1
+      BranchProfiles:
+        - Branch String:   './picotest/picotest.c:61,9'
+          Branch Sides:
+            - BranchSide:      './picotest/picotest.c:61,9'
+              BranchSideFuncs:
+                - indent
+                - printf
+                - vprintf
+                - printf
+            - BranchSide:      './picotest/picotest.c:62,9'
+              BranchSideFuncs:
+                - indent
+                - printf
+                - vprintf
+                - printf
+      Callsites:
+        - Src:             './picotest/picotest.c:63,5'
+          Dst:             indent
+        - Src:             './picotest/picotest.c:65,5'
+          Dst:             printf
+        - Src:             './picotest/picotest.c:67,5'
+          Dst:             vprintf
+        - Src:             './picotest/picotest.c:70,5'
+          Dst:             printf
+    - functionName:    indent
+      functionSourceFile: '/src/picohttpparser/./picotest/picotest.c'
+      linkageType:     InternalLinkage
+      functionLinenumber: 35
+      functionLinenumberEnd: 39
+      functionDepth:   0
+      returnType:      void
+      argCount:        0
+      argTypes:        []
+      constantsTouched: []
+      argNames:        []
+      BBCount:         7
+      ICount:          32
+      EdgeCount:       8
+      CyclomaticComplexity: 3
+      functionsReached:
+        - printf
+      functionUses:    3
+      BranchProfiles:
+        - Branch String:   './picotest/picotest.c:37,12'
+          Branch Sides:
+            - BranchSide:      './picotest/picotest.c:36,9'
+              BranchSideFuncs:
+                - printf
+            - BranchSide:      './picotest/picotest.c:37,17'
+              BranchSideFuncs:
+                - printf
+        - Branch String:   './picotest/picotest.c:37,5'
+          Branch Sides:
+            - BranchSide:      './picotest/picotest.c:38,9'
+              BranchSideFuncs:
+                - printf
+            - BranchSide:      './picotest/picotest.c:39,1'
+              BranchSideFuncs: []
+      Callsites:
+        - Src:             './picotest/picotest.c:38,9'
+          Dst:             printf
+    - functionName:    vprintf
+      functionSourceFile: ''
+      linkageType:     externalLinkage
+      functionLinenumber: -1
+      functionLinenumberEnd: 0
+      functionDepth:   0
+      returnType:      int
+      argCount:        2
+      argTypes:
+        - 'N/A'
+        - 'N/A'
+      constantsTouched: []
+      argNames:
+        - ''
+        - ''
+      BBCount:         0
+      ICount:          0
+      EdgeCount:       0
+      CyclomaticComplexity: 2
+      functionsReached: []
+      functionUses:    2
+      BranchProfiles:  []
+      Callsites:       []
+...

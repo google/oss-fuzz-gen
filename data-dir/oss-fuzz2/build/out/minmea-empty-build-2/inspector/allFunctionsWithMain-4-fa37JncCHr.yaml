@@ -1,0 +1,205 @@
+---
+Fuzzer filename: ''
+All functions:
+  Function list name: All functions
+  Elements:
+    - functionName:    test_func
+      functionSourceFile: '/src/minmea/fuzz-build/CMakeFiles/CMakeScratch/TryCompile-RNBNKj/src.c'
+      linkageType:     InternalLinkage
+      functionLinenumber: 4
+      functionLinenumberEnd: 5
+      functionDepth:   0
+      returnType:      'N/A'
+      argCount:        1
+      argTypes:
+        - 'N/A'
+      constantsTouched: []
+      argNames:
+        - data
+      BBCount:         1
+      ICount:          8
+      EdgeCount:       1
+      CyclomaticComplexity: 2
+      functionsReached: []
+      functionUses:    1
+      BranchProfiles:  []
+      Callsites:       []
+    - functionName:    main
+      functionSourceFile: '/src/minmea/fuzz-build/CMakeFiles/CMakeScratch/TryCompile-RNBNKj/src.c'
+      linkageType:     externalLinkage
+      functionLinenumber: 10
+      functionLinenumberEnd: 16
+      functionDepth:   0
+      returnType:      int
+      argCount:        0
+      argTypes:        []
+      constantsTouched: []
+      argNames:        []
+      BBCount:         1
+      ICount:          14
+      EdgeCount:       1
+      CyclomaticComplexity: 2
+      functionsReached:
+        - pthread_atfork
+        - pthread_cancel
+        - pthread_create
+        - pthread_detach
+        - pthread_exit
+        - pthread_join
+        - test_func
+      functionUses:    0
+      BranchProfiles:  []
+      Callsites:
+        - Src:             'src.c:11,3'
+          Dst:             pthread_create
+        - Src:             'src.c:11,3'
+          Dst:             test_func
+        - Src:             'src.c:12,3'
+          Dst:             pthread_detach
+        - Src:             'src.c:13,3'
+          Dst:             pthread_cancel
+        - Src:             'src.c:14,3'
+          Dst:             pthread_join
+        - Src:             'src.c:15,3'
+          Dst:             pthread_atfork
+        - Src:             'src.c:16,3'
+          Dst:             pthread_exit
+    - functionName:    pthread_create
+      functionSourceFile: ''
+      linkageType:     externalLinkage
+      functionLinenumber: -1
+      functionLinenumberEnd: 0
+      functionDepth:   0
+      returnType:      int
+      argCount:        4
+      argTypes:
+        - 'N/A'
+        - 'N/A'
+        - 'N/A'
+        - 'N/A'
+      constantsTouched: []
+      argNames:
+        - ''
+        - ''
+        - ''
+        - ''
+      BBCount:         0
+      ICount:          0
+      EdgeCount:       0
+      CyclomaticComplexity: 2
+      functionsReached: []
+      functionUses:    1
+      BranchProfiles:  []
+      Callsites:       []
+    - functionName:    pthread_detach
+      functionSourceFile: ''
+      linkageType:     externalLinkage
+      functionLinenumber: -1
+      functionLinenumberEnd: 0
+      functionDepth:   0
+      returnType:      int
+      argCount:        1
+      argTypes:
+        - size_t
+      constantsTouched: []
+      argNames:
+        - ''
+      BBCount:         0
+      ICount:          0
+      EdgeCount:       0
+      CyclomaticComplexity: 2
+      functionsReached: []
+      functionUses:    1
+      BranchProfiles:  []
+      Callsites:       []
+    - functionName:    pthread_cancel
+      functionSourceFile: ''
+      linkageType:     externalLinkage
+      functionLinenumber: -1
+      functionLinenumberEnd: 0
+      functionDepth:   0
+      returnType:      int
+      argCount:        1
+      argTypes:
+        - size_t
+      constantsTouched: []
+      argNames:
+        - ''
+      BBCount:         0
+      ICount:          0
+      EdgeCount:       0
+      CyclomaticComplexity: 2
+      functionsReached: []
+      functionUses:    1
+      BranchProfiles:  []
+      Callsites:       []
+    - functionName:    pthread_join
+      functionSourceFile: ''
+      linkageType:     externalLinkage
+      functionLinenumber: -1
+      functionLinenumberEnd: 0
+      functionDepth:   0
+      returnType:      int
+      argCount:        2
+      argTypes:
+        - size_t
+        - 'N/A'
+      constantsTouched: []
+      argNames:
+        - ''
+        - ''
+      BBCount:         0
+      ICount:          0
+      EdgeCount:       0
+      CyclomaticComplexity: 2
+      functionsReached: []
+      functionUses:    1
+      BranchProfiles:  []
+      Callsites:       []
+    - functionName:    pthread_atfork
+      functionSourceFile: ''
+      linkageType:     externalLinkage
+      functionLinenumber: -1
+      functionLinenumberEnd: 0
+      functionDepth:   0
+      returnType:      int
+      argCount:        3
+      argTypes:
+        - 'N/A'
+        - 'N/A'
+        - 'N/A'
+      constantsTouched: []
+      argNames:
+        - ''
+        - ''
+        - ''
+      BBCount:         0
+      ICount:          0
+      EdgeCount:       0
+      CyclomaticComplexity: 2
+      functionsReached: []
+      functionUses:    1
+      BranchProfiles:  []
+      Callsites:       []
+    - functionName:    pthread_exit
+      functionSourceFile: ''
+      linkageType:     externalLinkage
+      functionLinenumber: -1
+      functionLinenumberEnd: 0
+      functionDepth:   0
+      returnType:      void
+      argCount:        1
+      argTypes:
+        - 'N/A'
+      constantsTouched: []
+      argNames:
+        - ''
+      BBCount:         0
+      ICount:          0
+      EdgeCount:       0
+      CyclomaticComplexity: 2
+      functionsReached: []
+      functionUses:    1
+      BranchProfiles:  []
+      Callsites:       []
+...

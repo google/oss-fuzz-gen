@@ -1,0 +1,1109 @@
+<--- Debug Information for Module 2.0 --->
+Compile unit: DW_LANG_C11 from /src/parson/fuzz-build//src/fuzzers/empty-fuzzer.c
+Compile unit: DW_LANG_C11 from /src/parson/fuzz-build//src/parson/parson.c
+
+## Functions defined in module
+Subprogram: LLVMFuzzerTestOneInput
+ from /src/fuzzers/empty-fuzzer.c:5
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type, DW_TAG_typedef,  uint8_t
+ - Operand Type: Name: {  size_t}Type:  from /usr/local/lib/clang/18/include/__stddef_size_t.h:18DW_TAG_typedef,  size_t
+
+Subprogram: parson_sprintf
+ from /src/parson/parson.c:289
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type,  char
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: void
+
+Subprogram: json_serialize_string
+ from /src/parson/parson.c:1290
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Name: {  size_t}Type:  from /usr/local/lib/clang/18/include/__stddef_size_t.h:18DW_TAG_typedef,  size_t
+ - Operand Type: Type: DW_TAG_pointer_type,  char
+
+Subprogram: num_bytes_in_utf8_sequence
+ from /src/parson/parson.c:335
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Name: {  unsigned char}Type:  DW_ATE_unsigned_char
+
+Subprogram: verify_utf8_sequence
+ from /src/parson/parson.c:350
+ - Operand Type: Name: {  JSON_Status}Type:  from /src/parson/parson.h:65DW_TAG_typedef,  JSON_Status
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  unsigned char
+ - Operand Type: Type: DW_TAG_pointer_type,  int
+
+Subprogram: json_object_init
+ from /src/parson/parson.c:455
+ - Operand Type: Name: {  JSON_Status}Type:  from /src/parson/parson.h:65DW_TAG_typedef,  JSON_Status
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Object
+ - Operand Type: Name: {  size_t}Type:  from /usr/local/lib/clang/18/include/__stddef_size_t.h:18DW_TAG_typedef,  size_t
+
+Subprogram: json_object_deinit
+ from /src/parson/parson.c:497
+ - Operand Type: void
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Object
+ - Operand Type: Name: {  parson_bool_t}Type:  from /src/parson/parson.c:106DW_TAG_typedef,  parson_bool_t
+ - Operand Type: Name: {  parson_bool_t}Type:  from /src/parson/parson.c:106DW_TAG_typedef,  parson_bool_t
+
+Subprogram: json_value_free
+ from /src/parson/parson.c:1599
+ - Operand Type: void
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Value
+
+Subprogram: json_value_get_type
+ from /src/parson/parson.c:1561
+ - Operand Type: Name: {  JSON_Value_Type}Type:  from /src/parson/parson.h:59DW_TAG_typedef,  JSON_Value_Type
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type, DW_TAG_typedef,  JSON_Value
+
+Subprogram: json_object_free
+ from /src/parson/parson.c:715
+ - Operand Type: void
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Object
+
+Subprogram: json_array_free
+ from /src/parson/parson.c:764
+ - Operand Type: void
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Array
+
+Subprogram: is_decimal
+ from /src/parson/parson.c:404
+ - Operand Type: Name: {  parson_bool_t}Type:  from /src/parson/parson.c:106DW_TAG_typedef,  parson_bool_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Name: {  size_t}Type:  from /usr/local/lib/clang/18/include/__stddef_size_t.h:18DW_TAG_typedef,  size_t
+
+Subprogram: json_array_resize
+ from /src/parson/parson.c:746
+ - Operand Type: Name: {  JSON_Status}Type:  from /src/parson/parson.h:65DW_TAG_typedef,  JSON_Status
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Array
+ - Operand Type: Name: {  size_t}Type:  from /usr/local/lib/clang/18/include/__stddef_size_t.h:18DW_TAG_typedef,  size_t
+
+Subprogram: hex_char_to_int
+ from /src/parson/parson.c:308
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Name: {  char}Type:  DW_ATE_signed_char
+
+Subprogram: parse_utf16_hex
+ from /src/parson/parson.c:319
+ - Operand Type: Name: {  JSON_Status}Type:  from /src/parson/parson.h:65DW_TAG_typedef,  JSON_Status
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Type: DW_TAG_pointer_type,  unsigned int
+
+Subprogram: parse_utf16
+ from /src/parson/parson.c:807
+ - Operand Type: Name: {  JSON_Status}Type:  from /src/parson/parson.h:65DW_TAG_typedef,  JSON_Status
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_pointer_type,  char
+
+Subprogram: process_string
+ from /src/parson/parson.c:856
+ - Operand Type: Type: DW_TAG_pointer_type,  char
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Name: {  size_t}Type:  from /usr/local/lib/clang/18/include/__stddef_size_t.h:18DW_TAG_typedef,  size_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  size_t
+
+Subprogram: skip_quotes
+ from /src/parson/parson.c:787
+ - Operand Type: Name: {  JSON_Status}Type:  from /src/parson/parson.h:65DW_TAG_typedef,  JSON_Status
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_pointer_type, DW_TAG_const_type,  char
+
+Subprogram: get_quoted_string
+ from /src/parson/parson.c:913
+ - Operand Type: Type: DW_TAG_pointer_type,  char
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  size_t
+
+Subprogram: parse_null_value
+ from /src/parson/parson.c:1114
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Value
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_pointer_type, DW_TAG_const_type,  char
+
+Subprogram: json_value_init_null
+ from /src/parson/parson.c:1699
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Value
+
+Subprogram: parse_number_value
+ from /src/parson/parson.c:1099
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Value
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_pointer_type, DW_TAG_const_type,  char
+
+Subprogram: json_value_init_number
+ from /src/parson/parson.c:1673
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Value
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+
+Subprogram: parse_boolean_value
+ from /src/parson/parson.c:1086
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Value
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_pointer_type, DW_TAG_const_type,  char
+
+Subprogram: json_value_init_boolean
+ from /src/parson/parson.c:1688
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Value
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+
+Subprogram: parse_string_value
+ from /src/parson/parson.c:1071
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Value
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_pointer_type, DW_TAG_const_type,  char
+
+Subprogram: json_value_init_string_no_copy
+ from /src/parson/parson.c:774
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Value
+ - Operand Type: Type: DW_TAG_pointer_type,  char
+ - Operand Type: Name: {  size_t}Type:  from /usr/local/lib/clang/18/include/__stddef_size_t.h:18DW_TAG_typedef,  size_t
+
+Subprogram: parse_array_value
+ from /src/parson/parson.c:1022
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Value
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Name: {  size_t}Type:  from /usr/local/lib/clang/18/include/__stddef_size_t.h:18DW_TAG_typedef,  size_t
+
+Subprogram: json_value_init_array
+ from /src/parson/parson.c:1631
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Value
+
+Subprogram: json_value_get_array
+ from /src/parson/parson.c:1569
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Array
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type, DW_TAG_typedef,  JSON_Value
+
+Subprogram: parse_value
+ from /src/parson/parson.c:924
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Value
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Name: {  size_t}Type:  from /usr/local/lib/clang/18/include/__stddef_size_t.h:18DW_TAG_typedef,  size_t
+
+Subprogram: json_array_add
+ from /src/parson/parson.c:733
+ - Operand Type: Name: {  JSON_Status}Type:  from /src/parson/parson.h:65DW_TAG_typedef,  JSON_Status
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Array
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Value
+
+Subprogram: json_array_get_count
+ from /src/parson/parson.c:1549
+ - Operand Type: Name: {  size_t}Type:  from /usr/local/lib/clang/18/include/__stddef_size_t.h:18DW_TAG_typedef,  size_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type, DW_TAG_typedef,  JSON_Array
+
+Subprogram: json_array_get_wrapping_value
+ from /src/parson/parson.c:1553
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Value
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type, DW_TAG_typedef,  JSON_Array
+
+Subprogram: parse_object_value
+ from /src/parson/parson.c:949
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Value
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Name: {  size_t}Type:  from /usr/local/lib/clang/18/include/__stddef_size_t.h:18DW_TAG_typedef,  size_t
+
+Subprogram: json_value_init_object
+ from /src/parson/parson.c:1616
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Value
+
+Subprogram: json_value_get_object
+ from /src/parson/parson.c:1565
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Object
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type, DW_TAG_typedef,  JSON_Value
+
+Subprogram: json_object_add
+ from /src/parson/parson.c:586
+ - Operand Type: Name: {  JSON_Status}Type:  from /src/parson/parson.h:65DW_TAG_typedef,  JSON_Status
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Object
+ - Operand Type: Type: DW_TAG_pointer_type,  char
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Value
+
+Subprogram: hash_string
+ from /src/parson/parson.c:419
+ - Operand Type: Name: {  unsigned long}Type:  DW_ATE_unsigned
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Name: {  size_t}Type:  from /usr/local/lib/clang/18/include/__stddef_size_t.h:18DW_TAG_typedef,  size_t
+
+Subprogram: json_object_get_cell_ix
+ from /src/parson/parson.c:555
+ - Operand Type: Name: {  size_t}Type:  from /usr/local/lib/clang/18/include/__stddef_size_t.h:18DW_TAG_typedef,  size_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type, DW_TAG_typedef,  JSON_Object
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Name: {  size_t}Type:  from /usr/local/lib/clang/18/include/__stddef_size_t.h:18DW_TAG_typedef,  size_t
+ - Operand Type: Name: {  unsigned long}Type:  DW_ATE_unsigned
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  parson_bool_t
+
+Subprogram: json_object_grow_and_rehash
+ from /src/parson/parson.c:525
+ - Operand Type: Name: {  JSON_Status}Type:  from /src/parson/parson.h:65DW_TAG_typedef,  JSON_Status
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Object
+
+Subprogram: json_object_get_wrapping_value
+ from /src/parson/parson.c:1492
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Value
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type, DW_TAG_typedef,  JSON_Object
+
+Subprogram: json_object_make
+ from /src/parson/parson.c:440
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Object
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Value
+
+Subprogram: json_array_make
+ from /src/parson/parson.c:721
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Array
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Value
+
+Subprogram: json_set_number_serialization_function
+ from /src/parson/parson.c:2484
+ - Operand Type: void
+ - Operand Type: Name: {  JSON_Number_Serialization_Function}Type:  from /src/parson/parson.h:74DW_TAG_typedef,  JSON_Number_Serialization_Function
+
+Subprogram: json_set_float_serialization_format
+ from /src/parson/parson.c:2472
+ - Operand Type: void
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+
+Subprogram: parson_strdup
+ from /src/parson/parson.c:285
+ - Operand Type: Type: DW_TAG_pointer_type,  char
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+
+Subprogram: parson_strndup
+ from /src/parson/parson.c:274
+ - Operand Type: Type: DW_TAG_pointer_type,  char
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Name: {  size_t}Type:  from /usr/local/lib/clang/18/include/__stddef_size_t.h:18DW_TAG_typedef,  size_t
+
+Subprogram: json_set_escape_slashes
+ from /src/parson/parson.c:2468
+ - Operand Type: void
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+
+Subprogram: json_set_allocation_functions
+ from /src/parson/parson.c:2463
+ - Operand Type: void
+ - Operand Type: Name: {  JSON_Malloc_Function}Type:  from /src/parson/parson.h:67DW_TAG_typedef,  JSON_Malloc_Function
+ - Operand Type: Name: {  JSON_Free_Function}Type:  from /src/parson/parson.h:68DW_TAG_typedef,  JSON_Free_Function
+
+Subprogram: json_boolean
+ from /src/parson/parson.c:2459
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type, DW_TAG_typedef,  JSON_Value
+
+Subprogram: json_value_get_boolean
+ from /src/parson/parson.c:1591
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type, DW_TAG_typedef,  JSON_Value
+
+Subprogram: json_number
+ from /src/parson/parson.c:2455
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type, DW_TAG_typedef,  JSON_Value
+
+Subprogram: json_value_get_number
+ from /src/parson/parson.c:1587
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type, DW_TAG_typedef,  JSON_Value
+
+Subprogram: json_string_len
+ from /src/parson/parson.c:2451
+ - Operand Type: Name: {  size_t}Type:  from /usr/local/lib/clang/18/include/__stddef_size_t.h:18DW_TAG_typedef,  size_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type, DW_TAG_typedef,  JSON_Value
+
+Subprogram: json_value_get_string_len
+ from /src/parson/parson.c:1582
+ - Operand Type: Name: {  size_t}Type:  from /usr/local/lib/clang/18/include/__stddef_size_t.h:18DW_TAG_typedef,  size_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type, DW_TAG_typedef,  JSON_Value
+
+Subprogram: json_value_get_string_desc
+ from /src/parson/parson.c:1573
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type, DW_TAG_typedef,  JSON_String
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type, DW_TAG_typedef,  JSON_Value
+
+Subprogram: json_string
+ from /src/parson/parson.c:2447
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type, DW_TAG_typedef,  JSON_Value
+
+Subprogram: json_value_get_string
+ from /src/parson/parson.c:1577
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type, DW_TAG_typedef,  JSON_Value
+
+Subprogram: json_array
+ from /src/parson/parson.c:2443
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Array
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type, DW_TAG_typedef,  JSON_Value
+
+Subprogram: json_object
+ from /src/parson/parson.c:2439
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Object
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type, DW_TAG_typedef,  JSON_Value
+
+Subprogram: json_type
+ from /src/parson/parson.c:2435
+ - Operand Type: Name: {  JSON_Value_Type}Type:  from /src/parson/parson.h:59DW_TAG_typedef,  JSON_Value_Type
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type, DW_TAG_typedef,  JSON_Value
+
+Subprogram: json_value_equals
+ from /src/parson/parson.c:2370
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type, DW_TAG_typedef,  JSON_Value
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type, DW_TAG_typedef,  JSON_Value
+
+Subprogram: json_array_get_value
+ from /src/parson/parson.c:1518
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Value
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type, DW_TAG_typedef,  JSON_Array
+ - Operand Type: Name: {  size_t}Type:  from /usr/local/lib/clang/18/include/__stddef_size_t.h:18DW_TAG_typedef,  size_t
+
+Subprogram: json_object_get_count
+ from /src/parson/parson.c:1474
+ - Operand Type: Name: {  size_t}Type:  from /usr/local/lib/clang/18/include/__stddef_size_t.h:18DW_TAG_typedef,  size_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type, DW_TAG_typedef,  JSON_Object
+
+Subprogram: json_object_get_name
+ from /src/parson/parson.c:1478
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type, DW_TAG_typedef,  JSON_Object
+ - Operand Type: Name: {  size_t}Type:  from /usr/local/lib/clang/18/include/__stddef_size_t.h:18DW_TAG_typedef,  size_t
+
+Subprogram: json_object_get_value
+ from /src/parson/parson.c:1410
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Value
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type, DW_TAG_typedef,  JSON_Object
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+
+Subprogram: json_object_getn_value
+ from /src/parson/parson.c:622
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Value
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type, DW_TAG_typedef,  JSON_Object
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Name: {  size_t}Type:  from /usr/local/lib/clang/18/include/__stddef_size_t.h:18DW_TAG_typedef,  size_t
+
+Subprogram: json_validate
+ from /src/parson/parson.c:2310
+ - Operand Type: Name: {  JSON_Status}Type:  from /src/parson/parson.h:65DW_TAG_typedef,  JSON_Status
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type, DW_TAG_typedef,  JSON_Value
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type, DW_TAG_typedef,  JSON_Value
+
+Subprogram: json_object_clear
+ from /src/parson/parson.c:2291
+ - Operand Type: Name: {  JSON_Status}Type:  from /src/parson/parson.h:65DW_TAG_typedef,  JSON_Status
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Object
+
+Subprogram: json_object_dotremove
+ from /src/parson/parson.c:2287
+ - Operand Type: Name: {  JSON_Status}Type:  from /src/parson/parson.h:65DW_TAG_typedef,  JSON_Status
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Object
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+
+Subprogram: json_object_dotremove_internal
+ from /src/parson/parson.c:700
+ - Operand Type: Name: {  JSON_Status}Type:  from /src/parson/parson.h:65DW_TAG_typedef,  JSON_Status
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Object
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Name: {  parson_bool_t}Type:  from /src/parson/parson.c:106DW_TAG_typedef,  parson_bool_t
+
+Subprogram: json_object_remove_internal
+ from /src/parson/parson.c:640
+ - Operand Type: Name: {  JSON_Status}Type:  from /src/parson/parson.h:65DW_TAG_typedef,  JSON_Status
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Object
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Name: {  parson_bool_t}Type:  from /src/parson/parson.c:106DW_TAG_typedef,  parson_bool_t
+
+Subprogram: json_object_remove
+ from /src/parson/parson.c:2283
+ - Operand Type: Name: {  JSON_Status}Type:  from /src/parson/parson.h:65DW_TAG_typedef,  JSON_Status
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Object
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+
+Subprogram: json_object_dotset_null
+ from /src/parson/parson.c:2271
+ - Operand Type: Name: {  JSON_Status}Type:  from /src/parson/parson.h:65DW_TAG_typedef,  JSON_Status
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Object
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+
+Subprogram: json_object_dotset_value
+ from /src/parson/parson.c:2172
+ - Operand Type: Name: {  JSON_Status}Type:  from /src/parson/parson.h:65DW_TAG_typedef,  JSON_Status
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Object
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Value
+
+Subprogram: json_object_set_value
+ from /src/parson/parson.c:2084
+ - Operand Type: Name: {  JSON_Status}Type:  from /src/parson/parson.h:65DW_TAG_typedef,  JSON_Status
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Object
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Value
+
+Subprogram: json_object_dotset_boolean
+ from /src/parson/parson.c:2259
+ - Operand Type: Name: {  JSON_Status}Type:  from /src/parson/parson.h:65DW_TAG_typedef,  JSON_Status
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Object
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+
+Subprogram: json_object_dotset_number
+ from /src/parson/parson.c:2247
+ - Operand Type: Name: {  JSON_Status}Type:  from /src/parson/parson.h:65DW_TAG_typedef,  JSON_Status
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Object
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+
+Subprogram: json_object_dotset_string_with_len
+ from /src/parson/parson.c:2235
+ - Operand Type: Name: {  JSON_Status}Type:  from /src/parson/parson.h:65DW_TAG_typedef,  JSON_Status
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Object
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Name: {  size_t}Type:  from /usr/local/lib/clang/18/include/__stddef_size_t.h:18DW_TAG_typedef,  size_t
+
+Subprogram: json_value_init_string_with_len
+ from /src/parson/parson.c:1653
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Value
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Name: {  size_t}Type:  from /usr/local/lib/clang/18/include/__stddef_size_t.h:18DW_TAG_typedef,  size_t
+
+Subprogram: is_valid_utf8
+ from /src/parson/parson.c:392
+ - Operand Type: Name: {  parson_bool_t}Type:  from /src/parson/parson.c:106DW_TAG_typedef,  parson_bool_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Name: {  size_t}Type:  from /usr/local/lib/clang/18/include/__stddef_size_t.h:18DW_TAG_typedef,  size_t
+
+Subprogram: json_object_dotset_string
+ from /src/parson/parson.c:2223
+ - Operand Type: Name: {  JSON_Status}Type:  from /src/parson/parson.h:65DW_TAG_typedef,  JSON_Status
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Object
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+
+Subprogram: json_value_init_string
+ from /src/parson/parson.c:1646
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Value
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+
+Subprogram: json_object_set_null
+ from /src/parson/parson.c:2163
+ - Operand Type: Name: {  JSON_Status}Type:  from /src/parson/parson.h:65DW_TAG_typedef,  JSON_Status
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Object
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+
+Subprogram: json_object_set_boolean
+ from /src/parson/parson.c:2154
+ - Operand Type: Name: {  JSON_Status}Type:  from /src/parson/parson.h:65DW_TAG_typedef,  JSON_Status
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Object
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+
+Subprogram: json_object_set_number
+ from /src/parson/parson.c:2145
+ - Operand Type: Name: {  JSON_Status}Type:  from /src/parson/parson.h:65DW_TAG_typedef,  JSON_Status
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Object
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+
+Subprogram: json_object_set_string_with_len
+ from /src/parson/parson.c:2136
+ - Operand Type: Name: {  JSON_Status}Type:  from /src/parson/parson.h:65DW_TAG_typedef,  JSON_Status
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Object
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Name: {  size_t}Type:  from /usr/local/lib/clang/18/include/__stddef_size_t.h:18DW_TAG_typedef,  size_t
+
+Subprogram: json_object_set_string
+ from /src/parson/parson.c:2127
+ - Operand Type: Name: {  JSON_Status}Type:  from /src/parson/parson.h:65DW_TAG_typedef,  JSON_Status
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Object
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+
+Subprogram: json_array_append_null
+ from /src/parson/parson.c:2072
+ - Operand Type: Name: {  JSON_Status}Type:  from /src/parson/parson.h:65DW_TAG_typedef,  JSON_Status
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Array
+
+Subprogram: json_array_append_value
+ from /src/parson/parson.c:2017
+ - Operand Type: Name: {  JSON_Status}Type:  from /src/parson/parson.h:65DW_TAG_typedef,  JSON_Status
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Array
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Value
+
+Subprogram: json_array_append_boolean
+ from /src/parson/parson.c:2060
+ - Operand Type: Name: {  JSON_Status}Type:  from /src/parson/parson.h:65DW_TAG_typedef,  JSON_Status
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Array
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+
+Subprogram: json_array_append_number
+ from /src/parson/parson.c:2048
+ - Operand Type: Name: {  JSON_Status}Type:  from /src/parson/parson.h:65DW_TAG_typedef,  JSON_Status
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Array
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+
+Subprogram: json_array_append_string_with_len
+ from /src/parson/parson.c:2036
+ - Operand Type: Name: {  JSON_Status}Type:  from /src/parson/parson.h:65DW_TAG_typedef,  JSON_Status
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Array
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Name: {  size_t}Type:  from /usr/local/lib/clang/18/include/__stddef_size_t.h:18DW_TAG_typedef,  size_t
+
+Subprogram: json_array_append_string
+ from /src/parson/parson.c:2024
+ - Operand Type: Name: {  JSON_Status}Type:  from /src/parson/parson.h:65DW_TAG_typedef,  JSON_Status
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Array
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+
+Subprogram: json_array_clear
+ from /src/parson/parson.c:2005
+ - Operand Type: Name: {  JSON_Status}Type:  from /src/parson/parson.h:65DW_TAG_typedef,  JSON_Status
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Array
+
+Subprogram: json_array_replace_null
+ from /src/parson/parson.c:1993
+ - Operand Type: Name: {  JSON_Status}Type:  from /src/parson/parson.h:65DW_TAG_typedef,  JSON_Status
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Array
+ - Operand Type: Name: {  size_t}Type:  from /usr/local/lib/clang/18/include/__stddef_size_t.h:18DW_TAG_typedef,  size_t
+
+Subprogram: json_array_replace_value
+ from /src/parson/parson.c:1935
+ - Operand Type: Name: {  JSON_Status}Type:  from /src/parson/parson.h:65DW_TAG_typedef,  JSON_Status
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Array
+ - Operand Type: Name: {  size_t}Type:  from /usr/local/lib/clang/18/include/__stddef_size_t.h:18DW_TAG_typedef,  size_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Value
+
+Subprogram: json_array_replace_boolean
+ from /src/parson/parson.c:1981
+ - Operand Type: Name: {  JSON_Status}Type:  from /src/parson/parson.h:65DW_TAG_typedef,  JSON_Status
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Array
+ - Operand Type: Name: {  size_t}Type:  from /usr/local/lib/clang/18/include/__stddef_size_t.h:18DW_TAG_typedef,  size_t
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+
+Subprogram: json_array_replace_number
+ from /src/parson/parson.c:1969
+ - Operand Type: Name: {  JSON_Status}Type:  from /src/parson/parson.h:65DW_TAG_typedef,  JSON_Status
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Array
+ - Operand Type: Name: {  size_t}Type:  from /usr/local/lib/clang/18/include/__stddef_size_t.h:18DW_TAG_typedef,  size_t
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+
+Subprogram: json_array_replace_string_with_len
+ from /src/parson/parson.c:1957
+ - Operand Type: Name: {  JSON_Status}Type:  from /src/parson/parson.h:65DW_TAG_typedef,  JSON_Status
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Array
+ - Operand Type: Name: {  size_t}Type:  from /usr/local/lib/clang/18/include/__stddef_size_t.h:18DW_TAG_typedef,  size_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Name: {  size_t}Type:  from /usr/local/lib/clang/18/include/__stddef_size_t.h:18DW_TAG_typedef,  size_t
+
+Subprogram: json_array_replace_string
+ from /src/parson/parson.c:1945
+ - Operand Type: Name: {  JSON_Status}Type:  from /src/parson/parson.h:65DW_TAG_typedef,  JSON_Status
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Array
+ - Operand Type: Name: {  size_t}Type:  from /usr/local/lib/clang/18/include/__stddef_size_t.h:18DW_TAG_typedef,  size_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+
+Subprogram: json_array_remove
+ from /src/parson/parson.c:1923
+ - Operand Type: Name: {  JSON_Status}Type:  from /src/parson/parson.h:65DW_TAG_typedef,  JSON_Status
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Array
+ - Operand Type: Name: {  size_t}Type:  from /usr/local/lib/clang/18/include/__stddef_size_t.h:18DW_TAG_typedef,  size_t
+
+Subprogram: json_serialize_to_string_pretty
+ from /src/parson/parson.c:1900
+ - Operand Type: Type: DW_TAG_pointer_type,  char
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type, DW_TAG_typedef,  JSON_Value
+
+Subprogram: json_serialization_size_pretty
+ from /src/parson/parson.c:1859
+ - Operand Type: Name: {  size_t}Type:  from /usr/local/lib/clang/18/include/__stddef_size_t.h:18DW_TAG_typedef,  size_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type, DW_TAG_typedef,  JSON_Value
+
+Subprogram: json_serialize_to_buffer_pretty
+ from /src/parson/parson.c:1865
+ - Operand Type: Name: {  JSON_Status}Type:  from /src/parson/parson.h:65DW_TAG_typedef,  JSON_Status
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type, DW_TAG_typedef,  JSON_Value
+ - Operand Type: Type: DW_TAG_pointer_type,  char
+ - Operand Type: Name: {  size_t}Type:  from /usr/local/lib/clang/18/include/__stddef_size_t.h:18DW_TAG_typedef,  size_t
+
+Subprogram: json_free_serialized_string
+ from /src/parson/parson.c:1919
+ - Operand Type: void
+ - Operand Type: Type: DW_TAG_pointer_type,  char
+
+Subprogram: json_serialize_to_buffer_r
+ from /src/parson/parson.c:1146
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type, DW_TAG_typedef,  JSON_Value
+ - Operand Type: Type: DW_TAG_pointer_type,  char
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Name: {  parson_bool_t}Type:  from /src/parson/parson.c:106DW_TAG_typedef,  parson_bool_t
+ - Operand Type: Type: DW_TAG_pointer_type,  char
+
+Subprogram: json_object_get_value_at
+ from /src/parson/parson.c:1485
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Value
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type, DW_TAG_typedef,  JSON_Object
+ - Operand Type: Name: {  size_t}Type:  from /usr/local/lib/clang/18/include/__stddef_size_t.h:18DW_TAG_typedef,  size_t
+
+Subprogram: json_serialize_to_file_pretty
+ from /src/parson/parson.c:1878
+ - Operand Type: Name: {  JSON_Status}Type:  from /src/parson/parson.h:65DW_TAG_typedef,  JSON_Status
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type, DW_TAG_typedef,  JSON_Value
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+
+Subprogram: json_serialize_to_string
+ from /src/parson/parson.c:1840
+ - Operand Type: Type: DW_TAG_pointer_type,  char
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type, DW_TAG_typedef,  JSON_Value
+
+Subprogram: json_serialization_size
+ from /src/parson/parson.c:1799
+ - Operand Type: Name: {  size_t}Type:  from /usr/local/lib/clang/18/include/__stddef_size_t.h:18DW_TAG_typedef,  size_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type, DW_TAG_typedef,  JSON_Value
+
+Subprogram: json_serialize_to_buffer
+ from /src/parson/parson.c:1805
+ - Operand Type: Name: {  JSON_Status}Type:  from /src/parson/parson.h:65DW_TAG_typedef,  JSON_Status
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type, DW_TAG_typedef,  JSON_Value
+ - Operand Type: Type: DW_TAG_pointer_type,  char
+ - Operand Type: Name: {  size_t}Type:  from /usr/local/lib/clang/18/include/__stddef_size_t.h:18DW_TAG_typedef,  size_t
+
+Subprogram: json_serialize_to_file
+ from /src/parson/parson.c:1818
+ - Operand Type: Name: {  JSON_Status}Type:  from /src/parson/parson.h:65DW_TAG_typedef,  JSON_Status
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type, DW_TAG_typedef,  JSON_Value
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+
+Subprogram: json_value_deep_copy
+ from /src/parson/parson.c:1709
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Value
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type, DW_TAG_typedef,  JSON_Value
+
+Subprogram: json_value_get_parent
+ from /src/parson/parson.c:1595
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Value
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type, DW_TAG_typedef,  JSON_Value
+
+Subprogram: json_array_get_boolean
+ from /src/parson/parson.c:1545
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type, DW_TAG_typedef,  JSON_Array
+ - Operand Type: Name: {  size_t}Type:  from /usr/local/lib/clang/18/include/__stddef_size_t.h:18DW_TAG_typedef,  size_t
+
+Subprogram: json_array_get_array
+ from /src/parson/parson.c:1541
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Array
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type, DW_TAG_typedef,  JSON_Array
+ - Operand Type: Name: {  size_t}Type:  from /usr/local/lib/clang/18/include/__stddef_size_t.h:18DW_TAG_typedef,  size_t
+
+Subprogram: json_array_get_object
+ from /src/parson/parson.c:1537
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Object
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type, DW_TAG_typedef,  JSON_Array
+ - Operand Type: Name: {  size_t}Type:  from /usr/local/lib/clang/18/include/__stddef_size_t.h:18DW_TAG_typedef,  size_t
+
+Subprogram: json_array_get_number
+ from /src/parson/parson.c:1533
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type, DW_TAG_typedef,  JSON_Array
+ - Operand Type: Name: {  size_t}Type:  from /usr/local/lib/clang/18/include/__stddef_size_t.h:18DW_TAG_typedef,  size_t
+
+Subprogram: json_array_get_string_len
+ from /src/parson/parson.c:1529
+ - Operand Type: Name: {  size_t}Type:  from /usr/local/lib/clang/18/include/__stddef_size_t.h:18DW_TAG_typedef,  size_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type, DW_TAG_typedef,  JSON_Array
+ - Operand Type: Name: {  size_t}Type:  from /usr/local/lib/clang/18/include/__stddef_size_t.h:18DW_TAG_typedef,  size_t
+
+Subprogram: json_array_get_string
+ from /src/parson/parson.c:1525
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type, DW_TAG_typedef,  JSON_Array
+ - Operand Type: Name: {  size_t}Type:  from /usr/local/lib/clang/18/include/__stddef_size_t.h:18DW_TAG_typedef,  size_t
+
+Subprogram: json_object_dothas_value_of_type
+ from /src/parson/parson.c:1512
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type, DW_TAG_typedef,  JSON_Object
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Name: {  JSON_Value_Type}Type:  from /src/parson/parson.h:59DW_TAG_typedef,  JSON_Value_Type
+
+Subprogram: json_object_dotget_value
+ from /src/parson/parson.c:1441
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Value
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type, DW_TAG_typedef,  JSON_Object
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+
+Subprogram: json_object_dothas_value
+ from /src/parson/parson.c:1508
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type, DW_TAG_typedef,  JSON_Object
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+
+Subprogram: json_object_has_value_of_type
+ from /src/parson/parson.c:1503
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type, DW_TAG_typedef,  JSON_Object
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Name: {  JSON_Value_Type}Type:  from /src/parson/parson.h:59DW_TAG_typedef,  JSON_Value_Type
+
+Subprogram: json_object_has_value
+ from /src/parson/parson.c:1499
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type, DW_TAG_typedef,  JSON_Object
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+
+Subprogram: json_object_dotget_boolean
+ from /src/parson/parson.c:1470
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type, DW_TAG_typedef,  JSON_Object
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+
+Subprogram: json_object_dotget_array
+ from /src/parson/parson.c:1466
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Array
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type, DW_TAG_typedef,  JSON_Object
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+
+Subprogram: json_object_dotget_object
+ from /src/parson/parson.c:1462
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Object
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type, DW_TAG_typedef,  JSON_Object
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+
+Subprogram: json_object_dotget_number
+ from /src/parson/parson.c:1458
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type, DW_TAG_typedef,  JSON_Object
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+
+Subprogram: json_object_dotget_string_len
+ from /src/parson/parson.c:1454
+ - Operand Type: Name: {  size_t}Type:  from /usr/local/lib/clang/18/include/__stddef_size_t.h:18DW_TAG_typedef,  size_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type, DW_TAG_typedef,  JSON_Object
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+
+Subprogram: json_object_dotget_string
+ from /src/parson/parson.c:1450
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type, DW_TAG_typedef,  JSON_Object
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+
+Subprogram: json_object_get_boolean
+ from /src/parson/parson.c:1437
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type, DW_TAG_typedef,  JSON_Object
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+
+Subprogram: json_object_get_array
+ from /src/parson/parson.c:1433
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Array
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type, DW_TAG_typedef,  JSON_Object
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+
+Subprogram: json_object_get_object
+ from /src/parson/parson.c:1429
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Object
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type, DW_TAG_typedef,  JSON_Object
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+
+Subprogram: json_object_get_number
+ from /src/parson/parson.c:1425
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type, DW_TAG_typedef,  JSON_Object
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+
+Subprogram: json_object_get_string_len
+ from /src/parson/parson.c:1421
+ - Operand Type: Name: {  size_t}Type:  from /usr/local/lib/clang/18/include/__stddef_size_t.h:18DW_TAG_typedef,  size_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type, DW_TAG_typedef,  JSON_Object
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+
+Subprogram: json_object_get_string
+ from /src/parson/parson.c:1417
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type, DW_TAG_typedef,  JSON_Object
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+
+Subprogram: remove_comments
+ from /src/parson/parson.c:239
+ - Operand Type: void
+ - Operand Type: Type: DW_TAG_pointer_type,  char
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+
+Subprogram: json_parse_string_with_comments
+ from /src/parson/parson.c:1393
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Value
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+
+Subprogram: json_parse_file_with_comments
+ from /src/parson/parson.c:1372
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Value
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+
+Subprogram: read_file
+ from /src/parson/parson.c:206
+ - Operand Type: Type: DW_TAG_pointer_type,  char
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+
+Subprogram: json_parse_string
+ from /src/parson/parson.c:1383
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Value
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+
+Subprogram: json_parse_file
+ from /src/parson/parson.c:1361
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  JSON_Value
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+
+
+## Global variables in module
+Global variable:  from /src/fuzzers/empty-fuzzer.c:7
+Global variable:  from /src/parson/parson.c:1400
+Global variable:  from /src/parson/parson.c:1400
+Global variable:  from /src/parson/parson.c:1401
+Global variable:  from /src/parson/parson.c:1401
+Global variable:  from /src/parson/parson.c:1825
+Global variable:  from /src/parson/parson.c:207
+Global variable: parson_free from /src/parson/parson.c:96
+Global variable:  from /src/parson/parson.c:1089
+Global variable:  from /src/parson/parson.c:1092
+Global variable:  from /src/parson/parson.c:408
+Global variable:  from /src/parson/parson.c:412
+Global variable:  from /src/parson/parson.c:1116
+Global variable: parson_malloc from /src/parson/parson.c:95
+Global variable:  from /src/parson/parson.c:1161
+Global variable:  from /src/parson/parson.c:1167
+Global variable:  from /src/parson/parson.c:1179
+Global variable:  from /src/parson/parson.c:1188
+Global variable:  from /src/parson/parson.c:1193
+Global variable:  from /src/parson/parson.c:1214
+Global variable:  from /src/parson/parson.c:1216
+Global variable:  from /src/parson/parson.c:1237
+Global variable:  from /src/parson/parson.c:1269
+Global variable:  from /src/parson/parson.c:1294
+Global variable:  from /src/parson/parson.c:1298
+Global variable:  from /src/parson/parson.c:1299
+Global variable:  from /src/parson/parson.c:1300
+Global variable:  from /src/parson/parson.c:1301
+Global variable:  from /src/parson/parson.c:1302
+Global variable:  from /src/parson/parson.c:1303
+Global variable:  from /src/parson/parson.c:1304
+Global variable:  from /src/parson/parson.c:1305
+Global variable:  from /src/parson/parson.c:1306
+Global variable:  from /src/parson/parson.c:1307
+Global variable:  from /src/parson/parson.c:1308
+Global variable:  from /src/parson/parson.c:1309
+Global variable:  from /src/parson/parson.c:1310
+Global variable:  from /src/parson/parson.c:1311
+Global variable:  from /src/parson/parson.c:1312
+Global variable:  from /src/parson/parson.c:1316
+Global variable:  from /src/parson/parson.c:1319
+Global variable:  from /src/parson/parson.c:1320
+Global variable:  from /src/parson/parson.c:1321
+Global variable:  from /src/parson/parson.c:1322
+Global variable:  from /src/parson/parson.c:1323
+Global variable:  from /src/parson/parson.c:1324
+Global variable:  from /src/parson/parson.c:1325
+Global variable:  from /src/parson/parson.c:1326
+Global variable:  from /src/parson/parson.c:1327
+Global variable:  from /src/parson/parson.c:1328
+Global variable:  from /src/parson/parson.c:1329
+Global variable:  from /src/parson/parson.c:1330
+Global variable:  from /src/parson/parson.c:1331
+Global variable:  from /src/parson/parson.c:1332
+Global variable:  from /src/parson/parson.c:1333
+Global variable:  from /src/parson/parson.c:1334
+Global variable:  from /src/parson/parson.c:1335
+Global variable:  from /src/parson/parson.c:1336
+Global variable:  from /src/parson/parson.c:1339
+Global variable:  from /src/parson/parson.c:1341
+Global variable: parson_escape_slashes from /src/parson/parson.c:98
+Global variable: parson_float_format from /src/parson/parson.c:100
+Global variable: parson_number_serialization_function from /src/parson/parson.c:102
+
+## Types defined in module
+Type: Name: {  char} DW_ATE_signed_char
+Type: Name: {  JSON_Free_Function} from /src/parson/parson.h:68 DW_TAG_typedef
+Type: Name: {  JSON_Malloc_Function} from /src/parson/parson.h:67 DW_TAG_typedef
+Type: Name: {  size_t} from /usr/local/lib/clang/18/include/__stddef_size_t.h:18 DW_TAG_typedef
+Type: Name: {  unsigned long} DW_ATE_unsigned
+Type: Name: {  int} DW_ATE_signed
+Type: Name: {  JSON_Number_Serialization_Function} from /src/parson/parson.h:74 DW_TAG_typedef
+Type: Name: {  double} DW_ATE_float
+Type: Name: {  json_value_type} from /src/parson/parson.h:50 DW_TAG_enumeration_type Composite type
+ - Elements: 7
+ - Elem 0{ JSONError }
+ - Elem 1{ JSONNull }
+ - Elem 2{ JSONString }
+ - Elem 3{ JSONNumber }
+ - Elem 4{ JSONObject }
+ - Elem 5{ JSONArray }
+ - Elem 6{ JSONBoolean }
+
+Type: Name: {  json_result_t} from /src/parson/parson.h:61 DW_TAG_enumeration_type Composite type
+ - Elements: 2
+ - Elem 0{ JSONSuccess }
+ - Elem 1{ JSONFailure }
+
+Type: Name: {  unsigned int} DW_ATE_unsigned
+Type: Name: {  JSON_Value} from /src/parson/parson.h:48 DW_TAG_typedef
+Type: Name: {  json_value_t} from /src/parson/parson.c:126 DW_TAG_structure_type Composite type
+ - Elements: 3
+ - Elem 0{  parent from /src/parson/parson.c:127 }
+ - Elem 1{  type from /src/parson/parson.c:128 }
+ - Elem 2{  value from /src/parson/parson.c:129 }
+
+Type: Name: {  parent} from /src/parson/parson.c:127 DW_TAG_member
+Type: Name: {  type} from /src/parson/parson.c:128 DW_TAG_member
+Type: Name: {  JSON_Value_Type} from /src/parson/parson.h:59 DW_TAG_typedef
+Type: Name: {  value} from /src/parson/parson.c:129 DW_TAG_member
+Type: Name: {  JSON_Value_Value} from /src/parson/parson.c:124 DW_TAG_typedef
+Type: Name: {  json_value_value} from /src/parson/parson.c:117 DW_TAG_union_type Composite type
+ - Elements: 6
+ - Elem 0{  string from /src/parson/parson.c:118 }
+ - Elem 1{  number from /src/parson/parson.c:119 }
+ - Elem 2{  object from /src/parson/parson.c:120 }
+ - Elem 3{  array from /src/parson/parson.c:121 }
+ - Elem 4{  boolean from /src/parson/parson.c:122 }
+ - Elem 5{  null from /src/parson/parson.c:123 }
+
+Type: Name: {  string} from /src/parson/parson.c:118 DW_TAG_member
+Type: Name: {  JSON_String} from /src/parson/parson.c:114 DW_TAG_typedef
+Type: Name: {  json_string} from /src/parson/parson.c:111 DW_TAG_structure_type Composite type
+ - Elements: 2
+ - Elem 0{  chars from /src/parson/parson.c:112 }
+ - Elem 1{  length from /src/parson/parson.c:113 }
+
+Type: Name: {  chars} from /src/parson/parson.c:112 DW_TAG_member
+Type: Name: {  length} from /src/parson/parson.c:113 DW_TAG_member
+Type: Name: {  number} from /src/parson/parson.c:119 DW_TAG_member
+Type: Name: {  object} from /src/parson/parson.c:120 DW_TAG_member
+Type: Name: {  JSON_Object} from /src/parson/parson.h:46 DW_TAG_typedef
+Type: Name: {  json_object_t} from /src/parson/parson.c:132 DW_TAG_structure_type Composite type
+ - Elements: 9
+ - Elem 0{  wrapping_value from /src/parson/parson.c:133 }
+ - Elem 1{  cells from /src/parson/parson.c:134 }
+ - Elem 2{  hashes from /src/parson/parson.c:135 }
+ - Elem 3{  names from /src/parson/parson.c:136 }
+ - Elem 4{  values from /src/parson/parson.c:137 }
+ - Elem 5{  cell_ixs from /src/parson/parson.c:138 }
+ - Elem 6{  count from /src/parson/parson.c:139 }
+ - Elem 7{  item_capacity from /src/parson/parson.c:140 }
+ - Elem 8{  cell_capacity from /src/parson/parson.c:141 }
+
+Type: Name: {  wrapping_value} from /src/parson/parson.c:133 DW_TAG_member
+Type: Name: {  cells} from /src/parson/parson.c:134 DW_TAG_member
+Type: Name: {  hashes} from /src/parson/parson.c:135 DW_TAG_member
+Type: Name: {  names} from /src/parson/parson.c:136 DW_TAG_member
+Type: Name: {  values} from /src/parson/parson.c:137 DW_TAG_member
+Type: Name: {  cell_ixs} from /src/parson/parson.c:138 DW_TAG_member
+Type: Name: {  count} from /src/parson/parson.c:139 DW_TAG_member
+Type: Name: {  item_capacity} from /src/parson/parson.c:140 DW_TAG_member
+Type: Name: {  cell_capacity} from /src/parson/parson.c:141 DW_TAG_member
+Type: Name: {  array} from /src/parson/parson.c:121 DW_TAG_member
+Type: Name: {  JSON_Array} from /src/parson/parson.h:47 DW_TAG_typedef
+Type: Name: {  json_array_t} from /src/parson/parson.c:144 DW_TAG_structure_type Composite type
+ - Elements: 4
+ - Elem 0{  wrapping_value from /src/parson/parson.c:145 }
+ - Elem 1{  items from /src/parson/parson.c:146 }
+ - Elem 2{  count from /src/parson/parson.c:147 }
+ - Elem 3{  capacity from /src/parson/parson.c:148 }
+
+Type: Name: {  wrapping_value} from /src/parson/parson.c:145 DW_TAG_member
+Type: Name: {  items} from /src/parson/parson.c:146 DW_TAG_member
+Type: Name: {  count} from /src/parson/parson.c:147 DW_TAG_member
+Type: Name: {  capacity} from /src/parson/parson.c:148 DW_TAG_member
+Type: Name: {  boolean} from /src/parson/parson.c:122 DW_TAG_member
+Type: Name: {  null} from /src/parson/parson.c:123 DW_TAG_member
+Type: Name: {  unsigned char} DW_ATE_unsigned_char
+Type: Name: {  unsigned short} DW_ATE_unsigned
+Type: Name: {  uint8_t} from /usr/include/x86_64-linux-gnu/bits/stdint-uintn.h:24 DW_TAG_typedef
+Type: Name: {  __uint8_t} from /usr/include/x86_64-linux-gnu/bits/types.h:38 DW_TAG_typedef
+Type: Name: {  va_list} from /usr/include/stdio.h:52 DW_TAG_typedef
+Type: Name: {  __gnuc_va_list} from /usr/local/lib/clang/18/include/__stdarg___gnuc_va_list.h:12 DW_TAG_typedef
+Type: Name: {  __builtin_va_list} from /src/parson/parson.c DW_TAG_typedef
+Type: Name: {  __va_list_tag} DW_TAG_structure_type Composite type
+ - Elements: 4
+ - Elem 0{  gp_offset from /src/parson/parson.c:291 }
+ - Elem 1{  fp_offset from /src/parson/parson.c:291 }
+ - Elem 2{  overflow_arg_area from /src/parson/parson.c:291 }
+ - Elem 3{  reg_save_area from /src/parson/parson.c:291 }
+
+Type: Name: {  gp_offset} from /src/parson/parson.c:291 DW_TAG_member
+Type: Name: {  fp_offset} from /src/parson/parson.c:291 DW_TAG_member
+Type: Name: {  overflow_arg_area} from /src/parson/parson.c:291 DW_TAG_member
+Type: Name: {  reg_save_area} from /src/parson/parson.c:291 DW_TAG_member
+Type: Name: {  JSON_Status} from /src/parson/parson.h:65 DW_TAG_typedef
+Type: Name: {  parson_bool_t} from /src/parson/parson.c:106 DW_TAG_typedef
+Type: Name: {  FILE} from /usr/include/x86_64-linux-gnu/bits/types/FILE.h:7 DW_TAG_typedef
+Type: Name: {  _IO_FILE} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:49 DW_TAG_structure_type Composite type
+ - Elements: 29
+ - Elem 0{  _flags from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:51 }
+ - Elem 1{  _IO_read_ptr from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:54 }
+ - Elem 2{  _IO_read_end from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:55 }
+ - Elem 3{  _IO_read_base from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:56 }
+ - Elem 4{  _IO_write_base from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:57 }
+ - Elem 5{  _IO_write_ptr from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:58 }
+ - Elem 6{  _IO_write_end from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:59 }
+ - Elem 7{  _IO_buf_base from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:60 }
+ - Elem 8{  _IO_buf_end from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:61 }
+ - Elem 9{  _IO_save_base from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:64 }
+ - Elem 10{  _IO_backup_base from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:65 }
+ - Elem 11{  _IO_save_end from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:66 }
+ - Elem 12{  _markers from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:68 }
+ - Elem 13{  _chain from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:70 }
+ - Elem 14{  _fileno from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:72 }
+ - Elem 15{  _flags2 from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:73 }
+ - Elem 16{  _old_offset from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:74 }
+ - Elem 17{  _cur_column from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:77 }
+ - Elem 18{  _vtable_offset from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:78 }
+ - Elem 19{  _shortbuf from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:79 }
+ - Elem 20{  _lock from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:81 }
+ - Elem 21{  _offset from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:89 }
+ - Elem 22{  _codecvt from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:91 }
+ - Elem 23{  _wide_data from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:92 }
+ - Elem 24{  _freeres_list from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:93 }
+ - Elem 25{  _freeres_buf from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:94 }
+ - Elem 26{  __pad5 from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:95 }
+ - Elem 27{  _mode from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:96 }
+ - Elem 28{  _unused2 from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:98 }
+
+Type: Name: {  _flags} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:51 DW_TAG_member
+Type: Name: {  _IO_read_ptr} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:54 DW_TAG_member
+Type: Name: {  _IO_read_end} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:55 DW_TAG_member
+Type: Name: {  _IO_read_base} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:56 DW_TAG_member
+Type: Name: {  _IO_write_base} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:57 DW_TAG_member
+Type: Name: {  _IO_write_ptr} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:58 DW_TAG_member
+Type: Name: {  _IO_write_end} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:59 DW_TAG_member
+Type: Name: {  _IO_buf_base} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:60 DW_TAG_member
+Type: Name: {  _IO_buf_end} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:61 DW_TAG_member
+Type: Name: {  _IO_save_base} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:64 DW_TAG_member
+Type: Name: {  _IO_backup_base} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:65 DW_TAG_member
+Type: Name: {  _IO_save_end} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:66 DW_TAG_member
+Type: Name: {  _markers} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:68 DW_TAG_member
+Type: Name: {  _IO_marker} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:36 DW_TAG_structure_type Composite type
+ - Elements: 0
+
+Type: Name: {  _chain} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:70 DW_TAG_member
+Type: Name: {  _fileno} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:72 DW_TAG_member
+Type: Name: {  _flags2} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:73 DW_TAG_member
+Type: Name: {  _old_offset} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:74 DW_TAG_member
+Type: Name: {  __off_t} from /usr/include/x86_64-linux-gnu/bits/types.h:152 DW_TAG_typedef
+Type: Name: {  long} DW_ATE_signed
+Type: Name: {  _cur_column} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:77 DW_TAG_member
+Type: Name: {  _vtable_offset} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:78 DW_TAG_member
+Type: Name: {  signed char} DW_ATE_signed_char
+Type: Name: {  _shortbuf} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:79 DW_TAG_member
+Type: Name: {  _lock} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:81 DW_TAG_member
+Type: Name: {  _IO_lock_t} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:43 DW_TAG_typedef
+Type: Name: {  _offset} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:89 DW_TAG_member
+Type: Name: {  __off64_t} from /usr/include/x86_64-linux-gnu/bits/types.h:153 DW_TAG_typedef
+Type: Name: {  _codecvt} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:91 DW_TAG_member
+Type: Name: {  _IO_codecvt} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:37 DW_TAG_structure_type Composite type
+ - Elements: 0
+
+Type: Name: {  _wide_data} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:92 DW_TAG_member
+Type: Name: {  _IO_wide_data} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:38 DW_TAG_structure_type Composite type
+ - Elements: 0
+
+Type: Name: {  _freeres_list} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:93 DW_TAG_member
+Type: Name: {  _freeres_buf} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:94 DW_TAG_member
+Type: Name: {  __pad5} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:95 DW_TAG_member
+Type: Name: {  _mode} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:96 DW_TAG_member
+Type: Name: {  _unused2} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:98 DW_TAG_member

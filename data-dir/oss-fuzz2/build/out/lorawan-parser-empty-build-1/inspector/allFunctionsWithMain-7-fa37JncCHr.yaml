@@ -1,0 +1,25 @@
+---
+Fuzzer filename: ''
+All functions:
+  Function list name: All functions
+  Elements:
+    - functionName:    main
+      functionSourceFile: '/src/lorawan-parser/conftest.c'
+      linkageType:     externalLinkage
+      functionLinenumber: 26
+      functionLinenumberEnd: 29
+      functionDepth:   0
+      returnType:      int
+      argCount:        0
+      argTypes:        []
+      constantsTouched: []
+      argNames:        []
+      BBCount:         1
+      ICount:          6
+      EdgeCount:       1
+      CyclomaticComplexity: 2
+      functionsReached: []
+      functionUses:    0
+      BranchProfiles:  []
+      Callsites:       []
+...

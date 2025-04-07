@@ -1,0 +1,8 @@
+---
+- name:            LLVMFuzzerTestOneInput
+  file_location:   '/src/fuzzers/empty-fuzzer.c:5'
+  type_arguments:  [ 93844519799672, 93844520602048, 93844520602384 ]
+  raw_name:        LLVMFuzzerTestOneInput
+  is_public:       0
+  is_private:      0
+...

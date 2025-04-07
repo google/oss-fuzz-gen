@@ -1,0 +1,606 @@
+---
+Fuzzer filename: ''
+All functions:
+  Function list name: All functions
+  Elements:
+    - functionName:    main
+      functionSourceFile: '/src/lorawan-parser/conftest.c'
+      linkageType:     externalLinkage
+      functionLinenumber: 132
+      functionLinenumberEnd: 202
+      functionDepth:   0
+      returnType:      int
+      argCount:        0
+      argTypes:        []
+      constantsTouched: []
+      argNames:        []
+      BBCount:         52
+      ICount:          333
+      EdgeCount:       71
+      CyclomaticComplexity: 21
+      functionsReached:
+        - close
+        - creat
+        - getpagesize
+        - mmap
+        - munmap
+        - open
+        - rand
+        - read
+        - umask
+        - write
+      functionUses:    0
+      BranchProfiles:
+        - Branch String:   'conftest.c:142,7'
+          Branch Sides:
+            - BranchSide:      'conftest.c:143,5'
+              BranchSideFuncs:
+                - umask
+                - creat
+                - write
+                - close
+                - open
+                - write
+                - mmap
+                - close
+                - munmap
+                - open
+                - mmap
+                - malloc
+                - read
+                - close
+                - free
+                - free
+                - rand
+            - BranchSide:      'conftest.c:144,10'
+              BranchSideFuncs:
+                - umask
+                - creat
+                - write
+                - close
+                - open
+                - write
+                - mmap
+                - close
+                - munmap
+                - open
+                - mmap
+                - malloc
+                - read
+                - close
+                - free
+                - free
+                - rand
+        - Branch String:   'conftest.c:144,3'
+          Branch Sides:
+            - BranchSide:      'conftest.c:145,19'
+              BranchSideFuncs:
+                - rand
+                - umask
+                - creat
+                - write
+                - close
+                - open
+                - write
+                - mmap
+                - close
+                - munmap
+                - open
+                - mmap
+                - malloc
+                - read
+                - close
+                - free
+                - free
+            - BranchSide:      'conftest.c:146,3'
+              BranchSideFuncs:
+                - umask
+                - creat
+                - write
+                - close
+                - open
+                - write
+                - mmap
+                - close
+                - munmap
+                - open
+                - mmap
+                - malloc
+                - read
+                - close
+                - free
+                - free
+        - Branch String:   'conftest.c:148,7'
+          Branch Sides:
+            - BranchSide:      'conftest.c:149,5'
+              BranchSideFuncs: []
+            - BranchSide:      'conftest.c:150,14'
+              BranchSideFuncs:
+                - write
+                - close
+                - open
+                - write
+                - mmap
+                - close
+                - munmap
+                - open
+                - mmap
+                - malloc
+                - read
+                - close
+                - free
+                - free
+        - Branch String:   'conftest.c:150,7'
+          Branch Sides:
+            - BranchSide:      'conftest.c:151,5'
+              BranchSideFuncs: []
+            - BranchSide:      'conftest.c:152,10'
+              BranchSideFuncs:
+                - close
+                - open
+                - write
+                - mmap
+                - close
+                - munmap
+                - open
+                - mmap
+                - malloc
+                - read
+                - close
+                - free
+                - free
+        - Branch String:   'conftest.c:157,7'
+          Branch Sides:
+            - BranchSide:      'conftest.c:158,5'
+              BranchSideFuncs: []
+            - BranchSide:      'conftest.c:159,10'
+              BranchSideFuncs:
+                - write
+                - mmap
+                - close
+                - munmap
+                - open
+                - mmap
+                - malloc
+                - read
+                - close
+                - free
+                - free
+        - Branch String:   'conftest.c:160,7'
+          Branch Sides:
+            - BranchSide:      'conftest.c:161,5'
+              BranchSideFuncs: []
+            - BranchSide:      'conftest.c:162,29'
+              BranchSideFuncs:
+                - mmap
+                - close
+                - munmap
+                - open
+                - mmap
+                - malloc
+                - read
+                - close
+                - free
+                - free
+        - Branch String:   'conftest.c:163,7'
+          Branch Sides:
+            - BranchSide:      'conftest.c:164,5'
+              BranchSideFuncs: []
+            - BranchSide:      'conftest.c:165,10'
+              BranchSideFuncs:
+                - close
+                - munmap
+                - open
+                - mmap
+                - malloc
+                - read
+                - close
+                - free
+                - free
+        - Branch String:   'conftest.c:165,3'
+          Branch Sides:
+            - BranchSide:      'conftest.c:166,11'
+              BranchSideFuncs:
+                - close
+                - munmap
+                - open
+                - mmap
+                - malloc
+                - read
+                - close
+                - free
+                - free
+            - BranchSide:      'conftest.c:168,10'
+              BranchSideFuncs:
+                - close
+                - munmap
+                - open
+                - mmap
+                - malloc
+                - read
+                - close
+                - free
+                - free
+        - Branch String:   'conftest.c:166,9'
+          Branch Sides:
+            - BranchSide:      'conftest.c:166,20'
+              BranchSideFuncs: []
+            - BranchSide:      'conftest.c:167,7'
+              BranchSideFuncs: []
+        - Branch String:   'conftest.c:169,7'
+          Branch Sides:
+            - BranchSide:      'conftest.c:170,5'
+              BranchSideFuncs: []
+            - BranchSide:      'conftest.c:175,8'
+              BranchSideFuncs:
+                - open
+                - mmap
+                - malloc
+                - read
+                - close
+                - free
+                - free
+        - Branch String:   'conftest.c:176,7'
+          Branch Sides:
+            - BranchSide:      'conftest.c:177,5'
+              BranchSideFuncs: []
+            - BranchSide:      'conftest.c:178,7'
+              BranchSideFuncs:
+                - mmap
+                - malloc
+                - read
+                - close
+                - free
+                - free
+        - Branch String:   'conftest.c:178,7'
+          Branch Sides:
+            - BranchSide:      'conftest.c:180,5'
+              BranchSideFuncs: []
+            - BranchSide:      'conftest.c:181,10'
+              BranchSideFuncs:
+                - malloc
+                - read
+                - close
+                - free
+                - free
+        - Branch String:   'conftest.c:181,3'
+          Branch Sides:
+            - BranchSide:      'conftest.c:182,11'
+              BranchSideFuncs:
+                - malloc
+                - read
+                - close
+                - free
+                - free
+            - BranchSide:      'conftest.c:188,10'
+              BranchSideFuncs:
+                - malloc
+                - read
+                - close
+                - free
+                - free
+        - Branch String:   'conftest.c:182,9'
+          Branch Sides:
+            - BranchSide:      'conftest.c:182,35'
+              BranchSideFuncs: []
+            - BranchSide:      'conftest.c:183,7'
+              BranchSideFuncs: []
+        - Branch String:   'conftest.c:188,3'
+          Branch Sides:
+            - BranchSide:      'conftest.c:189,22'
+              BranchSideFuncs:
+                - malloc
+                - read
+                - close
+                - free
+                - free
+            - BranchSide:      'conftest.c:190,28'
+              BranchSideFuncs:
+                - malloc
+                - read
+                - close
+                - free
+                - free
+        - Branch String:   'conftest.c:191,7'
+          Branch Sides:
+            - BranchSide:      'conftest.c:192,5'
+              BranchSideFuncs:
+                - read
+                - close
+                - free
+                - free
+            - BranchSide:      'conftest.c:193,13'
+              BranchSideFuncs:
+                - read
+                - close
+                - free
+                - free
+        - Branch String:   'conftest.c:193,7'
+          Branch Sides:
+            - BranchSide:      'conftest.c:194,5'
+              BranchSideFuncs: []
+            - BranchSide:      'conftest.c:195,10'
+              BranchSideFuncs:
+                - close
+                - free
+                - free
+        - Branch String:   'conftest.c:195,3'
+          Branch Sides:
+            - BranchSide:      'conftest.c:196,11'
+              BranchSideFuncs:
+                - close
+                - free
+                - free
+            - BranchSide:      'conftest.c:198,10'
+              BranchSideFuncs:
+                - close
+                - free
+                - free
+        - Branch String:   'conftest.c:196,9'
+          Branch Sides:
+            - BranchSide:      'conftest.c:196,35'
+              BranchSideFuncs: []
+            - BranchSide:      'conftest.c:197,7'
+              BranchSideFuncs: []
+      Callsites:
+        - Src:             'conftest.c:138,14'
+          Dst:             getpagesize
+        - Src:             'conftest.c:145,19'
+          Dst:             rand
+        - Src:             'conftest.c:146,3'
+          Dst:             umask
+        - Src:             'conftest.c:147,8'
+          Dst:             creat
+        - Src:             'conftest.c:150,7'
+          Dst:             write
+        - Src:             'conftest.c:152,3'
+          Dst:             close
+        - Src:             'conftest.c:156,9'
+          Dst:             open
+        - Src:             'conftest.c:160,7'
+          Dst:             write
+        - Src:             'conftest.c:162,20'
+          Dst:             mmap
+        - Src:             'conftest.c:168,3'
+          Dst:             close
+        - Src:             'conftest.c:169,7'
+          Dst:             munmap
+        - Src:             'conftest.c:175,8'
+          Dst:             open
+        - Src:             'conftest.c:178,16'
+          Dst:             mmap
+        - Src:             'conftest.c:193,7'
+          Dst:             read
+        - Src:             'conftest.c:198,3'
+          Dst:             close
+    - functionName:    getpagesize
+      functionSourceFile: ''
+      linkageType:     externalLinkage
+      functionLinenumber: -1
+      functionLinenumberEnd: 0
+      functionDepth:   0
+      returnType:      int
+      argCount:        0
+      argTypes:        []
+      constantsTouched: []
+      argNames:        []
+      BBCount:         0
+      ICount:          0
+      EdgeCount:       0
+      CyclomaticComplexity: 2
+      functionsReached: []
+      functionUses:    1
+      BranchProfiles:  []
+      Callsites:       []
+    - functionName:    rand
+      functionSourceFile: ''
+      linkageType:     externalLinkage
+      functionLinenumber: -1
+      functionLinenumberEnd: 0
+      functionDepth:   0
+      returnType:      int
+      argCount:        0
+      argTypes:        []
+      constantsTouched: []
+      argNames:        []
+      BBCount:         0
+      ICount:          0
+      EdgeCount:       0
+      CyclomaticComplexity: 2
+      functionsReached: []
+      functionUses:    1
+      BranchProfiles:  []
+      Callsites:       []
+    - functionName:    umask
+      functionSourceFile: ''
+      linkageType:     externalLinkage
+      functionLinenumber: -1
+      functionLinenumberEnd: 0
+      functionDepth:   0
+      returnType:      int
+      argCount:        1
+      argTypes:
+        - int
+      constantsTouched: []
+      argNames:
+        - ''
+      BBCount:         0
+      ICount:          0
+      EdgeCount:       0
+      CyclomaticComplexity: 2
+      functionsReached: []
+      functionUses:    1
+      BranchProfiles:  []
+      Callsites:       []
+    - functionName:    creat
+      functionSourceFile: ''
+      linkageType:     externalLinkage
+      functionLinenumber: -1
+      functionLinenumberEnd: 0
+      functionDepth:   0
+      returnType:      int
+      argCount:        2
+      argTypes:
+        - 'N/A'
+        - int
+      constantsTouched: []
+      argNames:
+        - ''
+        - ''
+      BBCount:         0
+      ICount:          0
+      EdgeCount:       0
+      CyclomaticComplexity: 2
+      functionsReached: []
+      functionUses:    1
+      BranchProfiles:  []
+      Callsites:       []
+    - functionName:    write
+      functionSourceFile: ''
+      linkageType:     externalLinkage
+      functionLinenumber: -1
+      functionLinenumberEnd: 0
+      functionDepth:   0
+      returnType:      size_t
+      argCount:        3
+      argTypes:
+        - int
+        - 'N/A'
+        - size_t
+      constantsTouched: []
+      argNames:
+        - ''
+        - ''
+        - ''
+      BBCount:         0
+      ICount:          0
+      EdgeCount:       0
+      CyclomaticComplexity: 2
+      functionsReached: []
+      functionUses:    2
+      BranchProfiles:  []
+      Callsites:       []
+    - functionName:    close
+      functionSourceFile: ''
+      linkageType:     externalLinkage
+      functionLinenumber: -1
+      functionLinenumberEnd: 0
+      functionDepth:   0
+      returnType:      int
+      argCount:        1
+      argTypes:
+        - int
+      constantsTouched: []
+      argNames:
+        - ''
+      BBCount:         0
+      ICount:          0
+      EdgeCount:       0
+      CyclomaticComplexity: 2
+      functionsReached: []
+      functionUses:    3
+      BranchProfiles:  []
+      Callsites:       []
+    - functionName:    open
+      functionSourceFile: ''
+      linkageType:     externalLinkage
+      functionLinenumber: -1
+      functionLinenumberEnd: 0
+      functionDepth:   0
+      returnType:      int
+      argCount:        2
+      argTypes:
+        - 'N/A'
+        - int
+      constantsTouched: []
+      argNames:
+        - ''
+        - ''
+      BBCount:         0
+      ICount:          0
+      EdgeCount:       0
+      CyclomaticComplexity: 2
+      functionsReached: []
+      functionUses:    2
+      BranchProfiles:  []
+      Callsites:       []
+    - functionName:    mmap
+      functionSourceFile: ''
+      linkageType:     externalLinkage
+      functionLinenumber: -1
+      functionLinenumberEnd: 0
+      functionDepth:   0
+      returnType:      'N/A'
+      argCount:        6
+      argTypes:
+        - 'N/A'
+        - size_t
+        - int
+        - int
+        - int
+        - size_t
+      constantsTouched: []
+      argNames:
+        - ''
+        - ''
+        - ''
+        - ''
+        - ''
+        - ''
+      BBCount:         0
+      ICount:          0
+      EdgeCount:       0
+      CyclomaticComplexity: 2
+      functionsReached: []
+      functionUses:    2
+      BranchProfiles:  []
+      Callsites:       []
+    - functionName:    munmap
+      functionSourceFile: ''
+      linkageType:     externalLinkage
+      functionLinenumber: -1
+      functionLinenumberEnd: 0
+      functionDepth:   0
+      returnType:      int
+      argCount:        2
+      argTypes:
+        - 'N/A'
+        - size_t
+      constantsTouched: []
+      argNames:
+        - ''
+        - ''
+      BBCount:         0
+      ICount:          0
+      EdgeCount:       0
+      CyclomaticComplexity: 2
+      functionsReached: []
+      functionUses:    1
+      BranchProfiles:  []
+      Callsites:       []
+    - functionName:    read
+      functionSourceFile: ''
+      linkageType:     externalLinkage
+      functionLinenumber: -1
+      functionLinenumberEnd: 0
+      functionDepth:   0
+      returnType:      size_t
+      argCount:        3
+      argTypes:
+        - int
+        - 'N/A'
+        - size_t
+      constantsTouched: []
+      argNames:
+        - ''
+        - ''
+        - ''
+      BBCount:         0
+      ICount:          0
+      EdgeCount:       0
+      CyclomaticComplexity: 2
+      functionsReached: []
+      functionUses:    1
+      BranchProfiles:  []
+      Callsites:       []
+...

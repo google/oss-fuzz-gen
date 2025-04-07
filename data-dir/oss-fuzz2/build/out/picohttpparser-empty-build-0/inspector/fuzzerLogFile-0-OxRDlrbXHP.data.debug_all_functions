@@ -1,0 +1,107 @@
+---
+- name:            parse_request
+  file_location:   '/src/picohttpparser/picohttpparser.c:355'
+  type_arguments:  [ 94265522859968, 94265522859968, 94265522859968, 94265526443600, 
+                     94265526443728, 94265526443600, 94265526443728, 94265526443856, 
+                     94265526444400, 94265526443728, 94265522860928, 94265526443856 ]
+  raw_name:        parse_request
+  is_public:       0
+  is_private:      0
+- name:            parse_token
+  file_location:   '/src/picohttpparser/picohttpparser.c:245'
+  type_arguments:  [ 94265522859968, 94265522859968, 94265522859968, 94265526443600, 
+                     94265526443728, 94265523721736, 94265526443856 ]
+  raw_name:        parse_token
+  is_public:       0
+  is_private:      0
+- name:            LLVMFuzzerTestOneInput
+  file_location:   '/src/fuzzers/empty-fuzzer.c:5'
+  type_arguments:  [ 94265522859224, 94265527167424, 94265522860928 ]
+  raw_name:        LLVMFuzzerTestOneInput
+  is_public:       0
+  is_private:      0
+- name:            get_token_to_eol
+  file_location:   '/src/picohttpparser/picohttpparser.c:134'
+  type_arguments:  [ 94265522859968, 94265522859968, 94265522859968, 94265526443600, 
+                     94265526443728, 94265526443856 ]
+  raw_name:        get_token_to_eol
+  is_public:       0
+  is_private:      0
+- name:            parse_http_version
+  file_location:   '/src/picohttpparser/picohttpparser.c:280'
+  type_arguments:  [ 94265522859968, 94265522859968, 94265522859968, 94265526443856, 
+                     94265526443856 ]
+  raw_name:        parse_http_version
+  is_public:       0
+  is_private:      0
+- name:            findchar_fast
+  file_location:   '/src/picohttpparser/picohttpparser.c:105'
+  type_arguments:  [ 94265522859968, 94265522859968, 94265522859968, 94265522859968, 
+                     94265522860928, 94265526443856 ]
+  raw_name:        findchar_fast
+  is_public:       0
+  is_private:      0
+- name:            phr_decode_chunked_is_in_data
+  file_location:   '/src/picohttpparser/picohttpparser.c:678'
+  type_arguments:  [ 94265522859224, 94265524722256 ]
+  raw_name:        phr_decode_chunked_is_in_data
+  is_public:       0
+  is_private:      0
+- name:            decode_hex
+  file_location:   '/src/picohttpparser/picohttpparser.c:530'
+  type_arguments:  [ 94265522859224, 94265522859224 ]
+  raw_name:        decode_hex
+  is_public:       0
+  is_private:      0
+- name:            phr_decode_chunked
+  file_location:   '/src/picohttpparser/picohttpparser.c:543'
+  type_arguments:  [ 94265526441712, 94265524722256, 94265526441840, 94265526443728 ]
+  raw_name:        phr_decode_chunked
+  is_public:       0
+  is_private:      0
+- name:            parse_headers
+  file_location:   '/src/picohttpparser/picohttpparser.c:298'
+  type_arguments:  [ 94265522859968, 94265522859968, 94265522859968, 94265526444400, 
+                     94265526443728, 94265522860928, 94265526443856 ]
+  raw_name:        parse_headers
+  is_public:       0
+  is_private:      0
+- name:            phr_parse_headers
+  file_location:   '/src/picohttpparser/picohttpparser.c:500'
+  type_arguments:  [ 94265522859224, 94265522859968, 94265522860928, 94265526444400, 
+                     94265526443728, 94265522860928 ]
+  raw_name:        phr_parse_headers
+  is_public:       0
+  is_private:      0
+- name:            is_complete
+  file_location:   '/src/picohttpparser/picohttpparser.c:197'
+  type_arguments:  [ 94265522859968, 94265522859968, 94265522859968, 94265522860928, 
+                     94265526443856 ]
+  raw_name:        is_complete
+  is_public:       0
+  is_private:      0
+- name:            parse_response
+  file_location:   '/src/picohttpparser/picohttpparser.c:429'
+  type_arguments:  [ 94265522859968, 94265522859968, 94265522859968, 94265526443856, 
+                     94265526443856, 94265526443600, 94265526443728, 94265526444400, 
+                     94265526443728, 94265522860928, 94265526443856 ]
+  raw_name:        parse_response
+  is_public:       0
+  is_private:      0
+- name:            phr_parse_response
+  file_location:   '/src/picohttpparser/picohttpparser.c:474'
+  type_arguments:  [ 94265522859224, 94265522859968, 94265522860928, 94265526443856, 
+                     94265526443856, 94265526443600, 94265526443728, 94265526444400, 
+                     94265526443728, 94265522860928 ]
+  raw_name:        phr_parse_response
+  is_public:       0
+  is_private:      0
+- name:            phr_parse_request
+  file_location:   '/src/picohttpparser/picohttpparser.c:401'
+  type_arguments:  [ 94265522859224, 94265522859968, 94265522860928, 94265526443600, 
+                     94265526443728, 94265526443600, 94265526443728, 94265526443856, 
+                     94265526444400, 94265526443728, 94265522860928 ]
+  raw_name:        phr_parse_request
+  is_public:       0
+  is_private:      0
+...

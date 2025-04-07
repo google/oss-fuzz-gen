@@ -1,0 +1,1129 @@
+---
+- name:            getopt_internal
+  file_location:   '/src/argtable3/src/arg_getopt_long.c:397'
+  type_arguments:  [ 94060805180760, 94060805180760, 94060807950144, 94060805131856, 
+                     94060807950400, 94060805216768, 94060805180760 ]
+  raw_name:        getopt_internal
+  is_public:       0
+  is_private:      0
+- name:            LLVMFuzzerTestOneInput
+  file_location:   '/src/fuzzers/empty-fuzzer.c:5'
+  type_arguments:  [ 94060805180760, 94060812338512, 94060805127600 ]
+  raw_name:        LLVMFuzzerTestOneInput
+  is_public:       0
+  is_private:      0
+- name:            arg_make_syntax_err_help_msg
+  file_location:   '/src/argtable3/src/arg_cmd.c:263'
+  type_arguments:  [ 94060805180760, 94060805182592, 94060805131856, 94060805180760, 
+                     94060805180760, 94060805216256, 94060805216384, 94060805216768 ]
+  raw_name:        arg_make_syntax_err_help_msg
+  is_public:       0
+  is_private:      0
+- name:            arg_make_help_msg
+  file_location:   '/src/argtable3/src/arg_cmd.c:240'
+  type_arguments:  [ 0, 94060805182592, 94060805131856, 94060805216256 ]
+  raw_name:        arg_make_help_msg
+  is_public:       0
+  is_private:      0
+- name:            arg_make_syntax_err_msg
+  file_location:   '/src/argtable3/src/arg_cmd.c:255'
+  type_arguments:  [ 0, 94060805182592, 94060805216256, 94060805216384 ]
+  raw_name:        arg_make_syntax_err_msg
+  is_public:       0
+  is_private:      0
+- name:            module_name
+  file_location:   '/src/argtable3/src/arg_cmd.c:221'
+  type_arguments:  [ 94060805131856 ]
+  raw_name:        module_name
+  is_public:       0
+  is_private:      0
+- name:            module_version
+  file_location:   '/src/argtable3/src/arg_cmd.c:228'
+  type_arguments:  [ 94060805131856 ]
+  raw_name:        module_version
+  is_public:       0
+  is_private:      0
+- name:            arg_make_get_help_msg
+  file_location:   '/src/argtable3/src/arg_cmd.c:235'
+  type_arguments:  [ 0, 94060805182592 ]
+  raw_name:        arg_make_get_help_msg
+  is_public:       0
+  is_private:      0
+- name:            arg_cmd_itr_search
+  file_location:   '/src/argtable3/src/arg_cmd.c:217'
+  type_arguments:  [ 94060805180760, 94060805131232, 94060805131104 ]
+  raw_name:        arg_cmd_itr_search
+  is_public:       0
+  is_private:      0
+- name:            arg_cmd_itr_destroy
+  file_location:   '/src/argtable3/src/arg_cmd.c:213'
+  type_arguments:  [ 0, 94060805131232 ]
+  raw_name:        arg_cmd_itr_destroy
+  is_public:       0
+  is_private:      0
+- name:            arg_cmd_itr_value
+  file_location:   '/src/argtable3/src/arg_cmd.c:209'
+  type_arguments:  [ 94060805130976, 94060805131232 ]
+  raw_name:        arg_cmd_itr_value
+  is_public:       0
+  is_private:      0
+- name:            arg_cmd_itr_key
+  file_location:   '/src/argtable3/src/arg_cmd.c:205'
+  type_arguments:  [ 94060805130192, 94060805131232 ]
+  raw_name:        arg_cmd_itr_key
+  is_public:       0
+  is_private:      0
+- name:            arg_cmd_itr_advance
+  file_location:   '/src/argtable3/src/arg_cmd.c:201'
+  type_arguments:  [ 94060805180760, 94060805131232 ]
+  raw_name:        arg_cmd_itr_advance
+  is_public:       0
+  is_private:      0
+- name:            arg_cmd_itr_create
+  file_location:   '/src/argtable3/src/arg_cmd.c:197'
+  type_arguments:  [ 94060805131232 ]
+  raw_name:        arg_cmd_itr_create
+  is_public:       0
+  is_private:      0
+- name:            arg_cmd_count
+  file_location:   '/src/argtable3/src/arg_cmd.c:193'
+  type_arguments:  [ 94060804248232 ]
+  raw_name:        arg_cmd_count
+  is_public:       0
+  is_private:      0
+- name:            arg_cmd_info
+  file_location:   '/src/argtable3/src/arg_cmd.c:189'
+  type_arguments:  [ 94060805130976, 94060805131856 ]
+  raw_name:        arg_cmd_info
+  is_public:       0
+  is_private:      0
+- name:            arg_cmd_dispatch
+  file_location:   '/src/argtable3/src/arg_cmd.c:180'
+  type_arguments:  [ 94060805180760, 94060805131856, 94060805180760, 94060805182144, 
+                     94060805182592 ]
+  raw_name:        arg_cmd_dispatch
+  is_public:       0
+  is_private:      0
+- name:            arg_cmd_unregister
+  file_location:   '/src/argtable3/src/arg_cmd.c:176'
+  type_arguments:  [ 0, 94060805131856 ]
+  raw_name:        arg_cmd_unregister
+  is_public:       0
+  is_private:      0
+- name:            arg_cmd_register
+  file_location:   '/src/argtable3/src/arg_cmd.c:132'
+  type_arguments:  [ 0, 94060805131856, 94060805183040, 94060805131856, 
+                     94060805131104 ]
+  raw_name:        arg_cmd_register
+  is_public:       0
+  is_private:      0
+- name:            arg_cmd_uninit
+  file_location:   '/src/argtable3/src/arg_cmd.c:128'
+  type_arguments:  [ 0 ]
+  raw_name:        arg_cmd_uninit
+  is_public:       0
+  is_private:      0
+- name:            equal_keys
+  file_location:   '/src/argtable3/src/arg_cmd.c:118'
+  type_arguments:  [ 94060805180760, 94060805179760, 94060805179760 ]
+  raw_name:        equal_keys
+  is_public:       0
+  is_private:      0
+- name:            hash_key
+  file_location:   '/src/argtable3/src/arg_cmd.c:107'
+  type_arguments:  [ 94060804248232, 94060805179760 ]
+  raw_name:        hash_key
+  is_public:       0
+  is_private:      0
+- name:            arg_cmd_init
+  file_location:   '/src/argtable3/src/arg_cmd.c:124'
+  type_arguments:  [ 0 ]
+  raw_name:        arg_cmd_init
+  is_public:       0
+  is_private:      0
+- name:            arg_set_module_version
+  file_location:   '/src/argtable3/src/arg_cmd.c:68'
+  type_arguments:  [ 0, 94060805180760, 94060805180760, 94060805180760, 
+                     94060805131856 ]
+  raw_name:        arg_set_module_version
+  is_public:       0
+  is_private:      0
+- name:            arg_set_module_name
+  file_location:   '/src/argtable3/src/arg_cmd.c:53'
+  type_arguments:  [ 0, 94060805131856 ]
+  raw_name:        arg_set_module_name
+  is_public:       0
+  is_private:      0
+- name:            arg_strcasecmp
+  file_location:   '/src/argtable3/src/arg_date.c:225'
+  type_arguments:  [ 94060805180760, 94060805131856, 94060805131856 ]
+  raw_name:        arg_strcasecmp
+  is_public:       0
+  is_private:      0
+- name:            conv_num
+  file_location:   '/src/argtable3/src/arg_date.c:550'
+  type_arguments:  [ 94060805180760, 94060805217152, 94060805216768, 94060805180760, 
+                     94060805180760 ]
+  raw_name:        conv_num
+  is_public:       0
+  is_private:      0
+- name:            arg_strncasecmp
+  file_location:   '/src/argtable3/src/arg_date.c:235'
+  type_arguments:  [ 94060805180760, 94060805131856, 94060805131856, 94060805127600 ]
+  raw_name:        arg_strncasecmp
+  is_public:       0
+  is_private:      0
+- name:            arg_strptime
+  file_location:   '/src/argtable3/src/arg_date.c:251'
+  type_arguments:  [ 94060805130192, 94060805131856, 94060805131856, 94060806168672 ]
+  raw_name:        arg_strptime
+  is_public:       0
+  is_private:      0
+- name:            arg_date_errorfn
+  file_location:   '/src/argtable3/src/arg_date.c:80'
+  type_arguments:  [ 0, 94060806168544, 94060805182592, 94060805180760, 
+                     94060805131856, 94060805131856 ]
+  raw_name:        arg_date_errorfn
+  is_public:       0
+  is_private:      0
+- name:            arg_date_checkfn
+  file_location:   '/src/argtable3/src/arg_date.c:73'
+  type_arguments:  [ 94060805180760, 94060806168544 ]
+  raw_name:        arg_date_checkfn
+  is_public:       0
+  is_private:      0
+- name:            arg_date_scanfn
+  file_location:   '/src/argtable3/src/arg_date.c:49'
+  type_arguments:  [ 94060805180760, 94060806168544, 94060805131856 ]
+  raw_name:        arg_date_scanfn
+  is_public:       0
+  is_private:      0
+- name:            arg_date_resetfn
+  file_location:   '/src/argtable3/src/arg_date.c:44'
+  type_arguments:  [ 0, 94060806168544 ]
+  raw_name:        arg_date_resetfn
+  is_public:       0
+  is_private:      0
+- name:            arg_date1
+  file_location:   '/src/argtable3/src/arg_date.c:118'
+  type_arguments:  [ 94060806168544, 94060805131856, 94060805131856, 94060805131856, 
+                     94060805131856, 94060805131856 ]
+  raw_name:        arg_date1
+  is_public:       0
+  is_private:      0
+- name:            arg_daten
+  file_location:   '/src/argtable3/src/arg_date.c:123'
+  type_arguments:  [ 94060806168544, 94060805131856, 94060805131856, 94060805131856, 
+                     94060805131856, 94060805180760, 94060805180760, 94060805131856 ]
+  raw_name:        arg_daten
+  is_public:       0
+  is_private:      0
+- name:            arg_date0
+  file_location:   '/src/argtable3/src/arg_date.c:114'
+  type_arguments:  [ 94060806168544, 94060805131856, 94060805131856, 94060805131856, 
+                     94060805131856, 94060805131856 ]
+  raw_name:        arg_date0
+  is_public:       0
+  is_private:      0
+- name:            arg_dbl_errorfn
+  file_location:   '/src/argtable3/src/arg_dbl.c:82'
+  type_arguments:  [ 0, 94060806888176, 94060805182592, 94060805180760, 
+                     94060805131856, 94060805131856 ]
+  raw_name:        arg_dbl_errorfn
+  is_public:       0
+  is_private:      0
+- name:            arg_dbl_checkfn
+  file_location:   '/src/argtable3/src/arg_dbl.c:75'
+  type_arguments:  [ 94060805180760, 94060806888176 ]
+  raw_name:        arg_dbl_checkfn
+  is_public:       0
+  is_private:      0
+- name:            arg_dbl_scanfn
+  file_location:   '/src/argtable3/src/arg_dbl.c:46'
+  type_arguments:  [ 94060805180760, 94060806888176, 94060805131856 ]
+  raw_name:        arg_dbl_scanfn
+  is_public:       0
+  is_private:      0
+- name:            arg_dbl_resetfn
+  file_location:   '/src/argtable3/src/arg_dbl.c:41'
+  type_arguments:  [ 0, 94060806888176 ]
+  raw_name:        arg_dbl_resetfn
+  is_public:       0
+  is_private:      0
+- name:            arg_dbl1
+  file_location:   '/src/argtable3/src/arg_dbl.c:113'
+  type_arguments:  [ 94060806888176, 94060805131856, 94060805131856, 94060805131856, 
+                     94060805131856 ]
+  raw_name:        arg_dbl1
+  is_public:       0
+  is_private:      0
+- name:            arg_dbln
+  file_location:   '/src/argtable3/src/arg_dbl.c:117'
+  type_arguments:  [ 94060806888176, 94060805131856, 94060805131856, 94060805131856, 
+                     94060805180760, 94060805180760, 94060805131856 ]
+  raw_name:        arg_dbln
+  is_public:       0
+  is_private:      0
+- name:            arg_dbl0
+  file_location:   '/src/argtable3/src/arg_dbl.c:109'
+  type_arguments:  [ 94060806888176, 94060805131856, 94060805131856, 94060805131856, 
+                     94060805131856 ]
+  raw_name:        arg_dbl0
+  is_public:       0
+  is_private:      0
+- name:            arg_dstr_free
+  file_location:   '/src/argtable3/src/arg_dstr.c:314'
+  type_arguments:  [ 0, 94060807110848 ]
+  raw_name:        arg_dstr_free
+  is_public:       0
+  is_private:      0
+- name:            arg_dstr_catf
+  file_location:   '/src/argtable3/src/arg_dstr.c:218'
+  type_arguments:  [ 0, 94060807110848, 94060805131856, 0 ]
+  raw_name:        arg_dstr_catf
+  is_public:       0
+  is_private:      0
+- name:            arg_dstr_cat
+  file_location:   '/src/argtable3/src/arg_dstr.c:175'
+  type_arguments:  [ 0, 94060807110848, 94060805131856 ]
+  raw_name:        arg_dstr_cat
+  is_public:       0
+  is_private:      0
+- name:            setup_append_buf
+  file_location:   '/src/argtable3/src/arg_dstr.c:260'
+  type_arguments:  [ 0, 94060807110848, 94060805180760 ]
+  raw_name:        setup_append_buf
+  is_public:       0
+  is_private:      0
+- name:            arg_dstr_catc
+  file_location:   '/src/argtable3/src/arg_dstr.c:180'
+  type_arguments:  [ 0, 94060807110848, 94060803214456 ]
+  raw_name:        arg_dstr_catc
+  is_public:       0
+  is_private:      0
+- name:            arg_dstr_cstr
+  file_location:   '/src/argtable3/src/arg_dstr.c:170'
+  type_arguments:  [ 94060805130192, 94060807110848 ]
+  raw_name:        arg_dstr_cstr
+  is_public:       0
+  is_private:      0
+- name:            arg_dstr_set
+  file_location:   '/src/argtable3/src/arg_dstr.c:125'
+  type_arguments:  [ 0, 94060807110848, 94060805130192, 94060807107472 ]
+  raw_name:        arg_dstr_set
+  is_public:       0
+  is_private:      0
+- name:            arg_dstr_reset
+  file_location:   '/src/argtable3/src/arg_dstr.c:325'
+  type_arguments:  [ 0, 94060807110848 ]
+  raw_name:        arg_dstr_reset
+  is_public:       0
+  is_private:      0
+- name:            arg_dstr_destroy
+  file_location:   '/src/argtable3/src/arg_dstr.c:116'
+  type_arguments:  [ 0, 94060807110848 ]
+  raw_name:        arg_dstr_destroy
+  is_public:       0
+  is_private:      0
+- name:            arg_dstr_create
+  file_location:   '/src/argtable3/src/arg_dstr.c:107'
+  type_arguments:  [ 94060807110848 ]
+  raw_name:        arg_dstr_create
+  is_public:       0
+  is_private:      0
+- name:            arg_print_errors
+  file_location:   '/src/argtable3/src/arg_end.c:125'
+  type_arguments:  [ 0, 94060807241600, 94060807364688, 94060805131856 ]
+  raw_name:        arg_print_errors
+  is_public:       0
+  is_private:      0
+- name:            arg_print_errors_ds
+  file_location:   '/src/argtable3/src/arg_end.c:115'
+  type_arguments:  [ 0, 94060805182592, 94060807364688, 94060805131856 ]
+  raw_name:        arg_print_errors_ds
+  is_public:       0
+  is_private:      0
+- name:            arg_end_errorfn
+  file_location:   '/src/argtable3/src/arg_end.c:46'
+  type_arguments:  [ 0, 94060805131104, 94060805182592, 94060805180760, 
+                     94060805131856, 94060805131856 ]
+  raw_name:        arg_end_errorfn
+  is_public:       0
+  is_private:      0
+- name:            arg_end_resetfn
+  file_location:   '/src/argtable3/src/arg_end.c:41'
+  type_arguments:  [ 0, 94060807364688 ]
+  raw_name:        arg_end_resetfn
+  is_public:       0
+  is_private:      0
+- name:            arg_end
+  file_location:   '/src/argtable3/src/arg_end.c:78'
+  type_arguments:  [ 94060807364688, 94060805180760 ]
+  raw_name:        arg_end
+  is_public:       0
+  is_private:      0
+- name:            arg_extension
+  file_location:   '/src/argtable3/src/arg_file.c:82'
+  type_arguments:  [ 94060805131856, 94060805131856 ]
+  raw_name:        arg_extension
+  is_public:       0
+  is_private:      0
+- name:            arg_basename
+  file_location:   '/src/argtable3/src/arg_file.c:56'
+  type_arguments:  [ 94060805131856, 94060805131856 ]
+  raw_name:        arg_basename
+  is_public:       0
+  is_private:      0
+- name:            arg_file_errorfn
+  file_location:   '/src/argtable3/src/arg_file.c:131'
+  type_arguments:  [ 0, 94060807548480, 94060805182592, 94060805180760, 
+                     94060805131856, 94060805131856 ]
+  raw_name:        arg_file_errorfn
+  is_public:       0
+  is_private:      0
+- name:            arg_file_checkfn
+  file_location:   '/src/argtable3/src/arg_file.c:124'
+  type_arguments:  [ 94060805180760, 94060807548480 ]
+  raw_name:        arg_file_checkfn
+  is_public:       0
+  is_private:      0
+- name:            arg_file_scanfn
+  file_location:   '/src/argtable3/src/arg_file.c:101'
+  type_arguments:  [ 94060805180760, 94060807548480, 94060805131856 ]
+  raw_name:        arg_file_scanfn
+  is_public:       0
+  is_private:      0
+- name:            arg_file_resetfn
+  file_location:   '/src/argtable3/src/arg_file.c:50'
+  type_arguments:  [ 0, 94060807548480 ]
+  raw_name:        arg_file_resetfn
+  is_public:       0
+  is_private:      0
+- name:            arg_file1
+  file_location:   '/src/argtable3/src/arg_file.c:160'
+  type_arguments:  [ 94060807548480, 94060805131856, 94060805131856, 94060805131856, 
+                     94060805131856 ]
+  raw_name:        arg_file1
+  is_public:       0
+  is_private:      0
+- name:            arg_filen
+  file_location:   '/src/argtable3/src/arg_file.c:164'
+  type_arguments:  [ 94060807548480, 94060805131856, 94060805131856, 94060805131856, 
+                     94060805180760, 94060805180760, 94060805131856 ]
+  raw_name:        arg_filen
+  is_public:       0
+  is_private:      0
+- name:            arg_file0
+  file_location:   '/src/argtable3/src/arg_file.c:156'
+  type_arguments:  [ 94060807548480, 94060805131856, 94060805131856, 94060805131856, 
+                     94060805131856 ]
+  raw_name:        arg_file0
+  is_public:       0
+  is_private:      0
+- name:            gcd
+  file_location:   '/src/argtable3/src/arg_getopt_long.c:175'
+  type_arguments:  [ 94060805180760, 94060805180760, 94060805180760 ]
+  raw_name:        gcd
+  is_public:       0
+  is_private:      0
+- name:            parse_long_options
+  file_location:   '/src/argtable3/src/arg_getopt_long.c:232'
+  type_arguments:  [ 94060805180760, 94060807950144, 94060805131856, 94060807950400, 
+                     94060805216768, 94060805180760, 94060805180760 ]
+  raw_name:        parse_long_options
+  is_public:       0
+  is_private:      0
+- name:            permute_args
+  file_location:   '/src/argtable3/src/arg_getopt_long.c:195'
+  type_arguments:  [ 0, 94060805180760, 94060805180760, 94060805180760, 
+                     94060807950144 ]
+  raw_name:        permute_args
+  is_public:       0
+  is_private:      0
+- name:            getopt_long_only
+  file_location:   '/src/argtable3/src/arg_getopt_long.c:654'
+  type_arguments:  [ 94060805180760, 94060805180760, 94060807950144, 94060805131856, 
+                     94060807950400, 94060805216768 ]
+  raw_name:        getopt_long_only
+  is_public:       0
+  is_private:      0
+- name:            getopt_long
+  file_location:   '/src/argtable3/src/arg_getopt_long.c:641'
+  type_arguments:  [ 94060805180760, 94060805180760, 94060807950144, 94060805131856, 
+                     94060807950400, 94060805216768 ]
+  raw_name:        getopt_long
+  is_public:       0
+  is_private:      0
+- name:            getopt
+  file_location:   '/src/argtable3/src/arg_getopt_long.c:622'
+  type_arguments:  [ 94060805180760, 94060805180760, 94060807950144, 94060805131856 ]
+  raw_name:        getopt
+  is_public:       0
+  is_private:      0
+- name:            arg_hashtable_change
+  file_location:   '/src/argtable3/src/arg_hashtable.c:405'
+  type_arguments:  [ 94060805180760, 94060808489104, 94060805131104, 94060805131104 ]
+  raw_name:        arg_hashtable_change
+  is_public:       0
+  is_private:      0
+- name:            enhanced_hash
+  file_location:   '/src/argtable3/src/arg_hashtable.c:89'
+  type_arguments:  [ 94060804248232, 94060808489104, 94060805179760 ]
+  raw_name:        enhanced_hash
+  is_public:       0
+  is_private:      0
+- name:            index_for
+  file_location:   '/src/argtable3/src/arg_hashtable.c:102'
+  type_arguments:  [ 94060804248232, 94060804248232, 94060804248232 ]
+  raw_name:        index_for
+  is_public:       0
+  is_private:      0
+- name:            arg_hashtable_itr_search
+  file_location:   '/src/argtable3/src/arg_hashtable.c:379'
+  type_arguments:  [ 94060805180760, 94060806174272, 94060808489104, 94060805131104 ]
+  raw_name:        arg_hashtable_itr_search
+  is_public:       0
+  is_private:      0
+- name:            arg_hashtable_itr_remove
+  file_location:   '/src/argtable3/src/arg_hashtable.c:350'
+  type_arguments:  [ 94060805180760, 94060806174272 ]
+  raw_name:        arg_hashtable_itr_remove
+  is_public:       0
+  is_private:      0
+- name:            arg_hashtable_itr_advance
+  file_location:   '/src/argtable3/src/arg_hashtable.c:313'
+  type_arguments:  [ 94060805180760, 94060806174272 ]
+  raw_name:        arg_hashtable_itr_advance
+  is_public:       0
+  is_private:      0
+- name:            arg_hashtable_itr_value
+  file_location:   '/src/argtable3/src/arg_hashtable.c:309'
+  type_arguments:  [ 94060805131104, 94060806174272 ]
+  raw_name:        arg_hashtable_itr_value
+  is_public:       0
+  is_private:      0
+- name:            arg_hashtable_itr_key
+  file_location:   '/src/argtable3/src/arg_hashtable.c:305'
+  type_arguments:  [ 94060805131104, 94060806174272 ]
+  raw_name:        arg_hashtable_itr_key
+  is_public:       0
+  is_private:      0
+- name:            arg_hashtable_itr_destroy
+  file_location:   '/src/argtable3/src/arg_hashtable.c:301'
+  type_arguments:  [ 0, 94060806174272 ]
+  raw_name:        arg_hashtable_itr_destroy
+  is_public:       0
+  is_private:      0
+- name:            arg_hashtable_itr_create
+  file_location:   '/src/argtable3/src/arg_hashtable.c:278'
+  type_arguments:  [ 94060806174272, 94060808489104 ]
+  raw_name:        arg_hashtable_itr_create
+  is_public:       0
+  is_private:      0
+- name:            arg_hashtable_destroy
+  file_location:   '/src/argtable3/src/arg_hashtable.c:248'
+  type_arguments:  [ 0, 94060808489104, 94060805180760 ]
+  raw_name:        arg_hashtable_destroy
+  is_public:       0
+  is_private:      0
+- name:            arg_hashtable_remove
+  file_location:   '/src/argtable3/src/arg_hashtable.c:218'
+  type_arguments:  [ 0, 94060808489104, 94060805179760 ]
+  raw_name:        arg_hashtable_remove
+  is_public:       0
+  is_private:      0
+- name:            arg_hashtable_search
+  file_location:   '/src/argtable3/src/arg_hashtable.c:201'
+  type_arguments:  [ 94060805131104, 94060808489104, 94060805179760 ]
+  raw_name:        arg_hashtable_search
+  is_public:       0
+  is_private:      0
+- name:            arg_hashtable_expand
+  file_location:   '/src/argtable3/src/arg_hashtable.c:139'
+  type_arguments:  [ 94060805180760, 94060808489104 ]
+  raw_name:        arg_hashtable_expand
+  is_public:       0
+  is_private:      0
+- name:            arg_hashtable_insert
+  file_location:   '/src/argtable3/src/arg_hashtable.c:178'
+  type_arguments:  [ 0, 94060808489104, 94060805131104, 94060805131104 ]
+  raw_name:        arg_hashtable_insert
+  is_public:       0
+  is_private:      0
+- name:            arg_hashtable_count
+  file_location:   '/src/argtable3/src/arg_hashtable.c:174'
+  type_arguments:  [ 94060804248232, 94060808489104 ]
+  raw_name:        arg_hashtable_count
+  is_public:       0
+  is_private:      0
+- name:            arg_hashtable_create
+  file_location:   '/src/argtable3/src/arg_hashtable.c:106'
+  type_arguments:  [ 94060808489104, 94060804248232, 94060805180528, 94060805180992 ]
+  raw_name:        arg_hashtable_create
+  is_public:       0
+  is_private:      0
+- name:            detectsuffix
+  file_location:   '/src/argtable3/src/arg_int.c:112'
+  type_arguments:  [ 94060805180760, 94060805131856, 94060805131856 ]
+  raw_name:        detectsuffix
+  is_public:       0
+  is_private:      0
+- name:            strtol0X
+  file_location:   '/src/argtable3/src/arg_int.c:58'
+  type_arguments:  [ 94060806156088, 94060805131856, 94060805217152, 94060803214456, 
+                     94060805180760 ]
+  raw_name:        strtol0X
+  is_public:       0
+  is_private:      0
+- name:            arg_int_errorfn
+  file_location:   '/src/argtable3/src/arg_int.c:216'
+  type_arguments:  [ 0, 94060808922112, 94060805182592, 94060805180760, 
+                     94060805131856, 94060805131856 ]
+  raw_name:        arg_int_errorfn
+  is_public:       0
+  is_private:      0
+- name:            arg_int_checkfn
+  file_location:   '/src/argtable3/src/arg_int.c:210'
+  type_arguments:  [ 94060805180760, 94060808922112 ]
+  raw_name:        arg_int_checkfn
+  is_public:       0
+  is_private:      0
+- name:            arg_int_scanfn
+  file_location:   '/src/argtable3/src/arg_int.c:139'
+  type_arguments:  [ 94060805180760, 94060808922112, 94060805131856 ]
+  raw_name:        arg_int_scanfn
+  is_public:       0
+  is_private:      0
+- name:            arg_int_resetfn
+  file_location:   '/src/argtable3/src/arg_int.c:43'
+  type_arguments:  [ 0, 94060808922112 ]
+  raw_name:        arg_int_resetfn
+  is_public:       0
+  is_private:      0
+- name:            arg_int1
+  file_location:   '/src/argtable3/src/arg_int.c:253'
+  type_arguments:  [ 94060808922112, 94060805131856, 94060805131856, 94060805131856, 
+                     94060805131856 ]
+  raw_name:        arg_int1
+  is_public:       0
+  is_private:      0
+- name:            arg_intn
+  file_location:   '/src/argtable3/src/arg_int.c:257'
+  type_arguments:  [ 94060808922112, 94060805131856, 94060805131856, 94060805131856, 
+                     94060805180760, 94060805180760, 94060805131856 ]
+  raw_name:        arg_intn
+  is_public:       0
+  is_private:      0
+- name:            arg_int0
+  file_location:   '/src/argtable3/src/arg_int.c:249'
+  type_arguments:  [ 94060808922112, 94060805131856, 94060805131856, 94060805131856, 
+                     94060805131856 ]
+  raw_name:        arg_int0
+  is_public:       0
+  is_private:      0
+- name:            arg_lit_errorfn
+  file_location:   '/src/argtable3/src/arg_lit.c:63'
+  type_arguments:  [ 0, 94060809189168, 94060805182592, 94060805180760, 
+                     94060805131856, 94060805131856 ]
+  raw_name:        arg_lit_errorfn
+  is_public:       0
+  is_private:      0
+- name:            arg_lit_checkfn
+  file_location:   '/src/argtable3/src/arg_lit.c:57'
+  type_arguments:  [ 94060805180760, 94060809189168 ]
+  raw_name:        arg_lit_checkfn
+  is_public:       0
+  is_private:      0
+- name:            arg_lit_scanfn
+  file_location:   '/src/argtable3/src/arg_lit.c:46'
+  type_arguments:  [ 94060805180760, 94060809189168, 94060805131856 ]
+  raw_name:        arg_lit_scanfn
+  is_public:       0
+  is_private:      0
+- name:            arg_lit_resetfn
+  file_location:   '/src/argtable3/src/arg_lit.c:41'
+  type_arguments:  [ 0, 94060809189168 ]
+  raw_name:        arg_lit_resetfn
+  is_public:       0
+  is_private:      0
+- name:            arg_lit1
+  file_location:   '/src/argtable3/src/arg_lit.c:88'
+  type_arguments:  [ 94060809189168, 94060805131856, 94060805131856, 94060805131856 ]
+  raw_name:        arg_lit1
+  is_public:       0
+  is_private:      0
+- name:            arg_litn
+  file_location:   '/src/argtable3/src/arg_lit.c:92'
+  type_arguments:  [ 94060809189168, 94060805131856, 94060805131856, 94060805180760, 
+                     94060805180760, 94060805131856 ]
+  raw_name:        arg_litn
+  is_public:       0
+  is_private:      0
+- name:            arg_lit0
+  file_location:   '/src/argtable3/src/arg_lit.c:84'
+  type_arguments:  [ 94060809189168, 94060805131856, 94060805131856, 94060805131856 ]
+  raw_name:        arg_lit0
+  is_public:       0
+  is_private:      0
+- name:            arg_rem
+  file_location:   '/src/argtable3/src/arg_rem.c:41'
+  type_arguments:  [ 94060809321232, 94060805131856, 94060805131856 ]
+  raw_name:        arg_rem
+  is_public:       0
+  is_private:      0
+- name:            trex_matchcclass
+  file_location:   '/src/argtable3/src/arg_rex.c:682'
+  type_arguments:  [ 94060809671632, 94060805180760, 94060803214456 ]
+  raw_name:        trex_matchcclass
+  is_public:       0
+  is_private:      0
+- name:            trex_matchclass
+  file_location:   '/src/argtable3/src/arg_rex.c:720'
+  type_arguments:  [ 94060809671632, 94060809656976, 94060806274976, 94060803214456 ]
+  raw_name:        trex_matchclass
+  is_public:       0
+  is_private:      0
+- name:            trex_charclass
+  file_location:   '/src/argtable3/src/arg_rex.c:427'
+  type_arguments:  [ 94060805180760, 94060809656976, 94060805180760 ]
+  raw_name:        trex_charclass
+  is_public:       0
+  is_private:      0
+- name:            trex_newnode
+  file_location:   '/src/argtable3/src/arg_rex.c:372'
+  type_arguments:  [ 94060805180760, 94060809656976, 94060809661776 ]
+  raw_name:        trex_newnode
+  is_public:       0
+  is_private:      0
+- name:            trex_escapechar
+  file_location:   '/src/argtable3/src/arg_rex.c:400'
+  type_arguments:  [ 94060803214456, 94060809656976 ]
+  raw_name:        trex_escapechar
+  is_public:       0
+  is_private:      0
+- name:            trex_error
+  file_location:   '/src/argtable3/src/arg_rex.c:388'
+  type_arguments:  [ 0, 94060809656976, 94060805131856 ]
+  raw_name:        trex_error
+  is_public:       0
+  is_private:      0
+- name:            trex_parsenumber
+  file_location:   '/src/argtable3/src/arg_rex.c:545'
+  type_arguments:  [ 94060805180760, 94060809656976 ]
+  raw_name:        trex_parsenumber
+  is_public:       0
+  is_private:      0
+- name:            trex_charnode
+  file_location:   '/src/argtable3/src/arg_rex.c:433'
+  type_arguments:  [ 94060805180760, 94060809656976, 94060809671632 ]
+  raw_name:        trex_charnode
+  is_public:       0
+  is_private:      0
+- name:            trex_class
+  file_location:   '/src/argtable3/src/arg_rex.c:494'
+  type_arguments:  [ 94060805180760, 94060809656976 ]
+  raw_name:        trex_class
+  is_public:       0
+  is_private:      0
+- name:            trex_expect
+  file_location:   '/src/argtable3/src/arg_rex.c:394'
+  type_arguments:  [ 0, 94060809656976, 94060805180760 ]
+  raw_name:        trex_expect
+  is_public:       0
+  is_private:      0
+- name:            trex_element
+  file_location:   '/src/argtable3/src/arg_rex.c:558'
+  type_arguments:  [ 94060805180760, 94060809656976 ]
+  raw_name:        trex_element
+  is_public:       0
+  is_private:      0
+- name:            trex_list
+  file_location:   '/src/argtable3/src/arg_rex.c:658'
+  type_arguments:  [ 94060805180760, 94060809656976 ]
+  raw_name:        trex_list
+  is_public:       0
+  is_private:      0
+- name:            trex_getsubexp
+  file_location:   '/src/argtable3/src/arg_rex.c:1004'
+  type_arguments:  [ 94060809671632, 94060809656976, 94060805180760, 94060806275680 ]
+  raw_name:        trex_getsubexp
+  is_public:       0
+  is_private:      0
+- name:            trex_getsubexpcount
+  file_location:   '/src/argtable3/src/arg_rex.c:1000'
+  type_arguments:  [ 94060805180760, 94060809656976 ]
+  raw_name:        trex_getsubexpcount
+  is_public:       0
+  is_private:      0
+- name:            trex_search
+  file_location:   '/src/argtable3/src/arg_rex.c:996'
+  type_arguments:  [ 94060809671632, 94060809656976, 94060805131856, 94060805217152, 
+                     94060805217152 ]
+  raw_name:        trex_search
+  is_public:       0
+  is_private:      0
+- name:            trex_searchrange
+  file_location:   '/src/argtable3/src/arg_rex.c:965'
+  type_arguments:  [ 94060809671632, 94060809656976, 94060805131856, 94060805131856, 
+                     94060805217152, 94060805217152 ]
+  raw_name:        trex_searchrange
+  is_public:       0
+  is_private:      0
+- name:            trex_matchnode
+  file_location:   '/src/argtable3/src/arg_rex.c:751'
+  type_arguments:  [ 94060805131856, 94060809656976, 94060806274976, 94060805131856, 
+                     94060806274976 ]
+  raw_name:        trex_matchnode
+  is_public:       0
+  is_private:      0
+- name:            trex_match
+  file_location:   '/src/argtable3/src/arg_rex.c:954'
+  type_arguments:  [ 94060809671632, 94060809656976, 94060805131856 ]
+  raw_name:        trex_match
+  is_public:       0
+  is_private:      0
+- name:            trex_free
+  file_location:   '/src/argtable3/src/arg_rex.c:945'
+  type_arguments:  [ 0, 94060809656976 ]
+  raw_name:        trex_free
+  is_public:       0
+  is_private:      0
+- name:            trex_compile
+  file_location:   '/src/argtable3/src/arg_rex.c:903'
+  type_arguments:  [ 94060809656976, 94060805131856, 94060805217152, 94060805180760 ]
+  raw_name:        trex_compile
+  is_public:       0
+  is_private:      0
+- name:            arg_rex_errorfn
+  file_location:   '/src/argtable3/src/arg_rex.c:177'
+  type_arguments:  [ 0, 94060809656592, 94060805182592, 94060805180760, 
+                     94060805131856, 94060805131856 ]
+  raw_name:        arg_rex_errorfn
+  is_public:       0
+  is_private:      0
+- name:            arg_rex_checkfn
+  file_location:   '/src/argtable3/src/arg_rex.c:164'
+  type_arguments:  [ 94060805180760, 94060809656592 ]
+  raw_name:        arg_rex_checkfn
+  is_public:       0
+  is_private:      0
+- name:            arg_rex_scanfn
+  file_location:   '/src/argtable3/src/arg_rex.c:130'
+  type_arguments:  [ 94060805180760, 94060809656592, 94060805131856 ]
+  raw_name:        arg_rex_scanfn
+  is_public:       0
+  is_private:      0
+- name:            arg_rex_resetfn
+  file_location:   '/src/argtable3/src/arg_rex.c:125'
+  type_arguments:  [ 0, 94060809656592 ]
+  raw_name:        arg_rex_resetfn
+  is_public:       0
+  is_private:      0
+- name:            arg_rex1
+  file_location:   '/src/argtable3/src/arg_rex.c:216'
+  type_arguments:  [ 94060809656592, 94060805131856, 94060805131856, 94060805131856, 
+                     94060805131856, 94060805180760, 94060805131856 ]
+  raw_name:        arg_rex1
+  is_public:       0
+  is_private:      0
+- name:            arg_rexn
+  file_location:   '/src/argtable3/src/arg_rex.c:220'
+  type_arguments:  [ 94060809656592, 94060805131856, 94060805131856, 94060805131856, 
+                     94060805131856, 94060805180760, 94060805180760, 94060805180760, 
+                     94060805131856 ]
+  raw_name:        arg_rexn
+  is_public:       0
+  is_private:      0
+- name:            arg_rex0
+  file_location:   '/src/argtable3/src/arg_rex.c:212'
+  type_arguments:  [ 94060809656592, 94060805131856, 94060805131856, 94060805131856, 
+                     94060805131856, 94060805180760, 94060805131856 ]
+  raw_name:        arg_rex0
+  is_public:       0
+  is_private:      0
+- name:            arg_str_errorfn
+  file_location:   '/src/argtable3/src/arg_str.c:77'
+  type_arguments:  [ 0, 94060810868160, 94060805182592, 94060805180760, 
+                     94060805131856, 94060805131856 ]
+  raw_name:        arg_str_errorfn
+  is_public:       0
+  is_private:      0
+- name:            arg_str_checkfn
+  file_location:   '/src/argtable3/src/arg_str.c:70'
+  type_arguments:  [ 94060805180760, 94060810868160 ]
+  raw_name:        arg_str_checkfn
+  is_public:       0
+  is_private:      0
+- name:            arg_str_scanfn
+  file_location:   '/src/argtable3/src/arg_str.c:51'
+  type_arguments:  [ 94060805180760, 94060810868160, 94060805131856 ]
+  raw_name:        arg_str_scanfn
+  is_public:       0
+  is_private:      0
+- name:            arg_str_resetfn
+  file_location:   '/src/argtable3/src/arg_str.c:41'
+  type_arguments:  [ 0, 94060810868160 ]
+  raw_name:        arg_str_resetfn
+  is_public:       0
+  is_private:      0
+- name:            arg_str1
+  file_location:   '/src/argtable3/src/arg_str.c:103'
+  type_arguments:  [ 94060810868160, 94060805131856, 94060805131856, 94060805131856, 
+                     94060805131856 ]
+  raw_name:        arg_str1
+  is_public:       0
+  is_private:      0
+- name:            arg_strn
+  file_location:   '/src/argtable3/src/arg_str.c:107'
+  type_arguments:  [ 94060810868160, 94060805131856, 94060805131856, 94060805131856, 
+                     94060805180760, 94060805180760, 94060805131856 ]
+  raw_name:        arg_strn
+  is_public:       0
+  is_private:      0
+- name:            arg_str0
+  file_location:   '/src/argtable3/src/arg_str.c:99'
+  type_arguments:  [ 94060810868160, 94060805131856, 94060805131856, 94060805131856, 
+                     94060805131856 ]
+  raw_name:        arg_str0
+  is_public:       0
+  is_private:      0
+- name:            panic
+  file_location:   '/src/argtable3/src/arg_utils.c:54'
+  type_arguments:  [ 0, 94060805131856, 0 ]
+  raw_name:        panic
+  is_public:       0
+  is_private:      0
+- name:            merge
+  file_location:   '/src/argtable3/src/arg_utils.c:113'
+  type_arguments:  [ 0, 94060805131104, 94060805180760, 94060805180760, 
+                     94060805180760, 94060805180760, 94060811079536 ]
+  raw_name:        merge
+  is_public:       0
+  is_private:      0
+- name:            argtable3_xmalloc
+  file_location:   '/src/argtable3/src/arg_utils.c:82'
+  type_arguments:  [ 94060805131104, 94060805127600 ]
+  raw_name:        argtable3_xmalloc
+  is_public:       0
+  is_private:      0
+- name:            argtable3_xfree
+  file_location:   '/src/argtable3/src/arg_utils.c:109'
+  type_arguments:  [ 0, 94060805131104 ]
+  raw_name:        argtable3_xfree
+  is_public:       0
+  is_private:      0
+- name:            arg_mgsort
+  file_location:   '/src/argtable3/src/arg_utils.c:165'
+  type_arguments:  [ 0, 94060805131104, 94060805180760, 94060805180760, 
+                     94060805180760, 94060805180760, 94060811079536 ]
+  raw_name:        arg_mgsort
+  is_public:       0
+  is_private:      0
+- name:            argtable3_xrealloc
+  file_location:   '/src/argtable3/src/arg_utils.c:100'
+  type_arguments:  [ 94060805131104, 94060805131104, 94060805127600 ]
+  raw_name:        argtable3_xrealloc
+  is_public:       0
+  is_private:      0
+- name:            argtable3_xcalloc
+  file_location:   '/src/argtable3/src/arg_utils.c:90'
+  type_arguments:  [ 94060805131104, 94060805127600, 94060805127600 ]
+  raw_name:        argtable3_xcalloc
+  is_public:       0
+  is_private:      0
+- name:            arg_set_panic
+  file_location:   '/src/argtable3/src/arg_utils.c:78'
+  type_arguments:  [ 0, 94060811078240 ]
+  raw_name:        arg_set_panic
+  is_public:       0
+  is_private:      0
+- name:            dbg_printf
+  file_location:   '/src/argtable3/src/arg_utils.c:47'
+  type_arguments:  [ 0, 94060805131856, 0 ]
+  raw_name:        dbg_printf
+  is_public:       0
+  is_private:      0
+- name:            arg_cat
+  file_location:   '/src/argtable3/src/argtable3.c:502'
+  type_arguments:  [ 0, 94060805182144, 94060805131856, 94060811558256 ]
+  raw_name:        arg_cat
+  is_public:       0
+  is_private:      0
+- name:            find_shortoption
+  file_location:   '/src/argtable3/src/argtable3.c:78'
+  type_arguments:  [ 94060805180760, 94060808172192, 94060803214456 ]
+  raw_name:        find_shortoption
+  is_public:       0
+  is_private:      0
+- name:            alloc_shortoptions
+  file_location:   '/src/argtable3/src/argtable3.c:189'
+  type_arguments:  [ 94060805130192, 94060808172192 ]
+  raw_name:        alloc_shortoptions
+  is_public:       0
+  is_private:      0
+- name:            alloc_longoptions
+  file_location:   '/src/argtable3/src/argtable3.c:112'
+  type_arguments:  [ 94060808172448, 94060808172192 ]
+  raw_name:        alloc_longoptions
+  is_public:       0
+  is_private:      0
+- name:            arg_register_error
+  file_location:   '/src/argtable3/src/argtable3.c:60'
+  type_arguments:  [ 0, 94060808172320, 94060805131104, 94060805180760, 
+                     94060805131856 ]
+  raw_name:        arg_register_error
+  is_public:       0
+  is_private:      0
+- name:            arg_freetable
+  file_location:   '/src/argtable3/src/argtable3.c:1086'
+  type_arguments:  [ 0, 94060805216256, 94060805127600 ]
+  raw_name:        arg_freetable
+  is_public:       0
+  is_private:      0
+- name:            arg_free
+  file_location:   '/src/argtable3/src/argtable3.c:1063'
+  type_arguments:  [ 0, 94060805216256 ]
+  raw_name:        arg_free
+  is_public:       0
+  is_private:      0
+- name:            arg_nullcheck
+  file_location:   '/src/argtable3/src/argtable3.c:1034'
+  type_arguments:  [ 94060805180760, 94060805216256 ]
+  raw_name:        arg_nullcheck
+  is_public:       0
+  is_private:      0
+- name:            arg_print_glossary_gnu
+  file_location:   '/src/argtable3/src/argtable3.c:1023'
+  type_arguments:  [ 0, 94060811547024, 94060805216256 ]
+  raw_name:        arg_print_glossary_gnu
+  is_public:       0
+  is_private:      0
+- name:            arg_print_glossary_gnu_ds
+  file_location:   '/src/argtable3/src/argtable3.c:989'
+  type_arguments:  [ 0, 94060805182592, 94060805216256 ]
+  raw_name:        arg_print_glossary_gnu_ds
+  is_public:       0
+  is_private:      0
+- name:            arg_cat_optionv
+  file_location:   '/src/argtable3/src/argtable3.c:575'
+  type_arguments:  [ 0, 94060805130192, 94060805127600, 94060805131856, 
+                     94060805131856, 94060805131856, 94060805180760, 94060805131856 ]
+  raw_name:        arg_cat_optionv
+  is_public:       0
+  is_private:      0
+- name:            arg_print_formatted_ds
+  file_location:   '/src/argtable3/src/argtable3.c:869'
+  type_arguments:  [ 0, 94060805182592, 94060808494080, 94060808494080, 
+                     94060805131856 ]
+  raw_name:        arg_print_formatted_ds
+  is_public:       0
+  is_private:      0
+- name:            arg_print_formatted
+  file_location:   '/src/argtable3/src/argtable3.c:973'
+  type_arguments:  [ 0, 94060811547024, 94060808494080, 94060808494080, 
+                     94060805131856 ]
+  raw_name:        arg_print_formatted
+  is_public:       0
+  is_private:      0
+- name:            arg_print_glossary
+  file_location:   '/src/argtable3/src/argtable3.c:854'
+  type_arguments:  [ 0, 94060811547024, 94060805216256, 94060805131856 ]
+  raw_name:        arg_print_glossary
+  is_public:       0
+  is_private:      0
+- name:            arg_print_glossary_ds
+  file_location:   '/src/argtable3/src/argtable3.c:836'
+  type_arguments:  [ 0, 94060805182592, 94060805216256, 94060805131856 ]
+  raw_name:        arg_print_glossary_ds
+  is_public:       0
+  is_private:      0
+- name:            arg_print_syntaxv
+  file_location:   '/src/argtable3/src/argtable3.c:829'
+  type_arguments:  [ 0, 94060811547024, 94060805216256, 94060805131856 ]
+  raw_name:        arg_print_syntaxv
+  is_public:       0
+  is_private:      0
+- name:            arg_print_syntaxv_ds
+  file_location:   '/src/argtable3/src/argtable3.c:779'
+  type_arguments:  [ 0, 94060805182592, 94060805216256, 94060805131856 ]
+  raw_name:        arg_print_syntaxv_ds
+  is_public:       0
+  is_private:      0
+- name:            arg_print_syntax
+  file_location:   '/src/argtable3/src/argtable3.c:772'
+  type_arguments:  [ 0, 94060811547024, 94060805216256, 94060805131856 ]
+  raw_name:        arg_print_syntax
+  is_public:       0
+  is_private:      0
+- name:            arg_print_syntax_ds
+  file_location:   '/src/argtable3/src/argtable3.c:713'
+  type_arguments:  [ 0, 94060805182592, 94060805216256, 94060805131856 ]
+  raw_name:        arg_print_syntax_ds
+  is_public:       0
+  is_private:      0
+- name:            arg_print_gnuswitch_ds
+  file_location:   '/src/argtable3/src/argtable3.c:664'
+  type_arguments:  [ 0, 94060805182592, 94060808172192 ]
+  raw_name:        arg_print_gnuswitch_ds
+  is_public:       0
+  is_private:      0
+- name:            arg_cat_option
+  file_location:   '/src/argtable3/src/argtable3.c:522'
+  type_arguments:  [ 0, 94060805130192, 94060805127600, 94060805131856, 
+                     94060805131856, 94060805131856, 94060805180760 ]
+  raw_name:        arg_cat_option
+  is_public:       0
+  is_private:      0
+- name:            arg_print_option
+  file_location:   '/src/argtable3/src/argtable3.c:652'
+  type_arguments:  [ 0, 94060811547024, 94060805131856, 94060805131856, 
+                     94060805131856, 94060805131856 ]
+  raw_name:        arg_print_option
+  is_public:       0
+  is_private:      0
+- name:            arg_print_option_ds
+  file_location:   '/src/argtable3/src/argtable3.c:640'
+  type_arguments:  [ 0, 94060805182592, 94060805131856, 94060805131856, 
+                     94060805131856, 94060805131856 ]
+  raw_name:        arg_print_option_ds
+  is_public:       0
+  is_private:      0
+- name:            arg_parse_untagged
+  file_location:   '/src/argtable3/src/argtable3.c:333'
+  type_arguments:  [ 0, 94060805180760, 94060805182144, 94060808172192, 
+                     94060808172320 ]
+  raw_name:        arg_parse_untagged
+  is_public:       0
+  is_private:      0
+- name:            arg_parse_tagged
+  file_location:   '/src/argtable3/src/argtable3.c:235'
+  type_arguments:  [ 0, 94060805180760, 94060805182144, 94060808172192, 
+                     94060808172320 ]
+  raw_name:        arg_parse_tagged
+  is_public:       0
+  is_private:      0
+- name:            arg_parse_check
+  file_location:   '/src/argtable3/src/argtable3.c:404'
+  type_arguments:  [ 0, 94060808172192, 94060808172320 ]
+  raw_name:        arg_parse_check
+  is_public:       0
+  is_private:      0
+- name:            arg_endindex
+  file_location:   '/src/argtable3/src/argtable3.c:228'
+  type_arguments:  [ 94060805180760, 94060808172192 ]
+  raw_name:        arg_endindex
+  is_public:       0
+  is_private:      0
+- name:            arg_reset
+  file_location:   '/src/argtable3/src/argtable3.c:417'
+  type_arguments:  [ 0, 94060805216256 ]
+  raw_name:        arg_reset
+  is_public:       0
+  is_private:      0
+- name:            arg_parse
+  file_location:   '/src/argtable3/src/argtable3.c:427'
+  type_arguments:  [ 94060805180760, 94060805180760, 94060805182144, 94060805216256 ]
+  raw_name:        arg_parse
+  is_public:       0
+  is_private:      0
+...

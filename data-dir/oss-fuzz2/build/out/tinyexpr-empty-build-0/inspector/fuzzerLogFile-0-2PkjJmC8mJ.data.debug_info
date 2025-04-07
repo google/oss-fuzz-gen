@@ -1,0 +1,786 @@
+<--- Debug Information for Module 2.0 --->
+Compile unit: DW_LANG_C11 from /src/tinyexpr//src/fuzzers/empty-fuzzer.c
+Compile unit: DW_LANG_C11 from /src/tinyexpr/benchmark.c
+Compile unit: DW_LANG_C11 from /src/tinyexpr/repl.c
+Compile unit: DW_LANG_C11 from /src/tinyexpr/smoke.c
+Compile unit: DW_LANG_C11 from /src/tinyexpr/tinyexpr.c
+
+## Functions defined in module
+Subprogram: LLVMFuzzerTestOneInput
+ from /src/fuzzers/empty-fuzzer.c:5
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type, DW_TAG_typedef,  uint8_t
+ - Operand Type: Name: {  size_t}Type:  from /usr/local/lib/clang/18/include/__stddef_size_t.h:18DW_TAG_typedef,  size_t
+
+Subprogram: al
+ from /src/tinyexpr/benchmark.c:119
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+
+Subprogram: as
+ from /src/tinyexpr/benchmark.c:115
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+
+Subprogram: a10
+ from /src/tinyexpr/benchmark.c:111
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+
+Subprogram: a52
+ from /src/tinyexpr/benchmark.c:107
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+
+Subprogram: a5abs
+ from /src/tinyexpr/benchmark.c:103
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+
+Subprogram: a55
+ from /src/tinyexpr/benchmark.c:99
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+
+Subprogram: a5
+ from /src/tinyexpr/benchmark.c:95
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+
+Subprogram: bench
+ from /src/tinyexpr/benchmark.c:38
+ - Operand Type: void
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Name: {  function1}Type:  from /src/tinyexpr/benchmark.c:36DW_TAG_typedef,  function1
+
+Subprogram: add_history
+ from /src/tinyexpr/repl.c:36
+ - Operand Type: void
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+
+Subprogram: readline
+ from /src/tinyexpr/repl.c:10
+ - Operand Type: Type: DW_TAG_pointer_type,  char
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+
+Subprogram: repl
+ from /src/tinyexpr/repl.c:51
+ - Operand Type: void
+
+Subprogram: eval
+ from /src/tinyexpr/repl.c:39
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+
+Subprogram: test_combinatorics
+ from /src/tinyexpr/smoke.c:649
+ - Operand Type: void
+
+Subprogram: test_pow
+ from /src/tinyexpr/smoke.c:575
+ - Operand Type: void
+
+Subprogram: test_optimize
+ from /src/tinyexpr/smoke.c:548
+ - Operand Type: void
+
+Subprogram: test_closure
+ from /src/tinyexpr/smoke.c:492
+ - Operand Type: void
+
+Subprogram: clo0
+ from /src/tinyexpr/smoke.c:474
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+ - Operand Type: Type: DW_TAG_pointer_type,  void
+
+Subprogram: clo1
+ from /src/tinyexpr/smoke.c:478
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+ - Operand Type: Type: DW_TAG_pointer_type,  void
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+
+Subprogram: clo2
+ from /src/tinyexpr/smoke.c:482
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+ - Operand Type: Type: DW_TAG_pointer_type,  void
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+
+Subprogram: cell
+ from /src/tinyexpr/smoke.c:487
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+ - Operand Type: Type: DW_TAG_pointer_type,  void
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+
+Subprogram: test_dynamic
+ from /src/tinyexpr/smoke.c:416
+ - Operand Type: void
+
+Subprogram: sum0
+ from /src/tinyexpr/smoke.c:390
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+
+Subprogram: sum1
+ from /src/tinyexpr/smoke.c:393
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+
+Subprogram: sum2
+ from /src/tinyexpr/smoke.c:396
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+
+Subprogram: sum3
+ from /src/tinyexpr/smoke.c:399
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+
+Subprogram: sum4
+ from /src/tinyexpr/smoke.c:402
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+
+Subprogram: sum5
+ from /src/tinyexpr/smoke.c:405
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+
+Subprogram: sum6
+ from /src/tinyexpr/smoke.c:408
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+
+Subprogram: sum7
+ from /src/tinyexpr/smoke.c:411
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+
+Subprogram: test_functions
+ from /src/tinyexpr/smoke.c:355
+ - Operand Type: void
+
+Subprogram: test_variables
+ from /src/tinyexpr/smoke.c:279
+ - Operand Type: void
+
+Subprogram: test_infs
+ from /src/tinyexpr/smoke.c:245
+ - Operand Type: void
+
+Subprogram: test_nans
+ from /src/tinyexpr/smoke.c:210
+ - Operand Type: void
+
+Subprogram: test_syntax
+ from /src/tinyexpr/smoke.c:167
+ - Operand Type: void
+
+Subprogram: test_results
+ from /src/tinyexpr/smoke.c:42
+ - Operand Type: void
+
+Subprogram: negate
+ from /src/tinyexpr/tinyexpr.c:235
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+
+Subprogram: base
+ from /src/tinyexpr/tinyexpr.c:310
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  te_expr
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  state
+
+Subprogram: new_expr
+ from /src/tinyexpr/tinyexpr.c:87
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  te_expr
+ - Operand Type: Type: DW_TAG_const_type,  int
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_pointer_type, DW_TAG_const_type, DW_TAG_typedef,  te_expr
+
+Subprogram: next_token
+ from /src/tinyexpr/tinyexpr.c:239
+ - Operand Type: void
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  state
+
+Subprogram: power
+ from /src/tinyexpr/tinyexpr.c:422
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  te_expr
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  state
+
+Subprogram: te_free
+ from /src/tinyexpr/tinyexpr.c:118
+ - Operand Type: void
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  te_expr
+
+Subprogram: expr
+ from /src/tinyexpr/tinyexpr.c:549
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  te_expr
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  state
+
+Subprogram: list
+ from /src/tinyexpr/tinyexpr.c:571
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  te_expr
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  state
+
+Subprogram: comma
+ from /src/tinyexpr/tinyexpr.c:236
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+
+Subprogram: term
+ from /src/tinyexpr/tinyexpr.c:527
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  te_expr
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  state
+
+Subprogram: add
+ from /src/tinyexpr/tinyexpr.c:231
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+
+Subprogram: sub
+ from /src/tinyexpr/tinyexpr.c:232
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+
+Subprogram: factor
+ from /src/tinyexpr/tinyexpr.c:503
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  te_expr
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  state
+
+Subprogram: mul
+ from /src/tinyexpr/tinyexpr.c:233
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+
+Subprogram: divide
+ from /src/tinyexpr/tinyexpr.c:234
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+
+Subprogram: te_free_parameters
+ from /src/tinyexpr/tinyexpr.c:104
+ - Operand Type: void
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  te_expr
+
+Subprogram: find_lookup
+ from /src/tinyexpr/tinyexpr.c:216
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type, DW_TAG_typedef,  te_variable
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type, DW_TAG_typedef,  state
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+
+Subprogram: find_builtin
+ from /src/tinyexpr/tinyexpr.c:195
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type, DW_TAG_typedef,  te_variable
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+
+Subprogram: e
+ from /src/tinyexpr/tinyexpr.c:126
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+
+Subprogram: fac
+ from /src/tinyexpr/tinyexpr.c:127
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+
+Subprogram: ncr
+ from /src/tinyexpr/tinyexpr.c:141
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+
+Subprogram: npr
+ from /src/tinyexpr/tinyexpr.c:155
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+
+Subprogram: pi
+ from /src/tinyexpr/tinyexpr.c:125
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+
+Subprogram: pn
+ from /src/tinyexpr/tinyexpr.c:706
+ - Operand Type: void
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type, DW_TAG_typedef,  te_expr
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+
+Subprogram: te_print
+ from /src/tinyexpr/tinyexpr.c:732
+ - Operand Type: void
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type, DW_TAG_typedef,  te_expr
+
+Subprogram: te_interp
+ from /src/tinyexpr/tinyexpr.c:693
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Type: DW_TAG_pointer_type,  int
+
+Subprogram: te_compile
+ from /src/tinyexpr/tinyexpr.c:665
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  te_expr
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type, DW_TAG_typedef,  te_variable
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type,  int
+
+Subprogram: te_eval
+ from /src/tinyexpr/tinyexpr.c:596
+ - Operand Type: Name: {  double}Type:  DW_ATE_float
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type, DW_TAG_typedef,  te_expr
+
+Subprogram: optimize
+ from /src/tinyexpr/tinyexpr.c:639
+ - Operand Type: void
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  te_expr
+
+
+## Global variables in module
+Global variable:  from /src/fuzzers/empty-fuzzer.c:7
+Global variable:  from /src/tinyexpr/benchmark.c:44
+Global variable:  from /src/tinyexpr/benchmark.c:46
+Global variable:  from /src/tinyexpr/benchmark.c:48
+Global variable:  from /src/tinyexpr/benchmark.c:59
+Global variable:  from /src/tinyexpr/benchmark.c:61
+Global variable:  from /src/tinyexpr/benchmark.c:63
+Global variable:  from /src/tinyexpr/benchmark.c:68
+Global variable:  from /src/tinyexpr/benchmark.c:88
+Global variable:  from /src/tinyexpr/benchmark.c:91
+Global variable:  from /src/tinyexpr/benchmark.c:126
+Global variable:  from /src/tinyexpr/benchmark.c:127
+Global variable:  from /src/tinyexpr/benchmark.c:128
+Global variable:  from /src/tinyexpr/benchmark.c:130
+Global variable:  from /src/tinyexpr/benchmark.c:131
+Global variable:  from /src/tinyexpr/benchmark.c:132
+Global variable:  from /src/tinyexpr/benchmark.c:133
+Global variable:  from /src/tinyexpr/repl.c:70
+Global variable:  from /src/tinyexpr/repl.c:80
+Global variable:  from /src/tinyexpr/repl.c:81
+Global variable:  from /src/tinyexpr/repl.c:43
+Global variable:  from /src/tinyexpr/repl.c:46
+Global variable:  from /src/tinyexpr/repl.c:53
+Global variable:  from /src/tinyexpr/repl.c:56
+Global variable:  from /src/tinyexpr/repl.c:56
+Global variable:  from /src/tinyexpr/repl.c:11
+Global variable:  from /src/tinyexpr/repl.c:17
+Global variable:  from /src/tinyexpr/smoke.c:44
+Global variable:  from /src/tinyexpr/smoke.c:45
+Global variable:  from /src/tinyexpr/smoke.c:46
+Global variable:  from /src/tinyexpr/smoke.c:48
+Global variable:  from /src/tinyexpr/smoke.c:49
+Global variable:  from /src/tinyexpr/smoke.c:50
+Global variable:  from /src/tinyexpr/smoke.c:52
+Global variable:  from /src/tinyexpr/smoke.c:53
+Global variable:  from /src/tinyexpr/smoke.c:54
+Global variable:  from /src/tinyexpr/smoke.c:56
+Global variable:  from /src/tinyexpr/smoke.c:57
+Global variable:  from /src/tinyexpr/smoke.c:58
+Global variable:  from /src/tinyexpr/smoke.c:59
+Global variable:  from /src/tinyexpr/smoke.c:61
+Global variable:  from /src/tinyexpr/smoke.c:62
+Global variable:  from /src/tinyexpr/smoke.c:63
+Global variable:  from /src/tinyexpr/smoke.c:64
+Global variable:  from /src/tinyexpr/smoke.c:66
+Global variable:  from /src/tinyexpr/smoke.c:67
+Global variable:  from /src/tinyexpr/smoke.c:68
+Global variable:  from /src/tinyexpr/smoke.c:69
+Global variable:  from /src/tinyexpr/smoke.c:71
+Global variable:  from /src/tinyexpr/smoke.c:72
+Global variable:  from /src/tinyexpr/smoke.c:73
+Global variable:  from /src/tinyexpr/smoke.c:74
+Global variable:  from /src/tinyexpr/smoke.c:76
+Global variable:  from /src/tinyexpr/smoke.c:77
+Global variable:  from /src/tinyexpr/smoke.c:78
+Global variable:  from /src/tinyexpr/smoke.c:80
+Global variable:  from /src/tinyexpr/smoke.c:81
+Global variable:  from /src/tinyexpr/smoke.c:82
+Global variable:  from /src/tinyexpr/smoke.c:83
+Global variable:  from /src/tinyexpr/smoke.c:85
+Global variable:  from /src/tinyexpr/smoke.c:86
+Global variable:  from /src/tinyexpr/smoke.c:87
+Global variable:  from /src/tinyexpr/smoke.c:88
+Global variable:  from /src/tinyexpr/smoke.c:89
+Global variable:  from /src/tinyexpr/smoke.c:90
+Global variable:  from /src/tinyexpr/smoke.c:91
+Global variable:  from /src/tinyexpr/smoke.c:93
+Global variable:  from /src/tinyexpr/smoke.c:94
+Global variable:  from /src/tinyexpr/smoke.c:97
+Global variable:  from /src/tinyexpr/smoke.c:98
+Global variable:  from /src/tinyexpr/smoke.c:99
+Global variable:  from /src/tinyexpr/smoke.c:100
+Global variable:  from /src/tinyexpr/smoke.c:107
+Global variable:  from /src/tinyexpr/smoke.c:110
+Global variable:  from /src/tinyexpr/smoke.c:111
+Global variable:  from /src/tinyexpr/smoke.c:112
+Global variable:  from /src/tinyexpr/smoke.c:113
+Global variable:  from /src/tinyexpr/smoke.c:114
+Global variable:  from /src/tinyexpr/smoke.c:115
+Global variable:  from /src/tinyexpr/smoke.c:117
+Global variable:  from /src/tinyexpr/smoke.c:118
+Global variable:  from /src/tinyexpr/smoke.c:119
+Global variable:  from /src/tinyexpr/smoke.c:120
+Global variable:  from /src/tinyexpr/smoke.c:121
+Global variable:  from /src/tinyexpr/smoke.c:123
+Global variable:  from /src/tinyexpr/smoke.c:124
+Global variable:  from /src/tinyexpr/smoke.c:125
+Global variable:  from /src/tinyexpr/smoke.c:127
+Global variable:  from /src/tinyexpr/smoke.c:128
+Global variable:  from /src/tinyexpr/smoke.c:129
+Global variable:  from /src/tinyexpr/smoke.c:130
+Global variable:  from /src/tinyexpr/smoke.c:131
+Global variable:  from /src/tinyexpr/smoke.c:132
+Global variable:  from /src/tinyexpr/smoke.c:133
+Global variable:  from /src/tinyexpr/smoke.c:135
+Global variable:  from /src/tinyexpr/smoke.c:136
+Global variable:  from /src/tinyexpr/smoke.c:138
+Global variable:  from /src/tinyexpr/smoke.c:139
+Global variable:  from /src/tinyexpr/smoke.c:140
+Global variable:  from /src/tinyexpr/smoke.c:141
+Global variable:  from /src/tinyexpr/smoke.c:142
+Global variable:  from /src/tinyexpr/smoke.c:143
+Global variable:  from /src/tinyexpr/smoke.c:144
+Global variable:  from /src/tinyexpr/smoke.c:145
+Global variable:  from /src/tinyexpr/smoke.c:157
+Global variable:  from /src/tinyexpr/smoke.c:157
+Global variable:  from /src/tinyexpr/smoke.c:158
+Global variable:  from /src/tinyexpr/smoke.c:161
+Global variable:  from /src/tinyexpr/smoke.c:169
+Global variable:  from /src/tinyexpr/smoke.c:170
+Global variable:  from /src/tinyexpr/smoke.c:171
+Global variable:  from /src/tinyexpr/smoke.c:172
+Global variable:  from /src/tinyexpr/smoke.c:173
+Global variable:  from /src/tinyexpr/smoke.c:174
+Global variable:  from /src/tinyexpr/smoke.c:175
+Global variable:  from /src/tinyexpr/smoke.c:176
+Global variable:  from /src/tinyexpr/smoke.c:177
+Global variable:  from /src/tinyexpr/smoke.c:178
+Global variable:  from /src/tinyexpr/smoke.c:179
+Global variable:  from /src/tinyexpr/smoke.c:180
+Global variable:  from /src/tinyexpr/smoke.c:181
+Global variable:  from /src/tinyexpr/smoke.c:182
+Global variable:  from /src/tinyexpr/smoke.c:193
+Global variable:  from /src/tinyexpr/smoke.c:201
+Global variable:  from /src/tinyexpr/smoke.c:213
+Global variable:  from /src/tinyexpr/smoke.c:214
+Global variable:  from /src/tinyexpr/smoke.c:215
+Global variable:  from /src/tinyexpr/smoke.c:216
+Global variable:  from /src/tinyexpr/smoke.c:217
+Global variable:  from /src/tinyexpr/smoke.c:218
+Global variable:  from /src/tinyexpr/smoke.c:219
+Global variable:  from /src/tinyexpr/smoke.c:220
+Global variable:  from /src/tinyexpr/smoke.c:221
+Global variable:  from /src/tinyexpr/smoke.c:222
+Global variable:  from /src/tinyexpr/smoke.c:223
+Global variable:  from /src/tinyexpr/smoke.c:248
+Global variable:  from /src/tinyexpr/smoke.c:249
+Global variable:  from /src/tinyexpr/smoke.c:250
+Global variable:  from /src/tinyexpr/smoke.c:251
+Global variable:  from /src/tinyexpr/smoke.c:252
+Global variable:  from /src/tinyexpr/smoke.c:253
+Global variable:  from /src/tinyexpr/smoke.c:254
+Global variable:  from /src/tinyexpr/smoke.c:255
+Global variable:  from /src/tinyexpr/smoke.c:256
+Global variable:  from /src/tinyexpr/smoke.c:257
+Global variable:  from /src/tinyexpr/smoke.c:282
+Global variable:  from /src/tinyexpr/smoke.c:282
+Global variable:  from /src/tinyexpr/smoke.c:282
+Global variable:  from /src/tinyexpr/smoke.c:286
+Global variable:  from /src/tinyexpr/smoke.c:290
+Global variable:  from /src/tinyexpr/smoke.c:294
+Global variable:  from /src/tinyexpr/smoke.c:298
+Global variable:  from /src/tinyexpr/smoke.c:328
+Global variable:  from /src/tinyexpr/smoke.c:332
+Global variable:  from /src/tinyexpr/smoke.c:336
+Global variable:  from /src/tinyexpr/smoke.c:340
+Global variable:  from /src/tinyexpr/smoke.c:364
+Global variable:  from /src/tinyexpr/smoke.c:365
+Global variable:  from /src/tinyexpr/smoke.c:366
+Global variable:  from /src/tinyexpr/smoke.c:367
+Global variable:  from /src/tinyexpr/smoke.c:368
+Global variable:  from /src/tinyexpr/smoke.c:369
+Global variable:  from /src/tinyexpr/smoke.c:370
+Global variable:  from /src/tinyexpr/smoke.c:371
+Global variable:  from /src/tinyexpr/smoke.c:372
+Global variable:  from /src/tinyexpr/smoke.c:373
+Global variable:  from /src/tinyexpr/smoke.c:374
+Global variable:  from /src/tinyexpr/smoke.c:375
+Global variable:  from /src/tinyexpr/smoke.c:376
+Global variable:  from /src/tinyexpr/smoke.c:377
+Global variable:  from /src/tinyexpr/smoke.c:378
+Global variable:  from /src/tinyexpr/smoke.c:379
+Global variable:  from /src/tinyexpr/smoke.c:383
+Global variable:  from /src/tinyexpr/smoke.c:384
+Global variable:  from /src/tinyexpr/smoke.c:421
+Global variable:  from /src/tinyexpr/smoke.c:422
+Global variable:  from /src/tinyexpr/smoke.c:423
+Global variable:  from /src/tinyexpr/smoke.c:424
+Global variable:  from /src/tinyexpr/smoke.c:425
+Global variable:  from /src/tinyexpr/smoke.c:426
+Global variable:  from /src/tinyexpr/smoke.c:427
+Global variable:  from /src/tinyexpr/smoke.c:428
+Global variable:  from /src/tinyexpr/smoke.c:429
+Global variable:  from /src/tinyexpr/smoke.c:434
+Global variable:  from /src/tinyexpr/smoke.c:435
+Global variable:  from /src/tinyexpr/smoke.c:436
+Global variable:  from /src/tinyexpr/smoke.c:437
+Global variable:  from /src/tinyexpr/smoke.c:438
+Global variable:  from /src/tinyexpr/smoke.c:439
+Global variable:  from /src/tinyexpr/smoke.c:440
+Global variable:  from /src/tinyexpr/smoke.c:441
+Global variable:  from /src/tinyexpr/smoke.c:442
+Global variable:  from /src/tinyexpr/smoke.c:443
+Global variable:  from /src/tinyexpr/smoke.c:444
+Global variable:  from /src/tinyexpr/smoke.c:445
+Global variable:  from /src/tinyexpr/smoke.c:446
+Global variable:  from /src/tinyexpr/smoke.c:447
+Global variable:  from /src/tinyexpr/smoke.c:448
+Global variable:  from /src/tinyexpr/smoke.c:449
+Global variable:  from /src/tinyexpr/smoke.c:450
+Global variable:  from /src/tinyexpr/smoke.c:451
+Global variable:  from /src/tinyexpr/smoke.c:452
+Global variable:  from /src/tinyexpr/smoke.c:453
+Global variable:  from /src/tinyexpr/smoke.c:454
+Global variable:  from /src/tinyexpr/smoke.c:498
+Global variable:  from /src/tinyexpr/smoke.c:499
+Global variable:  from /src/tinyexpr/smoke.c:500
+Global variable:  from /src/tinyexpr/smoke.c:501
+Global variable:  from /src/tinyexpr/smoke.c:506
+Global variable:  from /src/tinyexpr/smoke.c:507
+Global variable:  from /src/tinyexpr/smoke.c:530
+Global variable:  from /src/tinyexpr/smoke.c:531
+Global variable:  from /src/tinyexpr/smoke.c:532
+Global variable:  from /src/tinyexpr/smoke.c:533
+Global variable:  from /src/tinyexpr/smoke.c:551
+Global variable:  from /src/tinyexpr/smoke.c:553
+Global variable:  from /src/tinyexpr/smoke.c:554
+Global variable:  from /src/tinyexpr/smoke.c:598
+Global variable:  from /src/tinyexpr/smoke.c:598
+Global variable:  from /src/tinyexpr/smoke.c:599
+Global variable:  from /src/tinyexpr/smoke.c:599
+Global variable:  from /src/tinyexpr/smoke.c:600
+Global variable:  from /src/tinyexpr/smoke.c:601
+Global variable:  from /src/tinyexpr/smoke.c:602
+Global variable:  from /src/tinyexpr/smoke.c:604
+Global variable:  from /src/tinyexpr/smoke.c:604
+Global variable:  from /src/tinyexpr/smoke.c:605
+Global variable:  from /src/tinyexpr/smoke.c:605
+Global variable:  from /src/tinyexpr/smoke.c:606
+Global variable:  from /src/tinyexpr/smoke.c:606
+Global variable:  from /src/tinyexpr/smoke.c:607
+Global variable:  from /src/tinyexpr/smoke.c:608
+Global variable:  from /src/tinyexpr/smoke.c:609
+Global variable:  from /src/tinyexpr/smoke.c:610
+Global variable:  from /src/tinyexpr/smoke.c:611
+Global variable:  from /src/tinyexpr/smoke.c:611
+Global variable:  from /src/tinyexpr/smoke.c:618
+Global variable:  from /src/tinyexpr/smoke.c:619
+Global variable:  from /src/tinyexpr/smoke.c:640
+Global variable:  from /src/tinyexpr/smoke.c:651
+Global variable:  from /src/tinyexpr/smoke.c:652
+Global variable:  from /src/tinyexpr/smoke.c:653
+Global variable:  from /src/tinyexpr/smoke.c:654
+Global variable:  from /src/tinyexpr/smoke.c:655
+Global variable:  from /src/tinyexpr/smoke.c:656
+Global variable:  from /src/tinyexpr/smoke.c:657
+Global variable:  from /src/tinyexpr/smoke.c:659
+Global variable:  from /src/tinyexpr/smoke.c:660
+Global variable:  from /src/tinyexpr/smoke.c:661
+Global variable:  from /src/tinyexpr/smoke.c:662
+Global variable:  from /src/tinyexpr/smoke.c:663
+Global variable:  from /src/tinyexpr/smoke.c:664
+Global variable:  from /src/tinyexpr/smoke.c:665
+Global variable:  from /src/tinyexpr/smoke.c:667
+Global variable:  from /src/tinyexpr/smoke.c:668
+Global variable:  from /src/tinyexpr/smoke.c:669
+Global variable:  from /src/tinyexpr/smoke.c:670
+Global variable:  from /src/tinyexpr/smoke.c:671
+Global variable:  from /src/tinyexpr/smoke.c:672
+Global variable:  from /src/tinyexpr/smoke.c:695
+Global variable:  from /src/tinyexpr/smoke.c:695
+Global variable:  from /src/tinyexpr/smoke.c:695
+Global variable:  from /src/tinyexpr/smoke.c:696
+Global variable:  from /src/tinyexpr/smoke.c:697
+Global variable:  from /src/tinyexpr/smoke.c:698
+Global variable:  from /src/tinyexpr/smoke.c:699
+Global variable:  from /src/tinyexpr/smoke.c:700
+Global variable:  from /src/tinyexpr/smoke.c:701
+Global variable:  from /src/tinyexpr/smoke.c:702
+Global variable:  from /src/tinyexpr/smoke.c:703
+Global variable:  from /src/tinyexpr/smoke.c:704
+Global variable:  from /src/tinyexpr/smoke.c:705
+Global variable:  from /src/tinyexpr/smoke.c:706
+Global variable:  from /src/tinyexpr/smoke.c:706
+Global variable: ltests from /src/tinyexpr/./minctest.h:73
+Global variable: lfails from /src/tinyexpr/./minctest.h:74
+Global variable:  from /src/tinyexpr/tinyexpr.c:164
+Global variable:  from /src/tinyexpr/tinyexpr.c:165
+Global variable:  from /src/tinyexpr/tinyexpr.c:166
+Global variable:  from /src/tinyexpr/tinyexpr.c:167
+Global variable:  from /src/tinyexpr/tinyexpr.c:168
+Global variable:  from /src/tinyexpr/tinyexpr.c:169
+Global variable:  from /src/tinyexpr/tinyexpr.c:170
+Global variable:  from /src/tinyexpr/tinyexpr.c:171
+Global variable:  from /src/tinyexpr/tinyexpr.c:172
+Global variable:  from /src/tinyexpr/tinyexpr.c:173
+Global variable:  from /src/tinyexpr/tinyexpr.c:174
+Global variable:  from /src/tinyexpr/tinyexpr.c:175
+Global variable:  from /src/tinyexpr/tinyexpr.c:176
+Global variable:  from /src/tinyexpr/tinyexpr.c:180
+Global variable:  from /src/tinyexpr/tinyexpr.c:182
+Global variable:  from /src/tinyexpr/tinyexpr.c:183
+Global variable:  from /src/tinyexpr/tinyexpr.c:184
+Global variable:  from /src/tinyexpr/tinyexpr.c:185
+Global variable:  from /src/tinyexpr/tinyexpr.c:186
+Global variable:  from /src/tinyexpr/tinyexpr.c:187
+Global variable:  from /src/tinyexpr/tinyexpr.c:188
+Global variable:  from /src/tinyexpr/tinyexpr.c:189
+Global variable:  from /src/tinyexpr/tinyexpr.c:190
+Global variable:  from /src/tinyexpr/tinyexpr.c:191
+Global variable: functions from /src/tinyexpr/tinyexpr.c:162
+Global variable:  from /src/tinyexpr/tinyexpr.c:708
+Global variable:  from /src/tinyexpr/tinyexpr.c:708
+Global variable:  from /src/tinyexpr/tinyexpr.c:711
+Global variable:  from /src/tinyexpr/tinyexpr.c:712
+Global variable:  from /src/tinyexpr/tinyexpr.c:719
+Global variable:  from /src/tinyexpr/tinyexpr.c:721
+Global variable:  from /src/tinyexpr/tinyexpr.c:723
+
+## Types defined in module
+Type: Name: {  char} DW_ATE_signed_char
+Type: Name: {  __clock_t} from /usr/include/x86_64-linux-gnu/bits/types.h:156 DW_TAG_typedef
+Type: Name: {  long} DW_ATE_signed
+Type: Name: {  double} DW_ATE_float
+Type: Name: {  int} DW_ATE_signed
+Type: Name: {  unsigned int} DW_ATE_unsigned
+Type: Name: {  te_variable} from /src/tinyexpr/./tinyexpr.h:60 DW_TAG_typedef
+Type: Name: {  te_variable} from /src/tinyexpr/./tinyexpr.h:55 DW_TAG_structure_type Composite type
+ - Elements: 4
+ - Elem 0{  name from /src/tinyexpr/./tinyexpr.h:56 }
+ - Elem 1{  address from /src/tinyexpr/./tinyexpr.h:57 }
+ - Elem 2{  type from /src/tinyexpr/./tinyexpr.h:58 }
+ - Elem 3{  context from /src/tinyexpr/./tinyexpr.h:59 }
+
+Type: Name: {  name} from /src/tinyexpr/./tinyexpr.h:56 DW_TAG_member
+Type: Name: {  address} from /src/tinyexpr/./tinyexpr.h:57 DW_TAG_member
+Type: Name: {  type} from /src/tinyexpr/./tinyexpr.h:58 DW_TAG_member
+Type: Name: {  context} from /src/tinyexpr/./tinyexpr.h:59 DW_TAG_member
+Type: Name: {  unsigned short} DW_ATE_unsigned
+Type: Name: {  te_expr} from /src/tinyexpr/./tinyexpr.h:40 DW_TAG_typedef
+Type: Name: {  te_expr} from /src/tinyexpr/./tinyexpr.h:36 DW_TAG_structure_type Composite type
+ - Elements: 3
+ - Elem 0{  type from /src/tinyexpr/./tinyexpr.h:37 }
+ - Elem 1{  from /src/tinyexpr/./tinyexpr.h:38 }
+ - Elem 2{  parameters from /src/tinyexpr/./tinyexpr.h:39 }
+
+Type: Name: {  type} from /src/tinyexpr/./tinyexpr.h:37 DW_TAG_member
+Type: Name: {  value} from /src/tinyexpr/./tinyexpr.h:38 DW_TAG_member
+Type: Name: {  bound} from /src/tinyexpr/./tinyexpr.h:38 DW_TAG_member
+Type: Name: {  function} from /src/tinyexpr/./tinyexpr.h:38 DW_TAG_member
+Type: Name: {  parameters} from /src/tinyexpr/./tinyexpr.h:39 DW_TAG_member
+Type: Name: {  uint8_t} from /usr/include/x86_64-linux-gnu/bits/stdint-uintn.h:24 DW_TAG_typedef
+Type: Name: {  __uint8_t} from /usr/include/x86_64-linux-gnu/bits/types.h:38 DW_TAG_typedef
+Type: Name: {  unsigned char} DW_ATE_unsigned_char
+Type: Name: {  size_t} from /usr/local/lib/clang/18/include/__stddef_size_t.h:18 DW_TAG_typedef
+Type: Name: {  unsigned long} DW_ATE_unsigned
+Type: Name: {  function1} from /src/tinyexpr/benchmark.c:36 DW_TAG_typedef
+Type: Name: {  clock_t} from /usr/include/x86_64-linux-gnu/bits/types/clock_t.h:7 DW_TAG_typedef
+Type: Name: {  te_variable} from /src/tinyexpr/./tinyexpr.h:60 DW_TAG_typedef
+Type: Name: {  te_variable} from /src/tinyexpr/./tinyexpr.h:55 DW_TAG_structure_type Composite type
+ - Elements: 4
+ - Elem 0{  name from /src/tinyexpr/./tinyexpr.h:56 }
+ - Elem 1{  address from /src/tinyexpr/./tinyexpr.h:57 }
+ - Elem 2{  type from /src/tinyexpr/./tinyexpr.h:58 }
+ - Elem 3{  context from /src/tinyexpr/./tinyexpr.h:59 }
+
+Type: Name: {  name} from /src/tinyexpr/./tinyexpr.h:56 DW_TAG_member
+Type: Name: {  address} from /src/tinyexpr/./tinyexpr.h:57 DW_TAG_member
+Type: Name: {  type} from /src/tinyexpr/./tinyexpr.h:58 DW_TAG_member
+Type: Name: {  context} from /src/tinyexpr/./tinyexpr.h:59 DW_TAG_member
+Type: Name: {  te_expr} from /src/tinyexpr/./tinyexpr.h:40 DW_TAG_typedef
+Type: Name: {  te_expr} from /src/tinyexpr/./tinyexpr.h:36 DW_TAG_structure_type Composite type
+ - Elements: 3
+ - Elem 0{  type from /src/tinyexpr/./tinyexpr.h:37 }
+ - Elem 1{  from /src/tinyexpr/./tinyexpr.h:38 }
+ - Elem 2{  parameters from /src/tinyexpr/./tinyexpr.h:39 }
+
+Type: Name: {  type} from /src/tinyexpr/./tinyexpr.h:37 DW_TAG_member
+Type: Name: {  value} from /src/tinyexpr/./tinyexpr.h:38 DW_TAG_member
+Type: Name: {  bound} from /src/tinyexpr/./tinyexpr.h:38 DW_TAG_member
+Type: Name: {  function} from /src/tinyexpr/./tinyexpr.h:38 DW_TAG_member
+Type: Name: {  parameters} from /src/tinyexpr/./tinyexpr.h:39 DW_TAG_member
+Type: Name: {  test_case} from /src/tinyexpr/smoke.c:33 DW_TAG_typedef
+Type: Name: {  expr} from /src/tinyexpr/smoke.c:31 DW_TAG_member
+Type: Name: {  answer} from /src/tinyexpr/smoke.c:32 DW_TAG_member
+Type: Name: {  test_equ} from /src/tinyexpr/smoke.c:38 DW_TAG_typedef
+Type: Name: {  expr1} from /src/tinyexpr/smoke.c:36 DW_TAG_member
+Type: Name: {  expr2} from /src/tinyexpr/smoke.c:37 DW_TAG_member
+Type: Name: {  te_variable} from /src/tinyexpr/./tinyexpr.h:60 DW_TAG_typedef
+Type: Name: {  te_variable} from /src/tinyexpr/./tinyexpr.h:55 DW_TAG_structure_type Composite type
+ - Elements: 4
+ - Elem 0{  name from /src/tinyexpr/./tinyexpr.h:56 }
+ - Elem 1{  address from /src/tinyexpr/./tinyexpr.h:57 }
+ - Elem 2{  type from /src/tinyexpr/./tinyexpr.h:58 }
+ - Elem 3{  context from /src/tinyexpr/./tinyexpr.h:59 }
+
+Type: Name: {  name} from /src/tinyexpr/./tinyexpr.h:56 DW_TAG_member
+Type: Name: {  address} from /src/tinyexpr/./tinyexpr.h:57 DW_TAG_member
+Type: Name: {  type} from /src/tinyexpr/./tinyexpr.h:58 DW_TAG_member
+Type: Name: {  context} from /src/tinyexpr/./tinyexpr.h:59 DW_TAG_member
+Type: Name: {  te_expr} from /src/tinyexpr/./tinyexpr.h:40 DW_TAG_typedef
+Type: Name: {  te_expr} from /src/tinyexpr/./tinyexpr.h:36 DW_TAG_structure_type Composite type
+ - Elements: 3
+ - Elem 0{  type from /src/tinyexpr/./tinyexpr.h:37 }
+ - Elem 1{  from /src/tinyexpr/./tinyexpr.h:38 }
+ - Elem 2{  parameters from /src/tinyexpr/./tinyexpr.h:39 }
+
+Type: Name: {  type} from /src/tinyexpr/./tinyexpr.h:37 DW_TAG_member
+Type: Name: {  value} from /src/tinyexpr/./tinyexpr.h:38 DW_TAG_member
+Type: Name: {  bound} from /src/tinyexpr/./tinyexpr.h:38 DW_TAG_member
+Type: Name: {  function} from /src/tinyexpr/./tinyexpr.h:38 DW_TAG_member
+Type: Name: {  parameters} from /src/tinyexpr/./tinyexpr.h:39 DW_TAG_member
+Type: Name: {  state} from /src/tinyexpr/tinyexpr.c:75 DW_TAG_typedef
+Type: Name: {  state} from /src/tinyexpr/tinyexpr.c:66 DW_TAG_structure_type Composite type
+ - Elements: 7
+ - Elem 0{  start from /src/tinyexpr/tinyexpr.c:67 }
+ - Elem 1{  next from /src/tinyexpr/tinyexpr.c:68 }
+ - Elem 2{  type from /src/tinyexpr/tinyexpr.c:69 }
+ - Elem 3{  from /src/tinyexpr/tinyexpr.c:70 }
+ - Elem 4{  context from /src/tinyexpr/tinyexpr.c:71 }
+ - Elem 5{  lookup from /src/tinyexpr/tinyexpr.c:73 }
+ - Elem 6{  lookup_len from /src/tinyexpr/tinyexpr.c:74 }
+
+Type: Name: {  start} from /src/tinyexpr/tinyexpr.c:67 DW_TAG_member
+Type: Name: {  next} from /src/tinyexpr/tinyexpr.c:68 DW_TAG_member
+Type: Name: {  type} from /src/tinyexpr/tinyexpr.c:69 DW_TAG_member
+Type: Name: {  value} from /src/tinyexpr/tinyexpr.c:70 DW_TAG_member
+Type: Name: {  bound} from /src/tinyexpr/tinyexpr.c:70 DW_TAG_member
+Type: Name: {  function} from /src/tinyexpr/tinyexpr.c:70 DW_TAG_member
+Type: Name: {  context} from /src/tinyexpr/tinyexpr.c:71 DW_TAG_member
+Type: Name: {  lookup} from /src/tinyexpr/tinyexpr.c:73 DW_TAG_member
+Type: Name: {  lookup_len} from /src/tinyexpr/tinyexpr.c:74 DW_TAG_member
+Type: Name: {  te_fun2} from /src/tinyexpr/tinyexpr.c:55 DW_TAG_typedef

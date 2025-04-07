@@ -1,0 +1,2966 @@
+<--- Debug Information for Module 2.0 --->
+Compile unit: DW_LANG_C11 from /src/mpc//src/fuzzers/empty-fuzzer.c
+Compile unit: DW_LANG_C11 from /src/mpc/tests/combinators.c
+Compile unit: DW_LANG_C11 from /src/mpc/tests/core.c
+Compile unit: DW_LANG_C11 from /src/mpc/examples/doge.c
+Compile unit: DW_LANG_C11 from /src/mpc/examples/foobar.c
+Compile unit: DW_LANG_C11 from /src/mpc/tests/grammar.c
+Compile unit: DW_LANG_C11 from /src/mpc/examples/line_reader.c
+Compile unit: DW_LANG_C11 from /src/mpc/examples/lispy.c
+Compile unit: DW_LANG_C11 from /src/mpc/examples/maths.c
+Compile unit: DW_LANG_C11 from /src/mpc/mpc.c
+Compile unit: DW_LANG_C11 from /src/mpc/tests/ptest.c
+Compile unit: DW_LANG_C11 from /src/mpc/tests/regex.c
+Compile unit: DW_LANG_C11 from /src/mpc/examples/smallc.c
+Compile unit: DW_LANG_C11 from /src/mpc/examples/tree_traversal.c
+
+## Functions defined in module
+Subprogram: LLVMFuzzerTestOneInput
+ from /src/fuzzers/empty-fuzzer.c:5
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type, DW_TAG_typedef,  uint8_t
+ - Operand Type: Name: {  size_t}Type:  from /usr/local/lib/clang/18/include/__stddef_size_t.h:18DW_TAG_typedef,  size_t
+
+Subprogram: suite_combinators
+ from /src/mpc/./tests/combinators.c:84
+ - Operand Type: void
+
+Subprogram: test_check
+ from /src/mpc/./tests/combinators.c:12
+ - Operand Type: void
+
+Subprogram: test_check_with
+ from /src/mpc/./tests/combinators.c:30
+ - Operand Type: void
+
+Subprogram: test_checkf
+ from /src/mpc/./tests/combinators.c:48
+ - Operand Type: void
+
+Subprogram: test_check_withf
+ from /src/mpc/./tests/combinators.c:66
+ - Operand Type: void
+
+Subprogram: check_is
+ from /src/mpc/./tests/combinators.c:8
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+ - Operand Type: Type: DW_TAG_pointer_type,  void
+
+Subprogram: check_is_a
+ from /src/mpc/./tests/combinators.c:4
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+
+Subprogram: suite_core
+ from /src/mpc/./tests/core.c:275
+ - Operand Type: void
+
+Subprogram: test_ident
+ from /src/mpc/./tests/core.c:17
+ - Operand Type: void
+
+Subprogram: test_maths
+ from /src/mpc/./tests/core.c:60
+ - Operand Type: void
+
+Subprogram: test_strip
+ from /src/mpc/./tests/core.c:97
+ - Operand Type: void
+
+Subprogram: test_repeat
+ from /src/mpc/./tests/core.c:113
+ - Operand Type: void
+
+Subprogram: test_copy
+ from /src/mpc/./tests/core.c:142
+ - Operand Type: void
+
+Subprogram: test_reader
+ from /src/mpc/./tests/core.c:187
+ - Operand Type: void
+
+Subprogram: test_tokens
+ from /src/mpc/./tests/core.c:221
+ - Operand Type: void
+
+Subprogram: test_eoi
+ from /src/mpc/./tests/core.c:239
+ - Operand Type: void
+
+Subprogram: test_sepby
+ from /src/mpc/./tests/core.c:250
+ - Operand Type: void
+
+Subprogram: streq
+ from /src/mpc/./tests/core.c:9
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  void
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  void
+
+Subprogram: strprint
+ from /src/mpc/./tests/core.c:10
+ - Operand Type: void
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  void
+
+Subprogram: fold_vals
+ from /src/mpc/./tests/core.c:11
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+
+Subprogram: print_token
+ from /src/mpc/./tests/core.c:215
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+
+Subprogram: read_line
+ from /src/mpc/./tests/core.c:182
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+
+Subprogram: mpcf_maths
+ from /src/mpc/./tests/core.c:41
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+
+Subprogram: int_eq
+ from /src/mpc/./tests/core.c:7
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  void
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  void
+
+Subprogram: int_print
+ from /src/mpc/./tests/core.c:8
+ - Operand Type: void
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  void
+
+Subprogram: suite_grammar
+ from /src/mpc/./tests/grammar.c:403
+ - Operand Type: void
+
+Subprogram: test_grammar
+ from /src/mpc/./tests/grammar.c:4
+ - Operand Type: void
+
+Subprogram: test_language
+ from /src/mpc/./tests/grammar.c:60
+ - Operand Type: void
+
+Subprogram: test_language_file
+ from /src/mpc/./tests/grammar.c:79
+ - Operand Type: void
+
+Subprogram: test_doge
+ from /src/mpc/./tests/grammar.c:94
+ - Operand Type: void
+
+Subprogram: test_partial
+ from /src/mpc/./tests/grammar.c:131
+ - Operand Type: void
+
+Subprogram: test_qscript
+ from /src/mpc/./tests/grammar.c:172
+ - Operand Type: void
+
+Subprogram: test_missingrule
+ from /src/mpc/./tests/grammar.c:261
+ - Operand Type: void
+
+Subprogram: test_regex_mode
+ from /src/mpc/./tests/grammar.c:285
+ - Operand Type: void
+
+Subprogram: test_digits_file
+ from /src/mpc/./tests/grammar.c:340
+ - Operand Type: void
+
+Subprogram: read_line
+ from /src/mpc/./examples/line_reader.c:3
+ - Operand Type: Type: DW_TAG_pointer_type,  void
+ - Operand Type: Type: DW_TAG_pointer_type,  void
+
+Subprogram: mpca_stmt_afold
+ from /src/mpc/./mpc.c:3660
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+
+Subprogram: mpca_stmt_list_apply_to
+ from /src/mpc/./mpc.c:3701
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+ - Operand Type: Type: DW_TAG_pointer_type,  void
+
+Subprogram: mpca_grammar_find_parser
+ from /src/mpc/./mpc.c:3508
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Type: DW_TAG_pointer_type,  char
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpca_grammar_st_t
+
+Subprogram: mpc_predictive
+ from /src/mpc/./mpc.c:1920
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+
+Subprogram: mpc_expect
+ from /src/mpc/./mpc.c:1737
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+
+Subprogram: mpc_optimise
+ from /src/mpc/./mpc.c:4124
+ - Operand Type: void
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+
+Subprogram: mpc_define
+ from /src/mpc/./mpc.c:1624
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+
+Subprogram: mpc_failf
+ from /src/mpc/./mpc.c:1688
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: void
+
+Subprogram: mpc_undefined
+ from /src/mpc/./mpc.c:1511
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+
+Subprogram: mpc_optimise_unretained
+ from /src/mpc/./mpc.c:3951
+ - Operand Type: void
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+
+Subprogram: mpcf_fold_ast
+ from /src/mpc/./mpc.c:3261
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+
+Subprogram: mpc_delete
+ from /src/mpc/./mpc.c:1492
+ - Operand Type: void
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+
+Subprogram: mpc_ast_delete
+ from /src/mpc/./mpc.c:2935
+ - Operand Type: void
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_ast_t
+
+Subprogram: mpcf_ctor_str
+ from /src/mpc/./mpc.c:2490
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+
+Subprogram: mpcf_strfold
+ from /src/mpc/./mpc.c:2707
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+
+Subprogram: mpc_undefine_unretained
+ from /src/mpc/./mpc.c:1430
+ - Operand Type: void
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+
+Subprogram: mpc_undefine_or
+ from /src/mpc/./mpc.c:1409
+ - Operand Type: void
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+
+Subprogram: mpc_undefine_and
+ from /src/mpc/./mpc.c:1419
+ - Operand Type: void
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+
+Subprogram: mpc_ast_new
+ from /src/mpc/./mpc.c:2959
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_ast_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+
+Subprogram: mpc_ast_add_child
+ from /src/mpc/./mpc.c:3023
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_ast_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_ast_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_ast_t
+
+Subprogram: mpc_ast_add_root_tag
+ from /src/mpc/./mpc.c:3039
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_ast_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_ast_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+
+Subprogram: mpc_ast_delete_no_children
+ from /src/mpc/./mpc.c:2952
+ - Operand Type: void
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_ast_t
+
+Subprogram: mpc_state_new
+ from /src/mpc/./mpc.c:16
+ - Operand Type: Name: {  mpc_state_t}Type:  from /src/mpc/./mpc.h:34DW_TAG_typedef,  mpc_state_t
+
+Subprogram: is_number
+ from /src/mpc/./mpc.c:3502
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+
+Subprogram: mpca_stmt_list_delete
+ from /src/mpc/./mpc.c:3685
+ - Operand Type: void
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+
+Subprogram: mpc_soft_delete
+ from /src/mpc/./mpc.c:1507
+ - Operand Type: void
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+
+Subprogram: mpca_stmt_fold
+ from /src/mpc/./mpc.c:3672
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+
+Subprogram: mpc_re_range_escape_char
+ from /src/mpc/./mpc.c:2332
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Name: {  char}Type:  DW_ATE_signed_char
+
+Subprogram: mpc_re_escape_char
+ from /src/mpc/./mpc.c:2256
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Name: {  char}Type:  DW_ATE_signed_char
+
+Subprogram: mpc_char
+ from /src/mpc/./mpc.c:1797
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Name: {  char}Type:  DW_ATE_signed_char
+
+Subprogram: mpc_boundary
+ from /src/mpc/./mpc.c:2064
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+
+Subprogram: mpc_lift
+ from /src/mpc/./mpc.c:1717
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Name: {  mpc_ctor_t}Type:  from /src/mpc/./mpc.h:79DW_TAG_typedef,  mpc_ctor_t
+
+Subprogram: mpcf_snd
+ from /src/mpc/./mpc.c:2685
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+
+Subprogram: mpc_and
+ from /src/mpc/./mpc.c:2007
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Name: {  mpc_fold_t}Type:  from /src/mpc/./mpc.h:83DW_TAG_typedef,  mpc_fold_t
+ - Operand Type: void
+
+Subprogram: mpc_not_lift
+ from /src/mpc/./mpc.c:1927
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Name: {  mpc_dtor_t}Type:  from /src/mpc/./mpc.h:78DW_TAG_typedef,  mpc_dtor_t
+ - Operand Type: Name: {  mpc_ctor_t}Type:  from /src/mpc/./mpc.h:79DW_TAG_typedef,  mpc_ctor_t
+
+Subprogram: mpc_soi
+ from /src/mpc/./mpc.c:2036
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+
+Subprogram: mpc_eoi
+ from /src/mpc/./mpc.c:2042
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+
+Subprogram: mpc_digit
+ from /src/mpc/./mpc.c:2075
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+
+Subprogram: mpc_whitespace
+ from /src/mpc/./mpc.c:2067
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+
+Subprogram: mpc_alphanum
+ from /src/mpc/./mpc.c:2086
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+
+Subprogram: mpc_alpha
+ from /src/mpc/./mpc.c:2084
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+
+Subprogram: mpc_underscore
+ from /src/mpc/./mpc.c:2085
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+
+Subprogram: mpc_or
+ from /src/mpc/./mpc.c:1987
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: void
+
+Subprogram: mpc_oneof
+ from /src/mpc/./mpc.c:1812
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+
+Subprogram: mpc_expectf
+ from /src/mpc/./mpc.c:1766
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: void
+
+Subprogram: mpc_boundary_anchor
+ from /src/mpc/./mpc.c:2048
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Name: {  char}Type:  DW_ATE_signed_char
+ - Operand Type: Name: {  char}Type:  DW_ATE_signed_char
+
+Subprogram: mpc_anchor
+ from /src/mpc/./mpc.c:1724
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Type: DW_TAG_pointer_type, 
+
+Subprogram: mpc_err_add_expected
+ from /src/mpc/./mpc.c:740
+ - Operand Type: void
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_input_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_err_t
+ - Operand Type: Type: DW_TAG_pointer_type,  char
+
+Subprogram: mpc_realloc
+ from /src/mpc/./mpc.c:270
+ - Operand Type: Type: DW_TAG_pointer_type,  void
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_input_t
+ - Operand Type: Type: DW_TAG_pointer_type,  void
+ - Operand Type: Name: {  size_t}Type:  from /usr/local/lib/clang/18/include/__stddef_size_t.h:18DW_TAG_typedef,  size_t
+
+Subprogram: mpc_malloc
+ from /src/mpc/./mpc.c:237
+ - Operand Type: Type: DW_TAG_pointer_type,  void
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_input_t
+ - Operand Type: Name: {  size_t}Type:  from /usr/local/lib/clang/18/include/__stddef_size_t.h:18DW_TAG_typedef,  size_t
+
+Subprogram: mpc_mem_ptr
+ from /src/mpc/./mpc.c:231
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_input_t
+ - Operand Type: Type: DW_TAG_pointer_type,  void
+
+Subprogram: mpc_free
+ from /src/mpc/./mpc.c:263
+ - Operand Type: void
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_input_t
+ - Operand Type: Type: DW_TAG_pointer_type,  void
+
+Subprogram: mpc_err_contains_expected
+ from /src/mpc/./mpc.c:731
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_input_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_err_t
+ - Operand Type: Type: DW_TAG_pointer_type,  char
+
+Subprogram: mpc_err_or
+ from /src/mpc/./mpc.c:748
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_err_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_input_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_pointer_type, DW_TAG_typedef,  mpc_err_t
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+
+Subprogram: mpc_state_invalid
+ from /src/mpc/./mpc.c:7
+ - Operand Type: Name: {  mpc_state_t}Type:  from /src/mpc/./mpc.h:34DW_TAG_typedef,  mpc_state_t
+
+Subprogram: mpc_err_delete_internal
+ from /src/mpc/./mpc.c:710
+ - Operand Type: void
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_input_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_err_t
+
+Subprogram: mpc_err_repeat
+ from /src/mpc/./mpc.c:800
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_err_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_input_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_err_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+
+Subprogram: mpc_calloc
+ from /src/mpc/./mpc.c:257
+ - Operand Type: Type: DW_TAG_pointer_type,  void
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_input_t
+ - Operand Type: Name: {  size_t}Type:  from /usr/local/lib/clang/18/include/__stddef_size_t.h:18DW_TAG_typedef,  size_t
+ - Operand Type: Name: {  size_t}Type:  from /usr/local/lib/clang/18/include/__stddef_size_t.h:18DW_TAG_typedef,  size_t
+
+Subprogram: mpcf_input_nth_free
+ from /src/mpc/./mpc.c:971
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_input_t
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+
+Subprogram: mpcf_input_state_ast
+ from /src/mpc/./mpc.c:991
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_input_t
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+
+Subprogram: mpc_ast_state
+ from /src/mpc/./mpc.c:3053
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_ast_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_ast_t
+ - Operand Type: Name: {  mpc_state_t}Type:  from /src/mpc/./mpc.h:34DW_TAG_typedef,  mpc_state_t
+
+Subprogram: mpcf_input_strfold
+ from /src/mpc/./mpc.c:981
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_input_t
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+
+Subprogram: mpcf_input_trd_free
+ from /src/mpc/./mpc.c:979
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_input_t
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+
+Subprogram: mpcf_input_snd_free
+ from /src/mpc/./mpc.c:978
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_input_t
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+
+Subprogram: mpcf_input_fst_free
+ from /src/mpc/./mpc.c:977
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_input_t
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+
+Subprogram: mpcf_input_str_ast
+ from /src/mpc/./mpc.c:1020
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_input_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+
+Subprogram: mpcf_input_free
+ from /src/mpc/./mpc.c:1015
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_input_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+
+Subprogram: mpc_input_failure
+ from /src/mpc/./mpc.c:435
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_input_t
+ - Operand Type: Name: {  char}Type:  DW_ATE_signed_char
+
+Subprogram: mpc_input_buffer_in_range
+ from /src/mpc/./mpc.c:362
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_input_t
+
+Subprogram: mpc_input_buffer_get
+ from /src/mpc/./mpc.c:366
+ - Operand Type: Name: {  char}Type:  DW_ATE_signed_char
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_input_t
+
+Subprogram: mpc_input_peekc
+ from /src/mpc/./mpc.c:394
+ - Operand Type: Name: {  char}Type:  DW_ATE_signed_char
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_input_t
+
+Subprogram: mpc_input_success
+ from /src/mpc/./mpc.c:455
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_input_t
+ - Operand Type: Name: {  char}Type:  DW_ATE_signed_char
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_pointer_type,  char
+
+Subprogram: mpc_input_getc
+ from /src/mpc/./mpc.c:370
+ - Operand Type: Name: {  char}Type:  DW_ATE_signed_char
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_input_t
+
+Subprogram: mpc_input_terminated
+ from /src/mpc/./mpc.c:431
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_input_t
+
+Subprogram: mpc_err_count
+ from /src/mpc/./mpc.c:860
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_err_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_input_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_err_t
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+
+Subprogram: mpc_err_many1
+ from /src/mpc/./mpc.c:856
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_err_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_input_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_err_t
+
+Subprogram: mpc_parse_fold
+ from /src/mpc/./mpc.c:1000
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_input_t
+ - Operand Type: Name: {  mpc_fold_t}Type:  from /src/mpc/./mpc.h:83DW_TAG_typedef,  mpc_fold_t
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+
+Subprogram: mpcf_null
+ from /src/mpc/./mpc.c:2683
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+
+Subprogram: mpcf_fst
+ from /src/mpc/./mpc.c:2684
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+
+Subprogram: mpcf_trd
+ from /src/mpc/./mpc.c:2686
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+
+Subprogram: mpcf_fst_free
+ from /src/mpc/./mpc.c:2696
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+
+Subprogram: mpcf_snd_free
+ from /src/mpc/./mpc.c:2697
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+
+Subprogram: mpcf_trd_free
+ from /src/mpc/./mpc.c:2698
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+
+Subprogram: mpcf_state_ast
+ from /src/mpc/./mpc.c:3305
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+
+Subprogram: mpc_export
+ from /src/mpc/./mpc.c:286
+ - Operand Type: Type: DW_TAG_pointer_type,  void
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_input_t
+ - Operand Type: Type: DW_TAG_pointer_type,  void
+
+Subprogram: mpcf_nth_free
+ from /src/mpc/./mpc.c:2688
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+
+Subprogram: mpc_grow_results
+ from /src/mpc/./mpc.c:1053
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_result_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_input_t
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_result_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_result_t
+
+Subprogram: mpc_input_unmark
+ from /src/mpc/./mpc.c:322
+ - Operand Type: void
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_input_t
+
+Subprogram: mpc_input_rewind
+ from /src/mpc/./mpc.c:348
+ - Operand Type: void
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_input_t
+
+Subprogram: mpc_input_mark
+ from /src/mpc/./mpc.c:301
+ - Operand Type: void
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_input_t
+
+Subprogram: mpc_input_backtrack_enable
+ from /src/mpc/./mpc.c:296
+ - Operand Type: void
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_input_t
+
+Subprogram: mpc_input_backtrack_disable
+ from /src/mpc/./mpc.c:295
+ - Operand Type: void
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_input_t
+
+Subprogram: mpc_err_new
+ from /src/mpc/./mpc.c:665
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_err_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_input_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+
+Subprogram: mpc_input_suppress_disable
+ from /src/mpc/./mpc.c:298
+ - Operand Type: void
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_input_t
+
+Subprogram: mpc_input_suppress_enable
+ from /src/mpc/./mpc.c:299
+ - Operand Type: void
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_input_t
+
+Subprogram: mpc_parse_dtor
+ from /src/mpc/./mpc.c:1036
+ - Operand Type: void
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_input_t
+ - Operand Type: Name: {  mpc_dtor_t}Type:  from /src/mpc/./mpc.h:78DW_TAG_typedef,  mpc_dtor_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+
+Subprogram: mpc_parse_apply_to
+ from /src/mpc/./mpc.c:1032
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_input_t
+ - Operand Type: Name: {  mpc_apply_to_t}Type:  from /src/mpc/./mpc.h:82DW_TAG_typedef,  mpc_apply_to_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+
+Subprogram: mpc_parse_apply
+ from /src/mpc/./mpc.c:1026
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_input_t
+ - Operand Type: Name: {  mpc_apply_t}Type:  from /src/mpc/./mpc.h:81DW_TAG_typedef,  mpc_apply_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+
+Subprogram: mpcf_free
+ from /src/mpc/./mpc.c:2491
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+
+Subprogram: mpcf_str_ast
+ from /src/mpc/./mpc.c:3299
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+
+Subprogram: mpc_input_state_copy
+ from /src/mpc/./mpc.c:565
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_state_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_input_t
+
+Subprogram: mpc_input_eoi
+ from /src/mpc/./mpc.c:553
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_input_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_pointer_type,  char
+
+Subprogram: mpc_input_soi
+ from /src/mpc/./mpc.c:548
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_input_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_pointer_type,  char
+
+Subprogram: mpc_input_anchor
+ from /src/mpc/./mpc.c:543
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_input_t
+ - Operand Type: Type: DW_TAG_pointer_type, 
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_pointer_type,  char
+
+Subprogram: mpc_input_string
+ from /src/mpc/./mpc.c:524
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_input_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_pointer_type,  char
+
+Subprogram: mpc_input_char
+ from /src/mpc/./mpc.c:489
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_input_t
+ - Operand Type: Name: {  char}Type:  DW_ATE_signed_char
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_pointer_type,  char
+
+Subprogram: mpc_input_satisfy
+ from /src/mpc/./mpc.c:517
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_input_t
+ - Operand Type: Type: DW_TAG_pointer_type, 
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_pointer_type,  char
+
+Subprogram: mpc_input_noneof
+ from /src/mpc/./mpc.c:510
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_input_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_pointer_type,  char
+
+Subprogram: mpc_input_oneof
+ from /src/mpc/./mpc.c:503
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_input_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_pointer_type,  char
+
+Subprogram: mpc_input_range
+ from /src/mpc/./mpc.c:496
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_input_t
+ - Operand Type: Name: {  char}Type:  DW_ATE_signed_char
+ - Operand Type: Name: {  char}Type:  DW_ATE_signed_char
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_pointer_type,  char
+
+Subprogram: mpc_input_any
+ from /src/mpc/./mpc.c:482
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_input_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_pointer_type,  char
+
+Subprogram: mpc_nodecount_unretained
+ from /src/mpc/./mpc.c:3896
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+
+Subprogram: mpc_stats
+ from /src/mpc/./mpc.c:3945
+ - Operand Type: void
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+
+Subprogram: mpca_lang_contents
+ from /src/mpc/./mpc.c:3862
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_err_t
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: void
+
+Subprogram: mpc_err_file
+ from /src/mpc/./mpc.c:696
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_err_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+
+Subprogram: mpc_input_new_file
+ from /src/mpc/./mpc.c:192
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_input_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  FILE
+
+Subprogram: mpca_lang_st
+ from /src/mpc/./mpc.c:3726
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_err_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_input_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpca_grammar_st_t
+
+Subprogram: mpc_input_delete
+ from /src/mpc/./mpc.c:219
+ - Operand Type: void
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_input_t
+
+Subprogram: mpc_new
+ from /src/mpc/./mpc.c:1519
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+
+Subprogram: mpc_many
+ from /src/mpc/./mpc.c:1952
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Name: {  mpc_fold_t}Type:  from /src/mpc/./mpc.h:83DW_TAG_typedef,  mpc_fold_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+
+Subprogram: mpc_total
+ from /src/mpc/./mpc.c:2150
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Name: {  mpc_dtor_t}Type:  from /src/mpc/./mpc.h:78DW_TAG_typedef,  mpc_dtor_t
+
+Subprogram: mpc_apply_to
+ from /src/mpc/./mpc.c:1856
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Name: {  mpc_apply_to_t}Type:  from /src/mpc/./mpc.h:82DW_TAG_typedef,  mpc_apply_to_t
+ - Operand Type: Type: DW_TAG_pointer_type,  void
+
+Subprogram: mpc_ident
+ from /src/mpc/./mpc.c:2129
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+
+Subprogram: mpc_tok
+ from /src/mpc/./mpc.c:2147
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+
+Subprogram: mpc_string_lit
+ from /src/mpc/./mpc.c:2119
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+
+Subprogram: mpc_maybe
+ from /src/mpc/./mpc.c:1948
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+
+Subprogram: mpc_sym
+ from /src/mpc/./mpc.c:2148
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+
+Subprogram: mpcaf_grammar_or
+ from /src/mpc/./mpc.c:3435
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+
+Subprogram: mpcaf_grammar_and
+ from /src/mpc/./mpc.c:3441
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+
+Subprogram: mpc_many1
+ from /src/mpc/./mpc.c:1960
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Name: {  mpc_fold_t}Type:  from /src/mpc/./mpc.h:83DW_TAG_typedef,  mpc_fold_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+
+Subprogram: mpc_int
+ from /src/mpc/./mpc.c:2088
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+
+Subprogram: mpc_tok_brackets
+ from /src/mpc/./mpc.c:2171
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Name: {  mpc_dtor_t}Type:  from /src/mpc/./mpc.h:78DW_TAG_typedef,  mpc_dtor_t
+
+Subprogram: mpc_pass
+ from /src/mpc/./mpc.c:1654
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+
+Subprogram: mpcaf_grammar_repeat
+ from /src/mpc/./mpc.c:3450
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+
+Subprogram: mpcaf_grammar_string
+ from /src/mpc/./mpc.c:3467
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+ - Operand Type: Type: DW_TAG_pointer_type,  void
+
+Subprogram: mpc_char_lit
+ from /src/mpc/./mpc.c:2115
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+
+Subprogram: mpcaf_grammar_char
+ from /src/mpc/./mpc.c:3475
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+ - Operand Type: Type: DW_TAG_pointer_type,  void
+
+Subprogram: mpc_regex_lit
+ from /src/mpc/./mpc.c:2124
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+
+Subprogram: mpc_lift_val
+ from /src/mpc/./mpc.c:1710
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+
+Subprogram: mpcaf_fold_regex
+ from /src/mpc/./mpc.c:3483
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+
+Subprogram: mpc_digits
+ from /src/mpc/./mpc.c:2078
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+
+Subprogram: mpc_tok_braces
+ from /src/mpc/./mpc.c:2170
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Name: {  mpc_dtor_t}Type:  from /src/mpc/./mpc.h:78DW_TAG_typedef,  mpc_dtor_t
+
+Subprogram: mpcaf_grammar_id
+ from /src/mpc/./mpc.c:3557
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+ - Operand Type: Type: DW_TAG_pointer_type,  void
+
+Subprogram: mpc_tok_parens
+ from /src/mpc/./mpc.c:2169
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Name: {  mpc_dtor_t}Type:  from /src/mpc/./mpc.h:78DW_TAG_typedef,  mpc_dtor_t
+
+Subprogram: mpc_parse_input
+ from /src/mpc/./mpc.c:1341
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_input_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_result_t
+
+Subprogram: mpc_cleanup
+ from /src/mpc/./mpc.c:1640
+ - Operand Type: void
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: void
+
+Subprogram: mpc_undefine
+ from /src/mpc/./mpc.c:1618
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+
+Subprogram: mpc_err_fail
+ from /src/mpc/./mpc.c:681
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_err_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_input_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+
+Subprogram: mpc_parse_run
+ from /src/mpc/./mpc.c:1068
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_input_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_result_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_pointer_type, DW_TAG_typedef,  mpc_err_t
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+
+Subprogram: mpc_err_merge
+ from /src/mpc/./mpc.c:874
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_err_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_input_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_err_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_err_t
+
+Subprogram: mpc_err_export
+ from /src/mpc/./mpc.c:720
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_err_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_input_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_err_t
+
+Subprogram: mpc_tok_between
+ from /src/mpc/./mpc.c:2163
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Name: {  mpc_dtor_t}Type:  from /src/mpc/./mpc.h:78DW_TAG_typedef,  mpc_dtor_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+
+Subprogram: mpca_add_tag
+ from /src/mpc/./mpc.c:3322
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+
+Subprogram: mpca_root
+ from /src/mpc/./mpc.c:3326
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+
+Subprogram: mpca_state
+ from /src/mpc/./mpc.c:3314
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+
+Subprogram: mpc_state
+ from /src/mpc/./mpc.c:1731
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+
+Subprogram: mpc_ast_add_root
+ from /src/mpc/./mpc.c:2995
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_ast_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_ast_t
+
+Subprogram: mpc_apply
+ from /src/mpc/./mpc.c:1848
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Name: {  mpc_apply_t}Type:  from /src/mpc/./mpc.h:81DW_TAG_typedef,  mpc_apply_t
+
+Subprogram: mpc_ast_add_tag
+ from /src/mpc/./mpc.c:3030
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_ast_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_ast_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+
+Subprogram: mpcf_unescape_regex
+ from /src/mpc/./mpc.c:2653
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+
+Subprogram: mpc_re_mode
+ from /src/mpc/./mpc.c:2416
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+
+Subprogram: mpca_tag
+ from /src/mpc/./mpc.c:3318
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+
+Subprogram: mpc_ast_tag
+ from /src/mpc/./mpc.c:3047
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_ast_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_ast_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+
+Subprogram: mpcf_re_or
+ from /src/mpc/./mpc.c:2224
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+
+Subprogram: mpcf_re_and
+ from /src/mpc/./mpc.c:2230
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+
+Subprogram: mpc_brackets
+ from /src/mpc/./mpc.c:2160
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Name: {  mpc_dtor_t}Type:  from /src/mpc/./mpc.h:78DW_TAG_typedef,  mpc_dtor_t
+
+Subprogram: mpcf_re_repeat
+ from /src/mpc/./mpc.c:2239
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+
+Subprogram: mpc_parens
+ from /src/mpc/./mpc.c:2158
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Name: {  mpc_dtor_t}Type:  from /src/mpc/./mpc.h:78DW_TAG_typedef,  mpc_dtor_t
+
+Subprogram: mpc_squares
+ from /src/mpc/./mpc.c:2161
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Name: {  mpc_dtor_t}Type:  from /src/mpc/./mpc.h:78DW_TAG_typedef,  mpc_dtor_t
+
+Subprogram: mpc_escape
+ from /src/mpc/./mpc.c:2073
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+
+Subprogram: mpcf_re_escape
+ from /src/mpc/./mpc.c:2278
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+ - Operand Type: Type: DW_TAG_pointer_type,  void
+
+Subprogram: mpc_noneof
+ from /src/mpc/./mpc.c:1820
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+
+Subprogram: mpcf_re_range
+ from /src/mpc/./mpc.c:2349
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+
+Subprogram: mpc_whole
+ from /src/mpc/./mpc.c:2142
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Name: {  mpc_dtor_t}Type:  from /src/mpc/./mpc.h:78DW_TAG_typedef,  mpc_dtor_t
+
+Subprogram: mpc_parse
+ from /src/mpc/./mpc.c:1355
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_result_t
+
+Subprogram: mpc_err_string
+ from /src/mpc/./mpc.c:628
+ - Operand Type: Type: DW_TAG_pointer_type,  char
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_err_t
+
+Subprogram: mpc_err_delete
+ from /src/mpc/./mpc.c:575
+ - Operand Type: void
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_err_t
+
+Subprogram: mpc_err_string_cat
+ from /src/mpc/./mpc.c:594
+ - Operand Type: void
+ - Operand Type: Type: DW_TAG_pointer_type,  char
+ - Operand Type: Type: DW_TAG_pointer_type,  int
+ - Operand Type: Type: DW_TAG_pointer_type,  int
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: void
+
+Subprogram: mpc_err_char_unescape
+ from /src/mpc/./mpc.c:604
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Name: {  char}Type:  DW_ATE_signed_char
+ - Operand Type: Type: DW_TAG_pointer_type,  char
+
+Subprogram: mpc_input_new_string
+ from /src/mpc/./mpc.c:103
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_input_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+
+Subprogram: mpcf_dtor_null
+ from /src/mpc/./mpc.c:2487
+ - Operand Type: void
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+
+Subprogram: mpc_fail
+ from /src/mpc/./mpc.c:1660
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+
+Subprogram: mpc_any
+ from /src/mpc/./mpc.c:1791
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+
+Subprogram: mpc_boundary_newline
+ from /src/mpc/./mpc.c:2065
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+
+Subprogram: mpc_newline
+ from /src/mpc/./mpc.c:2071
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+
+Subprogram: mpc_boundary_newline_anchor
+ from /src/mpc/./mpc.c:2059
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Name: {  char}Type:  DW_ATE_signed_char
+ - Operand Type: Name: {  char}Type:  DW_ATE_signed_char
+
+Subprogram: mpc_between
+ from /src/mpc/./mpc.c:2152
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Name: {  mpc_dtor_t}Type:  from /src/mpc/./mpc.h:78DW_TAG_typedef,  mpc_dtor_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+
+Subprogram: mpc_string
+ from /src/mpc/./mpc.c:1836
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+
+Subprogram: mpc_maybe_lift
+ from /src/mpc/./mpc.c:1940
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Name: {  mpc_ctor_t}Type:  from /src/mpc/./mpc.h:79DW_TAG_typedef,  mpc_ctor_t
+
+Subprogram: mpc_count
+ from /src/mpc/./mpc.c:1968
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Name: {  mpc_fold_t}Type:  from /src/mpc/./mpc.h:83DW_TAG_typedef,  mpc_fold_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Name: {  mpc_dtor_t}Type:  from /src/mpc/./mpc.h:78DW_TAG_typedef,  mpc_dtor_t
+
+Subprogram: mpcf_unescape_new
+ from /src/mpc/./mpc.c:2595
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_pointer_type, DW_TAG_const_type,  char
+
+Subprogram: mpcf_unescape
+ from /src/mpc/./mpc.c:2641
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+
+Subprogram: mpca_many
+ from /src/mpc/./mpc.c:3332
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+
+Subprogram: mpca_many1
+ from /src/mpc/./mpc.c:3333
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+
+Subprogram: mpca_maybe
+ from /src/mpc/./mpc.c:3331
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+
+Subprogram: mpca_not
+ from /src/mpc/./mpc.c:3330
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+
+Subprogram: mpca_count
+ from /src/mpc/./mpc.c:3334
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+
+Subprogram: mpc_not
+ from /src/mpc/./mpc.c:1936
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Name: {  mpc_dtor_t}Type:  from /src/mpc/./mpc.h:78DW_TAG_typedef,  mpc_dtor_t
+
+Subprogram: mpcf_ctor_null
+ from /src/mpc/./mpc.c:2489
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+
+Subprogram: mpcf_int
+ from /src/mpc/./mpc.c:2493
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+
+Subprogram: mpca_and
+ from /src/mpc/./mpc.c:3357
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: void
+
+Subprogram: mpca_or
+ from /src/mpc/./mpc.c:3336
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: void
+
+Subprogram: mpc_blank
+ from /src/mpc/./mpc.c:2069
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+
+Subprogram: mpc_whitespaces
+ from /src/mpc/./mpc.c:2068
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+
+Subprogram: mpc_strip
+ from /src/mpc/./mpc.c:2146
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+
+Subprogram: mpca_lang
+ from /src/mpc/./mpc.c:3839
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_err_t
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: void
+
+Subprogram: mpca_lang_pipe
+ from /src/mpc/./mpc.c:3817
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_err_t
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  FILE
+ - Operand Type: void
+
+Subprogram: mpc_input_new_pipe
+ from /src/mpc/./mpc.c:163
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_input_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  FILE
+
+Subprogram: mpca_lang_file
+ from /src/mpc/./mpc.c:3795
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_err_t
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  FILE
+ - Operand Type: void
+
+Subprogram: mpca_grammar
+ from /src/mpc/./mpc.c:3637
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: void
+
+Subprogram: mpca_grammar_st
+ from /src/mpc/./mpc.c:3570
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpca_grammar_st_t
+
+Subprogram: mpca_total
+ from /src/mpc/./mpc.c:3382
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+
+Subprogram: mpc_ast_traverse_free
+ from /src/mpc/./mpc.c:3250
+ - Operand Type: void
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_pointer_type, DW_TAG_typedef,  mpc_ast_trav_t
+
+Subprogram: mpc_ast_traverse_next
+ from /src/mpc/./mpc.c:3167
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_ast_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_pointer_type, DW_TAG_typedef,  mpc_ast_trav_t
+
+Subprogram: mpc_ast_traverse_start
+ from /src/mpc/./mpc.c:3125
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_ast_trav_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_ast_t
+ - Operand Type: Name: {  mpc_ast_trav_order_t}Type:  from /src/mpc/./mpc.h:314DW_TAG_typedef,  mpc_ast_trav_order_t
+
+Subprogram: mpc_ast_get_child_lb
+ from /src/mpc/./mpc.c:3113
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_ast_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_ast_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+
+Subprogram: mpc_ast_get_child
+ from /src/mpc/./mpc.c:3109
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_ast_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_ast_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+
+Subprogram: mpc_ast_get_index_lb
+ from /src/mpc/./mpc.c:3097
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_ast_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+
+Subprogram: mpc_ast_get_index
+ from /src/mpc/./mpc.c:3093
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_ast_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+
+Subprogram: mpc_ast_print_to
+ from /src/mpc/./mpc.c:3089
+ - Operand Type: void
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_ast_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  FILE
+
+Subprogram: mpc_ast_print_depth
+ from /src/mpc/./mpc.c:3059
+ - Operand Type: void
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_ast_t
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  FILE
+
+Subprogram: mpc_ast_print
+ from /src/mpc/./mpc.c:3085
+ - Operand Type: void
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_ast_t
+
+Subprogram: mpc_ast_eq
+ from /src/mpc/./mpc.c:3008
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_ast_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_ast_t
+
+Subprogram: mpc_ast_build
+ from /src/mpc/./mpc.c:2977
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_ast_t
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: void
+
+Subprogram: mpc_test_pass
+ from /src/mpc/./mpc.c:2903
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  void
+ - Operand Type: Type: DW_TAG_pointer_type, 
+ - Operand Type: Name: {  mpc_dtor_t}Type:  from /src/mpc/./mpc.h:78DW_TAG_typedef,  mpc_dtor_t
+ - Operand Type: Type: DW_TAG_pointer_type, 
+
+Subprogram: mpc_err_print
+ from /src/mpc/./mpc.c:584
+ - Operand Type: void
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_err_t
+
+Subprogram: mpc_err_print_to
+ from /src/mpc/./mpc.c:588
+ - Operand Type: void
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_err_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  FILE
+
+Subprogram: mpc_test_fail
+ from /src/mpc/./mpc.c:2880
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  void
+ - Operand Type: Type: DW_TAG_pointer_type, 
+ - Operand Type: Name: {  mpc_dtor_t}Type:  from /src/mpc/./mpc.h:78DW_TAG_typedef,  mpc_dtor_t
+ - Operand Type: Type: DW_TAG_pointer_type, 
+
+Subprogram: mpc_print_unretained
+ from /src/mpc/./mpc.c:2728
+ - Operand Type: void
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+
+Subprogram: mpcf_escape_new
+ from /src/mpc/./mpc.c:2559
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_pointer_type, DW_TAG_const_type,  char
+
+Subprogram: mpc_print
+ from /src/mpc/./mpc.c:2860
+ - Operand Type: void
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+
+Subprogram: mpcf_all_free
+ from /src/mpc/./mpc.c:2699
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+
+Subprogram: mpcf_unescape_char_raw
+ from /src/mpc/./mpc.c:2677
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+
+Subprogram: mpcf_escape_char_raw
+ from /src/mpc/./mpc.c:2671
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+
+Subprogram: mpcf_unescape_string_raw
+ from /src/mpc/./mpc.c:2665
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+
+Subprogram: mpcf_escape_string_raw
+ from /src/mpc/./mpc.c:2659
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+
+Subprogram: mpcf_escape_regex
+ from /src/mpc/./mpc.c:2647
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+
+Subprogram: mpcf_escape
+ from /src/mpc/./mpc.c:2635
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+
+Subprogram: mpcf_strtrim
+ from /src/mpc/./mpc.c:2538
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+
+Subprogram: mpcf_strtrimr
+ from /src/mpc/./mpc.c:2529
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+
+Subprogram: mpcf_strtriml
+ from /src/mpc/./mpc.c:2521
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+
+Subprogram: mpc_re
+ from /src/mpc/./mpc.c:2412
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+
+Subprogram: mpc_tok_squares
+ from /src/mpc/./mpc.c:2172
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Name: {  mpc_dtor_t}Type:  from /src/mpc/./mpc.h:78DW_TAG_typedef,  mpc_dtor_t
+
+Subprogram: mpc_braces
+ from /src/mpc/./mpc.c:2159
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Name: {  mpc_dtor_t}Type:  from /src/mpc/./mpc.h:78DW_TAG_typedef,  mpc_dtor_t
+
+Subprogram: mpc_stripr
+ from /src/mpc/./mpc.c:2145
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+
+Subprogram: mpc_stripl
+ from /src/mpc/./mpc.c:2144
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+
+Subprogram: mpc_endwith
+ from /src/mpc/./mpc.c:2141
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Name: {  mpc_dtor_t}Type:  from /src/mpc/./mpc.h:78DW_TAG_typedef,  mpc_dtor_t
+
+Subprogram: mpc_startwith
+ from /src/mpc/./mpc.c:2140
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+
+Subprogram: mpcf_float
+ from /src/mpc/./mpc.c:2514
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+
+Subprogram: mpc_float
+ from /src/mpc/./mpc.c:2111
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+
+Subprogram: mpc_real
+ from /src/mpc/./mpc.c:2093
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+
+Subprogram: mpc_number
+ from /src/mpc/./mpc.c:2091
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+
+Subprogram: mpc_hex
+ from /src/mpc/./mpc.c:2089
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+
+Subprogram: mpc_oct
+ from /src/mpc/./mpc.c:2090
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+
+Subprogram: mpc_octdigits
+ from /src/mpc/./mpc.c:2080
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+
+Subprogram: mpcf_oct
+ from /src/mpc/./mpc.c:2507
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+
+Subprogram: mpc_octdigit
+ from /src/mpc/./mpc.c:2077
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+
+Subprogram: mpc_hexdigits
+ from /src/mpc/./mpc.c:2079
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+
+Subprogram: mpcf_hex
+ from /src/mpc/./mpc.c:2500
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_val_t
+
+Subprogram: mpc_hexdigit
+ from /src/mpc/./mpc.c:2076
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+
+Subprogram: mpc_upper
+ from /src/mpc/./mpc.c:2083
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+
+Subprogram: mpc_lower
+ from /src/mpc/./mpc.c:2082
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+
+Subprogram: mpc_tab
+ from /src/mpc/./mpc.c:2072
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+
+Subprogram: mpc_sepby1
+ from /src/mpc/./mpc.c:1978
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Name: {  mpc_fold_t}Type:  from /src/mpc/./mpc.h:83DW_TAG_typedef,  mpc_fold_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+
+Subprogram: mpc_check_withf
+ from /src/mpc/./mpc.c:1904
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Name: {  mpc_dtor_t}Type:  from /src/mpc/./mpc.h:78DW_TAG_typedef,  mpc_dtor_t
+ - Operand Type: Name: {  mpc_check_with_t}Type:  from /src/mpc/./mpc.h:86DW_TAG_typedef,  mpc_check_with_t
+ - Operand Type: Type: DW_TAG_pointer_type,  void
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: void
+
+Subprogram: mpc_check_with
+ from /src/mpc/./mpc.c:1876
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Name: {  mpc_dtor_t}Type:  from /src/mpc/./mpc.h:78DW_TAG_typedef,  mpc_dtor_t
+ - Operand Type: Name: {  mpc_check_with_t}Type:  from /src/mpc/./mpc.h:86DW_TAG_typedef,  mpc_check_with_t
+ - Operand Type: Type: DW_TAG_pointer_type,  void
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+
+Subprogram: mpc_checkf
+ from /src/mpc/./mpc.c:1888
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Name: {  mpc_dtor_t}Type:  from /src/mpc/./mpc.h:78DW_TAG_typedef,  mpc_dtor_t
+ - Operand Type: Name: {  mpc_check_t}Type:  from /src/mpc/./mpc.h:85DW_TAG_typedef,  mpc_check_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: void
+
+Subprogram: mpc_check
+ from /src/mpc/./mpc.c:1865
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Name: {  mpc_dtor_t}Type:  from /src/mpc/./mpc.h:78DW_TAG_typedef,  mpc_dtor_t
+ - Operand Type: Name: {  mpc_check_t}Type:  from /src/mpc/./mpc.h:85DW_TAG_typedef,  mpc_check_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+
+Subprogram: mpc_satisfy
+ from /src/mpc/./mpc.c:1829
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Type: DW_TAG_pointer_type, 
+
+Subprogram: mpc_range
+ from /src/mpc/./mpc.c:1804
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Name: {  char}Type:  DW_ATE_signed_char
+ - Operand Type: Name: {  char}Type:  DW_ATE_signed_char
+
+Subprogram: mpc_copy
+ from /src/mpc/./mpc.c:1527
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+
+Subprogram: mpc_parse_contents
+ from /src/mpc/./mpc.c:1387
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_result_t
+
+Subprogram: mpc_parse_file
+ from /src/mpc/./mpc.c:1371
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  FILE
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_result_t
+
+Subprogram: mpc_parse_pipe
+ from /src/mpc/./mpc.c:1379
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  FILE
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_result_t
+
+Subprogram: mpc_input_new_nstring
+ from /src/mpc/./mpc.c:132
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_input_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Name: {  size_t}Type:  from /usr/local/lib/clang/18/include/__stddef_size_t.h:18DW_TAG_typedef,  size_t
+
+Subprogram: mpc_nparse
+ from /src/mpc/./mpc.c:1363
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Name: {  size_t}Type:  from /usr/local/lib/clang/18/include/__stddef_size_t.h:18DW_TAG_typedef,  size_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_result_t
+
+Subprogram: pt_color
+ from /src/mpc/./tests/ptest.c:93
+ - Operand Type: void
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+
+Subprogram: ptest_signal
+ from /src/mpc/./tests/ptest.c:127
+ - Operand Type: void
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+
+Subprogram: pt_run
+ from /src/mpc/./tests/ptest.c:241
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+
+Subprogram: pt_add_suite
+ from /src/mpc/./tests/ptest.c:231
+ - Operand Type: void
+ - Operand Type: Type: DW_TAG_pointer_type, 
+
+Subprogram: pt_title_case
+ from /src/mpc/./tests/ptest.c:159
+ - Operand Type: void
+ - Operand Type: Type: DW_TAG_pointer_type,  char
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+
+Subprogram: pt_add_test
+ from /src/mpc/./tests/ptest.c:198
+ - Operand Type: void
+ - Operand Type: Type: DW_TAG_pointer_type, 
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+
+Subprogram: pt_assert_run
+ from /src/mpc/./tests/ptest.c:109
+ - Operand Type: void
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+
+Subprogram: suite_regex
+ from /src/mpc/./tests/regex.c:172
+ - Operand Type: void
+
+Subprogram: test_regex_basic
+ from /src/mpc/./tests/regex.c:18
+ - Operand Type: void
+
+Subprogram: test_regex_range
+ from /src/mpc/./tests/regex.c:81
+ - Operand Type: void
+
+Subprogram: test_regex_string
+ from /src/mpc/./tests/regex.c:99
+ - Operand Type: void
+
+Subprogram: test_regex_lisp_comment
+ from /src/mpc/./tests/regex.c:112
+ - Operand Type: void
+
+Subprogram: test_regex_boundary
+ from /src/mpc/./tests/regex.c:48
+ - Operand Type: void
+
+Subprogram: test_regex_newline
+ from /src/mpc/./tests/regex.c:123
+ - Operand Type: void
+
+Subprogram: test_regex_multiline
+ from /src/mpc/./tests/regex.c:135
+ - Operand Type: void
+
+Subprogram: test_regex_dotall
+ from /src/mpc/./tests/regex.c:150
+ - Operand Type: void
+
+Subprogram: regex_test_pass
+ from /src/mpc/./tests/regex.c:10
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+
+Subprogram: regex_test_fail
+ from /src/mpc/./tests/regex.c:14
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  mpc_parser_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+
+Subprogram: string_eq
+ from /src/mpc/./tests/regex.c:7
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  void
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  void
+
+Subprogram: string_print
+ from /src/mpc/./tests/regex.c:8
+ - Operand Type: void
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  void
+
+
+## Global variables in module
+Global variable:  from /src/fuzzers/empty-fuzzer.c:7
+Global variable:  from /src/mpc/./tests/combinators.c:15
+Global variable:  from /src/mpc/./tests/combinators.c:17
+Global variable:  from /src/mpc/./tests/combinators.c:17
+Global variable:  from /src/mpc/./tests/combinators.c:18
+Global variable:  from /src/mpc/./tests/combinators.c:18
+Global variable:  from /src/mpc/./tests/combinators.c:19
+Global variable:  from /src/mpc/./tests/combinators.c:22
+Global variable:  from /src/mpc/./tests/combinators.c:23
+Global variable:  from /src/mpc/./tests/combinators.c:24
+Global variable:  from /src/mpc/./tests/combinators.c:51
+Global variable:  from /src/mpc/./tests/combinators.c:85
+Global variable:  from /src/mpc/./tests/combinators.c:85
+Global variable:  from /src/mpc/./tests/combinators.c:86
+Global variable:  from /src/mpc/./tests/combinators.c:87
+Global variable:  from /src/mpc/./tests/combinators.c:88
+Global variable:  from /src/mpc/./tests/core.c:29
+Global variable:  from /src/mpc/./tests/core.c:29
+Global variable:  from /src/mpc/./tests/core.c:29
+Global variable:  from /src/mpc/./tests/core.c:30
+Global variable:  from /src/mpc/./tests/core.c:30
+Global variable:  from /src/mpc/./tests/core.c:30
+Global variable:  from /src/mpc/./tests/core.c:31
+Global variable:  from /src/mpc/./tests/core.c:31
+Global variable:  from /src/mpc/./tests/core.c:32
+Global variable:  from /src/mpc/./tests/core.c:32
+Global variable:  from /src/mpc/./tests/core.c:33
+Global variable:  from /src/mpc/./tests/core.c:33
+Global variable:  from /src/mpc/./tests/core.c:34
+Global variable:  from /src/mpc/./tests/core.c:35
+Global variable:  from /src/mpc/./tests/core.c:35
+Global variable:  from /src/mpc/./tests/core.c:65
+Global variable:  from /src/mpc/./tests/core.c:66
+Global variable:  from /src/mpc/./tests/core.c:67
+Global variable:  from /src/mpc/./tests/core.c:68
+Global variable:  from /src/mpc/./tests/core.c:71
+Global variable:  from /src/mpc/./tests/core.c:76
+Global variable:  from /src/mpc/./tests/core.c:87
+Global variable:  from /src/mpc/./tests/core.c:87
+Global variable:  from /src/mpc/./tests/core.c:88
+Global variable:  from /src/mpc/./tests/core.c:88
+Global variable:  from /src/mpc/./tests/core.c:89
+Global variable:  from /src/mpc/./tests/core.c:89
+Global variable:  from /src/mpc/./tests/core.c:90
+Global variable:  from /src/mpc/./tests/core.c:90
+Global variable:  from /src/mpc/./tests/core.c:91
+Global variable:  from /src/mpc/./tests/core.c:91
+Global variable:  from /src/mpc/./tests/core.c:92
+Global variable:  from /src/mpc/./tests/core.c:92
+Global variable:  from /src/mpc/./tests/core.c:103
+Global variable:  from /src/mpc/./tests/core.c:103
+Global variable:  from /src/mpc/./tests/core.c:103
+Global variable:  from /src/mpc/./tests/core.c:104
+Global variable:  from /src/mpc/./tests/core.c:104
+Global variable:  from /src/mpc/./tests/core.c:105
+Global variable:  from /src/mpc/./tests/core.c:105
+Global variable:  from /src/mpc/./tests/core.c:119
+Global variable:  from /src/mpc/./tests/core.c:120
+Global variable:  from /src/mpc/./tests/core.c:121
+Global variable:  from /src/mpc/./tests/core.c:124
+Global variable:  from /src/mpc/./tests/core.c:129
+Global variable:  from /src/mpc/./tests/core.c:134
+Global variable:  from /src/mpc/./tests/core.c:135
+Global variable:  from /src/mpc/./tests/core.c:149
+Global variable:  from /src/mpc/./tests/core.c:151
+Global variable:  from /src/mpc/./tests/core.c:154
+Global variable:  from /src/mpc/./tests/core.c:156
+Global variable:  from /src/mpc/./tests/core.c:159
+Global variable:  from /src/mpc/./tests/core.c:161
+Global variable:  from /src/mpc/./tests/core.c:164
+Global variable:  from /src/mpc/./tests/core.c:166
+Global variable:  from /src/mpc/./tests/core.c:169
+Global variable:  from /src/mpc/./tests/core.c:191
+Global variable:  from /src/mpc/./tests/core.c:195
+Global variable:  from /src/mpc/./tests/core.c:195
+Global variable:  from /src/mpc/./tests/core.c:199
+Global variable:  from /src/mpc/./tests/core.c:203
+Global variable:  from /src/mpc/./tests/core.c:203
+Global variable:  from /src/mpc/./tests/core.c:207
+Global variable:  from /src/mpc/./tests/core.c:225
+Global variable:  from /src/mpc/./tests/core.c:229
+Global variable:  from /src/mpc/./tests/core.c:229
+Global variable:  from /src/mpc/./tests/core.c:229
+Global variable:  from /src/mpc/./tests/core.c:233
+Global variable:  from /src/mpc/./tests/core.c:241
+Global variable:  from /src/mpc/./tests/core.c:243
+Global variable:  from /src/mpc/./tests/core.c:243
+Global variable:  from /src/mpc/./tests/core.c:244
+Global variable:  from /src/mpc/./tests/core.c:244
+Global variable:  from /src/mpc/./tests/core.c:253
+Global variable:  from /src/mpc/./tests/core.c:254
+Global variable:  from /src/mpc/./tests/core.c:254
+Global variable:  from /src/mpc/./tests/core.c:255
+Global variable:  from /src/mpc/./tests/core.c:255
+Global variable:  from /src/mpc/./tests/core.c:256
+Global variable:  from /src/mpc/./tests/core.c:256
+Global variable:  from /src/mpc/./tests/core.c:256
+Global variable:  from /src/mpc/./tests/core.c:257
+Global variable:  from /src/mpc/./tests/core.c:257
+Global variable:  from /src/mpc/./tests/core.c:257
+Global variable:  from /src/mpc/./tests/core.c:264
+Global variable:  from /src/mpc/./tests/core.c:264
+Global variable:  from /src/mpc/./tests/core.c:266
+Global variable:  from /src/mpc/./tests/core.c:266
+Global variable:  from /src/mpc/./tests/core.c:267
+Global variable:  from /src/mpc/./tests/core.c:267
+Global variable:  from /src/mpc/./tests/core.c:268
+Global variable:  from /src/mpc/./tests/core.c:268
+Global variable:  from /src/mpc/./tests/core.c:269
+Global variable:  from /src/mpc/./tests/core.c:269
+Global variable:  from /src/mpc/./tests/core.c:276
+Global variable:  from /src/mpc/./tests/core.c:276
+Global variable:  from /src/mpc/./tests/core.c:277
+Global variable:  from /src/mpc/./tests/core.c:278
+Global variable:  from /src/mpc/./tests/core.c:279
+Global variable:  from /src/mpc/./tests/core.c:280
+Global variable:  from /src/mpc/./tests/core.c:281
+Global variable:  from /src/mpc/./tests/core.c:282
+Global variable:  from /src/mpc/./tests/core.c:283
+Global variable:  from /src/mpc/./tests/core.c:284
+Global variable:  from /src/mpc/./tests/core.c:10
+Global variable:  from /src/mpc/./tests/core.c:8
+Global variable: line_count from /src/mpc/./tests/core.c:180
+Global variable: token_count from /src/mpc/./tests/core.c:213
+Global variable:  from /src/mpc/./examples/doge.c:7
+Global variable:  from /src/mpc/./examples/doge.c:8
+Global variable:  from /src/mpc/./examples/doge.c:9
+Global variable:  from /src/mpc/./examples/doge.c:10
+Global variable:  from /src/mpc/./examples/doge.c:13
+Global variable:  from /src/mpc/./examples/doge.c:31
+Global variable:  from /src/mpc/./examples/foobar.c:9
+Global variable:  from /src/mpc/./examples/foobar.c:13
+Global variable:  from /src/mpc/./examples/foobar.c:14
+Global variable:  from /src/mpc/./examples/foobar.c:16
+Global variable:  from /src/mpc/./tests/grammar.c:9
+Global variable:  from /src/mpc/./tests/grammar.c:10
+Global variable:  from /src/mpc/./tests/grammar.c:11
+Global variable:  from /src/mpc/./tests/grammar.c:12
+Global variable:  from /src/mpc/./tests/grammar.c:14
+Global variable:  from /src/mpc/./tests/grammar.c:15
+Global variable:  from /src/mpc/./tests/grammar.c:16
+Global variable:  from /src/mpc/./tests/grammar.c:19
+Global variable:  from /src/mpc/./tests/grammar.c:19
+Global variable:  from /src/mpc/./tests/grammar.c:20
+Global variable:  from /src/mpc/./tests/grammar.c:21
+Global variable:  from /src/mpc/./tests/grammar.c:22
+Global variable:  from /src/mpc/./tests/grammar.c:22
+Global variable:  from /src/mpc/./tests/grammar.c:23
+Global variable:  from /src/mpc/./tests/grammar.c:23
+Global variable:  from /src/mpc/./tests/grammar.c:24
+Global variable:  from /src/mpc/./tests/grammar.c:26
+Global variable:  from /src/mpc/./tests/grammar.c:28
+Global variable:  from /src/mpc/./tests/grammar.c:30
+Global variable:  from /src/mpc/./tests/grammar.c:33
+Global variable:  from /src/mpc/./tests/grammar.c:33
+Global variable:  from /src/mpc/./tests/grammar.c:34
+Global variable:  from /src/mpc/./tests/grammar.c:35
+Global variable:  from /src/mpc/./tests/grammar.c:37
+Global variable:  from /src/mpc/./tests/grammar.c:39
+Global variable:  from /src/mpc/./tests/grammar.c:46
+Global variable:  from /src/mpc/./tests/grammar.c:46
+Global variable:  from /src/mpc/./tests/grammar.c:46
+Global variable:  from /src/mpc/./tests/grammar.c:47
+Global variable:  from /src/mpc/./tests/grammar.c:47
+Global variable:  from /src/mpc/./tests/grammar.c:48
+Global variable:  from /src/mpc/./tests/grammar.c:48
+Global variable:  from /src/mpc/./tests/grammar.c:49
+Global variable:  from /src/mpc/./tests/grammar.c:49
+Global variable:  from /src/mpc/./tests/grammar.c:50
+Global variable:  from /src/mpc/./tests/grammar.c:50
+Global variable:  from /src/mpc/./tests/grammar.c:70
+Global variable:  from /src/mpc/./tests/grammar.c:88
+Global variable:  from /src/mpc/./tests/grammar.c:97
+Global variable:  from /src/mpc/./tests/grammar.c:98
+Global variable:  from /src/mpc/./tests/grammar.c:99
+Global variable:  from /src/mpc/./tests/grammar.c:100
+Global variable:  from /src/mpc/./tests/grammar.c:103
+Global variable:  from /src/mpc/./tests/grammar.c:111
+Global variable:  from /src/mpc/./tests/grammar.c:111
+Global variable:  from /src/mpc/./tests/grammar.c:112
+Global variable:  from /src/mpc/./tests/grammar.c:113
+Global variable:  from /src/mpc/./tests/grammar.c:113
+Global variable:  from /src/mpc/./tests/grammar.c:114
+Global variable:  from /src/mpc/./tests/grammar.c:114
+Global variable:  from /src/mpc/./tests/grammar.c:121
+Global variable:  from /src/mpc/./tests/grammar.c:121
+Global variable:  from /src/mpc/./tests/grammar.c:123
+Global variable:  from /src/mpc/./tests/grammar.c:123
+Global variable:  from /src/mpc/./tests/grammar.c:136
+Global variable:  from /src/mpc/./tests/grammar.c:137
+Global variable:  from /src/mpc/./tests/grammar.c:138
+Global variable:  from /src/mpc/./tests/grammar.c:139
+Global variable:  from /src/mpc/./tests/grammar.c:140
+Global variable:  from /src/mpc/./tests/grammar.c:142
+Global variable:  from /src/mpc/./tests/grammar.c:142
+Global variable:  from /src/mpc/./tests/grammar.c:145
+Global variable:  from /src/mpc/./tests/grammar.c:151
+Global variable:  from /src/mpc/./tests/grammar.c:155
+Global variable:  from /src/mpc/./tests/grammar.c:156
+Global variable:  from /src/mpc/./tests/grammar.c:157
+Global variable:  from /src/mpc/./tests/grammar.c:157
+Global variable:  from /src/mpc/./tests/grammar.c:158
+Global variable:  from /src/mpc/./tests/grammar.c:158
+Global variable:  from /src/mpc/./tests/grammar.c:161
+Global variable:  from /src/mpc/./tests/grammar.c:161
+Global variable:  from /src/mpc/./tests/grammar.c:175
+Global variable:  from /src/mpc/./tests/grammar.c:176
+Global variable:  from /src/mpc/./tests/grammar.c:177
+Global variable:  from /src/mpc/./tests/grammar.c:178
+Global variable:  from /src/mpc/./tests/grammar.c:179
+Global variable:  from /src/mpc/./tests/grammar.c:180
+Global variable:  from /src/mpc/./tests/grammar.c:181
+Global variable:  from /src/mpc/./tests/grammar.c:182
+Global variable:  from /src/mpc/./tests/grammar.c:183
+Global variable:  from /src/mpc/./tests/grammar.c:184
+Global variable:  from /src/mpc/./tests/grammar.c:185
+Global variable:  from /src/mpc/./tests/grammar.c:186
+Global variable:  from /src/mpc/./tests/grammar.c:187
+Global variable:  from /src/mpc/./tests/grammar.c:188
+Global variable:  from /src/mpc/./tests/grammar.c:189
+Global variable:  from /src/mpc/./tests/grammar.c:191
+Global variable:  from /src/mpc/./tests/grammar.c:192
+Global variable:  from /src/mpc/./tests/grammar.c:195
+Global variable:  from /src/mpc/./tests/grammar.c:224
+Global variable:  from /src/mpc/./tests/grammar.c:225
+Global variable:  from /src/mpc/./tests/grammar.c:226
+Global variable:  from /src/mpc/./tests/grammar.c:227
+Global variable:  from /src/mpc/./tests/grammar.c:227
+Global variable:  from /src/mpc/./tests/grammar.c:228
+Global variable:  from /src/mpc/./tests/grammar.c:229
+Global variable:  from /src/mpc/./tests/grammar.c:230
+Global variable:  from /src/mpc/./tests/grammar.c:230
+Global variable:  from /src/mpc/./tests/grammar.c:232
+Global variable:  from /src/mpc/./tests/grammar.c:233
+Global variable:  from /src/mpc/./tests/grammar.c:234
+Global variable:  from /src/mpc/./tests/grammar.c:236
+Global variable:  from /src/mpc/./tests/grammar.c:237
+Global variable:  from /src/mpc/./tests/grammar.c:240
+Global variable:  from /src/mpc/./tests/grammar.c:248
+Global variable:  from /src/mpc/./tests/grammar.c:248
+Global variable:  from /src/mpc/./tests/grammar.c:269
+Global variable:  from /src/mpc/./tests/grammar.c:274
+Global variable:  from /src/mpc/./tests/grammar.c:274
+Global variable:  from /src/mpc/./tests/grammar.c:276
+Global variable:  from /src/mpc/./tests/grammar.c:277
+Global variable:  from /src/mpc/./tests/grammar.c:278
+Global variable:  from /src/mpc/./tests/grammar.c:278
+Global variable:  from /src/mpc/./tests/grammar.c:290
+Global variable:  from /src/mpc/./tests/grammar.c:291
+Global variable:  from /src/mpc/./tests/grammar.c:292
+Global variable:  from /src/mpc/./tests/grammar.c:293
+Global variable:  from /src/mpc/./tests/grammar.c:295
+Global variable:  from /src/mpc/./tests/grammar.c:296
+Global variable:  from /src/mpc/./tests/grammar.c:297
+Global variable:  from /src/mpc/./tests/grammar.c:298
+Global variable:  from /src/mpc/./tests/grammar.c:300
+Global variable:  from /src/mpc/./tests/grammar.c:301
+Global variable:  from /src/mpc/./tests/grammar.c:306
+Global variable:  from /src/mpc/./tests/grammar.c:311
+Global variable:  from /src/mpc/./tests/grammar.c:316
+Global variable:  from /src/mpc/./tests/grammar.c:321
+Global variable:  from /src/mpc/./tests/grammar.c:326
+Global variable:  from /src/mpc/./tests/grammar.c:344
+Global variable:  from /src/mpc/./tests/grammar.c:345
+Global variable:  from /src/mpc/./tests/grammar.c:349
+Global variable:  from /src/mpc/./tests/grammar.c:357
+Global variable:  from /src/mpc/./tests/grammar.c:357
+Global variable:  from /src/mpc/./tests/grammar.c:359
+Global variable:  from /src/mpc/./tests/grammar.c:362
+Global variable:  from /src/mpc/./tests/grammar.c:364
+Global variable:  from /src/mpc/./tests/grammar.c:367
+Global variable:  from /src/mpc/./tests/grammar.c:372
+Global variable:  from /src/mpc/./tests/grammar.c:373
+Global variable:  from /src/mpc/./tests/grammar.c:387
+Global variable:  from /src/mpc/./tests/grammar.c:404
+Global variable:  from /src/mpc/./tests/grammar.c:404
+Global variable:  from /src/mpc/./tests/grammar.c:405
+Global variable:  from /src/mpc/./tests/grammar.c:406
+Global variable:  from /src/mpc/./tests/grammar.c:407
+Global variable:  from /src/mpc/./tests/grammar.c:408
+Global variable:  from /src/mpc/./tests/grammar.c:409
+Global variable:  from /src/mpc/./tests/grammar.c:410
+Global variable:  from /src/mpc/./tests/grammar.c:411
+Global variable:  from /src/mpc/./tests/grammar.c:412
+Global variable:  from /src/mpc/./examples/line_reader.c:11
+Global variable:  from /src/mpc/./examples/line_reader.c:21
+Global variable:  from /src/mpc/./examples/line_reader.c:27
+Global variable:  from /src/mpc/./examples/line_reader.c:28
+Global variable:  from /src/mpc/./examples/line_reader.c:4
+Global variable:  from /src/mpc/./examples/lispy.c:7
+Global variable:  from /src/mpc/./examples/lispy.c:8
+Global variable:  from /src/mpc/./examples/lispy.c:9
+Global variable:  from /src/mpc/./examples/lispy.c:10
+Global variable:  from /src/mpc/./examples/lispy.c:11
+Global variable:  from /src/mpc/./examples/lispy.c:12
+Global variable:  from /src/mpc/./examples/lispy.c:13
+Global variable:  from /src/mpc/./examples/lispy.c:14
+Global variable:  from /src/mpc/./examples/lispy.c:17
+Global variable:  from /src/mpc/./examples/lispy.c:40
+Global variable:  from /src/mpc/./examples/maths.c:5
+Global variable:  from /src/mpc/./examples/maths.c:6
+Global variable:  from /src/mpc/./examples/maths.c:7
+Global variable:  from /src/mpc/./examples/maths.c:8
+Global variable:  from /src/mpc/./examples/maths.c:11
+Global variable:  from /src/mpc/./examples/maths.c:36
+Global variable:  from /src/mpc/./mpc.c:590
+Global variable:  from /src/mpc/./mpc.c:638
+Global variable:  from /src/mpc/./mpc.c:643
+Global variable:  from /src/mpc/./mpc.c:645
+Global variable:  from /src/mpc/./mpc.c:650
+Global variable:  from /src/mpc/./mpc.c:653
+Global variable:  from /src/mpc/./mpc.c:658
+Global variable:  from /src/mpc/./mpc.c:660
+Global variable:  from /src/mpc/./mpc.c:1343
+Global variable:  from /src/mpc/./mpc.c:1389
+Global variable:  from /src/mpc/./mpc.c:1394
+Global variable:  from /src/mpc/./mpc.c:1630
+Global variable:  from /src/mpc/./mpc.c:1728
+Global variable:  from /src/mpc/./mpc.c:1794
+Global variable:  from /src/mpc/./mpc.c:1801
+Global variable:  from /src/mpc/./mpc.c:1809
+Global variable:  from /src/mpc/./mpc.c:1817
+Global variable:  from /src/mpc/./mpc.c:1825
+Global variable:  from /src/mpc/./mpc.c:1833
+Global variable:  from /src/mpc/./mpc.c:1841
+Global variable:  from /src/mpc/./mpc.c:2039
+Global variable:  from /src/mpc/./mpc.c:2045
+Global variable:  from /src/mpc/./mpc.c:2064
+Global variable:  from /src/mpc/./mpc.c:2065
+Global variable:  from /src/mpc/./mpc.c:2067
+Global variable:  from /src/mpc/./mpc.c:2067
+Global variable:  from /src/mpc/./mpc.c:2068
+Global variable:  from /src/mpc/./mpc.c:2071
+Global variable:  from /src/mpc/./mpc.c:2072
+Global variable:  from /src/mpc/./mpc.c:2075
+Global variable:  from /src/mpc/./mpc.c:2075
+Global variable:  from /src/mpc/./mpc.c:2076
+Global variable:  from /src/mpc/./mpc.c:2076
+Global variable:  from /src/mpc/./mpc.c:2077
+Global variable:  from /src/mpc/./mpc.c:2077
+Global variable:  from /src/mpc/./mpc.c:2078
+Global variable:  from /src/mpc/./mpc.c:2079
+Global variable:  from /src/mpc/./mpc.c:2080
+Global variable:  from /src/mpc/./mpc.c:2082
+Global variable:  from /src/mpc/./mpc.c:2082
+Global variable:  from /src/mpc/./mpc.c:2083
+Global variable:  from /src/mpc/./mpc.c:2083
+Global variable:  from /src/mpc/./mpc.c:2084
+Global variable:  from /src/mpc/./mpc.c:2084
+Global variable:  from /src/mpc/./mpc.c:2085
+Global variable:  from /src/mpc/./mpc.c:2086
+Global variable:  from /src/mpc/./mpc.c:2088
+Global variable:  from /src/mpc/./mpc.c:2089
+Global variable:  from /src/mpc/./mpc.c:2090
+Global variable:  from /src/mpc/./mpc.c:2091
+Global variable:  from /src/mpc/./mpc.c:2099
+Global variable:  from /src/mpc/./mpc.c:2102
+Global variable:  from /src/mpc/./mpc.c:2107
+Global variable:  from /src/mpc/./mpc.c:2112
+Global variable:  from /src/mpc/./mpc.c:2116
+Global variable:  from /src/mpc/./mpc.c:2116
+Global variable:  from /src/mpc/./mpc.c:2120
+Global variable:  from /src/mpc/./mpc.c:2121
+Global variable:  from /src/mpc/./mpc.c:2125
+Global variable:  from /src/mpc/./mpc.c:2126
+Global variable:  from /src/mpc/./mpc.c:2158
+Global variable:  from /src/mpc/./mpc.c:2158
+Global variable:  from /src/mpc/./mpc.c:2159
+Global variable:  from /src/mpc/./mpc.c:2159
+Global variable:  from /src/mpc/./mpc.c:2160
+Global variable:  from /src/mpc/./mpc.c:2160
+Global variable:  from /src/mpc/./mpc.c:2161
+Global variable:  from /src/mpc/./mpc.c:2161
+Global variable:  from /src/mpc/./mpc.c:2424
+Global variable:  from /src/mpc/./mpc.c:2425
+Global variable:  from /src/mpc/./mpc.c:2426
+Global variable:  from /src/mpc/./mpc.c:2427
+Global variable:  from /src/mpc/./mpc.c:2450
+Global variable:  from /src/mpc/./mpc.c:2467
+Global variable:  from /src/mpc/./mpc.c:2469
+Global variable:  from /src/mpc/./mpc.c:2886
+Global variable:  from /src/mpc/./mpc.c:2915
+Global variable:  from /src/mpc/./mpc.c:2916
+Global variable:  from /src/mpc/./mpc.c:2979
+Global variable:  from /src/mpc/./mpc.c:3035
+Global variable:  from /src/mpc/./mpc.c:3577
+Global variable:  from /src/mpc/./mpc.c:3578
+Global variable:  from /src/mpc/./mpc.c:3598
+Global variable:  from /src/mpc/./mpc.c:3599
+Global variable:  from /src/mpc/./mpc.c:3600
+Global variable:  from /src/mpc/./mpc.c:3601
+Global variable:  from /src/mpc/./mpc.c:3610
+Global variable:  from /src/mpc/./mpc.c:3621
+Global variable:  from /src/mpc/./mpc.c:3623
+Global variable:  from /src/mpc/./mpc.c:3808
+Global variable:  from /src/mpc/./mpc.c:3830
+Global variable:  from /src/mpc/./mpc.c:3853
+Global variable:  from /src/mpc/./mpc.c:3946
+Global variable:  from /src/mpc/./mpc.c:3947
+Global variable:  from /src/mpc/./mpc.c:3948
+Global variable:  from /src/mpc/./mpc.c:612
+Global variable:  from /src/mpc/./mpc.c:613
+Global variable:  from /src/mpc/./mpc.c:614
+Global variable:  from /src/mpc/./mpc.c:615
+Global variable:  from /src/mpc/./mpc.c:616
+Global variable:  from /src/mpc/./mpc.c:620
+Global variable:  from /src/mpc/./mpc.c:1076
+Global variable:  from /src/mpc/./mpc.c:1096
+Global variable:  from /src/mpc/./mpc.c:1174
+Global variable:  from /src/mpc/./mpc.c:1330
+Global variable:  from /src/mpc/./mpc.c:857
+Global variable:  from /src/mpc/./mpc.c:839
+Global variable:  from /src/mpc/./mpc.c:842
+Global variable:  from /src/mpc/./mpc.c:868
+Global variable:  from /src/mpc/./mpc.c:2049
+Global variable:  from /src/mpc/./mpc.c:2290
+Global variable:  from /src/mpc/./mpc.c:2359
+Global variable:  from /src/mpc/./mpc.c:2383
+Global variable:  from /src/mpc/./mpc.c:2335
+Global variable:  from /src/mpc/./mpc.c:2336
+Global variable:  from /src/mpc/./mpc.c:2338
+Global variable:  from /src/mpc/./mpc.c:2339
+Global variable:  from /src/mpc/./mpc.c:2340
+Global variable:  from /src/mpc/./mpc.c:2341
+Global variable: mpc_escape_input_c from /src/mpc/./mpc.c:2542
+Global variable:  from /src/mpc/./mpc.c:2547
+Global variable:  from /src/mpc/./mpc.c:2547
+Global variable:  from /src/mpc/./mpc.c:2547
+Global variable:  from /src/mpc/./mpc.c:2547
+Global variable:  from /src/mpc/./mpc.c:2547
+Global variable:  from /src/mpc/./mpc.c:2547
+Global variable:  from /src/mpc/./mpc.c:2548
+Global variable:  from /src/mpc/./mpc.c:2548
+Global variable:  from /src/mpc/./mpc.c:2548
+Global variable:  from /src/mpc/./mpc.c:2548
+Global variable:  from /src/mpc/./mpc.c:2548
+Global variable: mpc_escape_output_c from /src/mpc/./mpc.c:2546
+Global variable: mpc_escape_input_raw_re from /src/mpc/./mpc.c:2550
+Global variable:  from /src/mpc/./mpc.c:2551
+Global variable: mpc_escape_output_raw_re from /src/mpc/./mpc.c:2551
+Global variable: mpc_escape_input_raw_cstr from /src/mpc/./mpc.c:2553
+Global variable: mpc_escape_output_raw_cstr from /src/mpc/./mpc.c:2554
+Global variable: mpc_escape_input_raw_cchar from /src/mpc/./mpc.c:2556
+Global variable: mpc_escape_output_raw_cchar from /src/mpc/./mpc.c:2557
+Global variable:  from /src/mpc/./mpc.c:2737
+Global variable:  from /src/mpc/./mpc.c:2738
+Global variable:  from /src/mpc/./mpc.c:2742
+Global variable:  from /src/mpc/./mpc.c:2743
+Global variable:  from /src/mpc/./mpc.c:2744
+Global variable:  from /src/mpc/./mpc.c:2745
+Global variable:  from /src/mpc/./mpc.c:2746
+Global variable:  from /src/mpc/./mpc.c:2747
+Global variable:  from /src/mpc/./mpc.c:2753
+Global variable:  from /src/mpc/./mpc.c:2754
+Global variable:  from /src/mpc/./mpc.c:2762
+Global variable:  from /src/mpc/./mpc.c:2777
+Global variable:  from /src/mpc/./mpc.c:2787
+Global variable:  from /src/mpc/./mpc.c:2796
+Global variable:  from /src/mpc/./mpc.c:2818
+Global variable:  from /src/mpc/./mpc.c:2821
+Global variable:  from /src/mpc/./mpc.c:2823
+Global variable:  from /src/mpc/./mpc.c:2833
+Global variable:  from /src/mpc/./mpc.c:2851
+Global variable:  from /src/mpc/./mpc.c:3064
+Global variable:  from /src/mpc/./mpc.c:3068
+Global variable:  from /src/mpc/./mpc.c:3071
+Global variable:  from /src/mpc/./mpc.c:3076
+Global variable:  from /src/mpc/./mpc.c:3523
+Global variable:  from /src/mpc/./mpc.c:3535
+Global variable:  from /src/mpc/./mpc.c:3732
+Global variable:  from /src/mpc/./mpc.c:3733
+Global variable:  from /src/mpc/./mpc.c:3745
+Global variable:  from /src/mpc/./mpc.c:3745
+Global variable:  from /src/mpc/./tests/ptest.c:118
+Global variable:  from /src/mpc/./tests/ptest.c:203
+Global variable:  from /src/mpc/./tests/ptest.c:208
+Global variable:  from /src/mpc/./tests/ptest.c:213
+Global variable:  from /src/mpc/./tests/ptest.c:247
+Global variable:  from /src/mpc/./tests/ptest.c:248
+Global variable:  from /src/mpc/./tests/ptest.c:249
+Global variable:  from /src/mpc/./tests/ptest.c:250
+Global variable:  from /src/mpc/./tests/ptest.c:251
+Global variable:  from /src/mpc/./tests/ptest.c:253
+Global variable:  from /src/mpc/./tests/ptest.c:281
+Global variable:  from /src/mpc/./tests/ptest.c:290
+Global variable:  from /src/mpc/./tests/ptest.c:300
+Global variable:  from /src/mpc/./tests/ptest.c:305
+Global variable:  from /src/mpc/./tests/ptest.c:320
+Global variable:  from /src/mpc/./tests/ptest.c:321
+Global variable:  from /src/mpc/./tests/ptest.c:322
+Global variable:  from /src/mpc/./tests/ptest.c:324
+Global variable:  from /src/mpc/./tests/ptest.c:325
+Global variable:  from /src/mpc/./tests/ptest.c:327
+Global variable:  from /src/mpc/./tests/ptest.c:329
+Global variable:  from /src/mpc/./tests/ptest.c:330
+Global variable:  from /src/mpc/./tests/ptest.c:332
+Global variable:  from /src/mpc/./tests/ptest.c:340
+Global variable:  from /src/mpc/./tests/ptest.c:353
+Global variable: assert_err from /src/mpc/./tests/ptest.c:105
+Global variable: assert_err_buff from /src/mpc/./tests/ptest.c:106
+Global variable: tests from /src/mpc/./tests/ptest.c:192
+Global variable: start from /src/mpc/./tests/ptest.c:238
+Global variable: end from /src/mpc/./tests/ptest.c:238
+Global variable: current_suite from /src/mpc/./tests/ptest.c:239
+Global variable: num_asserts from /src/mpc/./tests/ptest.c:101
+Global variable: test_passing from /src/mpc/./tests/ptest.c:23
+Global variable: num_assert_passes from /src/mpc/./tests/ptest.c:102
+Global variable: assert_err_num from /src/mpc/./tests/ptest.c:107
+Global variable: num_assert_fails from /src/mpc/./tests/ptest.c:103
+Global variable: num_tests from /src/mpc/./tests/ptest.c:194
+Global variable: num_suites from /src/mpc/./tests/ptest.c:227
+Global variable:  from /src/mpc/./tests/ptest.c:133
+Global variable:  from /src/mpc/./tests/ptest.c:136
+Global variable:  from /src/mpc/./tests/ptest.c:139
+Global variable:  from /src/mpc/./tests/ptest.c:151
+Global variable: suite_passing from /src/mpc/./tests/ptest.c:24
+Global variable: num_suites_passes from /src/mpc/./tests/ptest.c:228
+Global variable: num_suites_fails from /src/mpc/./tests/ptest.c:229
+Global variable: num_tests_passes from /src/mpc/./tests/ptest.c:195
+Global variable:  from /src/mpc/./tests/ptest.c:94
+Global variable:  from /src/mpc/./tests/ptest.c:74
+Global variable:  from /src/mpc/./tests/ptest.c:75
+Global variable:  from /src/mpc/./tests/ptest.c:76
+Global variable:  from /src/mpc/./tests/ptest.c:77
+Global variable:  from /src/mpc/./tests/ptest.c:78
+Global variable:  from /src/mpc/./tests/ptest.c:79
+Global variable:  from /src/mpc/./tests/ptest.c:80
+Global variable:  from /src/mpc/./tests/ptest.c:81
+Global variable:  from /src/mpc/./tests/ptest.c:90
+Global variable: colors from /src/mpc/./tests/ptest.c:73
+Global variable: num_tests_fails from /src/mpc/./tests/ptest.c:196
+Global variable:  from /src/mpc/./tests/regex.c:22
+Global variable:  from /src/mpc/./tests/regex.c:23
+Global variable:  from /src/mpc/./tests/regex.c:24
+Global variable:  from /src/mpc/./tests/regex.c:25
+Global variable:  from /src/mpc/./tests/regex.c:26
+Global variable:  from /src/mpc/./tests/regex.c:27
+Global variable:  from /src/mpc/./tests/regex.c:29
+Global variable:  from /src/mpc/./tests/regex.c:29
+Global variable:  from /src/mpc/./tests/regex.c:29
+Global variable:  from /src/mpc/./tests/regex.c:30
+Global variable:  from /src/mpc/./tests/regex.c:30
+Global variable:  from /src/mpc/./tests/regex.c:31
+Global variable:  from /src/mpc/./tests/regex.c:31
+Global variable:  from /src/mpc/./tests/regex.c:32
+Global variable:  from /src/mpc/./tests/regex.c:32
+Global variable:  from /src/mpc/./tests/regex.c:33
+Global variable:  from /src/mpc/./tests/regex.c:33
+Global variable:  from /src/mpc/./tests/regex.c:34
+Global variable:  from /src/mpc/./tests/regex.c:35
+Global variable:  from /src/mpc/./tests/regex.c:35
+Global variable:  from /src/mpc/./tests/regex.c:36
+Global variable:  from /src/mpc/./tests/regex.c:36
+Global variable:  from /src/mpc/./tests/regex.c:37
+Global variable:  from /src/mpc/./tests/regex.c:37
+Global variable:  from /src/mpc/./tests/regex.c:52
+Global variable:  from /src/mpc/./tests/regex.c:53
+Global variable:  from /src/mpc/./tests/regex.c:54
+Global variable:  from /src/mpc/./tests/regex.c:56
+Global variable:  from /src/mpc/./tests/regex.c:56
+Global variable:  from /src/mpc/./tests/regex.c:57
+Global variable:  from /src/mpc/./tests/regex.c:57
+Global variable:  from /src/mpc/./tests/regex.c:58
+Global variable:  from /src/mpc/./tests/regex.c:58
+Global variable:  from /src/mpc/./tests/regex.c:59
+Global variable:  from /src/mpc/./tests/regex.c:59
+Global variable:  from /src/mpc/./tests/regex.c:61
+Global variable:  from /src/mpc/./tests/regex.c:61
+Global variable:  from /src/mpc/./tests/regex.c:62
+Global variable:  from /src/mpc/./tests/regex.c:62
+Global variable:  from /src/mpc/./tests/regex.c:64
+Global variable:  from /src/mpc/./tests/regex.c:65
+Global variable:  from /src/mpc/./tests/regex.c:65
+Global variable:  from /src/mpc/./tests/regex.c:66
+Global variable:  from /src/mpc/./tests/regex.c:66
+Global variable:  from /src/mpc/./tests/regex.c:68
+Global variable:  from /src/mpc/./tests/regex.c:68
+Global variable:  from /src/mpc/./tests/regex.c:69
+Global variable:  from /src/mpc/./tests/regex.c:69
+Global variable:  from /src/mpc/./tests/regex.c:70
+Global variable:  from /src/mpc/./tests/regex.c:70
+Global variable:  from /src/mpc/./tests/regex.c:71
+Global variable:  from /src/mpc/./tests/regex.c:71
+Global variable:  from /src/mpc/./tests/regex.c:72
+Global variable:  from /src/mpc/./tests/regex.c:72
+Global variable:  from /src/mpc/./tests/regex.c:73
+Global variable:  from /src/mpc/./tests/regex.c:73
+Global variable:  from /src/mpc/./tests/regex.c:85
+Global variable:  from /src/mpc/./tests/regex.c:86
+Global variable:  from /src/mpc/./tests/regex.c:87
+Global variable:  from /src/mpc/./tests/regex.c:88
+Global variable:  from /src/mpc/./tests/regex.c:101
+Global variable:  from /src/mpc/./tests/regex.c:103
+Global variable:  from /src/mpc/./tests/regex.c:103
+Global variable:  from /src/mpc/./tests/regex.c:104
+Global variable:  from /src/mpc/./tests/regex.c:104
+Global variable:  from /src/mpc/./tests/regex.c:105
+Global variable:  from /src/mpc/./tests/regex.c:105
+Global variable:  from /src/mpc/./tests/regex.c:106
+Global variable:  from /src/mpc/./tests/regex.c:106
+Global variable:  from /src/mpc/./tests/regex.c:114
+Global variable:  from /src/mpc/./tests/regex.c:116
+Global variable:  from /src/mpc/./tests/regex.c:116
+Global variable:  from /src/mpc/./tests/regex.c:117
+Global variable:  from /src/mpc/./tests/regex.c:117
+Global variable:  from /src/mpc/./tests/regex.c:117
+Global variable:  from /src/mpc/./tests/regex.c:125
+Global variable:  from /src/mpc/./tests/regex.c:127
+Global variable:  from /src/mpc/./tests/regex.c:127
+Global variable:  from /src/mpc/./tests/regex.c:128
+Global variable:  from /src/mpc/./tests/regex.c:128
+Global variable:  from /src/mpc/./tests/regex.c:129
+Global variable:  from /src/mpc/./tests/regex.c:137
+Global variable:  from /src/mpc/./tests/regex.c:139
+Global variable:  from /src/mpc/./tests/regex.c:139
+Global variable:  from /src/mpc/./tests/regex.c:140
+Global variable:  from /src/mpc/./tests/regex.c:140
+Global variable:  from /src/mpc/./tests/regex.c:141
+Global variable:  from /src/mpc/./tests/regex.c:141
+Global variable:  from /src/mpc/./tests/regex.c:142
+Global variable:  from /src/mpc/./tests/regex.c:142
+Global variable:  from /src/mpc/./tests/regex.c:143
+Global variable:  from /src/mpc/./tests/regex.c:143
+Global variable:  from /src/mpc/./tests/regex.c:144
+Global variable:  from /src/mpc/./tests/regex.c:144
+Global variable:  from /src/mpc/./tests/regex.c:152
+Global variable:  from /src/mpc/./tests/regex.c:155
+Global variable:  from /src/mpc/./tests/regex.c:155
+Global variable:  from /src/mpc/./tests/regex.c:156
+Global variable:  from /src/mpc/./tests/regex.c:156
+Global variable:  from /src/mpc/./tests/regex.c:157
+Global variable:  from /src/mpc/./tests/regex.c:157
+Global variable:  from /src/mpc/./tests/regex.c:157
+Global variable:  from /src/mpc/./tests/regex.c:158
+Global variable:  from /src/mpc/./tests/regex.c:158
+Global variable:  from /src/mpc/./tests/regex.c:159
+Global variable:  from /src/mpc/./tests/regex.c:159
+Global variable:  from /src/mpc/./tests/regex.c:159
+Global variable:  from /src/mpc/./tests/regex.c:161
+Global variable:  from /src/mpc/./tests/regex.c:162
+Global variable:  from /src/mpc/./tests/regex.c:163
+Global variable:  from /src/mpc/./tests/regex.c:164
+Global variable:  from /src/mpc/./tests/regex.c:165
+Global variable:  from /src/mpc/./tests/regex.c:173
+Global variable:  from /src/mpc/./tests/regex.c:173
+Global variable:  from /src/mpc/./tests/regex.c:174
+Global variable:  from /src/mpc/./tests/regex.c:175
+Global variable:  from /src/mpc/./tests/regex.c:176
+Global variable:  from /src/mpc/./tests/regex.c:177
+Global variable:  from /src/mpc/./tests/regex.c:178
+Global variable:  from /src/mpc/./tests/regex.c:179
+Global variable:  from /src/mpc/./tests/regex.c:180
+Global variable:  from /src/mpc/./tests/regex.c:8
+Global variable:  from /src/mpc/./examples/smallc.c:5
+Global variable:  from /src/mpc/./examples/smallc.c:6
+Global variable:  from /src/mpc/./examples/smallc.c:7
+Global variable:  from /src/mpc/./examples/smallc.c:8
+Global variable:  from /src/mpc/./examples/smallc.c:9
+Global variable:  from /src/mpc/./examples/smallc.c:10
+Global variable:  from /src/mpc/./examples/smallc.c:11
+Global variable:  from /src/mpc/./examples/smallc.c:12
+Global variable:  from /src/mpc/./examples/smallc.c:13
+Global variable:  from /src/mpc/./examples/smallc.c:14
+Global variable:  from /src/mpc/./examples/smallc.c:15
+Global variable:  from /src/mpc/./examples/smallc.c:16
+Global variable:  from /src/mpc/./examples/smallc.c:17
+Global variable:  from /src/mpc/./examples/smallc.c:18
+Global variable:  from /src/mpc/./examples/smallc.c:19
+Global variable:  from /src/mpc/./examples/smallc.c:20
+Global variable:  from /src/mpc/./examples/smallc.c:21
+Global variable:  from /src/mpc/./examples/smallc.c:24
+Global variable:  from /src/mpc/./examples/smallc.c:85
+Global variable:  from /src/mpc/./examples/tree_traversal.c:5
+Global variable:  from /src/mpc/./examples/tree_traversal.c:6
+Global variable:  from /src/mpc/./examples/tree_traversal.c:7
+Global variable:  from /src/mpc/./examples/tree_traversal.c:14
+Global variable:  from /src/mpc/./examples/tree_traversal.c:32
+Global variable:  from /src/mpc/./examples/tree_traversal.c:46
+Global variable:  from /src/mpc/./examples/tree_traversal.c:55
+Global variable:  from /src/mpc/./examples/tree_traversal.c:58
+Global variable:  from /src/mpc/./examples/tree_traversal.c:62
+Global variable:  from /src/mpc/./examples/tree_traversal.c:70
+Global variable:  from /src/mpc/./examples/tree_traversal.c:76
+Global variable:  from /src/mpc/./examples/tree_traversal.c:84
+Global variable:  from /src/mpc/./examples/tree_traversal.c:99
+
+## Types defined in module
+Type: Name: {  char} DW_ATE_signed_char
+Type: Name: {  int} DW_ATE_signed
+Type: Name: {  unsigned int} DW_ATE_unsigned
+Type: Name: {  mpc_dtor_t} from /src/mpc/./tests/../mpc.h:78 DW_TAG_typedef
+Type: Name: {  mpc_val_t} from /src/mpc/./tests/../mpc.h:58 DW_TAG_typedef
+Type: Name: {  mpc_dtor_t} from /src/mpc/./mpc.h:78 DW_TAG_typedef
+Type: Name: {  mpc_val_t} from /src/mpc/./mpc.h:58 DW_TAG_typedef
+Type: Name: {  unsigned char} DW_ATE_unsigned_char
+Type: Name: {  unsigned short} DW_ATE_unsigned
+Type: Name: {  mpc_ast_t} from /src/mpc/./mpc.h:291 DW_TAG_typedef
+Type: Name: {  mpc_ast_t} from /src/mpc/./mpc.h:285 DW_TAG_structure_type Composite type
+ - Elements: 5
+ - Elem 0{  tag from /src/mpc/./mpc.h:286 }
+ - Elem 1{  contents from /src/mpc/./mpc.h:287 }
+ - Elem 2{  state from /src/mpc/./mpc.h:288 }
+ - Elem 3{  children_num from /src/mpc/./mpc.h:289 }
+ - Elem 4{  children from /src/mpc/./mpc.h:290 }
+
+Type: Name: {  tag} from /src/mpc/./mpc.h:286 DW_TAG_member
+Type: Name: {  contents} from /src/mpc/./mpc.h:287 DW_TAG_member
+Type: Name: {  state} from /src/mpc/./mpc.h:288 DW_TAG_member
+Type: Name: {  mpc_state_t} from /src/mpc/./mpc.h:34 DW_TAG_typedef
+Type: Name: {  pos} from /src/mpc/./mpc.h:30 DW_TAG_member
+Type: Name: {  long} DW_ATE_signed
+Type: Name: {  row} from /src/mpc/./mpc.h:31 DW_TAG_member
+Type: Name: {  col} from /src/mpc/./mpc.h:32 DW_TAG_member
+Type: Name: {  term} from /src/mpc/./mpc.h:33 DW_TAG_member
+Type: Name: {  children_num} from /src/mpc/./mpc.h:289 DW_TAG_member
+Type: Name: {  children} from /src/mpc/./mpc.h:290 DW_TAG_member
+Type: Name: {  mpc_apply_to_t} from /src/mpc/./mpc.h:82 DW_TAG_typedef
+Type: Name: {  mpc_apply_t} from /src/mpc/./mpc.h:81 DW_TAG_typedef
+Type: Name: {  size_t} from /usr/local/lib/clang/18/include/__stddef_size_t.h:18 DW_TAG_typedef
+Type: Name: {  unsigned long} DW_ATE_unsigned
+Type: Name: {  mpc_parser_t} from /src/mpc/./mpc.h:66 DW_TAG_typedef
+Type: Name: {  mpc_parser_t} from /src/mpc/./mpc.c:964 DW_TAG_structure_type Composite type
+ - Elements: 4
+ - Elem 0{  name from /src/mpc/./mpc.c:965 }
+ - Elem 1{  data from /src/mpc/./mpc.c:966 }
+ - Elem 2{  type from /src/mpc/./mpc.c:967 }
+ - Elem 3{  retained from /src/mpc/./mpc.c:968 }
+
+Type: Name: {  name} from /src/mpc/./mpc.c:965 DW_TAG_member
+Type: Name: {  data} from /src/mpc/./mpc.c:966 DW_TAG_member
+Type: Name: {  mpc_pdata_t} from /src/mpc/./mpc.c:962 DW_TAG_typedef
+Type: Name: {  fail} from /src/mpc/./mpc.c:944 DW_TAG_member
+Type: Name: {  mpc_pdata_fail_t} from /src/mpc/./mpc.c:924 DW_TAG_typedef
+Type: Name: {  m} from /src/mpc/./mpc.c:924 DW_TAG_member
+Type: Name: {  lift} from /src/mpc/./mpc.c:945 DW_TAG_member
+Type: Name: {  mpc_pdata_lift_t} from /src/mpc/./mpc.c:925 DW_TAG_typedef
+Type: Name: {  lf} from /src/mpc/./mpc.c:925 DW_TAG_member
+Type: Name: {  mpc_ctor_t} from /src/mpc/./mpc.h:79 DW_TAG_typedef
+Type: Name: {  x} from /src/mpc/./mpc.c:925 DW_TAG_member
+Type: Name: {  expect} from /src/mpc/./mpc.c:946 DW_TAG_member
+Type: Name: {  mpc_pdata_expect_t} from /src/mpc/./mpc.c:926 DW_TAG_typedef
+Type: Name: {  x} from /src/mpc/./mpc.c:926 DW_TAG_member
+Type: Name: {  m} from /src/mpc/./mpc.c:926 DW_TAG_member
+Type: Name: {  anchor} from /src/mpc/./mpc.c:947 DW_TAG_member
+Type: Name: {  mpc_pdata_anchor_t} from /src/mpc/./mpc.c:927 DW_TAG_typedef
+Type: Name: {  f} from /src/mpc/./mpc.c:927 DW_TAG_member
+Type: Name: {  single} from /src/mpc/./mpc.c:948 DW_TAG_member
+Type: Name: {  mpc_pdata_single_t} from /src/mpc/./mpc.c:928 DW_TAG_typedef
+Type: Name: {  x} from /src/mpc/./mpc.c:928 DW_TAG_member
+Type: Name: {  range} from /src/mpc/./mpc.c:949 DW_TAG_member
+Type: Name: {  mpc_pdata_range_t} from /src/mpc/./mpc.c:929 DW_TAG_typedef
+Type: Name: {  x} from /src/mpc/./mpc.c:929 DW_TAG_member
+Type: Name: {  y} from /src/mpc/./mpc.c:929 DW_TAG_member
+Type: Name: {  satisfy} from /src/mpc/./mpc.c:950 DW_TAG_member
+Type: Name: {  mpc_pdata_satisfy_t} from /src/mpc/./mpc.c:930 DW_TAG_typedef
+Type: Name: {  f} from /src/mpc/./mpc.c:930 DW_TAG_member
+Type: Name: {  string} from /src/mpc/./mpc.c:951 DW_TAG_member
+Type: Name: {  mpc_pdata_string_t} from /src/mpc/./mpc.c:931 DW_TAG_typedef
+Type: Name: {  x} from /src/mpc/./mpc.c:931 DW_TAG_member
+Type: Name: {  apply} from /src/mpc/./mpc.c:952 DW_TAG_member
+Type: Name: {  mpc_pdata_apply_t} from /src/mpc/./mpc.c:932 DW_TAG_typedef
+Type: Name: {  x} from /src/mpc/./mpc.c:932 DW_TAG_member
+Type: Name: {  f} from /src/mpc/./mpc.c:932 DW_TAG_member
+Type: Name: {  apply_to} from /src/mpc/./mpc.c:953 DW_TAG_member
+Type: Name: {  mpc_pdata_apply_to_t} from /src/mpc/./mpc.c:933 DW_TAG_typedef
+Type: Name: {  x} from /src/mpc/./mpc.c:933 DW_TAG_member
+Type: Name: {  f} from /src/mpc/./mpc.c:933 DW_TAG_member
+Type: Name: {  d} from /src/mpc/./mpc.c:933 DW_TAG_member
+Type: Name: {  check} from /src/mpc/./mpc.c:954 DW_TAG_member
+Type: Name: {  mpc_pdata_check_t} from /src/mpc/./mpc.c:934 DW_TAG_typedef
+Type: Name: {  x} from /src/mpc/./mpc.c:934 DW_TAG_member
+Type: Name: {  dx} from /src/mpc/./mpc.c:934 DW_TAG_member
+Type: Name: {  f} from /src/mpc/./mpc.c:934 DW_TAG_member
+Type: Name: {  mpc_check_t} from /src/mpc/./mpc.h:85 DW_TAG_typedef
+Type: Name: {  e} from /src/mpc/./mpc.c:934 DW_TAG_member
+Type: Name: {  check_with} from /src/mpc/./mpc.c:955 DW_TAG_member
+Type: Name: {  mpc_pdata_check_with_t} from /src/mpc/./mpc.c:935 DW_TAG_typedef
+Type: Name: {  x} from /src/mpc/./mpc.c:935 DW_TAG_member
+Type: Name: {  dx} from /src/mpc/./mpc.c:935 DW_TAG_member
+Type: Name: {  f} from /src/mpc/./mpc.c:935 DW_TAG_member
+Type: Name: {  mpc_check_with_t} from /src/mpc/./mpc.h:86 DW_TAG_typedef
+Type: Name: {  d} from /src/mpc/./mpc.c:935 DW_TAG_member
+Type: Name: {  e} from /src/mpc/./mpc.c:935 DW_TAG_member
+Type: Name: {  predict} from /src/mpc/./mpc.c:956 DW_TAG_member
+Type: Name: {  mpc_pdata_predict_t} from /src/mpc/./mpc.c:936 DW_TAG_typedef
+Type: Name: {  x} from /src/mpc/./mpc.c:936 DW_TAG_member
+Type: Name: {  not} from /src/mpc/./mpc.c:957 DW_TAG_member
+Type: Name: {  mpc_pdata_not_t} from /src/mpc/./mpc.c:937 DW_TAG_typedef
+Type: Name: {  x} from /src/mpc/./mpc.c:937 DW_TAG_member
+Type: Name: {  dx} from /src/mpc/./mpc.c:937 DW_TAG_member
+Type: Name: {  lf} from /src/mpc/./mpc.c:937 DW_TAG_member
+Type: Name: {  repeat} from /src/mpc/./mpc.c:958 DW_TAG_member
+Type: Name: {  mpc_pdata_repeat_t} from /src/mpc/./mpc.c:938 DW_TAG_typedef
+Type: Name: {  n} from /src/mpc/./mpc.c:938 DW_TAG_member
+Type: Name: {  f} from /src/mpc/./mpc.c:938 DW_TAG_member
+Type: Name: {  mpc_fold_t} from /src/mpc/./mpc.h:83 DW_TAG_typedef
+Type: Name: {  x} from /src/mpc/./mpc.c:938 DW_TAG_member
+Type: Name: {  dx} from /src/mpc/./mpc.c:938 DW_TAG_member
+Type: Name: {  and} from /src/mpc/./mpc.c:959 DW_TAG_member
+Type: Name: {  mpc_pdata_and_t} from /src/mpc/./mpc.c:940 DW_TAG_typedef
+Type: Name: {  n} from /src/mpc/./mpc.c:940 DW_TAG_member
+Type: Name: {  f} from /src/mpc/./mpc.c:940 DW_TAG_member
+Type: Name: {  xs} from /src/mpc/./mpc.c:940 DW_TAG_member
+Type: Name: {  dxs} from /src/mpc/./mpc.c:940 DW_TAG_member
+Type: Name: {  or} from /src/mpc/./mpc.c:960 DW_TAG_member
+Type: Name: {  mpc_pdata_or_t} from /src/mpc/./mpc.c:939 DW_TAG_typedef
+Type: Name: {  n} from /src/mpc/./mpc.c:939 DW_TAG_member
+Type: Name: {  xs} from /src/mpc/./mpc.c:939 DW_TAG_member
+Type: Name: {  sepby1} from /src/mpc/./mpc.c:961 DW_TAG_member
+Type: Name: {  mpc_pdata_sepby1} from /src/mpc/./mpc.c:941 DW_TAG_typedef
+Type: Name: {  n} from /src/mpc/./mpc.c:941 DW_TAG_member
+Type: Name: {  f} from /src/mpc/./mpc.c:941 DW_TAG_member
+Type: Name: {  x} from /src/mpc/./mpc.c:941 DW_TAG_member
+Type: Name: {  sep} from /src/mpc/./mpc.c:941 DW_TAG_member
+Type: Name: {  type} from /src/mpc/./mpc.c:967 DW_TAG_member
+Type: Name: {  retained} from /src/mpc/./mpc.c:968 DW_TAG_member
+Type: Name: {  test_t} from /src/mpc/./tests/ptest.c:190 DW_TAG_typedef
+Type: Name: {  func} from /src/mpc/./tests/ptest.c:187 DW_TAG_member
+Type: Name: {  name} from /src/mpc/./tests/ptest.c:188 DW_TAG_member
+Type: Name: {  suite} from /src/mpc/./tests/ptest.c:189 DW_TAG_member
+Type: Name: {  clock_t} from /usr/include/x86_64-linux-gnu/bits/types/clock_t.h:7 DW_TAG_typedef
+Type: Name: {  __clock_t} from /usr/include/x86_64-linux-gnu/bits/types.h:156 DW_TAG_typedef
+Type: Name: {  double} DW_ATE_float
+Type: Name: {  uint8_t} from /usr/include/x86_64-linux-gnu/bits/stdint-uintn.h:24 DW_TAG_typedef
+Type: Name: {  __uint8_t} from /usr/include/x86_64-linux-gnu/bits/types.h:38 DW_TAG_typedef
+Type: Name: {  mpc_result_t} from /src/mpc/./tests/../mpc.h:63 DW_TAG_typedef
+Type: Name: {  error} from /src/mpc/./tests/../mpc.h:61 DW_TAG_member
+Type: Name: {  mpc_err_t} from /src/mpc/./tests/../mpc.h:47 DW_TAG_typedef
+Type: Name: {  state} from /src/mpc/./tests/../mpc.h:41 DW_TAG_member
+Type: Name: {  mpc_state_t} from /src/mpc/./tests/../mpc.h:34 DW_TAG_typedef
+Type: Name: {  pos} from /src/mpc/./tests/../mpc.h:30 DW_TAG_member
+Type: Name: {  row} from /src/mpc/./tests/../mpc.h:31 DW_TAG_member
+Type: Name: {  col} from /src/mpc/./tests/../mpc.h:32 DW_TAG_member
+Type: Name: {  term} from /src/mpc/./tests/../mpc.h:33 DW_TAG_member
+Type: Name: {  expected_num} from /src/mpc/./tests/../mpc.h:42 DW_TAG_member
+Type: Name: {  filename} from /src/mpc/./tests/../mpc.h:43 DW_TAG_member
+Type: Name: {  failure} from /src/mpc/./tests/../mpc.h:44 DW_TAG_member
+Type: Name: {  expected} from /src/mpc/./tests/../mpc.h:45 DW_TAG_member
+Type: Name: {  received} from /src/mpc/./tests/../mpc.h:46 DW_TAG_member
+Type: Name: {  output} from /src/mpc/./tests/../mpc.h:62 DW_TAG_member
+Type: Name: {  mpc_parser_t} from /src/mpc/./tests/../mpc.h:66 DW_TAG_typedef
+Type: Name: {  mpc_parser_t} from /src/mpc/./tests/../mpc.h:65 DW_TAG_structure_type Composite type
+ - Elements: 0
+
+Type: Name: {  mpc_result_t} from /src/mpc/./tests/../mpc.h:63 DW_TAG_typedef
+Type: Name: {  error} from /src/mpc/./tests/../mpc.h:61 DW_TAG_member
+Type: Name: {  mpc_err_t} from /src/mpc/./tests/../mpc.h:47 DW_TAG_typedef
+Type: Name: {  state} from /src/mpc/./tests/../mpc.h:41 DW_TAG_member
+Type: Name: {  mpc_state_t} from /src/mpc/./tests/../mpc.h:34 DW_TAG_typedef
+Type: Name: {  pos} from /src/mpc/./tests/../mpc.h:30 DW_TAG_member
+Type: Name: {  row} from /src/mpc/./tests/../mpc.h:31 DW_TAG_member
+Type: Name: {  col} from /src/mpc/./tests/../mpc.h:32 DW_TAG_member
+Type: Name: {  term} from /src/mpc/./tests/../mpc.h:33 DW_TAG_member
+Type: Name: {  expected_num} from /src/mpc/./tests/../mpc.h:42 DW_TAG_member
+Type: Name: {  filename} from /src/mpc/./tests/../mpc.h:43 DW_TAG_member
+Type: Name: {  failure} from /src/mpc/./tests/../mpc.h:44 DW_TAG_member
+Type: Name: {  expected} from /src/mpc/./tests/../mpc.h:45 DW_TAG_member
+Type: Name: {  received} from /src/mpc/./tests/../mpc.h:46 DW_TAG_member
+Type: Name: {  output} from /src/mpc/./tests/../mpc.h:62 DW_TAG_member
+Type: Name: {  mpc_ast_t} from /src/mpc/./tests/../mpc.h:291 DW_TAG_typedef
+Type: Name: {  mpc_ast_t} from /src/mpc/./tests/../mpc.h:285 DW_TAG_structure_type Composite type
+ - Elements: 5
+ - Elem 0{  tag from /src/mpc/./tests/../mpc.h:286 }
+ - Elem 1{  contents from /src/mpc/./tests/../mpc.h:287 }
+ - Elem 2{  state from /src/mpc/./tests/../mpc.h:288 }
+ - Elem 3{  children_num from /src/mpc/./tests/../mpc.h:289 }
+ - Elem 4{  children from /src/mpc/./tests/../mpc.h:290 }
+
+Type: Name: {  tag} from /src/mpc/./tests/../mpc.h:286 DW_TAG_member
+Type: Name: {  contents} from /src/mpc/./tests/../mpc.h:287 DW_TAG_member
+Type: Name: {  state} from /src/mpc/./tests/../mpc.h:288 DW_TAG_member
+Type: Name: {  mpc_state_t} from /src/mpc/./tests/../mpc.h:34 DW_TAG_typedef
+Type: Name: {  pos} from /src/mpc/./tests/../mpc.h:30 DW_TAG_member
+Type: Name: {  row} from /src/mpc/./tests/../mpc.h:31 DW_TAG_member
+Type: Name: {  col} from /src/mpc/./tests/../mpc.h:32 DW_TAG_member
+Type: Name: {  term} from /src/mpc/./tests/../mpc.h:33 DW_TAG_member
+Type: Name: {  children_num} from /src/mpc/./tests/../mpc.h:289 DW_TAG_member
+Type: Name: {  children} from /src/mpc/./tests/../mpc.h:290 DW_TAG_member
+Type: Name: {  mpc_err_t} from /src/mpc/./tests/../mpc.h:47 DW_TAG_typedef
+Type: Name: {  state} from /src/mpc/./tests/../mpc.h:41 DW_TAG_member
+Type: Name: {  expected_num} from /src/mpc/./tests/../mpc.h:42 DW_TAG_member
+Type: Name: {  filename} from /src/mpc/./tests/../mpc.h:43 DW_TAG_member
+Type: Name: {  failure} from /src/mpc/./tests/../mpc.h:44 DW_TAG_member
+Type: Name: {  expected} from /src/mpc/./tests/../mpc.h:45 DW_TAG_member
+Type: Name: {  received} from /src/mpc/./tests/../mpc.h:46 DW_TAG_member
+Type: Name: {  mpc_result_t} from /src/mpc/./tests/../mpc.h:63 DW_TAG_typedef
+Type: Name: {  error} from /src/mpc/./tests/../mpc.h:61 DW_TAG_member
+Type: Name: {  output} from /src/mpc/./tests/../mpc.h:62 DW_TAG_member
+Type: Name: {  FILE} from /usr/include/x86_64-linux-gnu/bits/types/FILE.h:7 DW_TAG_typedef
+Type: Name: {  _IO_FILE} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:49 DW_TAG_structure_type Composite type
+ - Elements: 29
+ - Elem 0{  _flags from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:51 }
+ - Elem 1{  _IO_read_ptr from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:54 }
+ - Elem 2{  _IO_read_end from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:55 }
+ - Elem 3{  _IO_read_base from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:56 }
+ - Elem 4{  _IO_write_base from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:57 }
+ - Elem 5{  _IO_write_ptr from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:58 }
+ - Elem 6{  _IO_write_end from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:59 }
+ - Elem 7{  _IO_buf_base from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:60 }
+ - Elem 8{  _IO_buf_end from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:61 }
+ - Elem 9{  _IO_save_base from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:64 }
+ - Elem 10{  _IO_backup_base from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:65 }
+ - Elem 11{  _IO_save_end from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:66 }
+ - Elem 12{  _markers from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:68 }
+ - Elem 13{  _chain from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:70 }
+ - Elem 14{  _fileno from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:72 }
+ - Elem 15{  _flags2 from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:73 }
+ - Elem 16{  _old_offset from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:74 }
+ - Elem 17{  _cur_column from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:77 }
+ - Elem 18{  _vtable_offset from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:78 }
+ - Elem 19{  _shortbuf from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:79 }
+ - Elem 20{  _lock from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:81 }
+ - Elem 21{  _offset from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:89 }
+ - Elem 22{  _codecvt from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:91 }
+ - Elem 23{  _wide_data from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:92 }
+ - Elem 24{  _freeres_list from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:93 }
+ - Elem 25{  _freeres_buf from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:94 }
+ - Elem 26{  __pad5 from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:95 }
+ - Elem 27{  _mode from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:96 }
+ - Elem 28{  _unused2 from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:98 }
+
+Type: Name: {  _flags} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:51 DW_TAG_member
+Type: Name: {  _IO_read_ptr} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:54 DW_TAG_member
+Type: Name: {  _IO_read_end} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:55 DW_TAG_member
+Type: Name: {  _IO_read_base} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:56 DW_TAG_member
+Type: Name: {  _IO_write_base} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:57 DW_TAG_member
+Type: Name: {  _IO_write_ptr} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:58 DW_TAG_member
+Type: Name: {  _IO_write_end} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:59 DW_TAG_member
+Type: Name: {  _IO_buf_base} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:60 DW_TAG_member
+Type: Name: {  _IO_buf_end} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:61 DW_TAG_member
+Type: Name: {  _IO_save_base} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:64 DW_TAG_member
+Type: Name: {  _IO_backup_base} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:65 DW_TAG_member
+Type: Name: {  _IO_save_end} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:66 DW_TAG_member
+Type: Name: {  _markers} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:68 DW_TAG_member
+Type: Name: {  _IO_marker} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:36 DW_TAG_structure_type Composite type
+ - Elements: 0
+
+Type: Name: {  _chain} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:70 DW_TAG_member
+Type: Name: {  _fileno} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:72 DW_TAG_member
+Type: Name: {  _flags2} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:73 DW_TAG_member
+Type: Name: {  _old_offset} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:74 DW_TAG_member
+Type: Name: {  __off_t} from /usr/include/x86_64-linux-gnu/bits/types.h:152 DW_TAG_typedef
+Type: Name: {  _cur_column} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:77 DW_TAG_member
+Type: Name: {  _vtable_offset} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:78 DW_TAG_member
+Type: Name: {  signed char} DW_ATE_signed_char
+Type: Name: {  _shortbuf} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:79 DW_TAG_member
+Type: Name: {  _lock} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:81 DW_TAG_member
+Type: Name: {  _IO_lock_t} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:43 DW_TAG_typedef
+Type: Name: {  _offset} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:89 DW_TAG_member
+Type: Name: {  __off64_t} from /usr/include/x86_64-linux-gnu/bits/types.h:153 DW_TAG_typedef
+Type: Name: {  _codecvt} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:91 DW_TAG_member
+Type: Name: {  _IO_codecvt} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:37 DW_TAG_structure_type Composite type
+ - Elements: 0
+
+Type: Name: {  _wide_data} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:92 DW_TAG_member
+Type: Name: {  _IO_wide_data} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:38 DW_TAG_structure_type Composite type
+ - Elements: 0
+
+Type: Name: {  _freeres_list} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:93 DW_TAG_member
+Type: Name: {  _freeres_buf} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:94 DW_TAG_member
+Type: Name: {  __pad5} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:95 DW_TAG_member
+Type: Name: {  _mode} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:96 DW_TAG_member
+Type: Name: {  _unused2} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:98 DW_TAG_member
+Type: Name: {  mpca_stmt_t} from /src/mpc/./mpc.c:3658 DW_TAG_typedef
+Type: Name: {  ident} from /src/mpc/./mpc.c:3655 DW_TAG_member
+Type: Name: {  name} from /src/mpc/./mpc.c:3656 DW_TAG_member
+Type: Name: {  grammar} from /src/mpc/./mpc.c:3657 DW_TAG_member
+Type: Name: {  mpca_grammar_st_t} from /src/mpc/./mpc.c:3433 DW_TAG_typedef
+Type: Name: {  va} from /src/mpc/./mpc.c:3429 DW_TAG_member
+Type: Name: {  va_list} from /usr/local/lib/clang/18/include/__stdarg_va_list.h:12 DW_TAG_typedef
+Type: Name: {  __builtin_va_list} from /src/mpc/mpc.c DW_TAG_typedef
+Type: Name: {  __va_list_tag} DW_TAG_structure_type Composite type
+ - Elements: 4
+ - Elem 0{  gp_offset from /src/mpc/mpc.c:1644 }
+ - Elem 1{  fp_offset from /src/mpc/mpc.c:1644 }
+ - Elem 2{  overflow_arg_area from /src/mpc/mpc.c:1644 }
+ - Elem 3{  reg_save_area from /src/mpc/mpc.c:1644 }
+
+Type: Name: {  gp_offset} from /src/mpc/mpc.c:1644 DW_TAG_member
+Type: Name: {  fp_offset} from /src/mpc/mpc.c:1644 DW_TAG_member
+Type: Name: {  overflow_arg_area} from /src/mpc/mpc.c:1644 DW_TAG_member
+Type: Name: {  reg_save_area} from /src/mpc/mpc.c:1644 DW_TAG_member
+Type: Name: {  parsers_num} from /src/mpc/./mpc.c:3430 DW_TAG_member
+Type: Name: {  parsers} from /src/mpc/./mpc.c:3431 DW_TAG_member
+Type: Name: {  flags} from /src/mpc/./mpc.c:3432 DW_TAG_member
+Type: Name: {  mpc_input_t} from /src/mpc/./mpc.c:101 DW_TAG_typedef
+Type: Name: {  type} from /src/mpc/./mpc.c:80 DW_TAG_member
+Type: Name: {  filename} from /src/mpc/./mpc.c:81 DW_TAG_member
+Type: Name: {  state} from /src/mpc/./mpc.c:82 DW_TAG_member
+Type: Name: {  string} from /src/mpc/./mpc.c:84 DW_TAG_member
+Type: Name: {  buffer} from /src/mpc/./mpc.c:85 DW_TAG_member
+Type: Name: {  file} from /src/mpc/./mpc.c:86 DW_TAG_member
+Type: Name: {  FILE} from /usr/include/x86_64-linux-gnu/bits/types/FILE.h:7 DW_TAG_typedef
+Type: Name: {  _IO_FILE} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:49 DW_TAG_structure_type Composite type
+ - Elements: 29
+ - Elem 0{  _flags from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:51 }
+ - Elem 1{  _IO_read_ptr from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:54 }
+ - Elem 2{  _IO_read_end from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:55 }
+ - Elem 3{  _IO_read_base from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:56 }
+ - Elem 4{  _IO_write_base from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:57 }
+ - Elem 5{  _IO_write_ptr from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:58 }
+ - Elem 6{  _IO_write_end from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:59 }
+ - Elem 7{  _IO_buf_base from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:60 }
+ - Elem 8{  _IO_buf_end from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:61 }
+ - Elem 9{  _IO_save_base from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:64 }
+ - Elem 10{  _IO_backup_base from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:65 }
+ - Elem 11{  _IO_save_end from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:66 }
+ - Elem 12{  _markers from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:68 }
+ - Elem 13{  _chain from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:70 }
+ - Elem 14{  _fileno from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:72 }
+ - Elem 15{  _flags2 from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:73 }
+ - Elem 16{  _old_offset from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:74 }
+ - Elem 17{  _cur_column from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:77 }
+ - Elem 18{  _vtable_offset from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:78 }
+ - Elem 19{  _shortbuf from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:79 }
+ - Elem 20{  _lock from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:81 }
+ - Elem 21{  _offset from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:89 }
+ - Elem 22{  _codecvt from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:91 }
+ - Elem 23{  _wide_data from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:92 }
+ - Elem 24{  _freeres_list from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:93 }
+ - Elem 25{  _freeres_buf from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:94 }
+ - Elem 26{  __pad5 from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:95 }
+ - Elem 27{  _mode from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:96 }
+ - Elem 28{  _unused2 from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:98 }
+
+Type: Name: {  _flags} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:51 DW_TAG_member
+Type: Name: {  _IO_read_ptr} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:54 DW_TAG_member
+Type: Name: {  _IO_read_end} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:55 DW_TAG_member
+Type: Name: {  _IO_read_base} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:56 DW_TAG_member
+Type: Name: {  _IO_write_base} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:57 DW_TAG_member
+Type: Name: {  _IO_write_ptr} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:58 DW_TAG_member
+Type: Name: {  _IO_write_end} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:59 DW_TAG_member
+Type: Name: {  _IO_buf_base} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:60 DW_TAG_member
+Type: Name: {  _IO_buf_end} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:61 DW_TAG_member
+Type: Name: {  _IO_save_base} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:64 DW_TAG_member
+Type: Name: {  _IO_backup_base} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:65 DW_TAG_member
+Type: Name: {  _IO_save_end} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:66 DW_TAG_member
+Type: Name: {  _markers} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:68 DW_TAG_member
+Type: Name: {  _chain} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:70 DW_TAG_member
+Type: Name: {  _fileno} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:72 DW_TAG_member
+Type: Name: {  _flags2} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:73 DW_TAG_member
+Type: Name: {  _old_offset} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:74 DW_TAG_member
+Type: Name: {  _cur_column} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:77 DW_TAG_member
+Type: Name: {  _vtable_offset} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:78 DW_TAG_member
+Type: Name: {  _shortbuf} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:79 DW_TAG_member
+Type: Name: {  _lock} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:81 DW_TAG_member
+Type: Name: {  _offset} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:89 DW_TAG_member
+Type: Name: {  _codecvt} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:91 DW_TAG_member
+Type: Name: {  _wide_data} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:92 DW_TAG_member
+Type: Name: {  _freeres_list} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:93 DW_TAG_member
+Type: Name: {  _freeres_buf} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:94 DW_TAG_member
+Type: Name: {  __pad5} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:95 DW_TAG_member
+Type: Name: {  _mode} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:96 DW_TAG_member
+Type: Name: {  _unused2} from /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:98 DW_TAG_member
+Type: Name: {  suppress} from /src/mpc/./mpc.c:88 DW_TAG_member
+Type: Name: {  backtrack} from /src/mpc/./mpc.c:89 DW_TAG_member
+Type: Name: {  marks_slots} from /src/mpc/./mpc.c:90 DW_TAG_member
+Type: Name: {  marks_num} from /src/mpc/./mpc.c:91 DW_TAG_member
+Type: Name: {  marks} from /src/mpc/./mpc.c:92 DW_TAG_member
+Type: Name: {  lasts} from /src/mpc/./mpc.c:94 DW_TAG_member
+Type: Name: {  last} from /src/mpc/./mpc.c:95 DW_TAG_member
+Type: Name: {  mem_index} from /src/mpc/./mpc.c:97 DW_TAG_member
+Type: Name: {  mem_full} from /src/mpc/./mpc.c:98 DW_TAG_member
+Type: Name: {  mem} from /src/mpc/./mpc.c:99 DW_TAG_member
+Type: Name: {  mpc_mem_t} from /src/mpc/./mpc.c:76 DW_TAG_typedef
+Type: Name: {  mem} from /src/mpc/./mpc.c:75 DW_TAG_member
+Type: Name: {  mpc_err_t} from /src/mpc/./mpc.h:47 DW_TAG_typedef
+Type: Name: {  state} from /src/mpc/./mpc.h:41 DW_TAG_member
+Type: Name: {  expected_num} from /src/mpc/./mpc.h:42 DW_TAG_member
+Type: Name: {  filename} from /src/mpc/./mpc.h:43 DW_TAG_member
+Type: Name: {  failure} from /src/mpc/./mpc.h:44 DW_TAG_member
+Type: Name: {  expected} from /src/mpc/./mpc.h:45 DW_TAG_member
+Type: Name: {  received} from /src/mpc/./mpc.h:46 DW_TAG_member
+Type: Name: {  mpc_result_t} from /src/mpc/./mpc.h:63 DW_TAG_typedef
+Type: Name: {  error} from /src/mpc/./mpc.h:61 DW_TAG_member
+Type: Name: {  output} from /src/mpc/./mpc.h:62 DW_TAG_member
+Type: Name: {  mpc_ast_trav_t} from /src/mpc/./mpc.h:321 DW_TAG_typedef
+Type: Name: {  mpc_ast_trav_t} from /src/mpc/./mpc.h:316 DW_TAG_structure_type Composite type
+ - Elements: 4
+ - Elem 0{  curr_node from /src/mpc/./mpc.h:317 }
+ - Elem 1{  parent from /src/mpc/./mpc.h:318 }
+ - Elem 2{  curr_child from /src/mpc/./mpc.h:319 }
+ - Elem 3{  order from /src/mpc/./mpc.h:320 }
+
+Type: Name: {  curr_node} from /src/mpc/./mpc.h:317 DW_TAG_member
+Type: Name: {  parent} from /src/mpc/./mpc.h:318 DW_TAG_member
+Type: Name: {  curr_child} from /src/mpc/./mpc.h:319 DW_TAG_member
+Type: Name: {  order} from /src/mpc/./mpc.h:320 DW_TAG_member
+Type: Name: {  mpc_ast_trav_order_t} from /src/mpc/./mpc.h:314 DW_TAG_typedef
+Type: Name: {  float} DW_ATE_float

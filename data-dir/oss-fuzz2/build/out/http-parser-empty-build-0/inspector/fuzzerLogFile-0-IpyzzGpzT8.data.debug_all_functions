@@ -1,0 +1,94 @@
+---
+- name:            LLVMFuzzerTestOneInput
+  file_location:   '/src/fuzzers/empty-fuzzer.c:5'
+  type_arguments:  [ 94323380848120, 94323382926448, 94323380847760 ]
+  raw_name:        LLVMFuzzerTestOneInput
+  is_public:       0
+  is_private:      0
+- name:            http_parse_host_char
+  file_location:   '/src/http-parser/./http_parser/http_parser.c:1939'
+  type_arguments:  [ 94323380955040, 94323380955040, 94323380831936 ]
+  raw_name:        http_parse_host_char
+  is_public:       0
+  is_private:      0
+- name:            http_parser_version
+  file_location:   '/src/http-parser/./http_parser/http_parser.c:2195'
+  type_arguments:  [ 94323380955576 ]
+  raw_name:        http_parser_version
+  is_public:       0
+  is_private:      0
+- name:            http_body_is_final
+  file_location:   '/src/http-parser/./http_parser/http_parser.c:2190'
+  type_arguments:  [ 94323380848120, 94323381062224 ]
+  raw_name:        http_body_is_final
+  is_public:       0
+  is_private:      0
+- name:            http_parser_pause
+  file_location:   '/src/http-parser/./http_parser/http_parser.c:2176'
+  type_arguments:  [ 0, 94323380848016, 94323380848120 ]
+  raw_name:        http_parser_pause
+  is_public:       0
+  is_private:      0
+- name:            http_parse_host
+  file_location:   '/src/http-parser/./http_parser/http_parser.c:2004'
+  type_arguments:  [ 94323380848120, 94323380832064, 94323382406400, 94323380848120 ]
+  raw_name:        http_parse_host
+  is_public:       0
+  is_private:      0
+- name:            http_parser_parse_url
+  file_location:   '/src/http-parser/./http_parser/http_parser.c:2077'
+  type_arguments:  [ 94323380848120, 94323380832064, 94323380847760, 94323380848120, 
+                     94323382406400 ]
+  raw_name:        http_parser_parse_url
+  is_public:       0
+  is_private:      0
+- name:            parse_url_char
+  file_location:   '/src/http-parser/./http_parser/http_parser.c:425'
+  type_arguments:  [ 94323381889280, 94323381889280, 94323380831936 ]
+  raw_name:        parse_url_char
+  is_public:       0
+  is_private:      0
+- name:            http_errno_description
+  file_location:   '/src/http-parser/./http_parser/http_parser.c:1933'
+  type_arguments:  [ 94323380832064, 94323381884304 ]
+  raw_name:        http_errno_description
+  is_public:       0
+  is_private:      0
+- name:            http_errno_name
+  file_location:   '/src/http-parser/./http_parser/http_parser.c:1927'
+  type_arguments:  [ 94323380832064, 94323381884304 ]
+  raw_name:        http_errno_name
+  is_public:       0
+  is_private:      0
+- name:            http_parser_init
+  file_location:   '/src/http-parser/./http_parser/http_parser.c:1916'
+  type_arguments:  [ 0, 94323380848016, 94323381889728 ]
+  raw_name:        http_parser_init
+  is_public:       0
+  is_private:      0
+- name:            http_method_str
+  file_location:   '/src/http-parser/./http_parser/http_parser.c:1909'
+  type_arguments:  [ 94323380832064, 94323380940272 ]
+  raw_name:        http_method_str
+  is_public:       0
+  is_private:      0
+- name:            http_message_needs_eof
+  file_location:   '/src/http-parser/./http_parser/http_parser.c:1867'
+  type_arguments:  [ 94323380848120, 94323382405920 ]
+  raw_name:        http_message_needs_eof
+  is_public:       0
+  is_private:      0
+- name:            http_should_keep_alive
+  file_location:   '/src/http-parser/./http_parser/http_parser.c:1890'
+  type_arguments:  [ 94323380848120, 94323382405920 ]
+  raw_name:        http_should_keep_alive
+  is_public:       0
+  is_private:      0
+- name:            http_parser_execute
+  file_location:   '/src/http-parser/./http_parser/http_parser.c:572'
+  type_arguments:  [ 94323380847760, 94323380848016, 94323383410432, 94323380832064, 
+                     94323380847760 ]
+  raw_name:        http_parser_execute
+  is_public:       0
+  is_private:      0
+...

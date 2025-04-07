@@ -1,0 +1,303 @@
+---
+- name:            LLVMFuzzerTestOneInput
+  file_location:   '/src/fuzzers/empty-fuzzer.c:5'
+  type_arguments:  [ 93941419107688, 93941420809552, 93941420567472 ]
+  raw_name:        LLVMFuzzerTestOneInput
+  is_public:       0
+  is_private:      0
+- name:            read_digits
+  file_location:   '/src/pdjson/pdjson.c:534'
+  type_arguments:  [ 93941419107688, 93941419107984 ]
+  raw_name:        read_digits
+  is_public:       0
+  is_private:      0
+- name:            is_digit
+  file_location:   '/src/pdjson/pdjson.c:528'
+  type_arguments:  [ 93941419107688, 93941419107688 ]
+  raw_name:        is_digit
+  is_public:       0
+  is_private:      0
+- name:            pushchar
+  file_location:   '/src/pdjson/pdjson.c:164'
+  type_arguments:  [ 93941419107688, 93941419107984, 93941419107688 ]
+  raw_name:        pushchar
+  is_public:       0
+  is_private:      0
+- name:            is_legal_utf8
+  file_location:   '/src/pdjson/pdjson.c:417'
+  type_arguments:  [ 93941419107688, 93941421516384, 93941419107688 ]
+  raw_name:        is_legal_utf8
+  is_public:       0
+  is_private:      0
+- name:            utf8_seq_length
+  file_location:   '/src/pdjson/pdjson.c:377'
+  type_arguments:  [ 93941419107688, 93941419138824 ]
+  raw_name:        utf8_seq_length
+  is_public:       0
+  is_private:      0
+- name:            hexchar
+  file_location:   '/src/pdjson/pdjson.c:222'
+  type_arguments:  [ 93941419107688, 93941419107688 ]
+  raw_name:        hexchar
+  is_public:       0
+  is_private:      0
+- name:            encode_utf8
+  file_location:   '/src/pdjson/pdjson.c:196'
+  type_arguments:  [ 93941419107688, 93941419107984, 93941420731672 ]
+  raw_name:        encode_utf8
+  is_public:       0
+  is_private:      0
+- name:            read_unicode_cp
+  file_location:   '/src/pdjson/pdjson.c:253'
+  type_arguments:  [ 93941420569208, 93941419107984 ]
+  raw_name:        read_unicode_cp
+  is_public:       0
+  is_private:      0
+- name:            read_unicode
+  file_location:   '/src/pdjson/pdjson.c:278'
+  type_arguments:  [ 93941419107688, 93941419107984 ]
+  raw_name:        read_unicode
+  is_public:       0
+  is_private:      0
+- name:            char_needs_escaping
+  file_location:   '/src/pdjson/pdjson.c:367'
+  type_arguments:  [ 93941419107688, 93941419107688 ]
+  raw_name:        char_needs_escaping
+  is_public:       0
+  is_private:      0
+- name:            read_utf8
+  file_location:   '/src/pdjson/pdjson.c:462'
+  type_arguments:  [ 93941419107688, 93941419107984, 93941419107688 ]
+  raw_name:        read_utf8
+  is_public:       0
+  is_private:      0
+- name:            read_escaped
+  file_location:   '/src/pdjson/pdjson.c:332'
+  type_arguments:  [ 93941419107688, 93941419107984 ]
+  raw_name:        read_escaped
+  is_public:       0
+  is_private:      0
+- name:            read_number
+  file_location:   '/src/pdjson/pdjson.c:558'
+  type_arguments:  [ 93941420567344, 93941419107984, 93941419107688 ]
+  raw_name:        read_number
+  is_public:       0
+  is_private:      0
+- name:            init_string
+  file_location:   '/src/pdjson/pdjson.c:181'
+  type_arguments:  [ 93941419107688, 93941419107984 ]
+  raw_name:        init_string
+  is_public:       0
+  is_private:      0
+- name:            is_match
+  file_location:   '/src/pdjson/pdjson.c:148'
+  type_arguments:  [ 93941420567344, 93941419107984, 93941420568384, 93941420567344 ]
+  raw_name:        is_match
+  is_public:       0
+  is_private:      0
+- name:            read_string
+  file_location:   '/src/pdjson/pdjson.c:494'
+  type_arguments:  [ 93941420567344, 93941419107984 ]
+  raw_name:        read_string
+  is_public:       0
+  is_private:      0
+- name:            push
+  file_location:   '/src/pdjson/pdjson.c:52'
+  type_arguments:  [ 93941420567344, 93941419107984, 93941420567344 ]
+  raw_name:        push
+  is_public:       0
+  is_private:      0
+- name:            json_close
+  file_location:   '/src/pdjson/pdjson.c:988'
+  type_arguments:  [ 0, 93941419107984 ]
+  raw_name:        json_close
+  is_public:       0
+  is_private:      0
+- name:            json_set_streaming
+  file_location:   '/src/pdjson/pdjson.c:980'
+  type_arguments:  [ 0, 93941419107984, 93941419107592 ]
+  raw_name:        json_set_streaming
+  is_public:       0
+  is_private:      0
+- name:            json_set_allocator
+  file_location:   '/src/pdjson/pdjson.c:975'
+  type_arguments:  [ 0, 93941419107984, 93941423071568 ]
+  raw_name:        json_set_allocator
+  is_public:       0
+  is_private:      0
+- name:            user_peek
+  file_location:   '/src/pdjson/pdjson.c:960'
+  type_arguments:  [ 93941419107688, 93941419112032 ]
+  raw_name:        user_peek
+  is_public:       0
+  is_private:      0
+- name:            user_get
+  file_location:   '/src/pdjson/pdjson.c:952'
+  type_arguments:  [ 93941419107688, 93941419112032 ]
+  raw_name:        user_get
+  is_public:       0
+  is_private:      0
+- name:            json_open_user
+  file_location:   '/src/pdjson/pdjson.c:965'
+  type_arguments:  [ 0, 93941419107984, 93941419033376, 93941419033376, 
+                     93941420568128 ]
+  raw_name:        json_open_user
+  is_public:       0
+  is_private:      0
+- name:            init
+  file_location:   '/src/pdjson/pdjson.c:125'
+  type_arguments:  [ 0, 93941419107984 ]
+  raw_name:        init
+  is_public:       0
+  is_private:      0
+- name:            stream_peek
+  file_location:   '/src/pdjson/pdjson.c:118'
+  type_arguments:  [ 93941419107688, 93941419112032 ]
+  raw_name:        stream_peek
+  is_public:       0
+  is_private:      0
+- name:            stream_get
+  file_location:   '/src/pdjson/pdjson.c:110'
+  type_arguments:  [ 93941419107688, 93941419112032 ]
+  raw_name:        stream_get
+  is_public:       0
+  is_private:      0
+- name:            json_open_stream
+  file_location:   '/src/pdjson/pdjson.c:944'
+  type_arguments:  [ 0, 93941419107984, 93941419034384 ]
+  raw_name:        json_open_stream
+  is_public:       0
+  is_private:      0
+- name:            json_open_string
+  file_location:   '/src/pdjson/pdjson.c:939'
+  type_arguments:  [ 0, 93941419107984, 93941420568384 ]
+  raw_name:        json_open_string
+  is_public:       0
+  is_private:      0
+- name:            json_open_buffer
+  file_location:   '/src/pdjson/pdjson.c:930'
+  type_arguments:  [ 0, 93941419107984, 93941420710544, 93941420567472 ]
+  raw_name:        json_open_buffer
+  is_public:       0
+  is_private:      0
+- name:            buffer_get
+  file_location:   '/src/pdjson/pdjson.c:102'
+  type_arguments:  [ 93941419107688, 93941419112032 ]
+  raw_name:        buffer_get
+  is_public:       0
+  is_private:      0
+- name:            buffer_peek
+  file_location:   '/src/pdjson/pdjson.c:94'
+  type_arguments:  [ 93941419107688, 93941419112032 ]
+  raw_name:        buffer_peek
+  is_public:       0
+  is_private:      0
+- name:            json_source_peek
+  file_location:   '/src/pdjson/pdjson.c:925'
+  type_arguments:  [ 93941419107688, 93941419107984 ]
+  raw_name:        json_source_peek
+  is_public:       0
+  is_private:      0
+- name:            json_source_get
+  file_location:   '/src/pdjson/pdjson.c:917'
+  type_arguments:  [ 93941419107688, 93941419107984 ]
+  raw_name:        json_source_get
+  is_public:       0
+  is_private:      0
+- name:            json_get_context
+  file_location:   '/src/pdjson/pdjson.c:906'
+  type_arguments:  [ 93941420567344, 93941419107984, 93941420905568 ]
+  raw_name:        json_get_context
+  is_public:       0
+  is_private:      0
+- name:            json_get_depth
+  file_location:   '/src/pdjson/pdjson.c:892'
+  type_arguments:  [ 93941420567472, 93941419107984 ]
+  raw_name:        json_get_depth
+  is_public:       0
+  is_private:      0
+- name:            json_get_position
+  file_location:   '/src/pdjson/pdjson.c:887'
+  type_arguments:  [ 93941420567472, 93941419107984 ]
+  raw_name:        json_get_position
+  is_public:       0
+  is_private:      0
+- name:            json_get_lineno
+  file_location:   '/src/pdjson/pdjson.c:882'
+  type_arguments:  [ 93941420567472, 93941419107984 ]
+  raw_name:        json_get_lineno
+  is_public:       0
+  is_private:      0
+- name:            json_get_error
+  file_location:   '/src/pdjson/pdjson.c:877'
+  type_arguments:  [ 93941420568384, 93941419107984 ]
+  raw_name:        json_get_error
+  is_public:       0
+  is_private:      0
+- name:            json_get_number
+  file_location:   '/src/pdjson/pdjson.c:871'
+  type_arguments:  [ 93941422768472, 93941419107984 ]
+  raw_name:        json_get_number
+  is_public:       0
+  is_private:      0
+- name:            json_get_string
+  file_location:   '/src/pdjson/pdjson.c:861'
+  type_arguments:  [ 93941420568384, 93941419107984, 93941420905568 ]
+  raw_name:        json_get_string
+  is_public:       0
+  is_private:      0
+- name:            json_skip_until
+  file_location:   '/src/pdjson/pdjson.c:846'
+  type_arguments:  [ 93941420567344, 93941419107984, 93941420567344 ]
+  raw_name:        json_skip_until
+  is_public:       0
+  is_private:      0
+- name:            json_skip
+  file_location:   '/src/pdjson/pdjson.c:819'
+  type_arguments:  [ 93941420567344, 93941419107984 ]
+  raw_name:        json_skip
+  is_public:       0
+  is_private:      0
+- name:            json_next
+  file_location:   '/src/pdjson/pdjson.c:701'
+  type_arguments:  [ 93941420567344, 93941419107984 ]
+  raw_name:        json_next
+  is_public:       0
+  is_private:      0
+- name:            json_isspace
+  file_location:   '/src/pdjson/pdjson.c:628'
+  type_arguments:  [ 93941419107592, 93941419107688 ]
+  raw_name:        json_isspace
+  is_public:       0
+  is_private:      0
+- name:            next
+  file_location:   '/src/pdjson/pdjson.c:642'
+  type_arguments:  [ 93941419107688, 93941419107984 ]
+  raw_name:        next
+  is_public:       0
+  is_private:      0
+- name:            read_value
+  file_location:   '/src/pdjson/pdjson.c:652'
+  type_arguments:  [ 93941420567344, 93941419107984, 93941419107688 ]
+  raw_name:        read_value
+  is_public:       0
+  is_private:      0
+- name:            pop
+  file_location:   '/src/pdjson/pdjson.c:84'
+  type_arguments:  [ 93941420567344, 93941419107984, 93941419107688, 93941420567344 ]
+  raw_name:        pop
+  is_public:       0
+  is_private:      0
+- name:            json_reset
+  file_location:   '/src/pdjson/pdjson.c:811'
+  type_arguments:  [ 0, 93941419107984 ]
+  raw_name:        json_reset
+  is_public:       0
+  is_private:      0
+- name:            json_peek
+  file_location:   '/src/pdjson/pdjson.c:691'
+  type_arguments:  [ 93941420567344, 93941419107984 ]
+  raw_name:        json_peek
+  is_public:       0
+  is_private:      0
+...

@@ -1,0 +1,47 @@
+---
+Fuzzer filename: ''
+All functions:
+  Function list name: All functions
+  Elements:
+    - functionName:    main
+      functionSourceFile: '/src/lorawan-parser/conftest.c'
+      linkageType:     externalLinkage
+      functionLinenumber: 68
+      functionLinenumberEnd: 69
+      functionDepth:   0
+      returnType:      int
+      argCount:        0
+      argTypes:        []
+      constantsTouched: []
+      argNames:        []
+      BBCount:         3
+      ICount:          15
+      EdgeCount:       3
+      CyclomaticComplexity: 2
+      functionsReached:
+        - memset
+      functionUses:    0
+      BranchProfiles:  []
+      Callsites:
+        - Src:             'conftest.c:69,8'
+          Dst:             memset
+    - functionName:    memset
+      functionSourceFile: ''
+      linkageType:     externalLinkage
+      functionLinenumber: -1
+      functionLinenumberEnd: 0
+      functionDepth:   0
+      returnType:      char
+      argCount:        0
+      argTypes:        []
+      constantsTouched: []
+      argNames:        []
+      BBCount:         0
+      ICount:          0
+      EdgeCount:       0
+      CyclomaticComplexity: 2
+      functionsReached: []
+      functionUses:    1
+      BranchProfiles:  []
+      Callsites:       []
+...

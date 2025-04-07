@@ -1,0 +1,2021 @@
+---
+- name:            LLVMFuzzerTestOneInput
+  file_location:   '/src/fuzzers/empty-fuzzer.c:5'
+  type_arguments:  [ 94022578529464, 94022583708752, 94022579708736 ]
+  raw_name:        LLVMFuzzerTestOneInput
+  is_public:       0
+  is_private:      0
+- name:            suite_combinators
+  file_location:   '/src/mpc/./tests/combinators.c:84'
+  type_arguments:  [ 0 ]
+  raw_name:        suite_combinators
+  is_public:       0
+  is_private:      0
+- name:            test_check
+  file_location:   '/src/mpc/./tests/combinators.c:12'
+  type_arguments:  [ 0 ]
+  raw_name:        test_check
+  is_public:       0
+  is_private:      0
+- name:            test_check_with
+  file_location:   '/src/mpc/./tests/combinators.c:30'
+  type_arguments:  [ 0 ]
+  raw_name:        test_check_with
+  is_public:       0
+  is_private:      0
+- name:            test_checkf
+  file_location:   '/src/mpc/./tests/combinators.c:48'
+  type_arguments:  [ 0 ]
+  raw_name:        test_checkf
+  is_public:       0
+  is_private:      0
+- name:            test_check_withf
+  file_location:   '/src/mpc/./tests/combinators.c:66'
+  type_arguments:  [ 0 ]
+  raw_name:        test_check_withf
+  is_public:       0
+  is_private:      0
+- name:            check_is
+  file_location:   '/src/mpc/./tests/combinators.c:8'
+  type_arguments:  [ 94022578529464, 94022578317312, 94022576423376 ]
+  raw_name:        check_is
+  is_public:       0
+  is_private:      0
+- name:            check_is_a
+  file_location:   '/src/mpc/./tests/combinators.c:4'
+  type_arguments:  [ 94022578529464, 94022578317312 ]
+  raw_name:        check_is_a
+  is_public:       0
+  is_private:      0
+- name:            suite_core
+  file_location:   '/src/mpc/./tests/core.c:275'
+  type_arguments:  [ 0 ]
+  raw_name:        suite_core
+  is_public:       0
+  is_private:      0
+- name:            test_ident
+  file_location:   '/src/mpc/./tests/core.c:17'
+  type_arguments:  [ 0 ]
+  raw_name:        test_ident
+  is_public:       0
+  is_private:      0
+- name:            test_maths
+  file_location:   '/src/mpc/./tests/core.c:60'
+  type_arguments:  [ 0 ]
+  raw_name:        test_maths
+  is_public:       0
+  is_private:      0
+- name:            test_strip
+  file_location:   '/src/mpc/./tests/core.c:97'
+  type_arguments:  [ 0 ]
+  raw_name:        test_strip
+  is_public:       0
+  is_private:      0
+- name:            test_repeat
+  file_location:   '/src/mpc/./tests/core.c:113'
+  type_arguments:  [ 0 ]
+  raw_name:        test_repeat
+  is_public:       0
+  is_private:      0
+- name:            test_copy
+  file_location:   '/src/mpc/./tests/core.c:142'
+  type_arguments:  [ 0 ]
+  raw_name:        test_copy
+  is_public:       0
+  is_private:      0
+- name:            test_reader
+  file_location:   '/src/mpc/./tests/core.c:187'
+  type_arguments:  [ 0 ]
+  raw_name:        test_reader
+  is_public:       0
+  is_private:      0
+- name:            test_tokens
+  file_location:   '/src/mpc/./tests/core.c:221'
+  type_arguments:  [ 0 ]
+  raw_name:        test_tokens
+  is_public:       0
+  is_private:      0
+- name:            test_eoi
+  file_location:   '/src/mpc/./tests/core.c:239'
+  type_arguments:  [ 0 ]
+  raw_name:        test_eoi
+  is_public:       0
+  is_private:      0
+- name:            test_sepby
+  file_location:   '/src/mpc/./tests/core.c:250'
+  type_arguments:  [ 0 ]
+  raw_name:        test_sepby
+  is_public:       0
+  is_private:      0
+- name:            streq
+  file_location:   '/src/mpc/./tests/core.c:9'
+  type_arguments:  [ 94022578529464, 94022578121056, 94022578121056 ]
+  raw_name:        streq
+  is_public:       0
+  is_private:      0
+- name:            strprint
+  file_location:   '/src/mpc/./tests/core.c:10'
+  type_arguments:  [ 0, 94022578121056 ]
+  raw_name:        strprint
+  is_public:       0
+  is_private:      0
+- name:            fold_vals
+  file_location:   '/src/mpc/./tests/core.c:11'
+  type_arguments:  [ 94022578207168, 94022578529464, 94022578317312 ]
+  raw_name:        fold_vals
+  is_public:       0
+  is_private:      0
+- name:            print_token
+  file_location:   '/src/mpc/./tests/core.c:215'
+  type_arguments:  [ 94022578207168, 94022578207168 ]
+  raw_name:        print_token
+  is_public:       0
+  is_private:      0
+- name:            read_line
+  file_location:   '/src/mpc/./tests/core.c:182'
+  type_arguments:  [ 94022578207168, 94022578207168 ]
+  raw_name:        read_line
+  is_public:       0
+  is_private:      0
+- name:            mpcf_maths
+  file_location:   '/src/mpc/./tests/core.c:41'
+  type_arguments:  [ 94022578207168, 94022578529464, 94022578317312 ]
+  raw_name:        mpcf_maths
+  is_public:       0
+  is_private:      0
+- name:            int_eq
+  file_location:   '/src/mpc/./tests/core.c:7'
+  type_arguments:  [ 94022578529464, 94022578121056, 94022578121056 ]
+  raw_name:        int_eq
+  is_public:       0
+  is_private:      0
+- name:            int_print
+  file_location:   '/src/mpc/./tests/core.c:8'
+  type_arguments:  [ 0, 94022578121056 ]
+  raw_name:        int_print
+  is_public:       0
+  is_private:      0
+- name:            suite_grammar
+  file_location:   '/src/mpc/./tests/grammar.c:403'
+  type_arguments:  [ 0 ]
+  raw_name:        suite_grammar
+  is_public:       0
+  is_private:      0
+- name:            test_grammar
+  file_location:   '/src/mpc/./tests/grammar.c:4'
+  type_arguments:  [ 0 ]
+  raw_name:        test_grammar
+  is_public:       0
+  is_private:      0
+- name:            test_language
+  file_location:   '/src/mpc/./tests/grammar.c:60'
+  type_arguments:  [ 0 ]
+  raw_name:        test_language
+  is_public:       0
+  is_private:      0
+- name:            test_language_file
+  file_location:   '/src/mpc/./tests/grammar.c:79'
+  type_arguments:  [ 0 ]
+  raw_name:        test_language_file
+  is_public:       0
+  is_private:      0
+- name:            test_doge
+  file_location:   '/src/mpc/./tests/grammar.c:94'
+  type_arguments:  [ 0 ]
+  raw_name:        test_doge
+  is_public:       0
+  is_private:      0
+- name:            test_partial
+  file_location:   '/src/mpc/./tests/grammar.c:131'
+  type_arguments:  [ 0 ]
+  raw_name:        test_partial
+  is_public:       0
+  is_private:      0
+- name:            test_qscript
+  file_location:   '/src/mpc/./tests/grammar.c:172'
+  type_arguments:  [ 0 ]
+  raw_name:        test_qscript
+  is_public:       0
+  is_private:      0
+- name:            test_missingrule
+  file_location:   '/src/mpc/./tests/grammar.c:261'
+  type_arguments:  [ 0 ]
+  raw_name:        test_missingrule
+  is_public:       0
+  is_private:      0
+- name:            test_regex_mode
+  file_location:   '/src/mpc/./tests/grammar.c:285'
+  type_arguments:  [ 0 ]
+  raw_name:        test_regex_mode
+  is_public:       0
+  is_private:      0
+- name:            test_digits_file
+  file_location:   '/src/mpc/./tests/grammar.c:340'
+  type_arguments:  [ 0 ]
+  raw_name:        test_digits_file
+  is_public:       0
+  is_private:      0
+- name:            read_line
+  file_location:   '/src/mpc/./examples/line_reader.c:3'
+  type_arguments:  [ 94022576423376, 94022576423376 ]
+  raw_name:        read_line
+  is_public:       0
+  is_private:      0
+- name:            mpca_stmt_afold
+  file_location:   '/src/mpc/./mpc.c:3660'
+  type_arguments:  [ 94022582139376, 94022578529464, 94022580259120 ]
+  raw_name:        mpca_stmt_afold
+  is_public:       0
+  is_private:      0
+- name:            mpca_stmt_list_apply_to
+  file_location:   '/src/mpc/./mpc.c:3701'
+  type_arguments:  [ 94022582139376, 94022582139376, 94022576423376 ]
+  raw_name:        mpca_stmt_list_apply_to
+  is_public:       0
+  is_private:      0
+- name:            mpca_grammar_find_parser
+  file_location:   '/src/mpc/./mpc.c:3508'
+  type_arguments:  [ 94022580259376, 94022578207872, 94022582141728 ]
+  raw_name:        mpca_grammar_find_parser
+  is_public:       0
+  is_private:      0
+- name:            mpc_predictive
+  file_location:   '/src/mpc/./mpc.c:1920'
+  type_arguments:  [ 94022580259376, 94022580259376 ]
+  raw_name:        mpc_predictive
+  is_public:       0
+  is_private:      0
+- name:            mpc_expect
+  file_location:   '/src/mpc/./mpc.c:1737'
+  type_arguments:  [ 94022580259376, 94022580259376, 94022582177024 ]
+  raw_name:        mpc_expect
+  is_public:       0
+  is_private:      0
+- name:            mpc_optimise
+  file_location:   '/src/mpc/./mpc.c:4124'
+  type_arguments:  [ 0, 94022580259376 ]
+  raw_name:        mpc_optimise
+  is_public:       0
+  is_private:      0
+- name:            mpc_define
+  file_location:   '/src/mpc/./mpc.c:1624'
+  type_arguments:  [ 94022580259376, 94022580259376, 94022580259376 ]
+  raw_name:        mpc_define
+  is_public:       0
+  is_private:      0
+- name:            mpc_failf
+  file_location:   '/src/mpc/./mpc.c:1688'
+  type_arguments:  [ 94022580259376, 94022582177024, 0 ]
+  raw_name:        mpc_failf
+  is_public:       0
+  is_private:      0
+- name:            mpc_undefined
+  file_location:   '/src/mpc/./mpc.c:1511'
+  type_arguments:  [ 94022580259376 ]
+  raw_name:        mpc_undefined
+  is_public:       0
+  is_private:      0
+- name:            mpc_optimise_unretained
+  file_location:   '/src/mpc/./mpc.c:3951'
+  type_arguments:  [ 0, 94022580259376, 94022578529464 ]
+  raw_name:        mpc_optimise_unretained
+  is_public:       0
+  is_private:      0
+- name:            mpcf_fold_ast
+  file_location:   '/src/mpc/./mpc.c:3261'
+  type_arguments:  [ 94022582139376, 94022578529464, 94022580259120 ]
+  raw_name:        mpcf_fold_ast
+  is_public:       0
+  is_private:      0
+- name:            mpc_delete
+  file_location:   '/src/mpc/./mpc.c:1492'
+  type_arguments:  [ 0, 94022580259376 ]
+  raw_name:        mpc_delete
+  is_public:       0
+  is_private:      0
+- name:            mpc_ast_delete
+  file_location:   '/src/mpc/./mpc.c:2935'
+  type_arguments:  [ 0, 94022582140064 ]
+  raw_name:        mpc_ast_delete
+  is_public:       0
+  is_private:      0
+- name:            mpcf_ctor_str
+  file_location:   '/src/mpc/./mpc.c:2490'
+  type_arguments:  [ 94022582139376 ]
+  raw_name:        mpcf_ctor_str
+  is_public:       0
+  is_private:      0
+- name:            mpcf_strfold
+  file_location:   '/src/mpc/./mpc.c:2707'
+  type_arguments:  [ 94022582139376, 94022578529464, 94022580259120 ]
+  raw_name:        mpcf_strfold
+  is_public:       0
+  is_private:      0
+- name:            mpc_undefine_unretained
+  file_location:   '/src/mpc/./mpc.c:1430'
+  type_arguments:  [ 0, 94022580259376, 94022578529464 ]
+  raw_name:        mpc_undefine_unretained
+  is_public:       0
+  is_private:      0
+- name:            mpc_undefine_or
+  file_location:   '/src/mpc/./mpc.c:1409'
+  type_arguments:  [ 0, 94022580259376 ]
+  raw_name:        mpc_undefine_or
+  is_public:       0
+  is_private:      0
+- name:            mpc_undefine_and
+  file_location:   '/src/mpc/./mpc.c:1419'
+  type_arguments:  [ 0, 94022580259376 ]
+  raw_name:        mpc_undefine_and
+  is_public:       0
+  is_private:      0
+- name:            mpc_ast_new
+  file_location:   '/src/mpc/./mpc.c:2959'
+  type_arguments:  [ 94022582140064, 94022582177024, 94022582177024 ]
+  raw_name:        mpc_ast_new
+  is_public:       0
+  is_private:      0
+- name:            mpc_ast_add_child
+  file_location:   '/src/mpc/./mpc.c:3023'
+  type_arguments:  [ 94022582140064, 94022582140064, 94022582140064 ]
+  raw_name:        mpc_ast_add_child
+  is_public:       0
+  is_private:      0
+- name:            mpc_ast_add_root_tag
+  file_location:   '/src/mpc/./mpc.c:3039'
+  type_arguments:  [ 94022582140064, 94022582140064, 94022582177024 ]
+  raw_name:        mpc_ast_add_root_tag
+  is_public:       0
+  is_private:      0
+- name:            mpc_ast_delete_no_children
+  file_location:   '/src/mpc/./mpc.c:2952'
+  type_arguments:  [ 0, 94022582140064 ]
+  raw_name:        mpc_ast_delete_no_children
+  is_public:       0
+  is_private:      0
+- name:            mpc_state_new
+  file_location:   '/src/mpc/./mpc.c:16'
+  type_arguments:  [ 94022582140320 ]
+  raw_name:        mpc_state_new
+  is_public:       0
+  is_private:      0
+- name:            is_number
+  file_location:   '/src/mpc/./mpc.c:3502'
+  type_arguments:  [ 94022578529464, 94022582177024 ]
+  raw_name:        is_number
+  is_public:       0
+  is_private:      0
+- name:            mpca_stmt_list_delete
+  file_location:   '/src/mpc/./mpc.c:3685'
+  type_arguments:  [ 0, 94022582139376 ]
+  raw_name:        mpca_stmt_list_delete
+  is_public:       0
+  is_private:      0
+- name:            mpc_soft_delete
+  file_location:   '/src/mpc/./mpc.c:1507'
+  type_arguments:  [ 0, 94022582139376 ]
+  raw_name:        mpc_soft_delete
+  is_public:       0
+  is_private:      0
+- name:            mpca_stmt_fold
+  file_location:   '/src/mpc/./mpc.c:3672'
+  type_arguments:  [ 94022582139376, 94022578529464, 94022580259120 ]
+  raw_name:        mpca_stmt_fold
+  is_public:       0
+  is_private:      0
+- name:            mpc_re_range_escape_char
+  file_location:   '/src/mpc/./mpc.c:2332'
+  type_arguments:  [ 94022582177024, 94022576801576 ]
+  raw_name:        mpc_re_range_escape_char
+  is_public:       0
+  is_private:      0
+- name:            mpc_re_escape_char
+  file_location:   '/src/mpc/./mpc.c:2256'
+  type_arguments:  [ 94022580259376, 94022576801576 ]
+  raw_name:        mpc_re_escape_char
+  is_public:       0
+  is_private:      0
+- name:            mpc_char
+  file_location:   '/src/mpc/./mpc.c:1797'
+  type_arguments:  [ 94022580259376, 94022576801576 ]
+  raw_name:        mpc_char
+  is_public:       0
+  is_private:      0
+- name:            mpc_boundary
+  file_location:   '/src/mpc/./mpc.c:2064'
+  type_arguments:  [ 94022580259376 ]
+  raw_name:        mpc_boundary
+  is_public:       0
+  is_private:      0
+- name:            mpc_lift
+  file_location:   '/src/mpc/./mpc.c:1717'
+  type_arguments:  [ 94022580259376, 94022582153216 ]
+  raw_name:        mpc_lift
+  is_public:       0
+  is_private:      0
+- name:            mpcf_snd
+  file_location:   '/src/mpc/./mpc.c:2685'
+  type_arguments:  [ 94022582139376, 94022578529464, 94022580259120 ]
+  raw_name:        mpcf_snd
+  is_public:       0
+  is_private:      0
+- name:            mpc_and
+  file_location:   '/src/mpc/./mpc.c:2007'
+  type_arguments:  [ 94022580259376, 94022578529464, 94022582150448, 0 ]
+  raw_name:        mpc_and
+  is_public:       0
+  is_private:      0
+- name:            mpc_not_lift
+  file_location:   '/src/mpc/./mpc.c:1927'
+  type_arguments:  [ 94022580259376, 94022580259376, 94022582139808, 94022582153216 ]
+  raw_name:        mpc_not_lift
+  is_public:       0
+  is_private:      0
+- name:            mpc_soi
+  file_location:   '/src/mpc/./mpc.c:2036'
+  type_arguments:  [ 94022580259376 ]
+  raw_name:        mpc_soi
+  is_public:       0
+  is_private:      0
+- name:            mpc_eoi
+  file_location:   '/src/mpc/./mpc.c:2042'
+  type_arguments:  [ 94022580259376 ]
+  raw_name:        mpc_eoi
+  is_public:       0
+  is_private:      0
+- name:            mpc_digit
+  file_location:   '/src/mpc/./mpc.c:2075'
+  type_arguments:  [ 94022580259376 ]
+  raw_name:        mpc_digit
+  is_public:       0
+  is_private:      0
+- name:            mpc_whitespace
+  file_location:   '/src/mpc/./mpc.c:2067'
+  type_arguments:  [ 94022580259376 ]
+  raw_name:        mpc_whitespace
+  is_public:       0
+  is_private:      0
+- name:            mpc_alphanum
+  file_location:   '/src/mpc/./mpc.c:2086'
+  type_arguments:  [ 94022580259376 ]
+  raw_name:        mpc_alphanum
+  is_public:       0
+  is_private:      0
+- name:            mpc_alpha
+  file_location:   '/src/mpc/./mpc.c:2084'
+  type_arguments:  [ 94022580259376 ]
+  raw_name:        mpc_alpha
+  is_public:       0
+  is_private:      0
+- name:            mpc_underscore
+  file_location:   '/src/mpc/./mpc.c:2085'
+  type_arguments:  [ 94022580259376 ]
+  raw_name:        mpc_underscore
+  is_public:       0
+  is_private:      0
+- name:            mpc_or
+  file_location:   '/src/mpc/./mpc.c:1987'
+  type_arguments:  [ 94022580259376, 94022578529464, 0 ]
+  raw_name:        mpc_or
+  is_public:       0
+  is_private:      0
+- name:            mpc_oneof
+  file_location:   '/src/mpc/./mpc.c:1812'
+  type_arguments:  [ 94022580259376, 94022582177024 ]
+  raw_name:        mpc_oneof
+  is_public:       0
+  is_private:      0
+- name:            mpc_expectf
+  file_location:   '/src/mpc/./mpc.c:1766'
+  type_arguments:  [ 94022580259376, 94022580259376, 94022582177024, 0 ]
+  raw_name:        mpc_expectf
+  is_public:       0
+  is_private:      0
+- name:            mpc_boundary_anchor
+  file_location:   '/src/mpc/./mpc.c:2048'
+  type_arguments:  [ 94022578529464, 94022576801576, 94022576801576 ]
+  raw_name:        mpc_boundary_anchor
+  is_public:       0
+  is_private:      0
+- name:            mpc_anchor
+  file_location:   '/src/mpc/./mpc.c:1724'
+  type_arguments:  [ 94022580259376, 94022582157984 ]
+  raw_name:        mpc_anchor
+  is_public:       0
+  is_private:      0
+- name:            mpc_err_add_expected
+  file_location:   '/src/mpc/./mpc.c:740'
+  type_arguments:  [ 0, 94022582130128, 94022582123232, 94022578207872 ]
+  raw_name:        mpc_err_add_expected
+  is_public:       0
+  is_private:      0
+- name:            mpc_realloc
+  file_location:   '/src/mpc/./mpc.c:270'
+  type_arguments:  [ 94022576423376, 94022582130128, 94022576423376, 94022579708736 ]
+  raw_name:        mpc_realloc
+  is_public:       0
+  is_private:      0
+- name:            mpc_malloc
+  file_location:   '/src/mpc/./mpc.c:237'
+  type_arguments:  [ 94022576423376, 94022582130128, 94022579708736 ]
+  raw_name:        mpc_malloc
+  is_public:       0
+  is_private:      0
+- name:            mpc_mem_ptr
+  file_location:   '/src/mpc/./mpc.c:231'
+  type_arguments:  [ 94022578529464, 94022582130128, 94022576423376 ]
+  raw_name:        mpc_mem_ptr
+  is_public:       0
+  is_private:      0
+- name:            mpc_free
+  file_location:   '/src/mpc/./mpc.c:263'
+  type_arguments:  [ 0, 94022582130128, 94022576423376 ]
+  raw_name:        mpc_free
+  is_public:       0
+  is_private:      0
+- name:            mpc_err_contains_expected
+  file_location:   '/src/mpc/./mpc.c:731'
+  type_arguments:  [ 94022578529464, 94022582130128, 94022582123232, 94022578207872 ]
+  raw_name:        mpc_err_contains_expected
+  is_public:       0
+  is_private:      0
+- name:            mpc_err_or
+  file_location:   '/src/mpc/./mpc.c:748'
+  type_arguments:  [ 94022582123232, 94022582130128, 94022582201728, 94022578529464 ]
+  raw_name:        mpc_err_or
+  is_public:       0
+  is_private:      0
+- name:            mpc_state_invalid
+  file_location:   '/src/mpc/./mpc.c:7'
+  type_arguments:  [ 94022582140320 ]
+  raw_name:        mpc_state_invalid
+  is_public:       0
+  is_private:      0
+- name:            mpc_err_delete_internal
+  file_location:   '/src/mpc/./mpc.c:710'
+  type_arguments:  [ 0, 94022582130128, 94022582123232 ]
+  raw_name:        mpc_err_delete_internal
+  is_public:       0
+  is_private:      0
+- name:            mpc_err_repeat
+  file_location:   '/src/mpc/./mpc.c:800'
+  type_arguments:  [ 94022582123232, 94022582130128, 94022582123232, 94022582177024 ]
+  raw_name:        mpc_err_repeat
+  is_public:       0
+  is_private:      0
+- name:            mpc_calloc
+  file_location:   '/src/mpc/./mpc.c:257'
+  type_arguments:  [ 94022576423376, 94022582130128, 94022579708736, 94022579708736 ]
+  raw_name:        mpc_calloc
+  is_public:       0
+  is_private:      0
+- name:            mpcf_input_nth_free
+  file_location:   '/src/mpc/./mpc.c:971'
+  type_arguments:  [ 94022582139376, 94022582130128, 94022578529464, 94022580259120, 
+                     94022578529464 ]
+  raw_name:        mpcf_input_nth_free
+  is_public:       0
+  is_private:      0
+- name:            mpcf_input_state_ast
+  file_location:   '/src/mpc/./mpc.c:991'
+  type_arguments:  [ 94022582139376, 94022582130128, 94022578529464, 94022580259120 ]
+  raw_name:        mpcf_input_state_ast
+  is_public:       0
+  is_private:      0
+- name:            mpc_ast_state
+  file_location:   '/src/mpc/./mpc.c:3053'
+  type_arguments:  [ 94022582140064, 94022582140064, 94022582140320 ]
+  raw_name:        mpc_ast_state
+  is_public:       0
+  is_private:      0
+- name:            mpcf_input_strfold
+  file_location:   '/src/mpc/./mpc.c:981'
+  type_arguments:  [ 94022582139376, 94022582130128, 94022578529464, 94022580259120 ]
+  raw_name:        mpcf_input_strfold
+  is_public:       0
+  is_private:      0
+- name:            mpcf_input_trd_free
+  file_location:   '/src/mpc/./mpc.c:979'
+  type_arguments:  [ 94022582139376, 94022582130128, 94022578529464, 94022580259120 ]
+  raw_name:        mpcf_input_trd_free
+  is_public:       0
+  is_private:      0
+- name:            mpcf_input_snd_free
+  file_location:   '/src/mpc/./mpc.c:978'
+  type_arguments:  [ 94022582139376, 94022582130128, 94022578529464, 94022580259120 ]
+  raw_name:        mpcf_input_snd_free
+  is_public:       0
+  is_private:      0
+- name:            mpcf_input_fst_free
+  file_location:   '/src/mpc/./mpc.c:977'
+  type_arguments:  [ 94022582139376, 94022582130128, 94022578529464, 94022580259120 ]
+  raw_name:        mpcf_input_fst_free
+  is_public:       0
+  is_private:      0
+- name:            mpcf_input_str_ast
+  file_location:   '/src/mpc/./mpc.c:1020'
+  type_arguments:  [ 94022582139376, 94022582130128, 94022582139376 ]
+  raw_name:        mpcf_input_str_ast
+  is_public:       0
+  is_private:      0
+- name:            mpcf_input_free
+  file_location:   '/src/mpc/./mpc.c:1015'
+  type_arguments:  [ 94022582139376, 94022582130128, 94022582139376 ]
+  raw_name:        mpcf_input_free
+  is_public:       0
+  is_private:      0
+- name:            mpc_input_failure
+  file_location:   '/src/mpc/./mpc.c:435'
+  type_arguments:  [ 94022578529464, 94022582130128, 94022576801576 ]
+  raw_name:        mpc_input_failure
+  is_public:       0
+  is_private:      0
+- name:            mpc_input_buffer_in_range
+  file_location:   '/src/mpc/./mpc.c:362'
+  type_arguments:  [ 94022578529464, 94022582130128 ]
+  raw_name:        mpc_input_buffer_in_range
+  is_public:       0
+  is_private:      0
+- name:            mpc_input_buffer_get
+  file_location:   '/src/mpc/./mpc.c:366'
+  type_arguments:  [ 94022576801576, 94022582130128 ]
+  raw_name:        mpc_input_buffer_get
+  is_public:       0
+  is_private:      0
+- name:            mpc_input_peekc
+  file_location:   '/src/mpc/./mpc.c:394'
+  type_arguments:  [ 94022576801576, 94022582130128 ]
+  raw_name:        mpc_input_peekc
+  is_public:       0
+  is_private:      0
+- name:            mpc_input_success
+  file_location:   '/src/mpc/./mpc.c:455'
+  type_arguments:  [ 94022578529464, 94022582130128, 94022576801576, 94022578315696 ]
+  raw_name:        mpc_input_success
+  is_public:       0
+  is_private:      0
+- name:            mpc_input_getc
+  file_location:   '/src/mpc/./mpc.c:370'
+  type_arguments:  [ 94022576801576, 94022582130128 ]
+  raw_name:        mpc_input_getc
+  is_public:       0
+  is_private:      0
+- name:            mpc_input_terminated
+  file_location:   '/src/mpc/./mpc.c:431'
+  type_arguments:  [ 94022578529464, 94022582130128 ]
+  raw_name:        mpc_input_terminated
+  is_public:       0
+  is_private:      0
+- name:            mpc_err_count
+  file_location:   '/src/mpc/./mpc.c:860'
+  type_arguments:  [ 94022582123232, 94022582130128, 94022582123232, 94022578529464 ]
+  raw_name:        mpc_err_count
+  is_public:       0
+  is_private:      0
+- name:            mpc_err_many1
+  file_location:   '/src/mpc/./mpc.c:856'
+  type_arguments:  [ 94022582123232, 94022582130128, 94022582123232 ]
+  raw_name:        mpc_err_many1
+  is_public:       0
+  is_private:      0
+- name:            mpc_parse_fold
+  file_location:   '/src/mpc/./mpc.c:1000'
+  type_arguments:  [ 94022582139376, 94022582130128, 94022582150448, 94022578529464, 
+                     94022580259120 ]
+  raw_name:        mpc_parse_fold
+  is_public:       0
+  is_private:      0
+- name:            mpcf_null
+  file_location:   '/src/mpc/./mpc.c:2683'
+  type_arguments:  [ 94022582139376, 94022578529464, 94022580259120 ]
+  raw_name:        mpcf_null
+  is_public:       0
+  is_private:      0
+- name:            mpcf_fst
+  file_location:   '/src/mpc/./mpc.c:2684'
+  type_arguments:  [ 94022582139376, 94022578529464, 94022580259120 ]
+  raw_name:        mpcf_fst
+  is_public:       0
+  is_private:      0
+- name:            mpcf_trd
+  file_location:   '/src/mpc/./mpc.c:2686'
+  type_arguments:  [ 94022582139376, 94022578529464, 94022580259120 ]
+  raw_name:        mpcf_trd
+  is_public:       0
+  is_private:      0
+- name:            mpcf_fst_free
+  file_location:   '/src/mpc/./mpc.c:2696'
+  type_arguments:  [ 94022582139376, 94022578529464, 94022580259120 ]
+  raw_name:        mpcf_fst_free
+  is_public:       0
+  is_private:      0
+- name:            mpcf_snd_free
+  file_location:   '/src/mpc/./mpc.c:2697'
+  type_arguments:  [ 94022582139376, 94022578529464, 94022580259120 ]
+  raw_name:        mpcf_snd_free
+  is_public:       0
+  is_private:      0
+- name:            mpcf_trd_free
+  file_location:   '/src/mpc/./mpc.c:2698'
+  type_arguments:  [ 94022582139376, 94022578529464, 94022580259120 ]
+  raw_name:        mpcf_trd_free
+  is_public:       0
+  is_private:      0
+- name:            mpcf_state_ast
+  file_location:   '/src/mpc/./mpc.c:3305'
+  type_arguments:  [ 94022582139376, 94022578529464, 94022580259120 ]
+  raw_name:        mpcf_state_ast
+  is_public:       0
+  is_private:      0
+- name:            mpc_export
+  file_location:   '/src/mpc/./mpc.c:286'
+  type_arguments:  [ 94022576423376, 94022582130128, 94022576423376 ]
+  raw_name:        mpc_export
+  is_public:       0
+  is_private:      0
+- name:            mpcf_nth_free
+  file_location:   '/src/mpc/./mpc.c:2688'
+  type_arguments:  [ 94022582139376, 94022578529464, 94022580259120, 94022578529464 ]
+  raw_name:        mpcf_nth_free
+  is_public:       0
+  is_private:      0
+- name:            mpc_grow_results
+  file_location:   '/src/mpc/./mpc.c:1053'
+  type_arguments:  [ 94022582130384, 94022582130128, 94022578529464, 94022582130384, 
+                     94022582130384 ]
+  raw_name:        mpc_grow_results
+  is_public:       0
+  is_private:      0
+- name:            mpc_input_unmark
+  file_location:   '/src/mpc/./mpc.c:322'
+  type_arguments:  [ 0, 94022582130128 ]
+  raw_name:        mpc_input_unmark
+  is_public:       0
+  is_private:      0
+- name:            mpc_input_rewind
+  file_location:   '/src/mpc/./mpc.c:348'
+  type_arguments:  [ 0, 94022582130128 ]
+  raw_name:        mpc_input_rewind
+  is_public:       0
+  is_private:      0
+- name:            mpc_input_mark
+  file_location:   '/src/mpc/./mpc.c:301'
+  type_arguments:  [ 0, 94022582130128 ]
+  raw_name:        mpc_input_mark
+  is_public:       0
+  is_private:      0
+- name:            mpc_input_backtrack_enable
+  file_location:   '/src/mpc/./mpc.c:296'
+  type_arguments:  [ 0, 94022582130128 ]
+  raw_name:        mpc_input_backtrack_enable
+  is_public:       0
+  is_private:      0
+- name:            mpc_input_backtrack_disable
+  file_location:   '/src/mpc/./mpc.c:295'
+  type_arguments:  [ 0, 94022582130128 ]
+  raw_name:        mpc_input_backtrack_disable
+  is_public:       0
+  is_private:      0
+- name:            mpc_err_new
+  file_location:   '/src/mpc/./mpc.c:665'
+  type_arguments:  [ 94022582123232, 94022582130128, 94022582177024 ]
+  raw_name:        mpc_err_new
+  is_public:       0
+  is_private:      0
+- name:            mpc_input_suppress_disable
+  file_location:   '/src/mpc/./mpc.c:298'
+  type_arguments:  [ 0, 94022582130128 ]
+  raw_name:        mpc_input_suppress_disable
+  is_public:       0
+  is_private:      0
+- name:            mpc_input_suppress_enable
+  file_location:   '/src/mpc/./mpc.c:299'
+  type_arguments:  [ 0, 94022582130128 ]
+  raw_name:        mpc_input_suppress_enable
+  is_public:       0
+  is_private:      0
+- name:            mpc_parse_dtor
+  file_location:   '/src/mpc/./mpc.c:1036'
+  type_arguments:  [ 0, 94022582130128, 94022582139808, 94022582139376 ]
+  raw_name:        mpc_parse_dtor
+  is_public:       0
+  is_private:      0
+- name:            mpc_parse_apply_to
+  file_location:   '/src/mpc/./mpc.c:1032'
+  type_arguments:  [ 94022582139376, 94022582130128, 94022580258560, 94022582139376, 
+                     94022582139376 ]
+  raw_name:        mpc_parse_apply_to
+  is_public:       0
+  is_private:      0
+- name:            mpc_parse_apply
+  file_location:   '/src/mpc/./mpc.c:1026'
+  type_arguments:  [ 94022582139376, 94022582130128, 94022580258992, 94022582139376 ]
+  raw_name:        mpc_parse_apply
+  is_public:       0
+  is_private:      0
+- name:            mpcf_free
+  file_location:   '/src/mpc/./mpc.c:2491'
+  type_arguments:  [ 94022582139376, 94022582139376 ]
+  raw_name:        mpcf_free
+  is_public:       0
+  is_private:      0
+- name:            mpcf_str_ast
+  file_location:   '/src/mpc/./mpc.c:3299'
+  type_arguments:  [ 94022582139376, 94022582139376 ]
+  raw_name:        mpcf_str_ast
+  is_public:       0
+  is_private:      0
+- name:            mpc_input_state_copy
+  file_location:   '/src/mpc/./mpc.c:565'
+  type_arguments:  [ 94022582140448, 94022582130128 ]
+  raw_name:        mpc_input_state_copy
+  is_public:       0
+  is_private:      0
+- name:            mpc_input_eoi
+  file_location:   '/src/mpc/./mpc.c:553'
+  type_arguments:  [ 94022578529464, 94022582130128, 94022578315696 ]
+  raw_name:        mpc_input_eoi
+  is_public:       0
+  is_private:      0
+- name:            mpc_input_soi
+  file_location:   '/src/mpc/./mpc.c:548'
+  type_arguments:  [ 94022578529464, 94022582130128, 94022578315696 ]
+  raw_name:        mpc_input_soi
+  is_public:       0
+  is_private:      0
+- name:            mpc_input_anchor
+  file_location:   '/src/mpc/./mpc.c:543'
+  type_arguments:  [ 94022578529464, 94022582130128, 94022582157984, 94022578315696 ]
+  raw_name:        mpc_input_anchor
+  is_public:       0
+  is_private:      0
+- name:            mpc_input_string
+  file_location:   '/src/mpc/./mpc.c:524'
+  type_arguments:  [ 94022578529464, 94022582130128, 94022582177024, 94022578315696 ]
+  raw_name:        mpc_input_string
+  is_public:       0
+  is_private:      0
+- name:            mpc_input_char
+  file_location:   '/src/mpc/./mpc.c:489'
+  type_arguments:  [ 94022578529464, 94022582130128, 94022576801576, 94022578315696 ]
+  raw_name:        mpc_input_char
+  is_public:       0
+  is_private:      0
+- name:            mpc_input_satisfy
+  file_location:   '/src/mpc/./mpc.c:517'
+  type_arguments:  [ 94022578529464, 94022582130128, 94022582157008, 94022578315696 ]
+  raw_name:        mpc_input_satisfy
+  is_public:       0
+  is_private:      0
+- name:            mpc_input_noneof
+  file_location:   '/src/mpc/./mpc.c:510'
+  type_arguments:  [ 94022578529464, 94022582130128, 94022582177024, 94022578315696 ]
+  raw_name:        mpc_input_noneof
+  is_public:       0
+  is_private:      0
+- name:            mpc_input_oneof
+  file_location:   '/src/mpc/./mpc.c:503'
+  type_arguments:  [ 94022578529464, 94022582130128, 94022582177024, 94022578315696 ]
+  raw_name:        mpc_input_oneof
+  is_public:       0
+  is_private:      0
+- name:            mpc_input_range
+  file_location:   '/src/mpc/./mpc.c:496'
+  type_arguments:  [ 94022578529464, 94022582130128, 94022576801576, 94022576801576, 
+                     94022578315696 ]
+  raw_name:        mpc_input_range
+  is_public:       0
+  is_private:      0
+- name:            mpc_input_any
+  file_location:   '/src/mpc/./mpc.c:482'
+  type_arguments:  [ 94022578529464, 94022582130128, 94022578315696 ]
+  raw_name:        mpc_input_any
+  is_public:       0
+  is_private:      0
+- name:            mpc_nodecount_unretained
+  file_location:   '/src/mpc/./mpc.c:3896'
+  type_arguments:  [ 94022578529464, 94022580259376, 94022578529464 ]
+  raw_name:        mpc_nodecount_unretained
+  is_public:       0
+  is_private:      0
+- name:            mpc_stats
+  file_location:   '/src/mpc/./mpc.c:3945'
+  type_arguments:  [ 0, 94022580259376 ]
+  raw_name:        mpc_stats
+  is_public:       0
+  is_private:      0
+- name:            mpca_lang_contents
+  file_location:   '/src/mpc/./mpc.c:3862'
+  type_arguments:  [ 94022582123232, 94022578529464, 94022582177024, 0 ]
+  raw_name:        mpca_lang_contents
+  is_public:       0
+  is_private:      0
+- name:            mpc_err_file
+  file_location:   '/src/mpc/./mpc.c:696'
+  type_arguments:  [ 94022582123232, 94022582177024, 94022582177024 ]
+  raw_name:        mpc_err_file
+  is_public:       0
+  is_private:      0
+- name:            mpc_input_new_file
+  file_location:   '/src/mpc/./mpc.c:192'
+  type_arguments:  [ 94022582130128, 94022582177024, 94022582124576 ]
+  raw_name:        mpc_input_new_file
+  is_public:       0
+  is_private:      0
+- name:            mpca_lang_st
+  file_location:   '/src/mpc/./mpc.c:3726'
+  type_arguments:  [ 94022582123232, 94022582130128, 94022582141728 ]
+  raw_name:        mpca_lang_st
+  is_public:       0
+  is_private:      0
+- name:            mpc_input_delete
+  file_location:   '/src/mpc/./mpc.c:219'
+  type_arguments:  [ 0, 94022582130128 ]
+  raw_name:        mpc_input_delete
+  is_public:       0
+  is_private:      0
+- name:            mpc_new
+  file_location:   '/src/mpc/./mpc.c:1519'
+  type_arguments:  [ 94022580259376, 94022582177024 ]
+  raw_name:        mpc_new
+  is_public:       0
+  is_private:      0
+- name:            mpc_many
+  file_location:   '/src/mpc/./mpc.c:1952'
+  type_arguments:  [ 94022580259376, 94022582150448, 94022580259376 ]
+  raw_name:        mpc_many
+  is_public:       0
+  is_private:      0
+- name:            mpc_total
+  file_location:   '/src/mpc/./mpc.c:2150'
+  type_arguments:  [ 94022580259376, 94022580259376, 94022582139808 ]
+  raw_name:        mpc_total
+  is_public:       0
+  is_private:      0
+- name:            mpc_apply_to
+  file_location:   '/src/mpc/./mpc.c:1856'
+  type_arguments:  [ 94022580259376, 94022580259376, 94022580258560, 94022576423376 ]
+  raw_name:        mpc_apply_to
+  is_public:       0
+  is_private:      0
+- name:            mpc_ident
+  file_location:   '/src/mpc/./mpc.c:2129'
+  type_arguments:  [ 94022580259376 ]
+  raw_name:        mpc_ident
+  is_public:       0
+  is_private:      0
+- name:            mpc_tok
+  file_location:   '/src/mpc/./mpc.c:2147'
+  type_arguments:  [ 94022580259376, 94022580259376 ]
+  raw_name:        mpc_tok
+  is_public:       0
+  is_private:      0
+- name:            mpc_string_lit
+  file_location:   '/src/mpc/./mpc.c:2119'
+  type_arguments:  [ 94022580259376 ]
+  raw_name:        mpc_string_lit
+  is_public:       0
+  is_private:      0
+- name:            mpc_maybe
+  file_location:   '/src/mpc/./mpc.c:1948'
+  type_arguments:  [ 94022580259376, 94022580259376 ]
+  raw_name:        mpc_maybe
+  is_public:       0
+  is_private:      0
+- name:            mpc_sym
+  file_location:   '/src/mpc/./mpc.c:2148'
+  type_arguments:  [ 94022580259376, 94022582177024 ]
+  raw_name:        mpc_sym
+  is_public:       0
+  is_private:      0
+- name:            mpcaf_grammar_or
+  file_location:   '/src/mpc/./mpc.c:3435'
+  type_arguments:  [ 94022582139376, 94022578529464, 94022580259120 ]
+  raw_name:        mpcaf_grammar_or
+  is_public:       0
+  is_private:      0
+- name:            mpcaf_grammar_and
+  file_location:   '/src/mpc/./mpc.c:3441'
+  type_arguments:  [ 94022582139376, 94022578529464, 94022580259120 ]
+  raw_name:        mpcaf_grammar_and
+  is_public:       0
+  is_private:      0
+- name:            mpc_many1
+  file_location:   '/src/mpc/./mpc.c:1960'
+  type_arguments:  [ 94022580259376, 94022582150448, 94022580259376 ]
+  raw_name:        mpc_many1
+  is_public:       0
+  is_private:      0
+- name:            mpc_int
+  file_location:   '/src/mpc/./mpc.c:2088'
+  type_arguments:  [ 94022580259376 ]
+  raw_name:        mpc_int
+  is_public:       0
+  is_private:      0
+- name:            mpc_tok_brackets
+  file_location:   '/src/mpc/./mpc.c:2171'
+  type_arguments:  [ 94022580259376, 94022580259376, 94022582139808 ]
+  raw_name:        mpc_tok_brackets
+  is_public:       0
+  is_private:      0
+- name:            mpc_pass
+  file_location:   '/src/mpc/./mpc.c:1654'
+  type_arguments:  [ 94022580259376 ]
+  raw_name:        mpc_pass
+  is_public:       0
+  is_private:      0
+- name:            mpcaf_grammar_repeat
+  file_location:   '/src/mpc/./mpc.c:3450'
+  type_arguments:  [ 94022582139376, 94022578529464, 94022580259120 ]
+  raw_name:        mpcaf_grammar_repeat
+  is_public:       0
+  is_private:      0
+- name:            mpcaf_grammar_string
+  file_location:   '/src/mpc/./mpc.c:3467'
+  type_arguments:  [ 94022582139376, 94022582139376, 94022576423376 ]
+  raw_name:        mpcaf_grammar_string
+  is_public:       0
+  is_private:      0
+- name:            mpc_char_lit
+  file_location:   '/src/mpc/./mpc.c:2115'
+  type_arguments:  [ 94022580259376 ]
+  raw_name:        mpc_char_lit
+  is_public:       0
+  is_private:      0
+- name:            mpcaf_grammar_char
+  file_location:   '/src/mpc/./mpc.c:3475'
+  type_arguments:  [ 94022582139376, 94022582139376, 94022576423376 ]
+  raw_name:        mpcaf_grammar_char
+  is_public:       0
+  is_private:      0
+- name:            mpc_regex_lit
+  file_location:   '/src/mpc/./mpc.c:2124'
+  type_arguments:  [ 94022580259376 ]
+  raw_name:        mpc_regex_lit
+  is_public:       0
+  is_private:      0
+- name:            mpc_lift_val
+  file_location:   '/src/mpc/./mpc.c:1710'
+  type_arguments:  [ 94022580259376, 94022582139376 ]
+  raw_name:        mpc_lift_val
+  is_public:       0
+  is_private:      0
+- name:            mpcaf_fold_regex
+  file_location:   '/src/mpc/./mpc.c:3483'
+  type_arguments:  [ 94022582139376, 94022578529464, 94022580259120 ]
+  raw_name:        mpcaf_fold_regex
+  is_public:       0
+  is_private:      0
+- name:            mpc_digits
+  file_location:   '/src/mpc/./mpc.c:2078'
+  type_arguments:  [ 94022580259376 ]
+  raw_name:        mpc_digits
+  is_public:       0
+  is_private:      0
+- name:            mpc_tok_braces
+  file_location:   '/src/mpc/./mpc.c:2170'
+  type_arguments:  [ 94022580259376, 94022580259376, 94022582139808 ]
+  raw_name:        mpc_tok_braces
+  is_public:       0
+  is_private:      0
+- name:            mpcaf_grammar_id
+  file_location:   '/src/mpc/./mpc.c:3557'
+  type_arguments:  [ 94022582139376, 94022582139376, 94022576423376 ]
+  raw_name:        mpcaf_grammar_id
+  is_public:       0
+  is_private:      0
+- name:            mpc_tok_parens
+  file_location:   '/src/mpc/./mpc.c:2169'
+  type_arguments:  [ 94022580259376, 94022580259376, 94022582139808 ]
+  raw_name:        mpc_tok_parens
+  is_public:       0
+  is_private:      0
+- name:            mpc_parse_input
+  file_location:   '/src/mpc/./mpc.c:1341'
+  type_arguments:  [ 94022578529464, 94022582130128, 94022580259376, 94022582130384 ]
+  raw_name:        mpc_parse_input
+  is_public:       0
+  is_private:      0
+- name:            mpc_cleanup
+  file_location:   '/src/mpc/./mpc.c:1640'
+  type_arguments:  [ 0, 94022578529464, 0 ]
+  raw_name:        mpc_cleanup
+  is_public:       0
+  is_private:      0
+- name:            mpc_undefine
+  file_location:   '/src/mpc/./mpc.c:1618'
+  type_arguments:  [ 94022580259376, 94022580259376 ]
+  raw_name:        mpc_undefine
+  is_public:       0
+  is_private:      0
+- name:            mpc_err_fail
+  file_location:   '/src/mpc/./mpc.c:681'
+  type_arguments:  [ 94022582123232, 94022582130128, 94022582177024 ]
+  raw_name:        mpc_err_fail
+  is_public:       0
+  is_private:      0
+- name:            mpc_parse_run
+  file_location:   '/src/mpc/./mpc.c:1068'
+  type_arguments:  [ 94022578529464, 94022582130128, 94022580259376, 94022582130384, 
+                     94022582201728, 94022578529464 ]
+  raw_name:        mpc_parse_run
+  is_public:       0
+  is_private:      0
+- name:            mpc_err_merge
+  file_location:   '/src/mpc/./mpc.c:874'
+  type_arguments:  [ 94022582123232, 94022582130128, 94022582123232, 94022582123232 ]
+  raw_name:        mpc_err_merge
+  is_public:       0
+  is_private:      0
+- name:            mpc_err_export
+  file_location:   '/src/mpc/./mpc.c:720'
+  type_arguments:  [ 94022582123232, 94022582130128, 94022582123232 ]
+  raw_name:        mpc_err_export
+  is_public:       0
+  is_private:      0
+- name:            mpc_tok_between
+  file_location:   '/src/mpc/./mpc.c:2163'
+  type_arguments:  [ 94022580259376, 94022580259376, 94022582139808, 94022582177024, 
+                     94022582177024 ]
+  raw_name:        mpc_tok_between
+  is_public:       0
+  is_private:      0
+- name:            mpca_add_tag
+  file_location:   '/src/mpc/./mpc.c:3322'
+  type_arguments:  [ 94022580259376, 94022580259376, 94022582177024 ]
+  raw_name:        mpca_add_tag
+  is_public:       0
+  is_private:      0
+- name:            mpca_root
+  file_location:   '/src/mpc/./mpc.c:3326'
+  type_arguments:  [ 94022580259376, 94022580259376 ]
+  raw_name:        mpca_root
+  is_public:       0
+  is_private:      0
+- name:            mpca_state
+  file_location:   '/src/mpc/./mpc.c:3314'
+  type_arguments:  [ 94022580259376, 94022580259376 ]
+  raw_name:        mpca_state
+  is_public:       0
+  is_private:      0
+- name:            mpc_state
+  file_location:   '/src/mpc/./mpc.c:1731'
+  type_arguments:  [ 94022580259376 ]
+  raw_name:        mpc_state
+  is_public:       0
+  is_private:      0
+- name:            mpc_ast_add_root
+  file_location:   '/src/mpc/./mpc.c:2995'
+  type_arguments:  [ 94022582140064, 94022582140064 ]
+  raw_name:        mpc_ast_add_root
+  is_public:       0
+  is_private:      0
+- name:            mpc_apply
+  file_location:   '/src/mpc/./mpc.c:1848'
+  type_arguments:  [ 94022580259376, 94022580259376, 94022580258992 ]
+  raw_name:        mpc_apply
+  is_public:       0
+  is_private:      0
+- name:            mpc_ast_add_tag
+  file_location:   '/src/mpc/./mpc.c:3030'
+  type_arguments:  [ 94022582140064, 94022582140064, 94022582177024 ]
+  raw_name:        mpc_ast_add_tag
+  is_public:       0
+  is_private:      0
+- name:            mpcf_unescape_regex
+  file_location:   '/src/mpc/./mpc.c:2653'
+  type_arguments:  [ 94022582139376, 94022582139376 ]
+  raw_name:        mpcf_unescape_regex
+  is_public:       0
+  is_private:      0
+- name:            mpc_re_mode
+  file_location:   '/src/mpc/./mpc.c:2416'
+  type_arguments:  [ 94022580259376, 94022582177024, 94022578529464 ]
+  raw_name:        mpc_re_mode
+  is_public:       0
+  is_private:      0
+- name:            mpca_tag
+  file_location:   '/src/mpc/./mpc.c:3318'
+  type_arguments:  [ 94022580259376, 94022580259376, 94022582177024 ]
+  raw_name:        mpca_tag
+  is_public:       0
+  is_private:      0
+- name:            mpc_ast_tag
+  file_location:   '/src/mpc/./mpc.c:3047'
+  type_arguments:  [ 94022582140064, 94022582140064, 94022582177024 ]
+  raw_name:        mpc_ast_tag
+  is_public:       0
+  is_private:      0
+- name:            mpcf_re_or
+  file_location:   '/src/mpc/./mpc.c:2224'
+  type_arguments:  [ 94022582139376, 94022578529464, 94022580259120 ]
+  raw_name:        mpcf_re_or
+  is_public:       0
+  is_private:      0
+- name:            mpcf_re_and
+  file_location:   '/src/mpc/./mpc.c:2230'
+  type_arguments:  [ 94022582139376, 94022578529464, 94022580259120 ]
+  raw_name:        mpcf_re_and
+  is_public:       0
+  is_private:      0
+- name:            mpc_brackets
+  file_location:   '/src/mpc/./mpc.c:2160'
+  type_arguments:  [ 94022580259376, 94022580259376, 94022582139808 ]
+  raw_name:        mpc_brackets
+  is_public:       0
+  is_private:      0
+- name:            mpcf_re_repeat
+  file_location:   '/src/mpc/./mpc.c:2239'
+  type_arguments:  [ 94022582139376, 94022578529464, 94022580259120 ]
+  raw_name:        mpcf_re_repeat
+  is_public:       0
+  is_private:      0
+- name:            mpc_parens
+  file_location:   '/src/mpc/./mpc.c:2158'
+  type_arguments:  [ 94022580259376, 94022580259376, 94022582139808 ]
+  raw_name:        mpc_parens
+  is_public:       0
+  is_private:      0
+- name:            mpc_squares
+  file_location:   '/src/mpc/./mpc.c:2161'
+  type_arguments:  [ 94022580259376, 94022580259376, 94022582139808 ]
+  raw_name:        mpc_squares
+  is_public:       0
+  is_private:      0
+- name:            mpc_escape
+  file_location:   '/src/mpc/./mpc.c:2073'
+  type_arguments:  [ 94022580259376 ]
+  raw_name:        mpc_escape
+  is_public:       0
+  is_private:      0
+- name:            mpcf_re_escape
+  file_location:   '/src/mpc/./mpc.c:2278'
+  type_arguments:  [ 94022582139376, 94022582139376, 94022576423376 ]
+  raw_name:        mpcf_re_escape
+  is_public:       0
+  is_private:      0
+- name:            mpc_noneof
+  file_location:   '/src/mpc/./mpc.c:1820'
+  type_arguments:  [ 94022580259376, 94022582177024 ]
+  raw_name:        mpc_noneof
+  is_public:       0
+  is_private:      0
+- name:            mpcf_re_range
+  file_location:   '/src/mpc/./mpc.c:2349'
+  type_arguments:  [ 94022582139376, 94022582139376 ]
+  raw_name:        mpcf_re_range
+  is_public:       0
+  is_private:      0
+- name:            mpc_whole
+  file_location:   '/src/mpc/./mpc.c:2142'
+  type_arguments:  [ 94022580259376, 94022580259376, 94022582139808 ]
+  raw_name:        mpc_whole
+  is_public:       0
+  is_private:      0
+- name:            mpc_parse
+  file_location:   '/src/mpc/./mpc.c:1355'
+  type_arguments:  [ 94022578529464, 94022582177024, 94022582177024, 94022580259376, 
+                     94022582130384 ]
+  raw_name:        mpc_parse
+  is_public:       0
+  is_private:      0
+- name:            mpc_err_string
+  file_location:   '/src/mpc/./mpc.c:628'
+  type_arguments:  [ 94022578207872, 94022582123232 ]
+  raw_name:        mpc_err_string
+  is_public:       0
+  is_private:      0
+- name:            mpc_err_delete
+  file_location:   '/src/mpc/./mpc.c:575'
+  type_arguments:  [ 0, 94022582123232 ]
+  raw_name:        mpc_err_delete
+  is_public:       0
+  is_private:      0
+- name:            mpc_err_string_cat
+  file_location:   '/src/mpc/./mpc.c:594'
+  type_arguments:  [ 0, 94022578207872, 94022578248560, 94022578248560, 
+                     94022582177024, 0 ]
+  raw_name:        mpc_err_string_cat
+  is_public:       0
+  is_private:      0
+- name:            mpc_err_char_unescape
+  file_location:   '/src/mpc/./mpc.c:604'
+  type_arguments:  [ 94022582177024, 94022576801576, 94022578207872 ]
+  raw_name:        mpc_err_char_unescape
+  is_public:       0
+  is_private:      0
+- name:            mpc_input_new_string
+  file_location:   '/src/mpc/./mpc.c:103'
+  type_arguments:  [ 94022582130128, 94022582177024, 94022582177024 ]
+  raw_name:        mpc_input_new_string
+  is_public:       0
+  is_private:      0
+- name:            mpcf_dtor_null
+  file_location:   '/src/mpc/./mpc.c:2487'
+  type_arguments:  [ 0, 94022582139376 ]
+  raw_name:        mpcf_dtor_null
+  is_public:       0
+  is_private:      0
+- name:            mpc_fail
+  file_location:   '/src/mpc/./mpc.c:1660'
+  type_arguments:  [ 94022580259376, 94022582177024 ]
+  raw_name:        mpc_fail
+  is_public:       0
+  is_private:      0
+- name:            mpc_any
+  file_location:   '/src/mpc/./mpc.c:1791'
+  type_arguments:  [ 94022580259376 ]
+  raw_name:        mpc_any
+  is_public:       0
+  is_private:      0
+- name:            mpc_boundary_newline
+  file_location:   '/src/mpc/./mpc.c:2065'
+  type_arguments:  [ 94022580259376 ]
+  raw_name:        mpc_boundary_newline
+  is_public:       0
+  is_private:      0
+- name:            mpc_newline
+  file_location:   '/src/mpc/./mpc.c:2071'
+  type_arguments:  [ 94022580259376 ]
+  raw_name:        mpc_newline
+  is_public:       0
+  is_private:      0
+- name:            mpc_boundary_newline_anchor
+  file_location:   '/src/mpc/./mpc.c:2059'
+  type_arguments:  [ 94022578529464, 94022576801576, 94022576801576 ]
+  raw_name:        mpc_boundary_newline_anchor
+  is_public:       0
+  is_private:      0
+- name:            mpc_between
+  file_location:   '/src/mpc/./mpc.c:2152'
+  type_arguments:  [ 94022580259376, 94022580259376, 94022582139808, 94022582177024, 
+                     94022582177024 ]
+  raw_name:        mpc_between
+  is_public:       0
+  is_private:      0
+- name:            mpc_string
+  file_location:   '/src/mpc/./mpc.c:1836'
+  type_arguments:  [ 94022580259376, 94022582177024 ]
+  raw_name:        mpc_string
+  is_public:       0
+  is_private:      0
+- name:            mpc_maybe_lift
+  file_location:   '/src/mpc/./mpc.c:1940'
+  type_arguments:  [ 94022580259376, 94022580259376, 94022582153216 ]
+  raw_name:        mpc_maybe_lift
+  is_public:       0
+  is_private:      0
+- name:            mpc_count
+  file_location:   '/src/mpc/./mpc.c:1968'
+  type_arguments:  [ 94022580259376, 94022578529464, 94022582150448, 94022580259376, 
+                     94022582139808 ]
+  raw_name:        mpc_count
+  is_public:       0
+  is_private:      0
+- name:            mpcf_unescape_new
+  file_location:   '/src/mpc/./mpc.c:2595'
+  type_arguments:  [ 94022582139376, 94022582139376, 94022582177024, 94022580247392 ]
+  raw_name:        mpcf_unescape_new
+  is_public:       0
+  is_private:      0
+- name:            mpcf_unescape
+  file_location:   '/src/mpc/./mpc.c:2641'
+  type_arguments:  [ 94022582139376, 94022582139376 ]
+  raw_name:        mpcf_unescape
+  is_public:       0
+  is_private:      0
+- name:            mpca_many
+  file_location:   '/src/mpc/./mpc.c:3332'
+  type_arguments:  [ 94022580259376, 94022580259376 ]
+  raw_name:        mpca_many
+  is_public:       0
+  is_private:      0
+- name:            mpca_many1
+  file_location:   '/src/mpc/./mpc.c:3333'
+  type_arguments:  [ 94022580259376, 94022580259376 ]
+  raw_name:        mpca_many1
+  is_public:       0
+  is_private:      0
+- name:            mpca_maybe
+  file_location:   '/src/mpc/./mpc.c:3331'
+  type_arguments:  [ 94022580259376, 94022580259376 ]
+  raw_name:        mpca_maybe
+  is_public:       0
+  is_private:      0
+- name:            mpca_not
+  file_location:   '/src/mpc/./mpc.c:3330'
+  type_arguments:  [ 94022580259376, 94022580259376 ]
+  raw_name:        mpca_not
+  is_public:       0
+  is_private:      0
+- name:            mpca_count
+  file_location:   '/src/mpc/./mpc.c:3334'
+  type_arguments:  [ 94022580259376, 94022578529464, 94022580259376 ]
+  raw_name:        mpca_count
+  is_public:       0
+  is_private:      0
+- name:            mpc_not
+  file_location:   '/src/mpc/./mpc.c:1936'
+  type_arguments:  [ 94022580259376, 94022580259376, 94022582139808 ]
+  raw_name:        mpc_not
+  is_public:       0
+  is_private:      0
+- name:            mpcf_ctor_null
+  file_location:   '/src/mpc/./mpc.c:2489'
+  type_arguments:  [ 94022582139376 ]
+  raw_name:        mpcf_ctor_null
+  is_public:       0
+  is_private:      0
+- name:            mpcf_int
+  file_location:   '/src/mpc/./mpc.c:2493'
+  type_arguments:  [ 94022582139376, 94022582139376 ]
+  raw_name:        mpcf_int
+  is_public:       0
+  is_private:      0
+- name:            mpca_and
+  file_location:   '/src/mpc/./mpc.c:3357'
+  type_arguments:  [ 94022580259376, 94022578529464, 0 ]
+  raw_name:        mpca_and
+  is_public:       0
+  is_private:      0
+- name:            mpca_or
+  file_location:   '/src/mpc/./mpc.c:3336'
+  type_arguments:  [ 94022580259376, 94022578529464, 0 ]
+  raw_name:        mpca_or
+  is_public:       0
+  is_private:      0
+- name:            mpc_blank
+  file_location:   '/src/mpc/./mpc.c:2069'
+  type_arguments:  [ 94022580259376 ]
+  raw_name:        mpc_blank
+  is_public:       0
+  is_private:      0
+- name:            mpc_whitespaces
+  file_location:   '/src/mpc/./mpc.c:2068'
+  type_arguments:  [ 94022580259376 ]
+  raw_name:        mpc_whitespaces
+  is_public:       0
+  is_private:      0
+- name:            mpc_strip
+  file_location:   '/src/mpc/./mpc.c:2146'
+  type_arguments:  [ 94022580259376, 94022580259376 ]
+  raw_name:        mpc_strip
+  is_public:       0
+  is_private:      0
+- name:            mpca_lang
+  file_location:   '/src/mpc/./mpc.c:3839'
+  type_arguments:  [ 94022582123232, 94022578529464, 94022582177024, 0 ]
+  raw_name:        mpca_lang
+  is_public:       0
+  is_private:      0
+- name:            mpca_lang_pipe
+  file_location:   '/src/mpc/./mpc.c:3817'
+  type_arguments:  [ 94022582123232, 94022578529464, 94022582124576, 0 ]
+  raw_name:        mpca_lang_pipe
+  is_public:       0
+  is_private:      0
+- name:            mpc_input_new_pipe
+  file_location:   '/src/mpc/./mpc.c:163'
+  type_arguments:  [ 94022582130128, 94022582177024, 94022582124576 ]
+  raw_name:        mpc_input_new_pipe
+  is_public:       0
+  is_private:      0
+- name:            mpca_lang_file
+  file_location:   '/src/mpc/./mpc.c:3795'
+  type_arguments:  [ 94022582123232, 94022578529464, 94022582124576, 0 ]
+  raw_name:        mpca_lang_file
+  is_public:       0
+  is_private:      0
+- name:            mpca_grammar
+  file_location:   '/src/mpc/./mpc.c:3637'
+  type_arguments:  [ 94022580259376, 94022578529464, 94022582177024, 0 ]
+  raw_name:        mpca_grammar
+  is_public:       0
+  is_private:      0
+- name:            mpca_grammar_st
+  file_location:   '/src/mpc/./mpc.c:3570'
+  type_arguments:  [ 94022580259376, 94022582177024, 94022582141728 ]
+  raw_name:        mpca_grammar_st
+  is_public:       0
+  is_private:      0
+- name:            mpca_total
+  file_location:   '/src/mpc/./mpc.c:3382'
+  type_arguments:  [ 94022580259376, 94022580259376 ]
+  raw_name:        mpca_total
+  is_public:       0
+  is_private:      0
+- name:            mpc_ast_traverse_free
+  file_location:   '/src/mpc/./mpc.c:3250'
+  type_arguments:  [ 0, 94022582141472 ]
+  raw_name:        mpc_ast_traverse_free
+  is_public:       0
+  is_private:      0
+- name:            mpc_ast_traverse_next
+  file_location:   '/src/mpc/./mpc.c:3167'
+  type_arguments:  [ 94022582140064, 94022582141472 ]
+  raw_name:        mpc_ast_traverse_next
+  is_public:       0
+  is_private:      0
+- name:            mpc_ast_traverse_start
+  file_location:   '/src/mpc/./mpc.c:3125'
+  type_arguments:  [ 94022582207584, 94022582140064, 94022582207712 ]
+  raw_name:        mpc_ast_traverse_start
+  is_public:       0
+  is_private:      0
+- name:            mpc_ast_get_child_lb
+  file_location:   '/src/mpc/./mpc.c:3113'
+  type_arguments:  [ 94022582140064, 94022582140064, 94022582177024, 94022578529464 ]
+  raw_name:        mpc_ast_get_child_lb
+  is_public:       0
+  is_private:      0
+- name:            mpc_ast_get_child
+  file_location:   '/src/mpc/./mpc.c:3109'
+  type_arguments:  [ 94022582140064, 94022582140064, 94022582177024 ]
+  raw_name:        mpc_ast_get_child
+  is_public:       0
+  is_private:      0
+- name:            mpc_ast_get_index_lb
+  file_location:   '/src/mpc/./mpc.c:3097'
+  type_arguments:  [ 94022578529464, 94022582140064, 94022582177024, 94022578529464 ]
+  raw_name:        mpc_ast_get_index_lb
+  is_public:       0
+  is_private:      0
+- name:            mpc_ast_get_index
+  file_location:   '/src/mpc/./mpc.c:3093'
+  type_arguments:  [ 94022578529464, 94022582140064, 94022582177024 ]
+  raw_name:        mpc_ast_get_index
+  is_public:       0
+  is_private:      0
+- name:            mpc_ast_print_to
+  file_location:   '/src/mpc/./mpc.c:3089'
+  type_arguments:  [ 0, 94022582140064, 94022582124576 ]
+  raw_name:        mpc_ast_print_to
+  is_public:       0
+  is_private:      0
+- name:            mpc_ast_print_depth
+  file_location:   '/src/mpc/./mpc.c:3059'
+  type_arguments:  [ 0, 94022582140064, 94022578529464, 94022582124576 ]
+  raw_name:        mpc_ast_print_depth
+  is_public:       0
+  is_private:      0
+- name:            mpc_ast_print
+  file_location:   '/src/mpc/./mpc.c:3085'
+  type_arguments:  [ 0, 94022582140064 ]
+  raw_name:        mpc_ast_print
+  is_public:       0
+  is_private:      0
+- name:            mpc_ast_eq
+  file_location:   '/src/mpc/./mpc.c:3008'
+  type_arguments:  [ 94022578529464, 94022582140064, 94022582140064 ]
+  raw_name:        mpc_ast_eq
+  is_public:       0
+  is_private:      0
+- name:            mpc_ast_build
+  file_location:   '/src/mpc/./mpc.c:2977'
+  type_arguments:  [ 94022582140064, 94022578529464, 94022582177024, 0 ]
+  raw_name:        mpc_ast_build
+  is_public:       0
+  is_private:      0
+- name:            mpc_test_pass
+  file_location:   '/src/mpc/./mpc.c:2903'
+  type_arguments:  [ 94022578529464, 94022580259376, 94022582177024, 94022578121056, 
+                     94022580203168, 94022582139808, 94022580230496 ]
+  raw_name:        mpc_test_pass
+  is_public:       0
+  is_private:      0
+- name:            mpc_err_print
+  file_location:   '/src/mpc/./mpc.c:584'
+  type_arguments:  [ 0, 94022582123232 ]
+  raw_name:        mpc_err_print
+  is_public:       0
+  is_private:      0
+- name:            mpc_err_print_to
+  file_location:   '/src/mpc/./mpc.c:588'
+  type_arguments:  [ 0, 94022582123232, 94022582124576 ]
+  raw_name:        mpc_err_print_to
+  is_public:       0
+  is_private:      0
+- name:            mpc_test_fail
+  file_location:   '/src/mpc/./mpc.c:2880'
+  type_arguments:  [ 94022578529464, 94022580259376, 94022582177024, 94022578121056, 
+                     94022580203168, 94022582139808, 94022580230496 ]
+  raw_name:        mpc_test_fail
+  is_public:       0
+  is_private:      0
+- name:            mpc_print_unretained
+  file_location:   '/src/mpc/./mpc.c:2728'
+  type_arguments:  [ 0, 94022580259376, 94022578529464 ]
+  raw_name:        mpc_print_unretained
+  is_public:       0
+  is_private:      0
+- name:            mpcf_escape_new
+  file_location:   '/src/mpc/./mpc.c:2559'
+  type_arguments:  [ 94022582139376, 94022582139376, 94022582177024, 94022580247392 ]
+  raw_name:        mpcf_escape_new
+  is_public:       0
+  is_private:      0
+- name:            mpc_print
+  file_location:   '/src/mpc/./mpc.c:2860'
+  type_arguments:  [ 0, 94022580259376 ]
+  raw_name:        mpc_print
+  is_public:       0
+  is_private:      0
+- name:            mpcf_all_free
+  file_location:   '/src/mpc/./mpc.c:2699'
+  type_arguments:  [ 94022582139376, 94022578529464, 94022580259120 ]
+  raw_name:        mpcf_all_free
+  is_public:       0
+  is_private:      0
+- name:            mpcf_unescape_char_raw
+  file_location:   '/src/mpc/./mpc.c:2677'
+  type_arguments:  [ 94022582139376, 94022582139376 ]
+  raw_name:        mpcf_unescape_char_raw
+  is_public:       0
+  is_private:      0
+- name:            mpcf_escape_char_raw
+  file_location:   '/src/mpc/./mpc.c:2671'
+  type_arguments:  [ 94022582139376, 94022582139376 ]
+  raw_name:        mpcf_escape_char_raw
+  is_public:       0
+  is_private:      0
+- name:            mpcf_unescape_string_raw
+  file_location:   '/src/mpc/./mpc.c:2665'
+  type_arguments:  [ 94022582139376, 94022582139376 ]
+  raw_name:        mpcf_unescape_string_raw
+  is_public:       0
+  is_private:      0
+- name:            mpcf_escape_string_raw
+  file_location:   '/src/mpc/./mpc.c:2659'
+  type_arguments:  [ 94022582139376, 94022582139376 ]
+  raw_name:        mpcf_escape_string_raw
+  is_public:       0
+  is_private:      0
+- name:            mpcf_escape_regex
+  file_location:   '/src/mpc/./mpc.c:2647'
+  type_arguments:  [ 94022582139376, 94022582139376 ]
+  raw_name:        mpcf_escape_regex
+  is_public:       0
+  is_private:      0
+- name:            mpcf_escape
+  file_location:   '/src/mpc/./mpc.c:2635'
+  type_arguments:  [ 94022582139376, 94022582139376 ]
+  raw_name:        mpcf_escape
+  is_public:       0
+  is_private:      0
+- name:            mpcf_strtrim
+  file_location:   '/src/mpc/./mpc.c:2538'
+  type_arguments:  [ 94022582139376, 94022582139376 ]
+  raw_name:        mpcf_strtrim
+  is_public:       0
+  is_private:      0
+- name:            mpcf_strtrimr
+  file_location:   '/src/mpc/./mpc.c:2529'
+  type_arguments:  [ 94022582139376, 94022582139376 ]
+  raw_name:        mpcf_strtrimr
+  is_public:       0
+  is_private:      0
+- name:            mpcf_strtriml
+  file_location:   '/src/mpc/./mpc.c:2521'
+  type_arguments:  [ 94022582139376, 94022582139376 ]
+  raw_name:        mpcf_strtriml
+  is_public:       0
+  is_private:      0
+- name:            mpc_re
+  file_location:   '/src/mpc/./mpc.c:2412'
+  type_arguments:  [ 94022580259376, 94022582177024 ]
+  raw_name:        mpc_re
+  is_public:       0
+  is_private:      0
+- name:            mpc_tok_squares
+  file_location:   '/src/mpc/./mpc.c:2172'
+  type_arguments:  [ 94022580259376, 94022580259376, 94022582139808 ]
+  raw_name:        mpc_tok_squares
+  is_public:       0
+  is_private:      0
+- name:            mpc_braces
+  file_location:   '/src/mpc/./mpc.c:2159'
+  type_arguments:  [ 94022580259376, 94022580259376, 94022582139808 ]
+  raw_name:        mpc_braces
+  is_public:       0
+  is_private:      0
+- name:            mpc_stripr
+  file_location:   '/src/mpc/./mpc.c:2145'
+  type_arguments:  [ 94022580259376, 94022580259376 ]
+  raw_name:        mpc_stripr
+  is_public:       0
+  is_private:      0
+- name:            mpc_stripl
+  file_location:   '/src/mpc/./mpc.c:2144'
+  type_arguments:  [ 94022580259376, 94022580259376 ]
+  raw_name:        mpc_stripl
+  is_public:       0
+  is_private:      0
+- name:            mpc_endwith
+  file_location:   '/src/mpc/./mpc.c:2141'
+  type_arguments:  [ 94022580259376, 94022580259376, 94022582139808 ]
+  raw_name:        mpc_endwith
+  is_public:       0
+  is_private:      0
+- name:            mpc_startwith
+  file_location:   '/src/mpc/./mpc.c:2140'
+  type_arguments:  [ 94022580259376, 94022580259376 ]
+  raw_name:        mpc_startwith
+  is_public:       0
+  is_private:      0
+- name:            mpcf_float
+  file_location:   '/src/mpc/./mpc.c:2514'
+  type_arguments:  [ 94022582139376, 94022582139376 ]
+  raw_name:        mpcf_float
+  is_public:       0
+  is_private:      0
+- name:            mpc_float
+  file_location:   '/src/mpc/./mpc.c:2111'
+  type_arguments:  [ 94022580259376 ]
+  raw_name:        mpc_float
+  is_public:       0
+  is_private:      0
+- name:            mpc_real
+  file_location:   '/src/mpc/./mpc.c:2093'
+  type_arguments:  [ 94022580259376 ]
+  raw_name:        mpc_real
+  is_public:       0
+  is_private:      0
+- name:            mpc_number
+  file_location:   '/src/mpc/./mpc.c:2091'
+  type_arguments:  [ 94022580259376 ]
+  raw_name:        mpc_number
+  is_public:       0
+  is_private:      0
+- name:            mpc_hex
+  file_location:   '/src/mpc/./mpc.c:2089'
+  type_arguments:  [ 94022580259376 ]
+  raw_name:        mpc_hex
+  is_public:       0
+  is_private:      0
+- name:            mpc_oct
+  file_location:   '/src/mpc/./mpc.c:2090'
+  type_arguments:  [ 94022580259376 ]
+  raw_name:        mpc_oct
+  is_public:       0
+  is_private:      0
+- name:            mpc_octdigits
+  file_location:   '/src/mpc/./mpc.c:2080'
+  type_arguments:  [ 94022580259376 ]
+  raw_name:        mpc_octdigits
+  is_public:       0
+  is_private:      0
+- name:            mpcf_oct
+  file_location:   '/src/mpc/./mpc.c:2507'
+  type_arguments:  [ 94022582139376, 94022582139376 ]
+  raw_name:        mpcf_oct
+  is_public:       0
+  is_private:      0
+- name:            mpc_octdigit
+  file_location:   '/src/mpc/./mpc.c:2077'
+  type_arguments:  [ 94022580259376 ]
+  raw_name:        mpc_octdigit
+  is_public:       0
+  is_private:      0
+- name:            mpc_hexdigits
+  file_location:   '/src/mpc/./mpc.c:2079'
+  type_arguments:  [ 94022580259376 ]
+  raw_name:        mpc_hexdigits
+  is_public:       0
+  is_private:      0
+- name:            mpcf_hex
+  file_location:   '/src/mpc/./mpc.c:2500'
+  type_arguments:  [ 94022582139376, 94022582139376 ]
+  raw_name:        mpcf_hex
+  is_public:       0
+  is_private:      0
+- name:            mpc_hexdigit
+  file_location:   '/src/mpc/./mpc.c:2076'
+  type_arguments:  [ 94022580259376 ]
+  raw_name:        mpc_hexdigit
+  is_public:       0
+  is_private:      0
+- name:            mpc_upper
+  file_location:   '/src/mpc/./mpc.c:2083'
+  type_arguments:  [ 94022580259376 ]
+  raw_name:        mpc_upper
+  is_public:       0
+  is_private:      0
+- name:            mpc_lower
+  file_location:   '/src/mpc/./mpc.c:2082'
+  type_arguments:  [ 94022580259376 ]
+  raw_name:        mpc_lower
+  is_public:       0
+  is_private:      0
+- name:            mpc_tab
+  file_location:   '/src/mpc/./mpc.c:2072'
+  type_arguments:  [ 94022580259376 ]
+  raw_name:        mpc_tab
+  is_public:       0
+  is_private:      0
+- name:            mpc_sepby1
+  file_location:   '/src/mpc/./mpc.c:1978'
+  type_arguments:  [ 94022580259376, 94022582150448, 94022580259376, 94022580259376 ]
+  raw_name:        mpc_sepby1
+  is_public:       0
+  is_private:      0
+- name:            mpc_check_withf
+  file_location:   '/src/mpc/./mpc.c:1904'
+  type_arguments:  [ 94022580259376, 94022580259376, 94022582139808, 94022582154272, 
+                     94022576423376, 94022582177024, 0 ]
+  raw_name:        mpc_check_withf
+  is_public:       0
+  is_private:      0
+- name:            mpc_check_with
+  file_location:   '/src/mpc/./mpc.c:1876'
+  type_arguments:  [ 94022580259376, 94022580259376, 94022582139808, 94022582154272, 
+                     94022576423376, 94022582177024 ]
+  raw_name:        mpc_check_with
+  is_public:       0
+  is_private:      0
+- name:            mpc_checkf
+  file_location:   '/src/mpc/./mpc.c:1888'
+  type_arguments:  [ 94022580259376, 94022580259376, 94022582139808, 94022582155424, 
+                     94022582177024, 0 ]
+  raw_name:        mpc_checkf
+  is_public:       0
+  is_private:      0
+- name:            mpc_check
+  file_location:   '/src/mpc/./mpc.c:1865'
+  type_arguments:  [ 94022580259376, 94022580259376, 94022582139808, 94022582155424, 
+                     94022582177024 ]
+  raw_name:        mpc_check
+  is_public:       0
+  is_private:      0
+- name:            mpc_satisfy
+  file_location:   '/src/mpc/./mpc.c:1829'
+  type_arguments:  [ 94022580259376, 94022582157008 ]
+  raw_name:        mpc_satisfy
+  is_public:       0
+  is_private:      0
+- name:            mpc_range
+  file_location:   '/src/mpc/./mpc.c:1804'
+  type_arguments:  [ 94022580259376, 94022576801576, 94022576801576 ]
+  raw_name:        mpc_range
+  is_public:       0
+  is_private:      0
+- name:            mpc_copy
+  file_location:   '/src/mpc/./mpc.c:1527'
+  type_arguments:  [ 94022580259376, 94022580259376 ]
+  raw_name:        mpc_copy
+  is_public:       0
+  is_private:      0
+- name:            mpc_parse_contents
+  file_location:   '/src/mpc/./mpc.c:1387'
+  type_arguments:  [ 94022578529464, 94022582177024, 94022580259376, 94022582130384 ]
+  raw_name:        mpc_parse_contents
+  is_public:       0
+  is_private:      0
+- name:            mpc_parse_file
+  file_location:   '/src/mpc/./mpc.c:1371'
+  type_arguments:  [ 94022578529464, 94022582177024, 94022582124576, 94022580259376, 
+                     94022582130384 ]
+  raw_name:        mpc_parse_file
+  is_public:       0
+  is_private:      0
+- name:            mpc_parse_pipe
+  file_location:   '/src/mpc/./mpc.c:1379'
+  type_arguments:  [ 94022578529464, 94022582177024, 94022582124576, 94022580259376, 
+                     94022582130384 ]
+  raw_name:        mpc_parse_pipe
+  is_public:       0
+  is_private:      0
+- name:            mpc_input_new_nstring
+  file_location:   '/src/mpc/./mpc.c:132'
+  type_arguments:  [ 94022582130128, 94022582177024, 94022582177024, 94022579708736 ]
+  raw_name:        mpc_input_new_nstring
+  is_public:       0
+  is_private:      0
+- name:            mpc_nparse
+  file_location:   '/src/mpc/./mpc.c:1363'
+  type_arguments:  [ 94022578529464, 94022582177024, 94022582177024, 94022579708736, 
+                     94022580259376, 94022582130384 ]
+  raw_name:        mpc_nparse
+  is_public:       0
+  is_private:      0
+- name:            pt_color
+  file_location:   '/src/mpc/./tests/ptest.c:93'
+  type_arguments:  [ 0, 94022578529464 ]
+  raw_name:        pt_color
+  is_public:       0
+  is_private:      0
+- name:            ptest_signal
+  file_location:   '/src/mpc/./tests/ptest.c:127'
+  type_arguments:  [ 0, 94022578529464 ]
+  raw_name:        ptest_signal
+  is_public:       0
+  is_private:      0
+- name:            pt_run
+  file_location:   '/src/mpc/./tests/ptest.c:241'
+  type_arguments:  [ 94022578529464 ]
+  raw_name:        pt_run
+  is_public:       0
+  is_private:      0
+- name:            pt_add_suite
+  file_location:   '/src/mpc/./tests/ptest.c:231'
+  type_arguments:  [ 0, 94022586041728 ]
+  raw_name:        pt_add_suite
+  is_public:       0
+  is_private:      0
+- name:            pt_title_case
+  file_location:   '/src/mpc/./tests/ptest.c:159'
+  type_arguments:  [ 0, 94022578207872, 94022582177024 ]
+  raw_name:        pt_title_case
+  is_public:       0
+  is_private:      0
+- name:            pt_add_test
+  file_location:   '/src/mpc/./tests/ptest.c:198'
+  type_arguments:  [ 0, 94022586041728, 94022582177024, 94022582177024 ]
+  raw_name:        pt_add_test
+  is_public:       0
+  is_private:      0
+- name:            pt_assert_run
+  file_location:   '/src/mpc/./tests/ptest.c:109'
+  type_arguments:  [ 0, 94022578529464, 94022582177024, 94022582177024, 
+                     94022578529464 ]
+  raw_name:        pt_assert_run
+  is_public:       0
+  is_private:      0
+- name:            suite_regex
+  file_location:   '/src/mpc/./tests/regex.c:172'
+  type_arguments:  [ 0 ]
+  raw_name:        suite_regex
+  is_public:       0
+  is_private:      0
+- name:            test_regex_basic
+  file_location:   '/src/mpc/./tests/regex.c:18'
+  type_arguments:  [ 0 ]
+  raw_name:        test_regex_basic
+  is_public:       0
+  is_private:      0
+- name:            test_regex_range
+  file_location:   '/src/mpc/./tests/regex.c:81'
+  type_arguments:  [ 0 ]
+  raw_name:        test_regex_range
+  is_public:       0
+  is_private:      0
+- name:            test_regex_string
+  file_location:   '/src/mpc/./tests/regex.c:99'
+  type_arguments:  [ 0 ]
+  raw_name:        test_regex_string
+  is_public:       0
+  is_private:      0
+- name:            test_regex_lisp_comment
+  file_location:   '/src/mpc/./tests/regex.c:112'
+  type_arguments:  [ 0 ]
+  raw_name:        test_regex_lisp_comment
+  is_public:       0
+  is_private:      0
+- name:            test_regex_boundary
+  file_location:   '/src/mpc/./tests/regex.c:48'
+  type_arguments:  [ 0 ]
+  raw_name:        test_regex_boundary
+  is_public:       0
+  is_private:      0
+- name:            test_regex_newline
+  file_location:   '/src/mpc/./tests/regex.c:123'
+  type_arguments:  [ 0 ]
+  raw_name:        test_regex_newline
+  is_public:       0
+  is_private:      0
+- name:            test_regex_multiline
+  file_location:   '/src/mpc/./tests/regex.c:135'
+  type_arguments:  [ 0 ]
+  raw_name:        test_regex_multiline
+  is_public:       0
+  is_private:      0
+- name:            test_regex_dotall
+  file_location:   '/src/mpc/./tests/regex.c:150'
+  type_arguments:  [ 0 ]
+  raw_name:        test_regex_dotall
+  is_public:       0
+  is_private:      0
+- name:            regex_test_pass
+  file_location:   '/src/mpc/./tests/regex.c:10'
+  type_arguments:  [ 94022578529464, 94022578317184, 94022582177024, 94022582177024 ]
+  raw_name:        regex_test_pass
+  is_public:       0
+  is_private:      0
+- name:            regex_test_fail
+  file_location:   '/src/mpc/./tests/regex.c:14'
+  type_arguments:  [ 94022578529464, 94022578317184, 94022582177024, 94022582177024 ]
+  raw_name:        regex_test_fail
+  is_public:       0
+  is_private:      0
+- name:            string_eq
+  file_location:   '/src/mpc/./tests/regex.c:7'
+  type_arguments:  [ 94022578529464, 94022578121056, 94022578121056 ]
+  raw_name:        string_eq
+  is_public:       0
+  is_private:      0
+- name:            string_print
+  file_location:   '/src/mpc/./tests/regex.c:8'
+  type_arguments:  [ 0, 94022578121056 ]
+  raw_name:        string_print
+  is_public:       0
+  is_private:      0
+...

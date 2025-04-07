@@ -1,0 +1,669 @@
+<--- Debug Information for Module 2.0 --->
+Compile unit: DW_LANG_C11 from /src/sqlite-createtable-parser//src/fuzzers/empty-fuzzer.c
+Compile unit: DW_LANG_C11 from /src/sqlite-createtable-parser/sql3parse_table.c
+
+## Functions defined in module
+Subprogram: LLVMFuzzerTestOneInput
+ from /src/fuzzers/empty-fuzzer.c:5
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type, DW_TAG_typedef,  uint8_t
+ - Operand Type: Name: {  size_t}Type:  from /usr/local/lib/clang/18/include/__stddef_size_t.h:18DW_TAG_typedef,  size_t
+
+Subprogram: sql3lexer_checkskip
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:422
+ - Operand Type: Name: {  _Bool}Type:  DW_ATE_boolean
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3state
+
+Subprogram: symbol_is_toskip
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:186
+ - Operand Type: Name: {  _Bool}Type:  DW_ATE_boolean
+ - Operand Type: Name: {  sql3char}Type:  from /src/sqlite-createtable-parser/./sql3parse_table.h:41DW_TAG_typedef,  sql3char
+
+Subprogram: symbol_is_comment
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:191
+ - Operand Type: Name: {  _Bool}Type:  DW_ATE_boolean
+ - Operand Type: Name: {  sql3char}Type:  from /src/sqlite-createtable-parser/./sql3parse_table.h:41DW_TAG_typedef,  sql3char
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3state
+
+Subprogram: sql3lexer_comment
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:322
+ - Operand Type: Name: {  sql3token_t}Type:  from /src/sqlite-createtable-parser/./sql3parse_table.c:38DW_TAG_typedef,  sql3token_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3state
+
+Subprogram: symbol_is_newline
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:182
+ - Operand Type: Name: {  _Bool}Type:  DW_ATE_boolean
+ - Operand Type: Name: {  sql3char}Type:  from /src/sqlite-createtable-parser/./sql3parse_table.h:41DW_TAG_typedef,  sql3char
+
+Subprogram: symbol_is_space
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:178
+ - Operand Type: Name: {  _Bool}Type:  DW_ATE_boolean
+ - Operand Type: Name: {  sql3char}Type:  from /src/sqlite-createtable-parser/./sql3parse_table.h:41DW_TAG_typedef,  sql3char
+
+Subprogram: sql3parse_foreignkey_clause
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:493
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3foreignkey
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3state
+
+Subprogram: sql3lexer_next
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:432
+ - Operand Type: Name: {  sql3token_t}Type:  from /src/sqlite-createtable-parser/./sql3parse_table.c:38DW_TAG_typedef,  sql3token_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3state
+
+Subprogram: sql3lexer_peek
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:447
+ - Operand Type: Name: {  sql3token_t}Type:  from /src/sqlite-createtable-parser/./sql3parse_table.c:38DW_TAG_typedef,  sql3token_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3state
+
+Subprogram: symbol_is_punctuation
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:218
+ - Operand Type: Name: {  _Bool}Type:  DW_ATE_boolean
+ - Operand Type: Name: {  sql3char}Type:  from /src/sqlite-createtable-parser/./sql3parse_table.h:41DW_TAG_typedef,  sql3char
+
+Subprogram: sql3lexer_punctuation
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:365
+ - Operand Type: Name: {  sql3token_t}Type:  from /src/sqlite-createtable-parser/./sql3parse_table.c:38DW_TAG_typedef,  sql3token_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3state
+
+Subprogram: symbol_is_alpha
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:197
+ - Operand Type: Name: {  _Bool}Type:  DW_ATE_boolean
+ - Operand Type: Name: {  sql3char}Type:  from /src/sqlite-createtable-parser/./sql3parse_table.h:41DW_TAG_typedef,  sql3char
+
+Subprogram: sql3lexer_alpha
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:379
+ - Operand Type: Name: {  sql3token_t}Type:  from /src/sqlite-createtable-parser/./sql3parse_table.c:38DW_TAG_typedef,  sql3token_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3state
+
+Subprogram: symbol_is_escape
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:207
+ - Operand Type: Name: {  _Bool}Type:  DW_ATE_boolean
+ - Operand Type: Name: {  sql3char}Type:  from /src/sqlite-createtable-parser/./sql3parse_table.h:41DW_TAG_typedef,  sql3char
+
+Subprogram: sql3lexer_escape
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:399
+ - Operand Type: Name: {  sql3token_t}Type:  from /src/sqlite-createtable-parser/./sql3parse_table.c:38DW_TAG_typedef,  sql3token_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3state
+
+Subprogram: symbol_is_identifier
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:202
+ - Operand Type: Name: {  _Bool}Type:  DW_ATE_boolean
+ - Operand Type: Name: {  sql3char}Type:  from /src/sqlite-createtable-parser/./sql3parse_table.h:41DW_TAG_typedef,  sql3char
+
+Subprogram: sql3lexer_keyword
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:234
+ - Operand Type: Name: {  sql3token_t}Type:  from /src/sqlite-createtable-parser/./sql3parse_table.c:38DW_TAG_typedef,  sql3token_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Name: {  size_t}Type:  from /usr/local/lib/clang/18/include/__stddef_size_t.h:18DW_TAG_typedef,  size_t
+
+Subprogram: str_nocasencmp
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:166
+ - Operand Type: Name: {  int}Type:  DW_ATE_signed
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Name: {  size_t}Type:  from /usr/local/lib/clang/18/include/__stddef_size_t.h:18DW_TAG_typedef,  size_t
+
+Subprogram: sql3parse_literal
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:753
+ - Operand Type: Name: {  sql3string}Type:  from /src/sqlite-createtable-parser/./sql3parse_table.h:40DW_TAG_typedef,  sql3string
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3state
+
+Subprogram: sql3parse_expression
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:797
+ - Operand Type: Name: {  sql3string}Type:  from /src/sqlite-createtable-parser/./sql3parse_table.h:40DW_TAG_typedef,  sql3string
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3state
+
+Subprogram: sql3parse_optionalconflitclause
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:471
+ - Operand Type: Name: {  sql3error_code}Type:  from /src/sqlite-createtable-parser/./sql3parse_table.h:48DW_TAG_typedef,  sql3error_code
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3state
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3conflict_clause
+
+Subprogram: sql3parse_optionalorder
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:458
+ - Operand Type: Name: {  sql3error_code}Type:  from /src/sqlite-createtable-parser/./sql3parse_table.h:48DW_TAG_typedef,  sql3error_code
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3state
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3order_clause
+
+Subprogram: sql3parse_column_constraints
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:863
+ - Operand Type: Name: {  sql3error_code}Type:  from /src/sqlite-createtable-parser/./sql3parse_table.h:48DW_TAG_typedef,  sql3error_code
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3state
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3column
+
+Subprogram: token_is_column_constraint
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:222
+ - Operand Type: Name: {  _Bool}Type:  DW_ATE_boolean
+ - Operand Type: Name: {  sql3token_t}Type:  from /src/sqlite-createtable-parser/./sql3parse_table.c:38DW_TAG_typedef,  sql3token_t
+
+Subprogram: sql3parse_column_type
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:821
+ - Operand Type: Name: {  sql3error_code}Type:  from /src/sqlite-createtable-parser/./sql3parse_table.h:48DW_TAG_typedef,  sql3error_code
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3state
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3column
+
+Subprogram: sql3parse_table_options
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:600
+ - Operand Type: Name: {  sql3error_code}Type:  from /src/sqlite-createtable-parser/./sql3parse_table.h:48DW_TAG_typedef,  sql3error_code
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3state
+
+Subprogram: sql3parse_table_constraint
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:640
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3tableconstraint
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3state
+
+Subprogram: token_is_table_constraint
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:227
+ - Operand Type: Name: {  _Bool}Type:  DW_ATE_boolean
+ - Operand Type: Name: {  sql3token_t}Type:  from /src/sqlite-createtable-parser/./sql3parse_table.c:38DW_TAG_typedef,  sql3token_t
+
+Subprogram: sql3parse_column
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:943
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3column
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3state
+
+Subprogram: sql3parse_schema_identifier
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:976
+ - Operand Type: Name: {  sql3error_code}Type:  from /src/sqlite-createtable-parser/./sql3parse_table.h:48DW_TAG_typedef,  sql3error_code
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3state
+
+Subprogram: sql3string_ptr
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:148
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3string
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  size_t
+
+Subprogram: sql3parse_alter
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:1009
+ - Operand Type: Name: {  sql3error_code}Type:  from /src/sqlite-createtable-parser/./sql3parse_table.h:48DW_TAG_typedef,  sql3error_code
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3state
+
+Subprogram: sql3parse_create
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:1110
+ - Operand Type: Name: {  sql3error_code}Type:  from /src/sqlite-createtable-parser/./sql3parse_table.h:48DW_TAG_typedef,  sql3error_code
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3state
+
+Subprogram: sql3parse
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:1238
+ - Operand Type: Name: {  sql3error_code}Type:  from /src/sqlite-createtable-parser/./sql3parse_table.h:48DW_TAG_typedef,  sql3error_code
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3state
+
+Subprogram: sql3parse_table
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:1527
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3table
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Name: {  size_t}Type:  from /usr/local/lib/clang/18/include/__stddef_size_t.h:18DW_TAG_typedef,  size_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3error_code
+
+Subprogram: sql3idxcolumn_order
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:1521
+ - Operand Type: Name: {  sql3order_clause}Type:  from /src/sqlite-createtable-parser/./sql3parse_table.h:63DW_TAG_typedef,  sql3order_clause
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3idxcolumn
+
+Subprogram: sql3idxcolumn_collate
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:1516
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3string
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3idxcolumn
+
+Subprogram: sql3idxcolumn_name
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:1511
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3string
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3idxcolumn
+
+Subprogram: sql3foreignkey_deferrable
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:1505
+ - Operand Type: Name: {  sql3fk_deftype}Type:  from /src/sqlite-createtable-parser/./sql3parse_table.h:82DW_TAG_typedef,  sql3fk_deftype
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3foreignkey
+
+Subprogram: sql3foreignkey_match
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:1500
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3string
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3foreignkey
+
+Subprogram: sql3foreignkey_onupdate_action
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:1496
+ - Operand Type: Name: {  sql3fk_action}Type:  from /src/sqlite-createtable-parser/./sql3parse_table.h:72DW_TAG_typedef,  sql3fk_action
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3foreignkey
+
+Subprogram: sql3foreignkey_ondelete_action
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:1492
+ - Operand Type: Name: {  sql3fk_action}Type:  from /src/sqlite-createtable-parser/./sql3parse_table.h:72DW_TAG_typedef,  sql3fk_action
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3foreignkey
+
+Subprogram: sql3foreignkey_get_column
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:1485
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3string
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3foreignkey
+ - Operand Type: Name: {  size_t}Type:  from /usr/local/lib/clang/18/include/__stddef_size_t.h:18DW_TAG_typedef,  size_t
+
+Subprogram: sql3foreignkey_num_columns
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:1481
+ - Operand Type: Name: {  size_t}Type:  from /usr/local/lib/clang/18/include/__stddef_size_t.h:18DW_TAG_typedef,  size_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3foreignkey
+
+Subprogram: sql3foreignkey_table
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:1476
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3string
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3foreignkey
+
+Subprogram: sql3column_foreignkey_clause
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:1470
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3foreignkey
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3column
+
+Subprogram: sql3column_collate_name
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:1465
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3string
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3column
+
+Subprogram: sql3column_default_expr
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:1460
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3string
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3column
+
+Subprogram: sql3column_check_expr
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:1455
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3string
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3column
+
+Subprogram: sql3column_unique_conflictclause
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:1451
+ - Operand Type: Name: {  sql3conflict_clause}Type:  from /src/sqlite-createtable-parser/./sql3parse_table.h:57DW_TAG_typedef,  sql3conflict_clause
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3column
+
+Subprogram: sql3column_notnull_conflictclause
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:1447
+ - Operand Type: Name: {  sql3conflict_clause}Type:  from /src/sqlite-createtable-parser/./sql3parse_table.h:57DW_TAG_typedef,  sql3conflict_clause
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3column
+
+Subprogram: sql3column_pk_conflictclause
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:1443
+ - Operand Type: Name: {  sql3conflict_clause}Type:  from /src/sqlite-createtable-parser/./sql3parse_table.h:57DW_TAG_typedef,  sql3conflict_clause
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3column
+
+Subprogram: sql3column_pk_order
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:1439
+ - Operand Type: Name: {  sql3order_clause}Type:  from /src/sqlite-createtable-parser/./sql3parse_table.h:63DW_TAG_typedef,  sql3order_clause
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3column
+
+Subprogram: sql3column_is_unique
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:1435
+ - Operand Type: Name: {  _Bool}Type:  DW_ATE_boolean
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3column
+
+Subprogram: sql3column_is_notnull
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:1431
+ - Operand Type: Name: {  _Bool}Type:  DW_ATE_boolean
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3column
+
+Subprogram: sql3column_is_autoincrement
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:1427
+ - Operand Type: Name: {  _Bool}Type:  DW_ATE_boolean
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3column
+
+Subprogram: sql3column_is_primarykey
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:1423
+ - Operand Type: Name: {  _Bool}Type:  DW_ATE_boolean
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3column
+
+Subprogram: sql3column_comment
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:1418
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3string
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3column
+
+Subprogram: sql3column_constraint_name
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:1413
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3string
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3column
+
+Subprogram: sql3column_length
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:1408
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3string
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3column
+
+Subprogram: sql3column_type
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:1403
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3string
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3column
+
+Subprogram: sql3column_name
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:1398
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3string
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3column
+
+Subprogram: sql3table_constraint_foreignkey_clause
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:1391
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3foreignkey
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3tableconstraint
+
+Subprogram: sql3table_constraint_get_fkcolumn
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:1384
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3string
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3tableconstraint
+ - Operand Type: Name: {  size_t}Type:  from /usr/local/lib/clang/18/include/__stddef_size_t.h:18DW_TAG_typedef,  size_t
+
+Subprogram: sql3table_constraint_num_fkcolumns
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:1379
+ - Operand Type: Name: {  size_t}Type:  from /usr/local/lib/clang/18/include/__stddef_size_t.h:18DW_TAG_typedef,  size_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3tableconstraint
+
+Subprogram: sql3table_constraint_check_expr
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:1373
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3string
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3tableconstraint
+
+Subprogram: sql3table_constraint_conflict_clause
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:1368
+ - Operand Type: Name: {  sql3conflict_clause}Type:  from /src/sqlite-createtable-parser/./sql3parse_table.h:57DW_TAG_typedef,  sql3conflict_clause
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3tableconstraint
+
+Subprogram: sql3table_constraint_get_idxcolumn
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:1362
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3idxcolumn
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3tableconstraint
+ - Operand Type: Name: {  size_t}Type:  from /usr/local/lib/clang/18/include/__stddef_size_t.h:18DW_TAG_typedef,  size_t
+
+Subprogram: sql3table_constraint_num_idxcolumns
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:1357
+ - Operand Type: Name: {  size_t}Type:  from /usr/local/lib/clang/18/include/__stddef_size_t.h:18DW_TAG_typedef,  size_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3tableconstraint
+
+Subprogram: sql3table_constraint_type
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:1353
+ - Operand Type: Name: {  sql3constraint_type}Type:  from /src/sqlite-createtable-parser/./sql3parse_table.h:89DW_TAG_typedef,  sql3constraint_type
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3tableconstraint
+
+Subprogram: sql3table_constraint_name
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:1348
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3string
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3tableconstraint
+
+Subprogram: sql3table_free
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:1313
+ - Operand Type: void
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3table
+
+Subprogram: sql3table_type
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:1309
+ - Operand Type: Name: {  sql3statement_type}Type:  from /src/sqlite-createtable-parser/./sql3parse_table.h:98DW_TAG_typedef,  sql3statement_type
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3table
+
+Subprogram: sql3table_get_constraint
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:1304
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3tableconstraint
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3table
+ - Operand Type: Name: {  size_t}Type:  from /usr/local/lib/clang/18/include/__stddef_size_t.h:18DW_TAG_typedef,  size_t
+
+Subprogram: sql3table_num_constraints
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:1300
+ - Operand Type: Name: {  size_t}Type:  from /usr/local/lib/clang/18/include/__stddef_size_t.h:18DW_TAG_typedef,  size_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3table
+
+Subprogram: sql3table_get_column
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:1295
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3column
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3table
+ - Operand Type: Name: {  size_t}Type:  from /usr/local/lib/clang/18/include/__stddef_size_t.h:18DW_TAG_typedef,  size_t
+
+Subprogram: sql3table_num_columns
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:1291
+ - Operand Type: Name: {  size_t}Type:  from /usr/local/lib/clang/18/include/__stddef_size_t.h:18DW_TAG_typedef,  size_t
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3table
+
+Subprogram: sql3table_is_strict
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:1287
+ - Operand Type: Name: {  _Bool}Type:  DW_ATE_boolean
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3table
+
+Subprogram: sql3table_is_withoutrowid
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:1283
+ - Operand Type: Name: {  _Bool}Type:  DW_ATE_boolean
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3table
+
+Subprogram: sql3table_is_ifnotexists
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:1279
+ - Operand Type: Name: {  _Bool}Type:  DW_ATE_boolean
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3table
+
+Subprogram: sql3table_is_temporary
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:1275
+ - Operand Type: Name: {  _Bool}Type:  DW_ATE_boolean
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3table
+
+Subprogram: sql3table_new_name
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:1270
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3string
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3table
+
+Subprogram: sql3table_current_name
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:1265
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3string
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3table
+
+Subprogram: sql3table_comment
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:1260
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3string
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3table
+
+Subprogram: sql3table_name
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:1255
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3string
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3table
+
+Subprogram: sql3table_schema
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:1250
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3string
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3table
+
+Subprogram: sql3string_cstring
+ from /src/sqlite-createtable-parser/./sql3parse_table.c:153
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_const_type,  char
+ - Operand Type: Type: DW_TAG_pointer_type, DW_TAG_typedef,  sql3string
+
+
+## Global variables in module
+Global variable:  from /src/fuzzers/empty-fuzzer.c:7
+Global variable:  from /src/sqlite-createtable-parser/./sql3parse_table.c:239
+Global variable:  from /src/sqlite-createtable-parser/./sql3parse_table.c:240
+Global variable:  from /src/sqlite-createtable-parser/./sql3parse_table.c:241
+Global variable:  from /src/sqlite-createtable-parser/./sql3parse_table.c:242
+Global variable:  from /src/sqlite-createtable-parser/./sql3parse_table.c:243
+Global variable:  from /src/sqlite-createtable-parser/./sql3parse_table.c:247
+Global variable:  from /src/sqlite-createtable-parser/./sql3parse_table.c:248
+Global variable:  from /src/sqlite-createtable-parser/./sql3parse_table.c:249
+Global variable:  from /src/sqlite-createtable-parser/./sql3parse_table.c:250
+Global variable:  from /src/sqlite-createtable-parser/./sql3parse_table.c:251
+Global variable:  from /src/sqlite-createtable-parser/./sql3parse_table.c:255
+Global variable:  from /src/sqlite-createtable-parser/./sql3parse_table.c:256
+Global variable:  from /src/sqlite-createtable-parser/./sql3parse_table.c:257
+Global variable:  from /src/sqlite-createtable-parser/./sql3parse_table.c:258
+Global variable:  from /src/sqlite-createtable-parser/./sql3parse_table.c:259
+Global variable:  from /src/sqlite-createtable-parser/./sql3parse_table.c:263
+Global variable:  from /src/sqlite-createtable-parser/./sql3parse_table.c:264
+Global variable:  from /src/sqlite-createtable-parser/./sql3parse_table.c:265
+Global variable:  from /src/sqlite-createtable-parser/./sql3parse_table.c:266
+Global variable:  from /src/sqlite-createtable-parser/./sql3parse_table.c:267
+Global variable:  from /src/sqlite-createtable-parser/./sql3parse_table.c:268
+Global variable:  from /src/sqlite-createtable-parser/./sql3parse_table.c:272
+Global variable:  from /src/sqlite-createtable-parser/./sql3parse_table.c:273
+Global variable:  from /src/sqlite-createtable-parser/./sql3parse_table.c:274
+Global variable:  from /src/sqlite-createtable-parser/./sql3parse_table.c:275
+Global variable:  from /src/sqlite-createtable-parser/./sql3parse_table.c:276
+Global variable:  from /src/sqlite-createtable-parser/./sql3parse_table.c:277
+Global variable:  from /src/sqlite-createtable-parser/./sql3parse_table.c:278
+Global variable:  from /src/sqlite-createtable-parser/./sql3parse_table.c:279
+Global variable:  from /src/sqlite-createtable-parser/./sql3parse_table.c:280
+Global variable:  from /src/sqlite-createtable-parser/./sql3parse_table.c:281
+Global variable:  from /src/sqlite-createtable-parser/./sql3parse_table.c:285
+Global variable:  from /src/sqlite-createtable-parser/./sql3parse_table.c:286
+Global variable:  from /src/sqlite-createtable-parser/./sql3parse_table.c:287
+Global variable:  from /src/sqlite-createtable-parser/./sql3parse_table.c:288
+Global variable:  from /src/sqlite-createtable-parser/./sql3parse_table.c:289
+Global variable:  from /src/sqlite-createtable-parser/./sql3parse_table.c:290
+Global variable:  from /src/sqlite-createtable-parser/./sql3parse_table.c:291
+Global variable:  from /src/sqlite-createtable-parser/./sql3parse_table.c:295
+Global variable:  from /src/sqlite-createtable-parser/./sql3parse_table.c:296
+Global variable:  from /src/sqlite-createtable-parser/./sql3parse_table.c:297
+Global variable:  from /src/sqlite-createtable-parser/./sql3parse_table.c:298
+Global variable:  from /src/sqlite-createtable-parser/./sql3parse_table.c:302
+Global variable:  from /src/sqlite-createtable-parser/./sql3parse_table.c:303
+Global variable:  from /src/sqlite-createtable-parser/./sql3parse_table.c:304
+Global variable:  from /src/sqlite-createtable-parser/./sql3parse_table.c:308
+Global variable:  from /src/sqlite-createtable-parser/./sql3parse_table.c:309
+Global variable:  from /src/sqlite-createtable-parser/./sql3parse_table.c:310
+Global variable:  from /src/sqlite-createtable-parser/./sql3parse_table.c:314
+Global variable: temp_identifier from /src/sqlite-createtable-parser/./sql3parse_table.c:134
+
+## Types defined in module
+Type: Name: {  char} DW_ATE_signed_char
+Type: Name: {  sql3string} from /src/sqlite-createtable-parser/./sql3parse_table.h:40 DW_TAG_typedef
+Type: Name: {  sql3string} from /src/sqlite-createtable-parser/./sql3parse_table.c:40 DW_TAG_structure_type Composite type
+ - Elements: 2
+ - Elem 0{  ptr from /src/sqlite-createtable-parser/./sql3parse_table.c:41 }
+ - Elem 1{  length from /src/sqlite-createtable-parser/./sql3parse_table.c:42 }
+
+Type: Name: {  ptr} from /src/sqlite-createtable-parser/./sql3parse_table.c:41 DW_TAG_member
+Type: Name: {  length} from /src/sqlite-createtable-parser/./sql3parse_table.c:42 DW_TAG_member
+Type: Name: {  size_t} from /usr/local/lib/clang/18/include/__stddef_size_t.h:18 DW_TAG_typedef
+Type: Name: {  unsigned long} DW_ATE_unsigned
+Type: Name: {  unsigned int} DW_ATE_unsigned
+Type: Name: {  int} DW_ATE_signed
+Type: Name: {  unsigned short} DW_ATE_unsigned
+Type: Name: {  unsigned char} DW_ATE_unsigned_char
+Type: Name: {  sql3tableconstraint} from /src/sqlite-createtable-parser/./sql3parse_table.h:39 DW_TAG_typedef
+Type: Name: {  sql3tableconstraint} from /src/sqlite-createtable-parser/./sql3parse_table.c:75 DW_TAG_structure_type Composite type
+ - Elements: 3
+ - Elem 0{  type from /src/sqlite-createtable-parser/./sql3parse_table.c:76 }
+ - Elem 1{  name from /src/sqlite-createtable-parser/./sql3parse_table.c:77 }
+ - Elem 2{  from /src/sqlite-createtable-parser/./sql3parse_table.c:78 }
+
+Type: Name: {  type} from /src/sqlite-createtable-parser/./sql3parse_table.c:76 DW_TAG_member
+Type: Name: {  sql3constraint_type} from /src/sqlite-createtable-parser/./sql3parse_table.h:89 DW_TAG_typedef
+Type: Name: {  name} from /src/sqlite-createtable-parser/./sql3parse_table.c:77 DW_TAG_member
+Type: Name: {  num_indexed} from /src/sqlite-createtable-parser/./sql3parse_table.c:81 DW_TAG_member
+Type: Name: {  indexed_columns} from /src/sqlite-createtable-parser/./sql3parse_table.c:82 DW_TAG_member
+Type: Name: {  sql3idxcolumn} from /src/sqlite-createtable-parser/./sql3parse_table.h:37 DW_TAG_typedef
+Type: Name: {  sql3idxcolumn} from /src/sqlite-createtable-parser/./sql3parse_table.c:119 DW_TAG_structure_type Composite type
+ - Elements: 3
+ - Elem 0{  name from /src/sqlite-createtable-parser/./sql3parse_table.c:120 }
+ - Elem 1{  collate_name from /src/sqlite-createtable-parser/./sql3parse_table.c:121 }
+ - Elem 2{  order from /src/sqlite-createtable-parser/./sql3parse_table.c:122 }
+
+Type: Name: {  name} from /src/sqlite-createtable-parser/./sql3parse_table.c:120 DW_TAG_member
+Type: Name: {  collate_name} from /src/sqlite-createtable-parser/./sql3parse_table.c:121 DW_TAG_member
+Type: Name: {  order} from /src/sqlite-createtable-parser/./sql3parse_table.c:122 DW_TAG_member
+Type: Name: {  sql3order_clause} from /src/sqlite-createtable-parser/./sql3parse_table.h:63 DW_TAG_typedef
+Type: Name: {  conflict_clause} from /src/sqlite-createtable-parser/./sql3parse_table.c:83 DW_TAG_member
+Type: Name: {  sql3conflict_clause} from /src/sqlite-createtable-parser/./sql3parse_table.h:57 DW_TAG_typedef
+Type: Name: {  check_expr} from /src/sqlite-createtable-parser/./sql3parse_table.c:87 DW_TAG_member
+Type: Name: {  foreignkey_num} from /src/sqlite-createtable-parser/./sql3parse_table.c:91 DW_TAG_member
+Type: Name: {  foreignkey_name} from /src/sqlite-createtable-parser/./sql3parse_table.c:92 DW_TAG_member
+Type: Name: {  foreignkey_clause} from /src/sqlite-createtable-parser/./sql3parse_table.c:93 DW_TAG_member
+Type: Name: {  sql3foreignkey} from /src/sqlite-createtable-parser/./sql3parse_table.h:38 DW_TAG_typedef
+Type: Name: {  sql3foreignkey} from /src/sqlite-createtable-parser/./sql3parse_table.c:45 DW_TAG_structure_type Composite type
+ - Elements: 7
+ - Elem 0{  table from /src/sqlite-createtable-parser/./sql3parse_table.c:46 }
+ - Elem 1{  num_columns from /src/sqlite-createtable-parser/./sql3parse_table.c:47 }
+ - Elem 2{  column_name from /src/sqlite-createtable-parser/./sql3parse_table.c:48 }
+ - Elem 3{  on_delete from /src/sqlite-createtable-parser/./sql3parse_table.c:49 }
+ - Elem 4{  on_update from /src/sqlite-createtable-parser/./sql3parse_table.c:50 }
+ - Elem 5{  match from /src/sqlite-createtable-parser/./sql3parse_table.c:51 }
+ - Elem 6{  deferrable from /src/sqlite-createtable-parser/./sql3parse_table.c:52 }
+
+Type: Name: {  table} from /src/sqlite-createtable-parser/./sql3parse_table.c:46 DW_TAG_member
+Type: Name: {  num_columns} from /src/sqlite-createtable-parser/./sql3parse_table.c:47 DW_TAG_member
+Type: Name: {  column_name} from /src/sqlite-createtable-parser/./sql3parse_table.c:48 DW_TAG_member
+Type: Name: {  on_delete} from /src/sqlite-createtable-parser/./sql3parse_table.c:49 DW_TAG_member
+Type: Name: {  sql3fk_action} from /src/sqlite-createtable-parser/./sql3parse_table.h:72 DW_TAG_typedef
+Type: Name: {  on_update} from /src/sqlite-createtable-parser/./sql3parse_table.c:50 DW_TAG_member
+Type: Name: {  match} from /src/sqlite-createtable-parser/./sql3parse_table.c:51 DW_TAG_member
+Type: Name: {  deferrable} from /src/sqlite-createtable-parser/./sql3parse_table.c:52 DW_TAG_member
+Type: Name: {  sql3fk_deftype} from /src/sqlite-createtable-parser/./sql3parse_table.h:82 DW_TAG_typedef
+Type: Name: {  uint8_t} from /usr/include/x86_64-linux-gnu/bits/stdint-uintn.h:24 DW_TAG_typedef
+Type: Name: {  __uint8_t} from /usr/include/x86_64-linux-gnu/bits/types.h:38 DW_TAG_typedef
+Type: Name: {  _Bool} DW_ATE_boolean
+Type: Name: {  sql3state} from /src/sqlite-createtable-parser/./sql3parse_table.c:132 DW_TAG_typedef
+Type: Name: {  buffer} from /src/sqlite-createtable-parser/./sql3parse_table.c:126 DW_TAG_member
+Type: Name: {  size} from /src/sqlite-createtable-parser/./sql3parse_table.c:127 DW_TAG_member
+Type: Name: {  offset} from /src/sqlite-createtable-parser/./sql3parse_table.c:128 DW_TAG_member
+Type: Name: {  identifier} from /src/sqlite-createtable-parser/./sql3parse_table.c:129 DW_TAG_member
+Type: Name: {  comment} from /src/sqlite-createtable-parser/./sql3parse_table.c:130 DW_TAG_member
+Type: Name: {  table} from /src/sqlite-createtable-parser/./sql3parse_table.c:131 DW_TAG_member
+Type: Name: {  sql3table} from /src/sqlite-createtable-parser/./sql3parse_table.h:35 DW_TAG_typedef
+Type: Name: {  sql3table} from /src/sqlite-createtable-parser/./sql3parse_table.c:102 DW_TAG_structure_type Composite type
+ - Elements: 14
+ - Elem 0{  name from /src/sqlite-createtable-parser/./sql3parse_table.c:103 }
+ - Elem 1{  schema from /src/sqlite-createtable-parser/./sql3parse_table.c:104 }
+ - Elem 2{  comment from /src/sqlite-createtable-parser/./sql3parse_table.c:105 }
+ - Elem 3{  is_temporary from /src/sqlite-createtable-parser/./sql3parse_table.c:106 }
+ - Elem 4{  is_ifnotexists from /src/sqlite-createtable-parser/./sql3parse_table.c:107 }
+ - Elem 5{  is_withoutrowid from /src/sqlite-createtable-parser/./sql3parse_table.c:108 }
+ - Elem 6{  is_strict from /src/sqlite-createtable-parser/./sql3parse_table.c:109 }
+ - Elem 7{  num_columns from /src/sqlite-createtable-parser/./sql3parse_table.c:110 }
+ - Elem 8{  columns from /src/sqlite-createtable-parser/./sql3parse_table.c:111 }
+ - Elem 9{  num_constraint from /src/sqlite-createtable-parser/./sql3parse_table.c:112 }
+ - Elem 10{  constraints from /src/sqlite-createtable-parser/./sql3parse_table.c:113 }
+ - Elem 11{  type from /src/sqlite-createtable-parser/./sql3parse_table.c:114 }
+ - Elem 12{  current_name from /src/sqlite-createtable-parser/./sql3parse_table.c:115 }
+ - Elem 13{  new_name from /src/sqlite-createtable-parser/./sql3parse_table.c:116 }
+
+Type: Name: {  name} from /src/sqlite-createtable-parser/./sql3parse_table.c:103 DW_TAG_member
+Type: Name: {  schema} from /src/sqlite-createtable-parser/./sql3parse_table.c:104 DW_TAG_member
+Type: Name: {  comment} from /src/sqlite-createtable-parser/./sql3parse_table.c:105 DW_TAG_member
+Type: Name: {  is_temporary} from /src/sqlite-createtable-parser/./sql3parse_table.c:106 DW_TAG_member
+Type: Name: {  is_ifnotexists} from /src/sqlite-createtable-parser/./sql3parse_table.c:107 DW_TAG_member
+Type: Name: {  is_withoutrowid} from /src/sqlite-createtable-parser/./sql3parse_table.c:108 DW_TAG_member
+Type: Name: {  is_strict} from /src/sqlite-createtable-parser/./sql3parse_table.c:109 DW_TAG_member
+Type: Name: {  num_columns} from /src/sqlite-createtable-parser/./sql3parse_table.c:110 DW_TAG_member
+Type: Name: {  columns} from /src/sqlite-createtable-parser/./sql3parse_table.c:111 DW_TAG_member
+Type: Name: {  sql3column} from /src/sqlite-createtable-parser/./sql3parse_table.h:36 DW_TAG_typedef
+Type: Name: {  sql3column} from /src/sqlite-createtable-parser/./sql3parse_table.c:55 DW_TAG_structure_type Composite type
+ - Elements: 17
+ - Elem 0{  name from /src/sqlite-createtable-parser/./sql3parse_table.c:56 }
+ - Elem 1{  type from /src/sqlite-createtable-parser/./sql3parse_table.c:57 }
+ - Elem 2{  length from /src/sqlite-createtable-parser/./sql3parse_table.c:58 }
+ - Elem 3{  constraint_name from /src/sqlite-createtable-parser/./sql3parse_table.c:59 }
+ - Elem 4{  comment from /src/sqlite-createtable-parser/./sql3parse_table.c:60 }
+ - Elem 5{  is_primarykey from /src/sqlite-createtable-parser/./sql3parse_table.c:61 }
+ - Elem 6{  is_autoincrement from /src/sqlite-createtable-parser/./sql3parse_table.c:62 }
+ - Elem 7{  is_notnull from /src/sqlite-createtable-parser/./sql3parse_table.c:63 }
+ - Elem 8{  is_unique from /src/sqlite-createtable-parser/./sql3parse_table.c:64 }
+ - Elem 9{  pk_order from /src/sqlite-createtable-parser/./sql3parse_table.c:65 }
+ - Elem 10{  pk_conflictclause from /src/sqlite-createtable-parser/./sql3parse_table.c:66 }
+ - Elem 11{  notnull_conflictclause from /src/sqlite-createtable-parser/./sql3parse_table.c:67 }
+ - Elem 12{  unique_conflictclause from /src/sqlite-createtable-parser/./sql3parse_table.c:68 }
+ - Elem 13{  check_expr from /src/sqlite-createtable-parser/./sql3parse_table.c:69 }
+ - Elem 14{  default_expr from /src/sqlite-createtable-parser/./sql3parse_table.c:70 }
+ - Elem 15{  collate_name from /src/sqlite-createtable-parser/./sql3parse_table.c:71 }
+ - Elem 16{  foreignkey_clause from /src/sqlite-createtable-parser/./sql3parse_table.c:72 }
+
+Type: Name: {  name} from /src/sqlite-createtable-parser/./sql3parse_table.c:56 DW_TAG_member
+Type: Name: {  type} from /src/sqlite-createtable-parser/./sql3parse_table.c:57 DW_TAG_member
+Type: Name: {  length} from /src/sqlite-createtable-parser/./sql3parse_table.c:58 DW_TAG_member
+Type: Name: {  constraint_name} from /src/sqlite-createtable-parser/./sql3parse_table.c:59 DW_TAG_member
+Type: Name: {  comment} from /src/sqlite-createtable-parser/./sql3parse_table.c:60 DW_TAG_member
+Type: Name: {  is_primarykey} from /src/sqlite-createtable-parser/./sql3parse_table.c:61 DW_TAG_member
+Type: Name: {  is_autoincrement} from /src/sqlite-createtable-parser/./sql3parse_table.c:62 DW_TAG_member
+Type: Name: {  is_notnull} from /src/sqlite-createtable-parser/./sql3parse_table.c:63 DW_TAG_member
+Type: Name: {  is_unique} from /src/sqlite-createtable-parser/./sql3parse_table.c:64 DW_TAG_member
+Type: Name: {  pk_order} from /src/sqlite-createtable-parser/./sql3parse_table.c:65 DW_TAG_member
+Type: Name: {  pk_conflictclause} from /src/sqlite-createtable-parser/./sql3parse_table.c:66 DW_TAG_member
+Type: Name: {  notnull_conflictclause} from /src/sqlite-createtable-parser/./sql3parse_table.c:67 DW_TAG_member
+Type: Name: {  unique_conflictclause} from /src/sqlite-createtable-parser/./sql3parse_table.c:68 DW_TAG_member
+Type: Name: {  check_expr} from /src/sqlite-createtable-parser/./sql3parse_table.c:69 DW_TAG_member
+Type: Name: {  default_expr} from /src/sqlite-createtable-parser/./sql3parse_table.c:70 DW_TAG_member
+Type: Name: {  collate_name} from /src/sqlite-createtable-parser/./sql3parse_table.c:71 DW_TAG_member
+Type: Name: {  foreignkey_clause} from /src/sqlite-createtable-parser/./sql3parse_table.c:72 DW_TAG_member
+Type: Name: {  num_constraint} from /src/sqlite-createtable-parser/./sql3parse_table.c:112 DW_TAG_member
+Type: Name: {  constraints} from /src/sqlite-createtable-parser/./sql3parse_table.c:113 DW_TAG_member
+Type: Name: {  type} from /src/sqlite-createtable-parser/./sql3parse_table.c:114 DW_TAG_member
+Type: Name: {  sql3statement_type} from /src/sqlite-createtable-parser/./sql3parse_table.h:98 DW_TAG_typedef
+Type: Name: {  current_name} from /src/sqlite-createtable-parser/./sql3parse_table.c:115 DW_TAG_member
+Type: Name: {  new_name} from /src/sqlite-createtable-parser/./sql3parse_table.c:116 DW_TAG_member
+Type: Name: {  sql3char} from /src/sqlite-createtable-parser/./sql3parse_table.h:41 DW_TAG_typedef
+Type: Name: {  uint16_t} from /usr/include/x86_64-linux-gnu/bits/stdint-uintn.h:25 DW_TAG_typedef
+Type: Name: {  __uint16_t} from /usr/include/x86_64-linux-gnu/bits/types.h:40 DW_TAG_typedef
+Type: Name: {  sql3token_t} from /src/sqlite-createtable-parser/./sql3parse_table.c:38 DW_TAG_typedef
+Type: Name: {  uint32_t} from /usr/include/x86_64-linux-gnu/bits/stdint-uintn.h:26 DW_TAG_typedef
+Type: Name: {  __uint32_t} from /usr/include/x86_64-linux-gnu/bits/types.h:42 DW_TAG_typedef
+Type: Name: {  sql3error_code} from /src/sqlite-createtable-parser/./sql3parse_table.h:48 DW_TAG_typedef

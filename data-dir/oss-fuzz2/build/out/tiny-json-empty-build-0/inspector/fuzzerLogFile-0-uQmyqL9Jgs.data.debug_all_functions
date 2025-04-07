@@ -1,0 +1,183 @@
+---
+- name:            getEscape
+  file_location:   '/src/tiny-json/tiny-json.c:96'
+  type_arguments:  [ 94566101180680, 94566101180680 ]
+  raw_name:        getEscape
+  is_public:       0
+  is_private:      0
+- name:            numValue
+  file_location:   '/src/tiny-json/tiny-json.c:267'
+  type_arguments:  [ 94566103429792, 94566103429792, 94566103430592 ]
+  raw_name:        numValue
+  is_public:       0
+  is_private:      0
+- name:            LLVMFuzzerTestOneInput
+  file_location:   '/src/fuzzers/empty-fuzzer.c:5'
+  type_arguments:  [ 94566103429896, 94566104205824, 94566102849024 ]
+  raw_name:        LLVMFuzzerTestOneInput
+  is_public:       0
+  is_private:      0
+- name:            goWhile
+  file_location:   '/src/tiny-json/tiny-json.c:418'
+  type_arguments:  [ 94566103429792, 94566103429792, 94566103433024 ]
+  raw_name:        goWhile
+  is_public:       0
+  is_private:      0
+- name:            isOneOfThem
+  file_location:   '/src/tiny-json/tiny-json.c:407'
+  type_arguments:  [ 94566103632968, 94566101180680, 94566103433024 ]
+  raw_name:        isOneOfThem
+  is_public:       0
+  is_private:      0
+- name:            expValue
+  file_location:   '/src/tiny-json/tiny-json.c:243'
+  type_arguments:  [ 94566103429792, 94566103429792 ]
+  raw_name:        expValue
+  is_public:       0
+  is_private:      0
+- name:            goNum
+  file_location:   '/src/tiny-json/tiny-json.c:439'
+  type_arguments:  [ 94566103429792, 94566103429792 ]
+  raw_name:        goNum
+  is_public:       0
+  is_private:      0
+- name:            fraqValue
+  file_location:   '/src/tiny-json/tiny-json.c:254'
+  type_arguments:  [ 94566103429792, 94566103429792 ]
+  raw_name:        fraqValue
+  is_public:       0
+  is_private:      0
+- name:            setToNull
+  file_location:   '/src/tiny-json/tiny-json.c:453'
+  type_arguments:  [ 94566103429792, 94566103429792 ]
+  raw_name:        setToNull
+  is_public:       0
+  is_private:      0
+- name:            isEndOfPrimitive
+  file_location:   '/src/tiny-json/tiny-json.c:459'
+  type_arguments:  [ 94566103632968, 94566101180680 ]
+  raw_name:        isEndOfPrimitive
+  is_public:       0
+  is_private:      0
+- name:            checkStr
+  file_location:   '/src/tiny-json/tiny-json.c:186'
+  type_arguments:  [ 94566103429792, 94566103429792, 94566103433024 ]
+  raw_name:        checkStr
+  is_public:       0
+  is_private:      0
+- name:            primitiveValue
+  file_location:   '/src/tiny-json/tiny-json.c:201'
+  type_arguments:  [ 94566103429792, 94566103429792, 94566103430592, 94566103433024, 
+                     94566103433408 ]
+  raw_name:        primitiveValue
+  is_public:       0
+  is_private:      0
+- name:            getCharFromUnicode
+  file_location:   '/src/tiny-json/tiny-json.c:114'
+  type_arguments:  [ 94566103429016, 94566103987248 ]
+  raw_name:        getCharFromUnicode
+  is_public:       0
+  is_private:      0
+- name:            parseString
+  file_location:   '/src/tiny-json/tiny-json.c:127'
+  type_arguments:  [ 94566103429792, 94566103429792 ]
+  raw_name:        parseString
+  is_public:       0
+  is_private:      0
+- name:            nullValue
+  file_location:   '/src/tiny-json/tiny-json.c:235'
+  type_arguments:  [ 94566103429792, 94566103429792, 94566103430592 ]
+  raw_name:        nullValue
+  is_public:       0
+  is_private:      0
+- name:            falseValue
+  file_location:   '/src/tiny-json/tiny-json.c:225'
+  type_arguments:  [ 94566103429792, 94566103429792, 94566103430592 ]
+  raw_name:        falseValue
+  is_public:       0
+  is_private:      0
+- name:            trueValue
+  file_location:   '/src/tiny-json/tiny-json.c:215'
+  type_arguments:  [ 94566103429792, 94566103429792, 94566103430592 ]
+  raw_name:        trueValue
+  is_public:       0
+  is_private:      0
+- name:            textValue
+  file_location:   '/src/tiny-json/tiny-json.c:173'
+  type_arguments:  [ 94566103429792, 94566103429792, 94566103430592 ]
+  raw_name:        textValue
+  is_public:       0
+  is_private:      0
+- name:            add
+  file_location:   '/src/tiny-json/tiny-json.c:310'
+  type_arguments:  [ 0, 94566103430592, 94566103430592 ]
+  raw_name:        add
+  is_public:       0
+  is_private:      0
+- name:            propertyName
+  file_location:   '/src/tiny-json/tiny-json.c:158'
+  type_arguments:  [ 94566103429792, 94566103429792, 94566103430592 ]
+  raw_name:        propertyName
+  is_public:       0
+  is_private:      0
+- name:            goBlank
+  file_location:   '/src/tiny-json/tiny-json.c:432'
+  type_arguments:  [ 94566103429792, 94566103429792 ]
+  raw_name:        goBlank
+  is_public:       0
+  is_private:      0
+- name:            poolAlloc
+  file_location:   '/src/tiny-json/tiny-json.c:397'
+  type_arguments:  [ 94566103430592, 94566103431360 ]
+  raw_name:        poolAlloc
+  is_public:       0
+  is_private:      0
+- name:            poolInit
+  file_location:   '/src/tiny-json/tiny-json.c:387'
+  type_arguments:  [ 94566103430592, 94566103431360 ]
+  raw_name:        poolInit
+  is_public:       0
+  is_private:      0
+- name:            json_create
+  file_location:   '/src/tiny-json/tiny-json.c:83'
+  type_arguments:  [ 94566103632640, 94566103429792, 94566103430592, 94566103594280 ]
+  raw_name:        json_create
+  is_public:       0
+  is_private:      0
+- name:            json_createWithPool
+  file_location:   '/src/tiny-json/tiny-json.c:70'
+  type_arguments:  [ 94566103632640, 94566103429792, 94566103431360 ]
+  raw_name:        json_createWithPool
+  is_public:       0
+  is_private:      0
+- name:            objValue
+  file_location:   '/src/tiny-json/tiny-json.c:327'
+  type_arguments:  [ 94566103429792, 94566103429792, 94566103430592, 94566103431360 ]
+  raw_name:        objValue
+  is_public:       0
+  is_private:      0
+- name:            json_getValue
+  file_location:   '/src/tiny-json/./tiny-json.h:89'
+  type_arguments:  [ 94566103433024, 94566103632640 ]
+  raw_name:        json_getValue
+  is_public:       0
+  is_private:      0
+- name:            json_getType
+  file_location:   '/src/tiny-json/./tiny-json.h:96'
+  type_arguments:  [ 94566103433408, 94566103632640 ]
+  raw_name:        json_getType
+  is_public:       0
+  is_private:      0
+- name:            json_getPropertyValue
+  file_location:   '/src/tiny-json/tiny-json.c:52'
+  type_arguments:  [ 94566103433024, 94566103632640, 94566103433024 ]
+  raw_name:        json_getPropertyValue
+  is_public:       0
+  is_private:      0
+- name:            json_getProperty
+  file_location:   '/src/tiny-json/tiny-json.c:43'
+  type_arguments:  [ 94566103632640, 94566103632640, 94566103433024 ]
+  raw_name:        json_getProperty
+  is_public:       0
+  is_private:      0
+...
