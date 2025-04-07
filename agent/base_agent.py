@@ -17,6 +17,7 @@ import random
 import re
 import subprocess as sp
 import time
+import os
 from abc import ABC, abstractmethod
 from typing import Any, Optional
 
@@ -194,6 +195,14 @@ class BaseAgent(ABC):
     return parser.parse_args()
 
   @classmethod
+  def _preprocess_fi_setup(cls) -> None:
+    logger.info('Checkign if we should use local FI', trial=0)
+    if not os.path.isdir('/workspace/data-dir'):
+      logger.info('This does not require a local FI.', trial=0)
+      return
+    logger.info('We should use local FI.', trial=0)
+
+  @classmethod
   def cloud_main(cls) -> None:
     """Executes agent using dill files. This is for cloud experiments launched
     by cloud_builder.py. It runs `new_result = agent.execute(result_history)` in
@@ -201,6 +210,8 @@ class BaseAgent(ABC):
     deserialized from dill files and new_result will be serialized to share data
     with the cloud experiment requester."""
     args = cls._parse_args()
+
+    cls._preprocess_fi_setup()
 
     agent = utils.deserialize_from_dill(args.agent)
     agent.llm.cloud_setup()
