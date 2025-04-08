@@ -109,6 +109,12 @@ class CoverageAnalyzer(BaseAgent):
     benchmark = last_result.benchmark
     # TODO(dongge): Use the generated fuzz target and build script here.
     self.inspect_tool = ProjectContainerTool(benchmark, name='inspect')
+    self.inspect_tool.write_to_file(content=last_result.fuzz_target_source,
+                                    file_path=benchmark.target_path)
+    if last_result.build_script_source:
+      self.inspect_tool.write_to_file(
+          content=last_result.build_script_source,
+          file_path=self.inspect_tool.build_script_path)
     self.inspect_tool.compile(extra_commands=' && rm -rf /out/* > /dev/null')
     cur_round = 1
     coverage_result = CoverageResult()

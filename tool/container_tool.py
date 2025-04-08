@@ -31,6 +31,7 @@ class ProjectContainerTool(BaseTool):
     self.container_id = self._start_docker_container()
     self._backup_default_build_script()
     self.project_dir = self._get_project_dir()
+    self.build_script_path = '/src/build.sh'
 
   def tutorial(self) -> str:
     """Constructs a tool guide tutorial for LLM agents."""
@@ -90,11 +91,11 @@ class ProjectContainerTool(BaseTool):
 
   def _backup_default_build_script(self) -> None:
     """Creates a copy of the human-written /src/build.sh for LLM to use."""
-    backup_command = 'cp /src/build.sh /src/build.bk.sh'
+    backup_command = f'cp {self.build_script_path} /src/build.bk.sh'
     process = self.execute(backup_command)
     if process.returncode:
-      logger.error('Failed to create a backup of /src/build.sh: %s',
-                   self.image_name)
+      logger.error('Failed to create a backup of %s: %s',
+                   self.build_script_path, self.image_name)
 
   def _get_project_dir(self) -> str:
     """Returns the project-under-test's source code directory."""
@@ -142,3 +143,8 @@ class ProjectContainerTool(BaseTool):
     terminate_container_command = ['docker', 'stop', self.container_id]
     result = self._execute_command(terminate_container_command)
     return result.returncode == 0
+
+  def write_to_file(self, content: str, file_path: str) -> None:
+    replace_file_content_command = (
+        f'cat << "OFG_EOF" > {file_path}\n{content}\nOFG_EOF')
+    self.execute(replace_file_content_command)
