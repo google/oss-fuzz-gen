@@ -890,13 +890,6 @@ class CloudBuilderRunner(BuilderRunner):
 
     project_name = self.benchmark.project
 
-    logger.info('OSS-Fuzz project name check')
-    logger.info(oss_fuzz_checkout.OSS_FUZZ_DIR)
-    if os.path.isdir(os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR, 'projects', project_name)):
-      logger.info('is a dir')
-    else:
-      logger.info('is not a dir')
-
     uid = self.experiment_name + str(uuid.uuid4())
     run_log_name = f'{uid}.run.log'
     run_log_path = f'gs://{self.experiment_bucket}/{run_log_name}'
