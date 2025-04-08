@@ -32,7 +32,7 @@ logger.setLevel(logging.DEBUG)
 
 BUILD_DIR: str = 'build'
 GLOBAL_TEMP_DIR: str = ''
-ENABLE_CACHING = bool(int(os.getenv('OFG_USE_CACHING', '0')))
+ENABLE_CACHING = bool(int(os.getenv('OFG_USE_CACHING', '1')))
 # Assume OSS-Fuzz is at repo root dir by default.
 # This will change if temp_dir is used.
 OSS_FUZZ_DIR: str = os.path.join(
@@ -170,17 +170,10 @@ def get_project_language(project: str) -> str:
   """Returns the |project| language read from its project.yaml."""
   project_yaml_path = os.path.join(OSS_FUZZ_DIR, 'projects', project,
                                    'project.yaml')
-  logger.info('Looking for %s', project_yaml_path)
-  logger.warning('Looking for %s', project_yaml_path)
   if not os.path.isfile(project_yaml_path):
     logger.warning('Failed to find the project yaml of %s, assuming it is C++',
                    project)
     return 'C++'
-
-  if os.path.isdir('/workspace/oss-fuzz-data'):
-    logger.info('is a directory: /workspace/oss-fuzz-data')
-  else:
-    logger.info('is not a directory: /workspace/oss-fuzz-data')
 
   with open(project_yaml_path, 'r') as benchmark_file:
     data = yaml.safe_load(benchmark_file)
