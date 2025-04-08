@@ -64,19 +64,16 @@ def setup_worker_project(oss_fuzz_base: str, project_name: str, llm_model: str):
         os.path.join(temp_project_dir, target_file))
 
   # Build a version of the project
-  python_path = "/venv/bin/python3" if os.path.exists(
-      "/venv/bin/python3") else "python3"
-  os.environ["PYTHON"] = python_path
   if silent_global:
     subprocess.check_call(
-        f'{python_path} infra/helper.py build_fuzzers {project_name}',
+        f'python3 infra/helper.py build_fuzzers {project_name}',
         shell=True,
         cwd=oss_fuzz_base,
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL)
   else:
     subprocess.check_call(
-        f'{python_path} infra/helper.py build_fuzzers {project_name}',
+        f'python3 infra/helper.py build_fuzzers {project_name}',
         shell=True,
         cwd=oss_fuzz_base)
 
@@ -91,10 +88,8 @@ def run_autogen(github_url,
                 max_successful_builds: int = -1,
                 max_timeout: int = 0):
   """Launch auto-gen analysis within OSS-Fuzz container."""
-  python_path = "/venv/bin/python3" if os.path.exists(
-      "/venv/bin/python3") else "python3"
-  os.environ["PYTHON"] = python_path
-  initiator_cmd = f'{python_path} /src/manager.py {github_url} -o {outdir}'
+
+  initiator_cmd = f'python3 /src/manager.py {github_url} -o {outdir}'
   initiator_cmd += f' --model={model}'
   if max_successful_builds > 0:
     initiator_cmd += f' --max-successful={max_successful_builds}'

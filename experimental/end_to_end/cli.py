@@ -67,14 +67,11 @@ def setup_workdirs(defined_dir):
                         shell=True,
                         cwd=workdir)
 
-  python_path = "/venv/bin/python3" if os.path.exists(
-      "/venv/bin/python3") else "python3"
-  os.environ["PYTHON"] = python_path
   # Ensure fuzz introspector's requirements.txt is installed
-  subprocess.check_call(f'{python_path} -m pip install -r requirements.txt',
+  subprocess.check_call('python3 -m pip install -r requirements.txt',
                         shell=True,
                         cwd=os.path.join(workdir, 'fuzz-introspector'))
-  subprocess.check_call(f'{python_path} -m pip install -r requirements.txt',
+  subprocess.check_call('python3 -m pip install -r requirements.txt',
                         shell=True,
                         cwd=os.path.join(workdir, 'fuzz-introspector', 'tools',
                                          'web-fuzzing-introspection'))
@@ -84,10 +81,8 @@ def setup_workdirs(defined_dir):
 def _run_introspector_collection(runner_script, project, wd, semaphore):
   """Run introspector on the given project."""
   semaphore.acquire()
-  python_path = "/venv/bin/python3" if os.path.exists(
-      "/venv/bin/python3") else "python3"
-  os.environ["PYTHON"] = python_path  
-  cmd = [python_path]
+
+  cmd = ['python3']
   cmd.append(runner_script)  # introspector helper script
   cmd.append('introspector')  # force an introspector run
   cmd.append(project)  # target project
@@ -142,10 +137,7 @@ def create_fi_db(workdir):
   fi_db_dir = os.path.join(workdir, 'fuzz-introspector', 'tools',
                            'web-fuzzing-introspection', 'app', 'static',
                            'assets', 'db')
-  python_path = "/venv/bin/python3" if os.path.exists(
-      "/venv/bin/python3") else "python3"
-  os.environ["PYTHON"] = python_path  
-  cmd = [python_path]
+  cmd = ['python3']
   cmd.append('web_db_creator_from_summary.py')
   cmd.append('--local-oss-fuzz')
   cmd.append(oss_fuzz_dir)
@@ -165,10 +157,7 @@ def launch_fi_webapp(workdir):
                                'web-fuzzing-introspection', 'app')
   environ = os.environ.copy()
   environ['FUZZ_INTROSPECTOR_LOCAL_OSS_FUZZ'] = oss_fuzz_dir
-  python_path = "/venv/bin/python3" if os.path.exists(
-      "/venv/bin/python3") else "python3"
-  os.environ["PYTHON"] = python_path    
-  cmd = [python_path]
+  cmd = ['python3']
   cmd.append('main.py')
   cmd.append('>> /dev/null &')
   subprocess.check_call(' '.join(cmd),
@@ -198,10 +187,8 @@ def run_ofg_generation(projects_to_run, workdir, args):
   """Runs harness generation"""
   logger.info('Running OFG experiment: %s', os.getcwd())
   oss_fuzz_dir = os.path.join(workdir, 'oss-fuzz')
-  python_path = "/venv/bin/python3" if os.path.exists(
-      "/venv/bin/python3") else "python3"
-  os.environ["PYTHON"] = python_path      
-  cmd = [python_path, os.path.join(OFG_BASE_DIR, 'run_all_experiments.py')]
+
+  cmd = ['python3', os.path.join(OFG_BASE_DIR, 'run_all_experiments.py')]
   cmd.append('--model')
   cmd.append(args.model)
   cmd.append('-g')
