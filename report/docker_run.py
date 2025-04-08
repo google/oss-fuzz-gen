@@ -35,7 +35,7 @@ DELAY = 0
 NUM_SAMPLES = 10
 LLM_FIX_LIMIT = 5
 MAX_ROUND = 100
-
+DATA_DIR = '/experiment/data-dir/'
 
 def _parse_args(cmd) -> argparse.Namespace:
   """Parses the command line arguments."""
@@ -144,19 +144,8 @@ def _run_command(command: list[str], shell=False):
   return process.returncode
 
 
-def main(cmd=None):
-  # run_standard(cmd)
-  run_new(cmd)
-
-
-def run_new(cmd=None):
-  args = _parse_args(cmd)
-
-  # Uses python3 by default and /venv/bin/python3 for Docker containers.
-  python_path = "/venv/bin/python3" if os.path.exists(
-      "/venv/bin/python3") else "python3"
-  os.environ["PYTHON"] = python_path
-
+def _authorize_gcloud():
+  """Authorizes to gcloud"""
   # When running the docker container locally we need to activate the service
   # account from the env variable.
   # When running on GCP this step is unnecessary.
@@ -171,6 +160,8 @@ def run_new(cmd=None):
     # TODO: Set GOOGLE_APPLICATION_CREDENTIALS and ensure cloud build uses it too.
     logging.info("GOOGLE APPLICATION CREDENTIALS is not set.")
 
+def _log_common_args(args):
+  """Prints args useful for logging"""
   logging.info("Benchmark set is %s.", args.benchmark_set)
   logging.info("Frequency label is %s.", args.frequency_label)
   logging.info("Run timeout is %s.", args.run_timeout)
@@ -180,31 +171,31 @@ def run_new(cmd=None):
   logging.info("LLM is %s.", args.model)
   logging.info("DELAY is %s.", args.delay)
 
+def main(cmd=None):
+  """Main entrypoint"""
+  if os.path.isdir(DATA_DIR):
+    run_on_data_from_scratch(cmd)
+  else:
+    run_standard(cmd)
 
+def run_on_data_from_scratch(cmd=None):
+  """Creates experiment for projects that are not in OSS-Fuzz upstream"""
+  args = _parse_args(cmd)
 
-  # Launch starter
+  # Uses python3 by default and /venv/bin/python3 for Docker containers.
+  python_path = "/venv/bin/python3" if os.path.exists(
+      "/venv/bin/python3") else "python3"
+  os.environ["PYTHON"] = python_path
+
+  _authorize_gcloud()
+  _log_common_args(args)
+
+  # Launch starter, which set ups a Fuzz Introspector instance, which
+  # will be used for creating benchmarks and extract context.
   logging.info('Running starter script')
-  subprocess.check_call('/experiment/starter.sh', shell=True)
-  #retcode = _run_command(['bash', '/experiment/starter.sh'], shell=True)
-  #logging.info('Retvalue: %d', retcode)
-  for l in os.listdir(os.getcwd()):
-    logging.info('Dir: %s', l)
-  logging.info('Finished running starter script.')
+  subprocess.check_call('/experiment/report/custom_oss_fuzz_fi_starter.sh', shell=True)
 
   date = datetime.datetime.now().strftime('%Y-%m-%d')
-
-  # Now read the projects we generated to collect project names. Fuzz Introspector
-  # is already running with the required data.
-  #projects_to_run = []
-  #for project_name in os.listdir(os.path.join('generated-projects-0', 'oss-fuzz-projects')):
-  #  projects_to_run.append(project_name)
-
-  # check results and identify the targets we want to analyse, which
-  # are the projects that had a successful run.
-
-  
-  #oss_fuzz_dir = target_workdir + '/oss-fuzz'
-
 
   # Experiment name is used to label the Cloud Builds and as part of the
   # GCS directory that build logs are stored in.
@@ -236,13 +227,12 @@ def run_new(cmd=None):
   environ = os.environ.copy()
 
   # We need to make sure that we use our version of OSS-Fuzz
-  data_dir = '/experiment/data-dir/'
-  environ['OSS_FUZZ_DATA_DIR'] = '/experiment/data-dir/oss-fuzz2'
+  environ['OSS_FUZZ_DATA_DIR'] = os.path.join(DATA_DIR, 'oss-fuzz2')
   
   # Get project names to analyse
   project_in_oss_fuzz = []
-  for project_name in os.listdir(os.path.join(data_dir, 'oss-fuzz2', 'build', 'out')):
-    project_path = os.path.join(data_dir, 'oss-fuzz2', 'build', 'out', project_name)
+  for project_name in os.listdir(os.path.join(DATA_DIR, 'oss-fuzz2', 'build', 'out')):
+    project_path = os.path.join(DATA_DIR, 'oss-fuzz2', 'build', 'out', project_name)
     if not os.path.isdir(project_path):
       continue
     project_in_oss_fuzz.append(project_name)
@@ -262,7 +252,6 @@ def run_new(cmd=None):
   cmd.append(introspector_endpoint)
   cmd.append('-mr')
   cmd.append(str(args.max_round))
-
   
   vary_temperature = [0.5, 0.6, 0.7, 0.8, 0.9] if args.vary_temperature else []
   cmd += [
@@ -292,7 +281,6 @@ def run_new(cmd=None):
   with open("/experiment_ended", "w") as _f:
     pass
 
-  #if args.local_introspector:
   logging.info("Shutting down introspector")
   try:
     subprocess.run(["curl", "--silent", "http://localhost:8080/api/shutdown"],
@@ -305,8 +293,6 @@ def run_new(cmd=None):
   # Wait for the report process to finish uploading.
   report_process.wait()
 
-
-  
   trends_cmd = [
       python_path, "-m", "report.trends_report.upload_summary", "--results-dir",
       local_results_dir, "--output-path",
@@ -331,15 +317,6 @@ def run_new(cmd=None):
   return ret_val
 
 
-
-
-
-
-
-
-
-
-
 def run_standard(cmd=None):
   """The main function."""
   args = _parse_args(cmd)
@@ -349,28 +326,8 @@ def run_standard(cmd=None):
       "/venv/bin/python3") else "python3"
   os.environ["PYTHON"] = python_path
 
-  # When running the docker container locally we need to activate the service
-  # account from the env variable.
-  # When running on GCP this step is unnecessary.
-  google_creds = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS', '')
-  if google_creds:
-    logging.info("GOOGLE APPLICATION CREDENTIALS set: %s.", google_creds)
-    _run_command([
-        'gcloud', 'auth', 'activate-service-account',
-        'LLM-EVAL@oss-fuzz.iam.gserviceaccount.com', '--key-file', google_creds
-    ])
-  else:
-    # TODO: Set GOOGLE_APPLICATION_CREDENTIALS and ensure cloud build uses it too.
-    logging.info("GOOGLE APPLICATION CREDENTIALS is not set.")
-
-  logging.info("Benchmark set is %s.", args.benchmark_set)
-  logging.info("Frequency label is %s.", args.frequency_label)
-  logging.info("Run timeout is %s.", args.run_timeout)
-  logging.info(
-      "Sub-directory is %s. Please consider using sub-directory to classify your experiment.",
-      args.sub_dir)
-  logging.info("LLM is %s.", args.model)
-  logging.info("DELAY is %s.", args.delay)
+  _authorize_gcloud()
+  _log_common_args(args)
 
   if args.local_introspector:
     os.environ["BENCHMARK_SET"] = args.benchmark_set
