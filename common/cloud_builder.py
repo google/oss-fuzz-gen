@@ -78,13 +78,13 @@ class CloudBuilder:
         client_options=REGIONAL_CLIENT_OPTIONS).projects().builds()
     self.storage_client = storage.Client(credentials=self.credentials)
 
-  def _upload_files(self, archive_name: str, dir: str,
+  def _upload_files(self, archive_name: str, target_dir: str,
                     files_to_upload: list[str]) -> str:
     """Archive and upload files to GCS."""
     with tempfile.TemporaryDirectory() as tmpdirname:
       archive_path = os.path.join(tmpdirname, archive_name)
       tar_command = ['tar', '-czf', archive_path] + files_to_upload
-      subprocess.run(tar_command, cwd=dir, check=True)
+      subprocess.run(tar_command, cwd=target_dir, check=True)
       logging.info('Created archive: %s', archive_path)
       return self._upload_to_gcs(archive_path)
 
@@ -145,8 +145,10 @@ class CloudBuilder:
     # Used for injecting additional OSS-Fuzz project integrations not in
     # upstream OSS-Fuzz.
     oss_fuzz_data_dir = ''
+    data_env_set = 'OSS_FUZZ_DATA_DIR_NOT_SET=1'
     if oss_fuzz_data_url:
       oss_fuzz_data_dir = '/workspace/oss-fuzz-data'
+      data_env_set = 'OSS_FUZZ_DATA_DIR=/workspace/oss-fuzz-data'
 
     target_data_dir = ''
     if data_dir_url:
@@ -197,10 +199,11 @@ class CloudBuilder:
                 'name': 'gcr.io/cloud-builders/gsutil',
                 'entrypoint': 'bash',
                 'args': [
-                    '-c',
-                    f'test -n "{oss_fuzz_data_url}" && gsutil cp {oss_fuzz_data_url} /tmp/oss-fuzz-data.tar.gz && '
-                    'mkdir /workspace/oss-fuzz-data && '
-                    f'tar -xzf /tmp/oss-fuzz-data.tar.gz -C /workspace/oss-fuzz-data'
+                    '-c', f'test -n "{oss_fuzz_data_url}" && '
+                    f'gsutil cp {oss_fuzz_data_url} '
+                    '/tmp/oss-fuzz-data.tar.gz && '
+                    f'mkdir {oss_fuzz_data_dir} && '
+                    f'tar -xzf /tmp/oss-fuzz-data.tar.gz -C {oss_fuzz_data_dir}'
                 ],
                 'allowFailure': True,
             },
@@ -208,10 +211,10 @@ class CloudBuilder:
                 'name': 'gcr.io/cloud-builders/gsutil',
                 'entrypoint': 'bash',
                 'args': [
-                    '-c',
-                    f'test -n "{data_dir_url}" && gsutil cp {data_dir_url} /tmp/data-dir.tar.gz && '
-                    'mkdir /workspace/data-dir && '
-                    f'tar -xzf /tmp/data-dir.tar.gz -C /workspace/data-dir'
+                    '-c', f'test -n "{data_dir_url}" && '
+                    f'gsutil cp {data_dir_url} /tmp/data-dir.tar.gz && '
+                    f'mkdir {target_data_dir} && '
+                    f'tar -xzf /tmp/data-dir.tar.gz -C {target_data_dir}'
                 ],
                 'allowFailure': True,
             },
@@ -222,14 +225,13 @@ class CloudBuilder:
                     '/workspace/ofg/',
                 'args': [
                     'run', '--rm', '-v', '/workspace:/workspace', '-e',
-                    'OSS_FUZZ_DATA_DIR=/workspace/oss-fuzz-data',
+                    data_env_set,
                     ('us-central1-docker.pkg.dev/oss-fuzz/oss-fuzz-gen/'
                      'agent-image'), 'python3.11', '-c',
                     'import os; from experiment import oss_fuzz_checkout; '
                     'oss_fuzz_checkout.clone_oss_fuzz("oss-fuzz"); '
                     'oss_fuzz_checkout.postprocess_oss_fuzz(); '
                 ],
-                #'env': [f'OSS_FUZZ_DATA_DIR={oss_fuzz_data_dir}'],
             },
             # Step 5: Run the Python script with the dill files.
             {

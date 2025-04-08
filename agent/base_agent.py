@@ -206,35 +206,31 @@ class BaseAgent(ABC):
     logger.info('We should use local FI.', trial=0)
 
     # Clone Fuzz Introspector
-    sp.check_call(
-        'git clone https://github.com/ossf/fuzz-introspector /workspace/fuzz-introspector',
-        shell=True)
-
+    introspector_repo = 'https://github.com/ossf/fuzz-introspector'
+    introspector_dst = '/workspace/fuzz-introspector'
+    sp.check_call(f'git clone {introspector_repo} {introspector_dst}',
+                  shell=True)
+    fi_web_dir = '/workspace/fuzz-introspector/tools/web-fuzzing-introspection'
     # Install reqs
     sp.check_call(
         'python3.11 -m pip install --ignore-installed -r requirements.txt',
-        cwd='/workspace/fuzz-introspector/tools/web-fuzzing-introspection',
+        cwd=fi_web_dir,
         shell=True)
 
     # Copy over the DB
-    shutil.rmtree(
-        '/workspace/fuzz-introspector/tools/web-fuzzing-introspection/app/static/assets/db/'
-    )
-    shutil.copytree(
-        '/workspace/data-dir/fuzz_introspector_db',
-        '/workspace/fuzz-introspector/tools/web-fuzzing-introspection/app/static/assets/db/'
-    )
+    shutil.rmtree(os.path.join(fi_web_dir, 'app/static/assets/db/'))
+    shutil.copytree('/workspace/data-dir/fuzz_introspector_db',
+                    os.path.join(fi_web_dir, 'app/static/assets/db/'))
 
     # Launch webapp
     fi_environ = os.environ
     fi_environ['FUZZ_INTROSPECTOR_SHUTDOWN'] = '1'
     fi_environ[
         'FUZZ_INTROSPECTOR_LOCAL_OSS_FUZZ'] = '/workspace/data-dir/oss-fuzz2'
-    sp.check_call(
-        'python3.11 main.py >> /dev/null &',
-        shell=True,
-        env=fi_environ,
-        cwd='/workspace/fuzz-introspector/tools/web-fuzzing-introspection/app')
+    sp.check_call('python3.11 main.py >> /dev/null &',
+                  shell=True,
+                  env=fi_environ,
+                  cwd=os.path.join(fi_web_dir, 'app'))
 
     logger.info('Waiting for the webapp to start', trial=0)
 
