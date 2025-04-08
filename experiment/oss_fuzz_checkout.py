@@ -105,9 +105,12 @@ def clone_oss_fuzz(oss_fuzz_dir: str = ''):
   # Sync oss-fuzz data if needed.
   if os.environ.get('OSS_FUZZ_DATA_DIR', ''):
     src_projects = os.path.join(os.environ['OSS_FUZZ_DATA_DIR'], 'projects')
+    logger.info('OSS_FUZZ_DATA_DIR: %s', os.environ['OSS_FUZZ_DATA_DIR'])
+    logger.info('src_projects: %s', src_projects)
     for proj in os.listdir(src_projects):
       src_project = os.path.join(src_projects, proj)
       dst_project = os.path.join(OSS_FUZZ_DIR, 'projects', proj)
+      logger.info('Copying: %s to %s', src_project, dst_project)
       shutil.copytree(src_project, dst_project)
 
 
