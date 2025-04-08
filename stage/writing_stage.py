@@ -21,6 +21,7 @@ from typing import cast
 from results import BuildResult, Result
 from stage.base_stage import BaseStage
 
+
 class WritingStage(BaseStage):
   """Handles the creation and refinement of fuzz targets and build scripts.
   Initially, this stage outputs a new fuzz target and its build script for a

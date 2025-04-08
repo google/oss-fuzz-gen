@@ -107,7 +107,6 @@ def extract_introspector_reports_for_benchmarks(projects_to_run, workdir, args):
   runner_script = os.path.join(workdir, 'fuzz-introspector',
                                'oss_fuzz_integration', 'runner.py')
 
-
   semaphore = threading.Semaphore(args.build_jobs)
   jobs = []
 
@@ -120,6 +119,7 @@ def extract_introspector_reports_for_benchmarks(projects_to_run, workdir, args):
 
   for proc in jobs:
     proc.join()
+
 
 def shutdown_fi_webapp():
   """Shutsdown the FI webapp if it exists."""

@@ -13,12 +13,12 @@
 # limitations under the License.
 """The abstract base class for LLM agents in stages."""
 import argparse
+import os
 import random
 import re
+import shutil
 import subprocess as sp
 import time
-import os
-import shutil
 from abc import ABC, abstractmethod
 from typing import Any, Optional
 
@@ -26,11 +26,12 @@ import requests
 
 import logger
 import utils
+from data_prep import introspector
 from llm_toolkit.models import LLM
 from llm_toolkit.prompts import Prompt
 from results import Result
 from tool.base_tool import BaseTool
-from data_prep import introspector
+
 
 class BaseAgent(ABC):
   """The abstract base class for LLM agents in stages."""
@@ -205,21 +206,35 @@ class BaseAgent(ABC):
     logger.info('We should use local FI.', trial=0)
 
     # Clone Fuzz Introspector
-    sp.check_call('git clone https://github.com/ossf/fuzz-introspector /workspace/fuzz-introspector',
-                        shell=True)
+    sp.check_call(
+        'git clone https://github.com/ossf/fuzz-introspector /workspace/fuzz-introspector',
+        shell=True)
 
     # Install reqs
-    sp.check_call('python3.11 -m pip install --ignore-installed -r requirements.txt', cwd='/workspace/fuzz-introspector/tools/web-fuzzing-introspection', shell=True)
+    sp.check_call(
+        'python3.11 -m pip install --ignore-installed -r requirements.txt',
+        cwd='/workspace/fuzz-introspector/tools/web-fuzzing-introspection',
+        shell=True)
 
     # Copy over the DB
-    shutil.rmtree('/workspace/fuzz-introspector/tools/web-fuzzing-introspection/app/static/assets/db/')
-    shutil.copytree('/workspace/data-dir/fuzz_introspector_db', '/workspace/fuzz-introspector/tools/web-fuzzing-introspection/app/static/assets/db/')
+    shutil.rmtree(
+        '/workspace/fuzz-introspector/tools/web-fuzzing-introspection/app/static/assets/db/'
+    )
+    shutil.copytree(
+        '/workspace/data-dir/fuzz_introspector_db',
+        '/workspace/fuzz-introspector/tools/web-fuzzing-introspection/app/static/assets/db/'
+    )
 
     # Launch webapp
-    fi_environ=os.environ
+    fi_environ = os.environ
     fi_environ['FUZZ_INTROSPECTOR_SHUTDOWN'] = '1'
-    fi_environ['FUZZ_INTROSPECTOR_LOCAL_OSS_FUZZ'] = '/workspace/data-dir/oss-fuzz2'
-    sp.check_call('python3.11 main.py >> /dev/null &', shell=True, env=fi_environ, cwd='/workspace/fuzz-introspector/tools/web-fuzzing-introspection/app')
+    fi_environ[
+        'FUZZ_INTROSPECTOR_LOCAL_OSS_FUZZ'] = '/workspace/data-dir/oss-fuzz2'
+    sp.check_call(
+        'python3.11 main.py >> /dev/null &',
+        shell=True,
+        env=fi_environ,
+        cwd='/workspace/fuzz-introspector/tools/web-fuzzing-introspection/app')
 
     logger.info('Waiting for the webapp to start', trial=0)
 
@@ -231,12 +246,10 @@ class BaseAgent(ABC):
       resp = requests.get('http://127.0.0.1:8080', timeout=10)
       if 'Fuzzing' in resp.text:
         break
-    if idx == max_wait_iterations-1:
-      # Launching FI failed. We can still continue, although context
-      # will be missing from runs.
-      logger.info('Failed to start webapp', trial=10)
-    else:
-      logger.info('FI webapp started', trial=0)
+      if idx == max_wait_iterations - 1:
+        # Launching FI failed. We can still continue, although context
+        # will be missing from runs.
+        logger.info('Failed to start webapp', trial=10)
 
     introspector.set_introspector_endpoints('http://127.0.0.1:8080/api')
 

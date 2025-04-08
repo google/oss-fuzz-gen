@@ -37,6 +37,7 @@ LLM_FIX_LIMIT = 5
 MAX_ROUND = 100
 DATA_DIR = '/experiment/data-dir/'
 
+
 def _parse_args(cmd) -> argparse.Namespace:
   """Parses the command line arguments."""
   parser = argparse.ArgumentParser(description='Run experiments')
@@ -160,6 +161,7 @@ def _authorize_gcloud():
     # TODO: Set GOOGLE_APPLICATION_CREDENTIALS and ensure cloud build uses it too.
     logging.info("GOOGLE APPLICATION CREDENTIALS is not set.")
 
+
 def _log_common_args(args):
   """Prints args useful for logging"""
   logging.info("Benchmark set is %s.", args.benchmark_set)
@@ -171,12 +173,14 @@ def _log_common_args(args):
   logging.info("LLM is %s.", args.model)
   logging.info("DELAY is %s.", args.delay)
 
+
 def main(cmd=None):
   """Main entrypoint"""
   if os.path.isdir(DATA_DIR):
     run_on_data_from_scratch(cmd)
   else:
     run_standard(cmd)
+
 
 def run_on_data_from_scratch(cmd=None):
   """Creates experiment for projects that are not in OSS-Fuzz upstream"""
@@ -193,7 +197,8 @@ def run_on_data_from_scratch(cmd=None):
   # Launch starter, which set ups a Fuzz Introspector instance, which
   # will be used for creating benchmarks and extract context.
   logging.info('Running starter script')
-  subprocess.check_call('/experiment/report/custom_oss_fuzz_fi_starter.sh', shell=True)
+  subprocess.check_call('/experiment/report/custom_oss_fuzz_fi_starter.sh',
+                        shell=True)
 
   date = datetime.datetime.now().strftime('%Y-%m-%d')
 
@@ -218,7 +223,6 @@ def run_on_data_from_scratch(cmd=None):
       args.benchmark_set, args.model
   ])
 
-
   # Launch run_all_experiments.py
   # some notes:
   # - we will generate benchmarks using the local FI running
@@ -228,11 +232,13 @@ def run_on_data_from_scratch(cmd=None):
 
   # We need to make sure that we use our version of OSS-Fuzz
   environ['OSS_FUZZ_DATA_DIR'] = os.path.join(DATA_DIR, 'oss-fuzz2')
-  
+
   # Get project names to analyse
   project_in_oss_fuzz = []
-  for project_name in os.listdir(os.path.join(DATA_DIR, 'oss-fuzz2', 'build', 'out')):
-    project_path = os.path.join(DATA_DIR, 'oss-fuzz2', 'build', 'out', project_name)
+  for project_name in os.listdir(
+      os.path.join(DATA_DIR, 'oss-fuzz2', 'build', 'out')):
+    project_path = os.path.join(DATA_DIR, 'oss-fuzz2', 'build', 'out',
+                                project_name)
     if not os.path.isdir(project_path):
       continue
     project_in_oss_fuzz.append(project_name)
@@ -252,7 +258,7 @@ def run_on_data_from_scratch(cmd=None):
   cmd.append(introspector_endpoint)
   cmd.append('-mr')
   cmd.append(str(args.max_round))
-  
+
   vary_temperature = [0.5, 0.6, 0.7, 0.8, 0.9] if args.vary_temperature else []
   cmd += [
       "--run-timeout",
