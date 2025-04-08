@@ -923,6 +923,11 @@ class CloudBuilderRunner(BuilderRunner):
         f'--real_project={project_name}',
     ]
 
+    # TODO(dongge): Reenable caching when build script is not modified.
+    # Current caching is not applicable when OFG modifies the build script,
+    # There is no simple way to check if the build script has been modified,
+    # but this feature should be added later.
+    # and fails to build the project (particularly with coverage sanitizer).
     # if oss_fuzz_checkout.ENABLE_CACHING and (
     #     oss_fuzz_checkout.is_image_cached(project_name, 'address') and
     #     oss_fuzz_checkout.is_image_cached(project_name, 'coverage')):
