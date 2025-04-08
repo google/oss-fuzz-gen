@@ -1,1 +1,0 @@
-["/src/fuzzers/empty-fuzzer.c", "/src/minmea/minmea.c", "/src/minmea/example.c", "/src/minmea/compat/minmea_compat_ti-rtos.h", "/src/minmea/fuzz-build/CMakeFiles/3.29.2/CompilerIdCXX/CMakeCXXCompilerId.cpp", "/src/minmea/tests.c", "/src/minmea/minmea.h", "/src/minmea/compat/minmea_compat_windows.h", "/src/minmea/fuzz-build/CMakeFiles/3.29.2/CompilerIdC/CMakeCCompilerId.c"]

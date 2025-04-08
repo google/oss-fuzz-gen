@@ -1,1 +1,0 @@
-var fuzzer_table_data = {"myTable3": []}

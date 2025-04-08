@@ -1,4 +1,0 @@
-Call tree
-LLVMFuzzerTestOneInput /src/fuzzers/empty-fuzzer.c linenumber=-1
-  printf  linenumber=7
-====================================

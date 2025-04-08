@@ -1,1 +1,0 @@
-var fuzzer_table_data = {"myTable2": [{"Function name": "LLVMFuzzerTestOneInput", "source code lines": 4, "source lines hit": 4, "percentage hit": "100.0%"}]}

@@ -1,1 +1,0 @@
-["/src/sqlite-createtable-parser/.clusterfuzzlite/fuzzer.c", "/src/sqlite-createtable-parser/debug/sql3parse_debug.c", "/src/fuzzers/empty-fuzzer.c", "/src/sqlite-createtable-parser/sql3parse_table.c", "/src/sqlite-createtable-parser/debug/main.c", "/src/sqlite-createtable-parser/sql3parse_table.h", "/src/sqlite-createtable-parser/debug/sql3parse_debug.h"]

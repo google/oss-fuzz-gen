@@ -1,1 +1,0 @@
-var analysis_1_data = []
