@@ -22,6 +22,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import threading
 import time
 
 import requests
@@ -77,19 +78,47 @@ def setup_workdirs(defined_dir):
   return workdir
 
 
-def extract_introspector_reports_for_benchmarks(projects_to_run, workdir):
+def _run_introspector_collection(runner_script, project, wd, semaphore):
+  """Run introspector on the given project."""
+  semaphore.acquire()
+
+  cmd = ['python3']
+  cmd.append(runner_script)  # introspector helper script
+  cmd.append('introspector')  # force an introspector run
+  cmd.append(project)  # target project
+  cmd.append('1')  # run the harness for 1 second
+  cmd.append('--disable-webserver')  # do not launch FI webapp
+
+  try:
+    logger.info('Collecting introspector information on %s', project)
+    subprocess.check_call(' '.join(cmd),
+                          shell=True,
+                          cwd=wd,
+                          stdout=subprocess.DEVNULL,
+                          stderr=subprocess.STDOUT)
+  except subprocess.CalledProcessError:
+    pass
+  semaphore.release()
+
+
+def extract_introspector_reports_for_benchmarks(projects_to_run, workdir, args):
   """Runs introspector through each report to collect program analysis data."""
   oss_fuzz_dir = os.path.join(workdir, 'oss-fuzz')
   runner_script = os.path.join(workdir, 'fuzz-introspector',
                                'oss_fuzz_integration', 'runner.py')
+
+  semaphore = threading.Semaphore(args.build_jobs)
+  jobs = []
+
   for project in projects_to_run:
-    cmd = ['python3']
-    cmd.append(runner_script)  # introspector helper script
-    cmd.append('introspector')  # force an introspector run
-    cmd.append(project)  # target project
-    cmd.append('1')  # run the harness for 1 second
-    cmd.append('--disable-webserver')  # do not launch FI webapp
-    subprocess.check_call(' '.join(cmd), shell=True, cwd=oss_fuzz_dir)
+    proc = threading.Thread(target=_run_introspector_collection,
+                            args=(runner_script, project, oss_fuzz_dir,
+                                  semaphore))
+    jobs.append(proc)
+    proc.start()
+
+  for proc in jobs:
+    proc.join()
 
 
 def shutdown_fi_webapp():
@@ -158,6 +187,7 @@ def run_ofg_generation(projects_to_run, workdir, args):
   """Runs harness generation"""
   logger.info('Running OFG experiment: %s', os.getcwd())
   oss_fuzz_dir = os.path.join(workdir, 'oss-fuzz')
+
   cmd = ['python3', os.path.join(OFG_BASE_DIR, 'run_all_experiments.py')]
   cmd.append('--model')
   cmd.append(args.model)
@@ -292,13 +322,22 @@ def run_harness_generation(out_gen, workdir, args):
   """Runs harness generation based on the projects in `out_gen`"""
 
   projects_to_run = copy_generated_projects_to_harness_gen(out_gen, workdir)
-  extract_introspector_reports_for_benchmarks(projects_to_run, workdir)
+  extract_introspector_reports_for_benchmarks(projects_to_run, workdir, args)
   shutdown_fi_webapp()
   create_fi_db(workdir)
+  if args.until_fi_db:
+    logger.info('Fuzz Introspector webapp created. Exiting.')
+    sys.exit(0)
   shutdown_fi_webapp()
   launch_fi_webapp(workdir)
   wait_until_fi_webapp_is_launched()
+
+  if args.all_but_ofg_core:
+    # do a prompt exist
+    sys.exit(0)
+
   run_ofg_generation(projects_to_run, workdir, args)
+
   create_merged_oss_fuzz_projects(out_gen)
   return projects_to_run
 
@@ -321,14 +360,15 @@ def get_next_out_folder():
 def run_analysis(args):
   """Generates builds and harnesses for repositories in input."""
   workdir = setup_workdirs(args.workdir)
+
   abs_workdir = os.path.abspath(workdir)
   if not args.out:
     out_folder = get_next_out_folder()
   else:
     out_folder = args.out
 
-  if os.path.isdir('results'):
-    shutil.rmtree('results')
+  #if os.path.isdir('results'):
+  #  shutil.rmtree('results')
 
   oss_fuzz_dir = os.path.join(abs_workdir, 'oss-fuzz-1')
   target_repositories = runner.extract_target_repositories(args.input)
@@ -393,11 +433,16 @@ def parse_commandline():
                       help='Parallel build-generator jobs to run.',
                       default=2,
                       type=int)
+  parser.add_argument('--all-but-ofg-core', action='store_true')
   parser.add_argument(
       '--build-timeout',
       help='Timeout for build generation per project, in seconds.',
       default=0,
       type=int)
+  parser.add_argument(
+      '--until-fi-db',
+      help='Run until Fuzz Introspector DB creation and then exit.',
+      action='store_true')
   parser.add_argument('-w', '--workdir', help='Work directory to use')
   return parser.parse_args()
 

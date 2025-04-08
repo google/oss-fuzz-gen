@@ -93,7 +93,6 @@ class OnePromptPrototyper(BaseAgent):
                            project_example_content=project_examples,
                            project_context_content=context_info)
     prompt.save(self.args.work_dirs.prompt)
-
     return prompt
 
   def execute(self, result_history: list[Result]) -> BuildResult:
