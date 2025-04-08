@@ -81,6 +81,7 @@ def setup_workdirs(defined_dir):
 def _run_introspector_collection(runner_script, project, wd, semaphore):
   """Run introspector on the given project."""
   semaphore.acquire()
+
   cmd = ['python3']
   cmd.append(runner_script)  # introspector helper script
   cmd.append('introspector')  # force an introspector run
@@ -186,6 +187,7 @@ def run_ofg_generation(projects_to_run, workdir, args):
   """Runs harness generation"""
   logger.info('Running OFG experiment: %s', os.getcwd())
   oss_fuzz_dir = os.path.join(workdir, 'oss-fuzz')
+
   cmd = ['python3', os.path.join(OFG_BASE_DIR, 'run_all_experiments.py')]
   cmd.append('--model')
   cmd.append(args.model)
@@ -329,6 +331,11 @@ def run_harness_generation(out_gen, workdir, args):
   shutdown_fi_webapp()
   launch_fi_webapp(workdir)
   wait_until_fi_webapp_is_launched()
+
+  if args.all_but_ofg_core:
+    # do a prompt exist
+    sys.exit(0)
+
   run_ofg_generation(projects_to_run, workdir, args)
 
   create_merged_oss_fuzz_projects(out_gen)
@@ -353,14 +360,15 @@ def get_next_out_folder():
 def run_analysis(args):
   """Generates builds and harnesses for repositories in input."""
   workdir = setup_workdirs(args.workdir)
+
   abs_workdir = os.path.abspath(workdir)
   if not args.out:
     out_folder = get_next_out_folder()
   else:
     out_folder = args.out
 
-  if os.path.isdir('results'):
-    shutil.rmtree('results')
+  #if os.path.isdir('results'):
+  #  shutil.rmtree('results')
 
   oss_fuzz_dir = os.path.join(abs_workdir, 'oss-fuzz-1')
   target_repositories = runner.extract_target_repositories(args.input)
@@ -425,6 +433,7 @@ def parse_commandline():
                       help='Parallel build-generator jobs to run.',
                       default=2,
                       type=int)
+  parser.add_argument('--all-but-ofg-core', action='store_true')
   parser.add_argument(
       '--build-timeout',
       help='Timeout for build generation per project, in seconds.',
