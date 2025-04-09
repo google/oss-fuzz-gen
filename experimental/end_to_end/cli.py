@@ -124,6 +124,7 @@ def extract_introspector_reports_for_benchmarks(projects_to_run, workdir, args):
   # Call reset here to ensure we're in a safe state.
   subprocess.check_call('reset', shell=True)
 
+
 def shutdown_fi_webapp():
   """Shutsdown the FI webapp if it exists."""
   try:
