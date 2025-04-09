@@ -120,6 +120,10 @@ def extract_introspector_reports_for_benchmarks(projects_to_run, workdir, args):
   for proc in jobs:
     proc.join()
 
+  # Often the terminal will become corrupted after a lot of introspector runs.
+  # Call reset here to ensure we're in a safe state.
+  subprocess.check_call('reset', shell=True)
+
 
 def shutdown_fi_webapp():
   """Shutsdown the FI webapp if it exists."""
@@ -138,7 +142,7 @@ def create_fi_db(workdir):
                            'web-fuzzing-introspection', 'app', 'static',
                            'assets', 'db')
   cmd = ['python3']
-  cmd.append('  .py')
+  cmd.append('web_db_creator_from_summary.py')
   cmd.append('--local-oss-fuzz')
   cmd.append(oss_fuzz_dir)
   try:
