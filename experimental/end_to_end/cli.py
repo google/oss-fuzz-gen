@@ -338,7 +338,6 @@ def _create_data_dir(workdir):
     os.makedirs(dst_project, exist_ok=True)
 
     for dn in ['inspector', 'report', 'report_target', 'textcov_reports']:
-      _copy_oss_fuzz_dirs(src_project, dst_project, dn)
       shutil.copytree(os.path.join(src_project, dn),
                       os.path.join(dst_project, dn))
     projects_to_copy.append(bp)
