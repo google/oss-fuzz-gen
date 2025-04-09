@@ -324,11 +324,6 @@ def create_merged_oss_fuzz_projects(workdir) -> None:
     shutil.copy(fuzz_src, fuzz_dst)
 
 
-def _copy_oss_fuzz_dirs(src_project, dst_project, dirname):
-  shutil.copytree(os.path.join(src_project, dirname),
-                  os.path.join(dst_project, dirname))
-
-
 def _create_data_dir(workdir):
   """Copy data from build generation to directory for cloud experimentation"""
   dst_dir = _get_next_data_dst_dir()
@@ -344,6 +339,8 @@ def _create_data_dir(workdir):
 
     for dn in ['inspector', 'report', 'report_target', 'textcov_reports']:
       _copy_oss_fuzz_dirs(src_project, dst_project, dn)
+      shutil.copytree(os.path.join(src_project, dn),
+                      os.path.join(dst_project, dn))
     projects_to_copy.append(bp)
 
   os.makedirs(os.path.join(dst_dir, 'oss-fuzz2', 'projects'), exist_ok=True)
