@@ -108,7 +108,7 @@ class OnePromptPrototyper(BaseAgent):
                                trial=last_result.trial,
                                work_dirs=last_result.work_dirs,
                                author=self,
-                               chat_history={self.name: prompt.get()})
+                               chat_history={self.name: prompt.gettext()})
 
     while prompt and cur_round <= self.max_round:
       self._generate_fuzz_target(prompt, result_history, build_result,
