@@ -14,7 +14,7 @@
 """The Analysis Stage class for examining the performance of fuzz targets. This
 stage is responsible for categorizing run-time crashes and detecting untested
 code blocks."""
-from results import Result
+from results import Result, RunResult
 from stage.base_stage import BaseStage
 
 
@@ -28,9 +28,15 @@ class AnalysisStage(BaseStage):
   been sufficiently covered."""
 
   def execute(self, result_history: list[Result]) -> Result:
+    """Selects agent based on run result and executes it."""
     self.logger.info('Analysis Stage')
-    agent = self.get_agent()
-    analysis_result = agent.execute(result_history)
+    last_result = result_history[-1]
+    assert isinstance(last_result, RunResult)
+    if last_result.crashes:
+      agent = self.get_agent(agent_name='SemanticAnalyzer')
+    else:
+      agent = self.get_agent(agent_name='CoverageAnalyzer')
+    analysis_result = self._execute_agent(agent, result_history)
 
     # TODO(dongge): Save logs and more info into workdir.
     self.logger.write_chat_history(analysis_result)
