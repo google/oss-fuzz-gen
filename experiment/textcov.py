@@ -15,6 +15,7 @@
 
 from __future__ import annotations
 
+import copy
 import dataclasses
 import json
 import logging
@@ -573,3 +574,7 @@ class Textcov:
       next_arg += '[]' * array_count
       args.append(next_arg)
     return args
+
+  def copy(self) -> 'Textcov':
+    """Create a deep copy of this Textcov oject."""
+    return copy.deepcopy(self)
