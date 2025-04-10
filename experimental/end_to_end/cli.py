@@ -120,6 +120,10 @@ def extract_introspector_reports_for_benchmarks(projects_to_run, workdir, args):
   for proc in jobs:
     proc.join()
 
+  # Often the terminal will become corrupted after a lot of introspector runs.
+  # Call reset here to ensure we're in a safe state.
+  subprocess.check_call('reset', shell=True)
+
 
 def shutdown_fi_webapp():
   """Shutsdown the FI webapp if it exists."""
@@ -143,7 +147,11 @@ def create_fi_db(workdir):
   cmd.append(oss_fuzz_dir)
   try:
     logger.info('Creating fuzz introspector database')
-    subprocess.check_call(' '.join(cmd), shell=True, cwd=fi_db_dir)
+    subprocess.check_call(' '.join(cmd),
+                          shell=True,
+                          cwd=fi_db_dir,
+                          stdout=subprocess.DEVNULL,
+                          stderr=subprocess.STDOUT)
     logger.info('Created database successfully')
   except subprocess.CalledProcessError:
     logger.info('Failed creation of DB')
@@ -158,12 +166,14 @@ def launch_fi_webapp(workdir):
   environ = os.environ.copy()
   environ['FUZZ_INTROSPECTOR_LOCAL_OSS_FUZZ'] = oss_fuzz_dir
   cmd = ['python3']
-  cmd.append('main.py')
-  cmd.append('>> /dev/null &')
+  cmd.append('main.py &')
+
   subprocess.check_call(' '.join(cmd),
                         shell=True,
                         cwd=fi_webapp_dir,
-                        env=environ)
+                        env=environ,
+                        stdout=subprocess.DEVNULL,
+                        stderr=subprocess.STDOUT)
 
 
 def wait_until_fi_webapp_is_launched():
@@ -318,6 +328,41 @@ def create_merged_oss_fuzz_projects(workdir) -> None:
     shutil.copy(fuzz_src, fuzz_dst)
 
 
+def _create_data_dir(workdir):
+  """Copy data from build generation to directory for cloud experimentation"""
+  dst_dir = _get_next_data_dst_dir()
+  oss_fuzz_build_out = os.path.join(workdir, 'oss-fuzz', 'build', 'out')
+
+  # Copy OSS-Fuzz data
+  projects_to_copy = []
+  for bp in os.listdir(oss_fuzz_build_out):
+    src_project = os.path.join(oss_fuzz_build_out, bp)
+    dst_project = os.path.join(dst_dir, 'oss-fuzz2', 'build', 'out', bp)
+
+    os.makedirs(dst_project, exist_ok=True)
+
+    for dn in ['inspector', 'report', 'report_target', 'textcov_reports']:
+      shutil.copytree(os.path.join(src_project, dn),
+                      os.path.join(dst_project, dn))
+    projects_to_copy.append(bp)
+
+  os.makedirs(os.path.join(dst_dir, 'oss-fuzz2', 'projects'), exist_ok=True)
+
+  for project in projects_to_copy:
+    p_src = os.path.join(workdir, 'oss-fuzz', 'projects', project)
+    p_dst = os.path.join(dst_dir, 'oss-fuzz2', 'projects', project)
+    shutil.copytree(p_src, p_dst)
+
+  # Copy Fuzz Introspector data
+  fuzz_introspector_db_folder = os.path.join(workdir, 'fuzz-introspector',
+                                             'tools',
+                                             'web-fuzzing-introspection', 'app',
+                                             'static', 'assets', 'db')
+  shutil.copytree(fuzz_introspector_db_folder,
+                  os.path.join(dst_dir, 'fuzz_introspector_db'))
+  return dst_dir
+
+
 def run_harness_generation(out_gen, workdir, args):
   """Runs harness generation based on the projects in `out_gen`"""
 
@@ -331,7 +376,8 @@ def run_harness_generation(out_gen, workdir, args):
   shutdown_fi_webapp()
   launch_fi_webapp(workdir)
   wait_until_fi_webapp_is_launched()
-
+  dst_data_dir = _create_data_dir(workdir)
+  logger.info('Wrote data directory for OFG experiments in %s', dst_data_dir)
   if args.all_but_ofg_core:
     # do a prompt exist
     sys.exit(0)
@@ -347,14 +393,24 @@ def setup_logging():
   logging.basicConfig(level=logging.INFO, format=LOG_FMT)
 
 
-def get_next_out_folder():
+def _get_next_folder_in_idx(base_name):
   """Get next pre-named work directory."""
   idx = 0
   while True:
-    if not os.path.isdir(f'generated-projects-{idx}'):
+    if not os.path.isdir(f'{base_name}-{idx}'):
       break
     idx += 1
-  return f'generated-projects-{idx}'
+  return f'{base_name}-{idx}'
+
+
+def get_next_out_folder():
+  """Get next pre-named work directory."""
+  return _get_next_folder_in_idx('generated-projects')
+
+
+def _get_next_data_dst_dir():
+  """Gets next data dir"""
+  return _get_next_folder_in_idx('data-dir')
 
 
 def run_analysis(args):

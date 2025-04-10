@@ -14,7 +14,6 @@
 """
 Tools used for experiments.
 """
-
 import atexit
 import logging
 import os
@@ -22,6 +21,7 @@ import re
 import shutil
 import subprocess as sp
 import tempfile
+import uuid
 
 import yaml
 
@@ -389,45 +389,6 @@ def prepare_build(project_name, sanitizer, generated_project):
     shutil.copy(original_dockerfile, dockerfile_to_use)
 
 
-def _image_exists_locally(image_name: str, project_name: str) -> bool:
-  """Checks if the given |image_name| exits locally."""
-  try:
-    all_images = sp.run(['docker', 'images', '--format', '{{.Repository}}'],
-                        stdout=sp.PIPE,
-                        text=True,
-                        check=True).stdout.splitlines()
-    if image_name in all_images:
-      logger.info('Will use local cached images of %s: %s', project_name,
-                  image_name)
-      return True
-  except sp.CalledProcessError:
-    logger.warning('Unable to use local cached image of %s: %s', project_name,
-                   image_name)
-  return False
-
-
-def _image_exists_online(image_name: str, project_name: str) -> bool:
-  """Checks if the given |image_name| exits in the cloud registry."""
-  online_image_name = _get_project_cache_image_name(project_name, 'address')
-  try:
-    sp.run(['docker', 'pull', online_image_name],
-           stdout=sp.PIPE,
-           text=True,
-           check=True)
-    logger.info('Pulled online cached images of %s: %s', project_name,
-                online_image_name)
-
-    sp.run(['docker', 'tag', online_image_name, image_name],
-           stdout=sp.PIPE,
-           text=True,
-           check=True)
-    logger.info('Will use online cached images: %s', project_name)
-    return True
-  except sp.CalledProcessError:
-    logger.warning('Unable to use online cached images: %s', project_name)
-    return False
-
-
 def _build_image(project_name: str) -> str:
   """Builds project image in OSS-Fuzz"""
   adjusted_env = os.environ | {
@@ -451,31 +412,50 @@ def _build_image(project_name: str) -> str:
     return ''
 
 
-def prepare_project_image(project: str) -> str:
-  """Prepares original image of the |project|'s fuzz target build container."""
-  image_name = f'gcr.io/oss-fuzz/{project}'
-  if ENABLE_CACHING and is_image_cached(project, 'address'):
-    logger.info('We should use cached instance.')
-    # Rewrite for caching.
-    rewrite_project_to_cached_project(project, project, 'address')
-    # Prepare build
-    prepare_build(project, 'address', project)
-    # Build the image
-    command = [
-        'docker', 'build', '-t', image_name,
-        os.path.join('projects', project)
-    ]
-    try:
-      sp.run(command,
-             cwd=OSS_FUZZ_DIR,
-             stdin=sp.DEVNULL,
-             stdout=sp.PIPE,
-             stderr=sp.PIPE,
-             check=True)
-      logger.info('Using cached project image for %s: %s', project, image_name)
-      return image_name
-    except sp.CalledProcessError as e:
-      logger.warning('Failed to build image for %s: %s', project, e)
+def rectify_docker_tag(docker_tag: str) -> str:
+  # Replace "::" and any character not \w, _, or . with "-".
+  valid_docker_tag = re.sub(r'::', '-', docker_tag)
+  valid_docker_tag = re.sub(r'[^\w_.]', '-', valid_docker_tag)
+  # Docker fails with tags containing -_ or _-.
+  valid_docker_tag = re.sub(r'[-_]{2,}', '-', valid_docker_tag)
+  return valid_docker_tag
 
-  logger.warning('Unable to find cached project image for %s', project)
-  return _build_image(project)
+
+def create_ossfuzz_project(benchmark: benchmarklib.Benchmark,
+                           generated_oss_fuzz_project: str) -> str:
+  """Creates an OSS-Fuzz project by replicating an existing project."""
+  generated_project_path = os.path.join(OSS_FUZZ_DIR, 'projects',
+                                        generated_oss_fuzz_project)
+  if os.path.exists(generated_project_path):
+    logger.info('Project %s already exists.', generated_project_path)
+    return generated_project_path
+
+  oss_fuzz_project_path = os.path.join(OSS_FUZZ_DIR, 'projects',
+                                       benchmark.project)
+  shutil.copytree(oss_fuzz_project_path, generated_project_path)
+  return generated_project_path
+
+
+def prepare_project_image(benchmark: benchmarklib.Benchmark) -> str:
+  """Prepares original image of the |project|'s fuzz target build container."""
+  project = benchmark.project
+  image_name = f'gcr.io/oss-fuzz/{project}'
+  logger.info('We should use cached instance.')
+  generated_oss_fuzz_project = f'{benchmark.id}-{uuid.uuid4().hex}'
+  generated_oss_fuzz_project = rectify_docker_tag(generated_oss_fuzz_project)
+  create_ossfuzz_project(benchmark, generated_oss_fuzz_project)
+
+  if not ENABLE_CACHING:
+    logger.warning('Disabled caching when building image for %s', project)
+  elif is_image_cached(project, 'address'):
+    # Rewrite for caching.
+    rewrite_project_to_cached_project(project, generated_oss_fuzz_project,
+                                      'address')
+    # Prepare build
+    prepare_build(project, 'address', generated_oss_fuzz_project)
+    # Build the image
+    logger.info('Using cached project image for %s: %s',
+                generated_oss_fuzz_project, image_name)
+  else:
+    logger.warning('Unable to find cached project image for %s', project)
+  return _build_image(generated_oss_fuzz_project)

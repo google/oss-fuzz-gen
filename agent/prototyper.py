@@ -154,18 +154,12 @@ class Prototyper(BaseAgent):
     compilation_tool = ProjectContainerTool(benchmark=benchmark)
 
     # Replace fuzz target and build script in the container.
-    replace_file_content_command = (
-        'cat << "OFG_EOF" > {file_path}\n{file_content}\nOFG_EOF')
-    compilation_tool.execute(
-        replace_file_content_command.format(
-            file_path=benchmark.target_path,
-            file_content=build_result.fuzz_target_source))
-
+    compilation_tool.write_to_file(content=build_result.fuzz_target_source,
+                                   file_path=benchmark.target_path)
     if build_result.build_script_source:
-      compilation_tool.execute(
-          replace_file_content_command.format(
-              file_path='/src/build.sh',
-              file_content=build_result.build_script_source))
+      compilation_tool.write_to_file(
+          content=build_result.build_script_source,
+          file_path=compilation_tool.build_script_path)
 
     # Recompile.
     logger.info('===== ROUND %02d Recompile =====',
