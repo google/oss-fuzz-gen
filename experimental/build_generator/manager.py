@@ -558,7 +558,7 @@ def auto_generate(github_url, disable_testing_build_scripts=False, outdir=''):
   all_build_scripts: List[Tuple[
       str, str, build_script_generator.
       AutoBuildContainer]] = build_script_generator.extract_build_suggestions(
-          target_source_path, 'test-fuzz-build-')
+          target_source_path, 'test-fuzz-build-', LLM_MODEL)
 
   # Check each of the build scripts.
   logger.info('[+] Testing build suggestions')

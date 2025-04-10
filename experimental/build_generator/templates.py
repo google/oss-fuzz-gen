@@ -115,16 +115,19 @@ AUTOGEN_DOCKER_FILE = BASE_DOCKER_HEAD + '''
 RUN rm /usr/local/bin/cargo && \\
  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | bash -s -- -y && \\
  apt-get install -y cargo
-RUN python3 -m pip install --upgrade pip && \\
-    python3 -m pip install pydantic-core pyyaml cxxfilt openai==1.60.0
+RUN python3 -m pip install --upgrade pip
 RUN python3 -m pip install --upgrade google-cloud-aiplatform
 # Some projects may have recurisve modules from github without use of ssl,
 # and this needs to be trusted. The below command can be removed if this
 # project is not doing such.
 RUN mkdir ~/.ssh && ssh-keyscan github.com >> ~/.ssh/known_hosts
-COPY *.py *.json $SRC/
+COPY *.py *.json requirements.txt $SRC/
+RUN python3 -m pip install -r $SRC/requirements.txt
+COPY llm_toolkit $SRC/llm_toolkit
 WORKDIR $SRC
-COPY build.sh $SRC/'''
+RUN python3 -m pip install httpx==0.27.2
+COPY build.sh $SRC/
+'''
 
 EMPTY_PROJECT_YAML = """homepage: "https://github.com/google/oss-fuzz"
 language: c++
@@ -153,4 +156,25 @@ COPY .clusterfuzzlite/build.sh $SRC/build.sh
 COPY .clusterfuzzlite/*.cpp $SRC/
 COPY .clusterfuzzlite/*.c $SRC/
 WORKDIR $SRC/{project_repo_dir}
+'''
+
+# Template file for building LLM prompt
+LLM_PRIMING = '''<system>
+You are a developer wanting to build a given C/C++ projects.
+</system>'''
+
+LLM_PROBLEM = '''
+Here is a list of build system configuration files found from the target
+repository. Please help generate the most suitable build script in bash to
+build the project, assuming the build is done under Ubuntu 24 with all
+necessary packages installed. Please also assume that the base script will
+be executed under root privilege, thus no sudo command should be used. You
+must only returns the content of the build script and nothing else more.
+
+{BUILD_FILES}
+'''
+
+LLM_BUILD_FILE_TEMPLATE = '''
+<file_path>{PATH}</file_path>
+<file_content>{CONTENT}</file_content>
 '''

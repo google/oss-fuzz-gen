@@ -24,6 +24,9 @@ from typing import Dict, Iterator, List, Optional, Tuple
 
 import constants
 import manager
+import templates
+
+from llm_toolkit import models
 
 logger = logging.getLogger(name=__name__)
 
@@ -96,6 +99,90 @@ class AutoBuildBase:
                          if lib in constants.LIBRARY_PACKAGE_MAP]
 
     return list(set(required_packages))
+
+
+class LLMBuilder(AutoBuildBase):
+  """Using LLM for automatic build script generation."""
+
+  def __init__(self, model_name: str):
+    super().__init__()
+    self.matches_found = {
+        'Makefile': [],
+        'configure.ac': [],
+        'Makefile.am': [],
+        'autogen.sh': [],
+        'bootstrap.sh': [],
+        'CMakeLists.txt': [],
+        'Config.in': [],
+    }
+    self.model = models.LLM.setup(
+        ai_binary=os.getenv('AI_BINARY', ''),
+        name=model_name,
+        max_tokens=4096,
+        num_samples=1,
+        temperature=0.4,
+        temperature_list=[],
+    )
+    self.prompt = self.model.prompt_type()(None)
+
+  def is_matched(self):
+    """Always true for using LLM support."""
+    return True
+
+  def steps_to_build(self) -> Iterator[AutoBuildContainer]:
+    """Yields AutoBuildContainer objects."""
+    container = AutoBuildContainer()
+
+    # Retrive a list of known build files from the project.
+    build_files = self._retrieve_build_files()
+    if build_files:
+      self._build_prompt(build_files)
+      response = self.model.ask_llm(prompt=self.prompt)
+      response = response.replace('```bash', '').replace('```', '')
+
+      container.list_of_commands.append(response)
+      container.heuristic_id = self.name + '1'
+      logger.info(container.list_of_commands)
+
+    yield container
+
+    # TODO Handle cases for source code only projects.
+    directory_tree = self._generate_directory_tree()
+    if directory_tree:
+      pass
+
+  def _generate_directory_tree(self) -> str:
+    """Generate a recusive directory tree string for the target project."""
+    return ''
+
+  def _retrieve_build_files(self) -> Dict[str, str]:
+    """Retrieve the content of build files mapped to their path."""
+    build_files = {}
+
+    for files in self.matches_found.values():
+      for file in files:
+        with open(file, 'r') as f:
+          build_files[file.split('/', 1)[-1]] = f.read()
+
+    return build_files
+
+  def _build_prompt(self, build_files: Dict[str, str]) -> None:
+    """Helper to generate prompt for llm model"""
+    build_files_str = []
+    for file, content in build_files.items():
+      target_str = templates.LLM_BUILD_FILE_TEMPLATE.replace('{PATH}', file)
+      target_str = target_str.replace('{CONTENT}', content)
+      build_files_str.append(target_str)
+
+    problem = templates.LLM_PROBLEM.replace('{BUILD_FILES}',
+                                            '\n'.join(build_files_str))
+
+    self.prompt.add_priming(templates.LLM_PRIMING)
+    self.prompt.add_problem(problem)
+
+  @property
+  def name(self):
+    return 'LLM'
 
 
 class HeaderOnlyCBuilder(AutoBuildBase):
@@ -837,7 +924,7 @@ llvm-ar rcs libfuzz.a $(cat objfiles)
     return 'kconfig'
 
 
-def match_build_heuristics_on_folder(abspath_of_target: str):
+def match_build_heuristics_on_folder(abspath_of_target: str, model_name: str):
   """Yields AutoBuildContainer objects.
 
   Traverses the files in the target folder. Uses the file list as input to
@@ -845,6 +932,7 @@ def match_build_heuristics_on_folder(abspath_of_target: str):
   build steps that are deemed matching."""
   all_files = manager.get_all_files_in_path(abspath_of_target)
   all_checks = [
+      LLMBuilder(model_name),
       AutogenConfScanner(),
       PureCFileCompiler(),
       PureCFileCompilerFind(),
@@ -927,11 +1015,12 @@ def convert_build_heuristics_to_scripts(
 
 
 def extract_build_suggestions(
-    target_dir, testing_base_dir) -> List[Tuple[str, str, AutoBuildContainer]]:
+    target_dir, testing_base_dir,
+    model_name) -> List[Tuple[str, str, AutoBuildContainer]]:
   """Statically create suggested build scripts for a project."""
   # Get all of the build heuristics
   all_build_suggestions: List[AutoBuildContainer] = list(
-      match_build_heuristics_on_folder(target_dir))
+      match_build_heuristics_on_folder(target_dir, model_name))
   logger.info('Found %d possible build suggestions', len(all_build_suggestions))
   #all_build_suggestions = all_build_suggestions[:2]
   for build_suggestion in all_build_suggestions:

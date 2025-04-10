@@ -44,7 +44,11 @@ def setup_worker_project(oss_fuzz_base: str, project_name: str, llm_model: str):
   with open(os.path.join(temp_project_dir, 'build.sh'), 'w') as f:
     f.write(templates.EMPTY_OSS_FUZZ_BUILD)
   with open(os.path.join(temp_project_dir, 'Dockerfile'), 'w') as f:
-    f.write(templates.AUTOGEN_DOCKER_FILE)
+    file_content = templates.AUTOGEN_DOCKER_FILE
+    openai_api_key = os.environ.get('OPENAI_API_KEY', '')
+    if openai_api_key:
+      file_content += f'ENV OPENAI_API_KEY {openai_api_key}'
+    f.write(file_content)
 
   if llm_model == 'vertex':
     json_config = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS', None)
@@ -56,12 +60,20 @@ def setup_worker_project(oss_fuzz_base: str, project_name: str, llm_model: str):
 
   # Copy over the generator
   files_to_copy = {
-      'build_script_generator.py', 'manager.py', 'templates.py', 'constants.py'
+      'build_script_generator.py', 'manager.py', 'templates.py', 'constants.py',
+      '../../utils.py', '../../requirements.txt'
   }
   for target_file in files_to_copy:
     shutil.copyfile(
         os.path.join(os.path.dirname(os.path.abspath(__file__)), target_file),
-        os.path.join(temp_project_dir, target_file))
+        os.path.join(temp_project_dir,
+                     target_file.split('/')[-1]))
+
+  # Copy over llm_toolkit
+  shutil.copytree(
+      os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                   '../..', 'llm_toolkit'),
+      os.path.join(temp_project_dir, 'llm_toolkit'))
 
   # Build a version of the project
   if silent_global:
