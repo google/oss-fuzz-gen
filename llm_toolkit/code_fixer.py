@@ -472,9 +472,12 @@ def apply_llm_fix(ai_binary: str,
     context = collect_context(benchmark, errors)
     instruction = collect_instructions(benchmark, errors,
                                        fuzz_target_source_code)
-    prompt = builder.build_fixer_prompt(benchmark, fuzz_target_source_code,
-                                        error_desc, errors, context,
-                                        instruction)
+    prompt = builder.build_fixer_prompt(benchmark,
+                                        fuzz_target_source_code,
+                                        error_desc,
+                                        errors,
+                                        context=context,
+                                        instruction=instruction)
     prompt.save(prompt_path)
 
   fixer_model.query_llm(prompt, response_dir)
