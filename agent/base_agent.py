@@ -1,14 +1,32 @@
+# Copyright 2025 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 """The abstract base class for LLM agents in stages."""
 import argparse
+import os
 import random
 import re
+import shutil
 import subprocess as sp
 import time
 from abc import ABC, abstractmethod
 from typing import Any, Optional
 
+import requests
+
 import logger
 import utils
+from data_prep import introspector
 from llm_toolkit.models import LLM
 from llm_toolkit.prompts import Prompt
 from results import Result
@@ -21,8 +39,8 @@ class BaseAgent(ABC):
   def __init__(self,
                trial: int,
                llm: LLM,
+               args: argparse.Namespace,
                tools: Optional[list[BaseTool]] = None,
-               args: Optional[argparse.Namespace] = None,
                name: str = ''):
     self.trial: int = trial
     self.llm: LLM = llm
@@ -30,6 +48,7 @@ class BaseAgent(ABC):
     self.args = args
     self.name: str = name or self.__class__.__name__
     self.chat_history: str = ''  # Communication history between LLM and tool.
+    self.max_round = self.args.max_round
 
   def __repr__(self) -> str:
     return self.__class__.__name__
@@ -50,6 +69,21 @@ class BaseAgent(ABC):
                 cur_round,
                 trial=trial)
     response = self.llm.chat_llm(client=client, prompt=prompt)
+    logger.info('<CHAT RESPONSE:ROUND %02d>%s</CHAT RESPONSE:ROUND %02d>',
+                cur_round,
+                response,
+                cur_round,
+                trial=trial)
+    return response
+
+  def ask_llm(self, cur_round: int, prompt: Prompt, trial: int) -> str:
+    """Chat with LLM."""
+    logger.info('<CHAT PROMPT:ROUND %02d>%s</CHAT PROMPT:ROUND %02d>',
+                cur_round,
+                prompt.get(),
+                cur_round,
+                trial=trial)
+    response = self.llm.ask_llm(prompt=prompt)
     logger.info('<CHAT RESPONSE:ROUND %02d>%s</CHAT RESPONSE:ROUND %02d>',
                 cur_round,
                 response,
@@ -87,7 +121,7 @@ class BaseAgent(ABC):
       previous_prompt: Optional[Prompt] = None) -> str:
     """Formats a prompt based on bash execution result."""
     if previous_prompt:
-      previous_prompt_text = previous_prompt.get()
+      previous_prompt_text = previous_prompt.gettext()
     else:
       previous_prompt_text = ''
     stdout = self.llm.truncate_prompt(process.stdout,
@@ -163,6 +197,59 @@ class BaseAgent(ABC):
     return parser.parse_args()
 
   @classmethod
+  def _preprocess_fi_setup(cls) -> None:
+    """Logic for starting a custom Fuzz Introspector used on cloud builds"""
+    logger.info('Checkign if we should use local FI', trial=0)
+    if not os.path.isdir('/workspace/data-dir'):
+      logger.info('This does not require a local FI.', trial=0)
+      return
+    logger.info('We should use local FI.', trial=0)
+
+    # Clone Fuzz Introspector
+    introspector_repo = 'https://github.com/ossf/fuzz-introspector'
+    introspector_dst = '/workspace/fuzz-introspector'
+    sp.check_call(f'git clone {introspector_repo} {introspector_dst}',
+                  shell=True)
+    fi_web_dir = '/workspace/fuzz-introspector/tools/web-fuzzing-introspection'
+    # Install reqs
+    sp.check_call(
+        'python3.11 -m pip install --ignore-installed -r requirements.txt',
+        cwd=fi_web_dir,
+        shell=True)
+
+    # Copy over the DB
+    shutil.rmtree(os.path.join(fi_web_dir, 'app/static/assets/db/'))
+    shutil.copytree('/workspace/data-dir/fuzz_introspector_db',
+                    os.path.join(fi_web_dir, 'app/static/assets/db/'))
+
+    # Launch webapp
+    fi_environ = os.environ
+    fi_environ['FUZZ_INTROSPECTOR_SHUTDOWN'] = '1'
+    fi_environ[
+        'FUZZ_INTROSPECTOR_LOCAL_OSS_FUZZ'] = '/workspace/data-dir/oss-fuzz2'
+    sp.check_call('python3.11 main.py >> /dev/null &',
+                  shell=True,
+                  env=fi_environ,
+                  cwd=os.path.join(fi_web_dir, 'app'))
+
+    logger.info('Waiting for the webapp to start', trial=0)
+
+    sec_to_wait = 10
+    max_wait_iterations = 10
+    for idx in range(max_wait_iterations):
+      time.sleep(sec_to_wait)
+
+      resp = requests.get('http://127.0.0.1:8080', timeout=10)
+      if 'Fuzzing' in resp.text:
+        break
+      if idx == max_wait_iterations - 1:
+        # Launching FI failed. We can still continue, although context
+        # will be missing from runs.
+        logger.info('Failed to start webapp', trial=10)
+
+    introspector.set_introspector_endpoints('http://127.0.0.1:8080/api')
+
+  @classmethod
   def cloud_main(cls) -> None:
     """Executes agent using dill files. This is for cloud experiments launched
     by cloud_builder.py. It runs `new_result = agent.execute(result_history)` in
@@ -170,6 +257,8 @@ class BaseAgent(ABC):
     deserialized from dill files and new_result will be serialized to share data
     with the cloud experiment requester."""
     args = cls._parse_args()
+
+    cls._preprocess_fi_setup()
 
     agent = utils.deserialize_from_dill(args.agent)
     agent.llm.cloud_setup()

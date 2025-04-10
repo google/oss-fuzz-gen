@@ -35,13 +35,6 @@ from experiment import evaluator, oss_fuzz_checkout, textcov
 from experiment.workdir import WorkDirs
 from llm_toolkit import models, prompt_builder
 
-try:
-  client = cloud_logging.Client()
-  client.setup_logging()
-except Exception as e:
-  # For local runs we continue
-  pass
-
 logger = logging.getLogger(__name__)
 
 # WARN: Avoid large NUM_EXP for local experiments.
@@ -82,6 +75,11 @@ class Result:
 def get_next_generated_benchmarks_dir() -> str:
   """Retuns the next folder to be used for generated benchmarks."""
   max_idx = -1
+  # When generating benchmarks dynamically sometimes we may not have a
+  # benchmark folder, as the command will be run from an arbitrary directory.
+  # Create the benchmark folder if this is the case.
+  if not os.path.isdir(BENCHMARK_ROOT):
+    os.makedirs(BENCHMARK_ROOT)
   for benchmark_folder in os.listdir(BENCHMARK_ROOT):
     try:
       max_idx = max(max_idx,
@@ -144,6 +142,7 @@ def run_experiments(benchmark: benchmarklib.Benchmark, args) -> Result:
   """Runs an experiment based on the |benchmark| config."""
   try:
     work_dirs = WorkDirs(os.path.join(args.work_dir, f'output-{benchmark.id}'))
+    args.work_dirs = work_dirs
     model = models.LLM.setup(
         ai_binary=args.ai_binary,
         name=args.model,
@@ -238,8 +237,7 @@ def parse_args() -> argparse.Namespace:
   parser.add_argument(
       '-of',
       '--oss-fuzz-dir',
-      help=
-      'Path to OSS-Fuzz dir to use. If not set will create temporary directory.',
+      help='OSS-Fuzz dir path to use. Create temporary directory by default.',
       default='')
   parser.add_argument(
       '-g',
@@ -274,6 +272,11 @@ def parse_args() -> argparse.Namespace:
                       action='store_true',
                       default=False,
                       help='Enables agent enhancement.')
+  parser.add_argument('-mr',
+                      '--max-round',
+                      type=int,
+                      default=100,
+                      help='Max trial round for agents.')
 
   args = parser.parse_args()
   if args.num_samples:
@@ -326,13 +329,22 @@ def extend_report_with_coverage_gains() -> None:
 
   comparative_cov_gains = {}
   for language, lang_cov_gain in total_new_covgains.items():
+    try:
+      total_coverage_increase = round(
+          (lang_cov_gain / existing_oss_fuzz_cov[language]['total']) * 100.0,
+          10)
+    except (KeyError, ZeroDivisionError):
+      total_coverage_increase = 0
+
+    try:
+      relative_coverage_increase = round(
+          (lang_cov_gain / existing_oss_fuzz_cov[language]['covered']) * 100.0,
+          10)
+    except (KeyError, ZeroDivisionError):
+      relative_coverage_increase = 0
     comparative_cov_gains[language] = {
-        'total_coverage_increase':
-            round((lang_cov_gain / existing_oss_fuzz_cov[language]['total']) *
-                  100.0, 10),
-        'relative_coverage_increase':
-            round((lang_cov_gain / existing_oss_fuzz_cov[language]['covered']) *
-                  100.0, 10)
+        'total_coverage_increase': total_coverage_increase,
+        'relative_coverage_increase': relative_coverage_increase,
     }
   add_to_json_report(WORK_DIR, 'coverage_gains_per_language',
                      total_new_covgains)
@@ -375,8 +387,17 @@ def _print_experiment_results(results: list[Result],
     logger.info('*%s: %s', project, cov_gain[project]["coverage_diff"])
 
 
-def _setup_logging(verbose: str = 'info') -> None:
+def _setup_logging(verbose: str = 'info', is_cloud: bool = False) -> None:
   """Set up logging level."""
+
+  if is_cloud:
+    try:
+      client = cloud_logging.Client()
+      client.setup_logging()
+    except Exception as e:
+      # For local runs we continue
+      logger.warning('Error setting up cloud logging client: %s', e)
+
   if verbose == "debug":
     log_level = logging.DEBUG
   else:
@@ -453,10 +474,12 @@ def _process_total_coverage_gain() -> dict[str, dict[str, Any]]:
       for textcov_file in os.listdir(summary):
         if textcov_file.endswith('.covreport'):
           with open(os.path.join(summary, textcov_file), 'rb') as f:
-
-            textcov_dict[project_name].append(
-                textcov.Textcov.from_file(
-                    f, ignore_function_patterns=ignore_patterns))
+            if benchmark_used[0].language != 'rust':
+              textcov_dict[project_name].append(textcov.Textcov.from_file(f))
+            else:
+              textcov_dict[project_name].append(
+                  textcov.Textcov.from_rust_file(
+                      f, ignore_function_patterns=ignore_patterns))
         elif textcov_file == 'all_cov.json':
           with open(os.path.join(summary, textcov_file)) as f:
             textcov_dict[project_name].append(
@@ -523,13 +546,15 @@ def main():
   global WORK_DIR
 
   args = parse_args()
-  _setup_logging(args.log_level)
+  _setup_logging(args.log_level, is_cloud=args.cloud_experiment_name != '')
   logger.info('Starting experiments on PR branch')
 
   # Capture time at start
   start = time.time()
   add_to_json_report(args.work_dir, 'start_time',
                      time.strftime(TIME_STAMP_FMT, time.gmtime(start)))
+  # Add num_samples to report.json
+  add_to_json_report(args.work_dir, 'num_samples', args.num_samples)
 
   # Set introspector endpoint before performing any operations to ensure the
   # right API endpoint is used throughout.
@@ -547,6 +572,7 @@ def main():
   # Set global variables that are updated throughout experiment runs.
   WORK_DIR = args.work_dir
 
+  # Start parallel coverage aggregate analysis
   coverage_gains_process = Process(
       target=extend_report_with_coverage_gains_process)
   coverage_gains_process.start()
@@ -575,9 +601,10 @@ def main():
       # Wait for all workers to complete.
       p.join()
 
-  # Do a final coverage aggregation.
-  coverage_gains_process.kill()
-  extend_report_with_coverage_gains()
+  if coverage_gains_process:
+    # Do a final coverage aggregation.
+    coverage_gains_process.kill()
+    extend_report_with_coverage_gains()
 
   # Capture time at end
   end = time.time()

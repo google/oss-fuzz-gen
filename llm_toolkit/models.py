@@ -135,6 +135,11 @@ class LLM:
   def query_llm(self, prompt: prompts.Prompt, response_dir: str) -> None:
     """Queries the LLM and stores responses in |response_dir|."""
 
+  def ask_llm(self, prompt: prompts.Prompt) -> str:
+    """Queries LLM a single prompt and returns its response."""
+    del prompt
+    return ''
+
   @abstractmethod
   def chat_llm(self, client: Any, prompt: prompts.Prompt) -> str:
     """Queries the LLM in the given chat session and returns the response."""
@@ -227,13 +232,7 @@ class GPT(LLM):
 
   def get_chat_client(self, model: Any) -> Any:
     """Returns a new chat session."""
-    del model
-    # Placeholder: To Be Implemented.
-
-  def chat_llm(self, client: Any, prompt: prompts.Prompt) -> Any:
-    """Queries the LLM in the given chat session and returns the response."""
-    del client, prompt
-    # Placeholder: To Be Implemented.
+    return self._get_client()
 
   def _get_tiktoken_encoding(self, model_name: str):
     """Returns the tiktoken encoding for the model."""
@@ -267,6 +266,41 @@ class GPT(LLM):
   def prompt_type(self) -> type[prompts.Prompt]:
     """Returns the expected prompt type."""
     return prompts.OpenAIPrompt
+
+  def chat_llm(self, client: Any, prompt: prompts.Prompt) -> str:
+    """Queries LLM a single prompt and returns its response."""
+    if self.ai_binary:
+      raise ValueError(f'OpenAI does not use local AI binary: {self.ai_binary}')
+    if self.temperature_list:
+      logger.info('OpenAI does not allow temperature list: %s',
+                  self.temperature_list)
+
+    completion = self.with_retry_on_error(
+        lambda: client.chat.completions.create(messages=prompt.get(),
+                                               model=self.name,
+                                               n=self.num_samples,
+                                               temperature=self.temperature),
+        [openai.OpenAIError])
+
+    return completion.choices[0].message.content
+
+  def ask_llm(self, prompt: prompts.Prompt) -> str:
+    """Queries LLM a single prompt and returns its response."""
+    if self.ai_binary:
+      raise ValueError(f'OpenAI does not use local AI binary: {self.ai_binary}')
+    if self.temperature_list:
+      logger.info('OpenAI does not allow temperature list: %s',
+                  self.temperature_list)
+
+    client = self._get_client()
+
+    completion = self.with_retry_on_error(
+        lambda: client.chat.completions.create(messages=prompt.get(),
+                                               model=self.name,
+                                               n=self.num_samples,
+                                               temperature=self.temperature),
+        [openai.OpenAIError])
+    return completion.choices[0].message.content
 
   # ============================== Generation ============================== #
   def query_llm(self, prompt: prompts.Prompt, response_dir: str) -> None:
@@ -439,6 +473,20 @@ class GoogleModel(LLM):
     # Otherwise, roughly 1.5 tokens per word:
     return int(len(re.split('[^a-zA-Z0-9]+', text)) * 1.5 + 0.5)
 
+  def _estimate_char_index(self, token_target: int, text: str) -> int:
+    """
+      Estimates a character index in `text` corresponding to approximately
+      `token_target` tokens. It uses the total token count for `text` and
+      assumes a roughly linear relation between token count and character
+      length.
+      """
+    total_tokens = self.estimate_token_num(text)
+    if not total_tokens:
+      return 0
+    # Proportional mapping: If text has T tokens over L characters, then
+    # token_target corresponds to roughly (token_target / T) * L characters.
+    return int(len(text) * token_target / total_tokens)
+
   # ============================== Generation ============================== #
   def query_llm(self, prompt: prompts.Prompt, response_dir: str) -> None:
     """Queries a Google LLM and stores results in |response_dir|."""
@@ -539,6 +587,18 @@ class VertexAIModel(GoogleModel):
           [GoogleAPICallError]) or ''
       self._save_output(i, response, response_dir)
 
+  def ask_llm(self, prompt: prompts.Prompt) -> str:
+    if self.ai_binary:
+      logger.info('VertexAI does not use local AI binary: %s', self.ai_binary)
+
+    model = self.get_model()
+    # TODO: Allow each trial to customize its parameters_list.
+    parameter = self._prepare_parameters()[0]
+    response = self.with_retry_on_error(
+        lambda: self.do_generate(model, prompt.get(), parameter),
+        [GoogleAPICallError]) or ''
+    return response
+
 
 class GeminiModel(VertexAIModel):
   """Gemini models."""
@@ -632,6 +692,24 @@ class GeminiV1D5(GeminiModel):
   _vertex_ai_model = 'gemini-1.5-pro-002'
 
 
+class GeminiV2Flash(GeminiV1D5):
+  """Gemini 2 Flash."""
+  name = 'vertex_ai_gemini-2-flash'
+  _vertex_ai_model = 'gemini-2.0-flash-001'
+
+
+class GeminiV2(GeminiV1D5):
+  """Gemini 2."""
+  name = 'vertex_ai_gemini-2'
+  _vertex_ai_model = 'gemini-2.0-pro-exp-02-05'
+
+
+class GeminiV2Think(GeminiV1D5):
+  """Gemini 2 thinking."""
+  name = 'vertex_ai_gemini-2-think'
+  _vertex_ai_model = 'gemini-2.0-flash-thinking-exp-01-21'
+
+
 class GeminiV1D5Chat(GeminiV1D5):
   """Gemini 1.5 for chat session."""
   name = 'vertex_ai_gemini-1-5-chat'
@@ -670,32 +748,53 @@ class GeminiV1D5Chat(GeminiV1D5):
                       raw_prompt_text: Any,
                       extra_text: Any = None) -> Any:
     """Truncates the prompt text to fit in MAX_INPUT_TOKEN."""
-    original_token_count = self.estimate_token_num(raw_prompt_text)
+    extra_text = extra_text or ''
+    extra_tokens = self.estimate_token_num(extra_text)
+    total_tokens = self.estimate_token_num(raw_prompt_text)
 
-    token_count = original_token_count
-    if token_count > self.MAX_INPUT_TOKEN:
-      raw_prompt_text = raw_prompt_text[-3 * self.MAX_INPUT_TOKEN:]
+    # Allow buffer space for potential prompts that will be appended later.
+    # Allocates 1/10 of MAX_INPUT_TOKEN per prompt text block, assuming up to 10
+    # blocks in the final prompt.
+    # TODO(dongge): Move this to prompt builder (e.g., `append()`), dynamically
+    # reduce each prompt text block if there is no space for raw_prompt_text.
+    allowed_tokens = self.MAX_INPUT_TOKEN // 10 - extra_tokens
+    if allowed_tokens <= 0:
+      logger.warning('Insufficient tokens to add any text: %d, %d',
+                     extra_tokens, allowed_tokens)
+      return ''
 
-    extra_text_token_count = self.estimate_token_num(extra_text)
-    # Reserve 10000 tokens for raw prompt wrappers.
-    max_raw_prompt_token_size = (self.MAX_INPUT_TOKEN * 0.9 -
-                                 extra_text_token_count) // 4
-    while token_count > max_raw_prompt_token_size:
-      estimate_truncate_size = int(
-          (1 - max_raw_prompt_token_size / token_count) * len(raw_prompt_text))
+    # raw_prompt_text already fits within the allowed #tokens, return it as is.
+    if total_tokens <= allowed_tokens:
+      return raw_prompt_text
 
-      num_init_tokens = min(100, int(max_raw_prompt_token_size * 0.1))
-      raw_prompt_init = raw_prompt_text[:num_init_tokens] + (
-          '\n...(truncated due to exceeding input token limit)...\n')
-      raw_prompt_text = raw_prompt_init + raw_prompt_text[
-          min(num_init_tokens + estimate_truncate_size + 1,
-              len(raw_prompt_text) - 100):]
+    marker = '\n...(truncated due to exceeding input token limit)...\n'
+    marker_tokens = self.estimate_token_num(marker)
 
-      token_count = self.estimate_token_num(raw_prompt_text)
-      logger.warning('Truncated %d raw prompt chars from %d to %d tokens.',
-                     estimate_truncate_size, original_token_count, token_count)
+    # extra_tokens is too large that allowed_tokens cannot include the marker,
+    # return just a prefix of raw_prompt_text.
+    if allowed_tokens < marker_tokens:
+      prefix_index = self._estimate_char_index(allowed_tokens, raw_prompt_text)
+      logger.warning('Insufficient tokens to add marker: %d, %d', extra_tokens,
+                     allowed_tokens)
+      return self.truncate_prompt(raw_prompt_text[:prefix_index], extra_text)
 
-    return raw_prompt_text
+    # Prefix of the truncated prompt, 100 tokens by default.
+    prefix_tokens = min(100, allowed_tokens - marker_tokens)
+    prefix_index = self._estimate_char_index(prefix_tokens, raw_prompt_text)
+
+    # Extra tokens beyond the allowed limit, with a 50-token buffer.
+    excess_tokens = total_tokens - allowed_tokens + 50
+    # Suffix keeps the last portion after removal_tokens, that is, remove a
+    # block and keep the last (total_tokens - removal_tokens) tokens.
+    tokens_before_suffix = prefix_tokens + marker_tokens + excess_tokens
+    suffix_index = self._estimate_char_index(tokens_before_suffix,
+                                             raw_prompt_text)
+
+    truncated_prompt = (raw_prompt_text[:prefix_index] + marker +
+                        raw_prompt_text[suffix_index:])
+    logger.info('Truncated %d tokens from %d to %d chars.', excess_tokens,
+                len(raw_prompt_text), len(truncated_prompt))
+    return self.truncate_prompt(truncated_prompt, extra_text)
 
   def chat_llm(self, client: ChatSession, prompt: prompts.Prompt) -> str:
     if self.ai_binary:
@@ -705,6 +804,24 @@ class GeminiV1D5Chat(GeminiV1D5):
     parameters_list = self._prepare_parameters()[0]
     response = self._do_generate(client, prompt.get(), parameters_list) or ''
     return response
+
+
+class GeminiV2FlashChat(GeminiV1D5Chat):
+  """Gemini 2 Flash for chat session."""
+  name = 'vertex_ai_gemini-2-flash-chat'
+  _vertex_ai_model = 'gemini-2.0-flash-001'
+
+
+class GeminiV2Chat(GeminiV1D5Chat):
+  """Gemini 2 for chat session."""
+  name = 'vertex_ai_gemini-2-chat'
+  _vertex_ai_model = 'gemini-2.0-pro-exp-02-05'
+
+
+class GeminiV2ThinkChat(GeminiV1D5Chat):
+  """Gemini 2 for chat session."""
+  name = 'vertex_ai_gemini-2-think-chat'
+  _vertex_ai_model = 'gemini-2.0-flash-thinking-exp-01-21'
 
 
 class AIBinaryModel(GoogleModel):

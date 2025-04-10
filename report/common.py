@@ -32,7 +32,8 @@ from experiment.workdir import WorkDirs
 
 MAX_RUN_LOGS_LEN = 16 * 1024
 
-TARGET_EXTS = project_src.SEARCH_EXTS + ['.java', '.py'] + ['.fuzz_target']
+TARGET_EXTS = project_src.SEARCH_EXTS + ['.java', '.py', '.rs'
+                                        ] + ['.fuzz_target']
 
 _CHAT_PROMPT_START_MARKER = re.compile(r'<CHAT PROMPT:ROUND\s+\d+>')
 _CHAT_PROMPT_END_MARKER = re.compile(r'</CHAT PROMPT:ROUND\s+\d+>')
@@ -268,7 +269,10 @@ class Results:
   def match_benchmark(self, benchmark_id: str, results: list[evaluator.Result],
                       targets: list[str]) -> Benchmark:
     """Returns a benchmark class based on |benchmark_id|."""
-    status = 'Done' if results and all(results) else 'Running'
+    num_finished_trials = len([result for result in results if result.finished])
+    status = 'Done' if num_finished_trials == len(results) else (
+        f'Running ({num_finished_trials}/{len(results)})')
+
     filtered_results = [(i, stat) for i, stat in enumerate(results) if stat]
 
     if filtered_results:

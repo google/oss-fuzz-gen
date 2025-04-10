@@ -238,6 +238,16 @@ def extract_error_message(log_path: str, project_target_basename: str,
     # A more accurate way to extract the error message.
     log_lines = log_file.readlines()
 
+  errors = extract_error_from_lines(log_lines, project_target_basename,
+                                    language)
+  if not errors:
+    logger.warning('Failed to parse error message from %s.', log_path)
+  return errors
+
+
+def extract_error_from_lines(log_lines: list[str], project_target_basename: str,
+                             language: str) -> list[str]:
+  """Extracts error message and its context from the file in |log_path|."""
   # Error message extraction for Java projects
   if language == 'jvm':
     started = False
@@ -249,6 +259,22 @@ def extract_error_message(log_path: str, project_target_basename: str,
           break
       else:
         if ': error:' in log_line:
+          errors.append(log_line)
+          started = True
+
+    return errors
+
+  # Error message extraction for Rust projects
+  if language == 'rust':
+    started = False
+    errors = []
+    for log_line in log_lines:
+      if started:
+        errors.append(log_line)
+        if log_line == 'error: could not compile':
+          break
+      else:
+        if log_line.startswith(('error[E', 'warning:')):
           errors.append(log_line)
           started = True
 
@@ -302,8 +328,6 @@ def extract_error_message(log_path: str, project_target_basename: str,
         line.rstrip()
         for line in log_lines[error_lines_range[0]:error_lines_range[1] + 1])
 
-  if not errors:
-    logger.warning('Failed to parse error message from %s.', log_path)
   return group_error_messages(errors)
 
 
@@ -368,7 +392,7 @@ def group_error_messages(error_lines: list[str]) -> list[str]:
 
 def llm_fix(ai_binary: str, target_path: str, benchmark: benchmarklib.Benchmark,
             llm_fix_id: int, error_desc: Optional[str], errors: list[str],
-            fixer_model_name: str, language: str, jvm_cov_fix: bool) -> None:
+            fixer_model_name: str, language: str) -> None:
   """Reads and fixes |target_path| in place with LLM based on |error_log|."""
   fuzz_target_source_code = parser.parse_code(target_path)
 
@@ -385,7 +409,6 @@ def llm_fix(ai_binary: str, target_path: str, benchmark: benchmarklib.Benchmark,
                 prompt_path,
                 response_dir,
                 language,
-                jvm_cov_fix,
                 fixer_model_name,
                 temperature=0.5 - llm_fix_id * 0.04)
 
@@ -428,7 +451,6 @@ def apply_llm_fix(ai_binary: str,
                   prompt_path: str,
                   response_dir: str,
                   language: str,
-                  jvm_cov_fix: bool,
                   fixer_model_name: str = models.DefaultModel.name,
                   temperature: float = 0.4):
   """Queries LLM to fix the code."""
@@ -440,17 +462,16 @@ def apply_llm_fix(ai_binary: str,
   )
 
   if language == 'jvm':
-    builder = prompt_builder.JvmErrorFixingBuilder(fixer_model, benchmark,
-                                                   fuzz_target_source_code,
-                                                   errors, jvm_cov_fix)
+    builder = prompt_builder.JvmFixingBuilder(fixer_model, benchmark,
+                                              fuzz_target_source_code, errors)
     prompt = builder.build([], None, None)
     prompt.save(prompt_path)
   else:
     builder = prompt_builder.DefaultTemplateBuilder(fixer_model)
 
-    context = _collect_context(benchmark, errors)
-    instruction = _collect_instructions(benchmark, errors,
-                                        fuzz_target_source_code)
+    context = collect_context(benchmark, errors)
+    instruction = collect_instructions(benchmark, errors,
+                                       fuzz_target_source_code)
     prompt = builder.build_fixer_prompt(benchmark, fuzz_target_source_code,
                                         error_desc, errors, context,
                                         instruction)
@@ -459,8 +480,8 @@ def apply_llm_fix(ai_binary: str,
   fixer_model.query_llm(prompt, response_dir)
 
 
-def _collect_context(benchmark: benchmarklib.Benchmark,
-                     errors: list[str]) -> str:
+def collect_context(benchmark: benchmarklib.Benchmark,
+                    errors: list[str]) -> str:
   """Collects the useful context to fix the errors."""
   if not errors:
     return ''
@@ -483,8 +504,8 @@ def _collect_context_no_member(benchmark: benchmarklib.Benchmark,
   return ci.get_type_def(target_type)
 
 
-def _collect_instructions(benchmark: benchmarklib.Benchmark, errors: list[str],
-                          fuzz_target_source_code: str) -> str:
+def collect_instructions(benchmark: benchmarklib.Benchmark, errors: list[str],
+                         fuzz_target_source_code: str) -> str:
   """Collects the useful instructions to fix the errors."""
   if not errors:
     return ''
@@ -523,7 +544,7 @@ def _collect_instruction_undefined_reference(
           'You must add the following #include statement to fix the error of '
           f'<error>undefined reference to {undefined_func}</error>:\n<code>\n'
           f'{header_file}\n</code>.\n')
-    elif not header_file and benchmark.is_c_projcet:
+    elif not header_file and benchmark.is_c_project:
       instruction += (
           f'You must remove the function <code>{undefined_func}</code> from the'
           ' generated fuzz target, because the function does not exist.\n')

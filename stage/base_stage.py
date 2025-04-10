@@ -1,3 +1,16 @@
+# Copyright 2025 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 """The abstract base class for stages in fuzzing pipeline."""
 import argparse
 from abc import ABC, abstractmethod
@@ -15,11 +28,13 @@ class BaseStage(ABC):
   def __init__(self,
                args: argparse.Namespace,
                trail: int,
-               agents: Optional[list[BaseAgent]] = None) -> None:
+               agents: Optional[list[BaseAgent]] = None,
+               name: str = '') -> None:
     self.args = args
     self.trial = trail
     self.agents: list[BaseAgent] = agents or []
     self.logger = logger.get_trial_logger(trial=trail)
+    self.name: str = name or self.__class__.__name__
 
   def __repr__(self) -> str:
     return self.__class__.__name__
@@ -30,8 +45,10 @@ class BaseStage(ABC):
     self.agents.append(agent)
     return self
 
-  def get_agent(self, agent_name: str) -> BaseAgent:
+  def get_agent(self, index: int = 0, agent_name: str = '') -> BaseAgent:
     """Finds the agent by its name."""
+    if not agent_name:
+      return self.agents[index]
     for agent in self.agents:
       if agent.name == agent_name:
         return agent

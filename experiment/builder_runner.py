@@ -39,9 +39,9 @@ from llm_toolkit.crash_triager import TriageResult
 from llm_toolkit.models import DefaultModel
 
 logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
 
 # The directory in the oss-fuzz image
-JCC_DIR = '/usr/local/bin'
 RUN_TIMEOUT: int = 30
 CLOUD_EXP_MAX_ATTEMPT = 5
 
@@ -194,6 +194,21 @@ class BuilderRunner:
 
     return min_func_name in generated_code
 
+  def _contains_target_rust_function(self, target_path: str) -> bool:
+    """Validates if the LLM-generated code contains the target function for
+    rust projects."""
+    with open(target_path) as generated_code_file:
+      generated_code = generated_code_file.read()
+
+    min_func_name = self._get_minimum_func_name(
+        self.benchmark.function_signature)
+
+    # Retrieve function name only with crate, triat, impl or mod tag
+    min_func_name = min_func_name.rsplit('::', 1)[-1]
+    min_func_name = min_func_name.rsplit('.', 1)[-1]
+
+    return min_func_name in generated_code
+
   def _pre_build_check(self, target_path: str,
                        build_result: BuildResult) -> bool:
     """Checks the generated target before building and running it."""
@@ -203,8 +218,11 @@ class BuilderRunner:
       result = self._contains_target_jvm_method(target_path)
     elif self.benchmark.language == 'python':
       result = self._contains_target_python_function(target_path)
+    elif self.benchmark.language == 'rust':
+      result = self._contains_target_rust_function(target_path)
     else:
-      result = self._contains_target_function(target_path)
+      # C/C++ pre-build check is done in agents.
+      return True
 
     if not result:
       build_result.errors = [
@@ -215,8 +233,8 @@ class BuilderRunner:
            f'`{self.benchmark.function_signature}` INSIDE FUNCTION '
            '`LLVMFuzzerTestOneInput`.')
       ]
-      logger.info('Missing target function: %s does not contain %s',
-                  target_path, self.benchmark.function_signature)
+      logger.warning('Missing target function: %s does not contain %s',
+                     target_path, self.benchmark.function_signature)
 
     return result
 
@@ -450,18 +468,20 @@ class BuilderRunner:
       target_path: str,
       iteration: int,
       language: str,
-      cloud_build_tags: Optional[list[str]] = None
+      cloud_build_tags: Optional[list[str]] = None,
+      trial: int = 0,
   ) -> tuple[BuildResult, Optional[RunResult]]:
     """Builds and runs the fuzz target for fuzzing."""
     del cloud_build_tags
     build_result = BuildResult()
 
     if not self._pre_build_check(target_path, build_result):
+      logger.warning('Pre-build check failure: %s', build_result)
       return build_result, None
 
     try:
       return self.build_and_run_local(generated_project, target_path, iteration,
-                                      build_result, language)
+                                      build_result, language, trial)
     except Exception as err:
       logger.warning(
           'Error occurred when building and running fuzz target locally'
@@ -469,9 +489,14 @@ class BuilderRunner:
       raise err
 
   def build_and_run_local(
-      self, generated_project: str, target_path: str, iteration: int,
+      self,
+      generated_project: str,
+      target_path: str,
+      iteration: int,
       build_result: BuildResult,
-      language: str) -> tuple[BuildResult, Optional[RunResult]]:
+      language: str,
+      trial: int = 0,
+  ) -> tuple[BuildResult, Optional[RunResult]]:
     """Builds and runs the fuzz target locally for fuzzing."""
     project_name = self.benchmark.project
     benchmark_target_name = os.path.basename(target_path)
@@ -480,43 +505,35 @@ class BuilderRunner:
         benchmark_target_name, iteration)
     build_result.succeeded = self.build_target_local(generated_project,
                                                      benchmark_log_path)
-
-    # Copy err.log into work dir (Ignored for JVM projects)
-    if language != 'jvm':
-      try:
-        shutil.copyfile(
-            os.path.join(get_build_artifact_dir(generated_project, "workspace"),
-                         'err.log'),
-            self.work_dirs.error_logs_target(benchmark_target_name, iteration))
-      except FileNotFoundError as e:
-        logger.error('Cannot get err.log for %s: %s', generated_project, e)
-
     if not build_result.succeeded:
       errors = code_fixer.extract_error_message(benchmark_log_path,
                                                 project_target_name, language)
       build_result.errors = errors
       return build_result, None
 
+    # TODO(Dongge): Split Builder and Runner:
+    # Make the rest lines in an independent function.
     run_result = RunResult()
 
-    self.run_target_local(
-        generated_project, benchmark_target_name,
-        self.work_dirs.run_logs_target(benchmark_target_name, iteration))
+    run_log_path = os.path.join(self.work_dirs.run_logs, f'{trial:02d}.log')
+    self.run_target_local(generated_project, benchmark_target_name,
+                          run_log_path)
     run_result.coverage, run_result.coverage_summary = (self.get_coverage_local(
         generated_project, benchmark_target_name))
 
+    run_result.log_path = run_log_path
+
     # Parse libfuzzer logs to get fuzz target runtime details.
-    with open(self.work_dirs.run_logs_target(benchmark_target_name, iteration),
-              'rb') as f:
+    with open(run_log_path, 'rb') as f:
       # In many case JVM/python projects won't have much cov
       # difference in short running. Adding the flag for JVM/python
       # projects to temporary skip the checking of coverage change.
-      flag = not self.benchmark.language in ['jvm', 'python']
+      # Also skipping for rust projects in initial implementation.
+      flag = not self.benchmark.language in ['jvm', 'python', 'rust']
       run_result.cov_pcs, run_result.total_pcs, \
         run_result.crashes, run_result.crash_info, \
           run_result.semantic_check = \
             self._parse_libfuzzer_logs(f, project_name, flag)
-      run_result.succeeded = not run_result.semantic_check.has_err
 
     return build_result, run_result
 
@@ -587,13 +604,12 @@ class BuilderRunner:
                stdout=log_file,
                stderr=sp.STDOUT,
                check=True)
-      except sp.CalledProcessError:
-        logger.info('Failed to build image for %s', generated_project)
+      except sp.CalledProcessError as e:
+        logger.info('Failed to build image for %s: %s', generated_project, e)
         return False
 
     outdir = get_build_artifact_dir(generated_project, 'out')
     workdir = get_build_artifact_dir(generated_project, 'work')
-    workspacedir = get_build_artifact_dir(generated_project, 'workspace')
     command = [
         'docker',
         'run',
@@ -612,26 +628,15 @@ class BuilderRunner:
         '-e',
         f'PROJECT_NAME={generated_project}',
         '-e',
-        f'CXX={JCC_DIR}/clang++-jcc',
-        '-e',
-        f'CC={JCC_DIR}/clang-jcc',
-        '-e',
         f'FUZZING_LANGUAGE={self.benchmark.language}',
         '-v',
         f'{outdir}:/out',
         '-v',
         f'{workdir}:/work',
-        # Allows jcc to write err.log.
-        # https://github.com/google/oss-fuzz/blob/090e0d6/infra/base-images/base-builder/jcc/jcc.go#L360
-        '-v',
-        f'{workspacedir}:/workspace',
     ]
     # Avoid permissions errors.
     os.makedirs(outdir, exist_ok=True)
     os.makedirs(workdir, exist_ok=True)
-    os.makedirs(workspacedir, exist_ok=True)
-    if self.benchmark.cppify_headers:
-      command.extend(['-e', 'JCC_CPPIFY_PROJECT_HEADERS=1'])
     command.extend(['--entrypoint', '/bin/bash'])
     command.append(f'gcr.io/oss-fuzz/{generated_project}')
 
@@ -639,8 +644,7 @@ class BuilderRunner:
     post_build_command = []
 
     # Cleanup mounted dirs.
-    pre_build_command.extend(
-        ['rm', '-rf', '/out/*', '/work/*', '/workspace/*', '&&'])
+    pre_build_command.extend(['rm', '-rf', '/out/*', '/work/*', '&&'])
 
     if self.benchmark.commit:
       # TODO(metzman): Try to use build_specified_commit here.
@@ -680,7 +684,8 @@ class BuilderRunner:
         'jvm': 'jacoco.xml',
         'python': 'all_cov.json',
         'c++': f'{self.benchmark.target_name}.covreport',
-        'c': f'{self.benchmark.target_name}.covreport'
+        'c': f'{self.benchmark.target_name}.covreport',
+        'rust': f'{self.benchmark.target_name}.covreport',
     }
 
     return os.path.join(get_build_artifact_dir(project_name,
@@ -696,6 +701,7 @@ class BuilderRunner:
         'python': 'r',
         'c': 'rb',
         'c++': 'rb',
+        'rust': 'rb',
     }
     with open(local_textcov_location,
               language_modes.get(self.benchmark.language, 'rb')) as f:
@@ -703,6 +709,8 @@ class BuilderRunner:
         new_textcov = textcov.Textcov.from_jvm_file(f)
       elif self.benchmark.language == 'python':
         new_textcov = textcov.Textcov.from_python_file(f)
+      elif self.benchmark.language == 'rust':
+        new_textcov = textcov.Textcov.from_rust_file(f)
       else:
         target_basename = os.path.basename(self.benchmark.target_path)
         new_textcov = textcov.Textcov.from_file(
@@ -803,6 +811,8 @@ class CloudBuilderRunner(BuilderRunner):
         # As mentioned in pr #151.
         ('BrokenPipeError: [Errno 32] Broken pipe',
          lambda x: 5 * 2**x + random.randint(1, 5)),
+        # Service Unavailable.
+        ('Service Unavailable', lambda x: 5 * 2**x + random.randint(1, 5)),
         # Temp workaround for issue #12.
         ('You do not currently have an active account selected',
          lambda x: 5 * 2**x),
@@ -813,7 +823,7 @@ class CloudBuilderRunner(BuilderRunner):
 
     for attempt_id in range(1, CLOUD_EXP_MAX_ATTEMPT + 1):
       try:
-        sp.run(*args, capture_output=True, check=True, **kwargs)
+        sp.run(*args, check=True, **kwargs)
         return True
       except sp.CalledProcessError as e:
         # Replace \n for single log entry on cloud.
@@ -835,6 +845,7 @@ class CloudBuilderRunner(BuilderRunner):
             '%s\n%s', os.path.realpath(target_path), attempt_id, delay, stdout,
             stderr)
         time.sleep(delay)
+    logger.info('Evaluate %s on cloud.', os.path.realpath(target_path))
 
     return False
 
@@ -844,17 +855,19 @@ class CloudBuilderRunner(BuilderRunner):
       target_path: str,
       iteration: int,
       language: str,
-      cloud_build_tags: Optional[list[str]] = None
+      cloud_build_tags: Optional[list[str]] = None,
+      trial: int = 0,
   ) -> tuple[BuildResult, Optional[RunResult]]:
     """Builds and runs the fuzz target for fuzzing."""
     build_result = BuildResult()
-
     if not self._pre_build_check(target_path, build_result):
+      logger.warning('Pre-build check failure: %s', build_result)
       return build_result, None
 
     try:
       return self.build_and_run_cloud(generated_project, target_path, iteration,
-                                      build_result, language, cloud_build_tags)
+                                      build_result, language, cloud_build_tags,
+                                      trial)
     except Exception as err:
       logger.warning(
           'Error occurred when building and running fuzz target on cloud'
@@ -869,7 +882,8 @@ class CloudBuilderRunner(BuilderRunner):
       iteration: int,
       build_result: BuildResult,
       language: str,
-      cloud_build_tags: Optional[list[str]] = None
+      cloud_build_tags: Optional[list[str]] = None,
+      trial: int = 0,
   ) -> tuple[BuildResult, Optional[RunResult]]:
     """Builds and runs the fuzz target locally for fuzzing."""
     logger.info('Evaluating %s on cloud.', os.path.realpath(target_path))
@@ -883,9 +897,6 @@ class CloudBuilderRunner(BuilderRunner):
     build_log_name = f'{uid}.build.log'
     build_log_path = f'gs://{self.experiment_bucket}/{build_log_name}'
 
-    err_log_name = f'{uid}.err.log'
-    err_log_path = f'gs://{self.experiment_bucket}/{err_log_name}'
-
     corpus_name = f'{uid}.corpus.zip'
     corpus_path = f'gs://{self.experiment_bucket}/{corpus_name}'
 
@@ -895,13 +906,14 @@ class CloudBuilderRunner(BuilderRunner):
     reproducer_name = f'{uid}.reproducer'
     reproducer_path = f'gs://{self.experiment_bucket}/{reproducer_name}'
 
+    logger.info('Servie account key: %s',
+                os.environ.get('GOOGLE_APPLICATION_CREDENTIALS'))
     command = [
         f'./{oss_fuzz_checkout.VENV_DIR}/bin/python3',
         'infra/build/functions/target_experiment.py',
         f'--project={generated_project}',
         f'--target={self.benchmark.target_name}',
         f'--upload_build_log={build_log_path}',
-        f'--upload_err_log={err_log_path}',
         f'--upload_output_log={run_log_path}',
         f'--upload_coverage={coverage_path}',
         f'--upload_reproducer={reproducer_path}',
@@ -917,8 +929,12 @@ class CloudBuilderRunner(BuilderRunner):
       command.append('--use_cached_image')
 
       # Overwrite the Dockerfile to be caching friendly
-      oss_fuzz_checkout.rewrite_project_to_cached_project_chronos(
-          generated_project)
+      # We hardcode 'address' here, but this is irrelevant and will be
+      # overridden later via a Docker argument.
+      oss_fuzz_checkout.rewrite_project_to_cached_project(
+          project_name, generated_project, 'address')
+      oss_fuzz_checkout.prepare_build(project_name, 'address',
+                                      generated_project)
 
     if cloud_build_tags:
       command += ['--tags'] + cloud_build_tags
@@ -951,22 +967,11 @@ class CloudBuilderRunner(BuilderRunner):
         logger.warning('Cannot find cloud build log of %s: %s',
                        os.path.realpath(target_path), build_log_name)
 
-    # Ignored for JVM project since JVM project does not generate err.log
-    if language != 'jvm':
-      with open(
-          self.work_dirs.error_logs_target(generated_target_name, iteration),
-          'wb') as f:
-        blob = bucket.blob(err_log_name)
-        if blob.exists():
-          logger.info('Downloading jcc error log of %s: %s to %s',
-                      os.path.realpath(target_path), err_log_name, f)
-          blob.download_to_file(f)
-        else:
-          logger.warning('Cannot find jcc error log of %s: %s',
-                         os.path.realpath(target_path), err_log_name)
-
-    with open(self.work_dirs.run_logs_target(generated_target_name, iteration),
-              'wb') as f:
+    # TODO(Dongge): Split Builder and Runner:
+    # Set build_result.succeeded based on existence of fuzz target binary.
+    # Separate the rest lines into an independent function.
+    run_log_path = os.path.join(self.work_dirs.run_logs, f'{trial:02d}.log')
+    with open(run_log_path, 'wb') as f:
       blob = bucket.blob(run_log_name)
       if blob.exists():
         build_result.succeeded = True
@@ -1032,6 +1037,13 @@ class CloudBuilderRunner(BuilderRunner):
           run_result.coverage = textcov.Textcov.from_python_file(f)
         self._copy_textcov_to_workdir(bucket, textcov_blob_path,
                                       generated_target_name)
+    elif self.benchmark.language == 'rust':
+      blob = bucket.blob(textcov_blob_path)
+      if blob.exists():
+        with blob.open() as f:
+          run_result.coverage = textcov.Textcov.from_rust_file(f)
+        self._copy_textcov_to_workdir(bucket, textcov_blob_path,
+                                      generated_target_name)
     else:
       # C/C++
       blob = bucket.blob(textcov_blob_path)
@@ -1047,13 +1059,11 @@ class CloudBuilderRunner(BuilderRunner):
                                       generated_target_name)
 
     # Parse libfuzzer logs to get fuzz target runtime details.
-    with open(self.work_dirs.run_logs_target(generated_target_name, iteration),
-              'rb') as f:
+    with open(run_log_path, 'rb') as f:
       run_result.cov_pcs, run_result.total_pcs, \
         run_result.crashes, run_result.crash_info, \
           run_result.semantic_check = \
             self._parse_libfuzzer_logs(f, project_name)
-      run_result.succeeded = not run_result.semantic_check.has_err
 
     return build_result, run_result
 
@@ -1075,6 +1085,7 @@ class CloudBuilderRunner(BuilderRunner):
     if self.benchmark.language == 'python':
       return f'{coverage_name}/textcov_reports/all_cov.json'
 
+    # For C/C++/Rust
     return (f'{coverage_name}/textcov_reports/{self.benchmark.target_name}'
             '.covreport')
 

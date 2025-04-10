@@ -24,16 +24,18 @@ from typing import List, Optional
 
 import logger
 import pipeline
+from agent.enhancer import Enhancer
+from agent.one_prompt_enhancer import OnePromptEnhancer
+from agent.one_prompt_prototyper import OnePromptPrototyper
 from agent.prototyper import Prototyper
-from data_prep import project_targets
-from data_prep.project_context.context_introspector import ContextRetriever
+from agent.semantic_analyzer import SemanticAnalyzer
 from experiment import builder_runner as builder_runner_lib
 from experiment import evaluator as exp_evaluator
 from experiment import oss_fuzz_checkout, textcov
 from experiment.benchmark import Benchmark
 from experiment.workdir import WorkDirs
 from llm_toolkit import models, output_parser, prompt_builder, prompts
-from results import BuildResult, ExperimentResult, Result, RunResult
+from results import BenchmarkResult, Result, TrialResult
 
 # WARN: Avoid high value for NUM_EVA for local experiments.
 # NUM_EVA controls the number of fuzz targets to evaluate in parallel by each
@@ -85,45 +87,18 @@ class AggregatedResult:
         f'max coverage diff report: {self.max_coverage_diff_report or "None"}')
 
   @classmethod
-  def from_experiment_result(
-      cls, trial_results: list[ExperimentResult]) -> 'AggregatedResult':
+  def from_benchmark_result(
+      cls, benchmark_result: BenchmarkResult) -> 'AggregatedResult':
     """Aggregates experiment history results of all samples."""
-    if not trial_results:
-      return AggregatedResult()
 
-    compilable_trials = []
-    crash_trials = []
-    max_coverage = 0
-    max_line_coverage_diff = 0
-    max_coverage_diff_report = ''
-    all_textcov = textcov.Textcov()
-    for trial_result_history in trial_results:
-      trial_final_result = trial_result_history.history_results[-1]
-      if isinstance(trial_final_result, BuildResult):
-        compilable_trials.append(trial_final_result.compiles)
-      if isinstance(trial_final_result, RunResult):
-        crash_trials.append(trial_final_result.crashes)
-        # TODO(dongge): Do not assume the last coverage is the highest.
-        max_coverage = max(max_coverage, trial_final_result.coverage)
-        if trial_final_result.line_coverage_diff > max_line_coverage_diff:
-          max_line_coverage_diff = trial_final_result.line_coverage_diff
-          max_coverage_diff_report = trial_final_result.coverage_report_path
-        if isinstance(trial_final_result.textcov_diff, textcov.Textcov):
-          all_textcov.merge(trial_final_result.textcov_diff)
-
-    build_success_count = sum(compilable_trials)
-    build_success_rate = (build_success_count /
-                          len(compilable_trials) if compilable_trials else 0)
-
-    crash_rate = sum(crash_trials) / len(crash_trials) if crash_trials else 0
-
-    return AggregatedResult(build_success_count=build_success_count,
-                            build_success_rate=build_success_rate,
-                            crash_rate=crash_rate,
-                            max_coverage=max_coverage,
-                            max_line_coverage_diff=max_line_coverage_diff,
-                            max_coverage_diff_report=max_coverage_diff_report,
-                            full_textcov_diff=all_textcov)
+    return AggregatedResult(
+        build_success_count=benchmark_result.build_success_count,
+        build_success_rate=benchmark_result.build_success_rate,
+        crash_rate=benchmark_result.crash_rate,
+        max_coverage=benchmark_result.coverage,
+        max_line_coverage_diff=benchmark_result.line_coverage_diff,
+        max_coverage_diff_report=benchmark_result.line_coverage_report,
+        full_textcov_diff=benchmark_result.textcov_diff)
 
 
 def generate_targets(benchmark: Benchmark, model: models.LLM,
@@ -260,96 +235,69 @@ def prepare(oss_fuzz_dir: str) -> None:
   oss_fuzz_checkout.postprocess_oss_fuzz()
 
 
-def generate_targets_for_analysis(
-    model: models.LLM,
-    benchmark: Benchmark,
-    work_dirs: WorkDirs,
-    template_dir: str,
-    use_context: bool,
-    example_pair: list[list[str]],
-    prompt_builder_to_use: str = 'DEFAULT',
-    cloud_experiment_bucket: str = '') -> List[str]:
-  """Generates a set of harnesses and build scripts ready to be evaluated
-    by `check_targets`. This is where the core first LLM logic is used to
-    generate harnesses.
-
-    Returns a list of folders with the generated artifacts.
-    """
-  logging.info('Generating targets')
-  if benchmark.use_project_examples:
-    project_examples = project_targets.generate_data(
-        benchmark.project,
-        benchmark.language,
-        cloud_experiment_bucket=cloud_experiment_bucket)
-  else:
-    project_examples = []
-
-  if use_context:
-    retriever = ContextRetriever(benchmark)
-    context_info = retriever.get_context_info()
-  else:
-    context_info = {}
-
-  # If this is a test benchmark then we will use a test prompt builder.
-  if benchmark.test_file_path:
-    logging.info('Generating a target for test case: %s',
-                 benchmark.test_file_path)
-    builder = prompt_builder.TestToHarnessConverter(model, benchmark,
-                                                    template_dir)
-  elif benchmark.language == 'jvm':
-    # For Java projects
-    builder = prompt_builder.DefaultJvmTemplateBuilder(model, benchmark,
-                                                       template_dir)
-  elif benchmark.language == 'python':
-    # For Python projects
-    builder = prompt_builder.DefaultPythonTemplateBuilder(
-        model, benchmark, template_dir)
-  elif prompt_builder_to_use == 'CSpecific':
-    builder = prompt_builder.CSpecificBuilder(model, benchmark, template_dir)
-  else:
-    # Use default
-    builder = prompt_builder.DefaultTemplateBuilder(model, benchmark,
-                                                    template_dir)
-
-  prompt = builder.build(example_pair,
-                         project_example_content=project_examples,
-                         project_context_content=context_info)
-  prompt.save(work_dirs.prompt)
-
-  generated_targets = generate_targets(benchmark, model, prompt, work_dirs,
-                                       builder)
-  generated_targets = fix_code(work_dirs, generated_targets)
-  return generated_targets
-
-
 def _fuzzing_pipeline(benchmark: Benchmark, model: models.LLM,
                       args: argparse.Namespace, work_dirs: WorkDirs,
-                      trial: int) -> ExperimentResult:
+                      trial: int) -> TrialResult:
   """Runs the predefined 3-stage pipeline for one trial."""
   trial_logger = logger.get_trial_logger(trial=trial, level=logging.DEBUG)
   trial_logger.info('Trial Starts')
-  p = pipeline.Pipeline(
-      args=args,
-      trial=trial,
-      writing_stage_agents=[Prototyper(trial=trial, llm=model)])
+  if args.agent:
+    p = pipeline.Pipeline(args=args,
+                          trial=trial,
+                          writing_stage_agents=[
+                              Prototyper(trial=trial, llm=model, args=args),
+                              Enhancer(trial=trial, llm=model, args=args),
+                          ],
+                          analysis_stage_agents=[
+                              SemanticAnalyzer(trial=trial,
+                                               llm=model,
+                                               args=args),
+                          ])
+  else:
+    p = pipeline.Pipeline(args=args,
+                          trial=trial,
+                          writing_stage_agents=[
+                              OnePromptPrototyper(trial=trial,
+                                                  llm=model,
+                                                  args=args),
+                              OnePromptEnhancer(trial=trial,
+                                                llm=model,
+                                                args=args),
+                          ],
+                          analysis_stage_agents=[
+                              SemanticAnalyzer(trial=trial,
+                                               llm=model,
+                                               args=args),
+                          ])
+
   results = p.execute(result_history=[
       Result(benchmark=benchmark, trial=trial, work_dirs=work_dirs)
   ])
 
-  return ExperimentResult(results)
+  trial_result = TrialResult(benchmark=benchmark,
+                             trial=trial,
+                             work_dirs=work_dirs,
+                             result_history=results)
+  trial_logger.write_result(
+      result_status_dir=trial_result.best_result.work_dirs.status,
+      result=trial_result,
+      finished=True)
+  return trial_result
 
 
 def _fuzzing_pipelines(benchmark: Benchmark, model: models.LLM,
                        args: argparse.Namespace,
-                       work_dirs: WorkDirs) -> AggregatedResult:
+                       work_dirs: WorkDirs) -> BenchmarkResult:
   """Runs all trial experiments in their pipelines."""
   # Create a pool of worker processes
   with pool.ThreadPool(processes=NUM_EVA) as p:
     # Initialize thread-local storage in each worker before processing
     task_args = [(benchmark, model, args, work_dirs, trial)
-                 for trial in range(1, NUM_EVA + 1)]
-    results = p.starmap(_fuzzing_pipeline, task_args)
-  return AggregatedResult.from_experiment_result(results)
+                 for trial in range(1, args.num_samples + 1)]
+    trial_results = p.starmap(_fuzzing_pipeline, task_args)
+  return BenchmarkResult(benchmark=benchmark,
+                         work_dirs=work_dirs,
+                         trial_results=trial_results)
 
 
 def run(benchmark: Benchmark, model: models.LLM, args: argparse.Namespace,
@@ -357,29 +305,12 @@ def run(benchmark: Benchmark, model: models.LLM, args: argparse.Namespace,
   """Generates code via LLM, and evaluates them."""
   model.cloud_setup()
 
-  # Save the benchmark in the working base
+  # Save the benchmark in the WorkDir base. This is saved to the working
+  # directory, and should not be deleted in future executions. As such,
+  # from here on, do not erase all WorkDir contents.
   Benchmark.to_yaml([benchmark],
                     outdir=work_dirs.base,
                     out_basename='benchmark.yaml')
 
-  if args.agent:
-    # TODO(dongge): Make this default when it is ready.
-    return _fuzzing_pipelines(benchmark, model, args, work_dirs)
-
-  generated_targets = generate_targets_for_analysis(
-      model=model,
-      benchmark=benchmark,
-      work_dirs=work_dirs,
-      template_dir=args.template_directory,
-      use_context=args.context,
-      example_pair=prompt_builder.EXAMPLES.get(benchmark.language, []),
-      prompt_builder_to_use=args.prompt_builder,
-      cloud_experiment_bucket=args.cloud_experiment_bucket)
-
-  logging.info('Generated %d targets', len(generated_targets))
-  if not generated_targets:
-    return None
-
-  return check_targets(model.ai_binary, benchmark, work_dirs, generated_targets,
-                       args.cloud_experiment_name, args.cloud_experiment_bucket,
-                       args.run_timeout, model.name)
+  return AggregatedResult.from_benchmark_result(
+      _fuzzing_pipelines(benchmark, model, args, work_dirs))

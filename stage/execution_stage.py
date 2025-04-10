@@ -1,3 +1,16 @@
+# Copyright 2025 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 """The Execution Stage class for measuring code coverage and capture run-time
 crashes of the fuzz targets. This stage will run the fuzz target with OSS-Fuzz
 infra and report its code coverage and crashes."""
@@ -64,7 +77,7 @@ class ExecutionStage(BaseStage):
       raise TypeError
 
     try:
-      _, run_result = evaluator.builder_runner.build_and_run(
+      build_result, run_result = evaluator.builder_runner.build_and_run(
           generated_oss_fuzz_project,
           fuzz_target_path,
           0,
@@ -75,7 +88,8 @@ class ExecutionStage(BaseStage):
               'ofg',
               # TODO(dongge): Tag function name, compatible with tag format.
               last_result.benchmark.project,
-          ])
+          ],
+          trial=last_result.trial)
       if not run_result:
         raise Exception('No RunResult received from build_and_run')
       if run_result.coverage_summary is None or run_result.coverage is None:
@@ -115,13 +129,15 @@ class ExecutionStage(BaseStage):
           fuzz_target_source=last_result.fuzz_target_source,
           build_script_source=last_result.build_script_source,
           chat_history=last_result.chat_history,
-          author=repr(self),
+          author=self,
           compiles=last_result.compiles,
           compile_error=last_result.compile_error,
           compile_log=last_result.compile_log,
+          binary_exists=last_result.binary_exists,
           is_function_referenced=last_result.is_function_referenced,
           crashes=run_result.crashes,
           run_error=run_result.crash_info,
+          # TODO: This should be the content of log_path.
           run_log=run_result.log_path,
           coverage_summary=run_result.coverage_summary,
           coverage=coverage_percent,
@@ -142,10 +158,11 @@ class ExecutionStage(BaseStage):
           fuzz_target_source=last_result.fuzz_target_source,
           build_script_source=last_result.build_script_source,
           chat_history=last_result.chat_history,
-          author=repr(self),
+          author=self,
           compiles=last_result.compiles,
           compile_error=last_result.compile_error,
           compile_log=last_result.compile_log,
+          binary_exists=last_result.binary_exists,
           is_function_referenced=last_result.is_function_referenced)
 
     return runresult

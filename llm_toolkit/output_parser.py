@@ -72,11 +72,17 @@ def parse_code(response_path: str) -> str:
   """Parses the expected output from the |response_path|."""
   with open(response_path) as file:
     response = file.read()
+  return filter_code(response)
+
+
+def filter_code(response: str) -> str:
+  # TODO(dongge): Merge this into prompt_builder.post_process_generated_code().
   solution = response.split('</solution>')[0]
   lines = solution.splitlines()
   lines = _parse_code_block_by_marker(lines, '```c', '```')
   lines = _parse_code_block_by_marker(lines, '```java', '```')
   lines = _parse_code_block_by_marker(lines, '```python', '```')
+  lines = _parse_code_block_by_marker(lines, '```rust', '```')
   lines = _parse_code_block_by_marker(lines, '```java_code', '```')
   lines = _parse_code_block_by_marker(lines, '<code>', '</code>')
   lines = _parse_code_block_by_marker(lines, '<java_code>', '</java_code>')

@@ -1,3 +1,16 @@
+# Copyright 2025 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 """A tool for LLM agents to interact within a project's docker container."""
 import logging
 import subprocess as sp
@@ -16,6 +29,8 @@ class ProjectContainerTool(BaseTool):
     super().__init__(benchmark, name)
     self.image_name = self._prepare_project_image()
     self.container_id = self._start_docker_container()
+    self._backup_default_build_script()
+    self.project_dir = self._get_project_dir()
 
   def tutorial(self) -> str:
     """Constructs a tool guide tutorial for LLM agents."""
@@ -73,6 +88,23 @@ class ProjectContainerTool(BaseTool):
                    e)
       return sp.CompletedProcess(command, returncode=1, stdout='', stderr='')
 
+  def _backup_default_build_script(self) -> None:
+    """Creates a copy of the human-written /src/build.sh for LLM to use."""
+    backup_command = 'cp /src/build.sh /src/build.bk.sh'
+    process = self.execute(backup_command)
+    if process.returncode:
+      logger.error('Failed to create a backup of /src/build.sh: %s',
+                   self.image_name)
+
+  def _get_project_dir(self) -> str:
+    """Returns the project-under-test's source code directory."""
+    pwd_command = 'pwd'
+    process = self.execute(pwd_command)
+    if process.returncode:
+      logger.error('Failed to get the WORKDIR: %s', self.image_name)
+      return ''
+    return process.stdout.strip()
+
   def _start_docker_container(self) -> str:
     """Runs the project's OSS-Fuzz image as a background container and returns
     the container ID."""
@@ -99,7 +131,11 @@ class ProjectContainerTool(BaseTool):
   def compile(self, extra_commands: str = '') -> sp.CompletedProcess:
     """Compiles the fuzz target."""
     command = 'compile > /dev/null' + extra_commands
-    return self.execute(command)
+    compile_process = self.execute(command)
+    # Hide Compilation command so that LLM won't reuse it in the inspection tool
+    # and be distracted by irrelevant errors, e.g., `build/ already exits`.
+    compile_process.args = '# Compiles the fuzz target.'
+    return compile_process
 
   def terminate(self) -> bool:
     """Terminates the container."""

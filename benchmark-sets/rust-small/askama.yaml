@@ -1,0 +1,37 @@
+"functions":
+- "name": "derive_template"
+  "params":
+  - "name": "input"
+    "type": "TokenStream"
+  "return_type": "TokenStream"
+  "signature": "pub fn derive_template(input: TokenStream) -> TokenStream"
+- "name": "build_template"
+  "params":
+  - "name": "ast"
+    "type": "&syn::DeriveInput"
+  "return_type": "Result"
+  "signature": "pub(crate) fn build_template(ast: &syn::DeriveInput) -> Result<String, CompileError>"
+- "name": "build_skeleton"
+  "params":
+  - "name": "ast"
+    "type": "&syn::DeriveInput"
+  "return_type": "Result"
+  "signature": "fn build_skeleton(ast: &syn::DeriveInput) -> Result<String, CompileError>"
+- "name": "Generator::build"
+  "params":
+  - "name": "ctx"
+    "type": "&Context<'a>"
+  "return_type": "Result"
+  "signature": "pub(crate) fn build(mut self, ctx: &Context<'a>) -> Result<String, CompileError>"
+- "name": "Generator::impl_template"
+  "params":
+  - "name": "ctx"
+    "type": "&Context<'a>"
+  - "name": "buf"
+    "type": "&mut Buffer"
+  "return_type": "Result"
+  "signature": "fn impl_template(&mut self, ctx: &Context<'a>, buf: &mut Buffer) -> Result<(), CompileError>"
+"language": "rust"
+"project": "askama"
+"target_name": "fuzz_filters"
+"target_path": "/src/askama/fuzz/fuzz_targets/fuzz_filters.rs"

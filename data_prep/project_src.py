@@ -16,6 +16,7 @@
 
 import logging
 import os
+import random
 import subprocess as sp
 import tempfile
 import time
@@ -95,6 +96,8 @@ def _get_harness(src_file: str, out: str, language: str) -> tuple[str, str]:
   ) == 'jvm' and 'static void fuzzerTestOneInput' not in content:
     return '', ''
   if language.lower() == 'python' and 'atheris.Fuzz()' not in content:
+    return '', ''
+  if language.lower() == 'rust' and 'fuzz_target!' not in content:
     return '', ''
 
   short_path = src_file[len(out):]
@@ -201,6 +204,7 @@ def _copy_project_src_from_cloud(bucket_dirname: str, out: str,
 
 def _copy_project_src_from_local(project: str, out: str, language: str):
   """Runs the project's OSS-Fuzz image to copy /|src| to /|out|."""
+  timestamp = time.time()
   run_container = [
       'docker',
       'run',
@@ -222,7 +226,7 @@ def _copy_project_src_from_local(project: str, out: str, language: str):
       '-e',
       f'FUZZING_LANGUAGE={language}',
       '--name',
-      f'{project}-container',
+      f'{project}-container-{timestamp}',
       f'gcr.io/oss-fuzz/{project}',
   ]
   result = sp.run(run_container,
@@ -230,12 +234,15 @@ def _copy_project_src_from_local(project: str, out: str, language: str):
                   stdin=sp.DEVNULL,
                   check=False)
   if result.returncode and 'Conflict' in str(result.stderr):
-    # Sometimes the previous container need longer time to delete
-    # If the next docker run is invoked before the previous container
-    # completely removed, it will resulti n Conflict error.
-    # Sleep for 60 seconds and retry.
-    logger.warning('Failed to run OSS-Fuzz on %s, retry in 60 sec', project)
-    time.sleep(60)
+    # When running in multi-threading environment, the timestamp suffix
+    # for the container name maybe the same and cause Conflict error.
+    # Sleep for random seconds from 1 to 30 and retry to avoid conflict.
+    logger.warning('Failed to run OSS-Fuzz on %s, retry in 1~30 sec', project)
+    time.sleep(random.randint(1, 30))
+
+    # Update timestamp suffix and re run
+    timestamp = time.time()
+    run_container[-2] = f'{project}-container-{timestamp}'
     result = sp.run(run_container,
                     capture_output=True,
                     stdin=sp.DEVNULL,
@@ -249,7 +256,7 @@ def _copy_project_src_from_local(project: str, out: str, language: str):
     raise Exception(f'Failed to run docker command: {" ".join(run_container)}')
 
   try:
-    copy_src = ['docker', 'cp', f'{project}-container:/src', out]
+    copy_src = ['docker', 'cp', f'{project}-container-{timestamp}:/src', out]
     result = sp.run(copy_src,
                     capture_output=True,
                     stdin=sp.DEVNULL,
@@ -262,10 +269,11 @@ def _copy_project_src_from_local(project: str, out: str, language: str):
     logger.info('Done copying %s /src to %s.', project, out)
   finally:
     # Shut down the container that was just started.
-    result = sp.run(['docker', 'container', 'stop', f'{project}-container'],
-                    capture_output=True,
-                    stdin=sp.DEVNULL,
-                    check=False)
+    result = sp.run(
+        ['docker', 'container', 'stop', f'{project}-container-{timestamp}'],
+        capture_output=True,
+        stdin=sp.DEVNULL,
+        check=False)
     if result.returncode:
       logger.error('Failed to stop container image: %s-container', project)
       logger.error('STDOUT: %s', result.stdout)
@@ -306,6 +314,12 @@ def _identify_fuzz_targets(out: str, interesting_filenames: list[str],
         if path.endswith(tuple(interesting_filenames)):
           interesting_filepaths.append(path)
         if path.endswith('.py'):
+          potential_harnesses.append(path)
+      elif language == 'rust':
+        # For Rust
+        if path.endswith(tuple(interesting_filenames)):
+          interesting_filepaths.append(path)
+        if path.endswith('.rs'):
           potential_harnesses.append(path)
       else:
         # For C/C++

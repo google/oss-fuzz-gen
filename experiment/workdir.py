@@ -42,6 +42,9 @@ class WorkDirs:
     os.makedirs(self.dills, exist_ok=True)
     os.makedirs(self.fuzz_targets, exist_ok=True)
 
+  def __repr__(self) -> str:
+    return self._base_dir
+
   @property
   def base(self):
     return self._base_dir
@@ -99,11 +102,6 @@ class WorkDirs:
   def build_logs_target(self, generated_target_name: str, iteration: int):
     return os.path.join(self.build_logs,
                         f'{generated_target_name}-F{iteration}.log')
-
-  def error_logs_target(self, generated_target_name: str,
-                        iteration: int) -> str:
-    return os.path.join(self.build_logs,
-                        f'{generated_target_name}-F{iteration}.err.log')
 
   def run_logs_target(self, generated_target_name: str, iteration: int):
     return os.path.join(self.run_logs,

@@ -18,6 +18,7 @@ Tools used for experiments.
 import atexit
 import logging
 import os
+import re
 import shutil
 import subprocess as sp
 import tempfile
@@ -101,6 +102,17 @@ def clone_oss_fuzz(oss_fuzz_dir: str = ''):
            check=True,
            cwd=OSS_FUZZ_DIR)
 
+  # Sync oss-fuzz data if needed.
+  if os.environ.get('OSS_FUZZ_DATA_DIR', ''):
+    src_projects = os.path.join(os.environ['OSS_FUZZ_DATA_DIR'], 'projects')
+    logger.info('OSS_FUZZ_DATA_DIR: %s', os.environ['OSS_FUZZ_DATA_DIR'])
+    logger.info('src_projects: %s', src_projects)
+    for proj in os.listdir(src_projects):
+      src_project = os.path.join(src_projects, proj)
+      dst_project = os.path.join(OSS_FUZZ_DIR, 'projects', proj)
+      logger.info('Copying: %s to %s', src_project, dst_project)
+      shutil.copytree(src_project, dst_project)
+
 
 def postprocess_oss_fuzz() -> None:
   """Prepares the oss-fuzz directory for experiments."""
@@ -117,7 +129,8 @@ def postprocess_oss_fuzz() -> None:
     return
 
   # If already in a virtualenv environment assume all is set up
-  if os.environ.get('VIRTUAL_ENV', ''):
+  venv_path = os.path.split(os.environ.get('VIRTUAL_ENV', ''))
+  if venv_path and venv_path[0].endswith(os.path.split(OSS_FUZZ_DIR)[-1]):
     return
 
   result = sp.run(['python3', '-m', 'venv', VENV_DIR],
@@ -297,59 +310,10 @@ def is_image_cached(project_name: str, sanitizer: str) -> bool:
     return False
 
 
-def rewrite_project_to_cached_project_chronos(generated_project) -> None:
-  """Rewrites Dockerfile to work with Chronos builds"""
-
-  generated_project_folder = os.path.join(OSS_FUZZ_DIR, 'projects',
-                                          generated_project)
-
-  # Check if there is an original Dockerfile, because we should use that in
-  # case,as otherwise the "Dockerfile" may be a copy of another sanitizer.
-  original_dockerfile = os.path.join(generated_project_folder, 'Dockerfile')
-  with open(original_dockerfile, 'r') as f:
-    docker_content = f.read()
-
-  arg_line = 'ARG CACHE_IMAGE=gcr.io/MUST_PROVIDE_IMAGE'
-  docker_content = arg_line + '\n' + docker_content
-  docker_content = docker_content.replace(
-      'FROM gcr.io/oss-fuzz-base/base-builder', 'FROM $CACHE_IMAGE')
-
-  # Now comment out everything except the first FROM and the last COPY that
-  # was added earlier in the OFG process.
-  arg_line = -1
-  workdir_line = -1
-  from_line = -1
-  copy_fuzzer_line = -1
-
-  for line_idx, line in enumerate(docker_content.split('\n')):
-    if line.startswith('WORKDIR') and workdir_line == -1:
-      # OSS-Fuzz infra relies on parsing WORKDIR.
-      workdir_line = line_idx
-    if line.startswith('ARG') and arg_line == -1:
-      arg_line = line_idx
-    if line.startswith('FROM') and from_line == -1:
-      from_line = line_idx
-    if line.startswith('COPY'):
-      copy_fuzzer_line = line_idx
-
-  lines_to_keep = {arg_line, from_line, copy_fuzzer_line, workdir_line}
-  new_content = ''
-  for line_idx, line in enumerate(docker_content.split('\n')):
-    if line_idx not in lines_to_keep:
-      new_content += f'# {line}\n'
-    else:
-      new_content += f'{line}\n'
-
-  # Overwrite the existing one
-  with open(original_dockerfile, 'w') as f:
-    f.write(new_content)
-
-
 def rewrite_project_to_cached_project(project_name: str, generated_project: str,
                                       sanitizer: str) -> None:
   """Rewrites Dockerfile of a project to enable cached build scripts."""
   cached_image_name = _get_project_cache_image_name(project_name, sanitizer)
-
   generated_project_folder = os.path.join(OSS_FUZZ_DIR, 'projects',
                                           generated_project)
 
@@ -370,22 +334,30 @@ def rewrite_project_to_cached_project(project_name: str, generated_project: str,
   with open(original_dockerfile, 'r') as f:
     docker_content = f.read()
 
-  docker_content = docker_content.replace(
-      'FROM gcr.io/oss-fuzz-base/base-builder', f'FROM {cached_image_name}')
+  arg_line = 'ARG CACHE_IMAGE=' + cached_image_name
+  docker_content = arg_line + '\n' + docker_content
+  docker_content = re.sub(r'FROM gcr.io/oss-fuzz-base/base-builder.*',
+                          'FROM $CACHE_IMAGE', docker_content)
 
-  # Now comment out everything except the first FROM and the last two Dockers
+  # Now comment out everything except:
+  # - The first FROM.
+  # - The ARG we just added.
+  # - The last 2 COPY commands (for the build script and the target we added).
+  arg_line = -1
   from_line = -1
   copy_fuzzer_line = -1
   copy_build_line = -1
 
   for line_idx, line in enumerate(docker_content.split('\n')):
+    if line.startswith('ARG') and arg_line == -1:
+      arg_line = line_idx
     if line.startswith('FROM') and from_line == -1:
       from_line = line_idx
     if line.startswith('COPY'):
       copy_fuzzer_line = copy_build_line
       copy_build_line = line_idx
 
-  lines_to_keep = {from_line, copy_fuzzer_line, copy_build_line}
+  lines_to_keep = {arg_line, from_line, copy_fuzzer_line, copy_build_line}
   new_content = ''
   for line_idx, line in enumerate(docker_content.split('\n')):
     if line_idx not in lines_to_keep:
@@ -482,10 +454,28 @@ def _build_image(project_name: str) -> str:
 def prepare_project_image(project: str) -> str:
   """Prepares original image of the |project|'s fuzz target build container."""
   image_name = f'gcr.io/oss-fuzz/{project}'
-  if (ENABLE_CACHING and is_image_cached(project, 'address') and
-      (_image_exists_locally(image_name, project_name=project) or
-       _image_exists_online(image_name, project_name=project))):
-    logger.info('Using cached project image for %s', project)
-    return image_name
+  if ENABLE_CACHING and is_image_cached(project, 'address'):
+    logger.info('We should use cached instance.')
+    # Rewrite for caching.
+    rewrite_project_to_cached_project(project, project, 'address')
+    # Prepare build
+    prepare_build(project, 'address', project)
+    # Build the image
+    command = [
+        'docker', 'build', '-t', image_name,
+        os.path.join('projects', project)
+    ]
+    try:
+      sp.run(command,
+             cwd=OSS_FUZZ_DIR,
+             stdin=sp.DEVNULL,
+             stdout=sp.PIPE,
+             stderr=sp.PIPE,
+             check=True)
+      logger.info('Using cached project image for %s: %s', project, image_name)
+      return image_name
+    except sp.CalledProcessError as e:
+      logger.warning('Failed to build image for %s: %s', project, e)
+
   logger.warning('Unable to find cached project image for %s', project)
   return _build_image(project)
