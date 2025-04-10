@@ -21,9 +21,15 @@ import shutil
 import subprocess
 import sys
 import threading
-from typing import List
+from typing import List, Optional
 
-from experimental.build_generator import constants, templates
+import git
+
+from experiment.benchmark import Benchmark
+from experiment.workdir import WorkDirs
+from experimental.build_generator import constants, llm_agent, templates
+from llm_toolkit import models
+from results import Result
 
 silent_global = False
 
@@ -32,7 +38,13 @@ LOG_FMT = ('%(asctime)s %(levelname)s [%(filename)s:%(lineno)d] '
            ': %(funcName)s: %(message)s')
 
 
-def setup_worker_project(oss_fuzz_base: str, project_name: str, llm_model: str):
+def setup_worker_project(oss_fuzz_base: str,
+                         project_name: str,
+                         llm_model: str,
+                         openai_api_key: Optional[str],
+                         github_url: str = '',
+                         from_agent: bool = False,
+                         workdir: str = ''):
   """Setup empty OSS-Fuzz project used for analysis."""
   temp_project_dir = os.path.join(oss_fuzz_base, "projects", project_name)
   if os.path.isdir(temp_project_dir):
@@ -44,7 +56,30 @@ def setup_worker_project(oss_fuzz_base: str, project_name: str, llm_model: str):
   with open(os.path.join(temp_project_dir, 'build.sh'), 'w') as f:
     f.write(templates.EMPTY_OSS_FUZZ_BUILD)
   with open(os.path.join(temp_project_dir, 'Dockerfile'), 'w') as f:
-    f.write(templates.AUTOGEN_DOCKER_FILE)
+    if from_agent:
+      file_content = templates.CLEAN_OSS_FUZZ_DOCKER
+      file_content = file_content.replace('{additional_packages}', '')
+      file_content = file_content.replace('{repo_url}', github_url)
+      file_content = file_content.replace('{project_repo_dir}',
+                                          github_url.split('/')[-1])
+    else:
+      file_content = templates.AUTOGEN_DOCKER_FILE
+      if openai_api_key:
+        file_content += f'ENV OPENAI_API_KEY {openai_api_key}'
+    f.write(file_content)
+
+  # Prepare demo fuzzing harness source
+  if from_agent:
+    repo_path = os.path.join(workdir, 'temp_repo')
+    git.Repo.clone_from(github_url, repo_path)
+    try:
+      with open(os.path.join(temp_project_dir, 'empty_fuzzer.c'), 'w') as f:
+        f.write(templates.C_BASE_TEMPLATE)
+      with open(os.path.join(temp_project_dir, 'empty_fuzzer.cpp'), 'w') as f:
+        f.write(templates.CPP_BASE_TEMPLATE)
+    finally:
+      if os.path.exists(repo_path) and os.path.isdir(repo_path):
+        shutil.rmtree(repo_path)
 
   if llm_model == 'vertex':
     json_config = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS', None)
@@ -88,7 +123,6 @@ def run_autogen(github_url,
                 max_successful_builds: int = -1,
                 max_timeout: int = 0):
   """Launch auto-gen analysis within OSS-Fuzz container."""
-
   initiator_cmd = f'python3 /src/manager.py {github_url} -o {outdir}'
   initiator_cmd += f' --model={model}'
   if max_successful_builds > 0:
@@ -98,10 +132,7 @@ def run_autogen(github_url,
   if model == constants.MODEL_VERTEX:
     extra_environment.append('-e')
     extra_environment.append('GOOGLE_APPLICATION_CREDENTIALS=/src/creds.json')
-  elif model == constants.MODEL_GPT_35_TURBO:
-    extra_environment.append('-e')
-    extra_environment.append(f'OPENAI_API_KEY={openai_api_key}')
-  elif model == constants.MODEL_GPT_4:
+  elif openai_api_key:
     extra_environment.append('-e')
     extra_environment.append(f'OPENAI_API_KEY={openai_api_key}')
 
@@ -169,6 +200,7 @@ def run_on_targets(target,
                    worker_project_name,
                    idx,
                    llm_model,
+                   openai_api_key,
                    semaphore=None,
                    build_heuristics='all',
                    output='',
@@ -177,8 +209,6 @@ def run_on_targets(target,
 
   if semaphore is not None:
     semaphore.acquire()
-
-  openai_api_key = os.getenv('OPENAI_API_KEY', None)
 
   outdir = os.path.join('/out/', constants.SHARED_MEMORY_RESULTS_DIR)
   with open('status-log.txt', 'a') as f:
@@ -222,52 +252,75 @@ def get_next_worker_project(oss_fuzz_base: str) -> str:
   return f'{constants.PROJECT_BASE}{max_idx+1}'
 
 
-def copy_result_to_out(project_generated, oss_fuzz_base, output) -> None:
+def copy_result_to_out(project_generated,
+                       oss_fuzz_base,
+                       output,
+                       from_agent=False,
+                       project_name='') -> None:
   """Copy raw results into an output directory and in a refined format."""
   # Go through the output
   os.makedirs(output, exist_ok=True)
   raw_result_dir = os.path.join(output, 'raw-results')
   os.makedirs(raw_result_dir, exist_ok=True)
 
-  project_directory = os.path.join(oss_fuzz_base, 'build', 'out',
-                                   project_generated)
+  if from_agent:
+    project_directory = os.path.join(oss_fuzz_base, 'projects',
+                                     project_generated)
+  else:
+    project_directory = os.path.join(oss_fuzz_base, 'build', 'out',
+                                     project_generated)
+
   if not os.path.isdir(project_directory):
     logger.info('Could not find project %s', project_directory)
     return
   shutil.copytree(project_directory,
-                  os.path.join(raw_result_dir, project_generated))
+                  os.path.join(raw_result_dir, project_generated),
+                  dirs_exist_ok=True)
 
   oss_fuzz_projects = os.path.join(output, 'oss-fuzz-projects')
   os.makedirs(oss_fuzz_projects, exist_ok=True)
 
-  # get project name
-  report_txt = os.path.join(raw_result_dir, project_generated,
-                            'autogen-results', 'report.txt')
-  if not os.path.isfile(report_txt):
-    return
-  project_name = ''
-  with open(report_txt, 'r') as f:
-    for line in f:
-      if 'Analysing' in line:
-        project_name = line.split('/')[-1].replace('\n', '')
-  if not project_name:
-    return
-
-  idx = 0
-  while True:
-    base_build_dir = f'empty-build-{idx}'
-    idx += 1
-
-    build_dir = os.path.join(raw_result_dir, project_generated, base_build_dir)
+  if from_agent:
+    build_dir = os.path.join(raw_result_dir, project_generated)
     if not os.path.isdir(build_dir):
-      break
+      return
 
-    dst_project = f'{project_name}-{base_build_dir}'
+    dst_project = f'{project_name}-agent'
     dst_dir = os.path.join(oss_fuzz_projects, dst_project)
     if os.path.isdir(dst_dir):
       logger.info('Destination dir alrady exists: %s. Skipping', dst_dir)
-      continue
+      return
+
     shutil.copytree(build_dir, dst_dir)
+  else:
+    report_txt = os.path.join(raw_result_dir, project_generated,
+                              'autogen-results', 'report.txt')
+    if not os.path.isfile(report_txt):
+      return
+
+    with open(report_txt, 'r') as f:
+      for line in f:
+        if 'Analysing' in line:
+          project_name = line.split('/')[-1].replace('\n', '')
+    if not project_name:
+      return
+
+    idx = 0
+    while True:
+      base_build_dir = f'empty-build-{idx}'
+      idx += 1
+
+      build_dir = os.path.join(raw_result_dir, project_generated,
+                               base_build_dir)
+      if not os.path.isdir(build_dir):
+        break
+
+      dst_project = f'{project_name}-{base_build_dir}'
+      dst_dir = os.path.join(oss_fuzz_projects, dst_project)
+      if os.path.isdir(dst_dir):
+        logger.info('Destination dir alrady exists: %s. Skipping', dst_dir)
+        continue
+      shutil.copytree(build_dir, dst_dir)
 
 
 def run_parallels(oss_fuzz_base,
@@ -285,20 +338,87 @@ def run_parallels(oss_fuzz_base,
   semaphore = threading.Semaphore(parallel_jobs)
   jobs = []
   projects_generated = []
+  openai_api_key = os.getenv('OPENAI_API_KEY', None)
+
   for idx, target in enumerate(target_repositories):
     worker_project_name = get_next_worker_project(oss_fuzz_base)
     logger.info('Worker project name: %s', worker_project_name)
     projects_generated.append(worker_project_name)
-    setup_worker_project(oss_fuzz_base, worker_project_name, llm_model)
+    setup_worker_project(oss_fuzz_base, worker_project_name, llm_model,
+                         openai_api_key)
     proc = threading.Thread(target=run_on_targets,
                             args=(target, oss_fuzz_base, worker_project_name,
-                                  idx, llm_model, semaphore, build_heuristics,
-                                  output, max_timeout))
+                                  idx, llm_model, openai_api_key, semaphore,
+                                  build_heuristics, output, max_timeout))
     jobs.append(proc)
     proc.start()
 
   for proc in jobs:
     proc.join()
+
+
+def run_agent(target_repositories: List[str], args: argparse.Namespace):
+  """Generates build script and fuzzer harnesses for a GitHub repository using
+  llm agent approach."""
+  # Process default arguments
+  oss_fuzz_base = os.path.abspath(args.oss_fuzz)
+  work_dirs = WorkDirs(args.work_dirs, keep=True)
+  openai_api_key = os.getenv('OPENAI_API_KEY', None)
+
+  # Prepare environment
+  worker_project_name = get_next_worker_project(oss_fuzz_base)
+
+  # Prepare LLM model
+  llm = models.LLM.setup(
+      ai_binary=os.getenv('AI_BINARY', ''),
+      name=args.model,
+      max_tokens=4096,
+      num_samples=1,
+      temperature=0.4,
+      temperature_list=[],
+  )
+
+  for target_repository in target_repositories:
+    logger.info('Target repository: %s', target_repository)
+
+    setup_worker_project(oss_fuzz_base, worker_project_name, args.model,
+                         openai_api_key, target_repository, True,
+                         os.path.abspath(args.work_dirs))
+    benchmark = Benchmark(worker_project_name, worker_project_name, '', '', '',
+                          '', [], '')
+
+    build_script = ''
+    for trial in range(args.max_round):
+      logger.info('Round %d', trial)
+      agent = llm_agent.BuildScriptAgent(trial=trial,
+                                         llm=llm,
+                                         args=args,
+                                         github_url=target_repository)
+      result_history = [
+          Result(benchmark=benchmark, trial=trial, work_dirs=work_dirs)
+      ]
+
+      build_result = agent.execute(result_history)
+      if build_result.compiles:
+        build_script = build_result.build_script_source
+        break
+
+      logger.info('Round %d build script generation failed for project %s',
+                  trial, target_repository)
+
+    if build_script:
+      logger.info('Build script generation success for project %s',
+                  target_repository)
+
+      # Update build script
+      build_script_path = os.path.join(oss_fuzz_base, 'projects',
+                                       worker_project_name, 'build.sh')
+      with open(build_script_path, 'w') as f:
+        f.write(build_script)
+
+      # Copy result to out
+      copy_result_to_out(worker_project_name, oss_fuzz_base, args.out, True,
+                         target_repository.split('/')[-1])
 
 
 def parse_commandline():
@@ -323,6 +443,21 @@ def parse_commandline():
       '-m',
       help=f'LLM model to use. Available: {str(constants.MODELS)}',
       type=str)
+  parser.add_argument('--agent',
+                      '-a',
+                      help='Use LLM Agent Builder or not.',
+                      action='store_true')
+  parser.add_argument('--max-round',
+                      '-mr',
+                      help='Max round of trial for the llm build script agent.',
+                      type=int,
+                      default=5)
+  parser.add_argument('--work-dirs',
+                      '-w',
+                      help='Working directory path.',
+                      type=str,
+                      default='./work_dirs')
+
   return parser.parse_args()
 
 
@@ -348,8 +483,11 @@ def main():
   target_repositories = extract_target_repositories(args.input)
   silent_global = args.silent
 
-  run_parallels(os.path.abspath(args.oss_fuzz), target_repositories, args.model,
-                args.build_heuristics, args.out)
+  if args.agent:
+    run_agent(target_repositories, args)
+  else:
+    run_parallels(os.path.abspath(args.oss_fuzz), target_repositories,
+                  args.model, args.build_heuristics, args.out)
 
 
 if __name__ == '__main__':

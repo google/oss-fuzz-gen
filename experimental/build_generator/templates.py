@@ -115,8 +115,7 @@ AUTOGEN_DOCKER_FILE = BASE_DOCKER_HEAD + '''
 RUN rm /usr/local/bin/cargo && \\
  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | bash -s -- -y && \\
  apt-get install -y cargo
-RUN python3 -m pip install --upgrade pip && \\
-    python3 -m pip install pydantic-core pyyaml cxxfilt openai==1.60.0
+RUN python3 -m pip install --upgrade pip
 RUN python3 -m pip install --upgrade google-cloud-aiplatform
 # Some projects may have recurisve modules from github without use of ssl,
 # and this needs to be trusted. The below command can be removed if this
@@ -124,7 +123,8 @@ RUN python3 -m pip install --upgrade google-cloud-aiplatform
 RUN mkdir ~/.ssh && ssh-keyscan github.com >> ~/.ssh/known_hosts
 COPY *.py *.json $SRC/
 WORKDIR $SRC
-COPY build.sh $SRC/'''
+COPY build.sh $SRC/
+'''
 
 EMPTY_PROJECT_YAML = """homepage: "https://github.com/google/oss-fuzz"
 language: c++
@@ -153,4 +153,46 @@ COPY .clusterfuzzlite/build.sh $SRC/build.sh
 COPY .clusterfuzzlite/*.cpp $SRC/
 COPY .clusterfuzzlite/*.c $SRC/
 WORKDIR $SRC/{project_repo_dir}
+'''
+
+# Template file for building LLM prompt
+LLM_PRIMING = '''<system>
+You are a developer wanting to build a given C/C++ projects.
+</system>'''
+
+LLM_PROBLEM = '''
+You must return only the contents of the build script wrapped in a `<bash>` tag, and nothing else.
+Below is a list of build system configuration files found in the target repository.
+Please generate the most appropriate build script in Bash to build the project, assuming the build is performed on Ubuntu 24.
+Do include any necessary flags and environment variables if required.
+If any flag-type environment variables need to be modified, please ensure the original value is preserved by appending rather than replacing it.
+If additional packages are needed, please also generate the corresponding `apt install` command to install them.
+Assume that the base script will be executed with root privileges, so no `sudo` commands should be used.
+If possible, avoid testing or installation, just need to compile the project to static library. Try using `llvm-ar` if the original build system does not ccompile to static library.
+Lastly, the build files must not be modified in any way, such as by using `sed`.
+
+<build_files>
+{BUILD_FILES}
+</build_files>
+
+Here is the Dockerfile that will be used for the build.
+Please assume that the build script will be copied to $SRC/build.sh inside the Docker container for execution.
+
+<dockerfile>
+{DOCKERFILE}
+</dockerfile>
+'''
+
+LLM_BUILD_FILE_TEMPLATE = '''
+<file_path>{PATH}</file_path>
+<file_content>{CONTENT}</file_content>
+'''
+
+LLM_RETRY = '''
+I failed to build the project with the above provided build script.
+Here is a dump of the bash execution result.
+Please analyse the result and generate a new build script with the same assumption above.
+You must only returns the content of the build script and nothing else more as always.
+
+{BASH_RESULT}
 '''

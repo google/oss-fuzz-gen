@@ -137,7 +137,7 @@ def get_all_introspector_files(target_dir):
   return introspection_files_found
 
 
-def build_empty_fuzzers(build_workers, language):
+def build_empty_fuzzers(build_workers, language) -> None:
   """Run build scripts against an empty fuzzer harness."""
   # Stage 2: perform program analysis to extract data to be used for
   # harness generation.
