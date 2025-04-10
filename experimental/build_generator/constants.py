@@ -21,3 +21,19 @@ MODEL_GPT_35_TURBO = 'gpt-3.5-turbo'
 MODEL_GPT_4 = 'gpt-4'
 MODEL_VERTEX = 'vertex'
 MODELS = [MODEL_GPT_35_TURBO, MODEL_VERTEX]
+
+# Common -l<lib> to required package mapping for Dockerfile installation
+LIBRARY_PACKAGE_MAP = {
+    "z": "zlib1g-dev",
+    "bz2": "libbz2-dev",
+    "ssl": "libssl-dev",
+    "crypto": "libssl-dev",
+    "c++": "libc++-dev",
+    "c++abi": "libc++abi-dev",
+    "gtest": "libgtest-dev",
+    "gmock": "libgmock-dev",
+    "brotlidec": "libbrotli-dev",
+    "brotlienc": "libbrotli-dev",
+    "divsufsort": "libdivsufsort-dev",
+    "divsufsort64": "libdivsufsort-dev",
+}
