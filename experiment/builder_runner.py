@@ -127,6 +127,7 @@ class BuilderRunner:
         '-len_control=0',
         # Timeout per testcase.
         '-timeout=30',
+        '-detect_leaks=0',
     ]
 
   def _get_minimum_func_name(self, func_sig: str) -> str:
@@ -922,19 +923,24 @@ class CloudBuilderRunner(BuilderRunner):
         f'--real_project={project_name}',
     ]
 
-    if oss_fuzz_checkout.ENABLE_CACHING and (
-        oss_fuzz_checkout.is_image_cached(project_name, 'address') and
-        oss_fuzz_checkout.is_image_cached(project_name, 'coverage')):
-      logger.info('Using cached image for %s', project_name)
-      command.append('--use_cached_image')
+    # TODO(dongge): Reenable caching when build script is not modified.
+    # Current caching is not applicable when OFG modifies the build script,
+    # There is no simple way to check if the build script has been modified,
+    # but this feature should be added later.
+    # and fails to build the project (particularly with coverage sanitizer).
+    # if oss_fuzz_checkout.ENABLE_CACHING and (
+    #     oss_fuzz_checkout.is_image_cached(project_name, 'address') and
+    #     oss_fuzz_checkout.is_image_cached(project_name, 'coverage')):
+    #   logger.info('Using cached image for %s', project_name)
+    #   command.append('--use_cached_image')
 
-      # Overwrite the Dockerfile to be caching friendly
-      # We hardcode 'address' here, but this is irrelevant and will be
-      # overridden later via a Docker argument.
-      oss_fuzz_checkout.rewrite_project_to_cached_project(
-          project_name, generated_project, 'address')
-      oss_fuzz_checkout.prepare_build(project_name, 'address',
-                                      generated_project)
+    #   # Overwrite the Dockerfile to be caching friendly
+    #   # We hardcode 'address' here, but this is irrelevant and will be
+    #   # overridden later via a Docker argument.
+    #   oss_fuzz_checkout.rewrite_project_to_cached_project(
+    #       project_name, generated_project, 'address')
+    #   oss_fuzz_checkout.prepare_build(project_name, 'address',
+    #                                   generated_project)
 
     if cloud_build_tags:
       command += ['--tags'] + cloud_build_tags

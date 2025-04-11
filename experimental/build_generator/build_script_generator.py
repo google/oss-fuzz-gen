@@ -784,6 +784,59 @@ class CMakeScanner(AutoBuildBase):
     return 'cmake'
 
 
+class KConfigBuildScanner(AutoBuildBase):
+  """Auto builder for KConfig-based projects."""
+
+  def __init__(self):
+    super().__init__()
+    self.matches_found = {
+        'Config.in': [],
+        'Makefile': [],
+    }
+
+  def is_matched(self):
+    """Returns True if the build heuristic found matching files."""
+    # Ensure both Config.in and Makefile exists
+    for found_matches in self.matches_found.values():
+      if len(found_matches) == 0:
+        return False
+    return True
+
+  def steps_to_build(self) -> Iterator[AutoBuildContainer]:
+    base_command = [
+        '''
+make defconfig
+make
+find . -type f -name "*.o" > objfiles
+llvm-ar rcs libfuzz.a $(cat objfiles)
+'''
+    ]
+    build_container = AutoBuildContainer()
+    build_container.list_of_commands = base_command
+    build_container.heuristic_id = self.name + '1'
+    yield build_container
+
+    # Alternative to avoid Gold lld
+    build_container_2 = AutoBuildContainer()
+    base_command.append('export CFLAGS="${CFLAGS} -fuse-ld=lld"')
+    base_command.append('export CFXXLAGS="${CXXFLAGS} -fuse-ld=lld"')
+    build_container_2.list_of_commands = base_command
+    build_container.heuristic_id = self.name + '2'
+    yield build_container_2
+
+    # Alternative to avoid Gold lld and add thread/crypt libraries
+    build_container_3 = AutoBuildContainer()
+    base_command.append('export CFLAGS="${CFLAGS} -lpthread -lcrypt"')
+    base_command.append('export CFXXLAGS="${CXXFLAGS} -lpthread -lcrypt"')
+    build_container_3.list_of_commands = base_command
+    build_container.heuristic_id = self.name + '3'
+    yield build_container_3
+
+  @property
+  def name(self):
+    return 'kconfig'
+
+
 def match_build_heuristics_on_folder(abspath_of_target: str):
   """Yields AutoBuildContainer objects.
 
@@ -808,6 +861,7 @@ def match_build_heuristics_on_folder(abspath_of_target: str):
       BootstrapScanner(),
       AutogenScannerSH(),
       HeaderOnlyCBuilder(),
+      KConfigBuildScanner(),
   ]
 
   checks_to_test = []
