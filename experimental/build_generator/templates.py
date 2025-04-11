@@ -39,7 +39,7 @@ BASE_DOCKER_HEAD = OSS_FUZZ_LICENSE + '''
 FROM gcr.io/oss-fuzz-base/base-builder
 RUN apt-get update && apt-get install -y make autoconf automake autopoint \\
                       libtool cmake pkg-config curl check libcpputest-dev \\
-                      flex bison re2c
+                      flex bison re2c protobuf-compiler
 '''
 
 CFLITE_TEMPLATE = '''name: ClusterFuzzLite PR fuzzing
