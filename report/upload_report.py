@@ -42,7 +42,7 @@ class ReportUploader:
             subprocess.run(command, check=True, capture_output=True, text=True)
             return True
         except subprocess.CalledProcessError as e:
-            self.logger.error(f"Command failed: {' '.join(command)}")
+            self.logger.error(f'Command failed: {" ".join(command)}')
             self.logger.error(f'Error: {e.stderr}')
             return False
 
@@ -169,7 +169,7 @@ class ReportUploader:
         self.logger.info('Final report uploaded.')
         
     
-def parse_args():
+def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description='Upload experiment reports to GCS')
     parser.add_argument('results_dir', help='Local directory with experiment results')
     parser.add_argument('gcs_dir', help='GCS directory for the report')
