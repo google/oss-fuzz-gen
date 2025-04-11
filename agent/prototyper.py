@@ -438,10 +438,16 @@ class Prototyper(BaseAgent):
     try:
       client = self.llm.get_chat_client(model=self.llm.get_model())
       while prompt and cur_round < self.max_round:
+
+        build_result.chat_history[self.name] += f'Step #{cur_round} - "agent-step": <CHAT PROMPT:ROUND {cur_round:02d}>{prompt.get()}</CHAT PROMPT:ROUND {cur_round:02d}>\n'
+        
         response = self.chat_llm(cur_round,
                                  client=client,
                                  prompt=prompt,
                                  trial=last_result.trial)
+        
+        build_result.chat_history[self.name] += f'Step #{cur_round} - "agent-step": <CHAT RESPONSE:ROUND {cur_round:02d}>{response}</CHAT RESPONSE:ROUND {cur_round:02d}>\n'
+        
         prompt = self._container_tool_reaction(cur_round, response,
                                                build_result)
         cur_round += 1
