@@ -208,8 +208,6 @@ class RunResult(BuildResult):
         'total_pcs':
             self.total_pcs,
     }
-    
-
 
   # TODO(dongge): Define success property to show if the fuzz target was run.
 
