@@ -21,7 +21,7 @@ import shutil
 import subprocess
 import sys
 import threading
-from typing import List
+from typing import List, Optional
 
 from experimental.build_generator import constants, templates
 
@@ -32,7 +32,8 @@ LOG_FMT = ('%(asctime)s %(levelname)s [%(filename)s:%(lineno)d] '
            ': %(funcName)s: %(message)s')
 
 
-def setup_worker_project(oss_fuzz_base: str, project_name: str, llm_model: str):
+def setup_worker_project(oss_fuzz_base: str, project_name: str, llm_model: str,
+                         openai_api_key: Optional[str]):
   """Setup empty OSS-Fuzz project used for analysis."""
   temp_project_dir = os.path.join(oss_fuzz_base, "projects", project_name)
   if os.path.isdir(temp_project_dir):
@@ -45,7 +46,6 @@ def setup_worker_project(oss_fuzz_base: str, project_name: str, llm_model: str):
     f.write(templates.EMPTY_OSS_FUZZ_BUILD)
   with open(os.path.join(temp_project_dir, 'Dockerfile'), 'w') as f:
     file_content = templates.AUTOGEN_DOCKER_FILE
-    openai_api_key = os.environ.get('OPENAI_API_KEY', '')
     if openai_api_key:
       file_content += f'ENV OPENAI_API_KEY {openai_api_key}'
     f.write(file_content)
@@ -98,11 +98,11 @@ def run_autogen(github_url,
                 openai_api_key=None,
                 build_heuristics='all',
                 max_successful_builds: int = -1,
-                max_timeout: int = 0):
+                max_timeout: int = 0,
+                use_agent: bool = False):
   """Launch auto-gen analysis within OSS-Fuzz container."""
-
   initiator_cmd = f'python3 /src/manager.py {github_url} -o {outdir}'
-  initiator_cmd += f' --model={model}'
+  initiator_cmd += f' --model={model} {"--agent" if use_agent else ""}'
   if max_successful_builds > 0:
     initiator_cmd += f' --max-successful={max_successful_builds}'
 
@@ -110,10 +110,7 @@ def run_autogen(github_url,
   if model == constants.MODEL_VERTEX:
     extra_environment.append('-e')
     extra_environment.append('GOOGLE_APPLICATION_CREDENTIALS=/src/creds.json')
-  elif model == constants.MODEL_GPT_35_TURBO:
-    extra_environment.append('-e')
-    extra_environment.append(f'OPENAI_API_KEY={openai_api_key}')
-  elif model == constants.MODEL_GPT_4:
+  elif openai_api_key:
     extra_environment.append('-e')
     extra_environment.append(f'OPENAI_API_KEY={openai_api_key}')
 
@@ -181,16 +178,16 @@ def run_on_targets(target,
                    worker_project_name,
                    idx,
                    llm_model,
+                   openai_api_key,
                    semaphore=None,
                    build_heuristics='all',
                    output='',
-                   max_timeout: int = 0):
+                   max_timeout: int = 0,
+                   use_agent: bool = False):
   """Thread entry point for single project auto-gen."""
 
   if semaphore is not None:
     semaphore.acquire()
-
-  openai_api_key = os.getenv('OPENAI_API_KEY', None)
 
   outdir = os.path.join('/out/', constants.SHARED_MEMORY_RESULTS_DIR)
   with open('status-log.txt', 'a') as f:
@@ -202,7 +199,8 @@ def run_on_targets(target,
               llm_model,
               openai_api_key=openai_api_key,
               build_heuristics=build_heuristics,
-              max_timeout=max_timeout)
+              max_timeout=max_timeout,
+              use_agent=use_agent)
 
   # Cleanup the OSS-Fuzz docker image
   clean_up_cmd = [
@@ -287,6 +285,7 @@ def run_parallels(oss_fuzz_base,
                   llm_model,
                   build_heuristics,
                   output,
+                  use_agent=False,
                   parallel_jobs=6,
                   max_timeout=0):
   """Run auto-gen on a list of projects in parallel.
@@ -297,15 +296,19 @@ def run_parallels(oss_fuzz_base,
   semaphore = threading.Semaphore(parallel_jobs)
   jobs = []
   projects_generated = []
+  openai_api_key = os.getenv('OPENAI_API_KEY', None)
+
   for idx, target in enumerate(target_repositories):
     worker_project_name = get_next_worker_project(oss_fuzz_base)
     logger.info('Worker project name: %s', worker_project_name)
     projects_generated.append(worker_project_name)
-    setup_worker_project(oss_fuzz_base, worker_project_name, llm_model)
+    setup_worker_project(oss_fuzz_base, worker_project_name, llm_model,
+                         openai_api_key)
     proc = threading.Thread(target=run_on_targets,
                             args=(target, oss_fuzz_base, worker_project_name,
-                                  idx, llm_model, semaphore, build_heuristics,
-                                  output, max_timeout))
+                                  idx, llm_model, openai_api_key, semaphore,
+                                  build_heuristics, output, max_timeout,
+                                  use_agent))
     jobs.append(proc)
     proc.start()
 
@@ -335,6 +338,10 @@ def parse_commandline():
       '-m',
       help=f'LLM model to use. Available: {str(constants.MODELS)}',
       type=str)
+  parser.add_argument('--agent',
+                      '-a',
+                      help='Use LLM agent for build script generation.',
+                      action='store_true')
   return parser.parse_args()
 
 
@@ -361,7 +368,7 @@ def main():
   silent_global = args.silent
 
   run_parallels(os.path.abspath(args.oss_fuzz), target_repositories, args.model,
-                args.build_heuristics, args.out)
+                args.build_heuristics, args.out, args.agent)
 
 
 if __name__ == '__main__':

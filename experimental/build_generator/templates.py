@@ -178,3 +178,17 @@ LLM_BUILD_FILE_TEMPLATE = '''
 <file_path>{PATH}</file_path>
 <file_content>{CONTENT}</file_content>
 '''
+
+LLM_RETRY = '''
+I failed to build the project with the above provided build script.
+Here is a dump of the stdout and stderr while executing the provided build
+script. Please analyse the result and generate a new build script with the
+same assumption above. You must only returns the content of the build script
+and nothing else more as always.
+
+Last 100 lines from the stdout for the execution:
+{STDOUT}
+
+Last 100 lines from the stderr for the execution:
+{STDERR}
+'''

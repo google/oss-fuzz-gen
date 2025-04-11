@@ -101,20 +101,10 @@ class AutoBuildBase:
     return list(set(required_packages))
 
 
-class LLMBuilder(AutoBuildBase):
-  """Using LLM for automatic build script generation."""
+class LLMAgentBase:
+  """Base class for LLM agent based builders."""
 
-  def __init__(self, model_name: str):
-    super().__init__()
-    self.matches_found = {
-        'Makefile': [],
-        'configure.ac': [],
-        'Makefile.am': [],
-        'autogen.sh': [],
-        'bootstrap.sh': [],
-        'CMakeLists.txt': [],
-        'Config.in': [],
-    }
+  def __init__(self, model_name: str, base_dir: str, retry_count: int = 10):
     self.model = models.LLM.setup(
         ai_binary=os.getenv('AI_BINARY', ''),
         name=model_name,
@@ -124,50 +114,132 @@ class LLMBuilder(AutoBuildBase):
         temperature_list=[],
     )
     self.prompt = self.model.prompt_type()(None)
+    self.base_dir = base_dir
+    self.target_files = {}
+    self.retry_count = retry_count
 
-  def is_matched(self):
-    """Always true for using LLM support."""
-    return True
+  def match_files(self) -> None:
+    """Matches files needed for the build heuristic."""
+    for root_dir, _, files in os.walk(self.base_dir):
+      for file in files:
+        if file in self.target_files:
+          full_path = os.path.join(root_dir, file)
+          self.target_files[file].append(full_path)
 
-  def steps_to_build(self) -> Iterator[AutoBuildContainer]:
-    """Yields AutoBuildContainer objects."""
-    container = AutoBuildContainer()
+  def is_matched(self) -> bool:
+    for files in self.target_files.values():
+      if files:
+        return True
+    return False
 
-    # Retrive a list of known build files from the project.
-    build_files = self._retrieve_build_files()
-    if build_files:
-      self._build_prompt(build_files)
-      response = self.model.ask_llm(prompt=self.prompt)
-      response = response.replace('```bash', '').replace('```', '')
+  def chat_llm(self) -> str:
+    """Helper method to call to chat_llm of the models"""
+    client = self.model.get_chat_client(model=self.model.get_model())
+    response = self.model.chat_llm(client=client, prompt=self.prompt)
+    self.prompt.add_solution(response)
 
-      container.list_of_commands.append(response)
-      container.heuristic_id = self.name + '1'
-      logger.info(container.list_of_commands)
+    return response
 
-    yield container
+  @abstractmethod
+  def execute(self,
+              target_dir: str,
+              language: str,
+              disable_testing: bool = False) -> Dict[str, BuildWorker]:
+    """Helper to generate build script by LLM model."""
 
-    # TODO Handle cases for source code only projects.
-    directory_tree = self._generate_directory_tree()
-    if directory_tree:
-      pass
 
-  def _generate_directory_tree(self) -> str:
-    """Generate a recusive directory tree string for the target project."""
-    return ''
+class LLMBuilder(LLMAgentBase):
+  """Using LLM for automatic build script generation."""
 
-  def _retrieve_build_files(self) -> Dict[str, str]:
-    """Retrieve the content of build files mapped to their path."""
+  def __init__(self, model_name: str, base_dir: str, retry_count: int = 10):
+    super().__init__(model_name, base_dir, retry_count)
+    self.target_files = {
+        'Makefile': [],
+        'configure.ac': [],
+        'Makefile.am': [],
+        'autogen.sh': [],
+        'bootstrap.sh': [],
+        'CMakeLists.txt': [],
+        'Config.in': [],
+    }
+    self.stdout_list = []
+    self.stderr_list = []
+
+  def execute(self,
+              target_dir: str,
+              language: str,
+              disable_testing: bool = False) -> Dict[str, BuildWorker]:
+    """Helper to generate build script by LLM model."""
+    build_results: Dict[str, BuildWorker] = {}
+
+    # Check build result and retry if failed and maximum count if not match
+    count = 0
+    success = False
+    while count < self.retry_count and not success:
+      count += 1
+
+      # Generating build script
+      test_dir = os.path.abspath(
+          os.path.join(os.getcwd(), f'test-fuzz-build-{count}'))
+      container = AutoBuildContainer()
+      build_script = self._build_script_generation()
+      container.heuristic_id = self.name
+      container.list_of_commands.append(build_script)
+      logger.info(build_script)
+      generation = [(build_script, test_dir, container)]
+
+      # Prepare raw evaluation
+      build_results = raw_build_evaluation(generation)
+      if disable_testing:
+        # Testing disabled, directly returns
+        break
+
+      # Evaluate the build script
+      manager.refine_static_libs(build_results)
+      manager.build_empty_fuzzers(build_results, language, True)
+
+      for _, build_worker in build_results.items():
+        if not build_worker.base_fuzz_build:
+          # Build failed for empty fuzzers, skipping this round
+          break
+
+        # Run build
+        if os.path.isdir(manager.INTROSPECTOR_OSS_FUZZ_DIR):
+          shutil.rmtree(manager.INTROSPECTOR_OSS_FUZZ_DIR)
+
+        has_error, _, stdout_str, stderr_str = manager.run_introspector_on_dir(
+            build_worker, test_dir, language)
+
+        if os.path.isdir(manager.INTROSPECTOR_OSS_FUZZ_DIR) and not has_error:
+          # Build success, returns
+          success = True
+          break
+
+        # Build failed, extract error message and retry
+        self.stdout_list = stdout_str.split('\n')[-100:]
+        self.stderr_list = stderr_str.split('\n')[-100:]
+
+    return build_results
+
+  def _build_script_generation(self) -> str:
+    """Helper to generate build script."""
+    # Retrieve build files
     build_files = {}
-
-    for files in self.matches_found.values():
+    for files in self.target_files.values():
       for file in files:
         with open(file, 'r') as f:
-          build_files[file.split('/', 1)[-1]] = f.read()
+          build_files[file] = f.read()
 
-    return build_files
+    # Call llm and get response
+    if self.stdout_list or self.stderr_list:
+      self._build_retry_prompt()
+    else:
+      self._build_prompt(build_files)
+    response = self.chat_llm().replace('```bash', '').replace('```', '')
+    return response
 
   def _build_prompt(self, build_files: Dict[str, str]) -> None:
-    """Helper to generate prompt for llm model"""
+    """Helper to generate prompt for llm model."""
     build_files_str = []
     for file, content in build_files.items():
       target_str = templates.LLM_BUILD_FILE_TEMPLATE.replace('{PATH}', file)
@@ -179,6 +251,12 @@ class LLMBuilder(AutoBuildBase):
 
     self.prompt.add_priming(templates.LLM_PRIMING)
     self.prompt.add_problem(problem)
+
+  def _build_retry_prompt(self) -> None:
+    """Helper to generate prompt for error retry."""
+    retry = templates.LLM_RETRY.replace('{STDOUT}', '\n'.join(self.stdout_list))
+    retry = retry.replace('{STDERR}', '\n'.join(self.stderr_list))
+    self.prompt.add_problem(retry)
 
   @property
   def name(self):
@@ -924,7 +1002,7 @@ llvm-ar rcs libfuzz.a $(cat objfiles)
     return 'kconfig'
 
 
-def match_build_heuristics_on_folder(abspath_of_target: str, model_name: str):
+def match_build_heuristics_on_folder(abspath_of_target: str):
   """Yields AutoBuildContainer objects.
 
   Traverses the files in the target folder. Uses the file list as input to
@@ -932,7 +1010,6 @@ def match_build_heuristics_on_folder(abspath_of_target: str, model_name: str):
   build steps that are deemed matching."""
   all_files = manager.get_all_files_in_path(abspath_of_target)
   all_checks = [
-      LLMBuilder(model_name),
       AutogenConfScanner(),
       PureCFileCompiler(),
       PureCFileCompilerFind(),
@@ -1014,13 +1091,25 @@ def convert_build_heuristics_to_scripts(
   return all_build_scripts
 
 
+def extract_llm_agents(model_name: str, base_dir: str) -> List[LLMAgentBase]:
+  """Return a list of LLM agents for build script generation."""
+  all_agents: List[LLMAgentBase] = [LLMBuilder(model_name, base_dir)]
+  agents: List[LLMAgentBase] = []
+
+  for agent in all_agents:
+    agent.match_files()
+    if agent.is_matched():
+      agents.append(agent)
+
+  return agents
+
+
 def extract_build_suggestions(
-    target_dir, testing_base_dir,
-    model_name) -> List[Tuple[str, str, AutoBuildContainer]]:
+    target_dir, testing_base_dir) -> List[Tuple[str, str, AutoBuildContainer]]:
   """Statically create suggested build scripts for a project."""
   # Get all of the build heuristics
   all_build_suggestions: List[AutoBuildContainer] = list(
-      match_build_heuristics_on_folder(target_dir, model_name))
+      match_build_heuristics_on_folder(target_dir))
   logger.info('Found %d possible build suggestions', len(all_build_suggestions))
   #all_build_suggestions = all_build_suggestions[:2]
   for build_suggestion in all_build_suggestions:
