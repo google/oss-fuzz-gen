@@ -28,7 +28,7 @@ from experiment import oss_fuzz_checkout
 from experiment.benchmark import Benchmark, FileType
 from experiment.fuzz_target_error import SemanticCheckResult
 from llm_toolkit import models, prompts
-from results import BuildResult
+from results import BuildResult, CoverageResult, RunResult
 
 logger = logging.getLogger(__name__)
 
@@ -309,12 +309,20 @@ class DefaultTemplateBuilder(PromptBuilder):
                          raw_code: str,
                          error_desc: Optional[str],
                          errors: list[str],
+                         coverage_result: Optional[CoverageResult] = None,
                          context: str = '',
                          instruction: str = '') -> prompts.Prompt:
     """Prepares the code-fixing prompt."""
     priming, priming_weight = self._format_fixer_priming(benchmark)
-    problem = self._format_fixer_problem(raw_code, error_desc, errors,
-                                         priming_weight, context, instruction)
+    if error_desc and errors:
+      problem = self._format_fixer_problem(raw_code, error_desc, errors,
+                                           priming_weight, context, instruction)
+    else:
+      assert coverage_result
+      problem = self._format_fixer_problem(
+          raw_code, coverage_result.insight,
+          coverage_result.suggestions.splitlines(), priming_weight, context,
+          instruction)
 
     self._prepare_prompt(priming, problem)
     return self._prompt
@@ -643,6 +651,47 @@ class PrototyperFixerTemplateBuilder(PrototyperTemplateBuilder):
     return self._prompt
 
 
+class CoverageAnalyzerTemplateBuilder(PrototyperTemplateBuilder):
+  """Builder specifically targeted C (and excluding C++)."""
+
+  def __init__(self,
+               model: models.LLM,
+               benchmark: Benchmark,
+               run_result: RunResult,
+               template_dir: str = DEFAULT_TEMPLATE_DIR,
+               initial: Any = None):
+    super().__init__(model, benchmark, template_dir, initial)
+    # Load templates.
+    self.priming_template_file = self._find_template(
+        self.agent_templare_dir, 'coverage-analyzer-priming.txt')
+    self.run_result = run_result
+
+  def build(self,
+            example_pair: list[list[str]],
+            project_example_content: Optional[list[list[str]]] = None,
+            project_context_content: Optional[dict] = None,
+            tool_guides: str = '',
+            project_dir: str = '') -> prompts.Prompt:
+    """Constructs a prompt using the templates in |self| and saves it."""
+    del (example_pair, project_example_content, project_context_content)
+    if not self.benchmark:
+      return self._prompt
+
+    prompt = self._get_template(self.priming_template_file)
+    prompt = prompt.replace('{LANGUAGE}', self.benchmark.file_type.value)
+    prompt = prompt.replace('{PROJECT}', self.benchmark.project)
+    prompt = prompt.replace('{PROJECT_DIR}', project_dir)
+    prompt = prompt.replace('{PROJECT_LANGUAGE}', self.benchmark.language)
+    prompt = prompt.replace('{FUNCTION_SIGNATURE}',
+                            self.benchmark.function_signature)
+    prompt = prompt.replace('{FUZZ_TARGET}', self.run_result.fuzz_target_source)
+    prompt = prompt.replace('{TOOL_GUIDES}', tool_guides)
+    prompt = prompt.replace('{FUZZING_LOG}', self.run_result.run_log)
+
+    self._prompt.append(prompt)
+    return self._prompt
+
+
 class EnhancerTemplateBuilder(PrototyperTemplateBuilder):
   """Builder specifically targeted C (and excluding C++)."""
 
@@ -650,8 +699,9 @@ class EnhancerTemplateBuilder(PrototyperTemplateBuilder):
                model: models.LLM,
                benchmark: Benchmark,
                build_result: BuildResult,
-               error_desc: str,
-               errors: list[str],
+               error_desc: str = '',
+               errors: Optional[list[str]] = None,
+               coverage_result: Optional[CoverageResult] = None,
                template_dir: str = DEFAULT_TEMPLATE_DIR,
                initial: Any = None):
     super().__init__(model, benchmark, template_dir, initial)
@@ -661,6 +711,7 @@ class EnhancerTemplateBuilder(PrototyperTemplateBuilder):
     self.build_result = build_result
     self.error_desc = error_desc
     self.errors = errors
+    self.coverage_result = coverage_result
 
   def build(self,
             example_pair: list[list[str]],
@@ -677,22 +728,79 @@ class EnhancerTemplateBuilder(PrototyperTemplateBuilder):
     priming = priming.replace('{LANGUAGE}', self.benchmark.file_type.value)
     priming = priming.replace('{FUNCTION_SIGNATURE}',
                               self.benchmark.function_signature)
-    # TODO(dongge): Add build script to .
     priming = priming.replace('{PROJECT_DIR}', project_dir)
+    priming = priming.replace('{TOOL_GUIDES}', tool_guides)
     if self.build_result.build_script_source:
       build_text = (f'<build script>\n{self.build_result.build_script_source}\n'
                     '</build script>')
     else:
       build_text = 'Build script reuses `/src/build.bk.sh`.'
     priming = priming.replace('{BUILD_TEXT}', build_text)
-    priming = priming.replace('{TOOL_GUIDES}', tool_guides)
     priming_weight = self._model.estimate_token_num(priming)
+    # TODO(dongge): Refine this logic.
+    if self.error_desc and self.errors:
 
-    problem = self._format_fixer_problem(self.build_result.fuzz_target_source,
-                                         self.error_desc, self.errors,
-                                         priming_weight, '', '')
+      problem = self._format_fixer_problem(self.build_result.fuzz_target_source,
+                                           self.error_desc, self.errors,
+                                           priming_weight, '', '')
+    else:
+      assert self.coverage_result
+      problem = self._format_fixer_problem(
+          self.build_result.fuzz_target_source, self.coverage_result.insight,
+          self.coverage_result.suggestions.splitlines(), priming_weight, '', '')
 
     self._prepare_prompt(priming, problem)
+    return self._prompt
+
+
+class CoverageEnhancerTemplateBuilder(PrototyperTemplateBuilder):
+  """Builder specifically targeted C (and excluding C++)."""
+
+  def __init__(self,
+               model: models.LLM,
+               benchmark: Benchmark,
+               build_result: BuildResult,
+               coverage_result: CoverageResult,
+               template_dir: str = DEFAULT_TEMPLATE_DIR,
+               initial: Any = None):
+    super().__init__(model, benchmark, template_dir, initial)
+    # Load templates.
+    self.priming_template_file = self._find_template(
+        self.agent_templare_dir, 'enhancer-coverage-priming.txt')
+    self.build_result = build_result
+    self.coverage_result = coverage_result
+
+  def build(self,
+            example_pair: list[list[str]],
+            project_example_content: Optional[list[list[str]]] = None,
+            project_context_content: Optional[dict] = None,
+            tool_guides: str = '',
+            project_dir: str = '') -> prompts.Prompt:
+    """Constructs a prompt using the templates in |self| and saves it."""
+    del (example_pair, project_example_content, project_context_content)
+    if not self.benchmark:
+      return self._prompt
+
+    prompt = self._get_template(self.priming_template_file)
+    prompt = prompt.replace('{TOOL_GUIDES}', tool_guides)
+    prompt = prompt.replace('{LANGUAGE}', self.benchmark.file_type.value)
+    prompt = prompt.replace('{PROJECT}', self.benchmark.project)
+    prompt = prompt.replace('{PROJECT_DIR}', project_dir)
+    prompt = prompt.replace('{PROJECT_LANGUAGE}', self.benchmark.language)
+    prompt = prompt.replace('{FUZZ_TARGET}',
+                            self.build_result.fuzz_target_source)
+    prompt = prompt.replace('{FUNCTION_SIGNATURE}',
+                            self.benchmark.function_signature)
+
+    if self.build_result.build_script_source:
+      build_text = (f'<build script>\n{self.build_result.build_script_source}\n'
+                    '</build script>')
+    else:
+      build_text = 'Build script reuses `/src/build.bk.sh`.'
+    prompt = prompt.replace('{BUILD_TEXT}', build_text)
+    prompt = prompt.replace('{INSIGHTS}', self.coverage_result.insight)
+    prompt = prompt.replace('{SUGGESTIONS}', self.coverage_result.suggestions)
+    self._prompt.append(prompt)
     return self._prompt
 
 
