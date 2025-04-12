@@ -47,6 +47,7 @@ logger = logging.getLogger(__name__)
 MAX_TOKENS: int = 2000
 NUM_SAMPLES: int = 1
 TEMPERATURE: float = 0.4
+TEMPERATURE_RANGE: list[float] = [0.0, 2.0]
 
 
 class LLM:
@@ -61,7 +62,7 @@ class LLM:
 
   _max_attempts = 5  # Maximum number of attempts to get prediction response
 
-  temperature_range: list[float] = [0.0, 2.0]  # Default model temperature range
+  temperature_range: list[float] = TEMPERATURE_RANGE
 
   def __init__(
       self,
@@ -118,25 +119,31 @@ class LLM:
     yield cls
     for subcls in cls.__subclasses__():
       yield from subcls.all_llm_subclasses()
-
-  @classmethod
-  def all_llm_names(cls):
-    """Returns the current model name and all child model names."""
-    names = []
-    for subcls in cls.all_llm_subclasses():
-      if hasattr(subcls, 'name') and subcls.name != AIBinaryModel.name:
-        names.append(subcls.name)
-    return names
   
   @classmethod
-  def all_llm_temperature_ranges(cls):
-    """Returns the current model and all child temperature ranges."""
-    ranges = {}
+  def all_llm_search(cls, attribute: str) -> list:
+    """Returns the desired attribute for all models."""
+    out = []
     for subcls in cls.all_llm_subclasses():
-      if (hasattr(subcls, 'temperature_range') and hasattr(subcls, 'name')
-          and subcls.name != AIBinaryModel.name):
-        ranges[subcls.name] = subcls.temperature_range
-    return ranges
+      if (hasattr(subcls, attribute) and hasattr(subcls, 'name') and
+          subcls.name != AIBinaryModel.name):
+        out.append(getattr(subcls, attribute))
+    return out
+
+  @classmethod
+  def all_llm_names(cls) -> list[str]:
+    """Returns the current model name and all child model names."""
+    return cls.all_llm_search('name')
+  
+  @classmethod
+  def all_llm_temperature_ranges(cls) -> dict[str, list[float, float]]:
+    """Returns the current model and all child temperature ranges."""
+    out = {}
+    names = cls.all_llm_search('name')
+    tr = cls.all_llm_search('temperature_range')
+    for i in range(len(names)):
+      out[names[i]] = tr[i]
+    return out
 
   @abstractmethod
   def estimate_token_num(self, text) -> int:

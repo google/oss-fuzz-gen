@@ -281,7 +281,7 @@ def parse_args() -> argparse.Namespace:
     ranges = models.LLM.all_llm_temperature_ranges()
     assert ranges[args.model][1] >= args.temperature >= ranges[args.model][0], (
       f'--temperature must be within {ranges[args.model][0]} and '
-      f'{ranges[args.model][1]}.')
+      f'{ranges[args.model][1]} for model {args.model}.')
 
   benchmark_yaml = args.benchmark_yaml
   if benchmark_yaml:
