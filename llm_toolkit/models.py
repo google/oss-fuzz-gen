@@ -77,6 +77,9 @@ class LLM:
     self.temperature = temperature
     self.temperature_list = temperature_list
 
+    # Preserve chat history for OpenAI
+    self.messages = []
+
   def cloud_setup(self):
     """Runs Cloud specific-setup."""
     # Only a subset of models need a cloud specific set up, so
@@ -275,14 +278,19 @@ class GPT(LLM):
       logger.info('OpenAI does not allow temperature list: %s',
                   self.temperature_list)
 
+    self.messages.extend(prompt.get())
+
     completion = self.with_retry_on_error(
-        lambda: client.chat.completions.create(messages=prompt.get(),
+        lambda: client.chat.completions.create(messages=self.messages,
                                                model=self.name,
                                                n=self.num_samples,
                                                temperature=self.temperature),
         [openai.OpenAIError])
 
-    return completion.choices[0].message.content
+    llm_response = completion.choices[0].message.content
+    self.messages.append({'role': 'assistant', 'content': llm_response})
+
+    return llm_response
 
   def ask_llm(self, prompt: prompts.Prompt) -> str:
     """Queries LLM a single prompt and returns its response."""

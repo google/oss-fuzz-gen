@@ -125,7 +125,8 @@ class OpenAIPrompt(Prompt):
     """Gets the final formatted prompt in plain text."""
     result = ''
     for item in self.get():
-      result = f'{result}\n{item.get("content", "")}'
+      result = (f'{result}\n{item.get("role", "Unknown")}:'
+                f'\n{item.get("content", "")}')
 
     return result
 
