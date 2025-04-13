@@ -24,6 +24,7 @@ from typing import List, Optional
 
 import logger
 import pipeline
+from agent.coverage_analyzer import CoverageAnalyzer
 from agent.enhancer import Enhancer
 from agent.one_prompt_enhancer import OnePromptEnhancer
 from agent.one_prompt_prototyper import OnePromptPrototyper
@@ -252,6 +253,9 @@ def _fuzzing_pipeline(benchmark: Benchmark, model: models.LLM,
                               SemanticAnalyzer(trial=trial,
                                                llm=model,
                                                args=args),
+                              CoverageAnalyzer(trial=trial,
+                                               llm=model,
+                                               args=args),
                           ])
   else:
     p = pipeline.Pipeline(args=args,
@@ -280,7 +284,8 @@ def _fuzzing_pipeline(benchmark: Benchmark, model: models.LLM,
                              result_history=results)
   trial_logger.write_result(
       result_status_dir=trial_result.best_result.work_dirs.status,
-      result=trial_result)
+      result=trial_result,
+      finished=True)
   return trial_result
 
 

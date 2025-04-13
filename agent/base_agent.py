@@ -13,15 +13,20 @@
 # limitations under the License.
 """The abstract base class for LLM agents in stages."""
 import argparse
+import os
 import random
 import re
+import shutil
 import subprocess as sp
 import time
 from abc import ABC, abstractmethod
 from typing import Any, Optional
 
+import requests
+
 import logger
 import utils
+from data_prep import introspector
 from llm_toolkit.models import LLM
 from llm_toolkit.prompts import Prompt
 from results import Result
@@ -192,6 +197,59 @@ class BaseAgent(ABC):
     return parser.parse_args()
 
   @classmethod
+  def _preprocess_fi_setup(cls) -> None:
+    """Logic for starting a custom Fuzz Introspector used on cloud builds"""
+    logger.info('Checkign if we should use local FI', trial=0)
+    if not os.path.isdir('/workspace/data-dir'):
+      logger.info('This does not require a local FI.', trial=0)
+      return
+    logger.info('We should use local FI.', trial=0)
+
+    # Clone Fuzz Introspector
+    introspector_repo = 'https://github.com/ossf/fuzz-introspector'
+    introspector_dst = '/workspace/fuzz-introspector'
+    sp.check_call(f'git clone {introspector_repo} {introspector_dst}',
+                  shell=True)
+    fi_web_dir = '/workspace/fuzz-introspector/tools/web-fuzzing-introspection'
+    # Install reqs
+    sp.check_call(
+        'python3.11 -m pip install --ignore-installed -r requirements.txt',
+        cwd=fi_web_dir,
+        shell=True)
+
+    # Copy over the DB
+    shutil.rmtree(os.path.join(fi_web_dir, 'app/static/assets/db/'))
+    shutil.copytree('/workspace/data-dir/fuzz_introspector_db',
+                    os.path.join(fi_web_dir, 'app/static/assets/db/'))
+
+    # Launch webapp
+    fi_environ = os.environ
+    fi_environ['FUZZ_INTROSPECTOR_SHUTDOWN'] = '1'
+    fi_environ[
+        'FUZZ_INTROSPECTOR_LOCAL_OSS_FUZZ'] = '/workspace/data-dir/oss-fuzz2'
+    sp.check_call('python3.11 main.py >> /dev/null &',
+                  shell=True,
+                  env=fi_environ,
+                  cwd=os.path.join(fi_web_dir, 'app'))
+
+    logger.info('Waiting for the webapp to start', trial=0)
+
+    sec_to_wait = 10
+    max_wait_iterations = 10
+    for idx in range(max_wait_iterations):
+      time.sleep(sec_to_wait)
+
+      resp = requests.get('http://127.0.0.1:8080', timeout=10)
+      if 'Fuzzing' in resp.text:
+        break
+      if idx == max_wait_iterations - 1:
+        # Launching FI failed. We can still continue, although context
+        # will be missing from runs.
+        logger.info('Failed to start webapp', trial=10)
+
+    introspector.set_introspector_endpoints('http://127.0.0.1:8080/api')
+
+  @classmethod
   def cloud_main(cls) -> None:
     """Executes agent using dill files. This is for cloud experiments launched
     by cloud_builder.py. It runs `new_result = agent.execute(result_history)` in
@@ -199,6 +257,8 @@ class BaseAgent(ABC):
     deserialized from dill files and new_result will be serialized to share data
     with the cloud experiment requester."""
     args = cls._parse_args()
+
+    cls._preprocess_fi_setup()
 
     agent = utils.deserialize_from_dill(args.agent)
     agent.llm.cloud_setup()
