@@ -21,6 +21,7 @@ import tempfile
 from typing import Mapping
 from urllib.parse import urlparse
 
+from google.cloud import logging as cloud_logging
 from google.cloud import storage
 
 from results import Result, RunResult, TrialResult
@@ -192,8 +193,21 @@ def error(msg: object,
 
 def get_trial_logger(name: str = __name__,
                      trial: int = 0,
-                     level=logging.DEBUG) -> CustomLoggerAdapter:
+                     level: int = logging.DEBUG,
+                     is_cloud: bool = False) -> CustomLoggerAdapter:
   """Sets up or retrieves a thread-local CustomLoggerAdapter for each thread."""
+
+  if is_cloud:
+    try:
+      client = cloud_logging.Client()
+      client.setup_logging()
+    except Exception as e:
+      logging.error(
+          '[Trial ID: %02d] Google Cloud log client initialization failure: %s',
+          trial, e)
+  else:
+    logging.debug('[Trial ID: %02d] Using local log.', trial)
+
   logger = logging.getLogger(name)
   if not logger.handlers:
     formatter = logging.Formatter(
