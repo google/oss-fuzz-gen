@@ -1,0 +1,10 @@
+"language": "c"
+"project": "quickjs"
+"target_name": "fuzz_regexp"
+"target_path": "/src/quickjs/fuzz/fuzz_regexp.c"
+"test_files":
+- "test_file_path": "/src/quickjs/examples/point.c"
+- "test_file_path": "/src/quickjs/tests/bjson.c"
+- "test_file_path": "/src/quickjs/compat/test-closefrom.c"
+- "test_file_path": "/src/quickjs/examples/fib.c"
+- "test_file_path": "/src/quickjs/run-test262.c"
