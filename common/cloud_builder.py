@@ -107,6 +107,14 @@ class CloudBuilder:
         subprocess.check_output(['git', 'ls-files'],
                                 cwd=OFG_ROOT_DIR,
                                 text=True).splitlines())
+
+    # Separate out any files in data-dir
+    tmp_files = []
+    for gf in git_files:
+      if 'data-dir' in gf:
+        continue
+      tmp_files.append(gf)
+    git_files = set(tmp_files)
     result_files = set(
         os.path.relpath(os.path.join(root, file))
         for root, _, files in os.walk(result_history[-1].work_dirs.base)
@@ -122,23 +130,21 @@ class CloudBuilder:
     if not oss_fuzz_data_dir:
       return ''
 
-    files_to_upload = [
-        os.path.relpath(os.path.join(root, file), oss_fuzz_data_dir)
-        for root, _, files in os.walk(oss_fuzz_data_dir)
-        for file in files
-    ]
+    # Upload all the files in the oss_fuzz_data_dir, _upload_files
+    # calls tar as the target_dir as cwd.
+    files_to_upload = ['.']
     return self._upload_files(f'oss-fuzz-{uuid.uuid4().hex}.tar.gz',
                               oss_fuzz_data_dir, files_to_upload)
 
   def _upload_fi_oss_fuzz_data(self) -> str:
+    """Upload data used by OFG from scratch."""
     data_dir = '/experiment/data-dir'
     if not os.path.isdir(data_dir):
       return ''
-    files_to_upload = [
-        os.path.relpath(os.path.join(root, file), data_dir)
-        for root, _, files in os.walk(data_dir)
-        for file in files
-    ]
+
+    # Upload all the files in the oss_fuzz_data_dir, _upload_files
+    # calls tar as the target_dir as cwd.
+    files_to_upload = ['.']
     return self._upload_files(f'data-dir-{uuid.uuid4().hex}.tar.gz', data_dir,
                               files_to_upload)
 

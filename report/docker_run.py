@@ -253,7 +253,7 @@ def run_on_data_from_scratch(cmd=None):
   cmd.append('-gp')
   cmd.append(project_names)
   cmd.append('-gm')
-  cmd.append(str(10))
+  cmd.append(str(8))
   cmd.append('-e')
   cmd.append(introspector_endpoint)
   cmd.append('-mr')
