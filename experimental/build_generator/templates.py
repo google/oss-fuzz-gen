@@ -121,11 +121,8 @@ RUN python3 -m pip install --upgrade google-cloud-aiplatform
 # and this needs to be trusted. The below command can be removed if this
 # project is not doing such.
 RUN mkdir ~/.ssh && ssh-keyscan github.com >> ~/.ssh/known_hosts
-COPY *.py *.json requirements.txt $SRC/
-RUN python3 -m pip install -r $SRC/requirements.txt
-COPY llm_toolkit $SRC/llm_toolkit
+COPY *.py *.json $SRC/
 WORKDIR $SRC
-RUN python3 -m pip install httpx==0.27.2
 COPY build.sh $SRC/
 '''
 
@@ -164,14 +161,26 @@ You are a developer wanting to build a given C/C++ projects.
 </system>'''
 
 LLM_PROBLEM = '''
-Here is a list of build system configuration files found from the target
-repository. Please help generate the most suitable build script in bash to
-build the project, assuming the build is done under Ubuntu 24 with all
-necessary packages installed. Please also assume that the base script will
-be executed under root privilege, thus no sudo command should be used. You
-must only returns the content of the build script and nothing else more.
+You must return only the contents of the build script wrapped in a `<bash>` tag, and nothing else.
+Below is a list of build system configuration files found in the target repository.
+Please generate the most appropriate build script in Bash to build the project, assuming the build is performed on Ubuntu 24.
+Do include any necessary flags and environment variables if required.
+If any flag-type environment variables need to be modified, please ensure the original value is preserved by appending rather than replacing it.
+If additional packages are needed, please also generate the corresponding `apt install` command to install them.
+Assume that the base script will be executed with root privileges, so no `sudo` commands should be used.
+If possible, avoid testing or installation, just need to compile the project to static library. Try using `llvm-ar` if the original build system does not ccompile to static library.
+Lastly, the build files must not be modified in any way, such as by using `sed`.
 
+<build_files>
 {BUILD_FILES}
+</build_files>
+
+Here is the Dockerfile that will be used for the build.
+Please assume that the build script will be copied to $SRC/build.sh inside the Docker container for execution.
+
+<dockerfile>
+{DOCKERFILE}
+</dockerfile>
 '''
 
 LLM_BUILD_FILE_TEMPLATE = '''
@@ -181,14 +190,9 @@ LLM_BUILD_FILE_TEMPLATE = '''
 
 LLM_RETRY = '''
 I failed to build the project with the above provided build script.
-Here is a dump of the stdout and stderr while executing the provided build
-script. Please analyse the result and generate a new build script with the
-same assumption above. You must only returns the content of the build script
-and nothing else more as always.
+Here is a dump of the bash execution result.
+Please analyse the result and generate a new build script with the same assumption above.
+You must only returns the content of the build script and nothing else more as always.
 
-Last 100 lines from the stdout for the execution:
-{STDOUT}
-
-Last 100 lines from the stderr for the execution:
-{STDERR}
+{BASH_RESULT}
 '''

@@ -20,7 +20,7 @@ import logging
 import os
 import shutil
 import subprocess
-from typing import Dict, List, Optional, Tuple
+from typing import List, Optional, Tuple
 
 import build_script_generator
 import templates
@@ -137,7 +137,7 @@ def get_all_introspector_files(target_dir):
   return introspection_files_found
 
 
-def build_empty_fuzzers(build_workers, language, from_agent=False) -> None:
+def build_empty_fuzzers(build_workers, language) -> None:
   """Run build scripts against an empty fuzzer harness."""
   # Stage 2: perform program analysis to extract data to be used for
   # harness generation.
@@ -150,8 +150,7 @@ def build_empty_fuzzers(build_workers, language, from_agent=False) -> None:
     logger.info('Test dir: %s :: %s', test_dir,
                 str(build_worker.executable_files_build['refined-static-libs']))
 
-    if not build_worker.executable_files_build[
-        'refined-static-libs'] and not from_agent:
+    if not build_worker.executable_files_build['refined-static-libs']:
       continue
 
     logger.info('Trying to link in an empty fuzzer')
@@ -210,7 +209,7 @@ def get_language_defaults(language: str):
 
 
 def run_introspector_on_dir(build_worker, test_dir,
-                            language) -> Tuple[bool, List[str], str, str]:
+                            language) -> Tuple[bool, List[str]]:
   """Runs Fuzz Introspector on a target directory with the ability
     to analyse code without having fuzzers (FUZZ_INTROSPECTOR_AUTO_FUZZ=1).
 
@@ -258,26 +257,22 @@ def run_introspector_on_dir(build_worker, test_dir,
 
   # Disable FI light because we want to make sure we can compile as well.
   modified_env['FI_DISABLE_LIGHT'] = "1"
-  stdout_str = ''
-  stderr_str = ''
+
   try:
-    subprocess.run('compile',
-                   shell=True,
-                   env=modified_env,
-                   capture_output=True,
-                   text=True,
-                   check=True)
+    subprocess.check_call('compile',
+                          shell=True,
+                          env=modified_env,
+                          stdout=subprocess.DEVNULL,
+                          stderr=subprocess.DEVNULL)
     build_returned_error = False
-  except subprocess.CalledProcessError as e:
+  except subprocess.CalledProcessError:
     build_returned_error = True
-    stdout_str = e.stdout
-    stderr_str = e.stderr
 
   if not os.path.isfile('/src/compiled_binary'):
     build_returned_error = True
 
   logger.info('Introspector build: %s', str(build_returned_error))
-  return build_returned_error, fuzzer_build_cmd, stdout_str, stderr_str
+  return build_returned_error, fuzzer_build_cmd
 
 
 def create_clean_oss_fuzz_from_empty(github_repo: str, build_worker,
@@ -543,10 +538,7 @@ def load_introspector_report():
   return summary_report
 
 
-def auto_generate(github_url,
-                  disable_testing_build_scripts=False,
-                  outdir='',
-                  use_agent=False):
+def auto_generate(github_url, disable_testing_build_scripts=False, outdir=''):
   """Generates build script and fuzzer harnesses for a GitHub repository."""
   target_source_path = os.path.join(os.getcwd(), github_url.split('/')[-1])
   dst_folder = github_url.split('/')[-1]
@@ -556,22 +548,27 @@ def auto_generate(github_url,
     subprocess.check_call(
         f'git clone --recurse-submodules {github_url} {dst_folder}', shell=True)
 
+  # Stage 1: Build script generation
   language = determine_project_language(target_source_path)
   logger.info('Target language: %s', language)
   append_to_report(outdir, f'Target language: {language}')
 
-  build_results = {}
-  if use_agent:
-    build_results = auto_generate_agent(target_source_path, language,
-                                        disable_testing_build_scripts)
-  else:
-    build_results = auto_generate_static(target_source_path)
+  # record the path
+  logger.info('[+] Extracting build scripts statically')
+  all_build_scripts: List[Tuple[
+      str, str, build_script_generator.
+      AutoBuildContainer]] = build_script_generator.extract_build_suggestions(
+          target_source_path, 'test-fuzz-build-')
+
+  # Check each of the build scripts.
+  logger.info('[+] Testing build suggestions')
+  build_results = build_script_generator.raw_build_evaluation(all_build_scripts)
+  logger.info('Checking results of %d build generators', len(build_results))
 
   if disable_testing_build_scripts:
     logger.info('disabling testing build scripts')
     return
 
-  # Log raw result
   for test_dir, build_worker in build_results.items():
     build_heuristic = build_worker.build_suggestion.heuristic_id
     static_libs = build_worker.executable_files_build['static-libs']
@@ -585,11 +582,11 @@ def auto_generate(github_url,
   # static libraries resulting from the build.
   refine_static_libs(build_results)
 
-  # Stage 3: perform program analysis to extract data to be used for
+  # Stage 2: perform program analysis to extract data to be used for
   # harness generation.
   build_empty_fuzzers(build_results, language)
 
-  # Harness generation and harness testing.
+  # Stage 3: Harness generation and harness testing.
   # We now know for which versions we can generate a base fuzzer.
   # Continue by runnig an introspector build using the auto-generated
   # build scripts but fuzz introspector as the sanitier. The introspector
@@ -604,6 +601,7 @@ def auto_generate(github_url,
   # this to check if there are differences in build output.
   logger.info('Going through %d build results to generate fuzzers',
               len(build_results))
+
   for test_dir, build_worker in build_results.items():
     logger.info('Checking build heuristic: %s',
                 build_worker.build_suggestion.heuristic_id)
@@ -618,8 +616,8 @@ def auto_generate(github_url,
     if os.path.isdir(INTROSPECTOR_OSS_FUZZ_DIR):
       shutil.rmtree(INTROSPECTOR_OSS_FUZZ_DIR)
 
-    build_returned_error, _, _, _ = run_introspector_on_dir(
-        build_worker, test_dir, language)
+    build_returned_error, _ = run_introspector_on_dir(build_worker, test_dir,
+                                                      language)
 
     if os.path.isdir(INTROSPECTOR_OSS_FUZZ_DIR):
       logger.info('Introspector build success')
@@ -649,42 +647,6 @@ def auto_generate(github_url,
                                      test_dir)
 
 
-def auto_generate_agent(
-    target_dir, language, disable_testing_build_scripts
-) -> Dict[str, 'build_script_generator.BuildWorker']:
-  """Generate build script and fuzzer harnesses using llm agent approach."""
-  # Stage 1: Extract auto build llm agent
-  logger.info('[+] Extracting auto build llm agent')
-  llm_agents = build_script_generator.extract_llm_agents(LLM_MODEL, target_dir)
-
-  # Stage 2: Perform build script generation and fail retry
-  logger.info('[+] Perform build script generation and fail retry.')
-  build_results = {}
-  for agent in llm_agents:
-    build_results = build_results | agent.execute(
-        target_dir, language, disable_testing_build_scripts)
-
-  return build_results
-
-
-def auto_generate_static(
-    target_source_path) -> Dict[str, 'build_script_generator.BuildWorker']:
-  """Generate build script and fuzzer harnesses using static approach."""
-  # Stage 1: Build script generation
-  logger.info('[+] Extracting build scripts statically')
-  all_build_scripts: List[Tuple[
-      str, str, build_script_generator.
-      AutoBuildContainer]] = build_script_generator.extract_build_suggestions(
-          target_source_path, 'test-fuzz-build-')
-
-  # Stage 2: Check each of the build scripts.
-  logger.info('[+] Testing build suggestions')
-  build_results = build_script_generator.raw_build_evaluation(all_build_scripts)
-  logger.info('Checking results of %d build generators', len(build_results))
-
-  return build_results
-
-
 def parse_commandline():
   """Commandline parser."""
   parser = argparse.ArgumentParser()
@@ -697,10 +659,6 @@ def parse_commandline():
                       '-m',
                       help='Model to use for auto generation',
                       type=str)
-  parser.add_argument('--agent',
-                      '-a',
-                      help='Use LLM Agent Builder or not.',
-                      action='store_true')
   return parser
 
 
@@ -717,7 +675,7 @@ def main():
 
   append_to_report(args.out, f'Analysing: {args.repo}')
 
-  auto_generate(args.repo, args.disable_build_test, args.out, args.agent)
+  auto_generate(args.repo, args.disable_build_test, args.out)
 
 
 if __name__ == '__main__':
