@@ -335,15 +335,23 @@ def _create_data_dir(workdir):
 
   # Copy OSS-Fuzz data
   projects_to_copy = []
+  out_folders = ['inspector', 'report', 'report_target', 'textcov_reports']
   for bp in os.listdir(oss_fuzz_build_out):
     src_project = os.path.join(oss_fuzz_build_out, bp)
     dst_project = os.path.join(dst_dir, 'oss-fuzz2', 'build', 'out', bp)
 
+    # Make sure all directories are there
+    do_copy = True
+    for out_folder in out_folders:
+      if not os.path.isdir(os.path.join(src_project, out_folder)):
+        do_copy = False
+    if not do_copy:
+      continue
     os.makedirs(dst_project, exist_ok=True)
 
-    for dn in ['inspector', 'report', 'report_target', 'textcov_reports']:
-      shutil.copytree(os.path.join(src_project, dn),
-                      os.path.join(dst_project, dn))
+    for out_folder in out_folders:
+      shutil.copytree(os.path.join(src_project, out_folder),
+                      os.path.join(dst_project, out_folder))
     projects_to_copy.append(bp)
 
   os.makedirs(os.path.join(dst_dir, 'oss-fuzz2', 'projects'), exist_ok=True)
@@ -360,6 +368,13 @@ def _create_data_dir(workdir):
                                              'static', 'assets', 'db')
   shutil.copytree(fuzz_introspector_db_folder,
                   os.path.join(dst_dir, 'fuzz_introspector_db'))
+
+  # Delete .gitignore that may exist in the DB folder. We do this because the
+  # files are needed when uploaded to OFG.
+  gitignore_file = os.path.join(dst_dir, 'fuzz_introspector_db', '.gitignore')
+  if os.path.isfile(gitignore_file):
+    os.remove(gitignore_file)
+
   return dst_dir
 
 
