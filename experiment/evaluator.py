@@ -20,6 +20,7 @@ import logging
 import os
 import re
 import shutil
+import copy
 from typing import Optional
 
 from google.cloud import storage
@@ -426,12 +427,12 @@ class Evaluator:
     current_coverage_copy = None
     if run_result and run_result.coverage:
         # Create a deep copy for calculating the union and original total lines
-        current_coverage_copy = run_result.coverage.copy()
+        current_coverage_copy = copy.deepcopy(run_result.coverage)
 
     # Calculate Union Total Lines (Denominator for diff)
     if current_coverage_copy:
         # Merge baseline into the copy of the current run's coverage
-        merged_coverage = current_coverage_copy.copy() # Copy again to avoid modifying current_coverage_copy
+        merged_coverage = copy.deepcopy(current_coverage_copy)
         merged_coverage.merge(existing_textcov)
         union_total_lines = merged_coverage.total_lines
     else:
@@ -489,6 +490,7 @@ class Evaluator:
     return newly_covered_lines, union_total_lines, coverage_diff, coverage_percent
 
   def check_target(self, ai_binary, target_path: str) -> Result:
+    """Builds and runs a target."""
     generated_target_name = os.path.basename(target_path)
     sample_id = os.path.splitext(generated_target_name)[0]
     generated_oss_fuzz_project = f'{self.benchmark.id}-{sample_id}'
@@ -659,7 +661,18 @@ class Evaluator:
     return load_existing_coverage_summary(self.benchmark.project)
 
   def load_existing_textcov(self) -> textcov.Textcov:
-    """Loads existing textcovs."""
+    """Loads existing textcovs.
+
+    The Jacoco.xml coverage report used to generate summary.json on
+    OSS-Fuzz for JVM projects does not trace the source file location.
+    Thus the conversion may miss some classes because they are not
+    present during coverage report generation. This fix gets the total
+    line calculation from the jacoco.xml report of the current run
+    directly and compares it with the total_lines retrieved from
+    summary.json. Then the larger total_lines is used which is assumed
+    to be more accurate. This is the same case for python project which
+    the total line is determined from the all_cov.json file.
+    """
     if self.benchmark.language == 'jvm':
       return load_existing_jvm_textcov(self.benchmark.project)
 
