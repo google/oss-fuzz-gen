@@ -42,14 +42,25 @@ class OnePromptEnhancer(OnePromptPrototyper):
                                  last_result.run_result.fuzz_target_source, [])
       prompt = builder.build([], None, None)
     else:
-      error_desc, errors = last_result.semantic_result.get_error_info()
+      # TODO(dongge): Refine this logic.
       builder = DefaultTemplateBuilder(self.llm)
-      prompt = builder.build_fixer_prompt(benchmark,
-                                          last_result.fuzz_target_source,
-                                          error_desc,
-                                          errors,
-                                          context='',
-                                          instruction='')
+      if last_result.semantic_result:
+        error_desc, errors = last_result.semantic_result.get_error_info()
+        prompt = builder.build_fixer_prompt(benchmark,
+                                            last_result.fuzz_target_source,
+                                            error_desc,
+                                            errors,
+                                            context='',
+                                            instruction='')
+      else:
+        prompt = builder.build_fixer_prompt(
+            benchmark=benchmark,
+            raw_code=last_result.fuzz_target_source,
+            error_desc='',
+            errors=[],
+            coverage_result=last_result.coverage_result,
+            context='',
+            instruction='')
       # TODO: A different file name/dir.
       prompt.save(self.args.work_dirs.prompt)
 
@@ -68,7 +79,7 @@ class OnePromptEnhancer(OnePromptPrototyper):
                                trial=last_result.trial,
                                work_dirs=last_result.work_dirs,
                                author=self,
-                               chat_history={self.name: prompt.get()})
+                               chat_history={self.name: prompt.gettext()})
 
     while prompt and cur_round <= self.max_round:
       self._generate_fuzz_target(prompt, result_history, build_result,

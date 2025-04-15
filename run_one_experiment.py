@@ -24,6 +24,7 @@ from typing import List, Optional
 
 import logger
 import pipeline
+from agent.coverage_analyzer import CoverageAnalyzer
 from agent.enhancer import Enhancer
 from agent.one_prompt_enhancer import OnePromptEnhancer
 from agent.one_prompt_prototyper import OnePromptPrototyper
@@ -301,6 +302,9 @@ def _fuzzing_pipeline(benchmark: Benchmark, model: models.LLM,
                           ],
                           analysis_stage_agents=[
                               SemanticAnalyzer(trial=trial,
+                                               llm=model,
+                                               args=args),
+                              CoverageAnalyzer(trial=trial,
                                                llm=model,
                                                args=args),
                           ])

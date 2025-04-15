@@ -16,11 +16,13 @@
 
 import logging
 import os
+import re
 import shutil
 import subprocess
 from abc import abstractmethod
-from typing import Dict, Iterator, List, Tuple
+from typing import Dict, Iterator, List, Optional, Tuple
 
+import constants
 import manager
 
 logger = logging.getLogger(name=__name__)
@@ -30,10 +32,17 @@ logger = logging.getLogger(name=__name__)
 #### Logic for auto building a given source code folder ####
 ############################################################
 class AutoBuildContainer:
+  """Auto build data container."""
 
-  def __init__(self):
-    self.list_of_commands = []
-    self.heuristic_id = ''
+  def __init__(self, old: Optional["AutoBuildContainer"] = None):
+    if old:
+      self.list_of_commands = old.list_of_commands
+      self.list_of_required_packages = old.list_of_required_packages
+      self.heuristic_id = old.heuristic_id
+    else:
+      self.list_of_commands = []
+      self.list_of_required_packages = []
+      self.heuristic_id = ''
 
 
 class BuildWorker:
@@ -73,6 +82,20 @@ class AutoBuildBase:
       if len(found_matches) > 0:
         return True
     return False
+
+  def determine_required_packages(
+      self, config_file_str: str) -> List[Tuple[str, str]]:
+    """Determine additional required package for installation in Dockerfile."""
+
+    # Find all -l<lib> flags in makefile or other configurations
+    libs = re.findall(r"-l(\w+)", config_file_str)
+
+    # Map to packages, skipping built-in or unmapped ones
+    required_packages = [(f'-l{lib}', constants.LIBRARY_PACKAGE_MAP[lib])
+                         for lib in libs
+                         if lib in constants.LIBRARY_PACKAGE_MAP]
+
+    return list(set(required_packages))
 
 
 class HeaderOnlyCBuilder(AutoBuildBase):
@@ -300,6 +323,68 @@ class PureMakefileScannerWithSubstitutions(AutoBuildBase):
   @property
   def name(self):
     return 'makeWithSubstitutions'
+
+
+class PureMakefileScannerWithLibFlag(AutoBuildBase):
+  """Auto builder for pure Makefile projects, relying on "make" with
+  additional -l flags during linker process."""
+
+  def __init__(self):
+    super().__init__()
+    self.matches_found = {
+        'Makefile': [],
+    }
+
+  def steps_to_build(self) -> Iterator[AutoBuildContainer]:
+    # Determine possible lib flags from Makefile
+    lib_flags: List[Tuple[str, str]] = []
+    for file in self.matches_found['Makefile']:
+      with open(file, 'r') as f:
+        content = f.read()
+        lib_flags.extend(self.determine_required_packages(content))
+
+    # Process required packages
+    build_container = AutoBuildContainer()
+    flags = []
+    for flag, package in lib_flags:
+      flags.append(flag)
+      if package:
+        build_container.list_of_required_packages.append(package)
+
+    # Route 1: Basic build with lib flags
+    build_container.list_of_commands = [
+        f'make clean && make LDLIBS="{" ".join(flags)}"',
+        ('find . -type f -name "*.o" -print0 | '
+         'xargs -0 llvm-ar rcs libfuzz.a')
+    ]
+    build_container.heuristic_id = self.name + '1'
+    yield build_container
+
+    # Route 2: Overriding CXXFLAGS
+    build_container_2 = AutoBuildContainer(build_container)
+    build_container_2.list_of_commands = [
+        ('make clean && make CXXFLAGS="$CXXFLAGS"'
+         f' LDLIBS="{" ".join(flags)}"'),
+        ('find . -type f -name "*.o" -print0 | '
+         'xargs -0 llvm-ar rcs libfuzz.a')
+    ]
+    build_container_2.heuristic_id = self.name + '2'
+    yield build_container_2
+
+    # Route 2: Overriding CXXFLAGS and add PIC flag
+    build_container_3 = AutoBuildContainer(build_container)
+    build_container_3.list_of_commands = [
+        ('make clean && make CXXFLAGS="$CXXFLAGS -fPIC"'
+         f' LDLIBS="{" ".join(flags)}"'),
+        ('find . -type f -name "*.o" -print0 | '
+         'xargs -0 llvm-ar rcs libfuzz.a')
+    ]
+    build_container_3.heuristic_id = self.name + '3'
+    yield build_container_3
+
+  @property
+  def name(self):
+    return 'makewithlibflag'
 
 
 class AutoRefConfScanner(AutoBuildBase):
@@ -699,6 +784,59 @@ class CMakeScanner(AutoBuildBase):
     return 'cmake'
 
 
+class KConfigBuildScanner(AutoBuildBase):
+  """Auto builder for KConfig-based projects."""
+
+  def __init__(self):
+    super().__init__()
+    self.matches_found = {
+        'Config.in': [],
+        'Makefile': [],
+    }
+
+  def is_matched(self):
+    """Returns True if the build heuristic found matching files."""
+    # Ensure both Config.in and Makefile exists
+    for found_matches in self.matches_found.values():
+      if len(found_matches) == 0:
+        return False
+    return True
+
+  def steps_to_build(self) -> Iterator[AutoBuildContainer]:
+    base_command = [
+        '''
+make defconfig
+make
+find . -type f -name "*.o" > objfiles
+llvm-ar rcs libfuzz.a $(cat objfiles)
+'''
+    ]
+    build_container = AutoBuildContainer()
+    build_container.list_of_commands = base_command
+    build_container.heuristic_id = self.name + '1'
+    yield build_container
+
+    # Alternative to avoid Gold lld
+    build_container_2 = AutoBuildContainer()
+    base_command.append('export CFLAGS="${CFLAGS} -fuse-ld=lld"')
+    base_command.append('export CFXXLAGS="${CXXFLAGS} -fuse-ld=lld"')
+    build_container_2.list_of_commands = base_command
+    build_container.heuristic_id = self.name + '2'
+    yield build_container_2
+
+    # Alternative to avoid Gold lld and add thread/crypt libraries
+    build_container_3 = AutoBuildContainer()
+    base_command.append('export CFLAGS="${CFLAGS} -lpthread -lcrypt"')
+    base_command.append('export CFXXLAGS="${CXXFLAGS} -lpthread -lcrypt"')
+    build_container_3.list_of_commands = base_command
+    build_container.heuristic_id = self.name + '3'
+    yield build_container_3
+
+  @property
+  def name(self):
+    return 'kconfig'
+
+
 def match_build_heuristics_on_folder(abspath_of_target: str):
   """Yields AutoBuildContainer objects.
 
@@ -714,6 +852,7 @@ def match_build_heuristics_on_folder(abspath_of_target: str):
       PureMakefileScanner(),
       PureMakefileScannerWithPThread(),
       PureMakefileScannerWithSubstitutions(),
+      PureMakefileScannerWithLibFlag(),
       AutogenScanner(),
       AutoRefConfScanner(),
       CMakeScanner(),
@@ -722,6 +861,7 @@ def match_build_heuristics_on_folder(abspath_of_target: str):
       BootstrapScanner(),
       AutogenScannerSH(),
       HeaderOnlyCBuilder(),
+      KConfigBuildScanner(),
   ]
 
   checks_to_test = []
@@ -812,8 +952,14 @@ def raw_build_evaluation(
     logger.info('Evaluating build heuristic %s', build_suggestion.heuristic_id)
     with open('/src/build.sh', 'w') as bf:
       bf.write(build_script)
+
+    pkgs = build_suggestion.list_of_required_packages
+    if pkgs:
+      command = f'apt install -y {" ".join(pkgs)} && compile'
+    else:
+      command = 'compile'
     try:
-      subprocess.check_call('compile',
+      subprocess.check_call(command,
                             shell=True,
                             stdout=subprocess.DEVNULL,
                             stderr=subprocess.DEVNULL)

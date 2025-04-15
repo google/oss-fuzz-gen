@@ -35,6 +35,7 @@ DELAY = 0
 NUM_SAMPLES = 10
 LLM_FIX_LIMIT = 5
 MAX_ROUND = 100
+DATA_DIR = '/experiment/data-dir/'
 
 
 def _parse_args(cmd) -> argparse.Namespace:
@@ -144,15 +145,8 @@ def _run_command(command: list[str], shell=False):
   return process.returncode
 
 
-def main(cmd=None):
-  """The main function."""
-  args = _parse_args(cmd)
-
-  # Uses python3 by default and /venv/bin/python3 for Docker containers.
-  python_path = "/venv/bin/python3" if os.path.exists(
-      "/venv/bin/python3") else "python3"
-  os.environ["PYTHON"] = python_path
-
+def _authorize_gcloud():
+  """Authorizes to gcloud"""
   # When running the docker container locally we need to activate the service
   # account from the env variable.
   # When running on GCP this step is unnecessary.
@@ -167,6 +161,9 @@ def main(cmd=None):
     # TODO: Set GOOGLE_APPLICATION_CREDENTIALS and ensure cloud build uses it too.
     logging.info("GOOGLE APPLICATION CREDENTIALS is not set.")
 
+
+def _log_common_args(args):
+  """Prints args useful for logging"""
   logging.info("Benchmark set is %s.", args.benchmark_set)
   logging.info("Frequency label is %s.", args.frequency_label)
   logging.info("Run timeout is %s.", args.run_timeout)
@@ -175,6 +172,168 @@ def main(cmd=None):
       args.sub_dir)
   logging.info("LLM is %s.", args.model)
   logging.info("DELAY is %s.", args.delay)
+
+
+def main(cmd=None):
+  """Main entrypoint"""
+  if os.path.isdir(DATA_DIR):
+    run_on_data_from_scratch(cmd)
+  else:
+    run_standard(cmd)
+
+
+def run_on_data_from_scratch(cmd=None):
+  """Creates experiment for projects that are not in OSS-Fuzz upstream"""
+  args = _parse_args(cmd)
+
+  # Uses python3 by default and /venv/bin/python3 for Docker containers.
+  python_path = "/venv/bin/python3" if os.path.exists(
+      "/venv/bin/python3") else "python3"
+  os.environ["PYTHON"] = python_path
+
+  _authorize_gcloud()
+  _log_common_args(args)
+
+  # Launch starter, which set ups a Fuzz Introspector instance, which
+  # will be used for creating benchmarks and extract context.
+  logging.info('Running starter script')
+  subprocess.check_call('/experiment/report/custom_oss_fuzz_fi_starter.sh',
+                        shell=True)
+
+  date = datetime.datetime.now().strftime('%Y-%m-%d')
+
+  # Experiment name is used to label the Cloud Builds and as part of the
+  # GCS directory that build logs are stored in.
+  #
+  # Example directory: 2023-12-02-daily-comparison
+  experiment_name = f"{date}-{args.frequency_label}-{args.benchmark_set}"
+
+  # Report directory uses the same name as experiment.
+  # See upload_report.sh on how this is used.
+  gcs_report_dir = f"{args.sub_dir}/{experiment_name}"
+
+  # Trends report use a similarly named path.
+  gcs_trend_report_path = f"{args.sub_dir}/{experiment_name}.json"
+
+  local_results_dir = 'results'
+
+  # Generate a report and upload it to GCS
+  report_process = subprocess.Popen([
+      "bash", "report/upload_report.sh", local_results_dir, gcs_report_dir,
+      args.benchmark_set, args.model
+  ])
+
+  # Launch run_all_experiments.py
+  # some notes:
+  # - we will generate benchmarks using the local FI running
+  # - we will use the oss-fuzz project of our workdir, which is
+  #   the only one that has the projets.
+  environ = os.environ.copy()
+
+  # We need to make sure that we use our version of OSS-Fuzz
+  environ['OSS_FUZZ_DATA_DIR'] = os.path.join(DATA_DIR, 'oss-fuzz2')
+
+  # Get project names to analyse
+  project_in_oss_fuzz = []
+  for project_name in os.listdir(
+      os.path.join(DATA_DIR, 'oss-fuzz2', 'build', 'out')):
+    project_path = os.path.join(DATA_DIR, 'oss-fuzz2', 'build', 'out',
+                                project_name)
+    if not os.path.isdir(project_path):
+      continue
+    project_in_oss_fuzz.append(project_name)
+  project_names = ','.join(project_in_oss_fuzz)
+
+  introspector_endpoint = "http://127.0.0.1:8080/api"
+
+  cmd = [python_path, 'run_all_experiments.py']
+  cmd.append('-g')
+  cmd.append(
+      'far-reach-low-coverage,low-cov-with-fuzz-keyword,easy-params-far-reach')
+  cmd.append('-gp')
+  cmd.append(project_names)
+  cmd.append('-gm')
+  cmd.append(str(8))
+  cmd.append('-e')
+  cmd.append(introspector_endpoint)
+  cmd.append('-mr')
+  cmd.append(str(args.max_round))
+
+  vary_temperature = [0.5, 0.6, 0.7, 0.8, 0.9] if args.vary_temperature else []
+  cmd += [
+      "--run-timeout",
+      str(args.run_timeout), "--cloud-experiment-name", experiment_name,
+      "--cloud-experiment-bucket", "oss-fuzz-gcb-experiment-run-logs",
+      "--template-directory", "prompts/template_xml", "--work-dir",
+      local_results_dir, "--num-samples",
+      str(args.num_samples), "--delay",
+      str(args.delay), "--context", "--temperature-list",
+      *[str(temp) for temp in vary_temperature], "--model", args.model
+  ]
+  if args.agent:
+    cmd.append("--agent")
+
+  # Run the experiment and redirect to file if indicated.
+  if args.redirect_outs:
+    with open(f"{local_results_dir}/logs-from-run.txt", "w") as outfile:
+      process = subprocess.run(cmd, stdout=outfile, stderr=outfile, env=environ)
+      ret_val = process.returncode
+  else:
+    process = subprocess.run(cmd, env=environ)
+    ret_val = process.returncode
+
+  os.environ["ret_val"] = str(ret_val)
+
+  with open("/experiment_ended", "w") as _f:
+    pass
+
+  logging.info("Shutting down introspector")
+  try:
+    subprocess.run(["curl", "--silent", "http://localhost:8080/api/shutdown"],
+                   check=False,
+                   stdout=subprocess.DEVNULL,
+                   stderr=subprocess.DEVNULL)
+  except Exception:
+    pass
+
+  # Wait for the report process to finish uploading.
+  report_process.wait()
+
+  trends_cmd = [
+      python_path, "-m", "report.trends_report.upload_summary", "--results-dir",
+      local_results_dir, "--output-path",
+      f"gs://oss-fuzz-gcb-experiment-run-logs/trend-reports/{gcs_trend_report_path}",
+      "--name", experiment_name, "--date", date, "--url",
+      f"https://llm-exp.oss-fuzz.com/Result-reports/{gcs_report_dir}",
+      "--run-timeout",
+      str(args.run_timeout), "--num-samples",
+      str(args.num_samples), "--llm-fix-limit",
+      str(args.llm_fix_limit), "--model", args.model, "--tags",
+      args.frequency_label, args.sub_dir, "--commit-hash",
+      subprocess.check_output(["git", "rev-parse",
+                               "HEAD"]).decode().strip(), "--commit-date",
+      subprocess.check_output(["git", "show", "--no-patch", "--format=%cs"
+                              ]).decode().strip(), "--git-branch",
+      subprocess.check_output(["git", "branch", "--show"]).decode().strip()
+  ]
+
+  subprocess.run(trends_cmd)
+
+  # Exit with the return value of `./run_all_experiments`.
+  return ret_val
+
+
+def run_standard(cmd=None):
+  """The main function."""
+  args = _parse_args(cmd)
+
+  # Uses python3 by default and /venv/bin/python3 for Docker containers.
+  python_path = "/venv/bin/python3" if os.path.exists(
+      "/venv/bin/python3") else "python3"
+  os.environ["PYTHON"] = python_path
+
+  _authorize_gcloud()
+  _log_common_args(args)
 
   if args.local_introspector:
     os.environ["BENCHMARK_SET"] = args.benchmark_set

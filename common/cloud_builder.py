@@ -53,6 +53,7 @@ class CloudBuilder:
 
   def __init__(self, args: argparse.Namespace) -> None:
     self.tags = ['ofg', 'agent', args.cloud_experiment_name]
+    self.exp_args = args
     self.credentials, self.project_id = default()
     assert self.project_id, 'Cloud experiment requires a Google cloud project.'
     assert hasattr(
@@ -78,6 +79,16 @@ class CloudBuilder:
         client_options=REGIONAL_CLIENT_OPTIONS).projects().builds()
     self.storage_client = storage.Client(credentials=self.credentials)
 
+  def _upload_files(self, archive_name: str, target_dir: str,
+                    files_to_upload: list[str]) -> str:
+    """Archive and upload files to GCS."""
+    with tempfile.TemporaryDirectory() as tmpdirname:
+      archive_path = os.path.join(tmpdirname, archive_name)
+      tar_command = ['tar', '-czf', archive_path] + files_to_upload
+      subprocess.run(tar_command, cwd=target_dir, check=True)
+      logging.info('Created archive: %s', archive_path)
+      return self._upload_to_gcs(archive_path)
+
   def _upload_to_gcs(self, local_file_path: str) -> str:
     """Uploads a file to Google Cloud Storage."""
     dest_file_name = os.path.basename(local_file_path)
@@ -86,30 +97,74 @@ class CloudBuilder:
     logging.info('Uploaded %s to %s', local_file_path, bucket_file_url)
     return bucket_file_url
 
-  def _prepare_and_upload_archive(self) -> str:
+  def _prepare_and_upload_archive(self, result_history: list[Result]) -> str:
     """Archives and uploads local OFG repo to cloud build."""
-    files_in_dir = set(
+    dir_files = set(
         os.path.relpath(os.path.join(root, file))
         for root, _, files in os.walk(OFG_ROOT_DIR)
         for file in files)
-    files_in_git = set(
+    git_files = set(
         subprocess.check_output(['git', 'ls-files'],
                                 cwd=OFG_ROOT_DIR,
                                 text=True).splitlines())
-    file_to_upload = list(files_in_dir & files_in_git)
 
-    with tempfile.TemporaryDirectory() as tmpdirname:
-      archive_name = f'ofg-repo-{uuid.uuid4().hex}.tar.gz'
-      archive_path = os.path.join(tmpdirname, archive_name)
-      tar_command = ['tar', '-czf', archive_path] + file_to_upload
-      subprocess.run(tar_command, cwd=OFG_ROOT_DIR, check=True)
-      logging.info('Created archive: %s', archive_path)
-      return self._upload_to_gcs(archive_path)
+    # Separate out any files in data-dir
+    tmp_files = []
+    for gf in git_files:
+      if 'data-dir' in gf:
+        continue
+      tmp_files.append(gf)
+    git_files = set(tmp_files)
+    result_files = set(
+        os.path.relpath(os.path.join(root, file))
+        for root, _, files in os.walk(result_history[-1].work_dirs.base)
+        for file in files)
+    file_to_upload = list((dir_files & git_files) | result_files)
+
+    return self._upload_files(f'ofg-repo-{uuid.uuid4().hex}.tar.gz',
+                              OFG_ROOT_DIR, file_to_upload)
+
+  def _upload_oss_fuzz_data(self) -> str:
+    """Archives and uploads OSS_FUZZ_DATA_DIR, if any."""
+    oss_fuzz_data_dir = os.getenv('OSS_FUZZ_DATA_DIR')
+    if not oss_fuzz_data_dir:
+      return ''
+
+    # Upload all the files in the oss_fuzz_data_dir, _upload_files
+    # calls tar as the target_dir as cwd.
+    files_to_upload = ['.']
+    return self._upload_files(f'oss-fuzz-{uuid.uuid4().hex}.tar.gz',
+                              oss_fuzz_data_dir, files_to_upload)
+
+  def _upload_fi_oss_fuzz_data(self) -> str:
+    """Upload data used by OFG from scratch."""
+    data_dir = '/experiment/data-dir'
+    if not os.path.isdir(data_dir):
+      return ''
+
+    # Upload all the files in the oss_fuzz_data_dir, _upload_files
+    # calls tar as the target_dir as cwd.
+    files_to_upload = ['.']
+    return self._upload_files(f'data-dir-{uuid.uuid4().hex}.tar.gz', data_dir,
+                              files_to_upload)
 
   def _request_cloud_build(self, ofg_repo_url: str, agent_dill_url: str,
-                           results_dill_url: str,
-                           new_result_filename: str) -> str:
+                           results_dill_url: str, oss_fuzz_data_url: str,
+                           data_dir_url: str, new_result_filename: str) -> str:
     """Requests Cloud Build to execute the operation."""
+
+    # Used for injecting additional OSS-Fuzz project integrations not in
+    # upstream OSS-Fuzz.
+    oss_fuzz_data_dir = ''
+    data_env_set = 'OSS_FUZZ_DATA_DIR_NOT_SET=1'
+    if oss_fuzz_data_url:
+      oss_fuzz_data_dir = '/workspace/oss-fuzz-data'
+      data_env_set = 'OSS_FUZZ_DATA_DIR=/workspace/oss-fuzz-data'
+
+    target_data_dir = ''
+    if data_dir_url:
+      target_data_dir = '/workspace/data-dir'
+
     cloud_build_config = {
         'steps': [
             # Step 1: Download the dill files from GCS bucket.
@@ -152,12 +207,36 @@ class CloudBuilder:
             },
             # Step 4: Prepare OSS-Fuzz repo.
             {
+                'name': 'gcr.io/cloud-builders/gsutil',
+                'entrypoint': 'bash',
+                'args': [
+                    '-c', f'test -n "{oss_fuzz_data_url}" && '
+                    f'gsutil cp {oss_fuzz_data_url} '
+                    '/tmp/oss-fuzz-data.tar.gz && '
+                    f'mkdir {oss_fuzz_data_dir} && '
+                    f'tar -xzf /tmp/oss-fuzz-data.tar.gz -C {oss_fuzz_data_dir}'
+                ],
+                'allowFailure': True,
+            },
+            {
+                'name': 'gcr.io/cloud-builders/gsutil',
+                'entrypoint': 'bash',
+                'args': [
+                    '-c', f'test -n "{data_dir_url}" && '
+                    f'gsutil cp {data_dir_url} /tmp/data-dir.tar.gz && '
+                    f'mkdir {target_data_dir} && '
+                    f'tar -xzf /tmp/data-dir.tar.gz -C {target_data_dir}'
+                ],
+                'allowFailure': True,
+            },
+            {
                 'name':
                     'gcr.io/cloud-builders/docker',
                 'dir':
                     '/workspace/ofg/',
                 'args': [
-                    'run', '--rm', '-v', '/workspace/ofg:/workspace/ofg',
+                    'run', '--rm', '-v', '/workspace:/workspace', '-e',
+                    data_env_set,
                     ('us-central1-docker.pkg.dev/oss-fuzz/oss-fuzz-gen/'
                      'agent-image'), 'python3.11', '-c',
                     'import os; from experiment import oss_fuzz_checkout; '
@@ -295,7 +374,7 @@ class CloudBuilder:
     self.tags += [
         str(agent),
         str(result_history[-1].benchmark.project),
-        # TODO(dongge): A tag for function name, compatible with tag format.
+        str(result_history[-1].benchmark.function_name),
         str(result_history[-1].trial)
     ]
     # Step1: Generate dill files.
@@ -306,13 +385,16 @@ class CloudBuilder:
     # TODO(dongge): Encrypt dill files?
 
     # Step 2: Upload OFG repo and dill files to GCS.
-    ofg_url = self._prepare_and_upload_archive()
+    ofg_url = self._prepare_and_upload_archive(result_history)
     agent_url = self._upload_to_gcs(agent_dill)
     results_url = self._upload_to_gcs(results_dill)
+    oss_fuzz_data_url = self._upload_oss_fuzz_data()
+    data_dir_url = self._upload_fi_oss_fuzz_data()
 
     # Step 3: Request Cloud Build.
     new_result_filename = f'{uuid.uuid4().hex}.pkl'
     build_id = self._request_cloud_build(ofg_url, agent_url, results_url,
+                                         oss_fuzz_data_url, data_dir_url,
                                          new_result_filename)
 
     # Step 4: Download new result dill.
