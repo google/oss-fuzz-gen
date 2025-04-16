@@ -39,7 +39,8 @@ class Result:
                fuzz_target_source: str = '',
                build_script_source: str = '',
                author: Any = None,
-               chat_history: Optional[dict] = None) -> None:
+               chat_history: Optional[dict] = None,
+               default_success: bool = False) -> None:
     self.benchmark = benchmark
     self.trial = trial
     self.work_dirs = work_dirs
@@ -47,6 +48,7 @@ class Result:
     self.build_script_source = build_script_source
     self.author = author
     self.chat_history = chat_history or {}
+    self.default_success = default_success
 
   def __repr__(self) -> str:
     attributes = [
@@ -54,6 +56,10 @@ class Result:
         if k not in self._repr_exclude
     ]
     return f'{self.__class__.__name__}({", ".join(attributes)})'
+
+  @property
+  def success(self):
+    return self.default_success
 
   def to_dict(self) -> dict:
     return {
