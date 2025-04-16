@@ -47,6 +47,7 @@ logger = logging.getLogger(__name__)
 MAX_TOKENS: int = 2000
 NUM_SAMPLES: int = 1
 TEMPERATURE: float = 0.4
+TEMPERATURE_RANGE: list[float] = [0.0, 2.0]
 
 
 class LLM:
@@ -60,6 +61,8 @@ class LLM:
   MAX_INPUT_TOKEN: int = sys.maxsize
 
   _max_attempts = 5  # Maximum number of attempts to get prediction response
+
+  temperature_range: list[float] = TEMPERATURE_RANGE
 
   def __init__(
       self,
@@ -119,16 +122,33 @@ class LLM:
     yield cls
     for subcls in cls.__subclasses__():
       yield from subcls.all_llm_subclasses()
-
+  
   @classmethod
-  def all_llm_names(cls):
-    """Returns the current model name and all child model names."""
-    names = []
+  def all_llm_search(cls, attribute: str = None) -> list:
+    """Returns the desired attribute for all models."""
+    out = []
     for subcls in cls.all_llm_subclasses():
       if hasattr(subcls, 'name') and subcls.name != AIBinaryModel.name:
-        names.append(subcls.name)
-    return names
+        if attribute is not None and hasattr(subcls, attribute): 
+          out.append(getattr(subcls, attribute))
+        else:
+          out.append(subcls)
+    return out
 
+  @classmethod
+  def all_llm_names(cls) -> list[str]:
+    """Returns the current model name and all child model names."""
+    return cls.all_llm_search('name')
+  
+  @classmethod
+  def all_llm_temperature_ranges(cls) -> dict[str, list[float, float]]:
+    """Returns the current model and all child temperature ranges."""
+    return {
+      m.name: m.temperature_range
+      for m in cls.all_llm_search()
+      if hasattr(m, 'temperature_range')
+    }
+  
   @abstractmethod
   def estimate_token_num(self, text) -> int:
     """Estimates the number of tokens in |text|."""
@@ -392,6 +412,7 @@ class Claude(LLM):
   _max_output_tokens = 4096
   _vertex_ai_model = ''
   context_window = 200000
+  temperature_range = [0.0, 1.0]
 
   # ================================ Prompt ================================ #
   def estimate_token_num(self, text) -> int:
@@ -556,6 +577,7 @@ class VertexAIModel(GoogleModel):
 
   _vertex_ai_model = ''
   _max_output_tokens = 2048
+  temperature_range = [0.0, 1.0]
 
   def cloud_setup(self):
     """Sets Vertex AI cloud location."""
@@ -610,6 +632,8 @@ class VertexAIModel(GoogleModel):
 
 class GeminiModel(VertexAIModel):
   """Gemini models."""
+
+  temperature_range = [0.0, 2.0]
 
   safety_config = [
       generative_models.SafetySetting(
@@ -668,6 +692,7 @@ class GeminiPro(GeminiModel):
 
   name = 'vertex_ai_gemini-pro'
   _vertex_ai_model = 'gemini-1.0-pro'
+  temperature_range = [0.0, 1.0]
 
 
 class GeminiUltra(GeminiModel):
@@ -678,6 +703,7 @@ class GeminiUltra(GeminiModel):
 
   name = 'vertex_ai_gemini-ultra'
   _vertex_ai_model = 'gemini-ultra'
+  temperature_range = [0.0, 1.0]
 
 
 class GeminiExperimental(GeminiModel):
