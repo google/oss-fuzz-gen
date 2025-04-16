@@ -51,6 +51,7 @@ class AccumulatedResult:
   total_coverage: float = 0.0
   total_line_coverage_diff: float = 0.0
   project_coverage: dict[str, float] = {}
+  project_coverage_diff: dict[str, float] = {}
 
   @property
   def average_coverage(self) -> float:
@@ -68,6 +69,13 @@ class AccumulatedResult:
   def average_project_coverage(self) -> float:
     if self.project_coverage:
       return sum(self.project_coverage.values()) / len(self.project_coverage)
+    return 0
+
+  @property
+  def average_project_coverage_diff(self) -> float:
+    if self.project_coverage_diff:
+      return sum(self.project_coverage_diff.values()) / len(
+          self.project_coverage_diff)
     return 0
 
 
@@ -486,12 +494,22 @@ class Results:
 
   def _update_project_coverage(self, accumulated_results: AccumulatedResult,
                                benchmark_result: Benchmark) -> None:
-    """Updates the coverage value per project based on benchmark result"""
+    """Updates the coverage value per project based on benchmark result."""
     project_coverage = accumulated_results.project_coverage
     if benchmark_result.project not in project_coverage:
       project_coverage[benchmark_result.project] = 0.0
-    project_coverage[
-        benchmark_result.project] += benchmark_result.result.max_coverage
+    project_coverage[benchmark_result.project] += (
+        benchmark_result.result.max_coverage)
+
+  def _update_project_coverage_diff(self,
+                                    accumulated_results: AccumulatedResult,
+                                    benchmark_result: Benchmark) -> None:
+    """Updates the coverage diff value per project based on benchmark result."""
+    project_coverage_diff = accumulated_results.project_coverage_diff
+    if benchmark_result.project not in project_coverage_diff:
+      project_coverage_diff[benchmark_result.project] = 0.0
+    project_coverage_diff[benchmark_result.project] += (
+        benchmark_result.result.max_line_coverage_diff)
 
   def get_macro_insights(self,
                          benchmarks: list[Benchmark]) -> AccumulatedResult:
@@ -506,6 +524,7 @@ class Results:
       accumulated_results.total_line_coverage_diff += (
           benchmark.result.max_line_coverage_diff)
       self._update_project_coverage(accumulated_results, benchmark)
+      self._update_project_coverage_diff(accumulated_results, benchmark)
 
     return accumulated_results
 
