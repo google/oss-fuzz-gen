@@ -324,7 +324,7 @@ class DefaultTemplateBuilder(PromptBuilder):
       error_desc = ''
       errors = []
     problem = self._format_fixer_problem(raw_code, error_desc, errors,
-                                           priming_weight, context, instruction)
+                                         priming_weight, context, instruction)
 
     self._prepare_prompt(priming, problem)
     return self._prompt
@@ -750,8 +750,8 @@ class EnhancerTemplateBuilder(PrototyperTemplateBuilder):
       error_desc = ''
       errors = []
     problem = self._format_fixer_problem(self.build_result.fuzz_target_source,
-                                           error_desc, errors,
-                                           priming_weight, '', '')
+                                         error_desc, errors, priming_weight, '',
+                                         '')
 
     self._prepare_prompt(priming, problem)
     return self._prompt
