@@ -122,6 +122,11 @@ RUN python3 -m pip install --upgrade google-cloud-aiplatform
 # and this needs to be trusted. The below command can be removed if this
 # project is not doing such.
 RUN mkdir ~/.ssh && ssh-keyscan github.com >> ~/.ssh/known_hosts
+# Disable light for now. This is to speed up performance and we currently
+# do not use light during build generation.
+# TODO(David): enable this and make sure performance is too
+# exhaustive (100+ min for some projects)
+ENV FI_DISABLE_LIGHT=1
 COPY *.py *.json $SRC/
 WORKDIR $SRC
 COPY build.sh $SRC/'''
@@ -143,6 +148,11 @@ COPY *.cpp *.c $SRC/fuzzers/
 # and this needs to be trusted. The below command can be removed if this
 # project is not doing such.
 RUN mkdir ~/.ssh && ssh-keyscan github.com >> ~/.ssh/known_hosts
+# Disable light for now. This is to speed up performance and we currently
+# do not use light during build generation.
+# TODO(David): enable this and make sure performance is too
+# exhaustive (100+ min for some projects)
+ENV FI_DISABLE_LIGHT=1
 RUN git clone --recurse-submodules {repo_url} {project_repo_dir}
 WORKDIR $SRC/{project_repo_dir}
 '''
