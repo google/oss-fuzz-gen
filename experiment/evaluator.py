@@ -212,8 +212,8 @@ def load_existing_coverage_summary(project: str) -> dict:
     return json.load(f)
 
 
-def compute_total_lines_without_fuzz_targets(coverage_summary: dict,
-                                             fuzz_target_base_name: str) -> int:
+def compute_total_lines_without_fuzz_targets(
+    coverage_summary: dict, fuzz_target_base_name: str) -> int:
   """Counts the total number of lines excluding the fuzz target."""
   # TODO(dongge): Exclude all fuzz targets if there are multiple.
   return sum([
@@ -249,8 +249,8 @@ class _Logger:
 class Evaluator:
   """Target evaluator."""
 
-  def __init__(self, runner: builder_runner.BuilderRunner, benchmark: Benchmark,
-               work_dirs: WorkDirs):
+  def __init__(self, runner: builder_runner.BuilderRunner,
+               benchmark: Benchmark, work_dirs: WorkDirs):
     self.builder_runner = runner
     self.benchmark = benchmark
     self.work_dirs = work_dirs
@@ -259,22 +259,24 @@ class Evaluator:
       # Load baseline coverage summary to get total lines.
       baseline_summary = load_existing_coverage_summary(self.benchmark.project)
       if baseline_summary:
-          target_basename = os.path.basename(self.benchmark.target_path)
-          self.baseline_total_lines = \
-              compute_total_lines_without_fuzz_targets(
-                  baseline_summary, target_basename)
+        target_basename = os.path.basename(self.benchmark.target_path)
+        self.baseline_total_lines = \
+            compute_total_lines_without_fuzz_targets(
+                baseline_summary, target_basename)
       logger.info('Baseline total lines for %s: %d', self.benchmark.project,
                   self.baseline_total_lines)
     except Exception as e:
-        logger.error('Failed to load baseline summary/calculate total lines: %s', e)
-        # Keep baseline_total_lines as 0
+      logger.error('Failed to load baseline summary/calculate total lines: %s',
+                   e)
+      # Keep baseline_total_lines as 0
 
   def build_log_path(self, generated_target_name: str, iteration: int):
     return os.path.join(self.work_dirs.run_logs,
                         f'{generated_target_name}-F{iteration}.log')
 
   def run_log_path(self, generated_target_name: str):
-    return os.path.join(self.work_dirs.run_logs, f'{generated_target_name}.log')
+    return os.path.join(self.work_dirs.run_logs,
+                        f'{generated_target_name}.log')
 
   def create_ossfuzz_project(self,
                              name: str,
@@ -333,12 +335,13 @@ class Evaluator:
       error_desc, errors = None, build_result.errors
 
     code_fixer.llm_fix(ai_binary, target_path, self.benchmark, iteration,
-                       error_desc, errors, self.builder_runner.fixer_model_name,
-                       language)
+                       error_desc, errors,
+                       self.builder_runner.fixer_model_name, language)
     shutil.copyfile(
         target_path,
-        os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR, 'projects',
-                     generated_oss_fuzz_project, os.path.basename(target_path)))
+        os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR,
+                     'projects', generated_oss_fuzz_project,
+                     os.path.basename(target_path)))
 
   def triage_crash(
       self,
@@ -391,10 +394,10 @@ class Evaluator:
       f.write('\npopd')
       f.write(f'\nzip $OUT/{target_harness_file}_seed_corpus.zip {corpus_dst}')
 
-  def _calculate_coverage_metrics(self, run_result: RunResult,
-                                  existing_textcov: textcov.Textcov,
-                                  generated_target_name: str,
-                                  dual_logger: _Logger) -> tuple[int, int, float, float]:
+  def _calculate_coverage_metrics(
+      self, run_result: RunResult, existing_textcov: textcov.Textcov,
+      generated_target_name: str,
+      dual_logger: _Logger) -> tuple[int, int, float, float]:
     """Calculates various coverage metrics based on run result and baseline.
 
     Returns:
@@ -404,70 +407,71 @@ class Evaluator:
     union_total_lines = 0
     coverage_diff = 0.0
     coverage_percent = 0.0
-    total_lines_for_percent = 0 # Used for overall % calculation
+    total_lines_for_percent = 0  # Used for overall % calculation
 
     current_coverage_copy = None
     if run_result and run_result.coverage:
-        # Create a deep copy for calculating the union and original total lines
-        current_coverage_copy = copy.deepcopy(run_result.coverage)
+      # Create a deep copy for calculating the union and original total lines
+      current_coverage_copy = copy.deepcopy(run_result.coverage)
 
     # Calculate Union Total Lines (Denominator for diff)
     if current_coverage_copy:
-        # Merge baseline into the copy of the current run's coverage
-        merged_coverage = copy.deepcopy(current_coverage_copy)
-        merged_coverage.merge(existing_textcov)
-        union_total_lines = merged_coverage.total_lines
+      # Merge baseline into the copy of the current run's coverage
+      merged_coverage = copy.deepcopy(current_coverage_copy)
+      merged_coverage.merge(existing_textcov)
+      union_total_lines = merged_coverage.total_lines
     else:
-        # If no current coverage, union total is just baseline total
-        union_total_lines = existing_textcov.total_lines
+      # If no current coverage, union total is just baseline total
+      union_total_lines = existing_textcov.total_lines
 
     # Calculate Newly Covered Lines (Numerator for diff)
     if run_result and run_result.coverage:
-        # Subtract baseline coverage from the original run_result coverage object
-        # This modifies run_result.coverage in place to hold the diff
-        run_result.coverage.subtract_covered_lines(existing_textcov)
-        newly_covered_lines = run_result.coverage.covered_lines
+      # Subtract baseline coverage from the original run_result coverage object
+      # This modifies run_result.coverage in place to hold the diff
+      run_result.coverage.subtract_covered_lines(existing_textcov)
+      newly_covered_lines = run_result.coverage.covered_lines
 
     # Calculate Coverage Diff using the union total lines
     if union_total_lines > 0:
-        coverage_diff = newly_covered_lines / union_total_lines
+      coverage_diff = newly_covered_lines / union_total_lines
     else:
-        if newly_covered_lines > 0:
-            dual_logger.log(
-                f'Warning: union_total_lines is 0 but newly_covered_lines is {newly_covered_lines}. Cannot calculate coverage diff accurately.'
-            )
-        # Keep coverage_diff as 0.0 if denominator is 0
-        coverage_diff = 0.0
+      if newly_covered_lines > 0:
+        dual_logger.log(
+            f'Warning: union_total_lines is 0 but newly_covered_lines is {newly_covered_lines}. Cannot calculate coverage diff accurately.'
+        )
+      # Keep coverage_diff as 0.0 if denominator is 0
+      coverage_diff = 0.0
 
     # --- Calculate overall coverage percentage --- #
     if run_result:
-        if run_result.total_pcs > 0: # Prefer pcs-based coverage if available
-            coverage_percent = run_result.cov_pcs / run_result.total_pcs
+      if run_result.total_pcs > 0:  # Prefer pcs-based coverage if available
+        coverage_percent = run_result.cov_pcs / run_result.total_pcs
+      else:
+        # Fallback to line-based percentage calculation using original coverage
+        original_covered_lines = 0
+        if current_coverage_copy:  # Use the original coverage before subtraction
+          total_lines_for_percent = current_coverage_copy.total_lines
+          original_covered_lines = current_coverage_copy.covered_lines
+
+        # If still 0 total lines, try loading from summary (less preferred)
+        # This might happen if the Textcov object couldn't be generated correctly
+        if total_lines_for_percent == 0:
+          coverage_summary = self._load_existing_coverage_summary()
+          if coverage_summary:
+            total_lines_for_percent = compute_total_lines_without_fuzz_targets(
+                coverage_summary, generated_target_name)
+            # Cannot easily get original_covered_lines from summary
+            original_covered_lines = -1  # Indicate unable to calculate line % this way
+
+        if total_lines_for_percent > 0 and original_covered_lines != -1:
+          coverage_percent = original_covered_lines / total_lines_for_percent
         else:
-            # Fallback to line-based percentage calculation using original coverage
-            original_covered_lines = 0
-            if current_coverage_copy: # Use the original coverage before subtraction
-                total_lines_for_percent = current_coverage_copy.total_lines
-                original_covered_lines = current_coverage_copy.covered_lines
-
-            # If still 0 total lines, try loading from summary (less preferred)
-            # This might happen if the Textcov object couldn't be generated correctly
-            if total_lines_for_percent == 0:
-                coverage_summary = self._load_existing_coverage_summary()
-                if coverage_summary:
-                    total_lines_for_percent = compute_total_lines_without_fuzz_targets(
-                        coverage_summary, generated_target_name)
-                    # Cannot easily get original_covered_lines from summary
-                    original_covered_lines = -1 # Indicate unable to calculate line % this way
-
-            if total_lines_for_percent > 0 and original_covered_lines != -1:
-                 coverage_percent = original_covered_lines / total_lines_for_percent
-            else:
-                # Only log warning if we couldn't calculate percentage either way
-                if run_result.total_pcs <= 0:
-                    dual_logger.log(
-                        f'Warning: Could not determine coverage percentage in {generated_oss_fuzz_project}. total_pcs={run_result.total_pcs}, total_lines={total_lines_for_percent}')
-                coverage_percent = 0.0
+          # Only log warning if we couldn't calculate percentage either way
+          if run_result.total_pcs <= 0:
+            dual_logger.log(
+                f'Warning: Could not determine coverage percentage in {generated_oss_fuzz_project}. total_pcs={run_result.total_pcs}, total_lines={total_lines_for_percent}'
+            )
+          coverage_percent = 0.0
 
     return newly_covered_lines, union_total_lines, coverage_diff, coverage_percent
 
@@ -485,7 +489,7 @@ class Evaluator:
     dual_logger = _Logger(status_path)
 
     if GENERATE_CORPUS:
-        self.extend_build_with_corpus(ai_binary, target_path,
+      self.extend_build_with_corpus(ai_binary, target_path,
                                     generated_oss_fuzz_project)
 
     llm_fix_count = 0
@@ -494,76 +498,74 @@ class Evaluator:
 
     # Loop of evaluating and fixing fuzz target.
     while True:
-        # 1. Evaluating generated driver.
-        try:
-            build_result, run_result = self.builder_runner.build_and_run(
-                generated_oss_fuzz_project, target_path, llm_fix_count,
-                self.benchmark.language)
-        except Exception as e:
-            dual_logger.log(
-                'Exception occurred when building and running fuzz target '
-                f'in attempt {llm_fix_count}: {e}')
-            build_result = BuildResult()
-            run_result = None # Ensure run_result is None on exception
+      # 1. Evaluating generated driver.
+      try:
+        build_result, run_result = self.builder_runner.build_and_run(
+            generated_oss_fuzz_project, target_path, llm_fix_count,
+            self.benchmark.language)
+      except Exception as e:
+        dual_logger.log(
+            'Exception occurred when building and running fuzz target '
+            f'in attempt {llm_fix_count}: {e}')
+        build_result = BuildResult()
+        run_result = None  # Ensure run_result is None on exception
 
-        # 2. Calculate coverage metrics
-        newly_covered_lines = 0
-        union_total_lines = 0
-        coverage_diff = 0.0
-        coverage_percent = 0.0
-        if run_result: # Only calculate if run_result exists
-            # Load baseline coverage needed for calculation
-            # TODO(dongge): Move load_existing_textcov to OSS-Fuzz module so that we only
-            # need to run it once.
-            existing_textcov = self.load_existing_textcov()
+      # 2. Calculate coverage metrics
+      newly_covered_lines = 0
+      union_total_lines = 0
+      coverage_diff = 0.0
+      coverage_percent = 0.0
+      if run_result:  # Only calculate if run_result exists
+        # Load baseline coverage needed for calculation
+        # TODO(dongge): Move load_existing_textcov to OSS-Fuzz module so that we only
+        # need to run it once.
+        existing_textcov = self.load_existing_textcov()
 
-            (newly_covered_lines, union_total_lines,
-             coverage_diff, coverage_percent) = self._calculate_coverage_metrics(
-                                                             run_result,
-                                                             existing_textcov,
-                                                             generated_target_name,
-                                                             dual_logger)
-            # Note: run_result.coverage is modified in place by _calculate_coverage_metrics
-            # to contain the textcov diff.
+        (newly_covered_lines, union_total_lines, coverage_diff,
+         coverage_percent) = self._calculate_coverage_metrics(
+             run_result, existing_textcov, generated_target_name, dual_logger)
+        # Note: run_result.coverage is modified in place by _calculate_coverage_metrics
+        # to contain the textcov diff.
 
-        # Determine success based on build status and coverage diff
+      # Determine success based on build status and coverage diff
+      gen_succ = False
+      # Ensure build_result exists before checking build_result.succeeded
+      current_build_succeeded = build_result.succeeded if build_result else False
+      if current_build_succeeded and run_result:  # Check run_result exists too
+        if self.benchmark.language == 'jvm':
+          # JVM success requires build, run, AND positive diff (if run didn't crash)
+          gen_succ = True  # Start assuming success if build is ok
+          if run_result.succeeded:
+            gen_succ = (coverage_diff > 0)
+        else:
+          # Other languages just need build success for generation success
+          gen_succ = True
+      elif current_build_succeeded and not run_result:
+        # If build succeeded but run failed (e.g. exception before runner)
+        # consider it not successful for breaking the loop, needs fix.
         gen_succ = False
-        # Ensure build_result exists before checking build_result.succeeded
-        current_build_succeeded = build_result.succeeded if build_result else False
-        if current_build_succeeded and run_result: # Check run_result exists too
-            if self.benchmark.language == 'jvm':
-                # JVM success requires build, run, AND positive diff (if run didn't crash)
-                gen_succ = True # Start assuming success if build is ok
-                if run_result.succeeded:
-                    gen_succ = (coverage_diff > 0)
-            else:
-                # Other languages just need build success for generation success
-                gen_succ = True
-        elif current_build_succeeded and not run_result:
-             # If build succeeded but run failed (e.g. exception before runner)
-             # consider it not successful for breaking the loop, needs fix.
-             gen_succ = False
 
-        if gen_succ or llm_fix_count >= LLM_FIX_LIMIT:
-            break # Exit loop on success or fix limit
+      if gen_succ or llm_fix_count >= LLM_FIX_LIMIT:
+        break  # Exit loop on success or fix limit
 
-        # 3. Fixing generated driver (Only run if not gen_succ and limit not reached)
-        llm_fix_count += 1
-        dual_logger.log(f'Fixing {target_path} with '
-                        f'{self.builder_runner.fixer_model_name}, '
-                        f'attempt {llm_fix_count}.')
-        try:
-             # Ensure build_result is passed even if previous run failed
-             current_build_result = build_result if build_result else BuildResult()
-             self._fix_generated_fuzz_target(ai_binary, generated_oss_fuzz_project,
-                                             target_path, llm_fix_count,
-                                             current_build_result, run_result, dual_logger,
-                                             self.benchmark.language)
-        except Exception as e:
-            dual_logger.log('Exception occurred when fixing fuzz target in attempt '
-                            f'{llm_fix_count}: {e}')
-            # Decide if we should break here or continue? Breaking seems safer.
-            break
+      # 3. Fixing generated driver (Only run if not gen_succ and limit not reached)
+      llm_fix_count += 1
+      dual_logger.log(f'Fixing {target_path} with '
+                      f'{self.builder_runner.fixer_model_name}, '
+                      f'attempt {llm_fix_count}.')
+      try:
+        # Ensure build_result is passed even if previous run failed
+        current_build_result = build_result if build_result else BuildResult()
+        self._fix_generated_fuzz_target(ai_binary, generated_oss_fuzz_project,
+                                        target_path, llm_fix_count,
+                                        current_build_result, run_result,
+                                        dual_logger, self.benchmark.language)
+      except Exception as e:
+        dual_logger.log(
+            'Exception occurred when fixing fuzz target in attempt '
+            f'{llm_fix_count}: {e}')
+        # Decide if we should break here or continue? Breaking seems safer.
+        break
 
     # --- Post-Loop: Logs and returns the result --- #
     final_build_succeeded = build_result.succeeded if build_result else False
@@ -576,66 +578,78 @@ class Evaluator:
     final_triage = TriageResult.NOT_APPLICABLE
     final_report_path = ''
     final_reproducer_path = ''
-    final_textcov_diff = textcov.Textcov() # Default to empty
+    final_textcov_diff = textcov.Textcov()  # Default to empty
 
     if run_result:
-        final_run_crashes = run_result.crashes
-        final_run_succeeded = run_result.succeeded
-        final_semantic_type = run_result.semantic_check.type
-        # Triage might happen inside the loop or after, check run_result.triage
-        final_triage = run_result.triage
-        final_report_path = run_result.coverage_report_path
-        final_reproducer_path = run_result.reproducer_path
-        # run_result.coverage now holds the diff textcov after _calculate_coverage_metrics
-        if run_result.coverage:
-            final_textcov_diff = run_result.coverage
+      final_run_crashes = run_result.crashes
+      final_run_succeeded = run_result.succeeded
+      final_semantic_type = run_result.semantic_check.type
+      # Triage might happen inside the loop or after, check run_result.triage
+      final_triage = run_result.triage
+      final_report_path = run_result.coverage_report_path
+      final_reproducer_path = run_result.reproducer_path
+      # run_result.coverage now holds the diff textcov after _calculate_coverage_metrics
+      if run_result.coverage:
+        final_textcov_diff = run_result.coverage
 
-        # Triage if crash occurred and triage hasn't happened yet
-        if final_run_crashes and final_triage == TriageResult.NOT_APPLICABLE:
-            dual_logger.log(f'Triaging the crash related to {target_path} ...')
-            final_triage = self.triage_crash(
-                 ai_binary,
-                 generated_oss_fuzz_project,
-                 target_path,
-                 run_result, # Pass the original run_result for triage
-                 dual_logger,
-            )
+      # Triage if crash occurred and triage hasn't happened yet
+      if final_run_crashes and final_triage == TriageResult.NOT_APPLICABLE:
+        dual_logger.log(f'Triaging the crash related to {target_path} ...')
+        final_triage = self.triage_crash(
+            ai_binary,
+            generated_oss_fuzz_project,
+            target_path,
+            run_result,  # Pass the original run_result for triage
+            dual_logger,
+        )
 
     # --- Final Result Reporting --- #
     if not final_build_succeeded:
-        dual_logger.log(f'Failed to build {target_path} after {llm_fix_count} fix attempts.')
-        result = Result(finished=True, # Mark as finished
-                        compiles=False,
-                        crashes=False, coverage=0.0, line_coverage_diff=0.0,
-                        newly_covered_lines=0, total_lines=0, baseline_total_lines=self.baseline_total_lines,
-                        coverage_report_path='', reproducer_path='', is_semantic_error=False,
-                        semantic_error=SemanticCheckResult.NOT_APPLICABLE,
-                        triage=TriageResult.NOT_APPLICABLE, textcov_diff=textcov.Textcov(),
-                        compile_error=final_compile_log, compile_log=final_compile_log)
+      dual_logger.log(
+          f'Failed to build {target_path} after {llm_fix_count} fix attempts.')
+      result = Result(
+          finished=True,  # Mark as finished
+          compiles=False,
+          crashes=False,
+          coverage=0.0,
+          line_coverage_diff=0.0,
+          newly_covered_lines=0,
+          total_lines=0,
+          baseline_total_lines=self.baseline_total_lines,
+          coverage_report_path='',
+          reproducer_path='',
+          is_semantic_error=False,
+          semantic_error=SemanticCheckResult.NOT_APPLICABLE,
+          triage=TriageResult.NOT_APPLICABLE,
+          textcov_diff=textcov.Textcov(),
+          compile_error=final_compile_log,
+          compile_log=final_compile_log)
     else:
-        dual_logger.log(f'Finished check for {target_path}. Build successful. Fix attempts: {llm_fix_count}.')
-        dual_logger.log(
-             f'Final Stats: '
-             f'crashes={final_run_crashes}, coverage={coverage_percent:.4f}, '
-             f'newly covered lines={newly_covered_lines}, union total lines={union_total_lines}, baseline total lines={self.baseline_total_lines}, '
-             f'coverage diff={coverage_diff:.4f}'
-        )
-        result = Result(finished=True, # Mark as finished
-                        compiles=True,
-                        crashes=final_run_crashes,
-                        coverage=coverage_percent,
-                        line_coverage_diff=coverage_diff,
-                        newly_covered_lines=newly_covered_lines,
-                        total_lines=union_total_lines,
-                        baseline_total_lines=self.baseline_total_lines,
-                        coverage_report_path=final_report_path,
-                        reproducer_path=final_reproducer_path,
-                        is_semantic_error=(not final_run_succeeded),
-                        semantic_error=final_semantic_type,
-                        triage=final_triage,
-                        textcov_diff=final_textcov_diff,
-                        compile_error=final_compile_log,
-                        compile_log=final_compile_log)
+      dual_logger.log(
+          f'Finished check for {target_path}. Build successful. Fix attempts: {llm_fix_count}.'
+      )
+      dual_logger.log(
+          f'Final Stats: '
+          f'crashes={final_run_crashes}, coverage={coverage_percent:.4f}, '
+          f'newly covered lines={newly_covered_lines}, union total lines={union_total_lines}, baseline total lines={self.baseline_total_lines}, '
+          f'coverage diff={coverage_diff:.4f}')
+      result = Result(
+          finished=True,  # Mark as finished
+          compiles=True,
+          crashes=final_run_crashes,
+          coverage=coverage_percent,
+          line_coverage_diff=coverage_diff,
+          newly_covered_lines=newly_covered_lines,
+          total_lines=union_total_lines,
+          baseline_total_lines=self.baseline_total_lines,
+          coverage_report_path=final_report_path,
+          reproducer_path=final_reproducer_path,
+          is_semantic_error=(not final_run_succeeded),
+          semantic_error=final_semantic_type,
+          triage=final_triage,
+          textcov_diff=final_textcov_diff,
+          compile_error=final_compile_log,
+          compile_log=final_compile_log)
 
     return dual_logger.return_result(result)
 
