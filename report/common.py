@@ -50,8 +50,9 @@ class AccumulatedResult:
   total_runs: int = 0
   total_coverage: float = 0.0
   total_line_coverage_diff: float = 0.0
-  project_coverage: dict[str, float] = {}
-  project_coverage_diff: dict[str, float] = {}
+  project_coverage: dict[str, float] = dataclasses.field(default_factory=dict)
+  project_coverage_diff: dict[str,
+                              float] = dataclasses.field(default_factory=dict)
 
   @property
   def average_coverage(self) -> float:
