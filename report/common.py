@@ -489,7 +489,6 @@ class Results:
       accumulated_results.total_runs += 1
       accumulated_results.total_line_coverage_diff += (
           benchmark.result.max_line_coverage_diff)
-
     return accumulated_results
 
   def get_coverage_language_gains(self):
