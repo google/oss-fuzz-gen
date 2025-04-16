@@ -209,7 +209,7 @@ def run_on_data_from_scratch(cmd=None):
   experiment_name = f"{date}-{args.frequency_label}-{args.benchmark_set}"
 
   # Report directory uses the same name as experiment.
-  # See upload_report.sh on how this is used.
+  # See upload_report.py on how this is used.
   gcs_report_dir = f"{args.sub_dir}/{experiment_name}"
 
   # Trends report use a similarly named path.
@@ -219,7 +219,7 @@ def run_on_data_from_scratch(cmd=None):
 
   # Generate a report and upload it to GCS
   report_process = subprocess.Popen([
-      "bash", "report/upload_report.sh", local_results_dir, gcs_report_dir,
+      "python_path", "report/upload_report.py", local_results_dir, gcs_report_dir,
       args.benchmark_set, args.model
   ])
 
@@ -363,7 +363,7 @@ def run_standard(cmd=None):
   experiment_name = f"{date}-{args.frequency_label}-{args.benchmark_set}"
 
   # Report directory uses the same name as experiment.
-  # See upload_report.sh on how this is used.
+  # See upload_report.py on how this is used.
   gcs_report_dir = f"{args.sub_dir}/{experiment_name}"
 
   # Trends report use a similarly named path.
@@ -371,7 +371,7 @@ def run_standard(cmd=None):
 
   # Generate a report and upload it to GCS
   report_process = subprocess.Popen([
-      "bash", "report/upload_report.sh", local_results_dir, gcs_report_dir,
+      "python_path", "report/upload_report.py", local_results_dir, gcs_report_dir,
       args.benchmark_set, args.model
   ])
 
