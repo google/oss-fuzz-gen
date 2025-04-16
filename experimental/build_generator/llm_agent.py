@@ -33,7 +33,7 @@ MAX_PROMPT_LENGTH = 25000
 
 
 class BuildScriptAgent(BaseAgent):
-  """Generate a working Dockerfile and build script from scratch."""
+  """Base class for buidl script agent."""
 
   def __init__(self,
                trial: int,
@@ -45,41 +45,9 @@ class BuildScriptAgent(BaseAgent):
     super().__init__(trial, llm, args, tools, name)
     self.github_url = github_url
     self.build_files = {}
+    self.last_status = False
     self.last_result = ''
-    self.target_files = {
-        'Makefile': [],
-        'configure.ac': [],
-        'Makefile.am': [],
-        'autogen.sh': [],
-        'bootstrap.sh': [],
-        'CMakeLists.txt': [],
-        'Config.in': [],
-    }
-
-  def _discover_build_configurations(self) -> None:
-    """Helper to discover the build configuartions of a repository."""
-    # Clone targert repository
-    target_source_path = os.path.join(os.getcwd(), self.args.work_dirs,
-                                      self.github_url.split('/')[-1])
-    dst_folder = os.path.join(self.args.work_dirs,
-                              self.github_url.split('/')[-1])
-    if not os.path.isdir(target_source_path):
-      subprocess.check_call(
-          f'git clone --recurse-submodules {self.github_url} {dst_folder}',
-          shell=True)
-
-    # Locate common build configuration files
-    for root_dir, _, files in os.walk(target_source_path):
-      for file in files:
-        if file in self.target_files:
-          full_path = os.path.join(root_dir, file)
-          self.target_files[file].append(full_path)
-
-    # Extract content of build files
-    for files in self.target_files.values():
-      for file in files:
-        with open(file, 'r') as f:
-          self.build_files[file] = f.read()
+    self.target_files = {}
 
   def _parse_tag(self, response: str, tag: str) -> str:
     """Parses the tag from LLM response."""
@@ -104,34 +72,6 @@ class BuildScriptAgent(BaseAgent):
       found_matches.extend([content.strip() for content in matches])
 
     return found_matches
-
-  def _initial_prompt(self, results: list[Result]) -> Prompt:
-    """Constructs initial prompt of the agent."""
-    self.prompt = self.llm.prompt_type()(None)
-
-    # Extract build configuration files content
-    build_files_str = []
-    for file, content in self.build_files.items():
-      target_str = templates.LLM_BUILD_FILE_TEMPLATE.replace('{PATH}', file)
-      target_str = target_str.replace('{CONTENT}', content)
-      build_files_str.append(target_str)
-
-    # Extract template Dockerfile content
-    dockerfile_str = templates.CLEAN_OSS_FUZZ_DOCKER
-    dockerfile_str = dockerfile_str.replace('{additional_packages}', '')
-    dockerfile_str = dockerfile_str.replace('{repo_url}', self.github_url)
-    dockerfile_str = dockerfile_str.replace('{project_repo_dir}',
-                                            self.github_url.split('/')[-1])
-
-    # Prepare prompt problem string
-    problem = templates.LLM_PROBLEM.replace('{BUILD_FILES}',
-                                            '\n'.join(build_files_str))
-    problem = problem.replace('{DOCKERFILE}', dockerfile_str)
-
-    self.prompt.add_priming(templates.LLM_PRIMING)
-    self.prompt.add_problem(problem)
-
-    return self.prompt
 
   def _container_handle_bash_commands(self, response: str, tool: BaseTool,
                                       prompt: Prompt) -> Prompt:
@@ -213,7 +153,7 @@ class BuildScriptAgent(BaseAgent):
                                work_dirs=last_result.work_dirs,
                                author=self,
                                chat_history={self.name: ''})
-    self._discover_build_configurations()
+
     prompt = self._initial_prompt(result_history)
     try:
       client = self.llm.get_chat_client(model=self.llm.get_model())
@@ -232,3 +172,163 @@ class BuildScriptAgent(BaseAgent):
       self.inspect_tool.terminate()
 
     return build_result
+
+
+class BuildSystemBuildScriptAgent(BuildScriptAgent):
+  """Generate a working Dockerfile and build script from scratch
+  with build system."""
+
+  def __init__(self,
+               trial: int,
+               llm: LLM,
+               args: argparse.Namespace,
+               github_url: str,
+               tools: Optional[list[BaseTool]] = None,
+               name: str = ''):
+    super().__init__(trial, llm, args, github_url, tools, name)
+    self.target_files = {
+        'Makefile': [],
+        'configure.ac': [],
+        'Makefile.am': [],
+        'autogen.sh': [],
+        'bootstrap.sh': [],
+        'CMakeLists.txt': [],
+        'Config.in': [],
+    }
+
+  def _discover_build_configurations(self) -> bool:
+    """Helper to discover the build configuartions of a repository."""
+    # Clone targert repository
+    target_path = os.path.join(self.args.work_dirs,
+                               self.github_url.split('/')[-1])
+    if not os.path.isdir(target_source_path):
+      subprocess.check_call(
+          f'git clone --recurse-submodules {self.github_url} {target_path}',
+          shell=True)
+
+    # Locate common build configuration files
+    for root_dir, _, files in os.walk(target_path):
+      for file in files:
+        if file in self.target_files:
+          full_path = os.path.join(root_dir, file)
+          self.target_files[file].append(full_path)
+
+    # Extract content of build files
+    for files in self.target_files.values():
+      for file in files:
+        with open(file, 'r') as f:
+          self.build_files[file] = f.read()
+
+    self.target_path = target_path
+    return len(self.build_files) > 0
+
+  def _initial_prompt(self, results: list[Result]) -> Prompt:
+    """Constructs initial prompt of the agent."""
+    self.prompt = self.llm.prompt_type()(None)
+
+    # Extract build configuration files content
+    build_files_str = []
+    for file, content in self.build_files.items():
+      target_str = templates.LLM_BUILD_FILE_TEMPLATE.replace('{PATH}', file)
+      target_str = target_str.replace('{CONTENT}', content)
+      build_files_str.append(target_str)
+
+    # Extract template Dockerfile content
+    dockerfile_str = templates.CLEAN_OSS_FUZZ_DOCKER
+    dockerfile_str = dockerfile_str.replace('{additional_packages}', '')
+    dockerfile_str = dockerfile_str.replace('{repo_url}', self.github_url)
+    dockerfile_str = dockerfile_str.replace('{project_repo_dir}',
+                                            self.github_url.split('/')[-1])
+
+    # Prepare prompt problem string
+    problem = templates.LLM_PROBLEM.replace('{BUILD_FILES}',
+                                            '\n'.join(build_files_str))
+    problem = problem.replace('{DOCKERFILE}', dockerfile_str)
+
+    self.prompt.add_priming(templates.LLM_PRIMING)
+    self.prompt.add_problem(problem)
+
+    return self.prompt
+
+  def execute(self, result_history: list[Result]) -> BuildResult:
+    """Executes the agent based on previous result."""
+    if not self._discover_build_configurations():
+      logger.info('No known build configuration.', self.name, trial=last_result.trial)
+      return BuildResult(benchmark=result_history[-1].benchmark,
+                         trial=result_history[-1].trial,
+                         work_dirs=result_history[-1].work_dirs,
+                         author=self,
+                         chat_history={self.name: ''})
+
+    # Clean up directory
+    if os.path.isdir(target_path):
+      shutil.rmtree(target_path)
+
+    return super().execute(result_history)
+
+
+class PlainBuildScriptAgent(BuildScriptAgent):
+  """Generate a working Dockerfile and build script from scratch
+  with plain clang build."""
+
+  def __init__(self,
+               trial: int,
+               llm: LLM,
+               args: argparse.Namespace,
+               github_url: str,
+               tools: Optional[list[BaseTool]] = None,
+               name: str = ''):
+    super().__init__(trial, llm, args, github_url, tools, name)
+    self.target_files = {
+        '.c': [],
+        '.cc': [],
+        '.cpp': [],
+    }
+    self.header_files = {
+        '.h': [].
+        '.hpp': [],
+    }
+
+  def _discover_source_files(self) -> bool:
+    """Helper to discover the source files of a repository."""
+    # Clone targert repository
+    target_path = os.path.join(self.args.work_dirs,
+                               self.github_url.split('/')[-1])
+    if not os.path.isdir(target_path):
+      subprocess.check_call(
+          f'git clone --recurse-submodules {self.github_url} {target_path}',
+          shell=True)
+
+    # Locate source files and header files
+    for root_dir, _, files in os.walk(target_path):
+      for file in files:
+        # Locate source files
+        for ext, list in self.target_files.items():
+          if file.endswith(ext):
+            full_path = os.path.join(root_dir, file)
+            list.append(full_path)
+
+        # Locate headere files
+        for ext, list in self.header_files.items():
+          if file.endswith(ext):
+            full_path = os.path.join(root_dir, file)
+            list.append(full_path)
+
+    self.target_path = target_path
+    return len(self.build_files) > 0
+
+  def _initial_prompt(self, results: list[Result]) -> Prompt:
+    """Constructs initial prompt of the agent."""
+    self.prompt = self.llm.prompt_type()(None)
+
+    return self.prompt
+
+  def execute(self, result_history: list[Result]) -> BuildResult:
+    """Executes the agent based on previous result."""
+    self._discover_source_files()
+
+    # Clean up directory
+    if os.path.isdir(target_path):
+      shutil.rmtree(target_path)
+
+    return super().execute(result_history)

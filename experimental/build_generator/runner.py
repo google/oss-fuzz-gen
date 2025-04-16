@@ -378,6 +378,11 @@ def run_agent(target_repositories: List[str], args: argparse.Namespace):
       temperature_list=[],
   )
 
+  # All agents
+  llm_agents = [
+      llm_agent.BuildSystemBuildScriptAgent, llm_agent.PlainBuildScriptAgent
+  ]
+
   for target_repository in target_repositories:
     logger.info('Target repository: %s', target_repository)
 
@@ -387,38 +392,37 @@ def run_agent(target_repositories: List[str], args: argparse.Namespace):
     benchmark = Benchmark(worker_project_name, worker_project_name, '', '', '',
                           '', [], '')
 
-    build_script = ''
-    for trial in range(args.max_round):
-      logger.info('Round %d', trial)
-      agent = llm_agent.BuildScriptAgent(trial=trial,
-                                         llm=llm,
-                                         args=args,
-                                         github_url=target_repository)
-      result_history = [
-          Result(benchmark=benchmark, trial=trial, work_dirs=work_dirs)
-      ]
+    for llm_agent_ctr in llm_agents:
+      build_script = ''
+      for trial in range(args.max_round):
+        logger.info('Agent: %s. Round %d', llm_agent_ctr.__name__, trial)
+        agent = llm_agent_ctr(trial=trial, llm=llm, args=args,
+                              github_url=target_repository)
+        result_history = [
+            Result(benchmark=benchmark, trial=trial, work_dirs=work_dirs)
+        ]
 
-      build_result = agent.execute(result_history)
-      if build_result.compiles:
-        build_script = build_result.build_script_source
-        break
+        build_result = agent.execute(result_history)
+        if build_result.compiles:
+          build_script = build_result.build_script_source
+          break
 
-      logger.info('Round %d build script generation failed for project %s',
-                  trial, target_repository)
+        logger.info('Round %d build script generation failed for project %s',
+                    trial, target_repository)
 
-    if build_script:
-      logger.info('Build script generation success for project %s',
-                  target_repository)
+      if build_script:
+        logger.info('Build script generation success for project %s',
+                    target_repository)
 
-      # Update build script
-      build_script_path = os.path.join(oss_fuzz_base, 'projects',
-                                       worker_project_name, 'build.sh')
-      with open(build_script_path, 'w') as f:
-        f.write(build_script)
+        # Update build script
+        build_script_path = os.path.join(oss_fuzz_base, 'projects',
+                                         worker_project_name, 'build.sh')
+        with open(build_script_path, 'w') as f:
+          f.write(build_script)
 
-      # Copy result to out
-      copy_result_to_out(worker_project_name, oss_fuzz_base, args.out, True,
-                         target_repository.split('/')[-1])
+        # Copy result to out
+        copy_result_to_out(worker_project_name, oss_fuzz_base, args.out, True,
+                           target_repository.split('/')[-1])
 
 
 def parse_commandline():
