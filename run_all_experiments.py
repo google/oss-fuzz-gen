@@ -492,6 +492,12 @@ def _process_total_coverage_gain() -> dict[str, dict[str, Any]]:
     return {}
 
   coverage_gain: dict[str, dict[str, Any]] = {}
+  sum_coverage_diff: float = 0.0
+  sum_coverage_relative_gain: float = 0.0
+  sum_coverage_ofg_total_covered_lines: int = 0
+  sum_coverage_ofg_total_new_covered_lines: int = 0
+  sum_coverage_existing_total_covered_lines: int = 0
+  sum_coverage_existing_total_lines: int = 0
   for project, cov_list in textcov_dict.items():
     total_cov = textcov.Textcov()
     for cov in cov_list:
@@ -537,7 +543,52 @@ def _process_total_coverage_gain() -> dict[str, dict[str, Any]]:
       # Fail safe when total_lines is 0 because of invalid coverage report
       logger.warning(
           'Line coverage information missing from the coverage report.')
-      coverage_gain[project] = {'coverage_diff': 0.0}
+      coverage_gain[project] = {
+          'language':
+              oss_fuzz_checkout.get_project_language(project),
+          'coverage_diff':
+              0.0,
+          'coverage_relative_gain':
+              cov_relative_gain,
+          'coverage_ofg_total_covered_lines':
+              total_cov_covered_lines_before_subtraction,
+          'coverage_ofg_total_new_covered_lines':
+              total_cov.covered_lines,
+          'coverage_existing_total_covered_lines':
+              existing_textcov.covered_lines,
+          'coverage_existing_total_lines':
+              total_existing_lines,
+      }
+    sum_coverage_diff += coverage_gain[project]['coverage_diff']
+    sum_coverage_relative_gain += (
+        coverage_gain[project]['coverage_relative_gain'])
+    sum_coverage_ofg_total_covered_lines += (
+        coverage_gain[project]['coverage_ofg_total_covered_lines'])
+    sum_coverage_ofg_total_new_covered_lines += (
+        coverage_gain[project]['coverage_ofg_total_new_covered_lines'])
+    sum_coverage_existing_total_covered_lines += (
+        coverage_gain[project]['coverage_existing_total_covered_lines'])
+    sum_coverage_existing_total_lines += (
+        coverage_gain[project]['coverage_existing_total_lines'])
+
+  # Project-level average data.
+  if len(coverage_gain):
+    coverage_gain['AVERAGE'] = {
+        'language':
+            '-',
+        'coverage_diff':
+            sum_coverage_diff / len(coverage_gain),
+        'coverage_relative_gain':
+            sum_coverage_relative_gain / len(coverage_gain),
+        'coverage_ofg_total_covered_lines':
+            sum_coverage_ofg_total_covered_lines / len(coverage_gain),
+        'coverage_ofg_total_new_covered_lines':
+            sum_coverage_ofg_total_new_covered_lines / len(coverage_gain),
+        'coverage_existing_total_covered_lines':
+            sum_coverage_existing_total_covered_lines / len(coverage_gain),
+        'coverage_existing_total_lines':
+            sum_coverage_existing_total_lines / len(coverage_gain),
+    }
 
   return coverage_gain
 
