@@ -314,15 +314,17 @@ class DefaultTemplateBuilder(PromptBuilder):
                          instruction: str = '') -> prompts.Prompt:
     """Prepares the code-fixing prompt."""
     priming, priming_weight = self._format_fixer_priming(benchmark)
+
     if error_desc and errors:
-      problem = self._format_fixer_problem(raw_code, error_desc, errors,
-                                           priming_weight, context, instruction)
+      pass
+    elif coverage_result:
+      error_desc = coverage_result.insight
+      errors = coverage_result.suggestions.splitlines()
     else:
-      assert coverage_result
-      problem = self._format_fixer_problem(
-          raw_code, coverage_result.insight,
-          coverage_result.suggestions.splitlines(), priming_weight, context,
-          instruction)
+      error_desc = ''
+      errors = []
+    problem = self._format_fixer_problem(raw_code, error_desc, errors,
+                                           priming_weight, context, instruction)
 
     self._prepare_prompt(priming, problem)
     return self._prompt
@@ -739,15 +741,17 @@ class EnhancerTemplateBuilder(PrototyperTemplateBuilder):
     priming_weight = self._model.estimate_token_num(priming)
     # TODO(dongge): Refine this logic.
     if self.error_desc and self.errors:
-
-      problem = self._format_fixer_problem(self.build_result.fuzz_target_source,
-                                           self.error_desc, self.errors,
-                                           priming_weight, '', '')
+      error_desc = self.error_desc
+      errors = self.errors
+    elif self.coverage_result:
+      error_desc = self.coverage_result.insight
+      errors = self.coverage_result.suggestions.splitlines()
     else:
-      assert self.coverage_result
-      problem = self._format_fixer_problem(
-          self.build_result.fuzz_target_source, self.coverage_result.insight,
-          self.coverage_result.suggestions.splitlines(), priming_weight, '', '')
+      error_desc = ''
+      errors = []
+    problem = self._format_fixer_problem(self.build_result.fuzz_target_source,
+                                           error_desc, errors,
+                                           priming_weight, '', '')
 
     self._prepare_prompt(priming, problem)
     return self._prompt
