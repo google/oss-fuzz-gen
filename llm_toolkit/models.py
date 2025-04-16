@@ -121,13 +121,15 @@ class LLM:
       yield from subcls.all_llm_subclasses()
   
   @classmethod
-  def all_llm_search(cls, attribute: str) -> list:
+  def all_llm_search(cls, attribute: str = None) -> list:
     """Returns the desired attribute for all models."""
     out = []
     for subcls in cls.all_llm_subclasses():
-      if (hasattr(subcls, attribute) and hasattr(subcls, 'name') and
-          subcls.name != AIBinaryModel.name):
-        out.append(getattr(subcls, attribute))
+      if hasattr(subcls, 'name') and subcls.name != AIBinaryModel.name:
+        if attribute is not None and hasattr(subcls, attribute): 
+          out.append(getattr(subcls, attribute))
+        else:
+          out.append(subcls)
     return out
 
   @classmethod
@@ -138,13 +140,12 @@ class LLM:
   @classmethod
   def all_llm_temperature_ranges(cls) -> dict[str, list[float, float]]:
     """Returns the current model and all child temperature ranges."""
-    out = {}
-    names = cls.all_llm_search('name')
-    tr = cls.all_llm_search('temperature_range')
-    for i in range(len(names)):
-      out[names[i]] = tr[i]
-    return out
-
+    return {
+      m.name: m.temperature_range
+      for m in cls.all_llm_search()
+      if hasattr(m, 'temperature_range')
+    }
+  
   @abstractmethod
   def estimate_token_num(self, text) -> int:
     """Estimates the number of tokens in |text|."""
