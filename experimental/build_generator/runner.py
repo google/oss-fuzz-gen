@@ -274,13 +274,25 @@ def copy_result_to_out(project_generated,
     logger.info('Could not find project %s', project_directory)
     return
   shutil.copytree(project_directory,
-                  os.path.join(raw_result_dir, project_generated))
+                  os.path.join(raw_result_dir, project_generated),
+                  dirs_exist_ok=True)
 
   oss_fuzz_projects = os.path.join(output, 'oss-fuzz-projects')
   os.makedirs(oss_fuzz_projects, exist_ok=True)
 
-  # get project name
-  if not from_agent:
+  if from_agent:
+    build_dir = os.path.join(raw_result_dir, project_generated)
+    if not os.path.isdir(build_dir):
+      return
+
+    dst_project = f'{project_name}-agent'
+    dst_dir = os.path.join(oss_fuzz_projects, dst_project)
+    if os.path.isdir(dst_dir):
+      logger.info('Destination dir alrady exists: %s. Skipping', dst_dir)
+      return
+
+    shutil.copytree(build_dir, dst_dir)
+  else:
     report_txt = os.path.join(raw_result_dir, project_generated,
                               'autogen-results', 'report.txt')
     if not os.path.isfile(report_txt):
@@ -293,21 +305,22 @@ def copy_result_to_out(project_generated,
     if not project_name:
       return
 
-  idx = 0
-  while True:
-    base_build_dir = f'empty-build-{idx}'
-    idx += 1
+    idx = 0
+    while True:
+      base_build_dir = f'empty-build-{idx}'
+      idx += 1
 
-    build_dir = os.path.join(raw_result_dir, project_generated, base_build_dir)
-    if not os.path.isdir(build_dir):
-      break
+      build_dir = os.path.join(raw_result_dir, project_generated,
+                               base_build_dir)
+      if not os.path.isdir(build_dir):
+        break
 
-    dst_project = f'{project_name}-{base_build_dir}'
-    dst_dir = os.path.join(oss_fuzz_projects, dst_project)
-    if os.path.isdir(dst_dir):
-      logger.info('Destination dir alrady exists: %s. Skipping', dst_dir)
-      continue
-    shutil.copytree(build_dir, dst_dir)
+      dst_project = f'{project_name}-{base_build_dir}'
+      dst_dir = os.path.join(oss_fuzz_projects, dst_project)
+      if os.path.isdir(dst_dir):
+        logger.info('Destination dir alrady exists: %s. Skipping', dst_dir)
+        continue
+      shutil.copytree(build_dir, dst_dir)
 
 
 def run_parallels(oss_fuzz_base,
