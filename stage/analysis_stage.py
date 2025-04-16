@@ -35,7 +35,10 @@ class AnalysisStage(BaseStage):
     if last_result.crashes:
       agent = self.get_agent(agent_name='SemanticAnalyzer')
     else:
-      agent = self.get_agent(agent_name='CoverageAnalyzer')
+      try:
+        agent = self.get_agent(agent_name='CoverageAnalyzer')
+      except RuntimeError:
+        agent = self.get_agent(agent_name='SemanticAnalyzer')
     analysis_result = self._execute_agent(agent, result_history)
 
     # TODO(dongge): Save logs and more info into workdir.
