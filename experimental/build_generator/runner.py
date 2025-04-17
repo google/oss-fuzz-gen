@@ -21,7 +21,7 @@ import shutil
 import subprocess
 import sys
 import threading
-from typing import List, Optional
+from typing import List
 
 import git
 from openai import OpenAIError
@@ -43,7 +43,6 @@ LOG_FMT = ('%(asctime)s %(levelname)s [%(filename)s:%(lineno)d] '
 def setup_worker_project(oss_fuzz_base: str,
                          project_name: str,
                          llm_model: str,
-                         openai_api_key: Optional[str],
                          github_url: str = '',
                          from_agent: bool = False,
                          workdir: str = '') -> str:
@@ -68,8 +67,7 @@ def setup_worker_project(oss_fuzz_base: str,
                                           github_url.split('/')[-1])
     else:
       file_content = templates.AUTOGEN_DOCKER_FILE
-      if openai_api_key:
-        file_content += f'ENV OPENAI_API_KEY {openai_api_key}'
+
     f.write(file_content)
 
   # Prepare demo fuzzing harness source
@@ -208,7 +206,6 @@ def run_on_targets(target,
                    worker_project_name,
                    idx,
                    llm_model,
-                   openai_api_key,
                    semaphore=None,
                    build_heuristics='all',
                    output='',
@@ -217,6 +214,8 @@ def run_on_targets(target,
 
   if semaphore is not None:
     semaphore.acquire()
+
+  openai_api_key = os.getenv('OPENAI_API_KEY', None)
 
   outdir = os.path.join('/out/', constants.SHARED_MEMORY_RESULTS_DIR)
   with open('status-log.txt', 'a') as f:
@@ -342,18 +341,15 @@ def run_parallels(oss_fuzz_base,
   semaphore = threading.Semaphore(parallel_jobs)
   jobs = []
   projects_generated = []
-  openai_api_key = os.getenv('OPENAI_API_KEY', None)
-
   for idx, target in enumerate(target_repositories):
     worker_project_name = get_next_worker_project(oss_fuzz_base)
     logger.info('Worker project name: %s', worker_project_name)
     projects_generated.append(worker_project_name)
-    setup_worker_project(oss_fuzz_base, worker_project_name, llm_model,
-                         openai_api_key)
+    setup_worker_project(oss_fuzz_base, worker_project_name, llm_model)
     proc = threading.Thread(target=run_on_targets,
                             args=(target, oss_fuzz_base, worker_project_name,
-                                  idx, llm_model, openai_api_key, semaphore,
-                                  build_heuristics, output, max_timeout))
+                                  idx, llm_model, semaphore, build_heuristics,
+                                  output, max_timeout))
     jobs.append(proc)
     proc.start()
 
@@ -367,7 +363,6 @@ def run_agent(target_repositories: List[str], args: argparse.Namespace):
   # Process default arguments
   oss_fuzz_base = os.path.abspath(args.oss_fuzz)
   work_dirs = WorkDirs(args.work_dirs, keep=True)
-  openai_api_key = os.getenv('OPENAI_API_KEY', None)
 
   # Prepare environment
   worker_project_name = get_next_worker_project(oss_fuzz_base)
@@ -388,8 +383,7 @@ def run_agent(target_repositories: List[str], args: argparse.Namespace):
   for target_repository in target_repositories:
     logger.info('Target repository: %s', target_repository)
     language = setup_worker_project(oss_fuzz_base, worker_project_name,
-                                    args.model, openai_api_key,
-                                    target_repository, True,
+                                    args.model, target_repository, True,
                                     os.path.abspath(args.work_dirs))
     benchmark = Benchmark(worker_project_name, worker_project_name, '', '', '',
                           '', [], '')

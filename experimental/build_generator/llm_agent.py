@@ -16,7 +16,6 @@
 import argparse
 import os
 import re
-import shutil
 import subprocess
 from typing import Optional
 
@@ -238,7 +237,6 @@ class BuildSystemBuildScriptAgent(BuildScriptAgent):
         with open(file, 'r') as f:
           self.build_files[file.replace(target_path, '')] = f.read()
 
-    self.target_path = target_path
     return len(self.build_files) > 0
 
   def _initial_prompt(self, results: list[Result]) -> Prompt:  # pylint: disable=unused-argument
@@ -283,9 +281,5 @@ class BuildSystemBuildScriptAgent(BuildScriptAgent):
                          work_dirs=result_history[-1].work_dirs,
                          author=self,
                          chat_history={self.name: ''})
-
-    # Clean up directory
-    if os.path.isdir(self.target_path):
-      shutil.rmtree(self.target_path)
 
     return super().execute(result_history)
