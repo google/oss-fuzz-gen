@@ -22,7 +22,7 @@ from typing import Optional
 
 import logger
 from agent.base_agent import BaseAgent
-from experimental.build_generator import templates, file_utils
+from experimental.build_generator import file_utils, templates
 from llm_toolkit.models import LLM
 from llm_toolkit.prompts import Prompt
 from results import BuildResult, Result
@@ -241,7 +241,7 @@ class BuildSystemBuildScriptAgent(BuildScriptAgent):
     self.target_path = target_path
     return len(self.build_files) > 0
 
-  def _initial_prompt(self, results: list[Result]) -> Prompt:
+  def _initial_prompt(self, results: list[Result]) -> Prompt:  # pylint: disable=unused-argument
     """Constructs initial prompt of the agent."""
     prompt = self.llm.prompt_type()(None)
 

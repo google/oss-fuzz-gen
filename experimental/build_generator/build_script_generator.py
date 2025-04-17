@@ -23,7 +23,6 @@ from abc import abstractmethod
 from typing import Dict, Iterator, List, Optional, Tuple
 
 import constants
-import manager
 import file_utils as utils
 
 logger = logging.getLogger(name=__name__)
