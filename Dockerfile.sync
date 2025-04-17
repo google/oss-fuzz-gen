@@ -1,0 +1,22 @@
+FROM debian:12
+
+# Install base dependencies
+RUN apt-get update && \
+    apt-get install -y \
+    python3 \
+    python3-pip \
+    python3-venv \
+    git \
+    curl
+
+# Set up virtual environment
+RUN python3 -m venv /venv
+
+# Install Python dependencies
+RUN /venv/bin/pip install google-cloud-storage
+
+# Copy sync tool
+COPY tools/gcs_sync.py /app/
+WORKDIR /app
+
+ENTRYPOINT ["/venv/bin/python3", "gcs_sync.py"]
