@@ -7,7 +7,7 @@ google-cloud-aiplatform==1.64.0
 google-cloud-storage==2.9.0
 google-cloud-logging==3.11.2
 Jinja2==3.1.6
-openai==1.16.2
+openai==1.72.0
 pandas==2.2.2
 pylint==3.2.5
 pyright==1.1.345

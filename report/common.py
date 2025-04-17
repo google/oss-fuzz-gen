@@ -73,6 +73,7 @@ class Benchmark:
   signature: str = ''
   project: str = ''
   function: str = ''
+  language: str = ''
 
 
 @dataclasses.dataclass
@@ -129,6 +130,7 @@ class Sample:
 class Target:
   code: str
   fixer_prompt: Optional[str] = None
+  build_script_code: Optional[str] = None
 
 
 @dataclasses.dataclass
@@ -414,7 +416,9 @@ class Results:
         build_script_code = f.read()
 
     # TODO(dongge): Properly show build script code in reports.
-    return Target(code=fuzz_target_code, fixer_prompt=build_script_code)
+    return Target(code=fuzz_target_code,
+                  fixer_prompt=None,
+                  build_script_code=build_script_code)
 
   def get_samples(self, results: list[evaluator.Result],
                   targets: list[str]) -> list[Sample]:
@@ -641,7 +645,9 @@ class Results:
     function = benchmark_id.split('-')[-1]
     signature = self._find_benchmark_signature(project,
                                                function) or benchmark_id
-    return Benchmark(benchmark_id, status, result, signature, project, function)
+    language = self._find_benchmark_language(project, function)
+    return Benchmark(benchmark_id, status, result, signature, project, function,
+                     language)
 
   def _find_benchmark_signature(self, project: str,
                                 target_function: str) -> str:
@@ -672,6 +678,23 @@ class Results:
           matched_prefix_signature = function_signature
 
     return matched_prefix_signature
+
+  def _find_benchmark_language(self, project: str, target_function: str) -> str:
+    """Finds the programming language of the benchmark."""
+    if not self._benchmark_dir:
+      return ''
+
+    project_path = os.path.join(self._benchmark_dir, f'{project}.yaml')
+    if not FileSystem(project_path).isfile():
+      return ''
+
+    try:
+      with FileSystem(project_path).open() as f:
+        benchmark_data = yaml.safe_load(f)
+        return benchmark_data.get('language', '')
+    except Exception as e:
+      logging.error('Failed to read benchmark file %s: %s', project_path, e)
+      return ''
 
 
 def _parse_log_parts(log: str) -> list[LogPart]:
