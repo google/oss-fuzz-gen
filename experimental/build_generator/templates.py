@@ -15,7 +15,7 @@
 """Holds templates used by the auto-generator both inside and outside the
 OSS-Fuzz base builder."""
 
-OSS_FUZZ_LICENSE = '''# Copyright 2024 Google LLC.
+OSS_FUZZ_LICENSE = '''# Copyright 2025 Google LLC.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -126,7 +126,8 @@ RUN mkdir ~/.ssh && ssh-keyscan github.com >> ~/.ssh/known_hosts
 # TODO(David): enable this and make sure performance is too
 # exhaustive (100+ min for some projects)
 ENV FI_DISABLE_LIGHT=1
-COPY *.py *.json $SRC/
+COPY *.py *.json requirements.txt $SRC/
+RUN pip install -r requirements.txt
 WORKDIR $SRC
 COPY build.sh $SRC/
 '''
@@ -171,26 +172,42 @@ You are a developer wanting to build a given C/C++ projects.
 </system>'''
 
 LLM_PROBLEM = '''
-You must return only the contents of the build script wrapped in a `<bash>` tag, and nothing else.
-Below is a list of build system configuration files found in the target repository.
-Please generate the most appropriate build script in Bash to build the project, assuming the build is performed on Ubuntu 24.
-Do include any necessary flags and environment variables if required.
-If any flag-type environment variables need to be modified, please ensure the original value is preserved by appending rather than replacing it.
-If additional packages are needed, please also generate the corresponding `apt install` command to install them.
-Assume that the base script will be executed with root privileges, so no `sudo` commands should be used.
-If possible, avoid testing or installation, just need to compile the project to static library. Try using `llvm-ar` if the original build system does not ccompile to static library.
-Lastly, the build files must not be modified in any way, such as by using `sed`.
+You are to build a fuzzing harness that attempts to fuzz the target project. You must use the provided build system file to build the project.
+Your output must contain only thwo XML tags:
+<bash></bash> – wraps the complete build script for both the target project and the fuzzing harness.
+<fuzzer></fuzzer> – wraps the complete, modified fuzzing harness, which includes and links the binaries compiled from the target project.
 
+If additional packages are required, please generate the corresponding `apt install` command.
+
+Please also modify the provided fuzzing harness (stored as `$SRC/{FUZZING_FILE}`) to include relevant headers from the target project.
+
+Generate the most suitable Bash build script for compiling the project, assuming the build is performed on Ubuntu 24.04.
+Assume the build script, stored as `$SRC/build.sh`  will be executed with root privileges – therefore, do not use `sudo`.
+
+Include any necessary flags and environment variables. Please avoid modifying existing environemnt variable flag.
+
+Avoid running tests or installation steps – the goal is to compile the project into a static library. If the original build system does not produce a static library, attempt to use `llvm-ar` to archive object files instead.
+
+Do not modify any build configuration files (e.g., using `sed` or similar tools).
+
+For the fuzzing harness, ensure it includes headers from the target project. The build script must contain the appropriate include flags to compile the harness.
+
+Ensure that the static library compiled from the target project is linked to the fuzzing harness binary using the `-Wl,--whole-archive` linker flag – this is mandatory.
+
+Below is a list of build system configuration files found in the target repository:
 <build_files>
 {BUILD_FILES}
 </build_files>
 
-Here is the Dockerfile that will be used for the build.
-Please assume that the build script will be copied to $SRC/build.sh inside the Docker container for execution.
-
+Here is the Dockerfile that will be used for the build. Assume the build script will be copied to `$SRC/build.sh` within the Docker container for execution:
 <dockerfile>
 {DOCKERFILE}
 </dockerfile>
+
+Below is the template fuzzing harness, which you must follow and modify:
+<fuzzer>
+{FUZZER}
+</fuzzer>
 '''
 
 LLM_BUILD_FILE_TEMPLATE = '''
@@ -200,9 +217,12 @@ LLM_BUILD_FILE_TEMPLATE = '''
 
 LLM_RETRY = '''
 I failed to build the project with the above provided build script.
-Here is a dump of the bash execution result.
 Please analyse the result and generate a new build script with the same assumption above.
 You must only returns the content of the build script and nothing else more as always.
+Your output must contain only two XML tags:
+<bash></bash> – wraps the complete build script for both the target project and the fuzzing harness.
+<fuzzer></fuzzer> – wraps the complete, modified fuzzing harness, which includes and links the binaries compiled from the target project.
 
+Here is a dump of the bash execution result.
 {BASH_RESULT}
 '''
