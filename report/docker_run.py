@@ -52,9 +52,8 @@ def _parse_args(cmd) -> argparse.Namespace:
       '--frequency-label',
       type=str,
       default=FREQUENCY_LABEL,
-      help=
-      f'Used as part of Cloud Build tags and GCS report directory, default: {FREQUENCY_LABEL}.'
-  )
+      help=(f'Used as part of Cloud Build tags and GCS report directory, '
+            f'default: {FREQUENCY_LABEL}.'))
   parser.add_argument(
       '-to',
       '--run-timeout',
@@ -141,7 +140,7 @@ def _parse_args(cmd) -> argparse.Namespace:
 
 def _run_command(command: list[str], shell=False):
   """Runs a command and return its exit code."""
-  process = subprocess.run(command, shell=shell)
+  process = subprocess.run(command, shell=shell, check=False)
   return process.returncode
 
 
@@ -158,7 +157,7 @@ def _authorize_gcloud():
         'LLM-EVAL@oss-fuzz.iam.gserviceaccount.com', '--key-file', google_creds
     ])
   else:
-    # TODO: Set GOOGLE_APPLICATION_CREDENTIALS and ensure cloud build uses it too.
+    # TODO: Set GOOGLE_APPLICATION_CREDENTIALS and ensure cloud build uses it.
     logging.info("GOOGLE APPLICATION CREDENTIALS is not set.")
 
 
@@ -168,8 +167,8 @@ def _log_common_args(args):
   logging.info("Frequency label is %s.", args.frequency_label)
   logging.info("Run timeout is %s.", args.run_timeout)
   logging.info(
-      "Sub-directory is %s. Please consider using sub-directory to classify your experiment.",
-      args.sub_dir)
+      "Sub-directory is %s. Please consider using sub-directory to classify"
+      " your experiment.", args.sub_dir)
   logging.info("LLM is %s.", args.model)
   logging.info("DELAY is %s.", args.delay)
 
@@ -276,15 +275,19 @@ def run_on_data_from_scratch(cmd=None):
   # Run the experiment and redirect to file if indicated.
   if args.redirect_outs:
     with open(f"{local_results_dir}/logs-from-run.txt", "w") as outfile:
-      process = subprocess.run(cmd, stdout=outfile, stderr=outfile, env=environ)
+      process = subprocess.run(cmd,
+                               stdout=outfile,
+                               stderr=outfile,
+                               env=environ,
+                               check=False)
       ret_val = process.returncode
   else:
-    process = subprocess.run(cmd, env=environ)
+    process = subprocess.run(cmd, env=environ, check=False)
     ret_val = process.returncode
 
   os.environ["ret_val"] = str(ret_val)
 
-  with open("/experiment_ended", "w") as _f:
+  with open("/experiment_ended", "w"):
     pass
 
   logging.info("Shutting down introspector")
@@ -302,9 +305,9 @@ def run_on_data_from_scratch(cmd=None):
   trends_cmd = [
       python_path, "-m", "report.trends_report.upload_summary", "--results-dir",
       local_results_dir, "--output-path",
-      f"gs://oss-fuzz-gcb-experiment-run-logs/trend-reports/{gcs_trend_report_path}",
-      "--name", experiment_name, "--date", date, "--url",
-      f"https://llm-exp.oss-fuzz.com/Result-reports/{gcs_report_dir}",
+      f"gs://oss-fuzz-gcb-experiment-run-logs/trend-reports/"
+      f"{gcs_trend_report_path}", "--name", experiment_name, "--date", date,
+      "--url", f"https://llm-exp.oss-fuzz.com/Result-reports/{gcs_report_dir}",
       "--run-timeout",
       str(args.run_timeout), "--num-samples",
       str(args.num_samples), "--llm-fix-limit",
@@ -317,7 +320,7 @@ def run_on_data_from_scratch(cmd=None):
       subprocess.check_output(["git", "branch", "--show"]).decode().strip()
   ]
 
-  subprocess.run(trends_cmd)
+  subprocess.run(trends_cmd, check=False)
 
   # Exit with the return value of `./run_all_experiments`.
   return ret_val
@@ -400,15 +403,18 @@ def run_standard(cmd=None):
   # Run the experiment and redirect to file if indicated.
   if args.redirect_outs:
     with open(f"{local_results_dir}/logs-from-run.txt", "w") as outfile:
-      process = subprocess.run(run_cmd, stdout=outfile, stderr=outfile)
+      process = subprocess.run(run_cmd,
+                               stdout=outfile,
+                               stderr=outfile,
+                               check=False)
       ret_val = process.returncode
   else:
-    process = subprocess.run(run_cmd)
+    process = subprocess.run(run_cmd, check=False)
     ret_val = process.returncode
 
   os.environ["ret_val"] = str(ret_val)
 
-  with open("/experiment_ended", "w") as _f:
+  with open("/experiment_ended", "w"):
     pass
 
   if args.local_introspector:
@@ -427,9 +433,9 @@ def run_standard(cmd=None):
   trends_cmd = [
       python_path, "-m", "report.trends_report.upload_summary", "--results-dir",
       local_results_dir, "--output-path",
-      f"gs://oss-fuzz-gcb-experiment-run-logs/trend-reports/{gcs_trend_report_path}",
-      "--name", experiment_name, "--date", date, "--url",
-      f"https://llm-exp.oss-fuzz.com/Result-reports/{gcs_report_dir}",
+      f"gs://oss-fuzz-gcb-experiment-run-logs/trend-reports/"
+      f"{gcs_trend_report_path}", "--name", experiment_name, "--date", date,
+      "--url", f"https://llm-exp.oss-fuzz.com/Result-reports/{gcs_report_dir}",
       "--benchmark-set", args.benchmark_set, "--run-timeout",
       str(args.run_timeout), "--num-samples",
       str(args.num_samples), "--llm-fix-limit",
@@ -442,7 +448,7 @@ def run_standard(cmd=None):
       subprocess.check_output(["git", "branch", "--show"]).decode().strip()
   ]
 
-  subprocess.run(trends_cmd)
+  subprocess.run(trends_cmd, check=False)
 
   # Exit with the return value of `./run_all_experiments`.
   return ret_val
