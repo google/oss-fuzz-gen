@@ -94,7 +94,7 @@ def setup_worker_project(oss_fuzz_base: str,
   # Copy over the generator
   files_to_copy = {
       'build_script_generator.py', 'manager.py', 'templates.py', 'constants.py',
-      'file_utils.py', '../../requirements.txt'
+      'file_utils.py'
   }
   for target_file in files_to_copy:
     shutil.copyfile(
