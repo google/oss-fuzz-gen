@@ -23,7 +23,7 @@ from abc import abstractmethod
 from typing import Dict, Iterator, List, Optional, Tuple
 
 import constants
-import manager
+import file_utils as utils
 
 logger = logging.getLogger(name=__name__)
 
@@ -843,7 +843,7 @@ def match_build_heuristics_on_folder(abspath_of_target: str):
   Traverses the files in the target folder. Uses the file list as input to
   auto build heuristics, and for each heuristic will yield any of the
   build steps that are deemed matching."""
-  all_files = manager.get_all_files_in_path(abspath_of_target)
+  all_files = utils.get_all_files_in_path(abspath_of_target)
   all_checks = [
       AutogenConfScanner(),
       PureCFileCompiler(),
@@ -887,7 +887,7 @@ def match_build_heuristics_on_folder(abspath_of_target: str):
 
 def get_all_binary_files_from_folder(path: str) -> Dict[str, List[str]]:
   """Extracts binary artifacts from a list of files, based on file suffix."""
-  all_files = manager.get_all_files_in_path(path, path)
+  all_files = utils.get_all_files_in_path(path, path)
 
   executable_files = {'static-libs': [], 'dynamic-libs': [], 'object-files': []}
   for fil in all_files:
