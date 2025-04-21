@@ -74,6 +74,8 @@ class Benchmark:
   project: str = ''
   function: str = ''
   language: str = ''
+  accumulated_results: AccumulatedResult = dataclasses.field(default_factory=AccumulatedResult)
+  execution_time: float = 0.0
 
 
 @dataclasses.dataclass
