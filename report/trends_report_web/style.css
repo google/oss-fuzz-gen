@@ -114,6 +114,26 @@ button {
 }
 
 /*
+ *aggregated metrics
+ */
+
+#aggregated-metrics {
+  margin: 1rem 0;
+}
+#aggregated-metrics table {
+  width: auto;
+  border-collapse: collapse;
+}
+#aggregated-metrics th,
+#aggregated-metrics td {
+  padding: 0.5rem 1rem;
+  border: 1px solid #ddd;
+}
+#aggregated-metrics h3 {
+  margin-bottom: 0.5rem;
+}
+
+/*
  * Projects
  */
 .projects {
