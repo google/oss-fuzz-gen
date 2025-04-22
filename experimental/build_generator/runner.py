@@ -391,6 +391,7 @@ def run_agent(target_repositories: List[str], args: argparse.Namespace):
     for llm_agent_ctr in llm_agents:
       build_script = ''
       harness = ''
+      build_success = False
       for trial in range(args.max_round):
         logger.info('Agent: %s. Round %d', llm_agent_ctr.__name__, trial)
         agent = llm_agent_ctr(trial=trial,
@@ -410,6 +411,7 @@ def run_agent(target_repositories: List[str], args: argparse.Namespace):
           break
 
         if build_result.compiles:
+          build_success = True
           build_script = build_result.build_script_source
           harness = build_result.fuzz_target_source
           break
@@ -417,7 +419,7 @@ def run_agent(target_repositories: List[str], args: argparse.Namespace):
         logger.info('Round %d build script generation failed for project %s',
                     trial, target_repository)
 
-      if build_script:
+      if build_success:
         logger.info('Build script generation success for project %s',
                     target_repository)
 
@@ -479,7 +481,7 @@ def parse_commandline():
                       '-mr',
                       help='Max round of trial for the llm build script agent.',
                       type=int,
-                      default=5)
+                      default=10)
   parser.add_argument('--work-dirs',
                       '-w',
                       help='Working directory path.',
