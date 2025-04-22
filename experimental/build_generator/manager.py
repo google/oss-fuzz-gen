@@ -184,12 +184,12 @@ def run_introspector_on_dir(build_worker, test_dir,
   fuzzer_build_cmd = [
       fuzz_compiler, fuzz_flags, '$LIB_FUZZING_ENGINE', empty_fuzzer_file
   ]
+  fuzzer_build_cmd.append('-Wl,--allow-multiple-definition')
   for refined_static_lib in build_worker.executable_files_build[
       'refined-static-libs']:
     fuzzer_build_cmd.append('-Wl,--whole-archive')
     fuzzer_build_cmd.append(os.path.join(test_dir, refined_static_lib))
-
-  fuzzer_build_cmd.append('-Wl,--allow-multiple-definition')
+  fuzzer_build_cmd.append('-Wl,--no-whole-archive')
 
   fuzzer_build_cmd.append('-o /src/compiled_binary')
 
