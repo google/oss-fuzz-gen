@@ -108,7 +108,7 @@ def build_empty_fuzzers(build_workers, language) -> None:
   # the resulting static libraries against an empty fuzzer.
   fuzz_compiler, _, empty_fuzzer_file, fuzz_template = (
       utils.get_language_defaults(language))
-  for test_dir, build_worker in build_workers.items():
+  for test_dir, build_worker in build_workers:
     logger.info('Test dir: %s :: %s', test_dir,
                 str(build_worker.executable_files_build['refined-static-libs']))
 
@@ -254,12 +254,13 @@ def create_clean_oss_fuzz_from_empty(github_repo: str, build_worker,
   fuzzer_build_cmd = [
       fuzz_compiler, fuzz_flags, '$LIB_FUZZING_ENGINE', empty_fuzzer_file
   ]
+  fuzzer_build_cmd.append('-Wl,--allow-multiple-definition')
   for refined_static_lib in build_worker.executable_files_build[
       'refined-static-libs']:
     fuzzer_build_cmd.append('-Wl,--whole-archive')
     fuzzer_build_cmd.append(os.path.join(test_dir, refined_static_lib))
 
-  fuzzer_build_cmd.append('-Wl,--allow-multiple-definition')
+  fuzzer_build_cmd.append('-Wl,--no-whole-archive')
 
   # Add inclusion of header file paths. This is anticipating any harnesses
   # will make an effort to include relevant header files.
@@ -535,6 +536,30 @@ def auto_generate(github_url, disable_testing_build_scripts=False, outdir=''):
   # static libraries resulting from the build.
   refine_static_libs(build_results)
 
+  refined_builds = []
+  b_idx = 0
+  for test_dir, build_worker in build_results.items():
+    if len(build_worker.executable_files_build) > 1:
+      for ref_lib in build_worker.executable_files_build['refined-static-libs']:
+        b_idx += 1
+        new_worker = build_script_generator.BuildWorker(
+            build_worker.build_suggestion, build_worker.build_script,
+            build_worker.build_directory,
+            build_worker.executable_files_build.copy())
+        new_worker.build_suggestion.heuristic_id = new_worker.build_suggestion.heuristic_id + '-%d' % (
+            b_idx)
+        new_worker.executable_files_build['refined-static-libs'] = [ref_lib]
+        refined_builds.append((test_dir, new_worker))
+    refined_builds.append((test_dir, build_worker))
+
+  build_results = refined_builds
+
+  logger.info('logging builds')
+  for test_dir, build_worker in build_results:
+    logger.info('Sample:')
+    logger.info(json.dumps(build_worker.executable_files_build))
+  logger.info('------------------------')
+
   # Stage 2: perform program analysis to extract data to be used for
   # harness generation.
   build_empty_fuzzers(build_results, language)
@@ -555,7 +580,7 @@ def auto_generate(github_url, disable_testing_build_scripts=False, outdir=''):
   logger.info('Going through %d build results to generate fuzzers',
               len(build_results))
 
-  for test_dir, build_worker in build_results.items():
+  for test_dir, build_worker in build_results:
     logger.info('Checking build heuristic: %s',
                 build_worker.build_suggestion.heuristic_id)
 
