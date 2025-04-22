@@ -111,7 +111,6 @@ def test_target_and_triage_dataclasses():
 
 
 def test_filesystem_local_operations(tmp_path):
-    # Setup directory and file
     dir_path = tmp_path / "subdir"
     dir_path.mkdir()
     file_path = dir_path / "test.txt"
@@ -150,7 +149,6 @@ def test_filesystem_local_operations(tmp_path):
 
 # Tests for Results class methods
 def test_results_list_benchmark_ids(tmp_path):
-    # Create result directories including valid (output-*) and invalid
     base = tmp_path / "results"
     base.mkdir()
     valid = base / "output-proj1-func1"
@@ -169,11 +167,9 @@ def test_results_match_benchmark(monkeypatch):
     dummy_aggr = run_one_experiment.AggregatedResult()
     monkeypatch.setattr(run_one_experiment, 'aggregate_results', lambda filtered, t: dummy_aggr)
 
-    # Create dummy evaluator.Result list with two finished, one unfinished
     class DummyE:
         def __init__(self, finished): self.finished = finished
     results = [DummyE(True), DummyE(False), DummyE(True)]
-    # Targets list
     targets = ["t1", "t2", "t3"]
     r = Results()
     bm = r.match_benchmark("output-proj-f-func", results, targets)
@@ -184,7 +180,6 @@ def test_results_match_benchmark(monkeypatch):
 
 
 def test_get_final_target_code(tmp_path):
-    # Setup directory structure
     rdir = tmp_path / "results"
     bdir = rdir / "bench1" / "fixed_targets"
     bdir.mkdir(parents=True)
@@ -193,12 +188,10 @@ def test_get_final_target_code(tmp_path):
 
     res = Results(results_dir=str(rdir))
     code = res.get_final_target_code("bench1", "s1")
-    # JSON-dumped content
     assert json.loads(code) == "abc123"
 
 
 def test_get_logs_and_parse(tmp_path):
-    # Create status/log.txt
     rdir = tmp_path / "results"
     logdir = rdir / "bench" / "status" / "s" 
     logdir.mkdir(parents=True)
@@ -208,7 +201,6 @@ def test_get_logs_and_parse(tmp_path):
 
     res = Results(results_dir=str(rdir))
     parts = res.get_logs("bench", "s")
-    # Should delegate to _parse_log_parts
     assert all(isinstance(p, LogPart) for p in parts)
     assert parts[0].content == 'p'
 
@@ -228,11 +220,9 @@ def test_get_run_logs_simple(tmp_path):
 
 
 def test_get_run_logs_truncated(tmp_path, monkeypatch):
-    # Large log > MAX_RUN_LOGS_LEN
     rdir = tmp_path / "results"
     rundir = rdir / "bench" / "logs" / "run"
     rundir.mkdir(parents=True)
-    # File must match pattern sample + '.' for detection
     fname = "01.log"
     fpath = rundir / fname
     big = 'A' * (MAX_RUN_LOGS_LEN + 10)
@@ -240,7 +230,6 @@ def test_get_run_logs_truncated(tmp_path, monkeypatch):
 
     res = Results(results_dir=str(rdir))
     log = res.get_run_logs("bench", "01")
-    # Expect truncated log with markers
     assert '...truncated...' in log
     half = MAX_RUN_LOGS_LEN // 2
     assert log.startswith('A' * half)
@@ -274,7 +263,6 @@ def test_get_targets_fixed_and_agent(tmp_path):
     # sample file
     sample_file = fixed / "01.txt"
     sample_file.write_text("code1")
-    # fixed target directory with prompt and rawoutput
     dir_f = fixed / "01-F00"
     dir_f.mkdir()
     p = dir_f / "prompt.txt"
@@ -293,9 +281,7 @@ def test_get_targets_fixed_and_agent(tmp_path):
 # Tests for get_samples
 
 def test_get_samples_mapping():
-    # Dummy evaluator.Result placeholder
     all_targets = ["t1", "t2", "t3"]
-    # Use None for unfinished, object() for finished
     results_list = [object(), None, object()]
     res = Results()
     samples = res.get_samples(results_list, all_targets)
@@ -329,7 +315,6 @@ def test_get_results_and_targets(tmp_path, monkeypatch):
     bench = rdir / "bench"
     raw = bench / "raw_targets"
     raw.mkdir(parents=True)
-    # Use an extension from TARGET_EXTS (e.g., .py)
     f1 = raw / "00.py"
     f1.write_text("dummy")
     status = bench / "status"
@@ -359,7 +344,7 @@ def test_get_macro_insights():
     b1 = Benchmark("id1","Done",ag1)
     b2 = Benchmark("id2","Done",ag2)
     acc = Results().get_macro_insights([b1,b2])
-    # compiles = 1, crashes = 1, total_runs=2, total_coverage=30, total_line_coverage_diff=5
+
     assert acc.compiles == 1
     assert acc.crashes == 1
     assert acc.total_runs == 2
@@ -387,9 +372,9 @@ def test_get_coverage_language_gains_and_project_summary(tmp_path):
     # Prepare benchmarks list
     class DummyAg:
         build_success_count = 1
-    # Manually set project to 'p1' so get_project_summary can pick it up
+
     b = Benchmark(id="id-p1-f", status="Done", result=DummyAg(), signature="", project="p1", function="", language="")
-    # get_coverage_language_gains returns full JSON
+
     gains = Results(results_dir=str(rdir)).get_coverage_language_gains()
     assert "project_summary" in gains
     assert "p1" in gains["project_summary"]

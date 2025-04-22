@@ -8,7 +8,7 @@ import pytest
 import argparse
 import gettext
 
-# Save original open for stubbing
+
 _ORIGINAL_OPEN = builtins.open
 
 import report.docker_run as dr
@@ -30,7 +30,7 @@ def test_parse_args_defaults():
     assert args.agent is False
     assert args.max_round == dr.MAX_ROUND
     assert args.redirect_outs is False
-    # No additional args by default
+
     assert args.additional_args == []
 
 
@@ -66,7 +66,7 @@ def test_parse_args_with_custom_and_additional():
     assert args.agent is True
     assert args.max_round == 50
     assert args.redirect_outs is True
-    # Unknown args after parsing include all extras
+
     assert args.additional_args == ['extra1', 'extra2']
 
 
@@ -85,9 +85,9 @@ def test_run_command_returncode(monkeypatch):
 
 def test_authorize_gcloud_no_creds(monkeypatch, caplog):
     caplog.set_level(logging.INFO)
-    # Ensure no credentials
+
     monkeypatch.delenv('GOOGLE_APPLICATION_CREDENTIALS', raising=False)
-    # Patch _run_command to fail if called
+
     monkeypatch.setattr(dr, '_run_command', lambda *args, **kwargs: (_ for _ in ()).throw(Exception("Should not be called")))
 
     dr._authorize_gcloud()
@@ -136,21 +136,19 @@ def test_log_common_args(caplog):
 
 
 def test_run_on_data_from_scratch_flow(monkeypatch, tmp_path):
-    # Force DATA_DIR exists branch
+
     monkeypatch.setattr(os.path, 'isdir', lambda path: True)
 
-    # Stub authorization and logging
+
     monkeypatch.setattr(dr, '_authorize_gcloud', lambda: None)
     monkeypatch.setattr(dr, '_log_common_args', lambda args: None)
 
-    # Stub python path resolution
     monkeypatch.setattr(os.path, 'exists', lambda path: False)
 
     # Stub subprocess.check_call for starter script
     starter_calls = []
     monkeypatch.setattr(subprocess, 'check_call', lambda cmd, shell: starter_calls.append((cmd, shell)) or 0)
 
-    # Fix current date: subclass datetime.datetime so construction still works
     RealDateTime = datetime.datetime
     class FakeDateTime(RealDateTime):
         @classmethod
@@ -193,18 +191,18 @@ def test_run_on_data_from_scratch_flow(monkeypatch, tmp_path):
 
     # Execute
     ret = dr.main([])
-    # main() does not propagate the experiment code, so ret is None
+
     assert ret is None
-    # Starter script called
+
     assert starter_calls
-    # Report upload invoked via Popen
+
     assert p_calls
-    # experiment_ended file was written
+
     assert written.get('opened', False)
 
 
 def test_run_standard_flow(monkeypatch, tmp_path):
-    # Force DATA_DIR does not exist branch
+
     monkeypatch.setattr(os.path, 'isdir', lambda path: False)
 
     # Stub authorization and logging
@@ -243,7 +241,7 @@ def test_run_standard_flow(monkeypatch, tmp_path):
         return b''
     monkeypatch.setattr(subprocess, 'check_output', fake_check_output)
 
-    # Capture writes to /experiment_ended, but allow all other files to open normally
+
     written = {}
     def fake_open(path, mode='r', **kwargs):
         if path == '/experiment_ended':
@@ -254,13 +252,13 @@ def test_run_standard_flow(monkeypatch, tmp_path):
 
     # Execute
     ret = dr.main([])
-    # main() does not propagate the experiment code, so ret is None
+
     assert ret is None
-    # upload_report.sh Popen called
+
     assert p_calls
-    # experiment_ended file was written
+
     assert written.get('opened', False)
-    # experiment flow run called
+
     assert any('run_all_experiments.py' in arg for c in run_calls for arg in c)
-    # trends upload called as last
+
     assert any('-m' in c or '--model' in c for c in run_calls)

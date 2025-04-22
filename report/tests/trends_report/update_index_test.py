@@ -45,7 +45,7 @@ class DummyClient:
 
 @pytest.fixture(autouse=True)
 def patch_storage(monkeypatch):
-    # Provide DummyClient instead of real storage.Client
+    # DummyClient instead of real storage.Client
     dummy_bucket = DummyBucket([])
     dummy_client = DummyClient(dummy_bucket)
     monkeypatch.setattr('report.trends_report.update_index.storage', 
@@ -59,9 +59,7 @@ def test_no_op_on_shallow_event(patch_storage, capsys):
     res = trends_report_index(event, None)
     captured = capsys.readouterr()
     assert res == ''
-    # No prints, no upload
     assert captured.out == '' and captured.err == ''
-    # Ensure upload blob has no data
     assert patch_storage._upload_blob.uploaded_data is None
 
 

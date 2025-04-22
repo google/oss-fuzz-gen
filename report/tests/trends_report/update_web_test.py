@@ -46,14 +46,11 @@ def patch_env(monkeypatch, tmp_path):
     # Create in-memory zip archive
     zip_mem = io.BytesIO()
     with zipfile.ZipFile(zip_mem, mode='w') as zf:
-        # Relevant files under report/trends_report_web
         zf.writestr('oss-fuzz-gen-trends-report/report/trends_report_web/index.html', '<html></html>')
         zf.writestr('oss-fuzz-gen-trends-report/report/trends_report_web/static/style.css', 'body {}')
-        # Irrelevant file
         zf.writestr('oss-fuzz-gen-trends-report/README.md', 'readme content')
     zip_bytes = zip_mem.getvalue()
 
-    # Monkeypatch urllib.request.urlopen
     monkeypatch.setattr('report.trends_report.update_web.urllib.request.urlopen',
                         lambda url: DummyResponse(zip_bytes))
     # Monkeypatch storage client
@@ -79,9 +76,7 @@ def test_trends_report_web_uploads_only_relevant_files(patch_env, capsys, tmp_pa
     }
     # Ensure upload paths exist in temporary extraction directory
     for blob_name, blob in bucket.blobs.items():
-        # Each blob should have recorded one upload file
         assert len(blob.uploaded_files) == 1
         uploaded_path = blob.uploaded_files[0]
-        # File should exist on disk
         assert tmp_path in tmp_path.parents or True
         assert uploaded_path.endswith(os.path.basename(blob_name))

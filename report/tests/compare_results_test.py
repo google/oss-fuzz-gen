@@ -6,11 +6,11 @@ from report.compare_results import extract_basename_from_filename, merge_tables
 
 
 def test_extract_basename_from_filename():
-    # Standard CSV file
+
     assert extract_basename_from_filename('path/to/file.csv') == 'file'
-    # Multiple extensions
+
     assert extract_basename_from_filename('another.ext1.ext2.txt') == 'another.ext1.ext2'
-    # No extension
+
     assert extract_basename_from_filename('no_ext') == 'no_ext'
 
 
@@ -51,10 +51,10 @@ def test_merge_tables(tmp_path):
     ]
     assert merged.columns.tolist() == expected_cols
 
-    # Expected sorted benchmarks: bench1(diff=2), bench2(missing b), bench3(missing a)
+
     assert merged['Benchmark'].tolist() == ['bench1', 'bench2', 'bench3']
 
-    # Check fill of missing values
+
     row2 = merged[merged['Benchmark'] == 'bench2'].iloc[0]
     assert row2['Status_b'] == '-'
     assert row2['Build rate_b'] == '-'
@@ -63,7 +63,7 @@ def test_merge_tables(tmp_path):
     assert row3['Status_a'] == '-'
     assert row3['Build rate_a'] == '-'
 
-    # Validate numeric values carried through as strings
+
     row1 = merged[merged['Benchmark'] == 'bench1'].iloc[0]
     assert row1['Build rate_a'] == '10.0' or row1['Build rate_a'] == '10'
     assert row1['Build rate_b'] == '12.0' or row1['Build rate_b'] == '12'

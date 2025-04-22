@@ -91,7 +91,7 @@ def test_parse_arguments_structure(monkeypatch):
 # -- I/O-heavy methods tests --
 
 def test_copy_and_set_coverage_report(tmp_path):
-    # Prepare a fake results directory with a coverage report structure
+
     class DummyResult:
         def __init__(self):
             self.coverage_report_path = ''
@@ -109,7 +109,7 @@ def test_copy_and_set_coverage_report(tmp_path):
     sample_dir = coverage_root / 'sample1'
     (sample_dir / 'linux').mkdir(parents=True)
     (sample_dir / 'extra').mkdir()
-    # Add a third entry to trigger the local-run copy (len > 2)
+
     (sample_dir / 'style.css').write_text('')
 
     out_dir = tmp_path / 'out'
@@ -121,24 +121,24 @@ def test_copy_and_set_coverage_report(tmp_path):
     sample = DummySample('sample1')
     gr._copy_and_set_coverage_report(benchmark, sample)
 
-    # Check that coverage folder was copied
+
     dest = out_dir / 'sample' / 'benchmark1' / 'coverage' / 'sample1' / 'linux'
     assert dest.exists()
-    # Check that sample.result.coverage_report_path was set correctly
+
     assert sample.result.coverage_report_path == '/sample/benchmark1/coverage/sample1/linux/'
 
 
 def test_generate_report_invokes_generate(monkeypatch):
     from report.web import generate_report, GenerateReport, Results
     calls = {}
-    # Patch Results so initialization works without real files
+
     monkeypatch.setattr('report.web.Results', lambda results_dir, benchmark_set: None)
-    # Patch GenerateReport.__init__ to store instance
+
     original_init = GenerateReport.__init__
     def fake_init(self, results, jinja_env, results_dir, output_dir):
         original_init(self, results=None, jinja_env=jinja_env, results_dir=results_dir, output_dir=output_dir)
     monkeypatch.setattr(GenerateReport, '__init__', fake_init)
-    # Patch generate to record call
+
     def fake_generate(self):
         calls['generated'] = True
     monkeypatch.setattr(GenerateReport, 'generate', fake_generate)
@@ -151,7 +151,7 @@ def test_generate_report_invokes_generate(monkeypatch):
 
 def test_launch_webserver(monkeypatch):
     from report.web import launch_webserver, LOCAL_HOST, ThreadingHTTPServer
-    # Capture server instance
+
     instances = []
     port = 12345
 
@@ -170,6 +170,6 @@ def test_launch_webserver(monkeypatch):
     args = Namespace(port=port, output_dir='unused')
     with pytest.raises(SystemExit):
         launch_webserver(args)
-    # Ensure serve_forever was called
+
     assert instances and getattr(instances[0], 'serve_called', False)
 

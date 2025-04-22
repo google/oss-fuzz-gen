@@ -34,14 +34,12 @@ class DummyProjectSummary:
 
 class DummyResultsUtil:
     def __init__(self, results_dir=None, benchmark_set=None):
-        # args forwarded from CLI, ignore
         pass
 
     def list_benchmark_ids(self):
         return ['bm1', 'bm2']
 
     def get_results(self, benchmark_id):
-        # return dummy (results, targets) tuple
         return {}, {}
 
     def match_benchmark(self, benchmark_id, results, targets):
@@ -54,7 +52,6 @@ class DummyResultsUtil:
             return DummyBenchmark('bm2', 'proj2', 'func2', 'sig2', res)
 
     def get_macro_insights(self, benchmarks):
-        # ensure benchmarks passed correctly
         assert len(benchmarks) == 2
         # return dummy insights
         return DummyMacroInsights(total_build_success_rate=1.9, total_crash_rate=0.3)
@@ -69,7 +66,6 @@ def test_generate_summary():
     dummy_util = DummyResultsUtil()
     summary = upload_summary.generate_summary(dummy_util)
 
-    # Verify benchmarks list
     assert isinstance(summary.benchmarks, list)
     assert len(summary.benchmarks) == 2
     assert summary.benchmarks[0] == {
@@ -99,10 +95,8 @@ def test_generate_summary():
 
 
 def test_main_writes_summary(tmp_path, monkeypatch):
-    # Prepare a temporary output file path
     output_file = tmp_path / 'summary.json'
 
-    # Monkeypatch FileSystem to use real file write
     class DummyFileSystem:
         def __init__(self, path):
             # Ensure path matches expected
@@ -114,10 +108,8 @@ def test_main_writes_summary(tmp_path, monkeypatch):
 
     monkeypatch.setattr(upload_summary, 'FileSystem', DummyFileSystem)
 
-    # Monkeypatch Results to our dummy util
     monkeypatch.setattr(upload_summary, 'Results', DummyResultsUtil)
 
-    # Construct command-line args
     args = [
         'upload_summary.py',
         '--results-dir', 'dummy_results',
@@ -137,14 +129,11 @@ def test_main_writes_summary(tmp_path, monkeypatch):
     ]
     monkeypatch.setattr(sys, 'argv', args)
 
-    # Run main
     upload_summary.main()
 
-    # Verify output file exists and content
     assert output_file.exists()
     data = json.loads(output_file.read_text(encoding='utf-8'))
 
-    # Check top-level keys
     expected_keys = {
         'name', 'date', 'benchmark_set', 'llm_model', 'url',
         'run_parameters', 'build_info', 'tags',
@@ -152,20 +141,16 @@ def test_main_writes_summary(tmp_path, monkeypatch):
     }
     assert expected_keys <= set(data.keys())
 
-    # Validate specific fields
     assert data['name'] == 'test_report'
     assert data['date'] == '2025-04-21'
     assert data['llm_model'] == 'test_model'
     assert data['url'] == 'http://example.com'
     assert data['benchmark_set'] == 'bset'
 
-    # Validate tags order: model, benchmark_set, then extra
     assert data['tags'] == ['test_model', 'bset', 'tagA', 'tagB']
 
-    # Validate run_parameters
     assert data['run_parameters'] == {'run_timeout': 10, 'num_samples': 5, 'llm_fix_limit': 2}
 
-    # Validate build_info
     assert data['build_info'] == {
         'branch': 'main',
         'commit_hash': 'abc123',
