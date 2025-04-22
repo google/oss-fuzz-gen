@@ -214,7 +214,7 @@ Below is the template fuzzing harness, which you must follow and modify:
 
 </fuzzer>
 
-Lastly, here is a list of all comma-separated directories that contain header files that you may need to include.
+Lastly, here is a list of all comma-separated header files, please choose some to include.
 <headers>
 {HEADERS}
 </headers>

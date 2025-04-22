@@ -30,7 +30,7 @@ from tool.base_tool import BaseTool
 from tool.container_tool import ProjectContainerTool
 
 MAX_PROMPT_LENGTH = 20000
-
+SAMPLE_HEADERS_COUNT = 30
 
 class BuildScriptAgent(BaseAgent):
   """Base class for buidl script agent."""
@@ -89,22 +89,26 @@ class BuildScriptAgent(BaseAgent):
     if isinstance(tool, ProjectContainerTool):
       tool.write_to_file(self.harness_code, self.harness_path)
 
-    # Try execute the generated build script
+    # Update build script
+    command = '\n'.join(self._parse_tags(response, 'bash'))
     prompt_text = ''
-    success = True
-    for command in self._parse_tags(response, 'bash'):
+    success = False
+    if command:
       # Add set -e to ensure docker image failing is reflected.
       command = command.replace('#!/bin/bash', '')
-      command = f'set -e\n{command}'
+      command = f'#!/bin/bash\nset -e\n{command}'
 
-      # Test command in docker
-      result = tool.execute(command)
+      # Update build script
+      if isinstance(tool, ProjectContainerTool):
+        tool.write_to_file(command, '/src/build.sh')
+
+      # Test and parse result
+      result = tool.execute('compile')
       format_result = self._format_bash_execution_result(result,
                                                          previous_prompt=prompt)
-      prompt_text += self._parse_tag(format_result, 'stderr') + '\n'
-      if result.returncode != 0:
-        success = False
-        break
+      prompt_text = self._parse_tag(format_result, 'stderr') + '\n'
+      if result.returncode == 0:
+        success = True
 
     self.last_status = success
     self.last_result = prompt_text
@@ -174,10 +178,10 @@ class BuildScriptAgent(BaseAgent):
           f'git clone --recurse-submodules {self.github_url} {target_path}',
           shell=True)
 
-    return target_path
+    return os.path.abspath(target_path)
 
   def _discover_headers(self) -> list[str]:
-    """Helper to discover all header file directories for inclusion."""
+    """Helper to discover some header files for inclusion."""
     # Prepare targert repository
     target_path = self._prepare_repository()
 
@@ -185,7 +189,10 @@ class BuildScriptAgent(BaseAgent):
     for root, _, files in os.walk(target_path):
       for file in files:
         if file.endswith((".h", ".hpp")):
-          headers.add(root.replace(target_path, ''))
+          header_path = os.path.join(root, file)
+          headers.add(header_path.replace(target_path, ''))
+        if len(headers) > SAMPLE_HEADERS_COUNT:
+          return list(headers)
 
     return list(headers)
 
