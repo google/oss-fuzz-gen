@@ -126,8 +126,8 @@ RUN mkdir ~/.ssh && ssh-keyscan github.com >> ~/.ssh/known_hosts
 # TODO(David): enable this and make sure performance is too
 # exhaustive (100+ min for some projects)
 ENV FI_DISABLE_LIGHT=1
-COPY *.py *.json requirements.txt $SRC/
-RUN pip install -r requirements.txt
+COPY *.py *.json $SRC/
+RUN python3 -m pip install pyyaml
 WORKDIR $SRC
 COPY build.sh $SRC/
 '''
