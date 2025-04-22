@@ -32,6 +32,7 @@ from tool.container_tool import ProjectContainerTool
 MAX_PROMPT_LENGTH = 20000
 SAMPLE_HEADERS_COUNT = 30
 
+
 class BuildScriptAgent(BaseAgent):
   """Base class for buidl script agent."""
 
