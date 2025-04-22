@@ -315,6 +315,7 @@ class PureMakefileScannerWithSubstitutions(AutoBuildBase):
         'sed -i \'s/CC=/#CC=/g\' ./Makefile',
         'sed -i \'s/CXX=/#CXX=/g\' ./Makefile',
         'sed -i \'s/CC =/#CC=/g\' ./Makefile',
+        'sed -i \'s/gcc/clang/g\' Make.Rules || true',
         'sed -i \'s/CXX =/#CXX=/g\' ./Makefile', 'make V=1 || true'
     ]
     build_container.heuristic_id = self.name + '1'
