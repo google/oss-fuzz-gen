@@ -134,7 +134,6 @@ def prepare_experiment_targets(
   experiment_configs = []
   for benchmark_file in benchmark_yamls:
     experiment_configs.extend(benchmarklib.Benchmark.from_yaml(benchmark_file))
-
   return experiment_configs
 
 
@@ -151,7 +150,6 @@ def run_experiments(benchmark: benchmarklib.Benchmark, args) -> Result:
         temperature=args.temperature,
         temperature_list=args.temperature_list,
     )
-
     result = run_one_experiment.run(benchmark=benchmark,
                                     model=model,
                                     args=args,
@@ -264,9 +262,10 @@ def parse_args() -> argparse.Namespace:
       help=('Delay each experiment by certain seconds (e.g., 10s) to avoid '
             'exceeding quota limit in large scale experiments.'))
   parser.add_argument('-p',
-                      '--prompt-builder',
-                      help='The prompt builder to use for harness generation.',
-                      default='DEFAULT')
+                    '--prompt-builder',
+                    help='The prompt builder to use for harness generation.',
+                    default='DEFAULT',
+                    choices=['DEFAULT', 'CSpecific', 'UnitTestToHarness'])
   parser.add_argument('-ag',
                       '--agent',
                       action='store_true',
@@ -544,39 +543,30 @@ def _process_total_coverage_gain() -> dict[str, dict[str, Any]]:
 
 def main():
   global WORK_DIR
-
   args = parse_args()
   _setup_logging(args.log_level, is_cloud=args.cloud_experiment_name != '')
   logger.info('Starting experiments on PR branch')
-
   # Capture time at start
   start = time.time()
   add_to_json_report(args.work_dir, 'start_time',
                      time.strftime(TIME_STAMP_FMT, time.gmtime(start)))
   # Add num_samples to report.json
   add_to_json_report(args.work_dir, 'num_samples', args.num_samples)
-
   # Set introspector endpoint before performing any operations to ensure the
   # right API endpoint is used throughout.
   introspector.set_introspector_endpoints(args.introspector_endpoint)
-
   run_one_experiment.prepare(args.oss_fuzz_dir)
-
   experiment_targets = prepare_experiment_targets(args)
   if oss_fuzz_checkout.ENABLE_CACHING:
     oss_fuzz_checkout.prepare_cached_images(experiment_targets)
-
   logger.info('Running %s experiment(s) in parallels of %s.',
               len(experiment_targets), str(NUM_EXP))
-
   # Set global variables that are updated throughout experiment runs.
-  WORK_DIR = args.work_dir
-
+  WORK_DIR = args.work_dir  
   # Start parallel coverage aggregate analysis
   coverage_gains_process = Process(
       target=extend_report_with_coverage_gains_process)
   coverage_gains_process.start()
-
   experiment_results = []
   if NUM_EXP == 1:
     for target_benchmark in experiment_targets:

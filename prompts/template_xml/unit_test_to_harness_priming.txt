@@ -1,0 +1,24 @@
+I'm a security engineer looking to convert unit tests into
+fuzzing harnesses.
+
+The target library is {TARGET_REPO}.
+
+The target project is written in the {PROG_LANG} programming language.
+
+{PROGRAMMING_LANGUAGE_TEXT}
+
+The goal is to convert the following unit test into a fuzzing harness:
+
+<code>
+{TEST_SOURCE_CODE}
+</code>
+
+Please write a fuzzing harness that is inspired by this unittest.
+
+{HEADER_FILE_LANG}
+
+{HARNESS_HEADERS}
+
+{TARGET_SAMPLE_HARNESS}
+
+In your response, include *only* the code for the harness, nothing more. You should wrap the code in <code></code> tags.

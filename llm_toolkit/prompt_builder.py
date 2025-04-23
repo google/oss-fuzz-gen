@@ -1814,3 +1814,217 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {}
             'int LLVMFuzzerTestOneInput')
 
     return generated_code
+  
+class UnitTestToHarnessConverter(PromptBuilder):
+  """Builder for unit test-to-harness conversion."""
+
+  def __init__(self,
+               model: models.LLM,
+               benchmark: Benchmark,
+               template_dir: str = DEFAULT_TEMPLATE_DIR):
+    super().__init__(model)
+    self._template_dir = template_dir
+    self.benchmark = benchmark
+
+    #查询harness源码
+    self.harness_source_code = introspector.query_introspector_source_code(
+        self.benchmark.project, self.benchmark.target_path, 0, 10000)
+    
+    self.general_jvm_imports = [
+        'import com.code_intelligence.jazzer.api.FuzzedDataProvider;'
+    ]
+    
+    # Load templates.
+    self.priming_template_file = self._find_template(
+        template_dir, 'unit_test_to_harness_priming.txt')
+    jvm_requirement_template_file = self._find_template(
+        template_dir, 'jvm_requirement_test_to_harness.txt')
+    
+    # Constant prompt description and text
+    self.language_prompt = {
+        'c':
+            '''This is a C programming language so the harness
+should be written in C. This means the  harness should have the structure:
+<code>
+int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {}
+</code>
+      ''',   
+        'c++':
+            '''This is a CPP programming language so the harness
+should be written in CPP. This means the  harness should have the structure:
+<code>
+extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {}
+</code>
+      ''',
+        'jvm':
+            self._get_template(jvm_requirement_template_file).replace(
+                '{HARNESS_NAME}', self.benchmark.target_name)
+    } 
+
+  def _find_template(self, template_dir: str, template_name: str) -> str: 
+    """Finds template file based on |template_dir|."""
+    preferred_template = os.path.join(template_dir, template_name)
+    # Use the preferred template if it exists.
+    if os.path.isfile(preferred_template):
+      return preferred_template
+    # Fall back to the default template.
+    default_template = os.path.join(DEFAULT_TEMPLATE_DIR, template_name)
+    return default_template
+  
+  def _get_template(self, template_file: str) -> str:
+    """Reads the template for prompts."""
+    with open(template_file) as file:
+      return file.read()  
+    
+  def extract_header_files(self, text):
+    # Include any weird macros defined that does not have any values. This
+    # was found empirically to be valuable.
+    includes_in_test = set()
+    for line in text.split('\n'):
+      if '#include' in line and 'test' not in line:
+        includes_in_test.add(line)
+    return includes_in_test
+  
+  def _get_function_doc(self, function_doc: str) -> str:
+    """Reads the template file and returns the contents as a string."""
+    with open(function_doc) as file:
+      return file.read()
+    
+  def build(self,
+            example_pair: list[list[str]],
+            project_example_content: Optional[list[list[str]]] = None,
+            project_context_content: Optional[dict] = None,
+            target_repository: str = '',
+            test_source_code: str = '') -> prompts.Prompt:
+    """Constructs a prompt using the templates in |self| and saves it."""
+
+    with open(self.priming_template_file, 'r') as f:
+      prompt_text = f.read()
+
+    # Format the priming
+    if not target_repository:
+      target_repository = oss_fuzz_checkout.get_project_repository(
+          self.benchmark.project)
+    
+    if not test_source_code:
+      test_source_code = self._get_function_doc(self.benchmark.test_file_path)  
+
+    prompt_text = prompt_text.replace("{TARGET_REPO}", target_repository)
+    prompt_text = prompt_text.replace("{TEST_SOURCE_CODE}", test_source_code)
+
+    language_text = self.language_prompt.get(self.benchmark.language.lower(),
+                                             '')
+    prompt_text = prompt_text.replace('{PROGRAMMING_LANGUAGE_TEXT}',
+                                      language_text)
+
+    if self.benchmark.language == 'jvm':
+      prompt_text = prompt_text.replace('{HEADER_FILE_LANG}', '')
+      prompt_text = prompt_text.replace('{HARNESS_HEADERS}', '')
+
+      # Fuzz Introspector use JVM as it support other JVM languages in addition
+      # to Java. Currently, the logic in OSS-Fuzz-Gen is only working on Java.
+      prompt_text = prompt_text.replace('{PROG_LANG}', 'Java')
+
+      # Provide list of public classes of this project
+      classes = introspector.query_introspector_public_classes(
+          self.benchmark.project)
+      prompt_text = prompt_text.replace('{PUBLIC_CLASSES}', ','.join(classes))
+
+      # Proivde sample harness code
+      harness_sample_text = ('There are already harnesses targeting this '
+                             'project, and an example of this is:\n'
+                             f'<code>\n{self.harness_source_code}\n</code>')
+      prompt_text = prompt_text.replace('{TARGET_SAMPLE_HARNESS}',
+                                        harness_sample_text)
+
+      # Extract must included methods
+      methods = self._get_jvm_public_candidates(self.benchmark.project)
+      prompt_text = prompt_text.replace('{PUBLIC_METHODS}', ','.join(methods))
+
+      # Extract import list
+      other_import_list = self._extract_jvm_imports(test_source_code, classes)
+      prompt_text = prompt_text.replace('{IMPORT_STATEMENTS}',
+                                        '\n'.join(self.general_jvm_imports))
+      prompt_text = prompt_text.replace('{OTHER_IMPORT_STATEMENTS}',
+                                        '\n'.join(other_import_list))
+    else:
+      included_header_files = self.extract_header_files(test_source_code)
+      if included_header_files:
+        harness_included_header_files = (
+            'The following header files are used in the '
+            'test source code. Please make sure to include the same ones: '
+            f'{included_header_files}')
+      else:
+        harness_included_header_files = ''
+      prompt_text = prompt_text.replace('{HARNESS_HEADERS}',
+                                        harness_included_header_files)
+
+      headers_to_include = \
+        introspector.query_introspector_header_files(
+        self.benchmark.project)
+      if headers_to_include:
+        header_inclusion_string = '<headers>\n'
+        header_inclusion_string += ''.join(
+            f'<elem>{h}</elem>\n' for h in headers_to_include)
+
+        header_inclusion_string += '</headers>\n'
+        header_inclusion_string = (
+            'The following header files exist in the project source code. '
+            'If the harness you create needs any header files make sure '
+            'they are in the list:\n'
+            f'{header_inclusion_string}')
+      else:
+        header_inclusion_string = ''
+      prompt_text = prompt_text.replace('{HEADER_FILE_LANG}',
+                                        header_inclusion_string)
+      prompt_text = prompt_text.replace('{PROG_LANG}', self.benchmark.language)
+
+      harness_sample_text = ('There are already harnesses targeting this '
+                             'project, and an example of this is:\n'
+                             f'<code>{self.harness_source_code}</code>')
+      prompt_text = prompt_text.replace('{TARGET_SAMPLE_HARNESS}',
+                                        harness_sample_text)
+
+    self._prompt.add_priming(prompt_text)
+    return self._prompt
+  
+  def build_fixer_prompt(self, benchmark: Benchmark, raw_code: str,
+                         error_desc: Optional[str],
+                         errors: list[str]) -> prompts.Prompt:
+    """Prepares the code-fixing prompt."""
+    return self._prompt
+  
+  def build_triager_prompt(self, benchmark: Benchmark, driver_code: str,
+                           crash_info: str, crash_func: dict) -> prompts.Prompt:
+    """Builds a triager prompt."""
+    return self._prompt
+  
+  def post_process_generated_code(self, generated_code: str) -> str:
+    """Adds specific C headers we always want in the harnesses for C/C++.
+    Add general import statements and remove unnecessary statments for JVM"""
+    if self.benchmark.language.lower() == 'jvm':
+      # For JVM
+      # Remove assert and out statements
+      fixed_code = []
+      prefixes = ['assert', 'System.out']
+      for line in generated_code.split('\n'):
+        if not any(line.lstrip().startswith(prefix) for prefix in prefixes):
+          fixed_code.append(line)
+
+      # Add general import statements
+      import_str = '\n'.join(self.general_jvm_imports)
+      generated_code = '\n'.join(fixed_code)
+      generated_code = f'{import_str}\n{generated_code}'
+    else:
+      # For C/C++
+      for header in C_PROMPT_HEADERS_TO_ALWAYS_INCLUDES:
+        generated_code = f'#include <{header}>\n{generated_code}'
+      generated_code += '\n'
+      if self.benchmark.language.lower() == 'c':
+        generated_code = generated_code.replace(
+            'extern "C" int LLVMFuzzerTestOneInput',
+            'int LLVMFuzzerTestOneInput')
+
+    return generated_code
+    
+
