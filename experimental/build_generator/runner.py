@@ -63,6 +63,7 @@ def setup_worker_project(oss_fuzz_base: str,
       file_content = templates.CLEAN_OSS_FUZZ_DOCKER
       file_content = file_content.replace('{additional_packages}', '')
       file_content = file_content.replace('{repo_url}', github_url)
+      file_content = file_content.replace('{fuzzer_dir}', '$SRC/')
       file_content = file_content.replace('{project_repo_dir}',
                                           github_url.split('/')[-1])
     else:
@@ -379,7 +380,7 @@ def run_agent(target_repositories: List[str], args: argparse.Namespace):
   )
 
   # All agents
-  llm_agents = [llm_agent.BuildSystemBuildScriptAgent]
+  llm_agents = [llm_agent.BuildSystemBuildScriptAgent, llm_agent.AutoDiscoveryBuildScriptAgent]
 
   for target_repository in target_repositories:
     logger.info('Target repository: %s', target_repository)

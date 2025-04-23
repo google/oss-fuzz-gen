@@ -302,7 +302,8 @@ def create_clean_oss_fuzz_from_empty(github_repo: str, build_worker,
   dockerfile = templates.CLEAN_OSS_FUZZ_DOCKER.format(
       repo_url=github_repo,
       project_repo_dir=project_repo_dir,
-      additional_packages=' '.join(additional_packages))
+      additional_packages=' '.join(additional_packages),
+      fuzzer_dir='$SRC/fuzzers/')
   with open(os.path.join(oss_fuzz_folder, 'Dockerfile'), 'w') as docker_out:
     docker_out.write(dockerfile)
 
@@ -346,7 +347,8 @@ def create_clean_oss_fuzz_from_success(github_repo: str, out_dir: str,
   dockerfile = templates.CLEAN_OSS_FUZZ_DOCKER.format(
       repo_url=github_repo,
       project_repo_dir=project_repo_dir,
-      additional_packages=' '.join(pkgs))
+      additional_packages=' '.join(pkgs),
+      fuzzer_dir='$SRC/fuzzers/')
   with open(os.path.join(oss_fuzz_folder, 'Dockerfile'), 'w') as docker_out:
     docker_out.write(dockerfile)
 
