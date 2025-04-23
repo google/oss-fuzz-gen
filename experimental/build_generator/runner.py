@@ -91,16 +91,17 @@ def setup_worker_project(oss_fuzz_base: str,
       sys.exit(1)
     shutil.copyfile(json_config, os.path.join(temp_project_dir, 'creds.json'))
 
-  # Copy over the generator
-  files_to_copy = {
-      'build_script_generator.py', 'manager.py', 'templates.py', 'constants.py',
-      'file_utils.py'
-  }
-  for target_file in files_to_copy:
-    shutil.copyfile(
-        os.path.join(os.path.dirname(os.path.abspath(__file__)), target_file),
-        os.path.join(temp_project_dir,
-                     target_file.split('/')[-1]))
+  # Copy over the generator (only for general approach
+  if not from_agent:
+    files_to_copy = {
+        'build_script_generator.py', 'manager.py', 'templates.py', 'constants.py',
+        'file_utils.py'
+    }
+    for target_file in files_to_copy:
+      shutil.copyfile(
+          os.path.join(os.path.dirname(os.path.abspath(__file__)), target_file),
+          os.path.join(temp_project_dir,
+                       target_file.split('/')[-1]))
 
   # Build a version of the project
   if silent_global:
