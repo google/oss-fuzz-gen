@@ -331,7 +331,8 @@ class BuildSystemBuildScriptAgent(BuildScriptAgent):
                               self.harness_path.split('/')[-1])
 
     headers = self._discover_headers()
-    problem = problem.replace('{HEADERS}', ','.join(headers[:SAMPLE_HEADERS_COUNT]))
+    problem = problem.replace('{HEADERS}',
+                              ','.join(headers[:SAMPLE_HEADERS_COUNT]))
 
     prompt.add_priming(templates.LLM_PRIMING)
     prompt.add_problem(problem)

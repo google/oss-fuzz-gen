@@ -380,7 +380,10 @@ def run_agent(target_repositories: List[str], args: argparse.Namespace):
   )
 
   # All agents
-  llm_agents = [llm_agent.BuildSystemBuildScriptAgent, llm_agent.AutoDiscoveryBuildScriptAgent]
+  llm_agents = [
+      llm_agent.BuildSystemBuildScriptAgent,
+      llm_agent.AutoDiscoveryBuildScriptAgent
+  ]
 
   for target_repository in target_repositories:
     logger.info('Target repository: %s', target_repository)

@@ -548,8 +548,8 @@ def auto_generate(github_url, disable_testing_build_scripts=False, outdir=''):
             build_worker.build_suggestion, build_worker.build_script,
             build_worker.build_directory,
             build_worker.executable_files_build.copy())
-        new_worker.build_suggestion.heuristic_id = new_worker.build_suggestion.heuristic_id + '-%d' % (
-            b_idx)
+        new_worker.build_suggestion.heuristic_id = (
+            new_worker.build_suggestion.heuristic_id + f'-{b_idx}')
         new_worker.executable_files_build['refined-static-libs'] = [ref_lib]
         refined_builds.append((test_dir, new_worker))
     refined_builds.append((test_dir, build_worker))

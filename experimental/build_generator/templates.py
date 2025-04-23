@@ -311,7 +311,7 @@ You must respond using **one of the following XML tags**:
 
 ### Fuzzing Harness Requirements
 
-- Modify the provided harness (`$SRC/{FUZZING_FILE}`) to include the correct headers from the target project found in base or include directories.
+- Modify the provided harness (`$SRC/{FUZZING_FILE}`) to include the correct headers from the target project found in base or include directories, **don't do anything else.**
 - The harness must compile and link cleanly with the static library.
 - Don't include any templates, placeholders or real function calls in the harness—it must be fully compilable without any modifications.
 
