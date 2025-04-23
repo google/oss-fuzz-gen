@@ -94,7 +94,7 @@ class BuildScriptAgent(BaseAgent):
     build_script = '\n'.join(self._parse_tags(response, 'bash'))
     commands = '; '.join(self._parse_tags(response, 'command'))
 
-    if harness and build_script:
+    if build_script:
       self.discovery_stage = False
 
       # Update fuzzing harness
