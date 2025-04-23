@@ -17,6 +17,7 @@ import argparse
 import os
 import re
 import subprocess
+import time
 from typing import Optional
 
 import logger
@@ -29,6 +30,7 @@ from tool.base_tool import BaseTool
 from tool.container_tool import ProjectContainerTool
 
 MAX_PROMPT_LENGTH = 20000
+SAMPLE_HEADERS_COUNT = 30
 
 
 class BuildScriptAgent(BaseAgent):
@@ -88,15 +90,26 @@ class BuildScriptAgent(BaseAgent):
     if isinstance(tool, ProjectContainerTool):
       tool.write_to_file(self.harness_code, self.harness_path)
 
-    # Try execute the generated build script
+    # Update build script
+    command = '\n'.join(self._parse_tags(response, 'bash'))
     prompt_text = ''
-    success = True
-    for command in self._parse_tags(response, 'bash'):
-      result = tool.execute(command)
-      success = success and (result.returncode == 0)
+    success = False
+    if command:
+      # Add set -e to ensure docker image failing is reflected.
+      command = command.replace('#!/bin/bash', '')
+      command = f'#!/bin/bash\nset -e\n{command}'
+
+      # Update build script
+      if isinstance(tool, ProjectContainerTool):
+        tool.write_to_file(command, '/src/build.sh')
+
+      # Test and parse result
+      result = tool.execute('compile')
       format_result = self._format_bash_execution_result(result,
                                                          previous_prompt=prompt)
-      prompt_text += self._parse_tag(format_result, 'stderr') + '\n'
+      prompt_text = self._parse_tag(format_result, 'stderr') + '\n'
+      if result.returncode == 0:
+        success = True
 
     self.last_status = success
     self.last_result = prompt_text
@@ -157,6 +170,33 @@ class BuildScriptAgent(BaseAgent):
 
     return prompt
 
+  def _prepare_repository(self) -> str:
+    """Helper to prepare the repository for analysis."""
+    target_path = os.path.join(self.args.work_dirs,
+                               self.github_url.split('/')[-1])
+    if not os.path.isdir(target_path):
+      subprocess.check_call(
+          f'git clone --recurse-submodules {self.github_url} {target_path}',
+          shell=True)
+
+    return os.path.abspath(target_path)
+
+  def _discover_headers(self) -> list[str]:
+    """Helper to discover some header files for inclusion."""
+    # Prepare targert repository
+    target_path = self._prepare_repository()
+
+    headers = set()
+    for root, _, files in os.walk(target_path):
+      for file in files:
+        if file.endswith((".h", ".hpp")):
+          header_path = os.path.join(root, file)
+          headers.add(header_path.replace(target_path, ''))
+        if len(headers) > SAMPLE_HEADERS_COUNT:
+          return list(headers)
+
+    return list(headers)
+
   def execute(self, result_history: list[Result]) -> BuildResult:
     """Executes the agent based on previous result."""
     last_result = result_history[-1]
@@ -175,6 +215,9 @@ class BuildScriptAgent(BaseAgent):
     try:
       client = self.llm.get_chat_client(model=self.llm.get_model())
       while prompt and cur_round < self.max_round:
+        # Sleep for a minute to avoid over RPM
+        time.sleep(60)
+
         response = self.chat_llm(cur_round,
                                  client=client,
                                  prompt=prompt,
@@ -216,13 +259,8 @@ class BuildSystemBuildScriptAgent(BuildScriptAgent):
 
   def _discover_build_configurations(self) -> bool:
     """Helper to discover the build configuartions of a repository."""
-    # Clone targert repository
-    target_path = os.path.join(self.args.work_dirs,
-                               self.github_url.split('/')[-1])
-    if not os.path.isdir(target_path):
-      subprocess.check_call(
-          f'git clone --recurse-submodules {self.github_url} {target_path}',
-          shell=True)
+    # Prepare targert repository
+    target_path = self._prepare_repository()
 
     # Locate common build configuration files
     for root_dir, _, files in os.walk(target_path):
@@ -264,6 +302,9 @@ class BuildSystemBuildScriptAgent(BuildScriptAgent):
     problem = problem.replace('{FUZZER}', self.harness_code)
     problem = problem.replace('{FUZZING_FILE}',
                               self.harness_path.split('/')[-1])
+
+    headers = self._discover_headers()
+    problem = problem.replace('{HEADERS}', ','.join(headers))
 
     prompt.add_priming(templates.LLM_PRIMING)
     prompt.add_problem(problem)
