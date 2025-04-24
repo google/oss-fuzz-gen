@@ -126,8 +126,8 @@ RUN mkdir ~/.ssh && ssh-keyscan github.com >> ~/.ssh/known_hosts
 # TODO(David): enable this and make sure performance is too
 # exhaustive (100+ min for some projects)
 ENV FI_DISABLE_LIGHT=1
-COPY *.py *.json requirements.txt $SRC/
-RUN pip install -r requirements.txt
+COPY *.py *.json $SRC/
+RUN python3 -m pip install pyyaml
 WORKDIR $SRC
 COPY build.sh $SRC/
 '''
@@ -184,9 +184,13 @@ Please also modify the provided fuzzing harness (stored as `$SRC/{FUZZING_FILE}`
 Generate the most suitable Bash build script for compiling the project, assuming the build is performed on Ubuntu 24.04.
 Assume the build script, stored as `$SRC/build.sh`  will be executed with root privileges – therefore, do not use `sudo`.
 
-Include any necessary flags and environment variables. Please avoid modifying existing environemnt variable flag.
+`$CC` and `$CXX` is already exist, use them to compile source code.
 
-Avoid running tests or installation steps – the goal is to compile the project into a static library. If the original build system does not produce a static library, attempt to use `llvm-ar` to archive object files instead.
+Include any other necessary flags and environment variables. Please use if statement (`if [ -z "${FLAG:-}" ]`) to check if the variable exist or not, if it is existed, append to the original variables, otherwise, create it.
+
+Avoid running tests or installation steps – the goal is to compile the project into a static library if possible. But do not modify any build configuration files (e.g., using `sed` or similar tools).
+
+If the original build system does not produce a static library, attempt to use `llvm-ar` to archive object files instead.
 
 Do not modify any build configuration files (e.g., using `sed` or similar tools).
 
@@ -207,7 +211,13 @@ Here is the Dockerfile that will be used for the build. Assume the build script 
 Below is the template fuzzing harness, which you must follow and modify:
 <fuzzer>
 {FUZZER}
+
 </fuzzer>
+
+Lastly, here is a list of all comma-separated header files, please choose some to include.
+<headers>
+{HEADERS}
+</headers>
 '''
 
 LLM_BUILD_FILE_TEMPLATE = '''
