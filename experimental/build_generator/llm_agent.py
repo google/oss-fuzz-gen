@@ -127,6 +127,7 @@ class BuildScriptAgent(BaseAgent):
       result = tool.execute(commands)
       prompt_text = self._format_bash_execution_result(result,
                                                        previous_prompt=prompt)
+
       if result.returncode == 0:
         success = True
 
@@ -373,7 +374,6 @@ class AutoDiscoveryBuildScriptAgent(BuildScriptAgent):
     problem = templates.LLM_AUTO_DISCOVERY
     problem = problem.replace('{PROJECT_NAME}', self.github_url.split('/')[-1])
     problem = problem.replace('{DOCKERFILE}', dockerfile_str)
-    problem = problem.replace('{FUZZER}', self.harness_code)
     problem = problem.replace('{MAX_DISCOVERY_ROUND}', str(MAX_DISCOVERY_ROUND))
     problem = problem.replace('{FUZZING_FILE}',
                               self.harness_path.split('/')[-1])
