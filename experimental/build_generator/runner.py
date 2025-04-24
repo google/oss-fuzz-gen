@@ -378,7 +378,7 @@ def run_agent(target_repositories: List[str], args: argparse.Namespace):
       temperature=0.4,
       temperature_list=[],
   )
-  llm.MAX_INPUT_TOKEN = MAX_PROMPT_LENGTH
+  llm.MAX_INPUT_TOKEN = llm_agent.MAX_PROMPT_LENGTH
 
   # All agents
   llm_agents = [
