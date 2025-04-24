@@ -271,8 +271,8 @@ class GPT(LLM):
     # Add marker and return the truncated string with another recursive check
     truncated_prompt = raw_prompt_text[-remaining:] + marker
     logger.info('Truncated %d tokens from %d to %d chars.',
-                len(raw_prompt_text) - remaining,
-                len(raw_prompt_text), len(truncated_prompt))
+                len(raw_prompt_text) - remaining, len(raw_prompt_text),
+                len(truncated_prompt))
 
     return self.truncate_prompt(truncated_prompt, extra_text)
 
