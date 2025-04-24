@@ -31,6 +31,7 @@ from tool.container_tool import ProjectContainerTool
 
 MAX_PROMPT_LENGTH = 20000
 SAMPLE_HEADERS_COUNT = 30
+MAX_DISCOVERY_ROUND = 100
 
 
 class BuildScriptAgent(BaseAgent):
@@ -51,6 +52,7 @@ class BuildScriptAgent(BaseAgent):
     self.last_status = False
     self.last_result = ''
     self.target_files = {}
+    self.discovery_stage = False
 
     # Get sample fuzzing harness
     _, _, self.harness_path, self.harness_code = (
@@ -83,31 +85,48 @@ class BuildScriptAgent(BaseAgent):
   def _container_handle_bash_commands(self, response: str, tool: BaseTool,
                                       prompt: Prompt) -> Prompt:
     """Handles the command from LLM with container |tool|."""
-    # Update fuzzing harness
-    harness = self._parse_tag(response, 'fuzzer')
-    if harness:
-      self.harness_code = harness
-    if isinstance(tool, ProjectContainerTool):
-      tool.write_to_file(self.harness_code, self.harness_path)
-
-    # Update build script
-    command = '\n'.join(self._parse_tags(response, 'bash'))
+    # Initialise variables
     prompt_text = ''
     success = False
-    if command:
-      # Add set -e to ensure docker image failing is reflected.
-      command = command.replace('#!/bin/bash', '')
-      command = f'#!/bin/bash\nset -e\n{command}'
+
+    # Retrieve data from response
+    harness = self._parse_tag(response, 'fuzzer')
+    build_script = '\n'.join(self._parse_tags(response, 'bash'))
+    commands = '; '.join(self._parse_tags(response, 'command'))
+
+    if build_script:
+      self.discovery_stage = False
+
+      # Update fuzzing harness
+      if harness:
+        self.harness_code = harness
+      if isinstance(tool, ProjectContainerTool):
+        tool.write_to_file(self.harness_code, self.harness_path)
 
       # Update build script
-      if isinstance(tool, ProjectContainerTool):
-        tool.write_to_file(command, '/src/build.sh')
+      if build_script:
+        # Add set -e to ensure docker image failing is reflected.
+        build_script = build_script.replace('#!/bin/bash', '')
+        build_script = f'#!/bin/bash\nset -e\n{build_script}'
 
-      # Test and parse result
-      result = tool.execute('compile')
-      format_result = self._format_bash_execution_result(result,
-                                                         previous_prompt=prompt)
-      prompt_text = self._parse_tag(format_result, 'stderr') + '\n'
+        # Update build script
+        if isinstance(tool, ProjectContainerTool):
+          tool.write_to_file(build_script, '/src/build.sh')
+
+          # Test and parse result
+          result = tool.execute('compile')
+          format_result = self._format_bash_execution_result(
+              result, previous_prompt=prompt)
+          prompt_text = self._parse_tag(format_result, 'stderr') + '\n'
+          if result.returncode == 0:
+            success = True
+
+    elif commands:
+      # Execute the command directly, then return the formatted result
+      self.discovery_stage = True
+      result = tool.execute(commands)
+      prompt_text = self._format_bash_execution_result(result,
+                                                       previous_prompt=prompt)
       if result.returncode == 0:
         success = True
 
@@ -192,8 +211,6 @@ class BuildScriptAgent(BaseAgent):
         if file.endswith((".h", ".hpp")):
           header_path = os.path.join(root, file)
           headers.add(header_path.replace(target_path, ''))
-        if len(headers) > SAMPLE_HEADERS_COUNT:
-          return list(headers)
 
     return list(headers)
 
@@ -205,6 +222,7 @@ class BuildScriptAgent(BaseAgent):
     self.inspect_tool = ProjectContainerTool(benchmark, name='inspect')
     self.inspect_tool.compile(extra_commands=' && rm -rf /out/* > /dev/null')
     cur_round = 1
+    dis_round = 1
     build_result = BuildResult(benchmark=benchmark,
                                trial=last_result.trial,
                                work_dirs=last_result.work_dirs,
@@ -214,7 +232,7 @@ class BuildScriptAgent(BaseAgent):
     prompt = self._initial_prompt(result_history)
     try:
       client = self.llm.get_chat_client(model=self.llm.get_model())
-      while prompt and cur_round < self.max_round:
+      while prompt:
         # Sleep for a minute to avoid over RPM
         time.sleep(60)
 
@@ -224,7 +242,15 @@ class BuildScriptAgent(BaseAgent):
                                  trial=last_result.trial)
         prompt = self._container_tool_reaction(cur_round, response,
                                                build_result)
-        cur_round += 1
+
+        if self.discovery_stage:
+          dis_round += 1
+          if dis_round >= MAX_DISCOVERY_ROUND:
+            break
+        else:
+          cur_round += 1
+          if cur_round >= self.max_round:
+            break
     finally:
       logger.info('Stopping and removing the inspect container %s',
                   self.inspect_tool.container_id,
@@ -291,6 +317,7 @@ class BuildSystemBuildScriptAgent(BuildScriptAgent):
     # Extract template Dockerfile content
     dockerfile_str = templates.CLEAN_OSS_FUZZ_DOCKER
     dockerfile_str = dockerfile_str.replace('{additional_packages}', '')
+    dockerfile_str = dockerfile_str.replace('{fuzzer_dir}', '$SRC/')
     dockerfile_str = dockerfile_str.replace('{repo_url}', self.github_url)
     dockerfile_str = dockerfile_str.replace('{project_repo_dir}',
                                             self.github_url.split('/')[-1])
@@ -304,7 +331,8 @@ class BuildSystemBuildScriptAgent(BuildScriptAgent):
                               self.harness_path.split('/')[-1])
 
     headers = self._discover_headers()
-    problem = problem.replace('{HEADERS}', ','.join(headers))
+    problem = problem.replace('{HEADERS}',
+                              ','.join(headers[:SAMPLE_HEADERS_COUNT]))
 
     prompt.add_priming(templates.LLM_PRIMING)
     prompt.add_problem(problem)
@@ -323,4 +351,67 @@ class BuildSystemBuildScriptAgent(BuildScriptAgent):
                          author=self,
                          chat_history={self.name: ''})
 
+    return super().execute(result_history)
+
+
+class AutoDiscoveryBuildScriptAgent(BuildScriptAgent):
+  """Generate a working Dockerfile and build script from scratch
+  with LLM auto discovery"""
+
+  def _initial_prompt(self, results: list[Result]) -> Prompt:  # pylint: disable=unused-argument
+    """Constructs initial prompt of the agent."""
+    prompt = self.llm.prompt_type()(None)
+
+    # Extract template Dockerfile content
+    dockerfile_str = templates.CLEAN_OSS_FUZZ_DOCKER
+    dockerfile_str = dockerfile_str.replace('{additional_packages}', '')
+    dockerfile_str = dockerfile_str.replace('{repo_url}', self.github_url)
+    dockerfile_str = dockerfile_str.replace('{project_repo_dir}',
+                                            self.github_url.split('/')[-1])
+
+    # Prepare prompt problem string
+    problem = templates.LLM_AUTO_DISCOVERY
+    problem = problem.replace('{PROJECT_NAME}', self.github_url.split('/')[-1])
+    problem = problem.replace('{DOCKERFILE}', dockerfile_str)
+    problem = problem.replace('{FUZZER}', self.harness_code)
+    problem = problem.replace('{MAX_DISCOVERY_ROUND}', str(MAX_DISCOVERY_ROUND))
+    problem = problem.replace('{FUZZING_FILE}',
+                              self.harness_path.split('/')[-1])
+
+    prompt.add_priming(templates.LLM_PRIMING)
+    prompt.add_problem(problem)
+
+    return prompt
+
+  def _container_tool_reaction(self, cur_round: int, response: str,
+                               build_result: BuildResult) -> Optional[Prompt]:
+    """Validates LLM conclusion or executes its command."""
+    prompt = self.llm.prompt_type()(None)
+
+    if response:
+      prompt = self._container_handle_bash_commands(response, self.inspect_tool,
+                                                    prompt)
+
+      if self.discovery_stage:
+        # Relay the command output back to LLM
+        feedback = templates.LLM_DOCKER_FEEDBACK
+        feedback = feedback.replace('{RESULT}', self.last_result)
+        prompt.add_problem(feedback)
+      else:
+        # Check result and try building with the new builds script
+        prompt = self._container_handle_conclusion(cur_round, response,
+                                                   build_result, prompt)
+
+        if prompt is None:
+          return None
+
+    if not response or not prompt or not prompt.get():
+      prompt = self._container_handle_invalid_tool_usage(
+          self.inspect_tool, cur_round, response, prompt)
+
+    return prompt
+
+  def execute(self, result_history: list[Result]) -> BuildResult:
+    """Executes the agent based on previous result."""
+    self._prepare_repository()
     return super().execute(result_history)
