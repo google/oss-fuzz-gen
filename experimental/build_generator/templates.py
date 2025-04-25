@@ -256,7 +256,7 @@ You are tasked with generating a **build script** to compile and link a target p
 
 The project source code is located at `$SRC/{PROJECT_NAME}` inside a Docker container running **Ubuntu 24.04**.
 
-The fuzzing harness template is provided at `$SRC/{FUZZING_FILE}`.
+The fuzzing harness template is provided at `$SRC/{FUZZING_FILE}` and the content is shown below, which you must modified from the given template.
 
 The generated build script will be executed in a **fresh session for testing**. Do **not** include any `|| true` or similar constructs to suppress errors.
 
@@ -277,6 +277,14 @@ The generated build script will be executed in a **fresh session for testing**. 
   </dockerfile>
   ```
 
+- **Template fuzzing harness:**
+  ```xml
+  <fuzzer>
+  {FUZZER}
+  </fuzzer>
+  ```
+
+
 ### Interaction Protocol
 
 This is an **interactive process**. You do not initially know the project layout or build system. You must request commands to be run inside the Docker container to discover this information.
@@ -287,7 +295,7 @@ Use the following XML tags for communication:
 
 - `<command></command>` – Use to request shell commands that will be executed in the container.
 - `<bash></bash>` – Use only when ready to output the **final build script**.
-- `<fuzzer></fuzzer>` – Use to output the **modified fuzzing harness** with project-specific header includes added.
+- `<fuzzer></fuzzer>` – wraps the complete, modified fuzzing harness, which includes and links the binaries compiled from the target project. The result **MUST** contain the **entire source code** of the updated fuzzing harness, not just a diff or partial snippet.
 
 You may include multiple shell commands in:
 - A single `<command>` tag, separated by semicolons (`;`), or
@@ -324,6 +332,7 @@ You may include multiple shell commands in:
 - Only modify the provided harness by including headers from the target project as necessary.
 - Do **not** add any logic, templates, function calls, or placeholders.
 - The harness must remain syntactically valid and must compile and link cleanly with the generated static library.
+- The result **MUST** contain the **entire source code** of the updated fuzzing harness, not just a diff or partial snippet.
 
 ### Getting Started
 
@@ -334,10 +343,25 @@ Begin by issuing discovery commands to explore the project layout and identify i
 - `find $SRC/{PROJECT_NAME} -type d -name include`
 
 Your first reply should be a `<command>` block to start the investigation.
+And your last reply should returns the full generated build script and modified harness with the `<bash>` and `<fuzzer>` tag.
 '''
 
 LLM_DOCKER_FEEDBACK = '''
 Here is the result of that command execution:
 
 {RESULT}
+'''
+
+LLM_NO_VALID_TAG = '''
+Your previous response is invalid.
+
+To be valid, the response must meet the following requirements regarding XML tags:
+
+- At least one of the following must be present:
+  - One or more <command></command> tags containing valid shell commands.
+  - A single <bash></bash> tag containing the complete Bash build script for compiling both the target project and the fuzzing harness.
+
+- The <fuzzer></fuzzer> tag is **required only if** the fuzzing harness has been modified. If included, it must contain the **entire source code** of the updated fuzzing harness, not just a diff or partial snippet.
+
+Do not include any content outside these XML tags. Revisit your output and regenerate it with these rules strictly followed.
 '''
