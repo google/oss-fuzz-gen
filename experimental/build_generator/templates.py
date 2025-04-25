@@ -143,8 +143,8 @@ main_repo: 'https://github.com/google/oss-fuzz'
 # Docker file used for OSS-Fuzz integrations.
 CLEAN_OSS_FUZZ_DOCKER = BASE_DOCKER_HEAD + ''' {additional_packages}
 COPY *.sh $SRC/
-RUN mkdir $SRC/fuzzers
-COPY *.cpp *.c $SRC/fuzzers/
+RUN mkdir -p {fuzzer_dir}
+COPY *.cpp *.c {fuzzer_dir}
 # Some projects may have recurisve modules from github without use of ssl,
 # and this needs to be trusted. The below command can be removed if this
 # project is not doing such.
@@ -172,52 +172,66 @@ You are a developer wanting to build a given C/C++ projects.
 </system>'''
 
 LLM_PROBLEM = '''
-You are to build a fuzzing harness that attempts to fuzz the target project. You must use the provided build system file to build the project.
-Your output must contain only thwo XML tags:
-<bash></bash> – wraps the complete build script for both the target project and the fuzzing harness.
-<fuzzer></fuzzer> – wraps the complete, modified fuzzing harness, which includes and links the binaries compiled from the target project.
+You are tasked with generating a fuzzing harness and build script to fuzz a target project. Use the provided build system files to compile the project and link it with the fuzzing harness.
 
-If additional packages are required, please generate the corresponding `apt install` command.
+### Output Format
+Your response **must only contain two XML tags**:
+- `<bash></bash>`: Wraps the complete Bash build script for compiling both the target project and the fuzzing harness.
+- `<fuzzer></fuzzer>`: Wraps the full fuzzing harness source code, modified to include and link the compiled target project.
 
-Please also modify the provided fuzzing harness (stored as `$SRC/{FUZZING_FILE}`) to include relevant headers from the target project.
+### Build Script Instructions
+- The build script will be executed as root on **Ubuntu 24.04**, so **do not use `sudo`**.
+- `$CC` and `$CXX` are set and must be used for compilation.
+- If additional packages are needed, include a single `apt install` command at the top.
+- Use the provided build system files to compile the target project.
+- If a static library is not produced, collect the object files and archive them using `llvm-ar`.
+- Do **not** modify existing build configuration files (e.g., via `sed`).
+- Avoid running tests or install targets—only compilation is required.
+- Ensure environment variables are handled as follows:
+  ```bash
+  if [ -z "${CFLAGS:-}" ]; then
+    CFLAGS="-I/some/include"
+  else
+    CFLAGS="$CFLAGS -I/some/include"
+  fi
+  ```
+- Ensure the fuzzing harness is linked with the target project using:
+  ```bash
+  -Wl,--whole-archive libtarget.a -Wl,--no-whole-archive
+  ```
 
-Generate the most suitable Bash build script for compiling the project, assuming the build is performed on Ubuntu 24.04.
-Assume the build script, stored as `$SRC/build.sh`  will be executed with root privileges – therefore, do not use `sudo`.
+### Fuzzing Harness Instructions
+- Modify the provided fuzzing harness (`$SRC/{FUZZING_FILE}`) to include relevant headers from the target project.
+- Include appropriate header files from the list below.
 
-`$CC` and `$CXX` is already exist, use them to compile source code.
+### Provided Resources
+- **Build system configuration files:**
+  ```xml
+  <build_files>
+  {BUILD_FILES}
+  </build_files>
+  ```
 
-Include any other necessary flags and environment variables. Please use if statement (`if [ -z "${FLAG:-}" ]`) to check if the variable exist or not, if it is existed, append to the original variables, otherwise, create it.
+- **Dockerfile for build environment:**
+  ```xml
+  <dockerfile>
+  {DOCKERFILE}
+  </dockerfile>
+  ```
 
-Avoid running tests or installation steps – the goal is to compile the project into a static library if possible. But do not modify any build configuration files (e.g., using `sed` or similar tools).
+- **Template fuzzing harness:**
+  ```xml
+  <fuzzer>
+  {FUZZER}
+  </fuzzer>
+  ```
 
-If the original build system does not produce a static library, attempt to use `llvm-ar` to archive object files instead.
-
-Do not modify any build configuration files (e.g., using `sed` or similar tools).
-
-For the fuzzing harness, ensure it includes headers from the target project. The build script must contain the appropriate include flags to compile the harness.
-
-Ensure that the static library compiled from the target project is linked to the fuzzing harness binary using the `-Wl,--whole-archive` linker flag – this is mandatory.
-
-Below is a list of build system configuration files found in the target repository:
-<build_files>
-{BUILD_FILES}
-</build_files>
-
-Here is the Dockerfile that will be used for the build. Assume the build script will be copied to `$SRC/build.sh` within the Docker container for execution:
-<dockerfile>
-{DOCKERFILE}
-</dockerfile>
-
-Below is the template fuzzing harness, which you must follow and modify:
-<fuzzer>
-{FUZZER}
-
-</fuzzer>
-
-Lastly, here is a list of all comma-separated header files, please choose some to include.
-<headers>
-{HEADERS}
-</headers>
+- **Available header files:**
+  ```xml
+  <headers>
+  {HEADERS}
+  </headers>
+  ```
 '''
 
 LLM_BUILD_FILE_TEMPLATE = '''
@@ -235,4 +249,78 @@ Your output must contain only two XML tags:
 
 Here is a dump of the bash execution result.
 {BASH_RESULT}
+'''
+
+LLM_AUTO_DISCOVERY = '''
+You are tasked with generating a fuzzing harness and build script to fuzz a target project. The project source code is located at `$SRC/{PROJECT_NAME}` inside a Docker container running **Ubuntu 24.04**. A template fuzzing harness is available at `$SRC/{FUZZING_FILE}` and will need to be modified to link with the compiled static library of the target project.
+
+The Docker container uses a specific environment described by the provided **Dockerfile**. The harness compilation and target project build will be executed within this container.
+
+### Provided Resources
+
+- **Dockerfile for build environment:**
+  ```xml
+  <dockerfile>
+  {DOCKERFILE}
+  </dockerfile>
+  ```
+
+- **Template fuzzing harness:**
+  ```xml
+  <fuzzer>
+  {FUZZER}
+  </fuzzer>
+  ```
+
+### Interaction Protocol
+
+This will be an interactive process. You do not have full knowledge of the build system or environment at the start. You must discover the necessary information step-by-step by requesting commands, which I will execute for you inside the Docker container. After each command, I will return the output for you to analyze.
+
+Each command is executed using `docker exec`, which starts a **fresh shell session each time**. This means any state (such as project build or set environment variables) will be lost between commands.
+
+If you need to perform multiple steps in a single session, you have two options:
+- **Use a single `<command>` tag** and separate the commands with `;`.
+- **Use multiple `<command>` tags**, each wrapping one command — they will be executed in the order received.
+
+You are limited to **{MAX_DISCOVERY_ROUND} discovery rounds**, so plan your exploration efficiently before generating the final build script and fuzzing harness.
+
+You must respond using **one of the following XML tags**:
+- `<command></command>`: Use this to request discovery commands (e.g., check for CMakeLists.txt, run `configure`, inspect files, etc.). Wait for my reply with output before continuing.
+- `<bash></bash>`: Use this **only when you are ready** to output the final Bash build script that compiles the target project and the fuzzing harness.
+- `<fuzzer></fuzzer>`: Use this to output the full, modified fuzzing harness that includes and links the compiled target project.
+
+### Build Script Guidelines
+
+- The script is executed as root in Ubuntu 24.04. **Do not use `sudo`.**
+- Use `$CC` and `$CXX` for all compilation steps.
+- If the project does not automatically produce a static library, collect `.o` files and archive them with `llvm-ar`.
+- Do **not** modify existing build configuration files.
+- Avoid tests, installs, and unnecessary build steps.
+- Handle environment variables properly:
+  ```bash
+  if [ -z "${CFLAGS:-}" ]; then
+    CFLAGS="-I/some/include"
+  else
+    CFLAGS="$CFLAGS -I/some/include"
+  fi
+  ```
+- Link the static library into the fuzzing harness with:
+  ```bash
+  -Wl,--whole-archive libtarget.a -Wl,--no-whole-archive
+  ```
+
+### Fuzzing Harness Requirements
+
+- Modify the provided harness (`$SRC/{FUZZING_FILE}`) to include the correct headers from the target project found in base or include directories, **don't do anything else.**
+- The harness must compile and link cleanly with the static library.
+- Don't include any templates, placeholders or real function calls in the harness—it must be fully compilable without any modifications.
+
+Begin by issuing discovery commands to understand the project’s build system and layout.
+Your first reply should be a `<command>` block to start the investigation.
+'''
+
+LLM_DOCKER_FEEDBACK = '''
+Here is the result of that command execution:
+
+{RESULT}
 '''
