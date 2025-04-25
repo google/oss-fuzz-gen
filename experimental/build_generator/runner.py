@@ -369,21 +369,10 @@ def run_agent(target_repositories: List[str], args: argparse.Namespace):
   # Prepare environment
   worker_project_name = get_next_worker_project(oss_fuzz_base)
 
-  # Prepare LLM model
-  llm = models.LLM.setup(
-      ai_binary=os.getenv('AI_BINARY', ''),
-      name=args.model,
-      max_tokens=4096,
-      num_samples=1,
-      temperature=0.4,
-      temperature_list=[],
-  )
-  llm.MAX_INPUT_TOKEN = llm_agent.MAX_PROMPT_LENGTH
-
   # All agents
   llm_agents = [
+      llm_agent.AutoDiscoveryBuildScriptAgent,
       llm_agent.BuildSystemBuildScriptAgent,
-      llm_agent.AutoDiscoveryBuildScriptAgent
   ]
 
   for target_repository in target_repositories:
@@ -399,6 +388,17 @@ def run_agent(target_repositories: List[str], args: argparse.Namespace):
       harness = ''
       build_success = False
       for trial in range(args.max_round):
+        # Prepare new LLM model
+        llm = models.LLM.setup(
+            ai_binary=os.getenv('AI_BINARY', ''),
+            name=args.model,
+            max_tokens=4096,
+            num_samples=1,
+            temperature=0.4,
+            temperature_list=[],
+        )
+        llm.MAX_INPUT_TOKEN = llm_agent.MAX_PROMPT_LENGTH
+
         logger.info('Agent: %s. Round %d', llm_agent_ctr.__name__, trial)
         agent = llm_agent_ctr(trial=trial,
                               llm=llm,

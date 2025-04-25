@@ -51,6 +51,7 @@ class BuildScriptAgent(BaseAgent):
     self.build_files = {}
     self.last_status = False
     self.last_result = ''
+    self.invalid = False
     self.target_files = {}
     self.discovery_stage = False
 
@@ -88,6 +89,7 @@ class BuildScriptAgent(BaseAgent):
     # Initialise variables
     prompt_text = ''
     success = False
+    self.invalid = False
 
     # Retrieve data from response
     harness = self._parse_tag(response, 'fuzzer')
@@ -135,6 +137,8 @@ class BuildScriptAgent(BaseAgent):
 
       if result.returncode == 0:
         success = True
+    else:
+      self.invalid = True
 
     self.last_status = success
     self.last_result = prompt_text
@@ -148,6 +152,10 @@ class BuildScriptAgent(BaseAgent):
     logger.info('----- ROUND %02d Received conclusion -----',
                 cur_round,
                 trial=build_result.trial)
+
+    # Don't need to check for invalid result
+    if self.invalid:
+      return prompt
 
     # Execution fail
     if not self.last_status:
@@ -390,12 +398,25 @@ class AutoDiscoveryBuildScriptAgent(BuildScriptAgent):
     problem = templates.LLM_AUTO_DISCOVERY
     problem = problem.replace('{PROJECT_NAME}', self.github_url.split('/')[-1])
     problem = problem.replace('{DOCKERFILE}', dockerfile_str)
+    problem = problem.replace('{FUZZER}', self.harness_code)
     problem = problem.replace('{MAX_DISCOVERY_ROUND}', str(MAX_DISCOVERY_ROUND))
     problem = problem.replace('{FUZZING_FILE}',
                               self.harness_path.split('/')[-1])
 
     prompt.add_priming(templates.LLM_PRIMING)
     prompt.add_problem(problem)
+
+    return prompt
+
+  def _container_handle_invalid_tool_usage(self, tool: BaseTool, cur_round: int,
+                                           response: str,
+                                           prompt: Prompt) -> Prompt:
+    """Formats a prompt to re-teach LLM how to use the |tool|."""
+    logger.warning('ROUND %02d Invalid response from LLM: %s',
+                   cur_round,
+                   response,
+                   trial=self.trial)
+    prompt.add_problem(templates.LLM_NO_VALID_TAG)
 
     return prompt
 
@@ -421,7 +442,7 @@ class AutoDiscoveryBuildScriptAgent(BuildScriptAgent):
         if prompt is None:
           return None
 
-    if not response or not prompt or not prompt.get():
+    if not response or not prompt.get() or self.invalid:
       prompt = self._container_handle_invalid_tool_usage(
           self.inspect_tool, cur_round, response, prompt)
 
