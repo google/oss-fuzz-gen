@@ -97,6 +97,12 @@ class BuildScriptAgent(BaseAgent):
     if build_script:
       self.discovery_stage = False
 
+      # Restart the container to ensure a fresh session for test
+      if isinstance(tool, ProjectContainerTool):
+        tool.terminate()
+      tool = ProjectContainerTool(benchmark=tool.benchmark, name='test')
+      self.inspect_tool = tool
+
       # Update fuzzing harness
       if harness:
         self.harness_code = harness
@@ -111,7 +117,7 @@ class BuildScriptAgent(BaseAgent):
 
         # Update build script
         if isinstance(tool, ProjectContainerTool):
-          tool.write_to_file(build_script, '/src/build.sh')
+          tool.write_to_file(build_script, tool.build_script_path)
 
           # Test and parse result
           result = tool.execute('compile')
@@ -123,7 +129,6 @@ class BuildScriptAgent(BaseAgent):
 
     elif commands:
       # Execute the command directly, then return the formatted result
-      self.discovery_stage = True
       result = tool.execute(commands)
       prompt_text = self._format_bash_execution_result(result,
                                                        previous_prompt=prompt)
@@ -357,6 +362,17 @@ class BuildSystemBuildScriptAgent(BuildScriptAgent):
 class AutoDiscoveryBuildScriptAgent(BuildScriptAgent):
   """Generate a working Dockerfile and build script from scratch
   with LLM auto discovery"""
+
+  def __init__(self,
+               trial: int,
+               llm: LLM,
+               args: argparse.Namespace,
+               github_url: str,
+               language: str,
+               tools: Optional[list[BaseTool]] = None,
+               name: str = ''):
+    super().__init__(trial, llm, args, github_url, language, tools, name)
+    self.discovery_stage = True
 
   def _initial_prompt(self, results: list[Result]) -> Prompt:  # pylint: disable=unused-argument
     """Constructs initial prompt of the agent."""
