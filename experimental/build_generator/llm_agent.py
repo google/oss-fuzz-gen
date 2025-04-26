@@ -51,6 +51,7 @@ class BuildScriptAgent(BaseAgent):
     self.build_files = {}
     self.last_status = False
     self.last_result = ''
+    self.invalid = False
     self.target_files = {}
     self.discovery_stage = False
 
@@ -88,6 +89,7 @@ class BuildScriptAgent(BaseAgent):
     # Initialise variables
     prompt_text = ''
     success = False
+    self.invalid = False
 
     # Retrieve data from response
     harness = self._parse_tag(response, 'fuzzer')
@@ -96,6 +98,12 @@ class BuildScriptAgent(BaseAgent):
 
     if build_script:
       self.discovery_stage = False
+
+      # Restart the container to ensure a fresh session for test
+      if isinstance(tool, ProjectContainerTool):
+        tool.terminate()
+      tool = ProjectContainerTool(benchmark=tool.benchmark, name='test')
+      self.inspect_tool = tool
 
       # Update fuzzing harness
       if harness:
@@ -111,7 +119,7 @@ class BuildScriptAgent(BaseAgent):
 
         # Update build script
         if isinstance(tool, ProjectContainerTool):
-          tool.write_to_file(build_script, '/src/build.sh')
+          tool.write_to_file(build_script, tool.build_script_path)
 
           # Test and parse result
           result = tool.execute('compile')
@@ -123,12 +131,14 @@ class BuildScriptAgent(BaseAgent):
 
     elif commands:
       # Execute the command directly, then return the formatted result
-      self.discovery_stage = True
       result = tool.execute(commands)
       prompt_text = self._format_bash_execution_result(result,
                                                        previous_prompt=prompt)
+
       if result.returncode == 0:
         success = True
+    else:
+      self.invalid = True
 
     self.last_status = success
     self.last_result = prompt_text
@@ -142,6 +152,10 @@ class BuildScriptAgent(BaseAgent):
     logger.info('----- ROUND %02d Received conclusion -----',
                 cur_round,
                 trial=build_result.trial)
+
+    # Don't need to check for invalid result
+    if self.invalid:
+      return prompt
 
     # Execution fail
     if not self.last_status:
@@ -358,6 +372,17 @@ class AutoDiscoveryBuildScriptAgent(BuildScriptAgent):
   """Generate a working Dockerfile and build script from scratch
   with LLM auto discovery"""
 
+  def __init__(self,
+               trial: int,
+               llm: LLM,
+               args: argparse.Namespace,
+               github_url: str,
+               language: str,
+               tools: Optional[list[BaseTool]] = None,
+               name: str = ''):
+    super().__init__(trial, llm, args, github_url, language, tools, name)
+    self.discovery_stage = True
+
   def _initial_prompt(self, results: list[Result]) -> Prompt:  # pylint: disable=unused-argument
     """Constructs initial prompt of the agent."""
     prompt = self.llm.prompt_type()(None)
@@ -383,6 +408,18 @@ class AutoDiscoveryBuildScriptAgent(BuildScriptAgent):
 
     return prompt
 
+  def _container_handle_invalid_tool_usage(self, tool: BaseTool, cur_round: int,
+                                           response: str,
+                                           prompt: Prompt) -> Prompt:
+    """Formats a prompt to re-teach LLM how to use the |tool|."""
+    logger.warning('ROUND %02d Invalid response from LLM: %s',
+                   cur_round,
+                   response,
+                   trial=self.trial)
+    prompt.add_problem(templates.LLM_NO_VALID_TAG)
+
+    return prompt
+
   def _container_tool_reaction(self, cur_round: int, response: str,
                                build_result: BuildResult) -> Optional[Prompt]:
     """Validates LLM conclusion or executes its command."""
@@ -405,7 +442,7 @@ class AutoDiscoveryBuildScriptAgent(BuildScriptAgent):
         if prompt is None:
           return None
 
-    if not response or not prompt or not prompt.get():
+    if not response or not prompt.get() or self.invalid:
       prompt = self._container_handle_invalid_tool_usage(
           self.inspect_tool, cur_round, response, prompt)
 
