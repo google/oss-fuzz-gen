@@ -53,6 +53,7 @@ class OnePromptEnhancer(OnePromptPrototyper):
             builder = DefaultTemplateBuilder(self.llm)
 
             # If there were semantic errors, build a fixer prompt
+            # TODO(dongge): Refine this logic.
             if last_result.semantic_result:
                 error_desc, errors = last_result.semantic_result.get_error_info()
                 prompt = builder.build_fixer_prompt(
@@ -75,7 +76,7 @@ class OnePromptEnhancer(OnePromptPrototyper):
                     instruction='',
                 )
 
-            # Persist the prompt for downstream steps
+            # TODO: A different file name/dir.
             prompt.save(self.args.work_dirs.prompt)
 
         return prompt

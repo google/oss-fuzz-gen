@@ -51,7 +51,7 @@ class Enhancer(Prototyper):
                    trial=self.trial)
       return Prompt()
 
-        # Delegate JVM-specific logic to JvmCoverageEnhancer
+    # Delegate JVM-specific logic to JvmCoverageEnhancer
     if benchmark.language == 'jvm':
         return JvmCoverageEnhancer(
             self.llm,
@@ -61,7 +61,7 @@ class Enhancer(Prototyper):
             self.args
         ).initial_prompt()
 
-        # Non-JVM path: reuse existing logic
+        #TODO(dongge): Refine this logic.
         if last_result.semantic_result:
             error_desc, errors = last_result.semantic_result.get_error_info()
             builder = EnhancerTemplateBuilder(
@@ -83,6 +83,7 @@ class Enhancer(Prototyper):
                 'Last result does not contain either semantic result or coverage result',
                 trial=self.trial
             )
+            # TODO(dongge): Give some default initial prompt.
             return TextPrompt(
                 'Last result does not contain either semantic result or coverage result'
             )
