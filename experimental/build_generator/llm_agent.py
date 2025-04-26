@@ -93,7 +93,7 @@ class BuildScriptAgent(BaseAgent):
 
     # Retrieve data from response
     harness = self._parse_tag(response, 'fuzzer')
-    build_script = '\n'.join(self._parse_tags(response, 'bash'))
+    build_script = self._parse_tag(response, 'bash')
     commands = '; '.join(self._parse_tags(response, 'command'))
 
     if build_script:
@@ -174,7 +174,7 @@ class BuildScriptAgent(BaseAgent):
     # Execution success
     build_result.compiles = True
     build_result.fuzz_target_source = self.harness_code
-    build_script_source = '\n'.join(self._parse_tags(response, 'bash'))
+    build_script_source = self._parse_tag(response, 'bash')
     if not build_script_source.startswith('#!'):
       build_script_source = templates.EMPTY_OSS_FUZZ_BUILD + build_script_source
     build_result.build_script_source = build_script_source
