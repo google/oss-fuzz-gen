@@ -247,8 +247,8 @@ class BuildScriptAgent(BaseAgent):
     try:
       client = self.llm.get_chat_client(model=self.llm.get_model())
       while prompt:
-        # Sleep for a minute to avoid over RPM
-        time.sleep(60)
+        # Sleep shortly to avoid RPM
+        time.sleep(6)
 
         response = self.chat_llm(cur_round,
                                  client=client,
