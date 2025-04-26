@@ -61,6 +61,7 @@ def setup_workdirs(defined_dir):
   subprocess.check_call('git clone https://github.com/google/oss-fuzz oss-fuzz',
                         shell=True,
                         cwd=workdir)
+  os.mkdir(os.path.join(workdir, 'oss-fuzz', 'venv'))
 
   # Clone Fuzz Introspector
   subprocess.check_call('git clone https://github.com/ossf/fuzz-introspector',
@@ -214,7 +215,7 @@ def run_ofg_generation(projects_to_run, workdir, args):
   cmd.append('http://127.0.0.1:8080/api')
   cmd.append('-mr')
   cmd.append(str(args.max_round))
-  if args.agent:
+  if args.hg_agent:
     cmd.append('--agent')
 
   environ = os.environ.copy()
@@ -443,13 +444,20 @@ def run_analysis(args):
 
   oss_fuzz_dir = os.path.join(abs_workdir, 'oss-fuzz-1')
   target_repositories = runner.extract_target_repositories(args.input)
-  runner.run_parallels(os.path.abspath(oss_fuzz_dir),
-                       target_repositories,
-                       args.model,
-                       'all',
-                       out_folder,
-                       parallel_jobs=args.build_jobs,
-                       max_timeout=args.build_timeout)
+  if args.agent:
+    # Prepare arguments used deeper in OFG core.
+    # TODO(David) make this cleaner.
+    args.oss_fuzz = oss_fuzz_dir
+    args.work_dirs = 'work_dirs'
+    runner.run_agent(target_repositories, args)
+  else:
+    runner.run_parallels(os.path.abspath(oss_fuzz_dir),
+                         target_repositories,
+                         args.model,
+                         'all',
+                         out_folder,
+                         parallel_jobs=args.build_jobs,
+                         max_timeout=args.build_timeout)
 
   # Exit if only builds are required.
   if args.build_only:
@@ -486,6 +494,10 @@ def parse_commandline():
   parser.add_argument('--agent',
                       '-a',
                       help='Enable agent workflow',
+                      action='store_true')
+  parser.add_argument('--hg-agent',
+                      '-ha',
+                      help='Enable agent harness generation',
                       action='store_true')
   parser.add_argument('-gm',
                       '--generate-benchmarks-max',
