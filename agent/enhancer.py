@@ -29,38 +29,37 @@ from results import AnalysisResult, BuildResult, Result
 class Enhancer(Prototyper):
   """The Agent to refine a compilable fuzz target for higher coverage."""
 
-    def _initial_prompt(self, results: list[Result]) -> Prompt:
-        """Constructs initial prompt of the agent."""
-        last_result = results[-1]
-        benchmark = last_result.benchmark
+  def _initial_prompt(self, results: list[Result]) -> Prompt:
+    """Constructs initial prompt of the agent."""
+    last_result = results[-1]
+    benchmark = last_result.benchmark
 
-        if not isinstance(last_result, AnalysisResult):
-            logger.error(
-                'The last result in Enhancer is not AnalysisResult: %s',
-                results,
-                trial=self.trial
-            )
-            return Prompt()
+    if not isinstance(last_result, AnalysisResult):
+      logger.error('The last result in Enhancer is not AnalysisResult: %s',
+                   results,
+                   trial=self.trial)
+      return Prompt()
 
-        # Find the most recent build result
-        last_build = next((r for r in reversed(results) if isinstance(r, BuildResult)), None)
-        if last_build is None:
-            logger.error(
-                'Unable to find the last build result in Enhancer: %s',
-                results,
-                trial=self.trial
-            )
-            return Prompt()
+    last_build_result = None
+    for result in results[::-1]:
+      if isinstance(result, BuildResult):
+        last_build_result = result
+        break
+    if not last_build_result:
+      logger.error('Unable to find the last build result in Enhancer : %s',
+                   results,
+                   trial=self.trial)
+      return Prompt()
 
         # Delegate JVM-specific logic to JvmCoverageEnhancer
-        if benchmark.language == 'jvm':
-            return JvmCoverageEnhancer(
-                self.llm,
-                benchmark,
-                last_result,
-                last_build,
-                self.args
-            ).initial_prompt()
+    if benchmark.language == 'jvm':
+        return JvmCoverageEnhancer(
+            self.llm,
+            benchmark,
+            last_result,
+            last_build,
+            self.args
+        ).initial_prompt()
 
         # Non-JVM path: reuse existing logic
         if last_result.semantic_result:
