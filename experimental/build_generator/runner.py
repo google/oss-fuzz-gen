@@ -26,6 +26,7 @@ from typing import List
 import git
 from openai import OpenAIError
 
+from experiment import oss_fuzz_checkout
 from experiment.benchmark import Benchmark
 from experiment.workdir import WorkDirs
 from experimental.build_generator import (constants, file_utils, llm_agent,
@@ -364,6 +365,11 @@ def run_agent(target_repositories: List[str], args: argparse.Namespace):
   llm agent approach."""
   # Process default arguments
   oss_fuzz_base = os.path.abspath(args.oss_fuzz)
+
+  # Set OSS_FUZZ_DIR in oss_fuzz_checkout as the agent will use this module
+  # for dealing with the generated project.
+
+  oss_fuzz_checkout.OSS_FUZZ_DIR = oss_fuzz_base
   work_dirs = WorkDirs(args.work_dirs, keep=True)
 
   # Prepare environment
