@@ -17,9 +17,10 @@ Use it as a usual module locally, or as script in cloud builds.
 import logger
 from agent.one_prompt_prototyper import OnePromptPrototyper
 from experiment.workdir import WorkDirs
-from llm_toolkit.prompt_builder import DefaultTemplateBuilder, JvmFixingBuilder
+from llm_toolkit.prompt_builder import DefaultTemplateBuilder
 from llm_toolkit.prompts import Prompt
 from results import AnalysisResult, BuildResult, Result
+from jvm_coverage_enhancer import JvmCoverageEnhancer
 
 
 class OnePromptEnhancer(OnePromptPrototyper):
@@ -36,33 +37,42 @@ class OnePromptEnhancer(OnePromptPrototyper):
                    trial=self.trial)
       return Prompt()
 
-    if benchmark.language == 'jvm':
-      # TODO: Do this in a separate agent for JVM coverage.
-      builder = JvmFixingBuilder(self.llm, benchmark,
-                                 last_result.run_result.fuzz_target_source, [])
-      prompt = builder.build([], None, None)
-    else:
-      # TODO(dongge): Refine this logic.
-      builder = DefaultTemplateBuilder(self.llm)
-      if last_result.semantic_result:
-        error_desc, errors = last_result.semantic_result.get_error_info()
-        prompt = builder.build_fixer_prompt(benchmark,
-                                            last_result.fuzz_target_source,
-                                            error_desc,
-                                            errors,
-                                            context='',
-                                            instruction='')
-      else:
-        prompt = builder.build_fixer_prompt(
-            benchmark=benchmark,
-            raw_code=last_result.fuzz_target_source,
-            error_desc='',
-            errors=[],
-            coverage_result=last_result.coverage_result,
-            context='',
-            instruction='')
-      # TODO: A different file name/dir.
-      prompt.save(self.args.work_dirs.prompt)
+        # For JVM benchmarks, delegate to the dedicated coverage enhancer
+        if benchmark.language == 'jvm':
+            jvm_agent = JvmCoverageEnhancer(
+                llm=self.llm,
+                benchmark=benchmark,
+                analysis_result=last_result,
+                build_result=None,
+                args=self.args
+            )
+            prompt = jvm_agent.initial_prompt()
+        else:
+            builder = DefaultTemplateBuilder(self.llm)
+            # If there were semantic errors, build a fixer prompt
+            if last_result.semantic_result:
+                error_desc, errors = last_result.semantic_result.get_error_info()
+                prompt = builder.build_fixer_prompt(
+                    benchmark,
+                    last_result.fuzz_target_source,
+                    error_desc,
+                    errors,
+                    context='',
+                    instruction=''
+                )
+            else:
+                # Build a default fixer prompt based on coverage feedback
+                prompt = builder.build_fixer_prompt(
+                    benchmark=benchmark,
+                    raw_code=last_result.fuzz_target_source,
+                    error_desc='',
+                    errors=[],
+                    coverage_result=last_result.coverage_result,
+                    context='',
+                    instruction=''
+                )
+            # Persist the prompt for downstream steps
+            prompt.save(self.args.work_dirs.prompt)
 
     return prompt
 
