@@ -330,8 +330,8 @@ class Evaluator:
           '\nENV CFLAGS="${CFLAGS} -g"\n'
           '\nENV CXXFLAGS="${CXXFLAGS} -g"\n'
           '\nRUN apt-get update\n'
-          '\napt-get install -y lldb\n'
-          '\napt-get install -y screen\n')
+          '\nRUN apt-get install -y lldb\n'
+          '\nRUN apt-get install -y screen\n')
 
     return name
 
