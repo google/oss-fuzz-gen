@@ -65,7 +65,7 @@ class BaseAgent(ABC):
     """Chat with LLM."""
     logger.info('<CHAT PROMPT:ROUND %02d>%s</CHAT PROMPT:ROUND %02d>',
                 cur_round,
-                prompt.get(),
+                prompt.gettext(),
                 cur_round,
                 trial=trial)
     response = self.llm.chat_llm(client=client, prompt=prompt)
@@ -80,7 +80,7 @@ class BaseAgent(ABC):
     """Chat with LLM."""
     logger.info('<CHAT PROMPT:ROUND %02d>%s</CHAT PROMPT:ROUND %02d>',
                 cur_round,
-                prompt.get(),
+                prompt.gettext(),
                 cur_round,
                 trial=trial)
     response = self.llm.ask_llm(prompt=prompt)

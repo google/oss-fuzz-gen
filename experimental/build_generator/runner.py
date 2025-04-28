@@ -26,6 +26,7 @@ from typing import List
 import git
 from openai import OpenAIError
 
+from experiment import oss_fuzz_checkout
 from experiment.benchmark import Benchmark
 from experiment.workdir import WorkDirs
 from experimental.build_generator import (constants, file_utils, llm_agent,
@@ -288,7 +289,7 @@ def copy_result_to_out(project_generated,
 
   oss_fuzz_projects = os.path.join(output, 'oss-fuzz-projects')
   os.makedirs(oss_fuzz_projects, exist_ok=True)
-
+  dst_dir = ''
   if from_agent:
     build_dir = os.path.join(raw_result_dir, project_generated)
     if not os.path.isdir(build_dir):
@@ -327,6 +328,29 @@ def copy_result_to_out(project_generated,
         continue
       shutil.copytree(build_dir, dst_dir)
 
+  if not dst_dir:
+    return
+  # Make sure project.yaml has correct language
+  is_c = False
+  for elem in os.listdir(dst_dir):
+    if elem.endswith('.c'):
+      is_c = True
+  if is_c:
+    lang = 'c'
+  else:
+    lang = 'c++'
+  dst_yaml = os.path.join(dst_dir, 'project.yaml')
+  with open(dst_yaml, 'r') as f:
+    content = f.read()
+  lines = []
+  for line in content.split('\n'):
+    if 'language' in line:
+      lines.append(f'language: {lang}')
+    else:
+      lines.append(line)
+  with open(dst_yaml, 'w') as f:
+    f.write('\n'.join(lines))
+
 
 def run_parallels(oss_fuzz_base,
                   target_repositories,
@@ -364,6 +388,11 @@ def run_agent(target_repositories: List[str], args: argparse.Namespace):
   llm agent approach."""
   # Process default arguments
   oss_fuzz_base = os.path.abspath(args.oss_fuzz)
+
+  # Set OSS_FUZZ_DIR in oss_fuzz_checkout as the agent will use this module
+  # for dealing with the generated project.
+
+  oss_fuzz_checkout.OSS_FUZZ_DIR = oss_fuzz_base
   work_dirs = WorkDirs(args.work_dirs, keep=True)
 
   # Prepare environment
