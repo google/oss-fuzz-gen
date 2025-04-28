@@ -287,25 +287,38 @@ def create_merged_oss_fuzz_projects(workdir) -> None:
     os.makedirs(project_dir, exist_ok=True)
 
     # Check if it was successful
-    result_json = os.path.join('results', result, 'status', '01', 'result.json')
-    if not os.path.isfile(result_json):
-      continue
-    with open(result_json, 'r') as f:
-      json_dict = json.loads(f.read())
+    idx_to_copy = ''
+    status_base = os.path.join('results', result, 'status')
+    for idx in sorted(os.listdir(status_base)):
+      id_path = os.path.join(status_base, idx)
+      if not os.path.isdir(id_path):
+        continue
+      result_json = os.path.join(id_path, 'result.json')
+      if not os.path.isfile(result_json):
+        continue
+      with open(result_json, 'r') as f:
+        json_dict = json.loads(f.read())
+      if json_dict['compiles']:
+        idx_to_copy = idx
+        break
 
-    if not json_dict['compiles']:
+    if not idx_to_copy:
+      logger.info('Did not find a harness to copy')
       continue
+    logger.info('Copying idx: %s', idx_to_copy)
 
     # Copy over the harness
-    fuzz_src = os.path.join('results', result, 'fuzz_targets', '01.fuzz_target')
-
+    fuzz_src = os.path.join('results', result, 'fuzz_targets',
+                            f'{idx_to_copy}.fuzz_target')
+    with open(fuzz_src, 'r') as f:
+      fuzz_content = f.read()
     idx = 0
 
     while True:
-      if project['language'] == 'c':
-        fuzz_dst = os.path.join(project_dir, f'fuzzer-{idx}.c')
+      if 'extern \'C\'' in fuzz_content or 'std::' in fuzz_content:
+        fuzz_dst = os.path.join(project_dir, f'empty-fuzzer.{idx}.cpp')
       else:
-        fuzz_dst = os.path.join(project_dir, f'fuzzer-{idx}.cpp')
+        fuzz_dst = os.path.join(project_dir, f'empty-fuzzer.{idx}.c')
       if not os.path.isfile(fuzz_dst):
         break
       idx += 1
