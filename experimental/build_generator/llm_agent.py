@@ -130,50 +130,47 @@ class BuildScriptAgent(BaseAgent):
       if isinstance(tool, ProjectContainerTool):
         tool.write_to_file(self.harness_code, self.harness_path)
 
+      # Fix shebang to ensure docker image failing is reflected.
+      lines = build_script.split('\n')
+      if lines[0].startswith("#!"):
+        lines[0] = "#!/bin/bash -eu"
+      else:
+        lines = ["#!/bin/bash -eu"] + lines
+      build_script = '\n'.join(lines)
+
       # Update build script
-      if build_script:
-        # Fix shebang to ensure docker image failing is reflected.
-        lines = build_script.split('\n')
-        if lines[0].startswith("#!"):
-          lines[0] = "#!/bin/bash -eu"
-        else:
-          lines = ["#!/bin/bash -eu"] + lines
-        build_script = '\n'.join(lines)
+      if isinstance(tool, ProjectContainerTool):
+        tool.write_to_file(build_script, tool.build_script_path)
 
-        # Update build script
-        if isinstance(tool, ProjectContainerTool):
-          tool.write_to_file(build_script, tool.build_script_path)
+        # Test and parse result
+        result = tool.execute('compile')
+        format_result = self._format_bash_execution_result(
+            result, previous_prompt=prompt)
+        prompt_text = self._parse_tag(format_result, 'stderr') + '\n'
+        if result.returncode == 0:
+          # Execution success, validating if the fuzzer binary built correctly
+          command = f'test -f $OUT/{self.harness_name}'
+          result = tool.execute(command)
 
-          # Test and parse result
-          result = tool.execute('compile')
-          format_result = self._format_bash_execution_result(
-              result, previous_prompt=prompt)
-          prompt_text = self._parse_tag(format_result, 'stderr') + '\n'
           if result.returncode == 0:
-            # Execution success, validating if the fuzzer binary built correctly
-            command = f'test -f $OUT/{self.harness_name}'
-            result = tool.execute(command)
-
-            if result.returncode == 0:
-              success = True
-              # Test introspector build
-              introspector_build_result = self._test_introspector_build(tool)
-
-              command = f'test -d {INTROSPECTOR_OSS_FUZZ_DIR}'
-              introspector_dir_check_result = tool.execute(command)
-              if introspector_dir_check_result.returncode == 0:
-                logger.info('Introspector build success', trial=-1)
-              else:
-                logger.info('Failed to get introspector results', trial=-1)
-
-              if not introspector_build_result:
-                logger.info(('Introspector build returned error, '
-                             'but light version worked.'), trial=-1)
+            success = True
+            # Test introspector build
+            introspector_build_result = self._test_introspector_build(tool)
+            command = f'test -d {INTROSPECTOR_OSS_FUZZ_DIR}'
+            introspector_dir_check_result = tool.execute(command)
+            if introspector_dir_check_result.returncode == 0:
+              logger.info('Introspector build success', trial=-1)
             else:
-              # Fuzzer binary not compiled correctly
-              success = False
-              self.missing_binary = True
+              logger.info('Failed to get introspector results', trial=-1)
 
+            if not introspector_build_result:
+              logger.info(('Introspector build returned error, '
+                           'but light version worked.'),
+                          trial=-1)
+          else:
+            # Fuzzer binary not compiled correctly
+            success = False
+            self.missing_binary = True
     elif commands:
       # Execute the command directly, then return the formatted result
       result = tool.execute(commands)
@@ -204,7 +201,8 @@ class BuildScriptAgent(BaseAgent):
     # Execution fail
     if not self.last_status:
       if self.missing_binary:
-        retry = templates.LLM_MISSING_BINARY.replace('{RESULT}', self.last_result)
+        retry = templates.LLM_MISSING_BINARY.replace('{RESULT}',
+                                                     self.last_result)
         retry = retry.replace('{FUZZER_NAME}', self.harness_name)
       else:
         retry = templates.LLM_RETRY.replace('{BASH_RESULT}', self.last_result)
