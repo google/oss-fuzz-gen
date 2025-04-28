@@ -233,8 +233,7 @@ class GPT(LLM):
 
   def get_chat_client(self, model: Any) -> Any:
     """Returns a new chat session."""
-    del model
-    # Placeholder: To Be Implemented.
+    return self._get_client()
 
   def chat_llm(self, client: Any, prompt: prompts.Prompt) -> Any:
     """Queries the LLM in the given chat session and returns the response."""
