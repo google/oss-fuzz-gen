@@ -289,7 +289,7 @@ def copy_result_to_out(project_generated,
 
   oss_fuzz_projects = os.path.join(output, 'oss-fuzz-projects')
   os.makedirs(oss_fuzz_projects, exist_ok=True)
-
+  dst_dir = ''
   if from_agent:
     build_dir = os.path.join(raw_result_dir, project_generated)
     if not os.path.isdir(build_dir):
@@ -328,6 +328,8 @@ def copy_result_to_out(project_generated,
         continue
       shutil.copytree(build_dir, dst_dir)
 
+  if not dst_dir:
+    return
   # Make sure project.yaml has correct language
   is_c = False
   for elem in os.listdir(dst_dir):
