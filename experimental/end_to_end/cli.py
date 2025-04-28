@@ -61,6 +61,7 @@ def setup_workdirs(defined_dir):
   subprocess.check_call('git clone https://github.com/google/oss-fuzz oss-fuzz',
                         shell=True,
                         cwd=workdir)
+  os.mkdir(os.path.join(workdir, 'oss-fuzz', 'venv'))
 
   # Clone Fuzz Introspector
   subprocess.check_call('git clone https://github.com/ossf/fuzz-introspector',
@@ -214,7 +215,7 @@ def run_ofg_generation(projects_to_run, workdir, args):
   cmd.append('http://127.0.0.1:8080/api')
   cmd.append('-mr')
   cmd.append(str(args.max_round))
-  if args.agent:
+  if args.hg_agent:
     cmd.append('--agent')
 
   environ = os.environ.copy()
@@ -335,15 +336,23 @@ def _create_data_dir(workdir):
 
   # Copy OSS-Fuzz data
   projects_to_copy = []
+  out_folders = ['inspector', 'report', 'report_target', 'textcov_reports']
   for bp in os.listdir(oss_fuzz_build_out):
     src_project = os.path.join(oss_fuzz_build_out, bp)
     dst_project = os.path.join(dst_dir, 'oss-fuzz2', 'build', 'out', bp)
 
+    # Make sure all directories are there
+    do_copy = True
+    for out_folder in out_folders:
+      if not os.path.isdir(os.path.join(src_project, out_folder)):
+        do_copy = False
+    if not do_copy:
+      continue
     os.makedirs(dst_project, exist_ok=True)
 
-    for dn in ['inspector', 'report', 'report_target', 'textcov_reports']:
-      shutil.copytree(os.path.join(src_project, dn),
-                      os.path.join(dst_project, dn))
+    for out_folder in out_folders:
+      shutil.copytree(os.path.join(src_project, out_folder),
+                      os.path.join(dst_project, out_folder))
     projects_to_copy.append(bp)
 
   os.makedirs(os.path.join(dst_dir, 'oss-fuzz2', 'projects'), exist_ok=True)
@@ -360,6 +369,13 @@ def _create_data_dir(workdir):
                                              'static', 'assets', 'db')
   shutil.copytree(fuzz_introspector_db_folder,
                   os.path.join(dst_dir, 'fuzz_introspector_db'))
+
+  # Delete .gitignore that may exist in the DB folder. We do this because the
+  # files are needed when uploaded to OFG.
+  gitignore_file = os.path.join(dst_dir, 'fuzz_introspector_db', '.gitignore')
+  if os.path.isfile(gitignore_file):
+    os.remove(gitignore_file)
+
   return dst_dir
 
 
@@ -428,13 +444,20 @@ def run_analysis(args):
 
   oss_fuzz_dir = os.path.join(abs_workdir, 'oss-fuzz-1')
   target_repositories = runner.extract_target_repositories(args.input)
-  runner.run_parallels(os.path.abspath(oss_fuzz_dir),
-                       target_repositories,
-                       args.model,
-                       'all',
-                       out_folder,
-                       parallel_jobs=args.build_jobs,
-                       max_timeout=args.build_timeout)
+  if args.agent:
+    # Prepare arguments used deeper in OFG core.
+    # TODO(David) make this cleaner.
+    args.oss_fuzz = oss_fuzz_dir
+    args.work_dirs = 'work_dirs'
+    runner.run_agent(target_repositories, args)
+  else:
+    runner.run_parallels(os.path.abspath(oss_fuzz_dir),
+                         target_repositories,
+                         args.model,
+                         'all',
+                         out_folder,
+                         parallel_jobs=args.build_jobs,
+                         max_timeout=args.build_timeout)
 
   # Exit if only builds are required.
   if args.build_only:
@@ -471,6 +494,10 @@ def parse_commandline():
   parser.add_argument('--agent',
                       '-a',
                       help='Enable agent workflow',
+                      action='store_true')
+  parser.add_argument('--hg-agent',
+                      '-ha',
+                      help='Enable agent harness generation',
                       action='store_true')
   parser.add_argument('-gm',
                       '--generate-benchmarks-max',

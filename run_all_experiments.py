@@ -322,9 +322,9 @@ def extend_report_with_coverage_gains() -> None:
 
   total_new_covgains = {}
   for project_dict in coverage_gain_dict.values():
-    lang_gains = total_new_covgains.get(project_dict['language'], 0)
-    lang_gains += project_dict['coverage_ofg_total_new_covered_lines']
-    total_new_covgains[project_dict['language']] = lang_gains
+    lang_gains = total_new_covgains.get(project_dict.get('language', 'c'), 0)
+    lang_gains += project_dict.get('coverage_ofg_total_new_covered_lines', 0)
+    total_new_covgains[project_dict.get('language', 'c')] = lang_gains
 
   comparative_cov_gains = {}
   for language, lang_cov_gain in total_new_covgains.items():

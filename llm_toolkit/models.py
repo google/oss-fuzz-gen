@@ -16,6 +16,7 @@ LLM models and their functions.
 """
 
 import logging
+import math
 import os
 import random
 import re
@@ -76,6 +77,9 @@ class LLM:
     self.num_samples = num_samples
     self.temperature = temperature
     self.temperature_list = temperature_list
+
+    # Preserve chat history for OpenAI
+    self.messages = []
 
   def cloud_setup(self):
     """Runs Cloud specific-setup."""
@@ -225,6 +229,7 @@ class GPT(LLM):
   """OpenAI's GPT model encapsulator."""
 
   name = 'gpt-3.5-turbo'
+  MAX_INPUT_TOKEN = 100000
 
   def get_model(self) -> Any:
     """Returns the underlying model instance."""
@@ -233,6 +238,43 @@ class GPT(LLM):
   def get_chat_client(self, model: Any) -> Any:
     """Returns a new chat session."""
     return self._get_client()
+
+  def truncate_prompt(self,
+                      raw_prompt_text: Any,
+                      extra_text: Any = None) -> Any:
+    """Truncates the prompt text to fit in MAX_INPUT_TOKEN."""
+    # Obtain token counts
+    extra_text = extra_text or ''
+    extra_tokens = self.estimate_token_num(extra_text)
+    total_tokens = self.estimate_token_num(raw_prompt_text)
+
+    # Assume 10 round max, with 1 portion reserved for tags and roles
+    remaining = math.floor(self.MAX_INPUT_TOKEN / 11 - extra_tokens)
+    if remaining <= 0:
+      logger.warning('Insufficient tokens to add any text: %d, %d',
+                     extra_tokens, remaining)
+      return ''
+
+    # Space enough, return directly
+    if total_tokens <= remaining:
+      return raw_prompt_text
+
+    # Truncate marker
+    marker = '\n..(truncated)...\n'
+
+    # Space not enough for marker, recursively truncate again
+    if remaining < self.estimate_token_num(marker):
+      logger.warning('Insufficient tokens to add marker: %d, %d', extra_tokens,
+                     remaining)
+      return self.truncate_prompt(raw_prompt_text[:remaining], extra_text)
+
+    # Add marker and return the truncated string with another recursive check
+    truncated_prompt = raw_prompt_text[-remaining:] + marker
+    logger.info('Truncated %d tokens from %d to %d chars.',
+                len(raw_prompt_text) - remaining, len(raw_prompt_text),
+                len(truncated_prompt))
+
+    return self.truncate_prompt(truncated_prompt, extra_text)
 
   def _get_tiktoken_encoding(self, model_name: str):
     """Returns the tiktoken encoding for the model."""
@@ -253,6 +295,9 @@ class GPT(LLM):
 
     encoder = self._get_tiktoken_encoding(self.name)
 
+    if isinstance(text, str):
+      return len(encoder.encode(text))
+
     num_tokens = 0
     for message in text:
       num_tokens += 3
@@ -261,6 +306,7 @@ class GPT(LLM):
         if key == 'name':
           num_tokens += 1
     num_tokens += 3
+
     return num_tokens
 
   def prompt_type(self) -> type[prompts.Prompt]:
@@ -275,14 +321,19 @@ class GPT(LLM):
       logger.info('OpenAI does not allow temperature list: %s',
                   self.temperature_list)
 
+    self.messages.extend(prompt.get())
+
     completion = self.with_retry_on_error(
-        lambda: client.chat.completions.create(messages=prompt.get(),
+        lambda: client.chat.completions.create(messages=self.messages,
                                                model=self.name,
                                                n=self.num_samples,
                                                temperature=self.temperature),
         [openai.OpenAIError])
 
-    return completion.choices[0].message.content
+    llm_response = completion.choices[0].message.content
+    self.messages.append({'role': 'assistant', 'content': llm_response})
+
+    return llm_response
 
   def ask_llm(self, prompt: prompts.Prompt) -> str:
     """Queries LLM a single prompt and returns its response."""

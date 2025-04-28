@@ -39,7 +39,8 @@ class Result:
                fuzz_target_source: str = '',
                build_script_source: str = '',
                author: Any = None,
-               chat_history: Optional[dict] = None) -> None:
+               chat_history: Optional[dict] = None,
+               default_success: bool = False) -> None:
     self.benchmark = benchmark
     self.trial = trial
     self.work_dirs = work_dirs
@@ -47,6 +48,7 @@ class Result:
     self.build_script_source = build_script_source
     self.author = author
     self.chat_history = chat_history or {}
+    self.default_success = default_success
 
   def __repr__(self) -> str:
     attributes = [
@@ -54,6 +56,10 @@ class Result:
         if k not in self._repr_exclude
     ]
     return f'{self.__class__.__name__}({", ".join(attributes)})'
+
+  @property
+  def success(self):
+    return self.default_success
 
   def to_dict(self) -> dict:
     return {
@@ -219,11 +225,26 @@ class CrashResult(RunResult):
   insight: str  # Reason and fixes for crashes
 
 
-class CoverageResult(RunResult):
+class CoverageResult():
   """The fuzzing run-time result with code coverage info."""
-  coverage_percentage: float
-  coverage_reports: dict[str, str]  # {source_file: coverage_report_content}
-  insight: str  # Reason and fixes for low coverage
+  improve_required: bool = False
+  insight: str = ''  # Reason and fixes for low coverage
+  suggestions: str = ''  # Suggestions to fix fuzz target.
+  _repr_exclude = set()
+
+  def to_dict(self) -> dict:
+    return {
+        'improve_required': self.improve_required,
+        'insights': self.insight,
+        'suggestions': self.suggestions
+    }
+
+  def __repr__(self) -> str:
+    attributes = [
+        f'{k}={v!r}' for k, v in vars(self).items()
+        if k not in self._repr_exclude
+    ]
+    return f'{self.__class__.__name__}({", ".join(attributes)})'
 
 
 # TODO: Make this class an attribute of Result, avoid too many attributes in one
@@ -231,14 +252,14 @@ class CoverageResult(RunResult):
 class AnalysisResult(Result):
   """Analysis of the fuzzing run-time result."""
   run_result: RunResult
-  semantic_result: SemanticCheckResult
+  semantic_result: Optional[SemanticCheckResult]
   crash_result: Optional[CrashResult]
   coverage_result: Optional[CoverageResult]
 
   def __init__(self,
                author: Any,
                run_result: RunResult,
-               semantic_result: SemanticCheckResult,
+               semantic_result: Optional[SemanticCheckResult] = None,
                crash_result: Optional[CrashResult] = None,
                coverage_result: Optional[CoverageResult] = None,
                chat_history: Optional[dict] = None) -> None:
@@ -252,14 +273,21 @@ class AnalysisResult(Result):
 
   def to_dict(self) -> dict:
     return self.run_result.to_dict() | {
-        'semantic_result': self.semantic_result.to_dict(),
-        'crash_result': self.crash_result,
-        'coverage_result': self.coverage_result,
+        'semantic_result':
+            self.semantic_result.to_dict() if self.semantic_result else {},
+        'crash_result':
+            self.crash_result.to_dict() if self.crash_result else {},
+        'coverage_result':
+            self.coverage_result.to_dict() if self.coverage_result else {},
     }
 
   @property
   def success(self) -> bool:
-    return not self.semantic_result.has_err
+    if self.semantic_result:
+      return not self.semantic_result.has_err
+    if self.coverage_result:
+      return not self.coverage_result.improve_required
+    return False
 
   @property
   def crashes(self) -> bool:
@@ -324,8 +352,9 @@ class TrialResult:
     """Last AnalysisResult in trial, prefer crashed and a non-semantic error."""
     # 1. Crashed for a non-semantic error
     for result in self.result_history[::-1]:
+      #TODO(dongge): Refine this logic for coverage
       if (isinstance(result, AnalysisResult) and result.crashes and
-          not result.semantic_result.has_err):
+          result.semantic_result and not result.semantic_result.has_err):
         return result
 
     # 2. Crashed
@@ -496,7 +525,7 @@ class TrialResult:
   def is_semantic_error(self) -> bool:
     """Validates if the best AnalysisResult has semantic error."""
     result = self.best_analysis_result
-    if result:
+    if result and result.semantic_result:
       return result.semantic_result.has_err
     return False
 
@@ -504,7 +533,7 @@ class TrialResult:
   def semantic_error(self) -> str:
     """Semantic error type of the best AnalysisResult."""
     result = self.best_analysis_result
-    if result:
+    if result and result.semantic_result:
       return result.semantic_result.type
     return '-'
 

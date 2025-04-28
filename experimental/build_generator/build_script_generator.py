@@ -23,7 +23,7 @@ from abc import abstractmethod
 from typing import Dict, Iterator, List, Optional, Tuple
 
 import constants
-import manager
+import file_utils as utils
 
 logger = logging.getLogger(name=__name__)
 
@@ -315,6 +315,7 @@ class PureMakefileScannerWithSubstitutions(AutoBuildBase):
         'sed -i \'s/CC=/#CC=/g\' ./Makefile',
         'sed -i \'s/CXX=/#CXX=/g\' ./Makefile',
         'sed -i \'s/CC =/#CC=/g\' ./Makefile',
+        'sed -i \'s/gcc/clang/g\' Make.Rules || true',
         'sed -i \'s/CXX =/#CXX=/g\' ./Makefile', 'make V=1 || true'
     ]
     build_container.heuristic_id = self.name + '1'
@@ -784,13 +785,66 @@ class CMakeScanner(AutoBuildBase):
     return 'cmake'
 
 
+class KConfigBuildScanner(AutoBuildBase):
+  """Auto builder for KConfig-based projects."""
+
+  def __init__(self):
+    super().__init__()
+    self.matches_found = {
+        'Config.in': [],
+        'Makefile': [],
+    }
+
+  def is_matched(self):
+    """Returns True if the build heuristic found matching files."""
+    # Ensure both Config.in and Makefile exists
+    for found_matches in self.matches_found.values():
+      if len(found_matches) == 0:
+        return False
+    return True
+
+  def steps_to_build(self) -> Iterator[AutoBuildContainer]:
+    base_command = [
+        '''
+make defconfig
+make
+find . -type f -name "*.o" > objfiles
+llvm-ar rcs libfuzz.a $(cat objfiles)
+'''
+    ]
+    build_container = AutoBuildContainer()
+    build_container.list_of_commands = base_command
+    build_container.heuristic_id = self.name + '1'
+    yield build_container
+
+    # Alternative to avoid Gold lld
+    build_container_2 = AutoBuildContainer()
+    base_command.append('export CFLAGS="${CFLAGS} -fuse-ld=lld"')
+    base_command.append('export CFXXLAGS="${CXXFLAGS} -fuse-ld=lld"')
+    build_container_2.list_of_commands = base_command
+    build_container.heuristic_id = self.name + '2'
+    yield build_container_2
+
+    # Alternative to avoid Gold lld and add thread/crypt libraries
+    build_container_3 = AutoBuildContainer()
+    base_command.append('export CFLAGS="${CFLAGS} -lpthread -lcrypt"')
+    base_command.append('export CFXXLAGS="${CXXFLAGS} -lpthread -lcrypt"')
+    build_container_3.list_of_commands = base_command
+    build_container.heuristic_id = self.name + '3'
+    yield build_container_3
+
+  @property
+  def name(self):
+    return 'kconfig'
+
+
 def match_build_heuristics_on_folder(abspath_of_target: str):
   """Yields AutoBuildContainer objects.
 
   Traverses the files in the target folder. Uses the file list as input to
   auto build heuristics, and for each heuristic will yield any of the
   build steps that are deemed matching."""
-  all_files = manager.get_all_files_in_path(abspath_of_target)
+  all_files = utils.get_all_files_in_path(abspath_of_target)
   all_checks = [
       AutogenConfScanner(),
       PureCFileCompiler(),
@@ -808,6 +862,7 @@ def match_build_heuristics_on_folder(abspath_of_target: str):
       BootstrapScanner(),
       AutogenScannerSH(),
       HeaderOnlyCBuilder(),
+      KConfigBuildScanner(),
   ]
 
   checks_to_test = []
@@ -833,7 +888,7 @@ def match_build_heuristics_on_folder(abspath_of_target: str):
 
 def get_all_binary_files_from_folder(path: str) -> Dict[str, List[str]]:
   """Extracts binary artifacts from a list of files, based on file suffix."""
-  all_files = manager.get_all_files_in_path(path, path)
+  all_files = utils.get_all_files_in_path(path, path)
 
   executable_files = {'static-libs': [], 'dynamic-libs': [], 'object-files': []}
   for fil in all_files:

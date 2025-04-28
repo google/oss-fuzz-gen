@@ -20,9 +20,10 @@ import logging
 import os
 import shutil
 import subprocess
-from typing import List, Optional, Tuple
+from typing import List, Tuple
 
 import build_script_generator
+import file_utils as utils
 import templates
 import yaml
 
@@ -58,45 +59,6 @@ class Test:
     self.test_content = test_content
 
 
-def get_all_files_in_path(base_path: str,
-                          path_to_subtract: Optional[str] = None) -> List[str]:
-  """Gets all files in a tree and returns as a list of strings."""
-  all_files = []
-  if path_to_subtract is None:
-    path_to_subtract = os.getcwd()
-  for root, _, files in os.walk(base_path):
-    for fi in files:
-      path = os.path.join(root, fi)
-      if path.startswith(path_to_subtract):
-        path = path[len(path_to_subtract):]
-      if len(path) > 0 and path[0] == '/':
-        path = path[1:]
-      all_files.append(path)
-  return all_files
-
-
-def determine_project_language(path: str) -> str:
-  """Returns the likely language of a project by looking at file suffixes."""
-  all_files = get_all_files_in_path(path, path)
-
-  language_dict = {'c': 0, 'c++': 0}
-  for source_file in all_files:
-    if source_file.endswith('.c'):
-      language_dict['c'] = language_dict['c'] + 1
-    elif source_file.endswith('.cpp'):
-      language_dict['c++'] = language_dict['c++'] + 1
-    elif source_file.endswith('.cc'):
-      language_dict['c++'] = language_dict['c++'] + 1
-
-  target_language = 'c++'
-  max_count = 0
-  for language, count in language_dict.items():
-    if count > max_count:
-      target_language = language
-      max_count = count
-  return target_language
-
-
 def get_all_functions_in_project(introspection_files_found):
   all_functions_in_project = []
   for fi_yaml_file in introspection_files_found:
@@ -126,7 +88,7 @@ def get_all_header_files(all_files: List[str]) -> List[str]:
 
 
 def get_all_introspector_files(target_dir):
-  all_files = get_all_files_in_path(target_dir)
+  all_files = utils.get_all_files_in_path(target_dir)
   introspection_files_found = []
   for yaml_file in all_files:
     if 'allFunctionsWithMain' in yaml_file:
@@ -137,16 +99,16 @@ def get_all_introspector_files(target_dir):
   return introspection_files_found
 
 
-def build_empty_fuzzers(build_workers, language):
+def build_empty_fuzzers(build_workers, language) -> None:
   """Run build scripts against an empty fuzzer harness."""
   # Stage 2: perform program analysis to extract data to be used for
   # harness generation.
 
   # For each of the auto generated build scripts try to link
   # the resulting static libraries against an empty fuzzer.
-  fuzz_compiler, _, empty_fuzzer_file, fuzz_template = get_language_defaults(
-      language)
-  for test_dir, build_worker in build_workers.items():
+  fuzz_compiler, _, empty_fuzzer_file, fuzz_template = (
+      utils.get_language_defaults(language))
+  for test_dir, build_worker in build_workers:
     logger.info('Test dir: %s :: %s', test_dir,
                 str(build_worker.executable_files_build['refined-static-libs']))
 
@@ -199,15 +161,6 @@ def refine_static_libs(build_results) -> None:
         'refined-static-libs'] = refined_static_list
 
 
-def get_language_defaults(language: str):
-  compilers_and_flags = {
-      'c': ('$CC', '$CFLAGS', '/src/empty-fuzzer.c', templates.C_BASE_TEMPLATE),
-      'c++': ('$CXX', '$CXXFLAGS', '/src/empty-fuzzer.cpp',
-              templates.CPP_BASE_TEMPLATE),
-  }
-  return compilers_and_flags[language]
-
-
 def run_introspector_on_dir(build_worker, test_dir,
                             language) -> Tuple[bool, List[str]]:
   """Runs Fuzz Introspector on a target directory with the ability
@@ -222,7 +175,7 @@ def run_introspector_on_dir(build_worker, test_dir,
     """
   introspector_vanilla_build_script = build_worker.build_script
   (fuzz_compiler, fuzz_flags, empty_fuzzer_file,
-   fuzz_template) = get_language_defaults(language)
+   fuzz_template) = utils.get_language_defaults(language)
 
   with open(empty_fuzzer_file, 'w') as f:
     f.write(fuzz_template)
@@ -231,12 +184,12 @@ def run_introspector_on_dir(build_worker, test_dir,
   fuzzer_build_cmd = [
       fuzz_compiler, fuzz_flags, '$LIB_FUZZING_ENGINE', empty_fuzzer_file
   ]
+  fuzzer_build_cmd.append('-Wl,--allow-multiple-definition')
   for refined_static_lib in build_worker.executable_files_build[
       'refined-static-libs']:
     fuzzer_build_cmd.append('-Wl,--whole-archive')
     fuzzer_build_cmd.append(os.path.join(test_dir, refined_static_lib))
-
-  fuzzer_build_cmd.append('-Wl,--allow-multiple-definition')
+  fuzzer_build_cmd.append('-Wl,--no-whole-archive')
 
   fuzzer_build_cmd.append('-o /src/compiled_binary')
 
@@ -290,7 +243,7 @@ def create_clean_oss_fuzz_from_empty(github_repo: str, build_worker,
 
   introspector_vanilla_build_script = build_worker.build_script
   (fuzz_compiler, fuzz_flags, empty_fuzzer_file,
-   fuzz_template) = get_language_defaults(language)
+   fuzz_template) = utils.get_language_defaults(language)
 
   # Write empty fuzzer
   with open(os.path.join(oss_fuzz_folder, os.path.basename(empty_fuzzer_file)),
@@ -301,16 +254,17 @@ def create_clean_oss_fuzz_from_empty(github_repo: str, build_worker,
   fuzzer_build_cmd = [
       fuzz_compiler, fuzz_flags, '$LIB_FUZZING_ENGINE', empty_fuzzer_file
   ]
+  fuzzer_build_cmd.append('-Wl,--allow-multiple-definition')
   for refined_static_lib in build_worker.executable_files_build[
       'refined-static-libs']:
     fuzzer_build_cmd.append('-Wl,--whole-archive')
     fuzzer_build_cmd.append(os.path.join(test_dir, refined_static_lib))
 
-  fuzzer_build_cmd.append('-Wl,--allow-multiple-definition')
+  fuzzer_build_cmd.append('-Wl,--no-whole-archive')
 
   # Add inclusion of header file paths. This is anticipating any harnesses
   # will make an effort to include relevant header files.
-  all_header_files = get_all_header_files(get_all_files_in_path(test_dir))
+  all_header_files = get_all_header_files(utils.get_all_files_in_path(test_dir))
   paths_to_include = set()
   for header_file in all_header_files:
     if not header_file.startswith('/src/'):
@@ -348,7 +302,8 @@ def create_clean_oss_fuzz_from_empty(github_repo: str, build_worker,
   dockerfile = templates.CLEAN_OSS_FUZZ_DOCKER.format(
       repo_url=github_repo,
       project_repo_dir=project_repo_dir,
-      additional_packages=' '.join(additional_packages))
+      additional_packages=' '.join(additional_packages),
+      fuzzer_dir='$SRC/fuzzers/')
   with open(os.path.join(oss_fuzz_folder, 'Dockerfile'), 'w') as docker_out:
     docker_out.write(dockerfile)
 
@@ -381,7 +336,7 @@ def create_clean_oss_fuzz_from_success(github_repo: str, out_dir: str,
     yaml.dump(project_yaml, project_out)
 
   # Copy fuzzer
-  _, _, fuzzer_target_file, _ = get_language_defaults(language)
+  _, _, fuzzer_target_file, _ = utils.get_language_defaults(language)
   shutil.copy(
       os.path.join(out_dir, os.path.basename(fuzzer_target_file)),
       os.path.join(oss_fuzz_folder,
@@ -392,7 +347,8 @@ def create_clean_oss_fuzz_from_success(github_repo: str, out_dir: str,
   dockerfile = templates.CLEAN_OSS_FUZZ_DOCKER.format(
       repo_url=github_repo,
       project_repo_dir=project_repo_dir,
-      additional_packages=' '.join(pkgs))
+      additional_packages=' '.join(pkgs),
+      fuzzer_dir='$SRC/fuzzers/')
   with open(os.path.join(oss_fuzz_folder, 'Dockerfile'), 'w') as docker_out:
     docker_out.write(dockerfile)
 
@@ -422,7 +378,7 @@ def create_clean_clusterfuzz_lite_from_success(github_repo: str, out_dir: str,
     yaml.dump(project_yaml, project_out)
 
   # Copy fuzzer
-  _, _, fuzzer_target_file, _ = get_language_defaults(language)
+  _, _, fuzzer_target_file, _ = utils.get_language_defaults(language)
   shutil.copy(
       os.path.join(out_dir, os.path.basename(fuzzer_target_file)),
       os.path.join(cflite_folder,
@@ -549,7 +505,7 @@ def auto_generate(github_url, disable_testing_build_scripts=False, outdir=''):
         f'git clone --recurse-submodules {github_url} {dst_folder}', shell=True)
 
   # Stage 1: Build script generation
-  language = determine_project_language(target_source_path)
+  language = utils.determine_project_language(target_source_path)
   logger.info('Target language: %s', language)
   append_to_report(outdir, f'Target language: {language}')
 
@@ -582,6 +538,30 @@ def auto_generate(github_url, disable_testing_build_scripts=False, outdir=''):
   # static libraries resulting from the build.
   refine_static_libs(build_results)
 
+  refined_builds = []
+  b_idx = 0
+  for test_dir, build_worker in build_results.items():
+    if len(build_worker.executable_files_build) > 1:
+      for ref_lib in build_worker.executable_files_build['refined-static-libs']:
+        b_idx += 1
+        new_worker = build_script_generator.BuildWorker(
+            build_worker.build_suggestion, build_worker.build_script,
+            build_worker.build_directory,
+            build_worker.executable_files_build.copy())
+        new_worker.build_suggestion.heuristic_id = (
+            new_worker.build_suggestion.heuristic_id + f'-{b_idx}')
+        new_worker.executable_files_build['refined-static-libs'] = [ref_lib]
+        refined_builds.append((test_dir, new_worker))
+    refined_builds.append((test_dir, build_worker))
+
+  build_results = refined_builds
+
+  logger.info('logging builds')
+  for test_dir, build_worker in build_results:
+    logger.info('Sample:')
+    logger.info(json.dumps(build_worker.executable_files_build))
+  logger.info('------------------------')
+
   # Stage 2: perform program analysis to extract data to be used for
   # harness generation.
   build_empty_fuzzers(build_results, language)
@@ -602,7 +582,7 @@ def auto_generate(github_url, disable_testing_build_scripts=False, outdir=''):
   logger.info('Going through %d build results to generate fuzzers',
               len(build_results))
 
-  for test_dir, build_worker in build_results.items():
+  for test_dir, build_worker in build_results:
     logger.info('Checking build heuristic: %s',
                 build_worker.build_suggestion.heuristic_id)
 
