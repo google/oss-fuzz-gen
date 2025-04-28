@@ -93,6 +93,7 @@ class BuildScriptAgent(BaseAgent):
         'FUZZ_INTROSPECTOR_AUTO_FUZZ': '1',
         'PROJECT_NAME': 'auto-fuzz-proj',
         'FI_DISABLE_LIGHT': '1',
+        'FUZZING_LANGUAGE': self.language,
     }
     env_str = ' '.join(f"{key}='{value}'" for key, value in envs.items())
 
@@ -115,7 +116,14 @@ class BuildScriptAgent(BaseAgent):
     build_script = self._parse_tag(response, 'bash')
     commands = '; '.join(self._parse_tags(response, 'command'))
 
-    if build_script:
+    if commands:
+      # Execute the command directly, then return the formatted result
+      result = tool.execute(commands)
+      prompt_text = self._format_bash_execution_result(result,
+                                                       previous_prompt=prompt)
+      if result.returncode == 0:
+        success = True
+    elif build_script:
       self.discovery_stage = False
 
       # Restart the container to ensure a fresh session for test
@@ -171,13 +179,6 @@ class BuildScriptAgent(BaseAgent):
             # Fuzzer binary not compiled correctly
             success = False
             self.missing_binary = True
-    elif commands:
-      # Execute the command directly, then return the formatted result
-      result = tool.execute(commands)
-      prompt_text = self._format_bash_execution_result(result,
-                                                       previous_prompt=prompt)
-      if result.returncode == 0:
-        success = True
     else:
       self.invalid = True
 
@@ -363,8 +364,10 @@ class BuildSystemBuildScriptAgent(BuildScriptAgent):
 
     return len(self.build_files) > 0
 
-  def _initial_prompt(self, results: list[Result]) -> Prompt:  # pylint: disable=unused-argument
+  def _initial_prompt(self, results: list[Result]) -> Prompt:
     """Constructs initial prompt of the agent."""
+    # pylint: disable=unused-argument
+
     prompt = self.llm.prompt_type()(None)
 
     # Extract build configuration files content
@@ -430,8 +433,10 @@ class AutoDiscoveryBuildScriptAgent(BuildScriptAgent):
     super().__init__(trial, llm, args, github_url, language, tools, name)
     self.discovery_stage = True
 
-  def _initial_prompt(self, results: list[Result]) -> Prompt:  # pylint: disable=unused-argument
+  def _initial_prompt(self, results: list[Result]) -> Prompt:
     """Constructs initial prompt of the agent."""
+    # pylint: disable=unused-argument
+
     prompt = self.llm.prompt_type()(None)
 
     # Extract template Dockerfile content
@@ -460,6 +465,8 @@ class AutoDiscoveryBuildScriptAgent(BuildScriptAgent):
                                            response: str,
                                            prompt: Prompt) -> Prompt:
     """Formats a prompt to re-teach LLM how to use the |tool|."""
+    # pylint: disable=unused-argument
+
     logger.warning('ROUND %02d Invalid response from LLM: %s',
                    cur_round,
                    response,
