@@ -474,8 +474,6 @@ def run_agent(target_repositories: List[str], args: argparse.Namespace):
         with open(harness_path, 'w') as f:
           f.write(harness)
 
-        #
-
         # Copy result to out
         copy_result_to_out(worker_project_name, oss_fuzz_base, args.out, True,
                            target_repository.split('/')[-1])
