@@ -12,3 +12,13 @@ __pycache__/
 *.egg-info
 .vscode/
 .DS_Store
+fintune_data/
+
+parse_unit_test/
+test_case_exec/
+unit_test_data/
+prompts/template_xml/exec_code_doc.txt
+.idea/
+execution.log
+环境变量
+output.txt

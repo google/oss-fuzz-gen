@@ -17,6 +17,7 @@ Use it as a usual module locally, or as script in cloud builds.
 import os
 import subprocess as sp
 import time
+import logging
 from datetime import timedelta
 from typing import Optional
 
@@ -41,7 +42,11 @@ class OnePromptPrototyper(BaseAgent):
     """Returns the prompt builder based on language and customization."""
     last_result = results[-1]
     benchmark = last_result.benchmark
+
     # If this is a test benchmark then we will use a test prompt builder.
+    if self.args.prompt_builder == 'UnitTestToHarness':
+      return prompt_builder.UnitTestToHarnessConverter(self.llm, benchmark,
+                                                   self.args.template_directory)
     if benchmark.test_file_path:
       logger.info('Generating a target for test case: %s',
                   benchmark.test_file_path,
@@ -73,7 +78,6 @@ class OnePromptPrototyper(BaseAgent):
     """Constructs initial prompt of the agent."""
     last_result = results[-1]
     benchmark = last_result.benchmark
-
     if benchmark.use_project_examples:
       project_examples = project_targets.generate_data(
           benchmark.project,
@@ -101,16 +105,23 @@ class OnePromptPrototyper(BaseAgent):
     logger.info('Executing %s', self.name, trial=last_result.trial)
     # Use keep to avoid deleting files, such as benchmark.yaml
     WorkDirs(self.args.work_dirs.base, keep=True)
-
+    start_time = time.localtime()
+    logger.info(f"_initial_prompt start time=======================================================: {time.strftime('%Y-%m-%d %H:%M:%S', start_time)}", trial=last_result.trial)
     prompt = self._initial_prompt(result_history)
+    end_time = time.time()
+    end_time = time.localtime()
+    execution_time = time.mktime(end_time) - time.mktime(start_time)
+    logger.info(f"_initial_prompt end time=======================================================: {time.strftime('%Y-%m-%d %H:%M:%S', end_time)}", trial=last_result.trial)
+    logger.info(f"_initial_prompt execution time: {execution_time:.2f} seconds", trial=last_result.trial)
     cur_round = 1
     build_result = BuildResult(benchmark=last_result.benchmark,
                                trial=last_result.trial,
                                work_dirs=last_result.work_dirs,
                                author=self,
                                chat_history={self.name: prompt.gettext()})
-
+    logger.info("开始执行1", trial=last_result.trial) 
     while prompt and cur_round <= self.max_round:
+      logger.info("开始执行", trial=last_result.trial)
       self._generate_fuzz_target(prompt, result_history, build_result,
                                  cur_round)
       self._validate_fuzz_target(cur_round, build_result)

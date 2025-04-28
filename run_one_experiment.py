@@ -315,6 +315,5 @@ def run(benchmark: Benchmark, model: models.LLM, args: argparse.Namespace,
   Benchmark.to_yaml([benchmark],
                     outdir=work_dirs.base,
                     out_basename='benchmark.yaml')
-
   return AggregatedResult.from_benchmark_result(
       _fuzzing_pipelines(benchmark, model, args, work_dirs))

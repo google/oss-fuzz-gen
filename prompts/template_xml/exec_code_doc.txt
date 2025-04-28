@@ -1,0 +1,53 @@
+<FunctionUnderTest>
+{function_under_test}
+</FunctionUnderTest>
+
+<FunctionDeclarationUnderTest>
+{function_declare_under_test}
+</FunctionDeclarationUnderTest>
+
+<UnitTestCodeFragments>
+{unit_test_code_fragments}
+</UnitTestCodeFragments>
+
+<FunctionDocumentationTemplate>
+# Function Overview & Details
+
+## Function: [Function Name]
+- **Declaration:**  
+  Provide the complete function signature (return type, name, parameters).
+
+- **Description & Purpose:**  
+  Briefly explain what the function does and why it exists (based on unit test observations).
+
+### Parameters
+For each parameter, list:
+- **Name (Type):** A short description of its role.
+  - **Constraints:** Any restrictions (e.g., valid range, non-null).
+  - **Example:** A representative value or construction (derived from unit tests).
+
+### Return Value
+- **Type:** Specify the return type.
+- **Explanation:**  
+  Describe what the return value represents, including typical outcomes (e.g., 0 for success, -1 for error).
+
+### Example Usage & Context
+Provide a minimal code snippet (a few lines) with inline comments that demonstrates:
+- Prerequisite API calls (e.g., initialization, resource creation).
+- The target function call with representative arguments.
+- Necessary follow-up or cleanup calls.
+
+```c
+// Initialization and prerequisite call
+Initialize();
+ResourceType* res = CreateResource("sample");
+
+// Target API function call with dependencies
+int result = function_name(res, arg);
+
+// Cleanup after use
+DestroyResource(res);
+
+<caution>
+All documentation content must be sourced from unit test cases. Document only the functions listed under the <FunctionUnderTest> tag. Think step by step.
+</caution>

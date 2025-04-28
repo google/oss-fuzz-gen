@@ -435,6 +435,7 @@ class Prototyper(BaseAgent):
                                author=self,
                                chat_history={self.name: ''})
     prompt = self._initial_prompt(result_history)
+    print("第一个提示词",prompt.gettext())
     try:
       client = self.llm.get_chat_client(model=self.llm.get_model())
       while prompt and cur_round < self.max_round:
@@ -444,6 +445,7 @@ class Prototyper(BaseAgent):
                                  trial=last_result.trial)
         prompt = self._container_tool_reaction(cur_round, response,
                                                build_result)
+        print("第2个提示词",prompt.gettext())
         cur_round += 1
     finally:
       # Cleanup: stop and remove the container

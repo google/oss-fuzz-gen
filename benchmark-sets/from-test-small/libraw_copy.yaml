@@ -1,0 +1,8 @@
+"is_test_benchmark": !!bool "true"
+"language": "c++"
+"project": "libraw"
+"target_name": "libraw_fuzzer"
+"target_path": "/src/libraw_fuzzer.cc"
+"use_project_examples": !!bool "false"
+"test_files":
+- "test_file_path": "/media/fengxiao/3d47419b-aaf4-418e-8ddd-4f2c62bebd8b/workSpace/oss-fuzz-gen-feng/oss-fuzz-gen-feng/test_case_exec/exec_code_result/libaom/docs/01.rawoutput"
