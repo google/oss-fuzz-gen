@@ -182,6 +182,7 @@ Your response **must only contain two XML tags**:
 ### Build Script Instructions
 - The build script will be executed as root on **Ubuntu 24.04**, so **do not use `sudo`**.
 - `$CC` and `$CXX` are set and must be used for compilation.
+- `$CFLAGS` and `$CXXFLAGS` must be used for compilation of source files. This is important because we need the flags to be used in the environment.
 - If additional packages are needed, include a single `apt install` command at the top.
 - Use the provided build system files to compile the target project.
 - If a static library is not produced, collect the object files and archive them using `llvm-ar`.
@@ -264,6 +265,7 @@ The generated build script will be executed in a **fresh session for testing**. 
 
 - Operating system: Ubuntu 24.04 (Docker)
 - Compiler: Use `$CC` and `$CXX` for all compilation and linking
+- `$CFLAGS` and `$CXXFLAGS` must be used for compilation of source files. This is important because we need the flags to be used in the environment.
 - Project source: `$SRC/{PROJECT_NAME}`
 - Fuzzing harness template: `$SRC/{FUZZING_FILE}`
 - Container environment: Defined by the provided `Dockerfile`
@@ -304,6 +306,7 @@ You may include multiple shell commands in:
 ### Build Script Guidelines
 
 - Use `$CC` and `$CXX` for all compile and link steps.
+- `$CFLAGS` and `$CXXFLAGS` must be used for compilation of source files. This is important because we need the flags to be used in the environment.
 - Do **not** use `sudo` (script runs as root).
 - Do **not** use `|| true` to suppress errors.
 - If a supported build system exists (e.g., CMake, Autotools, Make), use it for compiling the project.
