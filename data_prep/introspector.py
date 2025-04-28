@@ -37,8 +37,8 @@ logger = logging.getLogger(__name__)
 
 T = TypeVar('T', str, list, dict, int)  # Generic type.
 
-TIMEOUT = 1
-MAX_RETRY = 1
+TIMEOUT = 45
+MAX_RETRY = 5
 
 BENCHMARK_ROOT: str = './benchmark-sets'
 BENCHMARK_DIR: str = f'{BENCHMARK_ROOT}/comparison'
