@@ -291,19 +291,15 @@ def create_merged_oss_fuzz_projects(workdir) -> None:
     status_base = os.path.join('results', result, 'status')
     for idx in sorted(os.listdir(status_base)):
       id_path = os.path.join(status_base, idx)
-      logger.info('I 0 : %s', id_path)
       if not os.path.isdir(id_path):
         continue
-      logger.info('I 1 : %s', id_path)
       result_json = os.path.join(id_path, 'result.json')
       if not os.path.isfile(result_json):
         continue
-      logger.info('I 2 : %s', id_path)
       with open(result_json, 'r') as f:
         json_dict = json.loads(f.read())
       if json_dict['compiles']:
         idx_to_copy = idx
-        logger.info('I 3 : %s', id_path)
         break
 
     if not idx_to_copy:
