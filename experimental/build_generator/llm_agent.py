@@ -32,6 +32,7 @@ from tool.container_tool import ProjectContainerTool
 MAX_PROMPT_LENGTH = 20000
 SAMPLE_HEADERS_COUNT = 30
 MAX_DISCOVERY_ROUND = 100
+INTROSPECTOR_OSS_FUZZ_DIR = '/src/inspector'
 
 
 class BuildScriptAgent(BaseAgent):
@@ -58,6 +59,7 @@ class BuildScriptAgent(BaseAgent):
     # Get sample fuzzing harness
     _, _, self.harness_path, self.harness_code = (
         file_utils.get_language_defaults(self.language))
+    self.harness_name = self.harness_path.split('/')[-1].split('.')[0]
 
   def _parse_tag(self, response: str, tag: str) -> str:
     """Parses the tag from LLM response."""
@@ -83,6 +85,22 @@ class BuildScriptAgent(BaseAgent):
 
     return found_matches
 
+  def _test_introspector_build(self, tool: BaseTool) -> bool:
+    """Helper to test the generated build script for introspector build."""
+    # Handles environment variables for introspector build
+    envs = {
+        'SANITIZER': 'introspector',
+        'FUZZ_INTROSPECTOR_AUTO_FUZZ': '1',
+        'PROJECT_NAME': 'auto-fuzz-proj',
+        'FI_DISABLE_LIGHT': '1',
+    }
+    env_str = ' '.join(f"{key}='{value}'" for key, value in envs.items())
+
+    # Test introspector build
+    result = tool.execute(f'{env_str} compile')
+
+    return result.returncode == 0
+
   def _container_handle_bash_commands(self, response: str, tool: BaseTool,
                                       prompt: Prompt) -> Prompt:
     """Handles the command from LLM with container |tool|."""
@@ -90,6 +108,7 @@ class BuildScriptAgent(BaseAgent):
     prompt_text = ''
     success = False
     self.invalid = False
+    self.missing_binary = False
 
     # Retrieve data from response
     harness = self._parse_tag(response, 'fuzzer')
@@ -113,9 +132,13 @@ class BuildScriptAgent(BaseAgent):
 
       # Update build script
       if build_script:
-        # Add set -e to ensure docker image failing is reflected.
-        build_script = build_script.replace('#!/bin/bash', '')
-        build_script = f'#!/bin/bash\nset -e\n{build_script}'
+        # Fix shebang to ensure docker image failing is reflected.
+        lines = build_script.split('\n')
+        if lines[0].startswith("#!"):
+          lines[0] = "#!/bin/bash -eu"
+        else:
+          lines = ["#!/bin/bash -eu"] + lines
+        build_script = '\n'.join(lines)
 
         # Update build script
         if isinstance(tool, ProjectContainerTool):
@@ -127,14 +150,35 @@ class BuildScriptAgent(BaseAgent):
               result, previous_prompt=prompt)
           prompt_text = self._parse_tag(format_result, 'stderr') + '\n'
           if result.returncode == 0:
-            success = True
+            # Execution success, validating if the fuzzer binary built correctly
+            command = f'test -f $OUT/{self.harness_name}'
+            result = tool.execute(command)
+
+            if result.returncode == 0:
+              success = True
+              # Test introspector build
+              introspector_build_result = self._test_introspector_build(tool)
+
+              command = f'test -d {INTROSPECTOR_OSS_FUZZ_DIR}'
+              introspector_dir_check_result = tool.execute(command)
+              if introspector_dir_check_result.returncode == 0:
+                logger.info('Introspector build success', trial=-1)
+              else:
+                logger.info('Failed to get introspector results', trial=-1)
+
+              if not introspector_build_result:
+                logger.info(('Introspector build returned error, '
+                             'but light version worked.'), trial=-1)
+            else:
+              # Fuzzer binary not compiled correctly
+              success = False
+              self.missing_binary = True
 
     elif commands:
       # Execute the command directly, then return the formatted result
       result = tool.execute(commands)
       prompt_text = self._format_bash_execution_result(result,
                                                        previous_prompt=prompt)
-
       if result.returncode == 0:
         success = True
     else:
@@ -159,7 +203,11 @@ class BuildScriptAgent(BaseAgent):
 
     # Execution fail
     if not self.last_status:
-      retry = templates.LLM_RETRY.replace('{BASH_RESULT}', self.last_result)
+      if self.missing_binary:
+        retry = templates.LLM_MISSING_BINARY.replace('{RESULT}', self.last_result)
+        retry = retry.replace('{FUZZER_NAME}', self.harness_name)
+      else:
+        retry = templates.LLM_RETRY.replace('{BASH_RESULT}', self.last_result)
 
       # Refine prompt text to max prompt count and add to prompt
       length = min(len(retry), (MAX_PROMPT_LENGTH - len(prompt.gettext())))
@@ -171,7 +219,7 @@ class BuildScriptAgent(BaseAgent):
 
       return prompt
 
-    # Execution success
+    # Build success and compiled binary exist
     build_result.compiles = True
     build_result.fuzz_target_source = self.harness_code
     build_script_source = self._parse_tag(response, 'bash')
@@ -341,6 +389,7 @@ class BuildSystemBuildScriptAgent(BuildScriptAgent):
                                             '\n'.join(build_files_str))
     problem = problem.replace('{DOCKERFILE}', dockerfile_str)
     problem = problem.replace('{FUZZER}', self.harness_code)
+    problem = problem.replace('{FUZZER_NAME}', self.harness_name)
     problem = problem.replace('{FUZZING_FILE}',
                               self.harness_path.split('/')[-1])
 
@@ -398,8 +447,9 @@ class AutoDiscoveryBuildScriptAgent(BuildScriptAgent):
     problem = templates.LLM_AUTO_DISCOVERY
     problem = problem.replace('{PROJECT_NAME}', self.github_url.split('/')[-1])
     problem = problem.replace('{DOCKERFILE}', dockerfile_str)
-    problem = problem.replace('{FUZZER}', self.harness_code)
     problem = problem.replace('{MAX_DISCOVERY_ROUND}', str(MAX_DISCOVERY_ROUND))
+    problem = problem.replace('{FUZZER}', self.harness_code)
+    problem = problem.replace('{FUZZER_NAME}', self.harness_name)
     problem = problem.replace('{FUZZING_FILE}',
                               self.harness_path.split('/')[-1])
 
