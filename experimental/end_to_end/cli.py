@@ -312,16 +312,17 @@ def create_merged_oss_fuzz_projects(workdir) -> None:
     logger.info('Copying idx: %s', idx_to_copy)
 
     # Copy over the harness
-    fuzz_src = os.path.join('results', result, 'fuzz_targets', f'{idx_to_copy}.fuzz_target')
+    fuzz_src = os.path.join('results', result, 'fuzz_targets',
+                            f'{idx_to_copy}.fuzz_target')
     with open(fuzz_src, 'r') as f:
       fuzz_content = f.read()
     idx = 0
 
     while True:
       if 'extern \'C\'' in fuzz_content or 'std::' in fuzz_content:
-        fuzz_dst = os.path.join(project_dir, f'fuzzer-{idx}.cpp')
+        fuzz_dst = os.path.join(project_dir, f'empty-fuzzer.{idx}.cpp')
       else:
-        fuzz_dst = os.path.join(project_dir, f'fuzzer-{idx}.c')
+        fuzz_dst = os.path.join(project_dir, f'empty-fuzzer.{idx}.c')
       if not os.path.isfile(fuzz_dst):
         break
       idx += 1
@@ -398,26 +399,26 @@ def _create_data_dir(workdir):
 def run_harness_generation(out_gen, workdir, args):
   """Runs harness generation based on the projects in `out_gen`"""
 
-  #projects_to_run = copy_generated_projects_to_harness_gen(out_gen, workdir)
-  #extract_introspector_reports_for_benchmarks(projects_to_run, workdir, args)
-  #shutdown_fi_webapp()
-  #create_fi_db(workdir)
-  #if args.until_fi_db:
-  #  logger.info('Fuzz Introspector webapp created. Exiting.')
-  #  sys.exit(0)
-  #shutdown_fi_webapp()
-  #launch_fi_webapp(workdir)
-  #wait_until_fi_webapp_is_launched()
-  #dst_data_dir = _create_data_dir(workdir)
-  #logger.info('Wrote data directory for OFG experiments in %s', dst_data_dir)
-  #if args.all_but_ofg_core:
-  #  # do a prompt exist
-  #  sys.exit(0)
+  projects_to_run = copy_generated_projects_to_harness_gen(out_gen, workdir)
+  extract_introspector_reports_for_benchmarks(projects_to_run, workdir, args)
+  shutdown_fi_webapp()
+  create_fi_db(workdir)
+  if args.until_fi_db:
+    logger.info('Fuzz Introspector webapp created. Exiting.')
+    sys.exit(0)
+  shutdown_fi_webapp()
+  launch_fi_webapp(workdir)
+  wait_until_fi_webapp_is_launched()
+  dst_data_dir = _create_data_dir(workdir)
+  logger.info('Wrote data directory for OFG experiments in %s', dst_data_dir)
+  if args.all_but_ofg_core:
+    # do a prompt exist
+    sys.exit(0)
 
-  #run_ofg_generation(projects_to_run, workdir, args)
+  run_ofg_generation(projects_to_run, workdir, args)
 
   create_merged_oss_fuzz_projects(out_gen)
-  return [] #projects_to_run
+  return projects_to_run
 
 
 def setup_logging():
@@ -454,27 +455,26 @@ def run_analysis(args):
     out_folder = get_next_out_folder()
   else:
     out_folder = args.out
-  out_folder = 'david-out-12'
 
   #if os.path.isdir('results'):
   #  shutil.rmtree('results')
 
-  #oss_fuzz_dir = os.path.join(abs_workdir, 'oss-fuzz-1')
-  #target_repositories = runner.extract_target_repositories(args.input)
-  #if args.agent:
-  #  # Prepare arguments used deeper in OFG core.
-  #  # TODO(David) make this cleaner.
-  #  args.oss_fuzz = oss_fuzz_dir
-  #  args.work_dirs = 'work_dirs'
-  #  runner.run_agent(target_repositories, args)
-  #else:
-  #  runner.run_parallels(os.path.abspath(oss_fuzz_dir),
-  #                       target_repositories,
-  #                       args.model,
-  #                       'all',
-  #                       out_folder,
-  #                       parallel_jobs=args.build_jobs,
-  #                       max_timeout=args.build_timeout)
+  oss_fuzz_dir = os.path.join(abs_workdir, 'oss-fuzz-1')
+  target_repositories = runner.extract_target_repositories(args.input)
+  if args.agent:
+    # Prepare arguments used deeper in OFG core.
+    # TODO(David) make this cleaner.
+    args.oss_fuzz = oss_fuzz_dir
+    args.work_dirs = 'work_dirs'
+    runner.run_agent(target_repositories, args)
+  else:
+    runner.run_parallels(os.path.abspath(oss_fuzz_dir),
+                         target_repositories,
+                         args.model,
+                         'all',
+                         out_folder,
+                         parallel_jobs=args.build_jobs,
+                         max_timeout=args.build_timeout)
 
   # Exit if only builds are required.
   if args.build_only:
