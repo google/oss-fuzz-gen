@@ -328,6 +328,27 @@ def copy_result_to_out(project_generated,
         continue
       shutil.copytree(build_dir, dst_dir)
 
+  # Make sure project.yaml has correct language
+  is_c = False
+  for elem in os.listdir(dst_dir):
+    if elem.endswith('.c'):
+      is_c = True
+  if is_c:
+    lang = 'c'
+  else:
+    lang = 'c++'
+  dst_yaml = os.path.join(dst_dir, 'project.yaml')
+  with open(dst_yaml, 'r') as f:
+    content = f.read()
+  lines = []
+  for line in content.split('\n'):
+    if 'language' in line:
+      lines.append(f'language: {lang}')
+    else:
+      lines.append(line)
+  with open(dst_yaml, 'w') as f:
+    f.write('\n'.join(lines))
+
 
 def run_parallels(oss_fuzz_base,
                   target_repositories,
@@ -452,6 +473,8 @@ def run_agent(target_repositories: List[str], args: argparse.Namespace):
                                     harness_name.split('/')[-1])
         with open(harness_path, 'w') as f:
           f.write(harness)
+
+        #
 
         # Copy result to out
         copy_result_to_out(worker_project_name, oss_fuzz_base, args.out, True,
