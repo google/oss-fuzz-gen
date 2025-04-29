@@ -29,7 +29,6 @@ from results import BuildResult, Result
 from tool.base_tool import BaseTool
 from tool.container_tool import ProjectContainerTool
 
-MAX_PROMPT_LENGTH = 20000
 SAMPLE_HEADERS_COUNT = 30
 MAX_DISCOVERY_ROUND = 100
 INTROSPECTOR_OSS_FUZZ_DIR = '/src/inspector'
