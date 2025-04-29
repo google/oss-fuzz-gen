@@ -207,10 +207,7 @@ class BuildScriptAgent(BaseAgent):
         retry = retry.replace('{FUZZER_NAME}', self.harness_name)
       else:
         retry = templates.LLM_RETRY.replace('{BASH_RESULT}', self.last_result)
-
-      # Refine prompt text to max prompt count and add to prompt
-      length = min(len(retry), (MAX_PROMPT_LENGTH - len(prompt.gettext())))
-      prompt.add_problem(retry[-length:])
+      prompt.add_problem(retry)
 
       # Store build result
       build_result.compiles = False
