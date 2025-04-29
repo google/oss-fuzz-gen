@@ -287,34 +287,42 @@ Your result must only contains these XML tags. **NOTHING MORE**.
 
 Your goal is to compile the project into a static library (`libtarget.a`) that can be linked into the fuzzing harnesses.
 
-### Supported Build Systems
+### Supported Build Systems (Follow This Order Strictly)
 
-- If the project uses **Android.bp** (Soong), assume it **cannot be invoked directly**.
-  - Manually extract source files, include directories, and defines from the `Android.bp` file.
-  - Compile the listed sources using `$CC` or `$CXX`, applying any necessary flags from the parsed metadata.
-  - Archive the resulting object files into a static library using `llvm-ar`.
-  - You **MUST** consider the needed dependencies installation in the **Android.bp** to ensure the build success.
+Always follow the order below when determining how to build the project:
 
-- If the project uses **BUILD.gn**, attempt to use the GN and Ninja build system **by installing the necessary tools**:
-  - Ensure `gn` and `ninja` are installed. If not, include the appropriate `apt install` command in the build script:
-    ```bash
-    apt update && apt install -y ninja-build
-    # For gn, install manually or from source if needed
-    ```
+1. **General Build Systems (Preferred)**
+   If the project contains standard build files like **Makefile**, **configure**, or **CMakeLists.txt**, use the corresponding build system directly.
+   Do **not** patch, modify, or override these files in any way.
 
-  - If this approach fails or the tools cannot be installed, **fall back to manual compilation**:
-    - Parse `BUILD.gn` to extract `sources`, `include_dirs`, and `defines`.
-    - Compile the relevant source files directly using `$CC`/`$CXX`.
-    - Archive object files using `llvm-ar`.
-    - You **MUST** consider the needed dependencies installation in the **BUILD.gn** to ensure the build success.
+2. **BUILD.gn (GN/Ninja Build System)**
+   - First, attempt to use `gn` and `ninja` by ensuring the necessary tools are installed:
+     ```bash
+     apt update && apt install -y ninja-build
+     # Install gn manually or from source if needed.
+     ```
+   - If GN/Ninja usage is not feasible, fall back to **manual parsing** of `BUILD.gn`:
+     - Extract `sources`, `include_dirs`, and `defines`.
+     - Compile using `$CC`/`$CXX` and apply `$CFLAGS`/`$CXXFLAGS`.
+     - Archive object files with `llvm-ar`.
+     - Install any required packages listed in `BUILD.gn`.
 
-- If **no recognizable build system** or configuration files are found, attempt to compile all source files directly using `$CC`/`$CXX`, and package them into a static library using `llvm-ar`.
+3. **Android.bp (Soong Build System)**
+   - Soong cannot be invoked directly; assume it is unavailable.
+   - Manually parse `Android.bp` to identify source files, include paths, defines, and dependencies.
+   - Compile sources using `$CC`/`$CXX`, apply appropriate flags, and archive with `llvm-ar`.
+   - Install required dependencies using `apt-get`.
 
-- Whenever possible, include `$CFLAGS` and `$CXXFLAGS` during the compile process.
+4. **No Build System Found (Manual Compilation Fallback)**
+   If no recognized build system is detected:
+   - Use `find` or similar tools to discover all relevant `.c`/`.cc` files.
+   - Compile them manually with `$CC`/`$CXX`, applying `$CFLAGS`/`$CXXFLAGS`.
+   - Archive object files into a static library using `llvm-ar`.
 
-- If additional packages are needed, you **MUST** also install them with `apt-get` command.
+Additionally:
 
-Do **not** modify or patch existing build configuration files under any circumstances.
+- Use `$CFLAGS` and `$CXXFLAGS` in all compilation steps.
+- Always install any required system packages via `apt-get`.
 
 ### Build Script Requirements
 
