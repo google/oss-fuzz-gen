@@ -289,15 +289,24 @@ Your goal is to compile the project into a static library (`libtarget.a`) that c
 
 ### Supported Build Systems
 
-- If the project uses **Android.bp** (Soong), assume it **cannot be invoked directly**. Instead:
-  - Identify source files manually using tools like `find`.
-  - Compile them individually using `$CC`/`$CXX`.
+- If the project uses **Android.bp** (Soong), assume it **cannot be invoked directly**.
+  - Manually extract source files, include directories, and defines from the `Android.bp` file.
+  - Compile the listed sources using `$CC` or `$CXX`, applying any necessary flags from the parsed metadata.
   - Archive the resulting object files into a static library using `llvm-ar`.
+  - You **MUST** consider the needed dependencies installation in the **Android.bp** to ensure the build success.
 
-- If the project uses **BUILD.gn**, avoid running `gn gen` or `ninja` unless **GN/Ninja tools are explicitly installed** in the provided Dockerfile.
-  - Instead, locate and compile relevant `.c` or `.cc` source files manually with `$CC`/`$CXX`.
+- If the project uses **BUILD.gn**, attempt to use the GN and Ninja build system **by installing the necessary tools**:
+  - Ensure `gn` and `ninja` are installed. If not, include the appropriate `apt install` command in the build script:
+    ```bash
+    apt update && apt install -y ninja-build
+    # For gn, install manually or from source if needed
+    ```
 
-- If the project includes standard build files such as `Makefile`, `configure`, or other commonly known build files, use the corresponding build system as intended.
+  - If this approach fails or the tools cannot be installed, **fall back to manual compilation**:
+    - Parse `BUILD.gn` to extract `sources`, `include_dirs`, and `defines`.
+    - Compile the relevant source files directly using `$CC`/`$CXX`.
+    - Archive object files using `llvm-ar`.
+    - You **MUST** consider the needed dependencies installation in the **BUILD.gn** to ensure the build success.
 
 - If **no recognizable build system** or configuration files are found, attempt to compile all source files directly using `$CC`/`$CXX`, and package them into a static library using `llvm-ar`.
 
@@ -310,7 +319,7 @@ Do **not** modify or patch existing build configuration files under any circumst
 ### Build Script Requirements
 
 - Use `$CC` and `$CXX` for all compilation and linking tasks.
-- Always apply `$CFLAGS` and `$CXXFLAGS` when compiling source files, both for the project and the fuzzing harness. Safely extend these variables as needed:
+- Always apply `$CFLAGS` and `$CXXFLAGS` when compiling source files, both for the project and the fuzzing harness. Safely extend these variables if needed, change the path for the needed includes:
   ```bash
   if [ -z "${CFLAGS:-}" ]; then
     CFLAGS="-I/some/include"
@@ -322,7 +331,8 @@ Do **not** modify or patch existing build configuration files under any circumst
 - The script **must not**:
   - Use `sudo` (the container runs as root),
   - Suppress errors (e.g., via `|| true`),
-  - Run tests or installation targets.
+
+- If possible, please exclude the building of tests or examples.
 
 - If the build does not automatically generate a static library, collect all `.o` files and manually archive them:
   ```bash
@@ -358,7 +368,7 @@ Useful starting points:
 ```bash
 ls -la $SRC/{PROJECT_NAME}
 find $SRC/{PROJECT_NAME} -name Android.bp -o -name BUILD.gn -o -name Makefile -o -name CMakeLists.txt
-find $SRC/{PROJECT_NAME} -type f \( -name '*.h' -o -name '*.hpp' \)
+find $SRC/{PROJECT_NAME} -type f \\( -name '*.h' -o -name '*.hpp' \\)
 ```
 
 Your **first reply** must be a `<command>` block to begin project exploration.
