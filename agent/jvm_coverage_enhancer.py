@@ -11,9 +11,15 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+"""
+Module: JVM Coverage Enhancer
+
+This module provides a helper agent to improve code coverage for JVM-based 
+fuzz targets by generating or fixing JVM harnesses using LLM prompts.
+"""
+
 import os
 
-import logger
 from agent.prototyper import Prototyper
 from llm_toolkit.prompt_builder import JvmFixingBuilder
 from llm_toolkit.prompts import Prompt
@@ -26,15 +32,23 @@ class JvmCoverageEnhancer(Prototyper):
   def __init__(self, llm, benchmark, analysis_result: AnalysisResult,
                build_result: BuildResult, args):
     super().__init__(llm, benchmark, args=args)
+    self.benchmark = benchmark
     self.analysis = analysis_result
     self.build = build_result
+    self.args = args
 
   def initial_prompt(self) -> Prompt:
     """Constructs initial JVM-focused prompt."""
-    # Build the JVM fixing prompt
+    # Extract the fuzz target source code
     source_code = self.analysis.run_result.fuzz_target_source
-    builder = JvmFixingBuilder(self.llm, self.benchmark, source_code, [])
-    prompt = builder.build(example_pair=[], tool_guides=None, project_dir=None)
+
+    # Build the JVM fixing prompt
+    builder = JvmFixingBuilder(model=self.llm,
+                               benchmark=self.benchmark,
+                               generated_harness=source_code,
+                               errors=[])
+    # Use correct signature: only example_pair is required
+    prompt = builder.build(example_pair=[])
 
     # Save to a dedicated JVM prompt file
     prompt_path = os.path.join(self.args.work_dirs.prompt, 'jvm_initial.txt')
