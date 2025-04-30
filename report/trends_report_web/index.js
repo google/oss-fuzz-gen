@@ -231,40 +231,40 @@ class Page {
   // show relevant data.
   async fetchAndUpdate() {
     document.querySelector('#loading').style.display = '';
-  
+
     let startDate = new Date('1970-01-01').getTime();
     if (this.filters.dateRange !== 'all') {
       const durationMillis = Number(this.filters.dateRange) * 24 * 3600 * 1000;
       startDate = Date.now() - durationMillis;
     }
-  
+
     const search = (this.filters.searchText || '').trim().toLowerCase();
-  
+
     const prelim = this.sortedNames.filter((name) => {
       const r = this.index[name];
       if (new Date(r.date).getTime() < startDate) return false;
-  
+
       if (this.filters.tags.size > 0) {
         if (!r.tags.some(t => this.filters.tags.has(t))) return false;
       }
-  
+
       if (this.filters.llmModels.size > 0 &&
           !this.filters.llmModels.has(r.llm_model)) {
         return false;
       }
-  
+
       if (this.filters.benchmarkSets.size > 0 &&
           !this.filters.benchmarkSets.has(r.benchmark_set)) {
         return false;
       }
-  
+
       return true;
     });
-  
+
     //  fetch only JSONs once
     this.filteredNames = prelim;
     await this.fetchReports();
-  
+
     if (search) {
       this.filteredNames = this.filteredNames.filter((name) => {
         const report = this.reports.get(name);
@@ -279,7 +279,7 @@ class Page {
         return JSON.stringify(report).toLowerCase().includes(search);
       });
     }
-  
+
     if (this.filteredNames.length > 0) {
       this.updateReportLinks();
       this.updateOverviewChart();
@@ -297,7 +297,7 @@ class Page {
       document.querySelector('#links').replaceChildren();
     }
     document.querySelector('#loading').style.display = 'none';
-  }  
+  }
 
   // updateReportLinks updates the links sections with filtered reports.
   updateReportLinks() {
@@ -716,7 +716,7 @@ async function main() {
     searchText: '',
   };
   const page = new Page(index, filters);
-  
+
   document.querySelector('#search-clear').addEventListener('click', () => {
     document.querySelector('#search-input').value = '';
     filters.searchText = '';
