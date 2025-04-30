@@ -211,11 +211,10 @@ class GenerateReport:
 
     self._write_index_html(benchmarks, accumulated_results, time_results,
                            projects, samples_with_bugs, coverage_language_gains)
-    self._write_index_json(
-        benchmarks,
-        accumulated_results=accumulated_results,
-        time_results=time_results,
-        projects=projects)
+    self._write_index_json(benchmarks,
+                           accumulated_results=accumulated_results,
+                           time_results=time_results,
+                           projects=projects)
 
   def _write(self, output_path: str, content: str):
     """Utility write to filesystem function."""
@@ -248,18 +247,15 @@ class GenerateReport:
         coverage_language_gains=coverage_language_gains)
     self._write('index.html', rendered)
 
-  def _write_index_json(self,
-                        benchmarks: List[Benchmark],
+  def _write_index_json(self, benchmarks: List[Benchmark],
                         accumulated_results: AccumulatedResult,
-                        time_results: dict[str, Any],
-                        projects: list[Project]):
+                        time_results: dict[str, Any], projects: list[Project]):
     """Generate the report index.json and write to filesystem."""
-    rendered = self._jinja.render(
-        'index.json',
-        benchmarks=benchmarks,
-        accumulated_results=accumulated_results,
-        time_results=time_results,
-        projects=projects)
+    rendered = self._jinja.render('index.json',
+                                  benchmarks=benchmarks,
+                                  accumulated_results=accumulated_results,
+                                  time_results=time_results,
+                                  projects=projects)
     self._write('index.json', rendered)
 
   def _write_benchmark_index(self, benchmark: Benchmark, samples: List[Sample],
