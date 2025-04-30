@@ -761,6 +761,14 @@ class GeminiV2Think(GeminiV1D5):
   _vertex_ai_model = 'gemini-2.0-flash-thinking-exp-01-21'
 
 
+class GeminiV2D5Flash(GeminiModel):
+  """Gemini 2.5 flash."""
+  _max_output_tokens = 65536
+  context_window = 1048576
+  name = 'vertex_ai_gemini-2-5-flash'
+  _vertex_ai_model = 'gemini-2.5-flash-preview-04-17'
+
+
 class GeminiV1D5Chat(GeminiV1D5):
   """Gemini 1.5 for chat session."""
   name = 'vertex_ai_gemini-1-5-chat'
