@@ -15,9 +15,10 @@
 Use it as a usual module locally, or as script in cloud builds.
 """
 import os
+
 import logger
-from agent.prototyper import Prototyper
 from agent.jvm_coverage_enhancer import JvmCoverageEnhancer
+from agent.prototyper import Prototyper
 from llm_toolkit.prompt_builder import (CoverageEnhancerTemplateBuilder,
                                         EnhancerTemplateBuilder)
 from llm_toolkit.prompts import Prompt, TextPrompt
@@ -61,17 +62,17 @@ class Enhancer(Prototyper):
                                         error_desc, errors)
     elif last_result.coverage_result:
       builder = CoverageEnhancerTemplateBuilder(
-        self.llm,
-        benchmark,
-        last_build,
-        coverage_result=last_result.coverage_result)
+          self.llm,
+          benchmark,
+          last_build,
+          coverage_result=last_result.coverage_result)
     else:
       logger.error(
-        'Last result does not contain either semantic result or coverage result',
-        trial=self.trial)
+          'Last result does not contain either semantic result or coverage result',
+          trial=self.trial)
       # TODO(dongge): Give some default initial prompt.
       return TextPrompt(
-        'Last result does not contain either semantic result or coverage result'
+          'Last result does not contain either semantic result or coverage result'
       )
 
     prompt = builder.build(example_pair=[],
