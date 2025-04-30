@@ -52,19 +52,19 @@ class Enhancer(Prototyper):
 
     # Delegate JVM-specific logic to JvmCoverageEnhancer
     if benchmark.language == 'jvm':
-      return JvmCoverageEnhancer(self.llm, benchmark, last_result, last_build,
-                                 self.args).initial_prompt()
+      return JvmCoverageEnhancer(self.llm, benchmark, last_result,
+                                 last_build_result, self.args).initial_prompt()
 
     #TODO(dongge): Refine this logic.
     if last_result.semantic_result:
       error_desc, errors = last_result.semantic_result.get_error_info()
-      builder = EnhancerTemplateBuilder(self.llm, benchmark, last_build,
+      builder = EnhancerTemplateBuilder(self.llm, benchmark, last_build_result,
                                         error_desc, errors)
     elif last_result.coverage_result:
       builder = CoverageEnhancerTemplateBuilder(
           self.llm,
           benchmark,
-          last_build,
+          last_build_result,
           coverage_result=last_result.coverage_result)
     else:
       logger.error(
