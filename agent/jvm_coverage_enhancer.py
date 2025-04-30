@@ -14,7 +14,7 @@
 """
 Module: JVM Coverage Enhancer
 
-This module provides a helper agent to improve code coverage for JVM-based 
+This module provides a helper agent to improve code coverage for JVM-based
 fuzz targets by generating or fixing JVM harnesses using LLM prompts.
 """
 
@@ -47,7 +47,6 @@ class JvmCoverageEnhancer(Prototyper):
                                benchmark=self.benchmark,
                                generated_harness=source_code,
                                errors=[])
-    # Use correct signature: only example_pair is required
     prompt = builder.build(example_pair=[])
 
     # Save to a dedicated JVM prompt file

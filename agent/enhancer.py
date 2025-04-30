@@ -68,12 +68,13 @@ class Enhancer(Prototyper):
           coverage_result=last_result.coverage_result)
     else:
       logger.error(
-          'Last result does not contain either semantic result or coverage result',
+          '''Last result does not contain either semantic result or coverage
+          result''',
           trial=self.trial)
       # TODO(dongge): Give some default initial prompt.
       return TextPrompt(
-          'Last result does not contain either semantic result or coverage result'
-      )
+          '''Last result does not contain either semantic result or coverage
+          result''')
 
     prompt = builder.build(example_pair=[],
                            tool_guides=self.inspect_tool.tutorial(),

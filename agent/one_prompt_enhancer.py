@@ -54,7 +54,6 @@ class OnePromptEnhancer(OnePromptPrototyper):
                                          args=self.args)
       prompt = jvm_enhancer.initial_prompt()
     else:
-      # Existing non-JVM logic
       builder = DefaultTemplateBuilder(self.llm)
       if last_result.semantic_result:
         error_desc, errors = last_result.semantic_result.get_error_info()
@@ -82,7 +81,6 @@ class OnePromptEnhancer(OnePromptPrototyper):
     """Executes the agent based on previous result."""
     last_result = result_history[-1]
     logger.info('Executing One Prompt Enhancer', trial=last_result.trial)
-    # Use keep to avoid deleting files, such as benchmark.yaml
     WorkDirs(self.args.work_dirs.base, keep=True)
 
     prompt = self._initial_prompt(result_history)
