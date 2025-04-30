@@ -22,7 +22,7 @@ from typing import Optional
 
 import logger
 from agent.base_agent import BaseAgent
-from experimental.build_generator import file_utils, templates
+from experimental.build_generator import constants, file_utils, templates
 from llm_toolkit.models import LLM
 from llm_toolkit.prompts import Prompt
 from results import BuildResult, Result
@@ -31,7 +31,6 @@ from tool.container_tool import ProjectContainerTool
 
 SAMPLE_HEADERS_COUNT = 30
 MAX_DISCOVERY_ROUND = 100
-INTROSPECTOR_OSS_FUZZ_DIR = '/src/inspector'
 
 
 class BuildScriptAgent(BaseAgent):
@@ -163,7 +162,7 @@ class BuildScriptAgent(BaseAgent):
             success = True
             # Test introspector build
             introspector_build_result = self._test_introspector_build(tool)
-            command = f'test -d {INTROSPECTOR_OSS_FUZZ_DIR}'
+            command = f'test -d {constants.INTROSPECTOR_OSS_FUZZ_DIR}'
             introspector_dir_check_result = tool.execute(command)
             if introspector_dir_check_result.returncode == 0:
               logger.info('Introspector build success', trial=-1)
@@ -402,9 +401,7 @@ class BuildSystemBuildScriptAgent(BuildScriptAgent):
   def execute(self, result_history: list[Result]) -> BuildResult:
     """Executes the agent based on previous result."""
     if not self._discover_build_configurations():
-      logger.info('No known build configuration.',
-                  self.name,
-                  trial=result_history[-1].trial)
+      logger.info('No known build configuration.', trial=self.trial)
       return BuildResult(benchmark=result_history[-1].benchmark,
                          trial=result_history[-1].trial,
                          work_dirs=result_history[-1].work_dirs,
