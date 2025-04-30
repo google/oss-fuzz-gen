@@ -24,6 +24,9 @@ MODELS = [MODEL_GPT_35_TURBO, MODEL_VERTEX]
 
 MAX_PROMPT_LENGTH = 25000
 
+INTROSPECTOR_OSS_FUZZ_DIR = '/src/inspector'
+INTROSPECTOR_ALL_FUNCTIONS_FILE = 'all-fuzz-introspector-functions.json'
+
 # Common -l<lib> to required package mapping for Dockerfile installation
 LIBRARY_PACKAGE_MAP = {
     "z": "zlib1g-dev",
