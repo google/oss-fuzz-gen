@@ -246,11 +246,9 @@ Here is a dump of the bash execution result.
 '''
 
 LLM_AUTO_DISCOVERY = '''
-You are tasked with generating a **build script** to compile and link a target project, and updating a **template fuzzing harness** by adding appropriate header includes from the project. The harness itself should not be modified beyond these includes.
+You are tasked with generating a **build script** to compile and statically link a target project, and updating a **template fuzzing harness** by including relevant project headers. Do **not** modify the harness logic, only add `#include` statements.
 
-The project source code is located at `$SRC/{PROJECT_NAME}` inside a Docker container running **Ubuntu 24.04**.
-
-The fuzzing harness template is provided at `$SRC/{FUZZING_FILE}` and the content is shown below, which you must modified from the given template.
+The source code is located at `$SRC/{PROJECT_NAME}` inside a Docker container running **Ubuntu 24.04**. The fuzzing harness template is at `$SRC/{FUZZING_FILE}` and is provided below.
 
 The generated build script will be executed in a **fresh session for testing**. Do **not** include any `|| true` or similar constructs to suppress errors.
 
@@ -261,7 +259,8 @@ The generated build script will be executed in a **fresh session for testing**. 
 - `$CFLAGS` and `$CXXFLAGS` must be used for compilation of source files. This is important because we need the flags to be used in the environment.
 - Project source: `$SRC/{PROJECT_NAME}`
 - Fuzzing harness template: `$SRC/{FUZZING_FILE}`
-- Container environment: Defined by the provided `Dockerfile`
+- Linking: Use `$LIB_FUZZING_ENGINE` and link fuzzers statically
+- Output fuzzers to: `$OUT/{FUZZER_NAME}`
 
 ### Provided Resources
 
@@ -270,11 +269,10 @@ The generated build script will be executed in a **fresh session for testing**. 
   {DOCKERFILE}
   </dockerfile>
 
-- **Template fuzzing harness:**
+- Template fuzzing harness:
   <fuzzer>
   {FUZZER}
   </fuzzer>
-
 
 ### Interaction Protocol
 
@@ -282,41 +280,54 @@ This is an **interactive process**. You do not initially know the project layout
 
 You are limited to **{MAX_DISCOVERY_ROUND} discovery rounds**, so plan efficiently.
 
-Use the following XML tags for communication:
-
-- `<command></command>` – Use to request shell commands that will be executed in the container.
+Your result must only contains these XML tags. **NOTHING MORE**.
+- `<command></command>` – Use to request shell commands that will be executed in the container. You may include multiple semicolon-separated commands per tag, or use multiple tags.
 - `<bash></bash>` – Use only when ready to output the **final build script**.
 - `<fuzzer></fuzzer>` – wraps the complete, modified fuzzing harness, which includes and links the binaries compiled from the target project. The result **MUST** contain the **entire source code** of the updated fuzzing harness, not just a diff or partial snippet.
 
-You may include multiple shell commands in:
-- A single `<command>` tag, separated by semicolons (`;`), or
-- Separate `<command>` tags, executed in sequence.
+Your goal is to compile the project into a static library (`libtarget.a`) that can be linked into the fuzzing harnesses.
 
-### Build Script Guidelines
+### Supported Build Systems (Follow This Order Strictly)
 
-- Use `$CC` and `$CXX` for all compile and link steps.
-- `$CFLAGS` and `$CXXFLAGS` must be used for compilation of source files. This is important because we need the flags to be used in the environment.
-- When you link the empty fuzzing harness, you must use `$LIB_FUZZING_ENGINE` which holds `-fsanitize=fuzzer` to make sure we link in libFuzzer's logic.
-- The fuzzing harness binary must be placed as `$OUT/{FUZZER_NAME}`. Make sure to use `-o $OUT/{FUZZER_NAME}` in the link stage of the fuzzing harness.
-- When linking the fuzzing harness against the code compiled in the target, make sure to link in the whole code of the target by using <code>-Wl,--whole-archive libtarget.a -Wl,--no-whole-archive</code> for each static library. This includes for libraries that have been assembled of object files.
-- When compiling and linking the fuzzing harness, the build script must be ready for building and linking multiple fuzzing harnesses. Each fuzzing harness is prefixed with "empty-fuzzer-*" and the source file suffix.
-  You must make sure to build/link the fuzzing harnesses in a loop, so that the build script can handle an arbitrary number of fuzzing harnesses.
-  As as an example, the following is incorrect:
-<code>$CC $CFLAGS -I$SRC/jsmn $SRC/empty-fuzzer.c -o $OUT/jsmn_fuzzer -L. -Wl,--whole-archive libjsmn.a -Wl,--no-whole-archive $LIB_FUZZING_ENGINE</code>
-  and the following is correct:
-<code>
-for fuzzer in $(find $SRC -maxdepth 1 -name 'empty-fuzzer.*'); do
-  fuzzer_basename=$(basename $fuzzer)
-  $CC $CFLAGS -I$SRC/.../.../ ${fuzzer} -o $OUT/${fuzzer_basename} -L. -Wl,--whole-archive .../.a -Wl,--no-whole-archive $LIB_FUZZING_ENGINE
-done
-</code>
-- Do **not** use `sudo` (script runs as root).
-- Do **not** use `|| true` to suppress errors.
-- If a supported build system exists (e.g., CMake, Autotools, Make), use it for compiling the project.
-- For **fuzzer compilation**, always use manual compilation with `$CC` or `$CXX`, regardless of the project’s build system.
-- Do not modify existing build configuration files.
-- Skip tests, installation, or unrelated build targets.
-- Safely extend environment variables (e.g., CFLAGS):
+Always follow the order below when determining how to build the project:
+
+1. **General Build Systems (Preferred)**
+   If the project contains standard build files like **Makefile**, **configure**, or **CMakeLists.txt**, use the corresponding build system directly.
+   Do **not** patch, modify, or override these files in any way.
+
+2. **BUILD.gn (GN/Ninja Build System)**
+   - First, attempt to use `gn` and `ninja` by ensuring the necessary tools are installed:
+     ```bash
+     apt update && apt install -y ninja-build
+     # Install gn manually or from source if needed.
+     ```
+   - If GN/Ninja usage is not feasible, fall back to **manual parsing** of `BUILD.gn`:
+     - Extract `sources`, `include_dirs`, and `defines`.
+     - Compile using `$CC`/`$CXX` and apply `$CFLAGS`/`$CXXFLAGS`.
+     - Archive object files with `llvm-ar`.
+     - Install any required packages listed in `BUILD.gn`.
+
+3. **Android.bp (Soong Build System)**
+   - Soong cannot be invoked directly; assume it is unavailable.
+   - Manually parse `Android.bp` to identify source files, include paths, defines, and dependencies.
+   - Compile sources using `$CC`/`$CXX`, apply appropriate flags, and archive with `llvm-ar`.
+   - Install required dependencies using `apt-get`.
+
+4. **No Build System Found (Manual Compilation Fallback)**
+   If no recognized build system is detected:
+   - Use `find` or similar tools to discover all relevant `.c`/`.cc` files.
+   - Compile them manually with `$CC`/`$CXX`, applying `$CFLAGS`/`$CXXFLAGS`.
+   - Archive object files into a static library using `llvm-ar`.
+
+Additionally:
+
+- Use `$CFLAGS` and `$CXXFLAGS` in all compilation steps.
+- Always install any required system packages via `apt-get`.
+
+### Build Script Requirements
+
+- Use `$CC` and `$CXX` for all compilation and linking tasks.
+- Always apply `$CFLAGS` and `$CXXFLAGS` when compiling source files, both for the project and the fuzzing harness. Safely extend these variables if needed, change the path for the needed includes:
   ```bash
   if [ -z "${CFLAGS:-}" ]; then
     CFLAGS="-I/some/include"
@@ -324,32 +335,52 @@ done
     CFLAGS="$CFLAGS -I/some/include"
   fi
   ```
-- If the build does not produce a static library, collect `.o` files and archive them using:
+
+- The script **must not**:
+  - Use `sudo` (the container runs as root),
+  - Suppress errors (e.g., via `|| true`),
+
+- If possible, please exclude the building of tests or examples.
+
+- If the build does not automatically generate a static library, collect all `.o` files and manually archive them:
   ```bash
   llvm-ar rcs libtarget.a *.o
   ```
-- Link the resulting static library into the fuzzer using:
+
+- When linking the fuzzing harness, always use:
   ```bash
   -Wl,--whole-archive libtarget.a -Wl,--no-whole-archive
   ```
 
+- Ensure the script builds **all fuzzing harnesses** matching the `empty-fuzzer.*` pattern using a loop, like so:
+  ```bash
+  for fuzzer in $(find $SRC -maxdepth 1 -name 'empty-fuzzer.*'); do
+    fuzzer_basename=$(basename $fuzzer)
+    $CC $CFLAGS -I$SRC/... $fuzzer -o $OUT/${fuzzer_basename} -L. -Wl,--whole-archive libtarget.a -Wl,--no-whole-archive $LIB_FUZZING_ENGINE
+  done
+  ```
+
+- If you are not using a build system (e.g., Make/CMake), and some source files fail to compile, you may **skip those individual files** to allow the build process to complete successfully. Focus on compiling as many valid source files as possible to produce a usable static library.
+
 ### Fuzzing Harness Requirements
 
-- Only modify the provided harness by including headers from the target project as necessary.
-- Do **not** add any logic, templates, function calls, or placeholders.
-- The harness must remain syntactically valid and must compile and link cleanly with the generated static library.
-- The result **MUST** contain the **entire source code** of the updated fuzzing harness, not just a diff or partial snippet.
+- Only modify the harness by adding necessary `#include` statements for project headers. Try to keep it as minimum as possible.
+- Do not alter or add logic, boilerplate, or functions.
+- The result MUST be **a complete, valid C/C++ file** that compiles and links cleanly.
 
 ### Getting Started
 
-Begin by issuing discovery commands to explore the project layout and identify its build system and header locations. Suggested starting commands include:
+Begin with discovery commands to examine project structure and identify build system and headers.
 
-- `ls -la $SRC/{PROJECT_NAME}`
-- `find $SRC/{PROJECT_NAME} -name CMakeLists.txt -o -name configure -o -name Makefile`
-- `find $SRC/{PROJECT_NAME} -type d -name include`
+Useful starting points:
+```bash
+ls -la $SRC/{PROJECT_NAME}
+find $SRC/{PROJECT_NAME} -name Android.bp -o -name BUILD.gn -o -name Makefile -o -name CMakeLists.txt
+find $SRC/{PROJECT_NAME} -type f \\( -name '*.h' -o -name '*.hpp' \\)
+```
 
-Your first reply should be a `<command>` block to start the investigation.
-And your last reply should returns the full generated build script and modified harness with the `<bash>` and `<fuzzer>` tag.
+Your **first reply** must be a `<command>` block to begin project exploration.
+Your **final reply** must include the `<bash>` block and, if the harness was modified, the `<fuzzer>` block.
 '''
 
 LLM_DOCKER_FEEDBACK = '''
