@@ -18,10 +18,8 @@ import os
 import logger
 from agent.prototyper import Prototyper
 from agent.jvm_coverage_enhancer import JvmCoverageEnhancer
-from llm_toolkit.prompt_builder import (
-    CoverageEnhancerTemplateBuilder,
-    EnhancerTemplateBuilder
-)
+from llm_toolkit.prompt_builder import (CoverageEnhancerTemplateBuilder,
+                                        EnhancerTemplateBuilder)
 from llm_toolkit.prompts import Prompt, TextPrompt
 from results import AnalysisResult, BuildResult, Result
 
@@ -53,47 +51,34 @@ class Enhancer(Prototyper):
 
     # Delegate JVM-specific logic to JvmCoverageEnhancer
     if benchmark.language == 'jvm':
-        return JvmCoverageEnhancer(
-            self.llm,
-            benchmark,
-            last_result,
-            last_build,
-            self.args
-        ).initial_prompt()
+      return JvmCoverageEnhancer(self.llm, benchmark, last_result, last_build,
+                                 self.args).initial_prompt()
 
-        #TODO(dongge): Refine this logic.
-        if last_result.semantic_result:
-            error_desc, errors = last_result.semantic_result.get_error_info()
-            builder = EnhancerTemplateBuilder(
-                self.llm,
-                benchmark,
-                last_build,
-                error_desc,
-                errors
-            )
-        elif last_result.coverage_result:
-            builder = CoverageEnhancerTemplateBuilder(
-                self.llm,
-                benchmark,
-                last_build,
-                coverage_result=last_result.coverage_result
-            )
-        else:
-            logger.error(
-                'Last result does not contain either semantic result or coverage result',
-                trial=self.trial
-            )
-            # TODO(dongge): Give some default initial prompt.
-            return TextPrompt(
-                'Last result does not contain either semantic result or coverage result'
-            )
+    #TODO(dongge): Refine this logic.
+    if last_result.semantic_result:
+      error_desc, errors = last_result.semantic_result.get_error_info()
+      builder = EnhancerTemplateBuilder(self.llm, benchmark, last_build,
+                                        error_desc, errors)
+    elif last_result.coverage_result:
+      builder = CoverageEnhancerTemplateBuilder(
+        self.llm,
+        benchmark,
+        last_build,
+        coverage_result=last_result.coverage_result)
+    else:
+      logger.error(
+        'Last result does not contain either semantic result or coverage result',
+        trial=self.trial)
+      # TODO(dongge): Give some default initial prompt.
+      return TextPrompt(
+        'Last result does not contain either semantic result or coverage result'
+      )
 
-        prompt = builder.build(
-            example_pair=[],
-            tool_guides=self.inspect_tool.tutorial(),
-            project_dir=self.inspect_tool.project_dir
-        )
-        # Save to a dedicated enhancer prompt file
-        prompt_path = os.path.join(self.args.work_dirs.prompt, 'enhancer_initial.txt')
-        prompt.save(prompt_path)
-        return prompt
+    prompt = builder.build(example_pair=[],
+                           tool_guides=self.inspect_tool.tutorial(),
+                           project_dir=self.inspect_tool.project_dir)
+    # Save to a dedicated enhancer prompt file
+    prompt_path = os.path.join(self.args.work_dirs.prompt,
+                               'enhancer_initial.txt')
+    prompt.save(prompt_path)
+    return prompt

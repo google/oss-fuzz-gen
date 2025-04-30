@@ -20,33 +20,22 @@ from results import AnalysisResult, BuildResult
 
 
 class JvmCoverageEnhancer(Prototyper):
-    """Helper agent for JVM-specific coverage improvement."""
+  """Helper agent for JVM-specific coverage improvement."""
 
-    def __init__(
-        self,
-        llm,
-        benchmark,
-        analysis_result: AnalysisResult,
-        build_result: BuildResult,
-        args
-    ):
-        super().__init__(llm, benchmark, args=args)
-        self.analysis = analysis_result
-        self.build = build_result
+  def __init__(self, llm, benchmark, analysis_result: AnalysisResult,
+               build_result: BuildResult, args):
+    super().__init__(llm, benchmark, args=args)
+    self.analysis = analysis_result
+    self.build = build_result
 
-    def initial_prompt(self) -> Prompt:
-        """Constructs initial JVM-focused prompt."""
-        # Build the JVM fixing prompt
-        source_code = self.analysis.run_result.fuzz_target_source
-        builder = JvmFixingBuilder(
-            self.llm,
-            self.benchmark,
-            source_code,
-            []
-        )
-        prompt = builder.build(example_pair=[], tool_guides=None, project_dir=None)
+  def initial_prompt(self) -> Prompt:
+    """Constructs initial JVM-focused prompt."""
+    # Build the JVM fixing prompt
+    source_code = self.analysis.run_result.fuzz_target_source
+    builder = JvmFixingBuilder(self.llm, self.benchmark, source_code, [])
+    prompt = builder.build(example_pair=[], tool_guides=None, project_dir=None)
 
-        # Save to a dedicated JVM prompt file
-        prompt_path = os.path.join(self.args.work_dirs.prompt, 'jvm_initial.txt')
-        prompt.save(prompt_path)
-        return prompt
+    # Save to a dedicated JVM prompt file
+    prompt_path = os.path.join(self.args.work_dirs.prompt, 'jvm_initial.txt')
+    prompt.save(prompt_path)
+    return prompt
