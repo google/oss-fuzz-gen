@@ -182,6 +182,8 @@ Your response **must only contain two XML tags**:
 ### Build Script Instructions
 - The build script will be executed as root on **Ubuntu 24.04**, so **do not use `sudo`**.
 - `$CC` and `$CXX` are set and must be used for compilation.
+- `$CFLAGS` and `$CXXFLAGS` must be used for compilation of source files. This is important because we need the flags to be used in the environment.
+- The fuzzing harness binary must be placed as `$OUT/{FUZZER_NAME}`. Make sure to use `-o $OUT/{FUZZER_NAME}` in the link stage of the fuzzing harness
 - If additional packages are needed, include a single `apt install` command at the top.
 - Use the provided build system files to compile the target project.
 - If a static library is not produced, collect the object files and archive them using `llvm-ar`.
@@ -206,32 +208,24 @@ Your response **must only contain two XML tags**:
 
 ### Provided Resources
 - **Build system configuration files:**
-  ```xml
   <build_files>
   {BUILD_FILES}
   </build_files>
-  ```
 
 - **Dockerfile for build environment:**
-  ```xml
   <dockerfile>
   {DOCKERFILE}
   </dockerfile>
-  ```
 
 - **Template fuzzing harness:**
-  ```xml
   <fuzzer>
   {FUZZER}
   </fuzzer>
-  ```
 
 - **Available header files:**
-  ```xml
   <headers>
   {HEADERS}
   </headers>
-  ```
 '''
 
 LLM_BUILD_FILE_TEMPLATE = '''
@@ -252,51 +246,77 @@ Here is a dump of the bash execution result.
 '''
 
 LLM_AUTO_DISCOVERY = '''
-You are tasked with generating a fuzzing harness and build script to fuzz a target project. The project source code is located at `$SRC/{PROJECT_NAME}` inside a Docker container running **Ubuntu 24.04**. A template fuzzing harness is available at `$SRC/{FUZZING_FILE}` and will need to be modified to link with the compiled static library of the target project.
+You are tasked with generating a **build script** to compile and link a target project, and updating a **template fuzzing harness** by adding appropriate header includes from the project. The harness itself should not be modified beyond these includes.
 
-The Docker container uses a specific environment described by the provided **Dockerfile**. The harness compilation and target project build will be executed within this container.
+The project source code is located at `$SRC/{PROJECT_NAME}` inside a Docker container running **Ubuntu 24.04**.
+
+The fuzzing harness template is provided at `$SRC/{FUZZING_FILE}` and the content is shown below, which you must modified from the given template.
+
+The generated build script will be executed in a **fresh session for testing**. Do **not** include any `|| true` or similar constructs to suppress errors.
+
+### Environment Details
+
+- Operating system: Ubuntu 24.04 (Docker)
+- Compiler: Use `$CC` and `$CXX` for all compilation and linking
+- `$CFLAGS` and `$CXXFLAGS` must be used for compilation of source files. This is important because we need the flags to be used in the environment.
+- Project source: `$SRC/{PROJECT_NAME}`
+- Fuzzing harness template: `$SRC/{FUZZING_FILE}`
+- Container environment: Defined by the provided `Dockerfile`
 
 ### Provided Resources
 
-- **Dockerfile for build environment:**
-  ```xml
+- Dockerfile:
   <dockerfile>
   {DOCKERFILE}
   </dockerfile>
-  ```
 
 - **Template fuzzing harness:**
-  ```xml
   <fuzzer>
   {FUZZER}
   </fuzzer>
-  ```
+
 
 ### Interaction Protocol
 
-This will be an interactive process. You do not have full knowledge of the build system or environment at the start. You must discover the necessary information step-by-step by requesting commands, which I will execute for you inside the Docker container. After each command, I will return the output for you to analyze.
+This is an **interactive process**. You do not initially know the project layout or build system. You must request commands to be run inside the Docker container to discover this information.
 
-Each command is executed using `docker exec`, which starts a **fresh shell session each time**. This means any state (such as project build or set environment variables) will be lost between commands.
+You are limited to **{MAX_DISCOVERY_ROUND} discovery rounds**, so plan efficiently.
 
-If you need to perform multiple steps in a single session, you have two options:
-- **Use a single `<command>` tag** and separate the commands with `;`.
-- **Use multiple `<command>` tags**, each wrapping one command — they will be executed in the order received.
+Use the following XML tags for communication:
 
-You are limited to **{MAX_DISCOVERY_ROUND} discovery rounds**, so plan your exploration efficiently before generating the final build script and fuzzing harness.
+- `<command></command>` – Use to request shell commands that will be executed in the container.
+- `<bash></bash>` – Use only when ready to output the **final build script**.
+- `<fuzzer></fuzzer>` – wraps the complete, modified fuzzing harness, which includes and links the binaries compiled from the target project. The result **MUST** contain the **entire source code** of the updated fuzzing harness, not just a diff or partial snippet.
 
-You must respond using **one of the following XML tags**:
-- `<command></command>`: Use this to request discovery commands (e.g., check for CMakeLists.txt, run `configure`, inspect files, etc.). Wait for my reply with output before continuing.
-- `<bash></bash>`: Use this **only when you are ready** to output the final Bash build script that compiles the target project and the fuzzing harness.
-- `<fuzzer></fuzzer>`: Use this to output the full, modified fuzzing harness that includes and links the compiled target project.
+You may include multiple shell commands in:
+- A single `<command>` tag, separated by semicolons (`;`), or
+- Separate `<command>` tags, executed in sequence.
 
 ### Build Script Guidelines
 
-- The script is executed as root in Ubuntu 24.04. **Do not use `sudo`.**
-- Use `$CC` and `$CXX` for all compilation steps.
-- If the project does not automatically produce a static library, collect `.o` files and archive them with `llvm-ar`.
-- Do **not** modify existing build configuration files.
-- Avoid tests, installs, and unnecessary build steps.
-- Handle environment variables properly:
+- Use `$CC` and `$CXX` for all compile and link steps.
+- `$CFLAGS` and `$CXXFLAGS` must be used for compilation of source files. This is important because we need the flags to be used in the environment.
+- When you link the empty fuzzing harness, you must use `$LIB_FUZZING_ENGINE` which holds `-fsanitize=fuzzer` to make sure we link in libFuzzer's logic.
+- The fuzzing harness binary must be placed as `$OUT/{FUZZER_NAME}`. Make sure to use `-o $OUT/{FUZZER_NAME}` in the link stage of the fuzzing harness.
+- When linking the fuzzing harness against the code compiled in the target, make sure to link in the whole code of the target by using <code>-Wl,--whole-archive libtarget.a -Wl,--no-whole-archive</code> for each static library. This includes for libraries that have been assembled of object files.
+- When compiling and linking the fuzzing harness, the build script must be ready for building and linking multiple fuzzing harnesses. Each fuzzing harness is prefixed with "empty-fuzzer-*" and the source file suffix.
+  You must make sure to build/link the fuzzing harnesses in a loop, so that the build script can handle an arbitrary number of fuzzing harnesses.
+  As as an example, the following is incorrect:
+<code>$CC $CFLAGS -I$SRC/jsmn $SRC/empty-fuzzer.c -o $OUT/jsmn_fuzzer -L. -Wl,--whole-archive libjsmn.a -Wl,--no-whole-archive $LIB_FUZZING_ENGINE</code>
+  and the following is correct:
+<code>
+for fuzzer in $(find $SRC -maxdepth 1 -name 'empty-fuzzer.*'); do
+  fuzzer_basename=$(basename $fuzzer)
+  $CC $CFLAGS -I$SRC/.../.../ ${fuzzer} -o $OUT/${fuzzer_basename} -L. -Wl,--whole-archive .../.a -Wl,--no-whole-archive $LIB_FUZZING_ENGINE
+done
+</code>
+- Do **not** use `sudo` (script runs as root).
+- Do **not** use `|| true` to suppress errors.
+- If a supported build system exists (e.g., CMake, Autotools, Make), use it for compiling the project.
+- For **fuzzer compilation**, always use manual compilation with `$CC` or `$CXX`, regardless of the project’s build system.
+- Do not modify existing build configuration files.
+- Skip tests, installation, or unrelated build targets.
+- Safely extend environment variables (e.g., CFLAGS):
   ```bash
   if [ -z "${CFLAGS:-}" ]; then
     CFLAGS="-I/some/include"
@@ -304,23 +324,58 @@ You must respond using **one of the following XML tags**:
     CFLAGS="$CFLAGS -I/some/include"
   fi
   ```
-- Link the static library into the fuzzing harness with:
+- If the build does not produce a static library, collect `.o` files and archive them using:
+  ```bash
+  llvm-ar rcs libtarget.a *.o
+  ```
+- Link the resulting static library into the fuzzer using:
   ```bash
   -Wl,--whole-archive libtarget.a -Wl,--no-whole-archive
   ```
 
 ### Fuzzing Harness Requirements
 
-- Modify the provided harness (`$SRC/{FUZZING_FILE}`) to include the correct headers from the target project found in base or include directories, **don't do anything else.**
-- The harness must compile and link cleanly with the static library.
-- Don't include any templates, placeholders or real function calls in the harness—it must be fully compilable without any modifications.
+- Only modify the provided harness by including headers from the target project as necessary.
+- Do **not** add any logic, templates, function calls, or placeholders.
+- The harness must remain syntactically valid and must compile and link cleanly with the generated static library.
+- The result **MUST** contain the **entire source code** of the updated fuzzing harness, not just a diff or partial snippet.
 
-Begin by issuing discovery commands to understand the project’s build system and layout.
+### Getting Started
+
+Begin by issuing discovery commands to explore the project layout and identify its build system and header locations. Suggested starting commands include:
+
+- `ls -la $SRC/{PROJECT_NAME}`
+- `find $SRC/{PROJECT_NAME} -name CMakeLists.txt -o -name configure -o -name Makefile`
+- `find $SRC/{PROJECT_NAME} -type d -name include`
+
 Your first reply should be a `<command>` block to start the investigation.
+And your last reply should returns the full generated build script and modified harness with the `<bash>` and `<fuzzer>` tag.
 '''
 
 LLM_DOCKER_FEEDBACK = '''
 Here is the result of that command execution:
+
+{RESULT}
+'''
+
+LLM_NO_VALID_TAG = '''
+Your previous response is invalid.
+
+To be valid, the response must meet the following requirements regarding XML tags:
+
+- At least one of the following must be present:
+  - One or more <command></command> tags containing valid shell commands.
+  - A single <bash></bash> tag containing the complete Bash build script for compiling both the target project and the fuzzing harness.
+
+- The <fuzzer></fuzzer> tag is **required only if** the fuzzing harness has been modified. If included, it must contain the **entire source code** of the updated fuzzing harness, not just a diff or partial snippet.
+
+Do not include any content outside these XML tags. Revisit your output and regenerate it with these rules strictly followed.
+'''
+
+LLM_MISSING_BINARY = '''
+The compiled binary was not found at `$OUT/{FUZZER_NAME}`. Please ensure that you use `-o $OUT/{FUZZER_NAME}` during the linking stage of the fuzzing harness.
+
+Below is the output from executing the previously generated build script for reference:
 
 {RESULT}
 '''

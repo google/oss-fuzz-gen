@@ -26,6 +26,7 @@ from typing import List
 import git
 from openai import OpenAIError
 
+from experiment import oss_fuzz_checkout
 from experiment.benchmark import Benchmark
 from experiment.workdir import WorkDirs
 from experimental.build_generator import (constants, file_utils, llm_agent,
@@ -288,7 +289,7 @@ def copy_result_to_out(project_generated,
 
   oss_fuzz_projects = os.path.join(output, 'oss-fuzz-projects')
   os.makedirs(oss_fuzz_projects, exist_ok=True)
-
+  dst_dir = ''
   if from_agent:
     build_dir = os.path.join(raw_result_dir, project_generated)
     if not os.path.isdir(build_dir):
@@ -327,6 +328,29 @@ def copy_result_to_out(project_generated,
         continue
       shutil.copytree(build_dir, dst_dir)
 
+  if not dst_dir:
+    return
+  # Make sure project.yaml has correct language
+  is_c = False
+  for elem in os.listdir(dst_dir):
+    if elem.endswith('.c'):
+      is_c = True
+  if is_c:
+    lang = 'c'
+  else:
+    lang = 'c++'
+  dst_yaml = os.path.join(dst_dir, 'project.yaml')
+  with open(dst_yaml, 'r') as f:
+    content = f.read()
+  lines = []
+  for line in content.split('\n'):
+    if 'language' in line:
+      lines.append(f'language: {lang}')
+    else:
+      lines.append(line)
+  with open(dst_yaml, 'w') as f:
+    f.write('\n'.join(lines))
+
 
 def run_parallels(oss_fuzz_base,
                   target_repositories,
@@ -364,25 +388,20 @@ def run_agent(target_repositories: List[str], args: argparse.Namespace):
   llm agent approach."""
   # Process default arguments
   oss_fuzz_base = os.path.abspath(args.oss_fuzz)
+
+  # Set OSS_FUZZ_DIR in oss_fuzz_checkout as the agent will use this module
+  # for dealing with the generated project.
+
+  oss_fuzz_checkout.OSS_FUZZ_DIR = oss_fuzz_base
   work_dirs = WorkDirs(args.work_dirs, keep=True)
 
   # Prepare environment
   worker_project_name = get_next_worker_project(oss_fuzz_base)
 
-  # Prepare LLM model
-  llm = models.LLM.setup(
-      ai_binary=os.getenv('AI_BINARY', ''),
-      name=args.model,
-      max_tokens=4096,
-      num_samples=1,
-      temperature=0.4,
-      temperature_list=[],
-  )
-
   # All agents
   llm_agents = [
+      llm_agent.AutoDiscoveryBuildScriptAgent,
       llm_agent.BuildSystemBuildScriptAgent,
-      llm_agent.AutoDiscoveryBuildScriptAgent
   ]
 
   for target_repository in target_repositories:
@@ -396,35 +415,39 @@ def run_agent(target_repositories: List[str], args: argparse.Namespace):
     for llm_agent_ctr in llm_agents:
       build_script = ''
       harness = ''
-      build_success = False
-      for trial in range(args.max_round):
-        logger.info('Agent: %s. Round %d', llm_agent_ctr.__name__, trial)
-        agent = llm_agent_ctr(trial=trial,
-                              llm=llm,
-                              args=args,
-                              github_url=target_repository,
-                              language=language)
-        result_history = [
-            Result(benchmark=benchmark, trial=trial, work_dirs=work_dirs)
-        ]
 
-        try:
-          build_result = agent.execute(result_history)
-        except OpenAIError:
-          logger.info(('Round %d build script generation failed for project %s'
-                       ' with openai errors'), trial, target_repository)
-          break
+      # Prepare new LLM model
+      llm = models.LLM.setup(
+          ai_binary=os.getenv('AI_BINARY', ''),
+          name=args.model,
+          max_tokens=4096,
+          num_samples=1,
+          temperature=0.4,
+          temperature_list=[],
+      )
+      llm.MAX_INPUT_TOKEN = constants.MAX_PROMPT_LENGTH
 
-        if build_result.compiles:
-          build_success = True
-          build_script = build_result.build_script_source
-          harness = build_result.fuzz_target_source
-          break
+      logger.info('Agent: %s.', llm_agent_ctr.__name__)
+      agent = llm_agent_ctr(trial=1,
+                            llm=llm,
+                            args=args,
+                            github_url=target_repository,
+                            language=language)
+      result_history = [
+          Result(benchmark=benchmark, trial=1, work_dirs=work_dirs)
+      ]
 
-        logger.info('Round %d build script generation failed for project %s',
-                    trial, target_repository)
+      try:
+        build_result = agent.execute(result_history)
+      except OpenAIError:
+        logger.info(('Round 1 build script generation failed for project %s'
+                     ' with openai errors'), target_repository)
+        break
 
-      if build_success:
+      if build_result.compiles:
+        build_script = build_result.build_script_source
+        harness = build_result.fuzz_target_source
+
         logger.info('Build script generation success for project %s',
                     target_repository)
 

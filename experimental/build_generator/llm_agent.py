@@ -29,9 +29,9 @@ from results import BuildResult, Result
 from tool.base_tool import BaseTool
 from tool.container_tool import ProjectContainerTool
 
-MAX_PROMPT_LENGTH = 20000
 SAMPLE_HEADERS_COUNT = 30
 MAX_DISCOVERY_ROUND = 100
+INTROSPECTOR_OSS_FUZZ_DIR = '/src/inspector'
 
 
 class BuildScriptAgent(BaseAgent):
@@ -51,12 +51,14 @@ class BuildScriptAgent(BaseAgent):
     self.build_files = {}
     self.last_status = False
     self.last_result = ''
+    self.invalid = False
     self.target_files = {}
     self.discovery_stage = False
 
     # Get sample fuzzing harness
     _, _, self.harness_path, self.harness_code = (
         file_utils.get_language_defaults(self.language))
+    self.harness_name = self.harness_path.split('/')[-1].split('.')[0]
 
   def _parse_tag(self, response: str, tag: str) -> str:
     """Parses the tag from LLM response."""
@@ -82,20 +84,52 @@ class BuildScriptAgent(BaseAgent):
 
     return found_matches
 
+  def _test_introspector_build(self, tool: BaseTool) -> bool:
+    """Helper to test the generated build script for introspector build."""
+    # Handles environment variables for introspector build
+    envs = {
+        'SANITIZER': 'introspector',
+        'FUZZ_INTROSPECTOR_AUTO_FUZZ': '1',
+        'PROJECT_NAME': 'auto-fuzz-proj',
+        'FI_DISABLE_LIGHT': '1',
+        'FUZZING_LANGUAGE': self.language,
+    }
+    env_str = ' '.join(f"{key}='{value}'" for key, value in envs.items())
+
+    # Test introspector build
+    result = tool.execute(f'{env_str} compile')
+
+    return result.returncode == 0
+
   def _container_handle_bash_commands(self, response: str, tool: BaseTool,
                                       prompt: Prompt) -> Prompt:
     """Handles the command from LLM with container |tool|."""
     # Initialise variables
     prompt_text = ''
     success = False
+    self.invalid = False
+    self.missing_binary = False
 
     # Retrieve data from response
     harness = self._parse_tag(response, 'fuzzer')
-    build_script = '\n'.join(self._parse_tags(response, 'bash'))
+    build_script = self._parse_tag(response, 'bash')
     commands = '; '.join(self._parse_tags(response, 'command'))
 
-    if build_script:
+    if commands:
+      # Execute the command directly, then return the formatted result
+      result = tool.execute(commands)
+      prompt_text = self._format_bash_execution_result(result,
+                                                       previous_prompt=prompt)
+      if result.returncode == 0:
+        success = True
+    elif build_script:
       self.discovery_stage = False
+
+      # Restart the container to ensure a fresh session for test
+      if isinstance(tool, ProjectContainerTool):
+        tool.terminate()
+      tool = ProjectContainerTool(benchmark=tool.benchmark, name='test')
+      self.inspect_tool = tool
 
       # Update fuzzing harness
       if harness:
@@ -103,32 +137,49 @@ class BuildScriptAgent(BaseAgent):
       if isinstance(tool, ProjectContainerTool):
         tool.write_to_file(self.harness_code, self.harness_path)
 
+      # Fix shebang to ensure docker image failing is reflected.
+      lines = build_script.split('\n')
+      if lines[0].startswith("#!"):
+        lines[0] = "#!/bin/bash -eu"
+      else:
+        lines = ["#!/bin/bash -eu"] + lines
+      build_script = '\n'.join(lines)
+
       # Update build script
-      if build_script:
-        # Add set -e to ensure docker image failing is reflected.
-        build_script = build_script.replace('#!/bin/bash', '')
-        build_script = f'#!/bin/bash\nset -e\n{build_script}'
+      if isinstance(tool, ProjectContainerTool):
+        tool.write_to_file(build_script, tool.build_script_path)
 
-        # Update build script
-        if isinstance(tool, ProjectContainerTool):
-          tool.write_to_file(build_script, '/src/build.sh')
+        # Test and parse result
+        result = tool.execute('compile')
+        format_result = self._format_bash_execution_result(
+            result, previous_prompt=prompt)
+        prompt_text = self._parse_tag(format_result, 'stderr') + '\n'
+        if result.returncode == 0:
+          # Execution success, validating if the fuzzer binary built correctly
+          command = f'test -f $OUT/{self.harness_name}'
+          result = tool.execute(command)
 
-          # Test and parse result
-          result = tool.execute('compile')
-          format_result = self._format_bash_execution_result(
-              result, previous_prompt=prompt)
-          prompt_text = self._parse_tag(format_result, 'stderr') + '\n'
           if result.returncode == 0:
             success = True
+            # Test introspector build
+            introspector_build_result = self._test_introspector_build(tool)
+            command = f'test -d {INTROSPECTOR_OSS_FUZZ_DIR}'
+            introspector_dir_check_result = tool.execute(command)
+            if introspector_dir_check_result.returncode == 0:
+              logger.info('Introspector build success', trial=-1)
+            else:
+              logger.info('Failed to get introspector results', trial=-1)
 
-    elif commands:
-      # Execute the command directly, then return the formatted result
-      self.discovery_stage = True
-      result = tool.execute(commands)
-      prompt_text = self._format_bash_execution_result(result,
-                                                       previous_prompt=prompt)
-      if result.returncode == 0:
-        success = True
+            if not introspector_build_result:
+              logger.info(('Introspector build returned error, '
+                           'but light version worked.'),
+                          trial=-1)
+          else:
+            # Fuzzer binary not compiled correctly
+            success = False
+            self.missing_binary = True
+    else:
+      self.invalid = True
 
     self.last_status = success
     self.last_result = prompt_text
@@ -143,13 +194,19 @@ class BuildScriptAgent(BaseAgent):
                 cur_round,
                 trial=build_result.trial)
 
+    # Don't need to check for invalid result
+    if self.invalid:
+      return prompt
+
     # Execution fail
     if not self.last_status:
-      retry = templates.LLM_RETRY.replace('{BASH_RESULT}', self.last_result)
-
-      # Refine prompt text to max prompt count and add to prompt
-      length = min(len(retry), (MAX_PROMPT_LENGTH - len(prompt.gettext())))
-      prompt.add_problem(retry[-length:])
+      if self.missing_binary:
+        retry = templates.LLM_MISSING_BINARY.replace('{RESULT}',
+                                                     self.last_result)
+        retry = retry.replace('{FUZZER_NAME}', self.harness_name)
+      else:
+        retry = templates.LLM_RETRY.replace('{BASH_RESULT}', self.last_result)
+      prompt.add_problem(retry)
 
       # Store build result
       build_result.compiles = False
@@ -157,10 +214,10 @@ class BuildScriptAgent(BaseAgent):
 
       return prompt
 
-    # Execution success
+    # Build success and compiled binary exist
     build_result.compiles = True
     build_result.fuzz_target_source = self.harness_code
-    build_script_source = '\n'.join(self._parse_tags(response, 'bash'))
+    build_script_source = self._parse_tag(response, 'bash')
     if not build_script_source.startswith('#!'):
       build_script_source = templates.EMPTY_OSS_FUZZ_BUILD + build_script_source
     build_result.build_script_source = build_script_source
@@ -233,8 +290,8 @@ class BuildScriptAgent(BaseAgent):
     try:
       client = self.llm.get_chat_client(model=self.llm.get_model())
       while prompt:
-        # Sleep for a minute to avoid over RPM
-        time.sleep(60)
+        # Sleep shortly to avoid RPM
+        time.sleep(6)
 
         response = self.chat_llm(cur_round,
                                  client=client,
@@ -303,8 +360,10 @@ class BuildSystemBuildScriptAgent(BuildScriptAgent):
 
     return len(self.build_files) > 0
 
-  def _initial_prompt(self, results: list[Result]) -> Prompt:  # pylint: disable=unused-argument
+  def _initial_prompt(self, results: list[Result]) -> Prompt:
     """Constructs initial prompt of the agent."""
+    # pylint: disable=unused-argument
+
     prompt = self.llm.prompt_type()(None)
 
     # Extract build configuration files content
@@ -327,6 +386,7 @@ class BuildSystemBuildScriptAgent(BuildScriptAgent):
                                             '\n'.join(build_files_str))
     problem = problem.replace('{DOCKERFILE}', dockerfile_str)
     problem = problem.replace('{FUZZER}', self.harness_code)
+    problem = problem.replace('{FUZZER_NAME}', self.harness_name)
     problem = problem.replace('{FUZZING_FILE}',
                               self.harness_path.split('/')[-1])
 
@@ -358,8 +418,21 @@ class AutoDiscoveryBuildScriptAgent(BuildScriptAgent):
   """Generate a working Dockerfile and build script from scratch
   with LLM auto discovery"""
 
-  def _initial_prompt(self, results: list[Result]) -> Prompt:  # pylint: disable=unused-argument
+  def __init__(self,
+               trial: int,
+               llm: LLM,
+               args: argparse.Namespace,
+               github_url: str,
+               language: str,
+               tools: Optional[list[BaseTool]] = None,
+               name: str = ''):
+    super().__init__(trial, llm, args, github_url, language, tools, name)
+    self.discovery_stage = True
+
+  def _initial_prompt(self, results: list[Result]) -> Prompt:
     """Constructs initial prompt of the agent."""
+    # pylint: disable=unused-argument
+
     prompt = self.llm.prompt_type()(None)
 
     # Extract template Dockerfile content
@@ -373,13 +446,28 @@ class AutoDiscoveryBuildScriptAgent(BuildScriptAgent):
     problem = templates.LLM_AUTO_DISCOVERY
     problem = problem.replace('{PROJECT_NAME}', self.github_url.split('/')[-1])
     problem = problem.replace('{DOCKERFILE}', dockerfile_str)
-    problem = problem.replace('{FUZZER}', self.harness_code)
     problem = problem.replace('{MAX_DISCOVERY_ROUND}', str(MAX_DISCOVERY_ROUND))
+    problem = problem.replace('{FUZZER}', self.harness_code)
+    problem = problem.replace('{FUZZER_NAME}', self.harness_name)
     problem = problem.replace('{FUZZING_FILE}',
                               self.harness_path.split('/')[-1])
 
     prompt.add_priming(templates.LLM_PRIMING)
     prompt.add_problem(problem)
+
+    return prompt
+
+  def _container_handle_invalid_tool_usage(self, tool: BaseTool, cur_round: int,
+                                           response: str,
+                                           prompt: Prompt) -> Prompt:
+    """Formats a prompt to re-teach LLM how to use the |tool|."""
+    # pylint: disable=unused-argument
+
+    logger.warning('ROUND %02d Invalid response from LLM: %s',
+                   cur_round,
+                   response,
+                   trial=self.trial)
+    prompt.add_problem(templates.LLM_NO_VALID_TAG)
 
     return prompt
 
@@ -405,7 +493,7 @@ class AutoDiscoveryBuildScriptAgent(BuildScriptAgent):
         if prompt is None:
           return None
 
-    if not response or not prompt or not prompt.get():
+    if not response or not prompt.get() or self.invalid:
       prompt = self._container_handle_invalid_tool_usage(
           self.inspect_tool, cur_round, response, prompt)
 
