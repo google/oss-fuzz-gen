@@ -395,9 +395,6 @@ def run_agent(target_repositories: List[str], args: argparse.Namespace):
   oss_fuzz_checkout.OSS_FUZZ_DIR = oss_fuzz_base
   work_dirs = WorkDirs(args.work_dirs, keep=True)
 
-  # Prepare environment
-  worker_project_name = get_next_worker_project(oss_fuzz_base)
-
   # All agents
   llm_agents = [
       llm_agent.AutoDiscoveryBuildScriptAgent,
@@ -406,6 +403,8 @@ def run_agent(target_repositories: List[str], args: argparse.Namespace):
 
   for target_repository in target_repositories:
     logger.info('Target repository: %s', target_repository)
+    # Prepare environment
+    worker_project_name = get_next_worker_project(oss_fuzz_base)
     language = setup_worker_project(oss_fuzz_base, worker_project_name,
                                     args.model, target_repository, True,
                                     os.path.abspath(args.work_dirs))
