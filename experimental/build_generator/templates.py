@@ -289,35 +289,40 @@ Your goal is to compile the project into a static library (`libtarget.a`) that c
 
 ### Supported Build Systems (Follow This Order Strictly)
 
-Always follow the order below when determining how to build the project:
+Always follow the order below **in strict priority** when determining how to build the project.
+Use the **first applicable method** — only fall back to later options if the earlier ones are not present or not usable. Known build systems always take precedence.
 
 1. **General Build Systems (Preferred)**
-   If the project contains standard build files like **Makefile**, **configure**, or **CMakeLists.txt**, use the corresponding build system directly.
+   If the project contains standard build files for any common C/C++ build system (e.g., `Makefile`, `configure`, etc), use the corresponding build system directly.
    Do **not** patch, modify, or override these files in any way.
 
 2. **BUILD.gn (GN/Ninja Build System)**
-   - First, attempt to use `gn` and `ninja` by ensuring the necessary tools are installed:
+   - Attempt to use `gn` and `ninja` directly:
      ```bash
      apt update && apt install -y ninja-build
      # Install gn manually or from source if needed.
      ```
-   - If GN/Ninja usage is not feasible, fall back to **manual parsing** of `BUILD.gn`:
+   - If direct use of GN/Ninja is not feasible, fall back to **manual parsing** of `BUILD.gn`:
      - Extract `sources`, `include_dirs`, and `defines`.
      - Compile using `$CC`/`$CXX` and apply `$CFLAGS`/`$CXXFLAGS`.
      - Archive object files with `llvm-ar`.
      - Install any required packages listed in `BUILD.gn`.
 
 3. **Android.bp (Soong Build System)**
-   - Soong cannot be invoked directly; assume it is unavailable.
-   - Manually parse `Android.bp` to identify source files, include paths, defines, and dependencies.
-   - Compile sources using `$CC`/`$CXX`, apply appropriate flags, and archive with `llvm-ar`.
-   - Install required dependencies using `apt-get`.
+   - Do **not** invoke Android-specific build tools (e.g., `soong_ui.bash`, `m`, `envsetup.sh`).
+   - Treat `Android.bp` as a declarative build description.
+   - Manually parse it to:
+     - Extract `srcs`, `include_dirs`, `header_libs`, and `static_libs`.
+     - Use this information to compile sources with `$CC`/`$CXX` and archive with `llvm-ar`.
+     - Resolve `static_libs` by checking https://android.googlesource.com/platform/external for corresponding modules and building them as described above.
 
 4. **No Build System Found (Manual Compilation Fallback)**
-   If no recognized build system is detected:
+   This is the **last resort**. Use this only if **none of the above build systems are present or usable**:
    - Use `find` or similar tools to discover all relevant `.c`/`.cc` files.
    - Compile them manually with `$CC`/`$CXX`, applying `$CFLAGS`/`$CXXFLAGS`.
    - Archive object files into a static library using `llvm-ar`.
+
+**Do not skip or bypass earlier build system options**. Always follow the order above. If a known build system is found (e.g., `Makefile`, `BUILD.gn`, or `Android.bp`), it must take precedence over manual compilation.
 
 Additionally:
 
@@ -327,7 +332,7 @@ Additionally:
 ### Build Script Requirements
 
 - Use `$CC` and `$CXX` for all compilation and linking tasks.
-- Always apply `$CFLAGS` and `$CXXFLAGS` when compiling source files, both for the project and the fuzzing harness. Safely extend these variables if needed, change the path for the needed includes:
+- Always apply `$CFLAGS` and `$CXXFLAGS` when compiling source files, both for the project and the fuzzing harness. Safely extend these variables only if needed. If specific include paths are required, add them like this (replace `/some/include` with the actual path as appropriate):
   ```bash
   if [ -z "${CFLAGS:-}" ]; then
     CFLAGS="-I/some/include"
@@ -335,8 +340,11 @@ Additionally:
     CFLAGS="$CFLAGS -I/some/include"
   fi
   ```
+- **Do not forcibly include standard system headers** (e.g., with `-include sys/types.h`, `-include stdint.h`, or `-include linux/types.h`) via `CFLAGS` or `CXXFLAGS`, as this may lead to conflicting type definitions and compilation errors.
 
-- The script **must not**:
+- **Avoid modifying `CFLAGS` or `CXXFLAGS` unless necessary**. Inherit and extend them only when required for a specific build constraint.
+
+- The script **MUST NOT**:
   - Use `sudo` (the container runs as root),
   - Suppress errors (e.g., via `|| true`),
 
