@@ -92,7 +92,7 @@ class BuildScriptAgent(BaseAgent):
         'PROJECT_NAME': 'auto-fuzz-proj',
         'FI_DISABLE_LIGHT': '1',
         'FUZZING_LANGUAGE': self.language,
-        'FUZZINTRO_OUTDIR': args.work_dir,
+        'FUZZINTRO_OUTDIR': self.args.work_dirs,
     }
     env_str = ' '.join(f"{key}='{value}'" for key, value in envs.items())
 
