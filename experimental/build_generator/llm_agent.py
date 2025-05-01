@@ -92,6 +92,7 @@ class BuildScriptAgent(BaseAgent):
         'PROJECT_NAME': 'auto-fuzz-proj',
         'FI_DISABLE_LIGHT': '1',
         'FUZZING_LANGUAGE': self.language,
+        'FUZZINTRO_OUTDIR': self.args.work_dirs,
     }
     env_str = ' '.join(f"{key}='{value}'" for key, value in envs.items())
 
@@ -115,6 +116,8 @@ class BuildScriptAgent(BaseAgent):
     commands = '; '.join(self._parse_tags(response, 'command'))
 
     if commands:
+      self.discovery_stage = True
+
       # Execute the command directly, then return the formatted result
       result = tool.execute(commands)
       prompt_text = self._format_bash_execution_result(result,
