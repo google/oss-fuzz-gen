@@ -280,49 +280,61 @@ This is an **interactive process**. You do not initially know the project layout
 
 You are limited to **{MAX_DISCOVERY_ROUND} discovery rounds**, so plan efficiently.
 
-Your result must only contains these XML tags. **NOTHING MORE**.
+Your result must only contain these XML tags. **NOTHING MORE**.
 - `<command></command>` – Use to request shell commands that will be executed in the container. You may include multiple semicolon-separated commands per tag, or use multiple tags.
-- `<bash></bash>` – Use only when ready to output the **final build script**.
-- `<fuzzer></fuzzer>` – wraps the complete, modified fuzzing harness, which includes and links the binaries compiled from the target project. The result **MUST** contain the **entire source code** of the updated fuzzing harness, not just a diff or partial snippet.
+- `<bash></bash>` – Use when ready to output the **current version of the build script**.
+- `<fuzzer></fuzzer>` – Wraps the complete, modified fuzzing harness, which includes and links the binaries compiled from the target project. The result **MUST** contain the **entire source code** of the updated fuzzing harness, not just a diff or partial snippet.
+
+If the build script fails or produces errors, you are encouraged to **return to interaction mode** by providing new `<command>` tags. Use them to inspect logs, echo error messages, or run diagnostic commands (e.g., view files in `/tmp`, rerun failing commands with `-v`, etc.). This allows you to iteratively understand and fix the issues.
 
 Your goal is to compile the project into a static library (`libtarget.a`) that can be linked into the fuzzing harnesses.
 
+### When to Return to Interaction
+
+If you are uncertain about how to compile part of the project, cannot find a required header or symbol, or encounter an unexpected build system file (e.g., `Makefile.am`, `autogen.sh`, or `bootstrap.sh`) and are unsure how to proceed, you **must return to the interaction process** using `<command>` tags. Use them to:
+- Search for additional build-related files
+- Explore how `autogen.sh` or `bootstrap.sh` work
+- Identify where a missing symbol or macro is defined
+
+Returning to interaction is not a failure — it is the correct response when you need more information. **Avoid guessing**.
+
 ### Supported Build Systems (Follow This Order Strictly)
 
-Always follow the order below **in strict priority** when determining how to build the project.
-Use the **first applicable method** — only fall back to later options if the earlier ones are not present or not usable. Known build systems always take precedence.
+Begin by analyzing **all available build system files** in the project (e.g., Makefile, CMakeLists.txt, Android.bp, BUILD.gn). Some important information — such as include paths, macro definitions, or dependencies — may only appear in certain build files even if they are not used for building directly.
+
+However, when deciding **which build system to use for compiling**, always prioritize the highest-preference option **from the list below**.
+
+For example: if both `Makefile` (a common build system with higher priority) and `Android.bp` (lower priority) exist, and the `Makefile` is functional, you must use it for building if it is functional, but you may still extract useful include paths or flags from `Android.bp` to ensure the build succeeds.
+
+Follow this prioritized order when choosing a build system for compilation:
 
 1. **General Build Systems (Preferred)**
-   If the project contains standard build files for any common C/C++ build system (e.g., `Makefile`, `configure`, etc), use the corresponding build system directly.
+   If the project contains a standard or auto-generated build system — such as **Makefile**, **configure**, **CMakeLists.txt**, or their variants (e.g., **Makefile.am**, **Makefile.in**, **autogen.sh**, **bootstrap.sh**), use the corresponding system directly, but only after verifying how they behave. If you're unsure, you must **return to the interaction process** to inspect them. This list is not exhaustive; always use discovery to identify possible build entry points.
    Do **not** patch, modify, or override these files in any way.
 
 2. **BUILD.gn (GN/Ninja Build System)**
-   - Attempt to use `gn` and `ninja` directly:
+   - First, attempt to use `gn` and `ninja` by ensuring the necessary tools are installed:
      ```bash
      apt update && apt install -y ninja-build
      # Install gn manually or from source if needed.
      ```
-   - If direct use of GN/Ninja is not feasible, fall back to **manual parsing** of `BUILD.gn`:
+   - If GN/Ninja usage is not feasible, fall back to **manual parsing** of `BUILD.gn`:
      - Extract `sources`, `include_dirs`, and `defines`.
      - Compile using `$CC`/`$CXX` and apply `$CFLAGS`/`$CXXFLAGS`.
      - Archive object files with `llvm-ar`.
      - Install any required packages listed in `BUILD.gn`.
 
 3. **Android.bp (Soong Build System)**
-   - Do **not** invoke Android-specific build tools (e.g., `soong_ui.bash`, `m`, `envsetup.sh`).
-   - Treat `Android.bp` as a declarative build description.
-   - Manually parse it to:
-     - Extract `srcs`, `include_dirs`, `header_libs`, and `static_libs`.
-     - Use this information to compile sources with `$CC`/`$CXX` and archive with `llvm-ar`.
-     - Resolve `static_libs` by checking https://android.googlesource.com/platform/external for corresponding modules and building them as described above.
+   - Soong cannot be invoked directly; assume it is unavailable.
+   - Manually parse `Android.bp` to identify source files, include paths, defines, and dependencies.
+   - Compile sources using `$CC`/`$CXX`, apply appropriate flags, and archive with `llvm-ar`.
+   - Install required dependencies using `apt-get`.
 
 4. **No Build System Found (Manual Compilation Fallback)**
-   This is the **last resort**. Use this only if **none of the above build systems are present or usable**:
+   If no recognized build system is detected:
    - Use `find` or similar tools to discover all relevant `.c`/`.cc` files.
    - Compile them manually with `$CC`/`$CXX`, applying `$CFLAGS`/`$CXXFLAGS`.
    - Archive object files into a static library using `llvm-ar`.
-
-**Do not skip or bypass earlier build system options**. Always follow the order above. If a known build system is found (e.g., `Makefile`, `BUILD.gn`, or `Android.bp`), it must take precedence over manual compilation.
 
 Additionally:
 
@@ -332,7 +344,7 @@ Additionally:
 ### Build Script Requirements
 
 - Use `$CC` and `$CXX` for all compilation and linking tasks.
-- Always apply `$CFLAGS` and `$CXXFLAGS` when compiling source files, both for the project and the fuzzing harness. Safely extend these variables only if needed. If specific include paths are required, add them like this (replace `/some/include` with the actual path as appropriate):
+- Always apply `$CFLAGS` and `$CXXFLAGS` when compiling source files, both for the project and the fuzzing harness. Safely extend these variables if needed, change the path for the needed includes:
   ```bash
   if [ -z "${CFLAGS:-}" ]; then
     CFLAGS="-I/some/include"
@@ -340,9 +352,14 @@ Additionally:
     CFLAGS="$CFLAGS -I/some/include"
   fi
   ```
-- **Do not forcibly include standard system headers** (e.g., with `-include sys/types.h`, `-include stdint.h`, or `-include linux/types.h`) via `CFLAGS` or `CXXFLAGS`, as this may lead to conflicting type definitions and compilation errors.
 
-- **Avoid modifying `CFLAGS` or `CXXFLAGS` unless necessary**. Inherit and extend them only when required for a specific build constraint.
+- If compilation fails due to missing type definitions (e.g., `__le32`, `__u8`, or project-defined structs), examine the error and include the appropriate internal project headers using `-include`, or extend the `-I` path to include internal directories such as `src/`, `lib/`, or `include/`. You may return to the interaction process using `<command>` tags to run discovery commands (e.g., `grep typedef`, `find include/ -name '*.h'`) to locate headers defining the missing types.
+
+- Do **not** introduce missing types using `#define`, `typedef`, or manual replacements in the fuzzing harness.
+
+- Do **not** include kernel or system headers like `<linux/types.h>` unless they are directly included in the project’s own source files. If you do not see them in the project, you must not use them. This will cause compatibility issues and is considered incorrect behavior.
+
+- If you're unable to identify the correct header for a missing type or symbol, you **must** return to the interaction process using `<command>` to search for it. For example, use `grep -r 'typedef.*__le32' .` or `find . -name 'types.h'`.
 
 - The script **MUST NOT**:
   - Use `sudo` (the container runs as root),
@@ -372,9 +389,23 @@ Additionally:
 
 ### Fuzzing Harness Requirements
 
-- Only modify the harness by adding necessary `#include` statements for project headers. Try to keep it as minimum as possible.
-- Do not alter or add logic, boilerplate, or functions.
-- The result MUST be **a complete, valid C/C++ file** that compiles and links cleanly.
+- Only modify the harness by adding necessary `#include` statements for project headers. Try to keep additions minimal.
+- If compilation fails due to **missing type definitions** (e.g., for structs, typedefs like `__le32`, or project-specific types), you may search for and include **internal project headers** that define them.
+- When encountering such errors, trace the missing types back to their likely header files (e.g., by searching for `typedef` or `struct` declarations within the project source).
+- Do **not** introduce type definitions via #define macros or manual typedefs to fix missing symbols. Always include the correct header file that defines the type or symbol within the project, even if it is not part of the public API.
+- Do **not** alter or add logic, boilerplate, or functions.
+- Do **not** include headers like `<linux/types.h>` unless you have confirmed that the project itself includes them. If a type is undefined, trace it to the correct project-owned header instead. If you don’t know where it’s defined, you **must** return to the interaction process using `<command>`.
+- The result MUST be a **complete, valid C/C++ file** that compiles and links cleanly.
+
+### Common Mistakes to Avoid
+
+- Do **not** guess type definitions using `-D`, `#define`, or `typedef` if a symbol is missing. Always locate and include the proper header file where the symbol is defined.
+- Do **not** include system or kernel headers (e.g., `<linux/types.h>`) unless the project itself explicitly includes them.
+- Do **not** patch or modify build system files (e.g., `Makefile`, `BUILD.gn`, `Android.bp`).
+- Do **not** fabricate include paths, source files, or flags based on assumptions.
+- Do **not** continue generating a build script if you are unsure how the project is built. Return to the interaction process using `<command>` and examine the build scripts or layout.
+
+Whenever you are uncertain, whether about a missing header, unknown type, build flags, or how to invoke the build system — you **must return to the interaction process** using `<command>` to inspect the source code or file layout. Never guess when reliable discovery is possible.
 
 ### Getting Started
 
@@ -383,7 +414,7 @@ Begin with discovery commands to examine project structure and identify build sy
 Useful starting points:
 ```bash
 ls -la $SRC/{PROJECT_NAME}
-find $SRC/{PROJECT_NAME} -name Android.bp -o -name BUILD.gn -o -name Makefile -o -name CMakeLists.txt
+find $SRC/{PROJECT_NAME} -name Android.bp -o -name BUILD.gn -o -name Makefile* -o -name CMakeLists.txt -o -name configure -o -name *.sh
 find $SRC/{PROJECT_NAME} -type f \\( -name '*.h' -o -name '*.hpp' \\)
 ```
 
