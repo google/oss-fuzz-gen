@@ -189,12 +189,12 @@ Your response **must only contain two XML tags**:
 - If a static library is not produced, collect the object files and archive them using `llvm-ar`.
 - Do **not** modify existing build configuration files (e.g., via `sed`).
 - Avoid running tests or install targets—only compilation is required.
-- Ensure environment variables are handled as follows:
+- Ensure environment variables are handled as follows, where you **MUST** add `-I$SRC` for compatibility:
   ```bash
   if [ -z "${CFLAGS:-}" ]; then
-    CFLAGS="-I/some/include"
+    CFLAGS="-I$SRC -I/some/include"
   else
-    CFLAGS="$CFLAGS -I/some/include"
+    CFLAGS="$CFLAGS -I$SRC -I/some/include"
   fi
   ```
 - Ensure the fuzzing harness is linked with the target project using:
@@ -289,6 +289,8 @@ If the build script fails or produces errors, you are encouraged to **return to 
 
 Your goal is to compile the project into a static library (`libtarget.a`) that can be linked into the fuzzing harnesses.
 
+As part of discovery, consider checking any available `README` or `INSTALL` files to understand custom build instructions.
+
 ### When to Return to Interaction
 
 If you are uncertain about how to compile part of the project, cannot find a required header or symbol, or encounter an unexpected build system file (e.g., `Makefile.am`, `autogen.sh`, or `bootstrap.sh`) and are unsure how to proceed, you **must return to the interaction process** using `<command>` tags. Use them to:
@@ -308,9 +310,21 @@ For example: if both `Makefile` (a common build system with higher priority) and
 
 Follow this prioritized order when choosing a build system for compilation:
 
+1. **General Build Systems (Preferred and Required)**
+   If the project contains a valid and functional configuration file or entry point for a **known common build system** — such as `Makefile`, `configure`, `CMakeLists.txt`, `autogen.sh`, `bootstrap.sh`, or equivalents — you **must invoke the build system directly** using the appropriate command (e.g., `make`, `./configure && make`, or `cmake && make`).
+   - You are **strictly prohibited** from manually compiling source files using `$CC`/`$CXX` if a functional build system exists. This includes compiling `.c` or `.cc` files directly or trying to manually replicate the build process.
+   - If you are not certain how to invoke the build system or whether it is functional, you **must return to the interaction process** using `<command>` tags to test it.
+   - You may still inspect build system files (e.g., to extract include paths or dependencies), but you **must not bypass them** unless explicitly broken or incomplete.
+   - Do **not** patch, modify, or override these build files under any circumstances.
+
 1. **General Build Systems (Preferred)**
-   If the project contains a standard or auto-generated build system — such as **Makefile**, **configure**, **CMakeLists.txt**, or their variants (e.g., **Makefile.am**, **Makefile.in**, **autogen.sh**, **bootstrap.sh**), use the corresponding system directly, but only after verifying how they behave. If you're unsure, you must **return to the interaction process** to inspect them. This list is not exhaustive; always use discovery to identify possible build entry points.
-   Do **not** patch, modify, or override these files in any way.
+   - If the project contains a valid and functional configuration file or entry point for a **known common build system** — such as `Makefile`, `configure`, `CMakeLists.txt`, `autogen.sh`, `bootstrap.sh`, or equivalents, you **must run the build system from the root project directory** using the appropriate command (e.g., `cd $SRC/{PROJECT_NAME} && make`), unless the build system is explicitly designed for subdirectory invocation (e.g., via `make -C`).
+   - Do not use `make -C` unless the Makefile or directory structure clearly requires it, as this can skip dependencies or fail to generate required files.
+   - You **must invoke the build system directly** (e.g., using `make`, `./configure && make`, or `cmake && make`) rather than attempting to reimplement or replicate the build logic manually.
+   - You may inspect the configuration files **only to understand output artifacts or include paths**, but you are not allowed to reconstruct or replace a known, functional build system.
+   - If the Makefile (or other general build systems) does not directly produce static library (i.e. `libtarget.a`), you **must still invoke** `make` (or the relative command of the known build system), and then archive any resulting `.o` files into a static library using `llvm-ar`.
+   - If you're unsure, you must **return to the interaction process** to inspect them. This list is not exhaustive; always use discovery to identify possible build entry points.
+   - Do **not** patch, modify, or override these files in any way.
 
 2. **BUILD.gn (GN/Ninja Build System)**
    - First, attempt to use `gn` and `ninja` by ensuring the necessary tools are installed:
@@ -339,11 +353,40 @@ Follow this prioritized order when choosing a build system for compilation:
 Additionally:
 
 - Use `$CFLAGS` and `$CXXFLAGS` in all compilation steps.
-- Always install any required system packages via `apt-get`.
+- If the project depends on external libraries (e.g., for testing or development), you **must always first attempt to install them using `apt-get` or `apt`**. This includes libraries such as `libgtest-dev`, `libgmock-dev`, `libprotobuf-dev`, and others.
+- If the installed package provides only source code (e.g., `libgtest-dev`), you **must retrieve the installed source code from the appropriate system location (typically `/usr/src/`) and build it manually**. For example:
+  ```bash
+  cd /usr/src/gtest
+  cmake .
+  make
+  cp lib/*.a /usr/lib
+  ```
+- You must not skip `apt-get` installation or attempt to manually fetch external libraries from the internet. Always use system-provided packages first.
+- If any `apt` or `apt-get` command is executed during the interaction process, it **must be included in the final build script** to ensure reproducibility.
+- Detect such dependencies by inspecting the code for test files (e.g., `*_test.cc`, `*_unittest.cc`) or linker flags such as `-lgtest`, `-lgmock`, `-lprotobuf`, etc.
+- This applies to all libraries following a similar pattern — the list above is **not exhaustive**, and you must infer missing libraries from the source context.
+
+### AOSP Build Context Awareness
+
+If the project uses **Android.bp** (Soong build system), you must account for the fact that:
+
+- Some macros (e.g., `ANDROID`) are **implicitly defined** by Soong.
+- Some global symbols (e.g., `preen`, `skipclean`) may be defined in **other AOSP modules**, injected via implicit dependencies.
+- Default include paths (e.g., `bionic/`, `system/core/include`, `external/bsd/include`) may provide compatibility shims or macros.
+
+To simulate this environment:
+
+1. You must add `-DANDROID` to your `CFLAGS` to match Soong's default behavior.
+2. If symbols are still missing (and not defined in the local project), you may:
+   - Search the project with `<command>` tags (e.g., `grep -r 'preen' .`)
+   - Define stub implementations in a compatibility `.c` file **only if they are global variables or no-op stubs** (e.g., `int preen = 0;`).
+
+You must **not guess types or fabricate includes**, but minimal compatibility stubs are allowed when required to simulate the Android build context.
 
 ### Build Script Requirements
 
 - Use `$CC` and `$CXX` for all compilation and linking tasks.
+
 - Always apply `$CFLAGS` and `$CXXFLAGS` when compiling source files, both for the project and the fuzzing harness. Safely extend these variables if needed, change the path for the needed includes:
   ```bash
   if [ -z "${CFLAGS:-}" ]; then
@@ -353,9 +396,38 @@ Additionally:
   fi
   ```
 
+- You must explicitly include **all header directories required by the project** using `-I` flags. This applies to `CFLAGS`, `CXXFLAGS`, and `CPPFLAGS`, depending on which is being used.
+
+- You **must always** add `-I$SRC` to your include flags (`CFLAGS`, `CXXFLAGS`, or `CPPFLAGS`). This is required to ensure project-relative includes such as `#include "project_name/foo.h"` resolve correctly. This pattern is common in Android Soong-style projects and many modular open-source layouts.
+
+- Failure to include `-I$SRC` may result in missing headers or build errors due to unresolvable include paths. Even if `-I$SRC` is not used at runtime, it causes no harm and is mandatory in all build scripts.
+
+- Do not assume `-Iinclude` alone is sufficient. Instead, during the interaction phase, use `<command>` to:
+  - Discover all `.h` files: `find . -name '*.h'`
+  - Identify their containing directories
+  - Check source files for `#include` statements referencing relative paths
+  - After discovery, add **all verified include directories** to the appropriate flags, e.g.:
+  ```bash
+  CFLAGS="$CFLAGS -Iinclude -Isrc -Ilib -Icompat"
+  ```
+- Avoid using placeholder or default includes like `-Iinclude` unless you have confirmed the headers are located there. Do not omit include paths that are clearly needed.
+
 - If compilation fails due to missing type definitions (e.g., `__le32`, `__u8`, or project-defined structs), examine the error and include the appropriate internal project headers using `-include`, or extend the `-I` path to include internal directories such as `src/`, `lib/`, or `include/`. You may return to the interaction process using `<command>` tags to run discovery commands (e.g., `grep typedef`, `find include/ -name '*.h'`) to locate headers defining the missing types.
 
 - Do **not** introduce missing types using `#define`, `typedef`, or manual replacements in the fuzzing harness.
+
+- If the build fails due to missing platform-specific macros (such as `__printflike`, `__RCSID`, or `__dead2`) that are present in BSD-derived code but missing on Linux, you may define **minimal compatibility shims** for them using `-D` flags or a shared shim header, stored under `$SRC/compat_shim.h`. For example:
+
+  ```bash
+  echo -e '#define __printflike(a,b)\n#define __RCSID(x)\n#define __dead2' > $SRC/compat_shim.h
+  ```
+
+  Then include it via:
+  ```bash
+  -include $SRC/compat_shim.h
+  ```
+
+  Only use this approach when those macros are required to make the project build, and **never for missing types or core logic**.
 
 - Do **not** include kernel or system headers like `<linux/types.h>` unless they are directly included in the project’s own source files. If you do not see them in the project, you must not use them. This will cause compatibility issues and is considered incorrect behavior.
 
@@ -365,7 +437,7 @@ Additionally:
   - Use `sudo` (the container runs as root),
   - Suppress errors (e.g., via `|| true`),
 
-- If possible, please exclude the building of tests or examples.
+- You may exclude building tests or examples **only if they are clearly separate** (e.g., in a `tests/` subdirectory). Do **not* skip source files or targets unless you're certain they are unrelated to the main build.
 
 - If the build does not automatically generate a static library, collect all `.o` files and manually archive them:
   ```bash
@@ -399,6 +471,9 @@ Additionally:
 
 ### Common Mistakes to Avoid
 
+- Do **not** manually recompile source files when a known and functional build system (e.g., Make, CMake, Autotools) is present. Use the existing build mechanism directly.
+- Do **not** manually compile source files when a usable build system is present. Always use `make` or the appropriate tool if a `Makefile`, `configure`, or similar file exists and works, then archive the resulting `.o` files using `llvm-ar` if needed.
+- Do **not** use `make -C` unless the `Makefile` or directory structure clearly requires it, as this can skip dependencies or fail to generate required files.
 - Do **not** guess type definitions using `-D`, `#define`, or `typedef` if a symbol is missing. Always locate and include the proper header file where the symbol is defined.
 - Do **not** include system or kernel headers (e.g., `<linux/types.h>`) unless the project itself explicitly includes them.
 - Do **not** patch or modify build system files (e.g., `Makefile`, `BUILD.gn`, `Android.bp`).
@@ -409,13 +484,14 @@ Whenever you are uncertain, whether about a missing header, unknown type, build 
 
 ### Getting Started
 
-Begin with discovery commands to examine project structure and identify build system and headers.
+Begin with discovery commands to examine the project structure, identify any build systems or helper scripts, and look for documentation (e.g., `README`, `INSTALL`, or `*.md` files) that may describe how to build the project.
 
 Useful starting points:
 ```bash
 ls -la $SRC/{PROJECT_NAME}
 find $SRC/{PROJECT_NAME} -name Android.bp -o -name BUILD.gn -o -name Makefile* -o -name CMakeLists.txt -o -name configure -o -name *.sh
 find $SRC/{PROJECT_NAME} -type f \\( -name '*.h' -o -name '*.hpp' \\)
+find $SRC/{PROJECT_NAME} -type f \\( -iname '*README*' -o -iname '*INSTALL*' -o -iname '*.md' \\)
 ```
 
 Your **first reply** must be a `<command>` block to begin project exploration.
