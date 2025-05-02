@@ -398,7 +398,7 @@ You must **not guess types or fabricate includes**, but minimal compatibility st
 
 - You must explicitly include **all header directories required by the project** using `-I` flags. This applies to `CFLAGS`, `CXXFLAGS`, and `CPPFLAGS`, depending on which is being used.
 
-- You **must always** add `-I$SRC` to your include flags (`CFLAGS`, `CXXFLAGS`, or `CPPFLAGS`). This is required to ensure project-relative includes such as `#include "project_name/foo.h"` resolve correctly. This pattern is common in Android Soong-style projects and many modular open-source layouts.  
+- You **must always** add `-I$SRC` to your include flags (`CFLAGS`, `CXXFLAGS`, or `CPPFLAGS`). This is required to ensure project-relative includes such as `#include "project_name/foo.h"` resolve correctly. This pattern is common in Android Soong-style projects and many modular open-source layouts.
 
 - Failure to include `-I$SRC` may result in missing headers or build errors due to unresolvable include paths. Even if `-I$SRC` is not used at runtime, it causes no harm and is mandatory in all build scripts.
 
@@ -491,7 +491,7 @@ Useful starting points:
 ls -la $SRC/{PROJECT_NAME}
 find $SRC/{PROJECT_NAME} -name Android.bp -o -name BUILD.gn -o -name Makefile* -o -name CMakeLists.txt -o -name configure -o -name *.sh
 find $SRC/{PROJECT_NAME} -type f \\( -name '*.h' -o -name '*.hpp' \\)
-find $SRC/{PROJECT_NAME} -type f \( -iname '*README*' -o -iname '*INSTALL*' -o -iname '*.md' \)
+find $SRC/{PROJECT_NAME} -type f \\( -iname '*README*' -o -iname '*INSTALL*' -o -iname '*.md' \\)
 ```
 
 Your **first reply** must be a `<command>` block to begin project exploration.
