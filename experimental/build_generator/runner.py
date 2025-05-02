@@ -295,7 +295,7 @@ def copy_result_to_out(project_generated,
     if not os.path.isdir(build_dir):
       return
 
-    dst_project = f'{project_name}-agent'
+    dst_project = f'{project_name.lower()}-agent'
     dst_dir = os.path.join(oss_fuzz_projects, dst_project)
     shutil.copytree(build_dir, dst_dir, dirs_exist_ok=True)
   else:
@@ -307,7 +307,7 @@ def copy_result_to_out(project_generated,
     with open(report_txt, 'r') as f:
       for line in f:
         if 'Analysing' in line:
-          project_name = line.split('/')[-1].replace('\n', '')
+          project_name = line.split('/')[-1].replace('\n', '').lower()
     if not project_name:
       return
 
