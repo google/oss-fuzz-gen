@@ -527,8 +527,16 @@ def extract_target_repositories(target_input) -> list[str]:
     target_repositories = read_targets_file(target_input)
   else:
     target_repositories = [target_input]
-  logger.info(target_repositories)
-  return target_repositories
+
+  refined_targets = []
+  for repo in target_repositories:
+    # Remove trailing /
+    while repo.endswith('/'):
+      repo = repo[:-1]
+    refined_targets.append(repo)
+  logger.info(refined_targets)
+
+  return refined_targets
 
 
 def main():

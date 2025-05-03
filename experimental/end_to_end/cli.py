@@ -494,7 +494,10 @@ def parse_commandline():
   """Parse the commandline."""
   parser = argparse.ArgumentParser()
   parser.add_argument('--input', '-i', help='Input to analyze')
-  parser.add_argument('--out', '-o', help='Directory to store output.')
+  parser.add_argument('--out',
+                      '-o',
+                      help='Directory to store output.',
+                      default='oss-fuzz-generated')
   parser.add_argument('--silent',
                       '-s',
                       help='Disable logging in subprocess.',
