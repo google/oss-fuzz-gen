@@ -302,7 +302,6 @@ class CloudBuilder:
     pool_name = os.getenv('GCB_BUILDPOOL_NAME')
     if pool_name:
       cloud_build_config.setdefault('options', {})['pool'] = {'name': pool_name}
-    logging.info(cloud_build_config)
 
     # Convert to YAML string and submit the Cloud Build request
     build_info = self.builds.create(projectId=self.project_id,
@@ -353,7 +352,6 @@ class CloudBuilder:
       bucket = self.storage_client.bucket(self.bucket_name)
       blob = bucket.blob(log_file_uri)
       log_content = self._extract_chat_history(blob.download_as_text())
-      logging.warning(log_content)
       return log_content
     except NotFound as e:
       logging.error('Cloud build log %s not found: %s', log_file_uri, e)
