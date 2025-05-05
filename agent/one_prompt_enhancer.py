@@ -14,10 +14,12 @@
 """An LLM agent to improve a fuzz target's runtime performance.
 Use it as a usual module locally, or as script in cloud builds.
 """
+from jvm_coverage_enhancer import JvmCoverageEnhancer
+
 import logger
 from agent.one_prompt_prototyper import OnePromptPrototyper
 from experiment.workdir import WorkDirs
-from llm_toolkit.prompt_builder import DefaultTemplateBuilder, JvmFixingBuilder
+from llm_toolkit.prompt_builder import DefaultTemplateBuilder
 from llm_toolkit.prompts import Prompt
 from results import AnalysisResult, BuildResult, Result
 
@@ -37,12 +39,21 @@ class OnePromptEnhancer(OnePromptPrototyper):
       return Prompt()
 
     if benchmark.language == 'jvm':
-      # TODO: Do this in a separate agent for JVM coverage.
-      builder = JvmFixingBuilder(self.llm, benchmark,
-                                 last_result.run_result.fuzz_target_source, [])
-      prompt = builder.build([], None, None)
+
+      # Create a temporary BuildResult for JVM enhancer instantiation
+      temp_build = BuildResult(benchmark=benchmark,
+                               trial=last_result.trial,
+                               work_dirs=last_result.work_dirs,
+                               author=self,
+                               chat_history={})
+      # Delegate JVM-specific coverage enhancement to the new enhancer
+      jvm_enhancer = JvmCoverageEnhancer(llm=self.llm,
+                                         benchmark=benchmark,
+                                         analysis_result=last_result,
+                                         build_result=temp_build,
+                                         args=self.args)
+      prompt = jvm_enhancer.initial_prompt()
     else:
-      # TODO(dongge): Refine this logic.
       builder = DefaultTemplateBuilder(self.llm)
       if last_result.semantic_result:
         error_desc, errors = last_result.semantic_result.get_error_info()
@@ -61,8 +72,8 @@ class OnePromptEnhancer(OnePromptPrototyper):
             coverage_result=last_result.coverage_result,
             context='',
             instruction='')
-      # TODO: A different file name/dir.
-      prompt.save(self.args.work_dirs.prompt)
+        # TODO: A different file name/dir.
+        prompt.save(self.args.work_dirs.prompt)
 
     return prompt
 
@@ -70,7 +81,6 @@ class OnePromptEnhancer(OnePromptPrototyper):
     """Executes the agent based on previous result."""
     last_result = result_history[-1]
     logger.info('Executing One Prompt Enhancer', trial=last_result.trial)
-    # Use keep to avoid deleting files, such as benchmark.yaml
     WorkDirs(self.args.work_dirs.base, keep=True)
 
     prompt = self._initial_prompt(result_history)
