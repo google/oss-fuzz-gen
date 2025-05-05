@@ -440,7 +440,6 @@ def prepare_project_image(benchmark: benchmarklib.Benchmark) -> str:
   """Prepares original image of the |project|'s fuzz target build container."""
   project = benchmark.project
   image_name = f'gcr.io/oss-fuzz/{project}'
-  logger.info('We should use cached instance.')
   generated_oss_fuzz_project = f'{benchmark.id}-{uuid.uuid4().hex}'
   generated_oss_fuzz_project = rectify_docker_tag(generated_oss_fuzz_project)
   create_ossfuzz_project(benchmark, generated_oss_fuzz_project)
@@ -448,6 +447,7 @@ def prepare_project_image(benchmark: benchmarklib.Benchmark) -> str:
   if not ENABLE_CACHING:
     logger.warning('Disabled caching when building image for %s', project)
   elif is_image_cached(project, 'address'):
+    logger.info('Will use cached instance.')
     # Rewrite for caching.
     rewrite_project_to_cached_project(project, generated_oss_fuzz_project,
                                       'address')
