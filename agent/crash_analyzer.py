@@ -73,7 +73,7 @@ class CrashAnalyzer(BaseAgent):
 
   def _container_handle_lldb_command(self, response: str, tool: LLDBTool,
                                      prompt: Prompt) -> Prompt:
-    """Handles the command from LLM with lldb |tool|."""
+    """Handles the command from LLM with lldb tool."""
     prompt_text = ''
     for command in self._parse_tags(response, 'lldb'):
       prompt_text += self._format_lldb_execution_result(
