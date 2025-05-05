@@ -646,7 +646,7 @@ class Results:
     function = benchmark_id.split('-')[-1]
     signature = self._find_benchmark_signature(project,
                                                function) or benchmark_id
-    language = self._find_benchmark_language(project, function)
+    language = self._find_benchmark_language(project)
     return Benchmark(benchmark_id, status, result, signature, project, function,
                      language)
 
@@ -680,7 +680,7 @@ class Results:
 
     return matched_prefix_signature
 
-  def _find_benchmark_language(self, project: str, target_function: str) -> str:
+  def _find_benchmark_language(self, project: str) -> str:
     """Finds the programming language of the benchmark."""
     if not self._benchmark_dir:
       return ''
