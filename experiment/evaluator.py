@@ -294,7 +294,7 @@ class Evaluator:
                      os.path.basename('agent-build.sh')))
 
     # Add additional statement in dockerfile to overwrite with generated
-    # build scrip
+    # build script
     with open(os.path.join(generated_project_path, 'Dockerfile'), 'a') as f:
       f.write('\nRUN cp /src/build.sh /src/build.bk.sh\n')
     with open(os.path.join(generated_project_path, 'Dockerfile'), 'a') as f:
