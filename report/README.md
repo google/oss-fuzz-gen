@@ -2,7 +2,7 @@
 
 ## Experiment Report
 
-*  While the experiment is running, `upload_report.sh` periodically generates
+*  While the experiment is running, `upload_report.py` periodically generates
    an experiment report and uploads it to
    `gs://oss-fuzz-gcb-experiment-run-logs/Result-reports/`.
 *  After the experiment a final report is generated and uploaded to GCS.
