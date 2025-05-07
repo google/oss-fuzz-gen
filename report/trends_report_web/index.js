@@ -351,6 +351,74 @@ class Page {
     container.append(chart);
   }
 
+  // ── new method to sum/average across all filtered experiments ─────────────
+  computeAggregates() {
+    let totalRuns       = 0;
+    let totalCoverage   = 0;
+    let totalCrashes    = 0;
+    let totalCrashCases = 0;
+    let totalExecTime   = 0;
+
+    for (let name of this.filteredNames) {
+      const rpt = this.reports.get(name).accumulated_results;
+      totalRuns       += rpt.total_runs;
+      totalCoverage   += rpt.total_coverage;
+      totalCrashes    += rpt.crashes;
+      totalCrashCases += rpt.crash_cases;
+      totalExecTime   += (this.reports.get(name).execution_time || 0);
+    }
+
+    return {
+      avgCoverage:  totalRuns
+                      ? (totalCoverage / totalRuns) * 100
+                      : 0,
+      crashes:      totalCrashes,
+      crashCases:   totalCrashCases,
+      avgExecTime:  this.filteredNames.length
+                      ? (totalExecTime / this.filteredNames.length)
+                      : 0
+    };
+  }
+
+  // ── Build the separate "Aggregated Metrics 📊" table ─────────────
+  updateAggregatedMetrics() {
+    const agg = this.computeAggregates();
+    const container = document.querySelector('#aggregated-metrics');
+    container.replaceChildren();
+
+    // Heading
+    const title = document.createElement('h3');
+    title.innerText = 'Aggregated Metrics 📊';
+    container.appendChild(title);
+
+    // Table
+    const table = document.createElement('table');
+    const thead = document.createElement('thead');
+    const tbody = document.createElement('tbody');
+    table.appendChild(thead);
+    table.appendChild(tbody);
+    container.appendChild(table);
+
+    // Header row
+    const headerRow = document.createElement('tr');
+    for (let h of ['Total Crashes', 'Total Crash Cases', 'Average Coverage', 'Execution Time']) {
+      const th = document.createElement('th');
+      th.innerText = h;
+      headerRow.appendChild(th);
+    }
+    thead.appendChild(headerRow);
+
+    // Data row
+    const dataRow = document.createElement('tr');
+    dataRow.innerHTML = `
+      <td>${agg.crashes}</td>
+      <td>${agg.crashCases}</td>
+      <td>${agg.avgCoverage.toFixed(2)}%</td>
+      <td>${agg.avgExecTime.toFixed(1)}s</td>
+    `;
+    tbody.appendChild(dataRow);
+  }
+
   // updateOverviewTable updates the data table showing the coverage data for
   // the selected project.
   updateOverviewTable() {
@@ -361,8 +429,12 @@ class Page {
     const table = document.createElement('table');
     const thead = document.createElement('thead');
     const tbody = document.createElement('tbody');
+    const tfoot = document.createElement('tfoot');
+    tfoot.id = 'overview-aggregate';
+
     table.appendChild(thead);
     table.appendChild(tbody);
+    table.appendChild(tfoot);
     tableContainer.appendChild(table);
 
 
@@ -409,6 +481,9 @@ class Page {
       lineCoverageDiff.innerText = `${lineCoverageDiffVal}%`;
       tr.appendChild(lineCoverageDiff);
     }
+
+    // ── inject the Total/Avg row into our new <tfoot> ─────────────
+    this.updateAggregatedMetrics();
   }
 
   // updateOverviewCoverageChart configures Plot to chart the coverage gain of different
