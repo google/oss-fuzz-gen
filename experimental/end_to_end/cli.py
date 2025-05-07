@@ -484,6 +484,9 @@ def _run_build_generation(workdir, out_folder, args):
 def run_fuzz_introspector_db_creation(args):
   """Entrypoint for fuzz introspector database creation."""
   args.workdir = os.path.abspath(args.workdir)
+  # Create working directory if it doesn't exist.
+  if not os.path.isdir(args.workdir):
+    args.workdir = setup_workdirs(args.workdir)
   prepare_fuzz_introspector_db(args.generated_builds, args.workdir,
                                args.parallel_build_jobs)
 
