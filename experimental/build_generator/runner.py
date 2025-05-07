@@ -371,7 +371,11 @@ def run_parallels(oss_fuzz_base,
     worker_project_name = get_next_worker_project(oss_fuzz_base)
     logger.info('Worker project name: %s', worker_project_name)
     projects_generated.append(worker_project_name)
-    setup_worker_project(oss_fuzz_base, worker_project_name, llm_model)
+    try:
+      setup_worker_project(oss_fuzz_base, worker_project_name, llm_model)
+    except subprocess.CalledProcessError:
+      logger.info('Project setup issue for %s', worker_project_name)
+      continue
     proc = threading.Thread(target=run_on_targets,
                             args=(target, oss_fuzz_base, worker_project_name,
                                   idx, llm_model, semaphore, build_heuristics,
@@ -405,9 +409,13 @@ def run_agent(target_repositories: List[str], args: argparse.Namespace):
     logger.info('Target repository: %s', target_repository)
     # Prepare environment
     worker_project_name = get_next_worker_project(oss_fuzz_base)
-    language = setup_worker_project(oss_fuzz_base, worker_project_name,
-                                    args.model, target_repository, True,
-                                    os.path.abspath(args.work_dirs))
+    try:
+      language = setup_worker_project(oss_fuzz_base, worker_project_name,
+                                      args.model, target_repository, True,
+                                      os.path.abspath(args.work_dirs))
+    except subprocess.CalledProcessError:
+      logger.info('Issues setting up %s', target_repository)
+      continue
     benchmark = Benchmark(worker_project_name, worker_project_name, '', '', '',
                           '', [], '')
 
@@ -441,6 +449,9 @@ def run_agent(target_repositories: List[str], args: argparse.Namespace):
       except OpenAIError:
         logger.info(('Round 1 build script generation failed for project %s'
                      ' with openai errors'), target_repository)
+        break
+      except subprocess.CalledProcessError:
+        logger.info('Issue running agent, %s', target_repository)
         break
 
       if build_result.compiles:
