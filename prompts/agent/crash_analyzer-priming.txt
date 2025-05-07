@@ -1,4 +1,4 @@
-Given the following crash report, fuzz driver code and relevant project function code, analyze the cause of the crash using LLDB tool.
+Given the following crash report, fuzz driver code and relevant project function code, analyze the cause of the crash using LLDB tool step by step.
 First, make a conclusion, only answer “Crash is caused by bug in fuzz driver” or “Crash is caused by bug in project”. Second, offer succinct and to-the-point analyses and suggestions.
 
 Below is crash report:
