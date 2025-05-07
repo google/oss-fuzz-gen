@@ -763,7 +763,7 @@ class GeminiV2Think(GeminiV1D5):
 
 class GeminiV2D5Flash(GeminiModel):
   """Gemini 2.5 flash."""
-  _max_output_tokens = 65536
+  _max_output_tokens = 65535
   context_window = 1048576
   name = 'vertex_ai_gemini-2-5-flash'
   _vertex_ai_model = 'gemini-2.5-flash-preview-04-17'
