@@ -533,17 +533,18 @@ class Results:
     if coverage_dict:
       for project in project_summary_list:
         if project.name in coverage_dict:
-          project.coverage_gain = coverage_dict[project.name]['coverage_diff']
-          project.coverage_relative_gain = coverage_dict[
-              project.name]['coverage_relative_gain']
+          project.coverage_gain = coverage_dict[project.name].get(
+              'coverage_diff', 0.0)
+          project.coverage_relative_gain = coverage_dict[project.name].get(
+              'coverage_relative_gain', 0.0)
           project.coverage_ofg_total_new_covered_lines = coverage_dict[
-              project.name]['coverage_ofg_total_new_covered_lines']
+              project.name].get('coverage_ofg_total_new_covered_lines', 0)
           project.coverage_existing_total_covered_lines = coverage_dict[
-              project.name]['coverage_existing_total_covered_lines']
+              project.name].get('coverage_existing_total_covered_lines', 0)
           project.coverage_existing_total_lines = coverage_dict[
-              project.name]['coverage_existing_total_lines']
+              project.name].get('coverage_existing_total_lines', 0)
           project.coverage_ofg_total_covered_lines = coverage_dict[
-              project.name]['coverage_ofg_total_covered_lines']
+              project.name].get('coverage_ofg_total_covered_lines', 0)
 
     return project_summary_list
 
@@ -645,7 +646,7 @@ class Results:
     function = benchmark_id.split('-')[-1]
     signature = self._find_benchmark_signature(project,
                                                function) or benchmark_id
-    language = self._find_benchmark_language(project, function)
+    language = self._find_benchmark_language(project)
     return Benchmark(benchmark_id, status, result, signature, project, function,
                      language)
 
@@ -679,7 +680,7 @@ class Results:
 
     return matched_prefix_signature
 
-  def _find_benchmark_language(self, project: str, target_function: str) -> str:
+  def _find_benchmark_language(self, project: str) -> str:
     """Finds the programming language of the benchmark."""
     if not self._benchmark_dir:
       return ''
