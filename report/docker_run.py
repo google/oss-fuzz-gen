@@ -254,11 +254,11 @@ def run_on_data_from_scratch(cmd=None):
   cmd = [python_path, 'run_all_experiments.py']
   cmd.append('-g')
   cmd.append(
-      'far-reach-low-coverage,low-cov-with-fuzz-keyword,easy-params-far-reach')
+      'test-migration')
   cmd.append('-gp')
   cmd.append(project_names)
   cmd.append('-gm')
-  cmd.append(str(8))
+  cmd.append(str(25))
   cmd.append('-e')
   cmd.append(introspector_endpoint)
   cmd.append('-mr')
