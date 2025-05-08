@@ -178,7 +178,7 @@ class CrashAnalyzer(BaseAgent):
                                  name='lldb',
                                  project_name=generated_oss_fuzz_project)
     self.analyze_tool.execute('compile > /dev/null')
-    self.analyze_tool.execute("'screen -dmS lldb_session bash -c 'lldb'")
+    self.analyze_tool.execute("screen -dmS lldb_session bash -c \"lldb\"")
     self.check_tool = ProjectContainerTool(
         benchmark, name='check', project_name=generated_oss_fuzz_project)
     self.check_tool.compile(extra_commands=' && rm -rf /out/* > /dev/null')
