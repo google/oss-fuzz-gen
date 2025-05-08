@@ -70,6 +70,9 @@ class AggregatedResult:
   found_bug: int = 0
   max_coverage: float = 0.0
   max_line_coverage_diff: float = 0.0
+  max_newly_covered_lines: int = 0
+  total_lines: int = 0
+  baseline_total_lines: int = 0
   max_coverage_sample: str = ''
   max_coverage_diff_sample: str = ''
   max_coverage_diff_report: str = ''
@@ -82,7 +85,10 @@ class AggregatedResult:
         f'crash rate: {self.crash_rate}, '
         f'found bug: {self.found_bug}, '
         f'max coverage: {self.max_coverage}, '
-        f'max line coverage diff: {self.max_line_coverage_diff}\n'
+        f'max line coverage diff: {self.max_line_coverage_diff}, '
+        f'max newly covered lines: {self.max_newly_covered_lines}, '
+        f'total lines: {self.total_lines}, '
+        f'baseline total lines: {self.baseline_total_lines}\n'
         f'max coverage sample: {self.max_coverage_sample}\n'
         f'max coverage diff sample: {self.max_coverage_diff_sample}\n'
         f'max coverage diff report: {self.max_coverage_diff_report or "None"}')
@@ -149,38 +155,83 @@ def fix_code(work_dirs: WorkDirs, generated_targets: List[str]) -> List[str]:
 def aggregate_results(target_stats: list[tuple[int, exp_evaluator.Result]],
                       generated_targets: list[str]) -> AggregatedResult:
   """Aggregates experiment status and results of a targets."""
-  build_success_count = sum([int(stat.compiles) for _, stat in target_stats])
-  build_success_rate = build_success_count / len(target_stats)
-  crash_rate = sum([int(stat.crashes) for _, stat in target_stats
-                   ]) / len(target_stats)
-  found_bug = sum([
-      int(stat.crashes and not stat.is_semantic_error)
-      for _, stat in target_stats
-  ])
-  max_coverage = max([stat.coverage for _, stat in target_stats])
-  max_line_coverage_diff = max(
-      [stat.line_coverage_diff for _, stat in target_stats])
+  if not target_stats:
+      return AggregatedResult()
 
-  max_coverage_sample = ''
-  max_coverage_diff_sample = ''
-  max_coverage_diff_report = ''
+  build_success_count = sum(int(stat.compiles) for _, stat in target_stats)
+  build_success_rate = build_success_count / len(target_stats)
+  crash_rate = sum(int(stat.crashes) for _, stat in target_stats) / len(target_stats)
+  found_bug = sum(int(stat.crashes and not stat.is_semantic_error)
+                    for _, stat in target_stats)
+
+  max_coverage = 0.0
+  max_line_coverage_diff = -1.0 # Initialize to handle cases where diff might be 0
+  max_newly_covered_lines = 0
+
+  best_cov_idx = -1
+  best_diff_idx = -1
+  best_diff_stat = None
 
   all_textcov = textcov.Textcov()
+
   for i, stat in target_stats:
-    if stat.coverage == max_coverage:
-      max_coverage_sample = generated_targets[i]
+      # Aggregate textcov diffs
+      if isinstance(stat.textcov_diff, textcov.Textcov):
+          all_textcov.merge(stat.textcov_diff)
 
-    if stat.line_coverage_diff == max_line_coverage_diff:
-      max_coverage_diff_sample = generated_targets[i]
-      max_coverage_diff_report = stat.coverage_report_path
+      # Find best coverage
+      if stat.coverage > max_coverage:
+          max_coverage = stat.coverage
+          best_cov_idx = i
 
-    if isinstance(stat.textcov_diff, textcov.Textcov):
-      all_textcov.merge(stat.textcov_diff)
+      # Find best coverage diff
+      if stat.line_coverage_diff > max_line_coverage_diff:
+          max_line_coverage_diff = stat.line_coverage_diff
+          best_diff_idx = i
+          best_diff_stat = stat # Store the stat object with the best diff
 
-  return AggregatedResult(build_success_count, build_success_rate, crash_rate,
-                          found_bug, max_coverage, max_line_coverage_diff,
-                          max_coverage_sample, max_coverage_diff_sample,
-                          max_coverage_diff_report, all_textcov)
+      # Keep track of overall max newly covered lines (optional, could also be from best_diff_stat)
+      if stat.newly_covered_lines > max_newly_covered_lines:
+          max_newly_covered_lines = stat.newly_covered_lines
+
+  # Extract info from the best performing stats
+  max_coverage_sample = generated_targets[best_cov_idx] if best_cov_idx != -1 else ''
+  max_coverage_diff_sample = generated_targets[best_diff_idx] if best_diff_idx != -1 else ''
+
+  # Get metrics from the stat that produced the best diff
+  union_total_lines = 0
+  baseline_total_lines = 0
+  max_coverage_diff_report = ''
+  if best_diff_stat:
+      # Use union_total_lines calculated in evaluator for the 'total_lines' field
+      union_total_lines = best_diff_stat.total_lines
+      baseline_total_lines = best_diff_stat.baseline_total_lines
+      max_coverage_diff_report = best_diff_stat.coverage_report_path
+      # We could also take max_newly_covered_lines from here if desired:
+      # max_newly_covered_lines = best_diff_stat.newly_covered_lines
+
+  # Handle case where max_line_coverage_diff might remain -1 (e.g., if all diffs were 0 or less)
+  if max_line_coverage_diff < 0:
+      max_line_coverage_diff = 0.0
+
+  # Pass all arguments as keywords
+  return AggregatedResult(
+      build_success_count=build_success_count,
+      build_success_rate=build_success_rate,
+      crash_rate=crash_rate,
+      found_bug=found_bug,
+      max_coverage=max_coverage,
+      max_line_coverage_diff=max_line_coverage_diff,
+      # Storing the overall max newly covered lines encountered
+      max_newly_covered_lines=max_newly_covered_lines,
+      # Storing the union_total_lines from the run with the max diff
+      total_lines=union_total_lines,
+      # Storing the baseline_total_lines from the run with the max diff
+      baseline_total_lines=baseline_total_lines,
+      max_coverage_sample=max_coverage_sample,
+      max_coverage_diff_sample=max_coverage_diff_sample,
+      max_coverage_diff_report=max_coverage_diff_report,
+      full_textcov_diff=all_textcov)
 
 
 def check_targets(
