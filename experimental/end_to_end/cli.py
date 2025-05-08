@@ -204,8 +204,7 @@ def run_ofg_generation(projects_to_run, workdir, args):
   cmd.append('--model')
   cmd.append(args.model)
   cmd.append('-g')
-  cmd.append(
-      'far-reach-low-coverage,low-cov-with-fuzz-keyword,easy-params-far-reach')
+  cmd.append(args.benchmark_oracles)
   cmd.append('-gp')
   cmd.append(','.join(projects_to_run))
   cmd.append('-gm')
@@ -667,6 +666,11 @@ def parse_commandline():
   run_harness_generation_parser.add_argument('-w',
                                              '--workdir',
                                              help='Work directory to use')
+  run_harness_generation_parser.add_argument(
+      '--benchmark-oracles',
+      default=
+      'far-reach-low-coverage,low-cov-with-fuzz-keyword,easy-params-far-reach,test-migration'
+  )
 
   # Run a full end to end generation.
   run_full_parser = subparsers.add_parser(
@@ -711,6 +715,12 @@ def parse_commandline():
                                help='Parallel build-generator jobs to run.',
                                default=2,
                                type=int)
+  run_full_parser.add_argument(
+      '--benchmark-oracles',
+      default=
+      'far-reach-low-coverage,low-cov-with-fuzz-keyword,easy-params-far-reach,test-migration'
+  )
+
   run_full_parser.add_argument(
       '--build-timeout',
       help='Timeout for build generation per project, in seconds.',
