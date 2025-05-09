@@ -174,9 +174,23 @@ class ContextRetriever:
           'function_signature: %s', project, func_sig)
     return xrefs
 
+  def _get_test_xrefs_to_function(self) -> list[str]:
+    """Queries FI for test source calling the function being fuzzed."""
+    project = self._benchmark.project
+    func_name = self._benchmark.function_name
+    xrefs = introspector.query_introspector_for_tests_xref(project, [func_name])
+
+    if not xrefs:
+      logging.warning(
+          'Could not retrieve tests xrefs for project: %s '
+          'function_signature: %s', project, func_name)
+
+    return xrefs
+
   def get_context_info(self) -> dict:
     """Retrieves contextual information and stores them in a dictionary."""
     xrefs = self._get_xrefs_to_function()
+    test_xrefs = self._get_test_xrefs_to_function()
     func_source = self._get_function_implementation()
     files = self._get_files_to_include()
     decl = self._get_embeddable_declaration()
@@ -188,6 +202,7 @@ class ContextRetriever:
         'files': files,
         'decl': decl,
         'header': header,
+        'test_xrefs': test_xrefs,
     }
 
     logging.info('Context: %s', context_info)

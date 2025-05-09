@@ -24,4 +24,9 @@ Here is the source code for functions which reference the function being tested:
 <code>
 {{ xrefs }}
 </code>
+
+Here is the source code for the tests/examples that reference the function being tested:
+<code>
+{{ tests_xrefs }}
+</code>
 {% endif %}
