@@ -271,12 +271,20 @@ def parse_args() -> argparse.Namespace:
                       '--agent',
                       action='store_true',
                       default=False,
-                      help='Enables agent enhancement.')
+                      help='Run experiment using the agent framework.')
   parser.add_argument('-mr',
                       '--max-round',
                       type=int,
                       default=100,
                       help='Max trial round for agents.')
+  parser.add_argument(
+      '--generate-seeds', action='store_true', default=False,
+      help='Use LLM to generate a seed corpus creation script for each target.')
+  parser.add_argument(
+          '--seed-generation-mode',
+            choices=['script', 'direct'],
+            default='script',
+            help="Method for LLM seed generation: 'script' (generates python script) or 'direct' (generates file content).")
 
   args = parser.parse_args()
   if args.num_samples:
@@ -615,6 +623,14 @@ def main():
 
   coverage_gain_dict = _process_total_coverage_gain()
   _print_experiment_results(experiment_results, coverage_gain_dict)
+
+  # Set the environment variable if the flag is present
+  if args.generate_seeds:
+    os.environ['LLM_GENERATE_CORPUS'] = '1'
+  else:
+    # Ensure it's unset if the flag is not provided
+    if 'LLM_GENERATE_CORPUS' in os.environ:
+      del os.environ['LLM_GENERATE_CORPUS']
 
 
 if __name__ == '__main__':
