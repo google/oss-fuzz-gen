@@ -327,8 +327,8 @@ class Evaluator:
       f.write(
           '\nRUN mkdir -p /artifact\n'
           f'\nCOPY {os.path.basename(run_result.artifact_path)} /artifact/\n'
-          '\nENV CFLAGS="${CFLAGS} -g"\n'
-          '\nENV CXXFLAGS="${CXXFLAGS} -g"\n'
+          '\nENV CFLAGS="${CFLAGS} -g -O0"\n'
+          '\nENV CXXFLAGS="${CXXFLAGS} -g -O0"\n'
           '\nRUN apt-get update\n'
           '\nRUN apt-get install -y lldb\n'
           '\nRUN apt-get install -y screen\n')
