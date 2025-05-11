@@ -13,6 +13,7 @@
 # limitations under the License.
 """A tool for LLM agents to interact within a LLDB."""
 import logging
+import time
 import subprocess as sp
 
 from experiment.benchmark import Benchmark
@@ -49,10 +50,10 @@ class LLDBTool(ProjectContainerTool):
     return process
 
   def execute_in_screen(self, lldb_command: str) -> sp.CompletedProcess:
-    """Sends a command to the lldb_session screen running in the container."""
-    # Escape any double quotes and ensure newline is injected
+    """Sends a command to the lldb_session screen and returns LLDB output."""
+    self.execute("truncate -s 0 /tmp/lldb_log.txt")
     safe_cmd = lldb_command.replace('"', '\\"') + '\n'
-    # Wrap it into a screen command
     screen_command = f'screen -S lldb_session -X stuff "{safe_cmd}"'
-
-    return self.execute(screen_command)
+    self.execute(screen_command)
+    time.sleep(0.3)
+    return self.execute("cat /tmp/lldb_log.txt")

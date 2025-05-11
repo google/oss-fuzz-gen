@@ -55,6 +55,7 @@ class CrashAnalyzer(BaseAgent):
 
   def _format_lldb_execution_result(
       self,
+      lldb_command: str,
       process: sp.CompletedProcess,
       previous_prompt: Optional[Prompt] = None) -> str:
     """Formats a prompt based on lldb execution result."""
@@ -66,9 +67,8 @@ class CrashAnalyzer(BaseAgent):
                                       previous_prompt_text).strip()
     stderr = self.llm.truncate_prompt(process.stderr,
                                       stdout + previous_prompt_text).strip()
-    return (f'<lldb>\n{process.args}\n</lldb>\n'
-            f'<return code>\n{process.returncode}\n</return code>\n'
-            f'<stdout>\n{stdout}\n</stdout>\n'
+    return (f'<lldb command>\n{lldb_command.strip()}\n</lldb command>\n'
+            f'<lldb output>\n{stdout}\n</lldb output>\n'
             f'<stderr>\n{stderr}\n</stderr>\n')
 
   def _container_handle_lldb_command(self, response: str, tool: LLDBTool,
@@ -76,8 +76,9 @@ class CrashAnalyzer(BaseAgent):
     """Handles the command from LLM with lldb tool."""
     prompt_text = ''
     for command in self._parse_tags(response, 'lldb'):
+      process = tool.execute_in_screen(command)
       prompt_text += self._format_lldb_execution_result(
-          tool.execute_in_screen(command), previous_prompt=prompt) + '\n'
+          command, process, previous_prompt=prompt) + '\n'
       prompt.append(prompt_text)
     return prompt
 
@@ -178,7 +179,10 @@ class CrashAnalyzer(BaseAgent):
                                  name='lldb',
                                  project_name=generated_oss_fuzz_project)
     self.analyze_tool.execute('compile > /dev/null')
-    self.analyze_tool.execute("screen -dmS lldb_session bash -c \"lldb\"")
+    # Launch LLDB and load fuzz target binary
+    self.analyze_tool.execute(
+        f'screen -dmS lldb_session bash -c "lldb /out/'
+        f'{last_result.benchmark.target_name} | tee /tmp/lldb_log.txt"')
     self.check_tool = ProjectContainerTool(
         benchmark, name='check', project_name=generated_oss_fuzz_project)
     self.check_tool.compile(extra_commands=' && rm -rf /out/* > /dev/null')

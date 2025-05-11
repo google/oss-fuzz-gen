@@ -11,13 +11,13 @@ Reasons here.
 <lldb>
 One lldb command here.
 </lldb>
-3. Each reponse I send will repeat the command you sent wrapped in <lldb></lldb> for you to double-check, followed by the command standard output wrapped in <stdout></stdout> and stderr wrapped in <stderr></stderr> in this format:
-<lldb>
+3. Each reponse I send will repeat the command you sent wrapped in <lldb command></lldb command> for you to double-check, followed by the command standard output wrapped in <lldb output></lldb output> and stderr wrapped in <stderr></stderr> in this format:
+<lldb command>
 The command I executed, copied from the command you sent.
-</lldb>
-<stdout>
+</lldb command>
+<lldb output>
 The standard output of the command.
-</stdout>
+</lldb output>
 <stderr>
 The standard error of the command.
 </stderr>
