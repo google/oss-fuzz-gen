@@ -13,8 +13,8 @@
 # limitations under the License.
 """A tool for LLM agents to interact within a LLDB."""
 import logging
-import time
 import subprocess as sp
+import time
 
 from experiment.benchmark import Benchmark
 from results import RunResult
