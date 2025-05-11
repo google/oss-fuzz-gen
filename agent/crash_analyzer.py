@@ -180,10 +180,9 @@ class CrashAnalyzer(BaseAgent):
                                  project_name=generated_oss_fuzz_project)
     self.analyze_tool.execute('compile > /dev/null')
     # Launch LLDB and load fuzz target binary
-    self.analyze_tool.execute(
-        f'screen -L -Logfile /tmp/lldb_log.txt -Logflush 0 '
-        f'-dmS lldb_session '
-        f'lldb /out/{last_result.benchmark.target_name}')
+    self.analyze_tool.execute(f'screen -dmS lldb_session -L '
+                              f'-Logfile /tmp/lldb_log.txt '
+                              f'lldb /out/{last_result.benchmark.target_name}')
     self.check_tool = ProjectContainerTool(
         benchmark, name='check', project_name=generated_oss_fuzz_project)
     self.check_tool.compile(extra_commands=' && rm -rf /out/* > /dev/null')
