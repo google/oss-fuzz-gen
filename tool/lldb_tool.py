@@ -51,9 +51,12 @@ class LLDBTool(ProjectContainerTool):
 
   def execute_in_screen(self, lldb_command: str) -> sp.CompletedProcess:
     """Sends a command to the lldb_session screen and returns LLDB output."""
-    self.execute("truncate -s 0 /tmp/lldb_log.txt")
-    safe_cmd = lldb_command.replace('"', '\\"') + '\n'
-    screen_command = f'screen -S lldb_session -X stuff "{safe_cmd}"'
-    self.execute(screen_command)
-    time.sleep(0.3)
-    return self.execute("cat /tmp/lldb_log.txt")
+    self.execute('screen -S lldb_session -X logfile flush 0')
+    self.execute('truncate -s 0 /tmp/lldb_log.txt')
+
+    safe_cmd = lldb_command.replace('"', '\\"') + '\r'
+    self.execute(f'screen -S lldb_session -X stuff "{safe_cmd}"')
+
+    time.sleep(1.0)
+    self.execute('screen -S lldb_session -X logfile flush 0')
+    return self.execute('cat /tmp/lldb_log.txt')
