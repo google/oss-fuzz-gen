@@ -36,7 +36,7 @@ Analysis and suggestion.
 1. DO NOT wrap code snippets with ```, using the XML-style tags above will suffice.
 2. DO NOT Compile or Run Code!
 3. Strictly ONE LLDB command at a time!
-4. DO NOT run 'lldb /out/{TARGET_NAME}' again! 
+4. DO NOT run 'lldb /out/{TARGET_NAME}' again!
 5. DO NOT run shell commands!
 </general rules>
 </tool>
