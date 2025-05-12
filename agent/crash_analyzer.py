@@ -21,11 +21,12 @@ from typing import Optional
 
 import logger
 from agent.base_agent import BaseAgent
+from experiment import oss_fuzz_checkout
 from experiment import evaluator as evaluator_lib
 from experiment.workdir import WorkDirs
 from llm_toolkit import prompt_builder
 from llm_toolkit.prompts import Prompt
-from results import CrashResult, Result, RunResult
+from results import CrashResult, Result, RunResult, AnalysisResult
 from tool.container_tool import ProjectContainerTool
 from tool.lldb_tool import LLDBTool
 
@@ -138,7 +139,7 @@ class CrashAnalyzer(BaseAgent):
                      cloud_build_artifact_path,
                      trial=self.trial)
 
-  def execute(self, result_history: list[Result]) -> CrashResult:
+  def execute(self, result_history: list[Result]) -> AnalysisResult:
     """Executes the agent based on previous run result."""
     WorkDirs(self.args.work_dirs.base)
     last_result = result_history[-1]
@@ -154,7 +155,7 @@ class CrashAnalyzer(BaseAgent):
     sample_id = os.path.splitext(generated_target_name)[0]
     generated_oss_fuzz_project = (
         f'{benchmark.id}-{sample_id}-lldb-{self.trial:02d}')
-    generated_oss_fuzz_project = evaluator_lib.rectify_docker_tag(
+    generated_oss_fuzz_project = oss_fuzz_checkout.rectify_docker_tag(
         generated_oss_fuzz_project)
 
     # TODO(dongge): Write to OSS-Fuzz project dir files directly.
@@ -213,4 +214,9 @@ class CrashAnalyzer(BaseAgent):
                    trial=self.trial)
       self.analyze_tool.terminate()
 
-    return crash_result
+    analysis_result = AnalysisResult(
+        author=self,
+        run_result=last_result,
+        crash_result=crash_result,
+        chat_history={self.name: crash_result.to_dict()})
+    return analysis_result

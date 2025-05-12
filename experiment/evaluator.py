@@ -272,7 +272,7 @@ class Evaluator:
     and build script with the new |target_file| and |build_script_path|."""
     logger.info('target file: %s', target_file)
     generated_project_path = oss_fuzz_checkout.create_ossfuzz_project(
-        self.benchmark, name)
+        benchmark, name)
 
     # Copy generated fuzzers to generated_project_path
     shutil.copyfile(
@@ -419,7 +419,8 @@ class Evaluator:
     generated_oss_fuzz_project = f'{self.benchmark.id}-{sample_id}'
     generated_oss_fuzz_project = oss_fuzz_checkout.rectify_docker_tag(
         generated_oss_fuzz_project)
-    self.create_ossfuzz_project(generated_oss_fuzz_project, target_path)
+    Evaluator.create_ossfuzz_project(self.benchmark, generated_oss_fuzz_project,
+                                     target_path)
 
     status_path = os.path.join(self.work_dirs.status, sample_id)
     os.makedirs(status_path, exist_ok=True)
