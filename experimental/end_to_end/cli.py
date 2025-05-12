@@ -555,7 +555,9 @@ def run_full(args):
     logger.info('- %s', project)
 
   if os.path.isdir('results'):
-    shutil.copytree('results', os.path.join(out_folder, 'harness-results'))
+    shutil.copytree('results',
+                    os.path.join(out_folder, 'harness-results'),
+                    dirs_exist_ok=True)
 
 
 def parse_commandline():
