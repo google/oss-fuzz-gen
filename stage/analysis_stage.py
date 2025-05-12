@@ -14,11 +14,8 @@
 """The Analysis Stage class for examining the performance of fuzz targets. This
 stage is responsible for categorizing run-time crashes and detecting untested
 code blocks."""
-from typing import cast
 
-from experiment.fuzz_target_error import SemanticCheckResult
-
-from results import Result, CrashResult, RunResult, RunResult
+from results import Result, RunResult
 from stage.base_stage import BaseStage
 
 
@@ -31,34 +28,14 @@ class AnalysisStage(BaseStage):
   crashes due to a bug in the project under test or if all major code paths have
   been sufficiently covered."""
 
-  def _analyze_crash(self, result_history: list[Result]) -> Result:
-    """Analyzes a runtime crash."""
-    agent = self.get_agent(agent_name='CrashAnalyzer')
-    if self.args.cloud_experiment_name:
-      return self._execute_agent_cloud(agent, result_history)
-    return agent.execute(result_history)
-
-  def _analyze_coverage(self, result_history: list[Result]) -> None:
-    """Analyzes code coverage."""
-    del result_history
-
   def execute(self, result_history: list[Result]) -> Result:
     """Selects agent based on run result and executes it."""
     self.logger.info('Analysis Stage')
     last_result = result_history[-1]
     assert isinstance(last_result, RunResult)
 
-    semantic_check_result = SemanticCheckResult(last_result.err_type,
-                                                last_result.crash_sypmtom,
-                                                last_result.crash_stacks,
-                                                last_result.crash_func)
-    analysis_result = AnalysisResult(author=self,
-                                     run_result=last_result,
-                                     semantic_result=semantic_check_result)
-
-    # 1. Analyzing runtime crash.
     if last_result.crashes:
-      agent = self.get_agent(agent_name='SemanticAnalyzer')
+      agent = self.get_agent(agent_name='CrashAnalyzer')
     else:
       try:
         agent = self.get_agent(agent_name='CoverageAnalyzer')
@@ -67,8 +44,8 @@ class AnalysisStage(BaseStage):
     analysis_result = self._execute_agent(agent, result_history)
 
     # TODO(dongge): Save logs and more info into workdir.
-    self.logger.write_chat_history(crash_result)
+    self.logger.write_chat_history(analysis_result)
     self.logger.debug('Analysis stage completed with with result:\n%s',
                       analysis_result)
 
-    return crash_result
+    return analysis_result

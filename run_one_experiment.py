@@ -25,7 +25,6 @@ from typing import List, Optional
 import logger
 import pipeline
 from agent.coverage_analyzer import CoverageAnalyzer
-from agent.enhancer import Enhancer
 from agent.crash_analyzer import CrashAnalyzer
 from agent.enhancer import Enhancer
 from agent.one_prompt_enhancer import OnePromptEnhancer
