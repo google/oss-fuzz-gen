@@ -959,6 +959,12 @@ class GeminiV2ThinkChat(GeminiV1D5Chat):
   _vertex_ai_model = 'gemini-2.0-flash-thinking-exp-01-21'
 
 
+class GeminiV2D5ProChat(GeminiV1D5Chat):
+  """Gemini 2.5 pro for chat session."""
+  name = 'vertex_ai_gemini-2-5-pro-chat'
+  _vertex_ai_model = 'gemini-2.5-pro-preview-05-06'
+
+
 class AIBinaryModel(GoogleModel):
   """A customized model hosted internally."""
 
