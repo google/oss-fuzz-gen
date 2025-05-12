@@ -32,6 +32,7 @@ from googleapiclient.discovery import build as cloud_build
 
 import utils
 from agent.base_agent import BaseAgent
+from agent.crash_analyzer import CrashAnalyzer
 from results import Result
 
 OF_REPO = 'https://github.com/google/oss-fuzz.git'
@@ -400,7 +401,10 @@ class CloudBuilder:
     ofg_url = self._prepare_and_upload_archive(result_history)
     agent_url = self._upload_to_gcs(agent_dill)
     results_url = self._upload_to_gcs(results_dill)
-    artifact_url = self._upload_to_gcs(artifact_dill)
+    if isinstance(agent, CrashAnalyzer):
+      artifact_url = self._upload_to_gcs(agent.artifact_path)
+    else:
+      artifact_url = ''
     oss_fuzz_data_url = self._upload_oss_fuzz_data()
     data_dir_url = self._upload_fi_oss_fuzz_data()
 

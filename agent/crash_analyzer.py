@@ -15,6 +15,7 @@
 Use it as a usual module locally, or as script in cloud builds.
 """
 import os
+import argparse
 import shutil
 import subprocess as sp
 from typing import Optional
@@ -29,12 +30,24 @@ from llm_toolkit.prompts import Prompt
 from results import AnalysisResult, CrashResult, Result, RunResult
 from tool.container_tool import ProjectContainerTool
 from tool.lldb_tool import LLDBTool
+from llm_toolkit.models import LLM
+from tool.base_tool import BaseTool
 
 MAX_ROUND = 100
 
 
 class CrashAnalyzer(BaseAgent):
   """The Agent to analyze a runtime crash and provide insight to fuzz target."""
+
+  def __init__(self,
+               trial: int,
+               llm: LLM,
+               args: argparse.Namespace,
+               tools: Optional[list[BaseTool]] = None,
+               name: str = '',
+               artifact_path: str = '') -> None:
+    super().__init__(trial, llm, args, tools, name)
+    self.artifact_path = artifact_path
 
   def _initial_prompt(self, results: list[Result]) -> Prompt:
     """Constructs initial prompt of the agent."""
@@ -149,6 +162,7 @@ class CrashAnalyzer(BaseAgent):
 
     if self.args.cloud_experiment_name:
       self._copy_cloud_artifact(last_result.artifact_path)
+      self.artifact_path = last_result.artifact_path
 
     # TODO(dongge): Move these to oss_fuzz_checkout.
     generated_target_name = os.path.basename(benchmark.target_path)
