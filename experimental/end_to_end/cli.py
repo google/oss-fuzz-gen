@@ -223,6 +223,7 @@ def run_ofg_generation(projects_to_run, workdir, args):
   environ['LLM_NUM_EVA'] = '4'
   environ['LLM_NUM_EXP'] = '4'
   environ['OFG_CLEAN_UP_OSS_FUZZ'] = '0'
+  environ['OFG_USE_CACHING'] = '0'
 
   subprocess.check_call(' '.join(cmd), shell=True, env=environ)
 
