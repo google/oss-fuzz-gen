@@ -172,7 +172,7 @@ td .signature {
             <td class="table-index">{{ loop.index }}</td>
             <td data-sort-value="{{bug_sample.benchmark.project}}">{{bug_sample.benchmark.project}}</td>
             <td data-sort-value="{{bug_sample.benchmark.id}}"><a href="sample/{{ bug_sample.benchmark.id|urlencode }}/{{ bug_sample.sample.id }}.html">{{bug_sample.benchmark.id}}-{{ bug_sample.sample.id }} </a> </td>
-            <td style="color: {{ 'red' if bug_sample.sample.result.crashes and not bug_sample.sample.result.is_semantic_error else 'green' }}" data-sort-value="{{'True positive' if bug_sample.sample.result.is_semantic_error else 'False positive'}}">{{'True positive' if bug_sample.sample.result.is_semantic_error else 'False positive'}}</td>
+            <td style="color: {{ 'red' if bug_sample.sample.result.crashes and bug_sample.sample.result.is_semantic_error else 'green' }}" data-sort-value="{{'True positive' if not bug_sample.sample.result.is_semantic_error else 'False positive'}}">{{'True positive' if not bug_sample.sample.result.is_semantic_error else 'False positive'}}</td>
         </tr>
         {% endfor %}
     </tbody>
