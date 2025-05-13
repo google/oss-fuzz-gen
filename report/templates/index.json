@@ -12,6 +12,13 @@
         {% if benchmark.result.max_coverage_diff_report %}
         ,"max_line_coverage_diff_report": "{{ benchmark.result.max_coverage_diff_report }}"
         {%- endif %}
+        ,"accumulated_results": {
+                     "total_runs":       {{ benchmark.accumulated_results.total_runs }},
+                    "total_coverage":   {{ benchmark.accumulated_results.total_coverage }},
+                     "crashes":          {{ benchmark.accumulated_results.crashes }},
+                     "crash_cases":      {{ benchmark.accumulated_results.crash_cases }}
+                  }
+                  ,"execution_time": {{ benchmark.execution_time }}
     }{% if not loop.last %},{% endif %}
 {% endfor %}
     ]
