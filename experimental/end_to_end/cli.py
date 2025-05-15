@@ -209,6 +209,7 @@ def run_ofg_generation(projects_to_run, workdir, args):
   cmd.append(','.join(projects_to_run))
   cmd.append('-gm')
   cmd.append(str(args.generate_benchmarks_max))
+  cmd.append('--context')
   cmd.append('-of')
   cmd.append(oss_fuzz_dir)
   cmd.append('-e')
