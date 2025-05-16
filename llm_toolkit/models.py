@@ -769,6 +769,14 @@ class GeminiV2D5Flash(GeminiModel):
   _vertex_ai_model = 'gemini-2.5-flash-preview-04-17'
 
 
+class GeminiV2D5Pro(GeminiModel):
+  """Gemini 2.5 pro."""
+  _max_output_tokens = 65535
+  context_window = 1048576
+  name = 'vertex_ai_gemini-2-5-pro'
+  _vertex_ai_model = 'gemini-2.5-pro-preview-05-06'
+
+
 class GeminiV1D5Chat(GeminiV1D5):
   """Gemini 1.5 for chat session."""
   name = 'vertex_ai_gemini-1-5-chat'
@@ -881,6 +889,22 @@ class GeminiV2ThinkChat(GeminiV1D5Chat):
   """Gemini 2 for chat session."""
   name = 'vertex_ai_gemini-2-think-chat'
   _vertex_ai_model = 'gemini-2.0-flash-thinking-exp-01-21'
+
+
+class GeminiV2D5FlashChat(GeminiV1D5Chat):
+  """Gemini 2.5 flash for chat session."""
+  _max_output_tokens = 65535
+  context_window = 1048576
+  name = 'vertex_ai_gemini-2-5-flash-chat'
+  _vertex_ai_model = 'gemini-2.5-flash-preview-04-17'
+
+
+class GeminiV2D5ProChat(GeminiV1D5Chat):
+  """Gemini 2.5 pro for chat session."""
+  _max_output_tokens = 65535
+  context_window = 1048576
+  name = 'vertex_ai_gemini-2-5-pro-chat'
+  _vertex_ai_model = 'gemini-2.5-pro-preview-05-06'
 
 
 class AIBinaryModel(GoogleModel):

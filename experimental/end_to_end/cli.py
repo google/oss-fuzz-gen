@@ -209,6 +209,7 @@ def run_ofg_generation(projects_to_run, workdir, args):
   cmd.append(','.join(projects_to_run))
   cmd.append('-gm')
   cmd.append(str(args.generate_benchmarks_max))
+  cmd.append('--context')
   cmd.append('-of')
   cmd.append(oss_fuzz_dir)
   cmd.append('-e')
@@ -223,6 +224,7 @@ def run_ofg_generation(projects_to_run, workdir, args):
   environ['LLM_NUM_EVA'] = '4'
   environ['LLM_NUM_EXP'] = '4'
   environ['OFG_CLEAN_UP_OSS_FUZZ'] = '0'
+  environ['OFG_USE_CACHING'] = '0'
 
   subprocess.check_call(' '.join(cmd), shell=True, env=environ)
 
@@ -248,14 +250,20 @@ def copy_generated_projects_to_harness_gen(out_gen, workdir):
   return projects_to_run
 
 
-def create_merged_oss_fuzz_projects(workdir) -> None:
+def create_merged_oss_fuzz_projects(
+    projects_to_run,
+    workdir,
+    merged_project_out_dir='final-oss-fuzz-projects') -> None:
   """Create OSS-Fuzz projects using successful harnesses."""
-  generated_projects_dir = os.path.join(workdir, 'oss-fuzz-projects')
+
+  logger.info('Merging harnesses for the following projects: %s',
+              str(projects_to_run))
+  logger.info('Writing results in %s', merged_project_out_dir)
 
   # Get list of projects created auto-building for.
   generated_projects = []
-  for project_name in os.listdir(generated_projects_dir):
-    project_yaml = os.path.join(generated_projects_dir, project_name,
+  for project_name in projects_to_run:
+    project_yaml = os.path.join(workdir, 'oss-fuzz', 'projects', project_name,
                                 'project.yaml')
     if not os.path.isfile(project_yaml):
       continue
@@ -269,6 +277,10 @@ def create_merged_oss_fuzz_projects(workdir) -> None:
 
   # Iterate results and copy fuzz harnesses into dedicated project folder.
   results_dir = 'results'
+  if not os.path.isdir(results_dir):
+    logger.info('No results identified')
+    return
+
   for result in os.listdir(results_dir):
     # Find project name
     project = {}
@@ -281,7 +293,7 @@ def create_merged_oss_fuzz_projects(workdir) -> None:
     # Copy the harness over
     #if not os.path.isdir('final-oss-fuzz-projects'):
     #  os.makedirs('final-oss-fuzz-projects')
-    project_dir = os.path.join('final-oss-fuzz-projects', project['name'])
+    project_dir = os.path.join(merged_project_out_dir, project['name'])
     #if not os.path.isdir(project_dir):
     #  os.makedirs(project_dir)
     os.makedirs(project_dir, exist_ok=True)
@@ -305,7 +317,7 @@ def create_merged_oss_fuzz_projects(workdir) -> None:
     if not idx_to_copy:
       logger.info('Did not find a harness to copy')
       continue
-    logger.info('Copying idx: %s', idx_to_copy)
+    logger.debug('Copying idx: %s', idx_to_copy)
 
     # Copy over the harness
     fuzz_src = os.path.join('results', result, 'fuzz_targets',
@@ -324,17 +336,17 @@ def create_merged_oss_fuzz_projects(workdir) -> None:
       idx += 1
 
     # Copy the harness
-    build_src = os.path.join(workdir, 'oss-fuzz-projects', project['name'],
+    build_src = os.path.join(workdir, 'oss-fuzz', 'projects', project['name'],
                              'build.sh')
     build_dst = os.path.join(project_dir, 'build.sh')
     shutil.copy(build_src, build_dst)
 
-    docker_src = os.path.join(workdir, 'oss-fuzz-projects', project['name'],
+    docker_src = os.path.join(workdir, 'oss-fuzz', 'projects', project['name'],
                               'Dockerfile')
     docker_dst = os.path.join(project_dir, 'Dockerfile')
     shutil.copy(docker_src, docker_dst)
 
-    project_yaml_src = os.path.join(workdir, 'oss-fuzz-projects',
+    project_yaml_src = os.path.join(workdir, 'oss-fuzz', 'projects',
                                     project['name'], 'project.yaml')
     project_yaml_dst = os.path.join(project_dir, 'project.yaml')
     shutil.copy(project_yaml_src, project_yaml_dst)
@@ -404,7 +416,7 @@ def prepare_fuzz_introspector_db(out_gen, workdir, parallel_introspector_jobs):
   create_fi_db(workdir)
 
 
-def run_harness_generation(out_gen, workdir, args):
+def run_harness_generation(workdir, args):
   """Runs harness generation based on the projects in `out_gen`"""
 
   # Read the json file from FI to get all current projects.
@@ -431,7 +443,7 @@ def run_harness_generation(out_gen, workdir, args):
   # Run OFG core using local OSS-Fuzz and local Fuzz Introspector.
   run_ofg_generation(projects_to_run, workdir, args)
 
-  create_merged_oss_fuzz_projects(out_gen)
+  create_merged_oss_fuzz_projects(projects_to_run, workdir)
   return projects_to_run
 
 
@@ -511,20 +523,12 @@ def run_cmd_harness_generation(args):
   # Prepare working directory.
   abs_workdir = os.path.abspath(args.workdir)
 
-  out_folder = args.out
-
   # Run harness generation.
-  projects_run = run_harness_generation(out_folder, abs_workdir, args)
+  projects_run = run_harness_generation(abs_workdir, args)
 
   # Log results.
   logger.info('Finished analysis')
-  logger.info('Results in %s', out_folder)
   logger.info('Projects generated (%d): ', len(projects_run))
-  for project in projects_run:
-    logger.info('- %s', project)
-
-  if os.path.isdir('results'):
-    shutil.copytree('results', os.path.join(out_folder, 'harness-results'))
 
 
 def run_full(args):
@@ -545,17 +549,11 @@ def run_full(args):
   prepare_fuzz_introspector_db(out_folder, abs_workdir, args.build_jobs)
 
   # Run harness generation.
-  projects_run = run_harness_generation(out_folder, abs_workdir, args)
+  projects_run = run_harness_generation(abs_workdir, args)
 
   # Log results.
   logger.info('Finished analysis')
-  logger.info('Results in %s', out_folder)
   logger.info('Projects generated (%d): ', len(projects_run))
-  for project in projects_run:
-    logger.info('- %s', project)
-
-  if os.path.isdir('results'):
-    shutil.copytree('results', os.path.join(out_folder, 'harness-results'))
 
 
 def parse_commandline():
@@ -628,10 +626,6 @@ def parse_commandline():
       help="Harness generation of OSS-Fuzz projects.",
   )
 
-  run_harness_generation_parser.add_argument('--out',
-                                             '-o',
-                                             help='Directory to store output.',
-                                             default='oss-fuzz-generated')
   run_harness_generation_parser.add_argument(
       '--silent',
       '-s',

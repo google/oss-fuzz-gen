@@ -85,7 +85,7 @@ def get_oracle_dict() -> Dict[str, Any]:
   """Returns the oracles available to identify targets."""
   # Do this in a function to allow for forward-declaration of functions below.
   oracle_dict = {
-      'far-reach-low-coverage': get_unreached_functions,
+      'far-reach-low-coverage': query_introspector_for_far_reach_low_cov,
       'low-cov-with-fuzz-keyword': query_introspector_for_keyword_targets,
       'easy-params-far-reach': query_introspector_for_easy_param_targets,
       'optimal-targets': query_introspector_for_optimal_targets,
@@ -526,9 +526,8 @@ def query_introspector_addr_type_info(project: str, addr: str) -> str:
   return _get_data(resp, 'dwarf-map', '')
 
 
-def get_unreached_functions(project):
+def query_introspector_for_far_reach_low_cov(project):
   functions = query_introspector_oracle(project, INTROSPECTOR_ORACLE_FAR_REACH)
-  functions = [f for f in functions if not f['reached_by_fuzzers']]
   return functions
 
 
