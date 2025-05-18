@@ -218,8 +218,8 @@ limitations under the License.
                         <td data-sort-value="{{bug_sample.benchmark.project}}">{{bug_sample.benchmark.project}}</td>
                         <td data-sort-value="{{bug_sample.benchmark.id}}">
                             <pre class="signature">
-                                <a href="sample/{{ bug_sample.benchmark.id|urlencode }}/{{ bug_sample.sample.id }}.html" class="prettify-benchmark-name">{{bug_sample.benchmark.id}}-{{ bug_sample.sample.id }} 
-                                </a> 
+                                <a href="sample/{{ bug_sample.benchmark.id|urlencode }}/{{ bug_sample.sample.id }}.html" class="prettify-benchmark-name">{{bug_sample.benchmark.id}}-{{ bug_sample.sample.id }}
+                                </a>
                             </pre>
                         </td>
                         <td data-sort-value="{{'False positive' if bug_sample.sample.result.is_semantic_error else 'True positive'}}">
@@ -274,7 +274,7 @@ limitations under the License.
         </div>
     </div>
 
-    <div class="border rounded-lg"> 
+    <div class="border rounded-lg">
         <button class="w-full p-4 flex justify-between items-center">
             <span class="text-lg font-bold">
                 Accumulated results

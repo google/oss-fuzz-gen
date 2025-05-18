@@ -85,7 +85,7 @@ td .signature {
     margin-right: 12px;
     transition: transform 0.2s;
     font-size: 0.8em;
-    color: #6b7280; 
+    color: #6b7280;
 }
 
 .project-header.collapsed:before {
@@ -129,7 +129,7 @@ td .signature {
 
 .chart-box {
     flex: 1;
-    height: 300px; 
+    height: 300px;
     padding: 15px;
     background: #f8f9fa;
     border-radius: 6px;
@@ -146,11 +146,11 @@ td .signature {
 }
 
 .sortable-table th {
-    background: #f9fafb; 
+    background: #f9fafb;
     padding: 12px 16px;
     text-align: left;
     font-weight: 600;
-    border-bottom: 2px solid #e5e7eb;  
+    border-bottom: 2px solid #e5e7eb;
 }
 
 .dark-mode .sortable-table th {
@@ -160,7 +160,7 @@ td .signature {
 
 .sortable-table td {
     padding: 12px 16px;
-    border-bottom: 1px solid #e5e7eb; 
+    border-bottom: 1px solid #e5e7eb;
 }
 
 .dark-mode .sortable-table td {
@@ -183,11 +183,11 @@ td .signature {
 }
 
 .status-indicator.no_bugs {
-    background-color: #34d399;  
+    background-color: #34d399;
 }
 
 .dark-mode .status-indicator.no_bugs {
-    background-color: #10b981; 
+    background-color: #10b981;
 }
 
 .stat-card {
@@ -228,13 +228,13 @@ td .signature {
 }
 
 .filter-btn.active {
-    background-color: #3b82f6; 
+    background-color: #3b82f6;
     color: white;
     border-color: #3b82f6;
 }
 
 .dark-mode .filter-btn.active {
-    background-color: #60a5fa;  
+    background-color: #60a5fa;
     border-color: #60a5fa;
 }
 

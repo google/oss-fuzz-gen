@@ -109,6 +109,12 @@ class JinjaEnv:
       for key, val in template_globals.items():
         self._env.globals[key] = val
 
+  def get_template_search_path(self) -> Optional[List[str]]:
+    """Returns the search path of the Jinja2 FileSystemLoader."""
+    if isinstance(self._env.loader, jinja2.FileSystemLoader):
+      return self._env.loader.searchpath
+    return None
+
   def render(self, template_name: str, **kwargs):
     """Render a template with variables provides through kwargs."""
     return self._env.get_template(template_name).render(**kwargs)
@@ -169,19 +175,28 @@ class GenerateReport:
 
   def _read_static_file(self, file_path_in_templates_subdir: str) -> str:
     """Reads a static file from the templates directory."""
-      
-    templates_base_dir = self._jinja._env.loader.searchpath[0]
-    full_file_path = os.path.join(templates_base_dir, file_path_in_templates_subdir)
-    
+
+    search_path = self._jinja.get_template_search_path()
+
+    if not search_path:
+      logging.error(
+          'Jinja FileSystemLoader\'s searchpath is empty, or loader is not '
+          'FileSystemLoader.')
+      return ''
+    templates_base_dir = search_path[0]
+
+    full_file_path = os.path.join(templates_base_dir,
+                                  file_path_in_templates_subdir)
+
     try:
-        with open(full_file_path, 'r', encoding='utf-8') as f:
-            return f.read()
+      with open(full_file_path, 'r', encoding='utf-8') as f:
+        return f.read()
     except FileNotFoundError:
-        logging.warning('Static file not found: %s', full_file_path)
-        return ""
+      logging.warning('Static file not found: %s', full_file_path)
+      return ''
     except Exception as e:
-        logging.error('Error reading static file %s: %s', full_file_path, e)
-        return ""
+      logging.error('Error reading static file %s: %s', full_file_path, e)
+      return ''
 
   def generate(self):
     """Generate and write every report file."""
@@ -240,7 +255,7 @@ class GenerateReport:
     """Generate the report index.html and write to filesystem."""
     index_css_content = self._read_static_file('index/index.css')
     index_js_content = self._read_static_file('index/index.js')
-    
+
     rendered = self._jinja.render(
         'index/index.html',
         benchmarks=benchmarks,
