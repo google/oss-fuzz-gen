@@ -154,7 +154,7 @@ limitations under the License.
                                                 </td>
                                                 <td data-sort-value="{{ benchmark.id }}">
                                                     <pre class="signature">
-                                                        <a href="benchmark/{{ benchmark.id|urlencode }}/index.html">{{ benchmark.signature }}</a>
+                                                        <a href="benchmark/{{ benchmark.id|urlencode }}/index.html" class="prettify-benchmark-name">{{ benchmark.signature }}</a>
                                                     </pre>
                                                 </td>
                                                 <td data-sort-value="{{ benchmark.status }}">{{ benchmark.status }}</td>
@@ -218,7 +218,7 @@ limitations under the License.
                         <td data-sort-value="{{bug_sample.benchmark.project}}">{{bug_sample.benchmark.project}}</td>
                         <td data-sort-value="{{bug_sample.benchmark.id}}">
                             <pre class="signature">
-                                <a href="sample/{{ bug_sample.benchmark.id|urlencode }}/{{ bug_sample.sample.id }}.html">{{bug_sample.benchmark.id}}-{{ bug_sample.sample.id }} 
+                                <a href="sample/{{ bug_sample.benchmark.id|urlencode }}/{{ bug_sample.sample.id }}.html" class="prettify-benchmark-name">{{bug_sample.benchmark.id}}-{{ bug_sample.sample.id }} 
                                 </a> 
                             </pre>
                         </td>
