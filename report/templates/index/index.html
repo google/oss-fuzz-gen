@@ -80,7 +80,7 @@ limitations under the License.
                     </thead>
                     <tbody>
                         {% for project in projects %}
-                        <tr>
+                        <tr class="project-data-row">
                             <td class="table-index">
                                 <button class="w-5 h-5 flex items-center justify-center focus:outline-none" @click="$refs.benchmarks_{{ loop.index }}.classList.toggle('hidden')">
                                     <svg class="w-4 h-4 transform transition-transform duration-200" :class="{'rotate-180': !$refs.benchmarks_{{ loop.index }}.classList.contains('hidden')}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -127,15 +127,15 @@ limitations under the License.
                             <td data-sort-value="{{ project.coverage_existing_total_covered_lines}}">{{ project.coverage_existing_total_covered_lines}}</td>
                             <td data-sort-value="{{ project.coverage_existing_total_lines}}">{{ project.coverage_existing_total_lines}}</td>
                         </tr>
-                        <tr>
+                        <tr class="project-benchmarks-container-row">
                             <td colspan="10" class="">
                                 <div x-ref="benchmarks_{{ loop.index }}" class="hidden">
-                                    <table class="sortable-table min-w-full ml-8">
+                                    <table class="sortable-table min-w-full ml-8" id="benchmarks-table-{{ loop.index }}">
                                         <thead>
                                             <tr>
                                                 <th></th>
-                                                <th data-sorted="asc">Benchmark</th>
-                                                <th>Status</th>
+                                                <th data-sorted="asc" data-sort-string>Benchmark</th>
+                                                <th data-sort-string>Status</th>
                                                 <th data-sort-number>Build Rate</th>
                                                 <th data-sort-number>Crash Rate</th>
                                                 <th data-sort-number>Bugs</th>
@@ -144,11 +144,13 @@ limitations under the License.
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            {% set bench_ns = namespace(index=0) %}
                                             {% for benchmark in benchmarks %}
                                             {% if benchmark.project == project.name %}
+                                            {% set bench_ns.index = bench_ns.index + 1 %}
                                             <tr>
                                                 <td class="table-index">
-                                                    {{ loop.index }}   
+                                                    {{ bench_ns.index }}
                                                 </td>
                                                 <td data-sort-value="{{ benchmark.id }}">
                                                     <pre class="signature">
@@ -158,7 +160,7 @@ limitations under the License.
                                                 <td data-sort-value="{{ benchmark.status }}">{{ benchmark.status }}</td>
                                                 <td data-sort-value="{{ benchmark.result.build_success_rate|percent }}">{{ benchmark.result.build_success_rate|percent}}</td>
                                                 <td data-sort-value="{{ benchmark.result.crash_rate|percent }}"><a href="benchmark/{{ benchmark.id|urlencode }}/crash.json"> {{ benchmark.result.crash_rate|percent }} </a></td>
-                                                <td data-sort-value="{{ benchmark.result.found_bug }}">{{ benchmark.result.found_bug }}</td>
+                                                <td data-sort-value="{{ benchmark.result.found_bug if benchmark.result and benchmark.result.found_bug is not none else 'N/A' }}">{{ benchmark.result.found_bug if benchmark.result and benchmark.result.found_bug is not none else 'N/A' }}</td>
                                                 <td data-sort-value="{{ benchmark.result.max_coverage |percent }}">{{ benchmark.result.max_coverage |percent }}</td>
                                                 <td data-sort-value="{{ benchmark.result.max_line_coverage_diff|percent }}"><a href="{{ benchmark.result.max_coverage_diff_report | cov_report_link }}">{{ benchmark.result.max_line_coverage_diff|percent }}</a></td>
                                             </tr>
@@ -200,12 +202,12 @@ limitations under the License.
         </button>
         <div x-show="crashesFoundOpen"
              class="p-4 border-t">
-             <table class="sortable-table min-w-full" id="summary-table">
+             <table class="sortable-table min-w-full" id="crashes-table">
                 <thead>
                     <tr>
                         <th></th>
                         <th data-sort-string>Project</th>
-                        <th data-sorted="asc">Benchmark</th>
+                        <th data-sorted="asc" data-sort-string>Benchmark</th>
                         <th data-sort-string>AI bug validation</th>
                     </tr>
                 </thead>
@@ -249,22 +251,22 @@ limitations under the License.
              class="p-4 border-t">
              <table class="sortable-table mb-8" id="language-coverage-gain">
                 <thead>
-                    <th>Language</th>
-                    <th>OSS-Fuzz total lines</th>
-                    <th>OSS-Fuzz coverage lines</th>
-                    <th>Experiment new coverage lines</th>
-                    <th>Increase of total</th>
-                    <th>Increase of covered</th>
+                    <th data-sorted="asc" data-sort-string>Language</th>
+                    <th data-sort-number>OSS-Fuzz total lines</th>
+                    <th data-sort-number>OSS-Fuzz coverage lines</th>
+                    <th data-sort-number>Experiment new coverage lines</th>
+                    <th data-sort-number>Increase of total</th>
+                    <th data-sort-number>Increase of covered</th>
                 </thead>
                 <tbody>
                     {% for language in coverage_language_gains['coverage_gains_per_language'] %}
                     <tr>
-                        <td>{{language}}</td>
-                        <td>{{ coverage_language_gains['oss_fuzz_language_status'].get(language, {}).get('total', 'N/A') }}</td>
-                        <td>{{ coverage_language_gains['oss_fuzz_language_status'].get(language, {}).get('covered', 'N/A') }}</td>
-                        <td>{{ coverage_language_gains['coverage_gains_per_language'].get(language, 'N/A') }}</td>
-                        <td>{{ coverage_language_gains['comperative_coverage_gains'].get(language, {}).get('total_coverage_increase', 'N/A') }}%</td>
-                        <td>{{ coverage_language_gains['comperative_coverage_gains'].get(language, {}).get('relative_coverage_increase', 'N/A') }}%</td>
+                        <td data-sort-value="{{language}}">{{language}}</td>
+                        <td data-sort-value="{{ coverage_language_gains['oss_fuzz_language_status'].get(language, {}).get('total', 'N/A') }}">{{ coverage_language_gains['oss_fuzz_language_status'].get(language, {}).get('total', 'N/A') }}</td>
+                        <td data-sort-value="{{ coverage_language_gains['oss_fuzz_language_status'].get(language, {}).get('covered', 'N/A') }}">{{ coverage_language_gains['oss_fuzz_language_status'].get(language, {}).get('covered', 'N/A') }}</td>
+                        <td data-sort-value="{{ coverage_language_gains['coverage_gains_per_language'].get(language, 'N/A') }}">{{ coverage_language_gains['coverage_gains_per_language'].get(language, 'N/A') }}</td>
+                        <td data-sort-value="{{ coverage_language_gains['comperative_coverage_gains'].get(language, {}).get('total_coverage_increase', 'N/A') }}">{{ coverage_language_gains['comperative_coverage_gains'].get(language, {}).get('total_coverage_increase', 'N/A') }}%</td>
+                        <td data-sort-value="{{ coverage_language_gains['comperative_coverage_gains'].get(language, {}).get('relative_coverage_increase', 'N/A') }}">{{ coverage_language_gains['comperative_coverage_gains'].get(language, {}).get('relative_coverage_increase', 'N/A') }}%</td>
                     </tr>
                     {% endfor %}
                 </tbody>
