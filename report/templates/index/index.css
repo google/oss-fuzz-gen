@@ -85,7 +85,7 @@ td .signature {
     margin-right: 12px;
     transition: transform 0.2s;
     font-size: 0.8em;
-    color: #6b7280;  /* gray-500 */
+    color: #6b7280; 
 }
 
 .project-header.collapsed:before {
@@ -178,15 +178,15 @@ td .signature {
     border-radius: 50%;
 }
 
-.status-indicator.running {
+.status-indicator.has_bugs {
     background-color: rgb(253, 96, 96);
 }
 
-.status-indicator.completed {
+.status-indicator.no_bugs {
     background-color: #34d399;  
 }
 
-.dark-mode .status-indicator.completed {
+.dark-mode .status-indicator.no_bugs {
     background-color: #10b981; 
 }
 
