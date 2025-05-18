@@ -17,87 +17,169 @@ limitations under the License.
 
 {% block content %}
 
+{% if index_css_content %}
 <style>
-td .benchmark .function,
-td .signature {
-    overflow-wrap: anywhere;
-}
-
-td .signature {
-    width: fit-content;
-    white-space: normal;
-    padding: 5px 2px;
-    margin: 5px 0 0;
-    background: #eee;
-    font-family: monospace;
-    font-size: 14px;
-}
-
-.signature a {
-    text-decoration: none;
-}
-
-.table-index {
-    color: #555;
-    font-size: 12px;
-    text-align: center;
-}
-
-
-.sortable-table th {
-    cursor: pointer;
-}
-
-.sortable-table th:after {
-    content: ' \25be';
-    color: #ccc;
-}
-
-.sortable-table th[data-sorted="asc"]:after {
-    color: #000;
-}
-
-.sortable-table th[data-sorted="desc"]:after {
-    content: ' \25b4';
-    color: #000;
-}
-
+{{ index_css_content | safe }}
 </style>
+{% endif %}
 
-<table class="sortable-table" id="benchmark-table">
-    <thead>
-        <tr>
-            <th></th>
-            <th data-sorted="asc">Benchmark</th>
-            <th>Status</th>
-            <th data-sort-number>Build Rate</th>
-            <th data-sort-number>Crash Rate</th>
-            <th data-sort-number>Bugs</th>
-            <th data-sort-number>Program Counter Coverage</th>
-            <th data-sort-number>Line Coverage Diff</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for benchmark in benchmarks %}
-        <tr>
-            <td class="table-index">{{ loop.index }}</td>
-            <td data-sort-value="{{ benchmark.id }}">
-                <div class="project">{{ benchmark.project }}</div>
-                <pre class="signature">
-                    <a href="benchmark/{{ benchmark.id|urlencode }}/index.html">{{ benchmark.signature }}</a>
-                </pre>
-            </td>
-            <td data-sort-value="{{ benchmark.status }}">{{ benchmark.status }}</td>
-            <td data-sort-value="{{ benchmark.result.build_success_rate|percent }}">{{ benchmark.result.build_success_rate|percent}}</td>
-            <td data-sort-value="{{ benchmark.result.crash_rate|percent }}"><a href="benchmark/{{ benchmark.id|urlencode }}/crash.json"> {{ benchmark.result.crash_rate|percent }} </a></td>
-            <td data-sort-value="{{ benchmark.result.found_bug }}">{{ benchmark.result.found_bug }}</td>
-            <td data-sort-value="{{ benchmark.result.max_coverage |percent }}">{{ benchmark.result.max_coverage |percent }}</td>
-            <td data-sort-value="{{ benchmark.result.max_line_coverage_diff|percent }}"><a href="{{ benchmark.result.max_coverage_diff_report | cov_report_link }}">{{ benchmark.result.max_line_coverage_diff|percent }}</a></td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+{% if index_js_content %}
+<script>
+{{ index_js_content | safe }}
+</script>
+{% endif %}
 
+<div class="border rounded-lg">
+    <button @click="projectOpen = !projectOpen"
+            class="w-full p-4 flex justify-between items-center">
+        <span class="text-lg font-bold">
+            Project summary
+        </span>
+        <svg class="w-5 h-5 transform transition-transform duration-200"
+             :class="{'rotate-180': projectOpen}"
+             fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+        </svg>
+    </button>
+    <div x-show="projectOpen"
+         class="p-4 border-t">
+
+         <div class="flex justify-between">
+            <div class="controls flex gap-2">
+                <button id="expand-all" class="border rounded-lg p-5">
+                    Expand All
+                </button>
+                <button id="collapse-all" class="border rounded-lg p-5">
+                    Collapse All
+                </button>
+            </div>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="sortable-table min-w-full" id="summary-table">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th data-sorted="asc">Project</th>
+                        <th data-sort-number>Total benchmarks</th>
+                        <th data-sort-number>Successful benchmarks</th>
+                        <th data-sort-number>Total coverage gain</th>
+                        <th data-sort-number>Total relative gain</th>
+                        <th data-sort-number>OSS-Fuzz-Gen total covered lines</th>
+                        <th data-sort-number>OSS-Fuzz-Gen new covered lines</th>
+                        <th data-sort-number>Existing covered lines</th>
+                        <th data-sort-number>Total project lines</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for project in projects %}
+                    <tr>
+                        <td class="table-index">
+                            <button class="w-5 h-5 flex items-center justify-center focus:outline-none" @click="$refs.benchmarks_{{ loop.index }}.classList.toggle('hidden')">
+                                <svg class="w-4 h-4 transform transition-transform duration-200" :class="{'rotate-180': !$refs.benchmarks_{{ loop.index }}.classList.contains('hidden')}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                                </svg>
+                            </button>
+                        </td>
+                        {% set ns = namespace(running=false, bug_found=false) %}
+                        <td data-sort-value="{{ project.name }}" class="w-full">
+                            <button @click="$refs.benchmarks_{{ loop.index }}.classList.toggle('hidden')" class="text-left font-medium hover:text-blue-600 focus:outline-none">
+                                {{ project.name }}
+                                {% set ns = namespace(running=false,
+                                    bug_found=false,
+                                    aggregated_build_rate=0,
+                                    aggregated_crash_rate=0,
+                                    aggregated_found_bug=0,
+                                    aggregated_max_coverage=0,
+                                    aggregated_max_line_coverage_diff=0) %}
+                                {% for benchmark in benchmarks %}
+                                    {% if benchmark.project == project.name %}
+                                        {% if benchmark.status == "Running" %}
+                                            {% set ns.running = true %}
+                                        {% endif %}
+                                        {% if benchmark.result.found_bug %}
+                                            {% set ns.bug_found = true %}
+                                            <!-- TODO: Track the average number of bugs as well, in order to  identify if a single benchmark has an exceptionally high bug count making it an outlier that needs priority fixing -->
+                                        {% endif %}
+                                        {% set ns.aggregated_build_rate = ns.aggregated_build_rate + benchmark.result.build_success_rate %}
+                                        {% set ns.aggregated_crash_rate = ns.aggregated_crash_rate + benchmark.result.crash_rate %}
+                                        {% set ns.aggregated_found_bug = ns.aggregated_found_bug + benchmark.result.found_bug %}
+                                        {% set ns.aggregated_max_coverage = ns.aggregated_max_coverage + benchmark.result.max_coverage %}
+                                        {% set ns.aggregated_max_line_coverage_diff = ns.aggregated_max_line_coverage_diff + benchmark.result.max_line_coverage_diff %}
+                                    {% endif %}
+                                {% endfor %}
+                                <span class="status-indicator ml-1 {{ 'running' if ns.bug_found else 'completed' }}"></span>
+                            </button>
+                        </td>
+                        <td data-sort-value="{{ project.count }}">{{ project.count }}</td>
+                        <td data-sort-value="{{ project.success }}">{{ project.success }}</td>
+                        <td data-sort-value="{{ project.coverage_gain|percent }}">{{ project.coverage_gain|percent }}%</td>
+                        <td data-sort-value="{{ project.coverage_relative_gain|percent}}">{{ project.coverage_relative_gain | percent }}%</td>
+                        <td data-sort-value="{{ project.coverage_ofg_total_covered_lines}}">{{project.coverage_ofg_total_covered_lines}}</td>
+                        <td data-sort-value="{{ project.coverage_ofg_total_new_covered_lines}}">{{ project.coverage_ofg_total_new_covered_lines}}</td>
+                        <td data-sort-value="{{ project.coverage_existing_total_covered_lines}}">{{ project.coverage_existing_total_covered_lines}}</td>
+                        <td data-sort-value="{{ project.coverage_existing_total_lines}}">{{ project.coverage_existing_total_lines}}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="10" class="">
+                            <div x-ref="benchmarks_{{ loop.index }}" class="hidden">
+                                <table class="sortable-table min-w-full ml-8">
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th data-sorted="asc">Benchmark</th>
+                                            <th>Status</th>
+                                            <th data-sort-number>Build Rate</th>
+                                            <th data-sort-number>Crash Rate</th>
+                                            <th data-sort-number>Bugs</th>
+                                            <th data-sort-number>Program Counter Coverage</th>
+                                            <th data-sort-number>Line Coverage Diff</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for benchmark in benchmarks %}
+                                        {% if benchmark.project == project.name %}
+                                        <tr>
+                                            <td class="table-index">
+                                                <!-- {{ loop.index }} -->
+                                                
+                                            </td>
+                                            <td data-sort-value="{{ benchmark.id }}">
+                                                <pre class="signature">
+                                                    <a href="benchmark/{{ benchmark.id|urlencode }}/index.html">{{ benchmark.signature }}</a>
+                                                </pre>
+                                            </td>
+                                            <td data-sort-value="{{ benchmark.status }}">{{ benchmark.status }}</td>
+                                            <td data-sort-value="{{ benchmark.result.build_success_rate|percent }}">{{ benchmark.result.build_success_rate|percent}}</td>
+                                            <td data-sort-value="{{ benchmark.result.crash_rate|percent }}"><a href="benchmark/{{ benchmark.id|urlencode }}/crash.json"> {{ benchmark.result.crash_rate|percent }} </a></td>
+                                            <td data-sort-value="{{ benchmark.result.found_bug }}">{{ benchmark.result.found_bug }}</td>
+                                            <td data-sort-value="{{ benchmark.result.max_coverage |percent }}">{{ benchmark.result.max_coverage |percent }}</td>
+                                            <td data-sort-value="{{ benchmark.result.max_line_coverage_diff|percent }}"><a href="{{ benchmark.result.max_coverage_diff_report | cov_report_link }}">{{ benchmark.result.max_line_coverage_diff|percent }}</a></td>
+                                        </tr>
+                                        {% endif %}
+                                        {% endfor %}
+                                        <tr class="font-bold">
+                                            <td>Average</td>
+                                            <td>-</td>
+                                            <td>-</td>
+                                            <td>{{ (ns.aggregated_build_rate / project.count)|percent }}</td>
+                                            <td>{{ (ns.aggregated_crash_rate / project.count)|percent }}</td>
+                                            <td>{{ ns.aggregated_found_bug }}</td>
+                                            <td>{{ (ns.aggregated_max_coverage / project.count)|percent }}</td>
+                                            <td>{{ (ns.aggregated_max_line_coverage_diff / project.count)|percent }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<!-- 
 <h2>Project summary</h2>
 <table class="sortable-table" id="summary-table">
     <thead>
@@ -130,7 +212,7 @@ td .signature {
         </tr>
         {% endfor %}
     </tbody>
-</table>
+</table> -->
 
 <h2>Language coverage gains</h2>
 <table class="sortable-table" id="language-coverage-gain">
@@ -224,50 +306,4 @@ td .signature {
   </tbody>
 </table>
 
-<script>
-(function() {
-    tables = Array.from(document.querySelectorAll('table.sortable-table'));
-    for (let tbl_idx1 = 0; tbl_idx1 < tables.length; tbl_idx1++) {
-        table_element = tables[tbl_idx1];
-        const table_id_name = table_element.id;
-        headers = Array.from(table_element.querySelectorAll('th'));
-        headers.map(
-            (th, colindex) => th.addEventListener('click', () => {
-                const sortAsc = th.dataset.sorted != "asc";
-                const sortNumber = th.dataset.sortNumber != undefined;
-
-                // Move sorted data attribute to the right column
-                headers.map(innerTH => delete innerTH.dataset.sorted);
-                th.dataset.sorted = sortAsc ? "asc" : "desc";
-
-                // Find the relevant table and sort it accordingly.
-                inner_tables = Array.from(document.querySelectorAll('table.sortable-table'));
-                for (let tbl_idx2 = 0; tbl_idx2 < inner_tables.length; tbl_idx2++) {
-                    the_table = inner_tables[tbl_idx2];
-                    if (the_table.id == table_id_name) {
-                        const tbody = the_table.querySelector('tbody');
-                        const rows = Array.from(tbody.children);
-                        rows.sort((a, b) => {
-                            let [valueA, valueB] = [a.children[colindex].dataset.sortValue, b.children[colindex].dataset.sortValue];
-                            // Swap the values for descending.
-                            if (!sortAsc) {
-                                [valueB, valueA] = [valueA, valueB];
-                            }
-
-                            if (sortNumber) {
-                                return Number(valueB) - Number(valueA);
-                            }
-                            return valueA.localeCompare(valueB);
-                        });
-                        tbody.replaceChildren(...rows);
-                        // Rewrite the index column
-                        rows.map((r, i) => r.children[0].innerText = i);
-                    }
-                }
-            }, )
-        );
-
-    }
-})();
-</script>
 {% endblock %}

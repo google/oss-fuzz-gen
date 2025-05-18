@@ -15,6 +15,18 @@ limitations under the License.
 
 #}{% extends 'base.html' %}
 
+{% if sample_css_content %}
+<style>
+{{ sample_css_content | safe }}
+</style>
+{% endif %}
+
+{% if sample_js_content %}
+<script>
+{{ sample_js_content | safe }}
+</script>
+{% endif %}
+
 {% block content %}
 <h1>{{ benchmark_id }} / {{ sample.id }}</h1>
 Bug: {{ sample.result.crashes|default(false) and not sample.result.is_semantic_error|default(false) }}
