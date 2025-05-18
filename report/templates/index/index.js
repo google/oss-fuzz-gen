@@ -64,58 +64,58 @@ document.addEventListener('DOMContentLoaded', function() {
                 const tbody = table_element.querySelector('tbody');
                 if (!tbody) return;
 
+                let allRowsInBody = Array.from(tbody.children);
+                let sortableUnits = [];
+                let appendedRows = [];
+
                 if (table_element.id === 'summary-table') {
-                    let projectPairs = [];
-                    let allRows = Array.from(tbody.children);
-                    for (let i = 0; i < allRows.length; i += 2) {
-                        if (allRows[i] && allRows[i+1] &&
-                            allRows[i].classList.contains('project-data-row') &&
-                            allRows[i+1].classList.contains('project-benchmarks-container-row')) {
-                            projectPairs.push({ dataRow: allRows[i], containerRow: allRows[i+1] });
+                    for (let i = 0; i < allRowsInBody.length; i += 2) {
+                        if (allRowsInBody[i] && allRowsInBody[i+1] &&
+                            allRowsInBody[i].classList.contains('project-data-row') &&
+                            allRowsInBody[i+1].classList.contains('project-benchmarks-container-row')) {
+                            sortableUnits.push({
+                                representativeRow: allRowsInBody[i],
+                                actualRows: [allRowsInBody[i], allRowsInBody[i+1]]
+                            });
+                        } else {
+                            appendedRows.push(...allRowsInBody.slice(i));
+                            break;
                         }
                     }
-
-                    projectPairs.sort((pairA, pairB) => {
-                        return compareTableCells(pairA.dataRow.children[colindex], pairB.dataRow.children[colindex], sortNumber, sortAsc);
-                    });
-
-                    tbody.innerHTML = '';
-                    projectPairs.forEach(pair => {
-                        tbody.appendChild(pair.dataRow);
-                        tbody.appendChild(pair.containerRow);
-                    });
                 } else {
-                    let rows = Array.from(tbody.children);
-                    let averageRow = null;
-
                     if (table_element.id && table_element.id.startsWith('benchmarks-table-')) {
-                        const averageRowIndex = rows.findIndex(row => row.cells.length > 0 && row.cells[0].innerText.trim() === 'Average');
+                        const averageRowIndex = allRowsInBody.findIndex(row => row.cells.length > 0 && row.cells[0].innerText.trim() === 'Average');
                         if (averageRowIndex !== -1) {
-                            averageRow = rows.splice(averageRowIndex, 1)[0];
+                            appendedRows.push(allRowsInBody.splice(averageRowIndex, 1)[0]);
                         }
                     }
-
-                    rows.sort((a, b) => {
-                        return compareTableCells(a.children[colindex], b.children[colindex], sortNumber, sortAsc);
-                    });
-
-                    tbody.innerHTML = '';
-                    rows.forEach(row => tbody.appendChild(row));
-                    if (averageRow) {
-                        tbody.appendChild(averageRow);
-                    }
-
-                    let visualIndex = 1;
-                    Array.from(tbody.children).forEach(r => {
-                        if (averageRow && r === averageRow) {
-                            return; 
-                        }
-                        const firstCell = r.children[0];
-                        if (firstCell && firstCell.classList.contains('table-index') && !firstCell.querySelector('button')) {
-                             firstCell.innerText = visualIndex++;
-                        }
+                    allRowsInBody.forEach(row => {
+                        sortableUnits.push({ representativeRow: row, actualRows: [row] });
                     });
                 }
+
+                sortableUnits.sort((unitA, unitB) => {
+                    const cellA = unitA.representativeRow.children[colindex];
+                    const cellB = unitB.representativeRow.children[colindex];
+                    return compareTableCells(cellA, cellB, sortNumber, sortAsc);
+                });
+
+                tbody.innerHTML = '';
+                sortableUnits.forEach(unit => {
+                    unit.actualRows.forEach(row => tbody.appendChild(row));
+                });
+                appendedRows.forEach(row => tbody.appendChild(row));
+
+                let visualIndex = 1;
+                Array.from(tbody.children).forEach(r => {
+                    if (appendedRows.includes(r)) {
+                        return;
+                    }
+                    const firstCell = r.children[0];
+                    if (firstCell && firstCell.classList.contains('table-index') && !firstCell.querySelector('button')) {
+                         firstCell.innerText = visualIndex++;
+                    }
+                });
             });
         });
     });
