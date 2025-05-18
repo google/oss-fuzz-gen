@@ -223,7 +223,7 @@ class GenerateReport:
                         coverage_language_gains: dict[str, Any]):
     """Generate the report index.html and write to filesystem."""
     rendered = self._jinja.render(
-        'index.html',
+        'index/index.html',
         benchmarks=benchmarks,
         accumulated_results=accumulated_results,
         time_results=time_results,
@@ -240,7 +240,7 @@ class GenerateReport:
   def _write_benchmark_index(self, benchmark: Benchmark, samples: List[Sample],
                              prompt: Optional[str]):
     """Generate the benchmark index.html and write to filesystem."""
-    rendered = self._jinja.render('benchmark.html',
+    rendered = self._jinja.render('benchmark/benchmark.html',
                                   benchmark=benchmark.id,
                                   samples=samples,
                                   prompt=prompt)
@@ -272,7 +272,7 @@ class GenerateReport:
           "triager_prompt": ""
       }
 
-      rendered = self._jinja.render('sample.html',
+      rendered = self._jinja.render('sample/sample.html',
                                     benchmark=benchmark,
                                     benchmark_id=benchmark.id,
                                     sample=sample,
