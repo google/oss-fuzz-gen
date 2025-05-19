@@ -458,6 +458,9 @@ def run_harness_generation(workdir,
     introspector.set_introspector_endpoints('http://127.0.0.1:8080/api')
     benchmark_dir = introspector.generate_benchmark_for_targeted_function(
         target_project, target_function)
+    if not benchmark_dir:
+      logger.info('Failed to generated benchmarks.')
+      sys.exit(1)
   else:
     logger.info('Generating a broad set of benchmarks')
     benchmark_dir = ''

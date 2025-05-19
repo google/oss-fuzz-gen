@@ -838,13 +838,14 @@ def generate_benchmark_for_targeted_function(project: str, function_name: str):
   project_lang = oss_fuzz_checkout.get_project_language(project)
 
   harness, target_name, _ = _get_harness_intrinsics(project, [], project_lang)
-
+  if not harness:
+    return ''
   target_benchmarks = [
       benchmarklib.Benchmark(
           benchmark_id='cli',
           project=project,
           language=project_lang,
-          function_signature=function_dict.get('function_signature'),
+          function_signature=function_dict.get('function_signature', ''),
           function_name=get_raw_function_name(function_dict, project),
           return_type=_get_clean_return_type(function_dict, project),
           params=_group_function_params(
