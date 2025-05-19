@@ -28,6 +28,7 @@ import time
 import requests
 import yaml
 
+from data_prep import introspector
 from experimental.build_generator import runner
 from llm_toolkit import models
 
@@ -195,7 +196,7 @@ def wait_until_fi_webapp_is_launched():
   sys.exit(0)
 
 
-def run_ofg_generation(projects_to_run, workdir, args):
+def run_ofg_generation(projects_to_run, workdir, args, target_benchmarks=''):
   """Runs harness generation"""
   logger.info('Running OFG experiment: %s', os.getcwd())
   oss_fuzz_dir = os.path.join(workdir, 'oss-fuzz')
@@ -203,12 +204,17 @@ def run_ofg_generation(projects_to_run, workdir, args):
   cmd = ['python3', os.path.join(OFG_BASE_DIR, 'run_all_experiments.py')]
   cmd.append('--model')
   cmd.append(args.model)
-  cmd.append('-g')
-  cmd.append(args.benchmark_oracles)
-  cmd.append('-gp')
-  cmd.append(','.join(projects_to_run))
-  cmd.append('-gm')
-  cmd.append(str(args.generate_benchmarks_max))
+
+  if not target_benchmarks:
+    cmd.append('-g')
+    cmd.append(args.benchmark_oracles)
+    cmd.append('-gp')
+    cmd.append(','.join(projects_to_run))
+    cmd.append('-gm')
+    cmd.append(str(args.generate_benchmarks_max))
+  else:
+    cmd.append('-b')
+    cmd.append(target_benchmarks)
   cmd.append('--context')
   cmd.append('-of')
   cmd.append(oss_fuzz_dir)
@@ -416,7 +422,10 @@ def prepare_fuzz_introspector_db(out_gen, workdir, parallel_introspector_jobs):
   create_fi_db(workdir)
 
 
-def run_harness_generation(workdir, args):
+def run_harness_generation(workdir,
+                           args,
+                           target_project='',
+                           target_function=''):
   """Runs harness generation based on the projects in `out_gen`"""
 
   # Read the json file from FI to get all current projects.
@@ -428,10 +437,13 @@ def run_harness_generation(workdir, args):
     set()
 
   projects_to_run = []
-  with open(fi_project_json, 'r') as f:
-    json_content = json.load(f)
-  for elem in json_content:
-    projects_to_run.append(elem['project_name'])
+  if target_project:
+    projects_to_run = [target_project]
+  else:
+    with open(fi_project_json, 'r') as f:
+      json_content = json.load(f)
+    for elem in json_content:
+      projects_to_run.append(elem['project_name'])
 
   # Launch the fuzz introspector webapp so it's ready for OFG core
   shutdown_fi_webapp()
@@ -440,8 +452,21 @@ def run_harness_generation(workdir, args):
   dst_data_dir = _create_data_dir(workdir)
   logger.info('Wrote data directory for OFG experiments in %s', dst_data_dir)
 
+  # Generate benchmarks if asked to
+  if target_project and target_function:
+    logger.info('Generating benchmark for specific function')
+    introspector.set_introspector_endpoints('http://127.0.0.1:8080/api')
+    benchmark_dir = introspector.generate_benchmark_for_targeted_function(
+        target_project, target_function)
+    if not benchmark_dir:
+      logger.info('Failed to generated benchmarks.')
+      sys.exit(1)
+  else:
+    logger.info('Generating a broad set of benchmarks')
+    benchmark_dir = ''
+
   # Run OFG core using local OSS-Fuzz and local Fuzz Introspector.
-  run_ofg_generation(projects_to_run, workdir, args)
+  run_ofg_generation(projects_to_run, workdir, args, benchmark_dir)
 
   create_merged_oss_fuzz_projects(projects_to_run, workdir)
   return projects_to_run
@@ -524,7 +549,8 @@ def run_cmd_harness_generation(args):
   abs_workdir = os.path.abspath(args.workdir)
 
   # Run harness generation.
-  projects_run = run_harness_generation(abs_workdir, args)
+  projects_run = run_harness_generation(abs_workdir, args, args.project,
+                                        args.function_name)
 
   # Log results.
   logger.info('Finished analysis')
@@ -665,6 +691,11 @@ def parse_commandline():
       default=
       'far-reach-low-coverage,low-cov-with-fuzz-keyword,easy-params-far-reach,test-migration'
   )
+  run_harness_generation_parser.add_argument(
+      '--project', default='', help='Limit analysis to specified project.')
+  run_harness_generation_parser.add_argument('--function-name',
+                                             default='',
+                                             help='Target function')
 
   # Run a full end to end generation.
   run_full_parser = subparsers.add_parser(
