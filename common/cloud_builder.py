@@ -150,9 +150,8 @@ class CloudBuilder:
                               files_to_upload)
 
   def _request_cloud_build(self, ofg_repo_url: str, agent_dill_url: str,
-                           results_dill_url: str, artifact_url: str,
-                           oss_fuzz_data_url: str, data_dir_url: str,
-                           new_result_filename: str) -> str:
+                           results_dill_url: str, oss_fuzz_data_url: str,
+                           data_dir_url: str, new_result_filename: str) -> str:
     """Requests Cloud Build to execute the operation."""
 
     # Used for injecting additional OSS-Fuzz project integrations not in
@@ -184,16 +183,6 @@ class CloudBuilder:
                 'name': 'gcr.io/cloud-builders/gsutil',
                 'dir': '/workspace',
                 'args': ['cp', results_dill_url, 'dills/result_history.pkl']
-            },
-            {
-                'name': 'gcr.io/cloud-builders/gsutil',
-                'dir': '/workspace',
-                'args': [
-                    'cp', artifact_url,
-                    f'/workspace/{os.path.basename(artifact_url)}'
-                ],
-                # artifact_url only exists in crash analyzer.
-                'allowFailure': True,
             },
             # Step 2: Prepare OFG and OF repos.
             {
@@ -401,18 +390,14 @@ class CloudBuilder:
     ofg_url = self._prepare_and_upload_archive(result_history)
     agent_url = self._upload_to_gcs(agent_dill)
     results_url = self._upload_to_gcs(results_dill)
-    if isinstance(agent, CrashAnalyzer):
-      artifact_url = self._upload_to_gcs(agent.artifact_path)
-    else:
-      artifact_url = ''
     oss_fuzz_data_url = self._upload_oss_fuzz_data()
     data_dir_url = self._upload_fi_oss_fuzz_data()
 
     # Step 3: Request Cloud Build.
     new_result_filename = f'{uuid.uuid4().hex}.pkl'
     build_id = self._request_cloud_build(ofg_url, agent_url, results_url,
-                                         artifact_url, oss_fuzz_data_url,
-                                         data_dir_url, new_result_filename)
+                                         oss_fuzz_data_url, data_dir_url,
+                                         new_result_filename)
 
     # Step 4: Download new result dill.
     cloud_build_log = ''
