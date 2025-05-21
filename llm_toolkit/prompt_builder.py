@@ -808,6 +808,59 @@ class CoverageEnhancerTemplateBuilder(PrototyperTemplateBuilder):
     return self._prompt
 
 
+class FunctionAnalyzerTemplateBuilder(PrototyperTemplateBuilder):
+  """ Builder for function analyzer. """
+  def __init__(self,
+               model: models.LLM,
+               benchmark: Benchmark,
+               template_dir: str = DEFAULT_TEMPLATE_DIR,
+               initial: Any = None):
+    super().__init__(model, benchmark, template_dir, initial)
+
+    # Load templates.
+    self.function_analyzer_instruction_template_file = self._find_template(
+        self.agent_templare_dir, 'function-analyzer-instruction.txt')
+    self.function_analyzer_prompt_template_file = self._find_template(
+        self.agent_templare_dir, 'function-analyzer-priming.txt')
+
+  def build_instruction(self) -> prompts.Prompt:
+    """Constructs a prompt using the templates in |self| and saves it."""
+    if not self.benchmark:
+      return self._prompt
+
+    prompt = self._get_template(self.function_analyzer_instruction_template_file)
+
+    self._prompt.append(prompt)
+
+    return self._prompt
+
+  def build_prompt(self, project_name, function_signature) -> prompts.Prompt:
+    """Constructs a prompt using the templates in |self| and saves it."""
+    if not self.benchmark:
+      return self._prompt
+
+    prompt = self._get_template(self.function_analyzer_prompt_template_file)
+
+    prompt.replace('{PROJECT_NAME}', project_name)
+    prompt.replace('{FUNCTION_SIGNATURE}', function_signature)
+
+    self._prompt.append(prompt)
+
+    return self._prompt
+
+  def build(self,
+            example_pair: Optional[list[list[str]]] = None,
+            project_example_content: Optional[list[list[str]]] = None,
+            project_context_content: Optional[dict] = None,
+            tool_guides: str = '',
+            project_dir: str = '',
+            project_name: str = '',
+            function_signature: str = '') -> prompts.Prompt:
+    
+    """Constructs a prompt using the templates in |self| and saves it."""
+    return self.build_prompt(project_name, function_signature)
+    
+
 class DefaultJvmTemplateBuilder(PromptBuilder):
   """Default builder for JVM projects."""
 

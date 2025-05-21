@@ -586,6 +586,35 @@ class TrialResult:
     }
 
 
+class PreWritingResult(Result):
+  """ The result of the function analyzer. """
+  result_available: bool
+  requirements: list[str]
+  explanation: str
+
+  def __init__(self,
+              benchmark: Benchmark,
+              trial: int,
+              work_dirs: WorkDirs,
+              result_available: bool,
+              requirements: list[str] = [],
+              explanation: str = '',
+              fuzz_target_source: str = '',
+              build_script_source: str = '',
+              author: Any = None,
+              chat_history: Optional[dict] = None,
+              default_success: bool = False) -> None:
+    
+    super().__init__(benchmark, trial, work_dirs, fuzz_target_source,
+                     build_script_source, author, chat_history,
+                     default_success)
+    
+    self.result_available = result_available
+    if result_available:
+      self.requirements = requirements
+      self.explanation = explanation
+      
+
 class BenchmarkResult:
   """All trial results for a benchmark in an experiment."""
   benchmark: Benchmark
