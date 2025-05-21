@@ -810,6 +810,7 @@ class CoverageEnhancerTemplateBuilder(PrototyperTemplateBuilder):
 
 class FunctionAnalyzerTemplateBuilder(PrototyperTemplateBuilder):
   """ Builder for function analyzer. """
+
   def __init__(self,
                model: models.LLM,
                benchmark: Benchmark,
@@ -828,7 +829,8 @@ class FunctionAnalyzerTemplateBuilder(PrototyperTemplateBuilder):
     if not self.benchmark:
       return self._prompt
 
-    prompt = self._get_template(self.function_analyzer_instruction_template_file)
+    prompt = self._get_template(
+        self.function_analyzer_instruction_template_file)
 
     self._prompt.append(prompt)
 
@@ -856,10 +858,9 @@ class FunctionAnalyzerTemplateBuilder(PrototyperTemplateBuilder):
             project_dir: str = '',
             project_name: str = '',
             function_signature: str = '') -> prompts.Prompt:
-    
     """Constructs a prompt using the templates in |self| and saves it."""
     return self.build_prompt(project_name, function_signature)
-    
+
 
 class DefaultJvmTemplateBuilder(PromptBuilder):
   """Default builder for JVM projects."""
