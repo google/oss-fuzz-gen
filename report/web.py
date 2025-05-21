@@ -109,6 +109,12 @@ class JinjaEnv:
       for key, val in template_globals.items():
         self._env.globals[key] = val
 
+  def get_template_search_path(self) -> Optional[List[str]]:
+    """Returns the search path of the Jinja2 FileSystemLoader."""
+    if isinstance(self._env.loader, jinja2.FileSystemLoader):
+      return self._env.loader.searchpath
+    return None
+
   def render(self, template_name: str, **kwargs):
     """Render a template with variables provides through kwargs."""
     return self._env.get_template(template_name).render(**kwargs)
@@ -167,6 +173,31 @@ class GenerateReport:
       sample.result.coverage_report_path = \
         f'/sample/{benchmark.id}/coverage/{sample.id}/linux/'
 
+  def _read_static_file(self, file_path_in_templates_subdir: str) -> str:
+    """Reads a static file from the templates directory."""
+
+    search_path = self._jinja.get_template_search_path()
+
+    if not search_path:
+      logging.error(
+          'Jinja FileSystemLoader\'s searchpath is empty, or loader is not '
+          'FileSystemLoader.')
+      return ''
+    templates_base_dir = search_path[0]
+
+    full_file_path = os.path.join(templates_base_dir,
+                                  file_path_in_templates_subdir)
+
+    try:
+      with open(full_file_path, 'r', encoding='utf-8') as f:
+        return f.read()
+    except FileNotFoundError:
+      logging.warning('Static file not found: %s', full_file_path)
+      return ''
+    except Exception as e:
+      logging.error('Error reading static file %s: %s', full_file_path, e)
+      return ''
+
   def generate(self):
     """Generate and write every report file."""
     benchmarks = []
@@ -222,14 +253,19 @@ class GenerateReport:
                         samples_with_bugs: list[dict[str, Any]],
                         coverage_language_gains: dict[str, Any]):
     """Generate the report index.html and write to filesystem."""
+    index_css_content = self._read_static_file('index/index.css')
+    index_js_content = self._read_static_file('index/index.js')
+
     rendered = self._jinja.render(
-        'index.html',
+        'index/index.html',
         benchmarks=benchmarks,
         accumulated_results=accumulated_results,
         time_results=time_results,
         projects=projects,
         samples_with_bugs=samples_with_bugs,
-        coverage_language_gains=coverage_language_gains)
+        coverage_language_gains=coverage_language_gains,
+        index_css_content=index_css_content,
+        index_js_content=index_js_content)
     self._write('index.html', rendered)
 
   def _write_index_json(self, benchmarks: List[Benchmark]):
@@ -240,10 +276,15 @@ class GenerateReport:
   def _write_benchmark_index(self, benchmark: Benchmark, samples: List[Sample],
                              prompt: Optional[str]):
     """Generate the benchmark index.html and write to filesystem."""
-    rendered = self._jinja.render('benchmark.html',
+    benchmark_css_content = self._read_static_file('benchmark/benchmark.css')
+    benchmark_js_content = self._read_static_file('benchmark/benchmark.js')
+
+    rendered = self._jinja.render('benchmark/benchmark.html',
                                   benchmark=benchmark.id,
                                   samples=samples,
-                                  prompt=prompt)
+                                  prompt=prompt,
+                                  benchmark_css_content=benchmark_css_content,
+                                  benchmark_js_content=benchmark_js_content)
     self._write(f'benchmark/{benchmark.id}/index.html', rendered)
 
   def _write_benchmark_crash(self, benchmark: Benchmark, samples: List[Sample]):
@@ -272,14 +313,19 @@ class GenerateReport:
           "triager_prompt": ""
       }
 
-      rendered = self._jinja.render('sample.html',
+      sample_css_content = self._read_static_file('sample/sample.css')
+      sample_js_content = self._read_static_file('sample/sample.js')
+
+      rendered = self._jinja.render('sample/sample.html',
                                     benchmark=benchmark,
                                     benchmark_id=benchmark.id,
                                     sample=sample,
                                     logs=logs,
                                     run_logs=run_logs,
                                     triage=triage,
-                                    targets=sample_targets)
+                                    targets=sample_targets,
+                                    sample_css_content=sample_css_content,
+                                    sample_js_content=sample_js_content)
       self._write(f'sample/{benchmark.id}/{sample.id}.html', rendered)
     except Exception as e:
       logging.error('Failed to write sample/%s/%s:\n%s', benchmark.id,

@@ -1,5 +1,5 @@
 {#
-Copyright 2024 Google LLC
+Copyright 2025 Google LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,13 +15,19 @@ limitations under the License.
 #}{% extends 'base.html' %}
 
 {% block content %}
+
+{% if benchmark_css_content %}
 <style>
-td, th {
-    border-right: 1px #dedede solid;
-    padding: 5px;
-    text-align: left;
-}
+{{ benchmark_css_content | safe }}
 </style>
+{% endif %}
+
+{% if benchmark_js_content %}
+<script>
+{{ benchmark_js_content | safe }}
+</script>
+{% endif %}
+
 <h1>{{ benchmark }}</h1>
 <table>
     <tr>
