@@ -385,6 +385,14 @@ class GPT4o(GPT):
   """OpenAI's GPT-4o model."""
 
   name = 'gpt-4o'
+  MAX_INPUT_TOKEN = 128000
+
+
+class ChatGPT4oLatest(GPT):
+  """OpenAI's chatgpt-4o-latest model."""
+
+  name = 'chatgpt-4o-latest'
+  MAX_INPUT_TOKEN = 128000
 
 
 class GPT4oMini(GPT):
