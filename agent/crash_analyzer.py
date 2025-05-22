@@ -160,6 +160,7 @@ class CrashAnalyzer(BaseAgent):
     logger.info('Executing Crash Analyzer', trial=self.trial)
     assert isinstance(last_result, RunResult)
 
+    # TODO(maoyi): move to cloud_builder.
     if self.args.cloud_experiment_name:
       self._copy_cloud_artifact(last_result.artifact_path)
       self.artifact_path = last_result.artifact_path

@@ -383,7 +383,7 @@ class CloudBuilder:
         agent, os.path.join(dill_dir, f'{uuid.uuid4().hex}.pkl'))
     results_dill = utils.serialize_to_dill(
         result_history, os.path.join(dill_dir, f'{uuid.uuid4().hex}.pkl'))
-    # TODO(maoyi): artifact_dill?
+    # TODO(maoyi): generate artifact_dill and upload it to GCS. How?
     # TODO(dongge): Encrypt dill files?
 
     # Step 2: Upload OFG repo and dill files to GCS.
