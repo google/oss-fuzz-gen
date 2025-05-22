@@ -1,4 +1,16 @@
-
+# Copyright 2025 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 """
 An LLM agent to analyze a function and identify its implicit requirements.
 The results of this analysis will be used by the writer agents to
@@ -33,134 +45,131 @@ logger = logging.getLogger(__name__)
 # logger.addHandler(handler)
 
 class FunctionAnalyzer (BaseAgent):
-    """An LLM agent to analyze a function and identify its implicit requirements.
-    The results of this analysis will be used by the writer agents to
-    generate correct fuzz target for the function.
-    """
+  """An LLM agent to analyze a function and identify its implicit requirements.
+  The results of this analysis will be used by the writer agents to
+  generate correct fuzz target for the function.
+  """
 
-    def __init__(self,
-               trial: int,
-               llm: LLM,
-               args: argparse.Namespace,
-               tools: Optional[list[BaseTool]] = None,
-               name: str = 'function_analyzer_agent',):
+  def initialize(self, benchmark: benchmarklib.Benchmark):
+    """Initialize the function analyzer agent with the given benchmark."""
 
-        # Call the parent constructor
-        super().__init__(trial, llm, args, tools, name)
+    self.benchmark = benchmark
 
-    def initialize(self, benchmark: benchmarklib.Benchmark):
+    # Initialize the prompt builder
+    builder = prompt_builder.FunctionAnalyzerTemplateBuilder(self.llm, self.benchmark)
 
-        self.benchmark = benchmark
+    # Get the agent's instructions
+    analyzer_instruction = builder.build_instruction()
 
-        # Initialize the prompt builder
-        builder = prompt_builder.FunctionAnalyzerTemplateBuilder(self.llm, self.benchmark)
+    # Initialize the Fuzz Introspector tool
+    introspector_tool = FuzzIntrospectorTool(benchmark, self.name)
 
-        # Get the agent's instructions
-        analyzer_instruction = builder.build_instruction()
+    # Create the agent using the ADK library
+    function_analyzer = Agent(
+        name=self.name,
+        # TODO: Get the model name from args.
+        # Currently, the default names are incompatible with the ADK library.
+        model='gemini-2.0-flash',
+        description=(
+            "Agent to analyze a function and identify its requirements."),
+        instruction=analyzer_instruction.get(),
+        tools=[introspector_tool._function_source])
 
-        # Initialize the Fuzz Introspector tool
-        introspector_tool = FuzzIntrospectorTool(benchmark, self.name)
+    # Get user id and session id
+    # TODO: Figure out how to get this data
+    user_id = "user"
+    session_id = "session"
 
-        # Create the agent using the ADK library
-        function_analyzer = Agent(
-            name=self.name,
-            model='gemini-2.0-flash', #TODO: Get the model name from args. Currently, some of the default names are incompatible with the ADK library.
-            description=("Agent to analyze a function and identify its implicit requirements."),
-            instruction=analyzer_instruction.get(),
-            tools=[introspector_tool._function_source],
-        )
+    # Create the session service
+    session_service = InMemorySessionService()
+    session = session_service.create_session(
+        app_name=self.name,
+        user_id=user_id,
+        session_id=session_id,
+    )
 
-        # Get user id and session id
-        # TODO: Figure out how to get this data
-        user_id = "user"
-        session_id = "session"
+    # Create the runner
+    self.runner = Runner(
+        agent=function_analyzer,
+        app_name=self.name,
+        session_service=session_service,
+    )
 
-        # Create the session service
-        session_service = InMemorySessionService()
-        session = session_service.create_session(
-            app_name=self.name,
-            user_id=user_id,
-            session_id=session_id,
-        )
+    logger.info(
+        "Function Analyzer Agent created, with name: %s, and session id: %s",
+        self.name, session_id)
 
-        # Create the runner
-        self.runner = Runner(
-            agent=function_analyzer,
-            app_name=self.name,
-            session_service=session_service,
-        )
+  async def call_agent_async(self, query: str, runner, user_id: str,
+                             session_id: str) -> PreWritingResult:
+    """Call the agent asynchronously with the given query."""
 
-        logger.info(f"Function Analyzer Agent created, with name: {self.name}, and session id: {session_id}")
+    logger.info(">>> User query: %s", query)
 
-    async def call_agent_async(self, query:str, runner, user_id:str, session_id:str) -> PreWritingResult:
+    content = types.Content(role='user', parts=[types.Part(text=query)])
 
-        logger.info(f">>> User query: {query}")
+    final_response_text = "Agent did not produce a final response."
 
-        content = types.Content(role='user', parts=[types.Part(text=query)])
+    result_available = False
 
-        final_response_text = "Agent did not produce a final response."
+    async for event in runner.run_async(
+        user_id=user_id,
+        session_id=session_id,
+        new_message=content,
+    ):
+      if event.is_final_response():
+        if event.content and event.content.parts:
+          final_response_text = event.content.parts[0].text
+          result_available = True
+        elif event.actions and event.actions.escalate:
+          error_message = event.error_message or 'No specific message.'
+          final_response_text = f"Agent escalated: {error_message}"
+        break
 
-        result_available = False
+    logger.info("<<< Agent response: %s", final_response_text)
 
-        async for event in runner.run_async(
-            user_id=user_id,
-            session_id=session_id,
-            new_message=content,
-        ):
-            if event.is_final_response():
-                if event.content and event.content.parts:
-                    final_response_text = event.content.parts[0].text
-                    result_available = True
-                elif event.actions and event.actions.escalate:
-                    final_response_text = f"Agent escalated: {event.error_message or 'No specific message.'}"
-                break
+    if result_available:
+      # Get the requirements from the response
+      requirements = self._parse_tags(final_response_text, 'requirement')
+    else:
+      requirements = []
 
-        logger.info(f"<<< Agent response: {final_response_text}")
+    # Prepare the result
+    result = PreWritingResult(
+        benchmark=self.benchmark,
+        trial=self.trial,
+        work_dirs=self.args.work_dir,
+        result_available=result_available,
+        requirements=requirements,
+    )
 
-        if result_available:
-            # Get the requirements from the response
-            requirements = self._parse_tags(final_response_text, 'requirement')
-        else:
-            requirements = []
+    return result
 
-        # Prepare the result
-        result = PreWritingResult(
-            benchmark=self.benchmark,
-            trial=self.trial,
-            work_dirs=self.args.work_dir,
-            result_available=result_available,
-            requirements=requirements,
-        )
+  def execute(self, result_history: list[Result]) -> PreWritingResult:
+    """Execute the agent with the given results."""
 
-        return result
+    # Call the agent asynchronously and return the result
+    prompt = self._initial_prompt(result_history)
+    query = prompt.gettext()
+    user_id = "user"
+    session_id = "session"
+    result = asyncio.run(
+        self.call_agent_async(query, self.runner, user_id, session_id))
 
-    def execute(self, result_history: list[Result]) -> PreWritingResult:
-        """Execute the agent with the given results."""
+    if result.result_available:
+      # Save the result to the history
+      result_history.append(result)
 
-        # Call the agent asynchronously and return the result
-        prompt = self._initial_prompt(result_history)
-        query = prompt.gettext()
-        user_id = "user"
-        session_id = "session"
-        result = asyncio.run(self.call_agent_async(query, self.runner, user_id, session_id))
+    return result
 
-        if result.result_available:
-            # Save the result to the history
-            result_history.append(result)
+  def _initial_prompt(self, results: list[Result]) -> Prompt:
+    """Create the initial prompt for the agent."""
 
-            logger.info(f"Result available: {result.result_available}")
-            logger.info(f"Requirements: {result.requirements}")
-        return result
+    # Initialize the prompt builder
+    builder = prompt_builder.FunctionAnalyzerTemplateBuilder(self.llm, self.benchmark)
 
-    def _initial_prompt(self, results: list[Result]) -> Prompt:
-        """Create the initial prompt for the agent."""
+    prompt = builder.build_prompt()
 
-        # Initialize the prompt builder
-        builder = prompt_builder.FunctionAnalyzerTemplateBuilder(self.llm, self.benchmark)
-
-        prompt = builder.build_prompt()
-
-        return prompt
+    return prompt
 
 
 

@@ -810,6 +810,7 @@ class CoverageEnhancerTemplateBuilder(PrototyperTemplateBuilder):
 
 class FunctionAnalyzerTemplateBuilder(DefaultTemplateBuilder):
   """ Builder for function analyzer. """
+
   def __init__(self,
                model: models.LLM,
                benchmark: Benchmark,
@@ -828,7 +829,8 @@ class FunctionAnalyzerTemplateBuilder(DefaultTemplateBuilder):
     if not self.benchmark:
       return self._prompt
 
-    prompt = self._get_template(self.function_analyzer_instruction_template_file)
+    prompt = self._get_template(
+        self.function_analyzer_instruction_template_file)
 
     self._prompt.append(prompt)
 
