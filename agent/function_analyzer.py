@@ -17,34 +17,26 @@ The results of this analysis will be used by the writer agents to
 generate correct fuzz target for the function.
 """
 
-import argparse
 import asyncio
-
-from typing import Optional
-
 import logging
-from agent.base_agent import BaseAgent
-from data_prep import introspector
-from experiment import benchmark as benchmarklib
-from llm_toolkit.models import LLM
-from llm_toolkit.prompts import Prompt
-from llm_toolkit import prompt_builder
-from results import Result, PreWritingResult
-from tool.base_tool import BaseTool
-from tool.fuzz_introspector_tool import FuzzIntrospectorTool
 
 from google.adk.agents import Agent
 from google.adk.runners import Runner
 from google.adk.sessions import InMemorySessionService
 from google.genai import types
 
+from agent.base_agent import BaseAgent
+from experiment import benchmark as benchmarklib
+from llm_toolkit import prompt_builder
+from llm_toolkit.prompts import Prompt
+from results import PreWritingResult, Result
+from tool.fuzz_introspector_tool import FuzzIntrospectorTool
+
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
-# logger.setLevel(logging.INFO)
-# handler = logging.StreamHandler()
-# logger.addHandler(handler)
 
-class FunctionAnalyzer (BaseAgent):
+
+class FunctionAnalyzer(BaseAgent):
   """An LLM agent to analyze a function and identify its implicit requirements.
   The results of this analysis will be used by the writer agents to
   generate correct fuzz target for the function.
@@ -56,7 +48,8 @@ class FunctionAnalyzer (BaseAgent):
     self.benchmark = benchmark
 
     # Initialize the prompt builder
-    builder = prompt_builder.FunctionAnalyzerTemplateBuilder(self.llm, self.benchmark)
+    builder = prompt_builder.FunctionAnalyzerTemplateBuilder(
+        self.llm, self.benchmark)
 
     # Get the agent's instructions
     analyzer_instruction = builder.build_instruction()
@@ -82,7 +75,7 @@ class FunctionAnalyzer (BaseAgent):
 
     # Create the session service
     session_service = InMemorySessionService()
-    session = session_service.create_session(
+    session_service.create_session(
         app_name=self.name,
         user_id=user_id,
         session_id=session_id,
@@ -165,15 +158,9 @@ class FunctionAnalyzer (BaseAgent):
     """Create the initial prompt for the agent."""
 
     # Initialize the prompt builder
-    builder = prompt_builder.FunctionAnalyzerTemplateBuilder(self.llm, self.benchmark)
+    builder = prompt_builder.FunctionAnalyzerTemplateBuilder(
+        self.llm, self.benchmark)
 
     prompt = builder.build_prompt()
 
     return prompt
-
-
-
-
-
-
-

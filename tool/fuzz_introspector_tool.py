@@ -13,9 +13,10 @@
 # limitations under the License.
 """A tool for LLM agents to interact within Fuzz Introspector to access
 the project's information."""
-from tool.base_tool import BaseTool
-from data_prep import introspector
 import logging
+
+from data_prep import introspector
+from tool.base_tool import BaseTool
 
 logger = logging.getLogger(__name__)
 
@@ -44,7 +45,6 @@ class FuzzIntrospectorTool(BaseTool):
     raise NotImplementedError
 
   def _function_source(self, project_name: str, function_signature: str) -> str:
-
     """
     Retrieves a function's source from the fuzz introspector API,
       using the project's name and function's signature.
@@ -54,16 +54,19 @@ class FuzzIntrospectorTool(BaseTool):
         function_signature (str): The signature of the function.
 
     Returns:
-        str: The source code of the function if found, otherwise an empty string.
+        str: Source code of the function if found, otherwise an empty string.
     """
 
-    function_code = introspector.query_introspector_function_source(project_name, function_signature)
+    function_code = introspector.query_introspector_function_source(
+        project_name, function_signature)
 
     if function_code.strip():
-      logger.info("Function with signature '%s' found and extracted.", function_signature)
+      logger.info("Function with signature '%s' found and extracted.",
+                  function_signature)
     else:
-      logger.error("Error: Function with signature '%s' not found in project '%s'.",
-                   function_signature, project_name)
+      logger.error(
+          "Error: Function with signature '%s' not found in project '%s'.",
+          function_signature, project_name)
 
     return function_code
 
@@ -72,4 +75,3 @@ class FuzzIntrospectorTool(BaseTool):
 
   def execute(self, command: str) -> introspector.Any:
     raise NotImplementedError
-

@@ -840,7 +840,8 @@ class FunctionAnalyzerTemplateBuilder(DefaultTemplateBuilder):
     """Constructs a prompt using the templates in |self| and saves it."""
 
     if not self.benchmark:
-      logger.error('No benchmark provided for function analyzer template builder.')
+      logger.error(
+          'No benchmark provided for function analyzer template builder.')
       return self._prompt
 
     print('Building function analyzer prompt for %s in %s',
@@ -849,7 +850,8 @@ class FunctionAnalyzerTemplateBuilder(DefaultTemplateBuilder):
     prompt = self._get_template(self.function_analyzer_prompt_template_file)
 
     prompt = prompt.replace('{PROJECT_NAME}', self.benchmark.project)
-    prompt = prompt.replace('{FUNCTION_SIGNATURE}', self.benchmark.function_signature)
+    prompt = prompt.replace('{FUNCTION_SIGNATURE}',
+                            self.benchmark.function_signature)
 
     self._prompt.append(prompt)
 
@@ -866,8 +868,7 @@ class FunctionAnalyzerTemplateBuilder(DefaultTemplateBuilder):
 
     raise NotImplementedError(
         'FunctionAnalyzerTemplateBuilder.build() should not be called. '
-        'Use build_instruction() or build_prompt() instead.'
-    )
+        'Use build_instruction() or build_prompt() instead.')
 
 
 class DefaultJvmTemplateBuilder(PromptBuilder):
