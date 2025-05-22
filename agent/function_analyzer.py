@@ -1,7 +1,7 @@
 
-""" 
-An LLM agent to analyze a function and identify its implicit requirements. 
-The results of this analysis will be used by the writer agents to 
+"""
+An LLM agent to analyze a function and identify its implicit requirements.
+The results of this analysis will be used by the writer agents to
 generate correct fuzz target for the function.
 """
 
@@ -19,44 +19,22 @@ from llm_toolkit.prompts import Prompt
 from llm_toolkit import prompt_builder
 from results import Result, PreWritingResult
 from tool.base_tool import BaseTool
+from tool.fuzz_introspector_tool import FuzzIntrospectorTool
 
 from google.adk.agents import Agent
 from google.adk.runners import Runner
 from google.adk.sessions import InMemorySessionService
-from google.genai import types  # For creating message Content/Parts
+from google.genai import types
 
-# logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
-handler = logging.StreamHandler()
-logger.addHandler(handler)
-
-
-def get_function_source_tool(project_name: str, function_signature: str):
-
-    """
-    Retrieves a function's source using the project name and function signature.
-
-    Args:
-        project_name (str): The name of the project.
-        function_signature (str): The signature of the function.
-    
-    Returns:
-        str: The source code of the function if found, otherwise an empty string.
-    """
-
-    function_code = introspector.query_introspector_function_source(project_name, function_signature)
-
-    if function_code:
-        logger.info(f"Function with signature '{function_signature}' found and extracted.")
-        return function_code
-    else:
-        logger.info(f"Error: Function with signature '{function_signature}' not found in project '{project_name}'.")
-        return ""
+# logger.setLevel(logging.INFO)
+# handler = logging.StreamHandler()
+# logger.addHandler(handler)
 
 class FunctionAnalyzer (BaseAgent):
     """An LLM agent to analyze a function and identify its implicit requirements.
-    The results of this analysis will be used by the writer agents to 
+    The results of this analysis will be used by the writer agents to
     generate correct fuzz target for the function.
     """
 
@@ -75,10 +53,13 @@ class FunctionAnalyzer (BaseAgent):
         self.benchmark = benchmark
 
         # Initialize the prompt builder
-        self.prompt_builder = prompt_builder.FunctionAnalyzerTemplateBuilder(self.llm, self.benchmark)
+        builder = prompt_builder.FunctionAnalyzerTemplateBuilder(self.llm, self.benchmark)
 
         # Get the agent's instructions
-        analyzer_instruction = self.prompt_builder.build_instruction()
+        analyzer_instruction = builder.build_instruction()
+
+        # Initialize the Fuzz Introspector tool
+        introspector_tool = FuzzIntrospectorTool(benchmark, self.name)
 
         # Create the agent using the ADK library
         function_analyzer = Agent(
@@ -86,7 +67,7 @@ class FunctionAnalyzer (BaseAgent):
             model='gemini-2.0-flash', #TODO: Get the model name from args. Currently, some of the default names are incompatible with the ADK library.
             description=("Agent to analyze a function and identify its implicit requirements."),
             instruction=analyzer_instruction.get(),
-            tools=[get_function_source_tool]
+            tools=[introspector_tool._function_source],
         )
 
         # Get user id and session id
@@ -173,16 +154,17 @@ class FunctionAnalyzer (BaseAgent):
 
     def _initial_prompt(self, results: list[Result]) -> Prompt:
         """Create the initial prompt for the agent."""
-    
-        prompt = self.prompt_builder.build(project_name=self.benchmark.project, 
-                                           function_signature=self.benchmark.function_signature)
+
+        # Initialize the prompt builder
+        builder = prompt_builder.FunctionAnalyzerTemplateBuilder(self.llm, self.benchmark)
+
+        prompt = builder.build_prompt()
 
         return prompt
 
 
-        
 
 
 
-    
-    
+
+

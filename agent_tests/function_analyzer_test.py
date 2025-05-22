@@ -7,21 +7,21 @@ from llm_toolkit import models
 RESULTS_DIR = './results'
 
 
-def parse_args() -> argparse.Namespace: 
-  """Parses command line arguments."""   
+def parse_args() -> argparse.Namespace:
+  """Parses command line arguments."""
   parser = argparse.ArgumentParser(
       description='Evaluate the function analyzer agent.')
 
   parser.add_argument('-y',
                         '--benchmark-yaml',
-                        type=str, 
-                        required=True,                        
+                        type=str,
+                        required=True,
                         help='A benchmark YAML file.')
-  
-  parser.add_argument('-w', 
-                      '--work-dir', 
+
+  parser.add_argument('-w',
+                      '--work-dir',
                       default=RESULTS_DIR)
-  
+
   parser.add_argument('-mr',
                       '--max-round',
                       type=int,
@@ -33,7 +33,6 @@ def parse_args() -> argparse.Namespace:
   return args
 
 if __name__ == "__main__":
-    
     model = models.LLM.setup(
         ai_binary='',
         name='vertex_ai_gemini-1-5-chat'
@@ -48,7 +47,7 @@ if __name__ == "__main__":
 
     if len(benchmarks) == 0:
         raise ValueError("No benchmarks found in the YAML file.")
-    
+
     # Initialize the function analyzer with the first benchmark
     function_analyzer.initialize(benchmarks[0])
 

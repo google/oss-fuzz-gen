@@ -808,7 +808,7 @@ class CoverageEnhancerTemplateBuilder(PrototyperTemplateBuilder):
     return self._prompt
 
 
-class FunctionAnalyzerTemplateBuilder(PrototyperTemplateBuilder):
+class FunctionAnalyzerTemplateBuilder(DefaultTemplateBuilder):
   """ Builder for function analyzer. """
   def __init__(self,
                model: models.LLM,
@@ -819,9 +819,9 @@ class FunctionAnalyzerTemplateBuilder(PrototyperTemplateBuilder):
 
     # Load templates.
     self.function_analyzer_instruction_template_file = self._find_template(
-        self.agent_templare_dir, 'function-analyzer-instruction.txt')
+        AGENT_TEMPLATE_DIR, 'function-analyzer-instruction.txt')
     self.function_analyzer_prompt_template_file = self._find_template(
-        self.agent_templare_dir, 'function-analyzer-priming.txt')
+        AGENT_TEMPLATE_DIR, 'function-analyzer-priming.txt')
 
   def build_instruction(self) -> prompts.Prompt:
     """Constructs a prompt using the templates in |self| and saves it."""
@@ -834,15 +834,20 @@ class FunctionAnalyzerTemplateBuilder(PrototyperTemplateBuilder):
 
     return self._prompt
 
-  def build_prompt(self, project_name, function_signature) -> prompts.Prompt:
+  def build_prompt(self) -> prompts.Prompt:
     """Constructs a prompt using the templates in |self| and saves it."""
+
     if not self.benchmark:
+      logger.error('No benchmark provided for function analyzer template builder.')
       return self._prompt
+
+    print('Building function analyzer prompt for %s in %s',
+          self.benchmark.function_name, self.benchmark.project)
 
     prompt = self._get_template(self.function_analyzer_prompt_template_file)
 
-    prompt.replace('{PROJECT_NAME}', project_name)
-    prompt.replace('{FUNCTION_SIGNATURE}', function_signature)
+    prompt = prompt.replace('{PROJECT_NAME}', self.benchmark.project)
+    prompt = prompt.replace('{FUNCTION_SIGNATURE}', self.benchmark.function_signature)
 
     self._prompt.append(prompt)
 
@@ -856,10 +861,12 @@ class FunctionAnalyzerTemplateBuilder(PrototyperTemplateBuilder):
             project_dir: str = '',
             project_name: str = '',
             function_signature: str = '') -> prompts.Prompt:
-    
-    """Constructs a prompt using the templates in |self| and saves it."""
-    return self.build_prompt(project_name, function_signature)
-    
+
+    raise NotImplementedError(
+        'FunctionAnalyzerTemplateBuilder.build() should not be called. '
+        'Use build_instruction() or build_prompt() instead.'
+    )
+
 
 class DefaultJvmTemplateBuilder(PromptBuilder):
   """Default builder for JVM projects."""
