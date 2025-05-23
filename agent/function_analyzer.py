@@ -32,7 +32,6 @@ from llm_toolkit.prompts import Prompt
 from results import PreWritingResult, Result
 from tool.fuzz_introspector_tool import FuzzIntrospectorTool
 
-logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
@@ -66,7 +65,7 @@ class FunctionAnalyzer(BaseAgent):
         description=(
             "Agent to analyze a function and identify its requirements."),
         instruction=analyzer_instruction.get(),
-        tools=[introspector_tool._function_source])
+        )
 
     # Get user id and session id
     # TODO: Figure out how to get this data
@@ -92,7 +91,7 @@ class FunctionAnalyzer(BaseAgent):
         "Function Analyzer Agent created, with name: %s, and session id: %s",
         self.name, session_id)
 
-  async def call_agent_async(self, query: str, runner, user_id: str,
+  async def call_agent_async(self, query: str, runner:Runner, user_id: str,
                              session_id: str) -> PreWritingResult:
     """Call the agent asynchronously with the given query."""
 
@@ -109,6 +108,8 @@ class FunctionAnalyzer(BaseAgent):
         session_id=session_id,
         new_message=content,
     ):
+
+      logger.info("Event is %s", event.content)
       if event.is_final_response():
         if event.content and event.content.parts:
           final_response_text = event.content.parts[0].text
@@ -120,7 +121,7 @@ class FunctionAnalyzer(BaseAgent):
 
     logger.info("<<< Agent response: %s", final_response_text)
 
-    if result_available:
+    if result_available and final_response_text:
       # Get the requirements from the response
       requirements = self._parse_tags(final_response_text, 'requirement')
     else:

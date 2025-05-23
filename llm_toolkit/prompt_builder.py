@@ -844,14 +844,20 @@ class FunctionAnalyzerTemplateBuilder(DefaultTemplateBuilder):
           'No benchmark provided for function analyzer template builder.')
       return self._prompt
 
-    print('Building function analyzer prompt for %s in %s',
-          self.benchmark.function_name, self.benchmark.project)
+    # First, we get the function's source
+    function_source = introspector.query_introspector_function_source(
+      self.benchmark.project, self.benchmark.function_signature)
+
+    if not function_source:
+      logger.error("The source code for function %s was not found.", self.benchmark.function_name)
+      return self._prompt
 
     prompt = self._get_template(self.function_analyzer_prompt_template_file)
 
     prompt = prompt.replace('{PROJECT_NAME}', self.benchmark.project)
     prompt = prompt.replace('{FUNCTION_SIGNATURE}',
                             self.benchmark.function_signature)
+    prompt = prompt.replace('{FUNCTION_SOURCE}', function_source)
 
     self._prompt.append(prompt)
 

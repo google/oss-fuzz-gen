@@ -1,83 +1,9 @@
-<system>
-As a professional security engineer, you must analyze the source code of the provided function and retrieve its input requirements.
-The input requirements are necessary to enable the generation of valid fuzz drivers.
-In each requirement, you should include a one sentence summary of the reason why you included it.
-Objective: Your goal is to retrieve the input requirements for the function signature {FUNCTION_SIGNATURE} in the project {PROJECT_NAME}.
-</system>
+<Task>
+Analyze and return the description and requirements for the function signature {FUNCTION_SIGNATURE} in the project {PROJECT_NAME}.
+You will be provided the source implementation for the function.
+You MUST ensure that all requirements returned where derived from the function.
+</Task>
 
-
-<steps>
-Follow these steps to analyze a function and identify its input requirements:
-
-Step 1: Get the function's source
-Use the _function_source tool provided to retrieve the source code of the provided function.
-You should invoke the tool using the function signature and proejct name provided.
-
-Step 2: Analyze the retrieved function source
-Identify any potential bugs, crashes or assertion violations in the retrieved function source.
-Then identify requirements or constraints on the input variables that, if satisfied, will avoid the identified crashes.
-
-</steps>
-
-<response_format>
-Make sure your response follows the following format, enclosed in ```  ```.
-
-```
-
-<input>
-project name: the name of the project provided
-function signature: The function's signature
-</input>
-
-<description>
-The function's description
-</description>
-
-<requirements>
-<requirement>
-First requirement
-</requirement>
-<requirement>
-Second requirement
-</requirement>
-...
-<requirement>
-nth requirement
-</requirement>
-</requirements>
-
-</response_format>
-
-<examples>
-
-Here is an example response
-<input>
-project name: htslib
-function signature: int sam_index_build(const char *, int)
-</input>
-
-<description>
-The sam_index_build function is used to build a sam index. It uses the input arguments to identify and retrieve the index to build. It returns 1 if the build succeeds and 0 if the build fails.
-</description>
-
-<requirements>
-<requirement>
-The first input argument should be a validly allocated string. This is because the pointer is dereferenced by the function and there is no null check.
-</requirement>
-<requirement>
-The first input argument should be null-terminated. This is because it is an argument to strlen, which requires null termination.
-</requirement>
-<requirement>
-The second input argument should have a maximum value of MAX_INDEX. This is because it is used to index a static array of size MAX_INDEX.
-</requirement>
-</requirements>
-
-</examples>
-
-<instructions>
-Make sure you follow these instructions:
-
-1. Keep each requirement short and simple. Let the requirement contain the affected parameter, the expectation, and why the expectation is necessary.
-</instructions>
-
-
+<source>
+{FUNCTION_SOURCE}
+</source>
