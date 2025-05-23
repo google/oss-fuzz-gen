@@ -60,12 +60,33 @@ class ExecutionStage(BaseStage):
                                     f'{last_result.trial:02d}.fuzz_target')
     build_script_path = os.path.join(last_result.work_dirs.fuzz_targets,
                                      f'{last_result.trial:02d}.build_script')
-    evaluator.create_ossfuzz_project(generated_oss_fuzz_project,
+    generated_project_path = evaluator.create_ossfuzz_project(generated_oss_fuzz_project,
                                      fuzz_target_path, build_script_path)
 
     status_path = os.path.join(last_result.work_dirs.status,
                                f'{last_result.trial:02}')
     os.makedirs(status_path, exist_ok=True)
+
+    # Get the source code of the fuzz target and build script from the generated oss-fuzz projects.
+    fuzz_target_source_path = os.path.join(generated_project_path, f'{last_result.trial:02d}.fuzz_target')
+
+    if fuzz_target_source_path and os.path.isfile(fuzz_target_source_path):
+      with open(fuzz_target_source_path, 'r') as f:
+        fuzz_target_source = f.read()
+    else:
+      fuzz_target_source = ''
+
+    build_script_source_path = os.path.join(generated_project_path, f'{last_result.trial:02d}.build_script')
+
+    if build_script_source_path and os.path.isfile(build_script_source_path):
+      with open(build_script_source_path, 'r') as f:
+        build_script_source = f.read()
+    else:
+      build_script_source = ''
+
+    # log the fuzz target and build script's source code.
+    self.logger.info('\nFuzz target source: \n%s\n', fuzz_target_source)
+    self.logger.info('\nBuild script source: \n%s\n', build_script_source)
 
     # Try building and running the new target.
 
@@ -135,6 +156,12 @@ class ExecutionStage(BaseStage):
           run_log_content = ''.join(run_log_lines)
       else:
         run_log_content = ''
+
+      # Add fuzz_target_source and build_script_source to the report log.
+      run_log_content = (
+          f'Fuzz target source:\n{fuzz_target_source}\n'
+          f'Build script source:\n{build_script_source}\n'
+          f'{run_log_content}')
 
       runresult = RunResult(
           benchmark=benchmark,
