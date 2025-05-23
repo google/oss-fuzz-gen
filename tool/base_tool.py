@@ -19,7 +19,8 @@ from typing import Any
 
 from experiment.benchmark import Benchmark
 
-TOOL_TUTORIAL_DIR = os.path.join('prompts', 'tool')
+TOOL_TUTORIAL_DIR = os.path.join(os.path.dirname(__file__), '../prompts',
+                                 'tool')
 
 
 class BaseTool(ABC):

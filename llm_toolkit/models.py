@@ -384,6 +384,14 @@ class GPT4o(GPT):
   """OpenAI's GPT-4o model."""
 
   name = 'gpt-4o'
+  MAX_INPUT_TOKEN = 128000
+
+
+class ChatGPT4oLatest(GPT):
+  """OpenAI's chatgpt-4o-latest model."""
+
+  name = 'chatgpt-4o-latest'
+  MAX_INPUT_TOKEN = 128000
 
 
 class GPT4oMini(GPT):
@@ -957,6 +965,14 @@ class GeminiV2ThinkChat(GeminiV1D5Chat):
   """Gemini 2 for chat session."""
   name = 'vertex_ai_gemini-2-think-chat'
   _vertex_ai_model = 'gemini-2.0-flash-thinking-exp-01-21'
+
+
+class GeminiV2D5FlashChat(GeminiV1D5Chat):
+  """Gemini 2.5 flash for chat session."""
+  _max_output_tokens = 65535
+  context_window = 1048576
+  name = 'vertex_ai_gemini-2-5-flash-chat'
+  _vertex_ai_model = 'gemini-2.5-flash-preview-04-17'
 
 
 class GeminiV2D5ProChat(GeminiV1D5Chat):
