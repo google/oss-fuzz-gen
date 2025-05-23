@@ -78,4 +78,5 @@ if __name__ == "__main__":
   # Print the result
   logger.info("Function Analyzer Result:")
   logger.info("Result available: %s", result.result_available)
-  logger.info("Requirements: %s", result.requirements)
+  if result.result_available:
+    logger.info("Requirements: %s", result.requirements)

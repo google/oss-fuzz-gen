@@ -843,8 +843,8 @@ class FunctionAnalyzerTemplateBuilder(PrototyperTemplateBuilder):
 
     prompt = self._get_template(self.function_analyzer_prompt_template_file)
 
-    prompt.replace('{PROJECT_NAME}', project_name)
-    prompt.replace('{FUNCTION_SIGNATURE}', function_signature)
+    prompt = prompt.replace('{PROJECT_NAME}', project_name)
+    prompt = prompt.replace('{FUNCTION_SIGNATURE}', function_signature)
 
     self._prompt.append(prompt)
 
