@@ -83,11 +83,42 @@ class CloudBuilder:
   def _upload_files(self, archive_name: str, target_dir: str,
                     files_to_upload: list[str]) -> str:
     """Archive and upload files to GCS."""
+    valid_files = []
+    for f in files_to_upload:
+      file_path = os.path.join(target_dir, f)
+      if os.path.exists(file_path):
+        valid_files.append(f)
+      else:
+        logging.error("File does not exist: %s", file_path)
+
+    valid_files.sort()
+
     with tempfile.TemporaryDirectory() as tmpdirname:
       archive_path = os.path.join(tmpdirname, archive_name)
-      tar_command = ['tar', '-czf', archive_path] + files_to_upload
-      subprocess.run(tar_command, cwd=target_dir, check=True)
-      logging.info('Created archive: %s', archive_path)
+      tar_command = ['tar', '-czf', archive_path] + valid_files
+      logging.error("Archive path: %s (exists: %s)", archive_path,
+                    os.path.exists(archive_path))
+      logging.error("Tar command: %s", ' '.join(tar_command))
+
+      try:
+        result = subprocess.run(tar_command,
+                                cwd=target_dir,
+                                check=True,
+                                stdout=subprocess.PIPE,
+                                stderr=subprocess.PIPE,
+                                text=True)
+        logging.error("subprocess stdout:\n%s", result.stdout)
+        logging.error("subprocess stderr:\n%s", result.stderr)
+      except subprocess.CalledProcessError as e:
+        logging.error("Tar command failed with return code %d", e.returncode)
+        logging.error("stdout:\n%s", e.stdout)
+        logging.error("stderr:\n%s", e.stderr)
+        raise
+
+      if os.path.exists(archive_path):
+        logging.info("Successfully created archive: %s", archive_path)
+      else:
+        logging.error("Failed to create archive: %s", archive_path)
       return self._upload_to_gcs(archive_path)
 
   def _upload_to_gcs(self, local_file_path: str) -> str:
