@@ -17,7 +17,6 @@ The results of this analysis will be used by the writer agents to
 generate correct fuzz target for the function.
 """
 
-import asyncio
 import logging
 
 from google.adk.agents import Agent
@@ -91,8 +90,8 @@ class FunctionAnalyzer(BaseAgent):
         "Function Analyzer Agent created, with name: %s, and session id: %s",
         self.name, session_id)
 
-  async def call_agent_async(self, query: str, runner:Runner, user_id: str,
-                             session_id: str) -> PreWritingResult:
+  def call_agent(self, query: str, runner: Runner, user_id: str,
+                 session_id: str) -> PreWritingResult:
     """Call the agent asynchronously with the given query."""
 
     logger.info(">>> User query: %s", query)
@@ -103,7 +102,7 @@ class FunctionAnalyzer(BaseAgent):
 
     result_available = False
 
-    async for event in runner.run_async(
+    for event in runner.run(
         user_id=user_id,
         session_id=session_id,
         new_message=content,
@@ -146,8 +145,7 @@ class FunctionAnalyzer(BaseAgent):
     query = prompt.gettext()
     user_id = "user"
     session_id = "session"
-    result = asyncio.run(
-        self.call_agent_async(query, self.runner, user_id, session_id))
+    result = self.call_agent(query, self.runner, user_id, session_id)
 
     if result.result_available:
       # Save the result to the history
