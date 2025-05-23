@@ -32,6 +32,7 @@ from googleapiclient.discovery import build as cloud_build
 
 import utils
 from agent.base_agent import BaseAgent
+from agent.crash_analyzer import CrashAnalyzer
 from results import Result
 
 OF_REPO = 'https://github.com/google/oss-fuzz.git'
@@ -82,11 +83,42 @@ class CloudBuilder:
   def _upload_files(self, archive_name: str, target_dir: str,
                     files_to_upload: list[str]) -> str:
     """Archive and upload files to GCS."""
+    valid_files = []
+    for f in files_to_upload:
+      file_path = os.path.join(target_dir, f)
+      if os.path.exists(file_path):
+        valid_files.append(f)
+      else:
+        logging.error("File does not exist: %s", file_path)
+
+    valid_files.sort()
+
     with tempfile.TemporaryDirectory() as tmpdirname:
       archive_path = os.path.join(tmpdirname, archive_name)
-      tar_command = ['tar', '-czf', archive_path] + files_to_upload
-      subprocess.run(tar_command, cwd=target_dir, check=True)
-      logging.info('Created archive: %s', archive_path)
+      tar_command = ['tar', '-czf', archive_path] + valid_files
+      logging.error("Archive path: %s (exists: %s)", archive_path,
+                    os.path.exists(archive_path))
+      logging.error("Tar command: %s", ' '.join(tar_command))
+
+      try:
+        result = subprocess.run(tar_command,
+                                cwd=target_dir,
+                                check=True,
+                                stdout=subprocess.PIPE,
+                                stderr=subprocess.PIPE,
+                                text=True)
+        logging.error("subprocess stdout:\n%s", result.stdout)
+        logging.error("subprocess stderr:\n%s", result.stderr)
+      except subprocess.CalledProcessError as e:
+        logging.error("Tar command failed with return code %d", e.returncode)
+        logging.error("stdout:\n%s", e.stdout)
+        logging.error("stderr:\n%s", e.stderr)
+        raise
+
+      if os.path.exists(archive_path):
+        logging.info("Successfully created archive: %s", archive_path)
+      else:
+        logging.error("Failed to create archive: %s", archive_path)
       return self._upload_to_gcs(archive_path)
 
   def _upload_to_gcs(self, local_file_path: str) -> str:
@@ -167,7 +199,7 @@ class CloudBuilder:
 
     cloud_build_config = {
         'steps': [
-            # Step 1: Download the dill files from GCS bucket.
+            # Step 1: Download the dill and artifact files from GCS bucket.
             {
                 'name': 'bash',
                 'dir': '/workspace',
@@ -275,7 +307,7 @@ class CloudBuilder:
                     '/workspace/dills/new_result.pkl'
                 ],
             },
-            # Step 4: Upload the result to GCS bucket
+            # Step 6: Upload the result to GCS bucket
             {
                 'name': 'bash',
                 'dir': '/workspace',
@@ -382,6 +414,7 @@ class CloudBuilder:
         agent, os.path.join(dill_dir, f'{uuid.uuid4().hex}.pkl'))
     results_dill = utils.serialize_to_dill(
         result_history, os.path.join(dill_dir, f'{uuid.uuid4().hex}.pkl'))
+    # TODO(maoyi): generate artifact_dill and upload it to GCS. How?
     # TODO(dongge): Encrypt dill files?
 
     # Step 2: Upload OFG repo and dill files to GCS.
@@ -416,7 +449,7 @@ class CloudBuilder:
 
     cloud_build_log += self._get_build_log(build_id)
 
-    # Step 4: Deserialize dilld file.
+    # Step 5: Deserialize dilld file.
     result = utils.deserialize_from_dill(new_result_dill)
     if not result:
       cloud_build_log += f'Failed to deserialize from dill {new_result_dill}.\n'
