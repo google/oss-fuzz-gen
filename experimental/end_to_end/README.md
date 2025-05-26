@@ -55,7 +55,7 @@ OSS-Fuzz project generation.
 
 ```sh
 # Use installed binary oss-fuzz-generator to create OSS-Fuzz project
-oss-fuzz-generator generate-full -m gpt-4o -i "https://github.com/kgabis/parson
+oss-fuzz-generator generate-full -m ${MODEL} -i "https://github.com/kgabis/parson
 ...
 $ ls final-oss-fuzz-projects/parson-agent/
 build.sh  Dockerfile  empty-fuzzer.0.c  empty-fuzzer.1.c  empty-fuzzer.2.c  empty-fuzzer.3.c  empty-fuzzer.4.c  project.yaml
@@ -70,7 +70,7 @@ using a file with a list of URLs to the repositories:
 $ cat input.txt 
 https://github.com/zserge/jsmn
 https://github.com/rafagafe/tiny-json
-$ oss-fuzz-generator generate-full -m gpt-4o -i input.txt
+$ oss-fuzz-generator generate-full -m ${MODEL} -i input.txt
 $ tree final-oss-fuzz-projects/
 final-oss-fuzz-projects/
 ├── jsmn-agent
