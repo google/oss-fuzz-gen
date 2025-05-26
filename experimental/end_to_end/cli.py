@@ -591,7 +591,8 @@ def parse_commandline():
   run_build_gen = subparsers.add_parser(
       'generate-builds',
       help='Generate OSS-Fuzz projects with build scripts but empty fuzzers.')
-  run_build_gen.add_argument('--input', '-i', help='Input to analyze')
+  run_build_gen.add_argument('--input', '-i', help=('Input to analyze. This can be either a URL to a git repository '
+                                                    'or a file with each line being a URL to a git reopsitory.'))
   run_build_gen.add_argument('--out',
                              '-o',
                              help='Directory to store output.',
@@ -702,7 +703,8 @@ def parse_commandline():
       'generate-full',
       help="End to end generation of OSS-Fuzz projects.",
   )
-  run_full_parser.add_argument('--input', '-i', help='Input to analyze')
+  run_full_parser.add_argument('--input', '-i', help=('Input to analyze. This can be either a URL to a git repository '
+                                                    'or a file with each line being a URL to a git reopsitory.'))
   run_full_parser.add_argument('--out',
                                '-o',
                                help='Directory to store output.',
