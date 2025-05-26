@@ -615,6 +615,28 @@ def _add_base_build_gen_arguments(parser):
   parser.add_argument('-w', '--workdir', help='Work directory to use')
 
 
+def _add_base_harness_gen_arguments(parser):
+  """Adds base arguments for harness generation."""
+  parser.add_argument('--hg-agent',
+                      '-ha',
+                      help='Enable agent harness generation',
+                      action='store_true')
+  parser.add_argument('-gm',
+                      '--generate-benchmarks-max',
+                      help='Max targets to generate per benchmark heuristic.',
+                      type=int,
+                      default=5)
+  parser.add_argument('-mr',
+                      '--max-round',
+                      type=int,
+                      default=5,
+                      help='Max trial round for agents.')
+  parser.add_argument(
+      '--benchmark-oracles',
+      default=('far-reach-low-coverage,low-cov-with-fuzz-keyword,'
+               'easy-params-far-reach,test-migration'))
+
+
 def parse_commandline():
   """Parse the commandline."""
   parser = argparse.ArgumentParser()
@@ -658,35 +680,15 @@ def parse_commandline():
       help=('Models available: '
             f'{", ".join(models.LLM.all_llm_names())}.'),
       type=str)
-  run_harness_generation_parser.add_argument(
-      '--hg-agent',
-      '-ha',
-      help='Enable agent harness generation',
-      action='store_true')
-  run_harness_generation_parser.add_argument(
-      '-gm',
-      '--generate-benchmarks-max',
-      help='Max targets to generate per benchmark heuristic.',
-      type=int,
-      default=5)
-  run_harness_generation_parser.add_argument('-mr',
-                                             '--max-round',
-                                             type=int,
-                                             default=5,
-                                             help='Max trial round for agents.')
   run_harness_generation_parser.add_argument('-w',
                                              '--workdir',
                                              help='Work directory to use')
-  run_harness_generation_parser.add_argument(
-      '--benchmark-oracles',
-      default=
-      'far-reach-low-coverage,low-cov-with-fuzz-keyword,easy-params-far-reach,test-migration'
-  )
   run_harness_generation_parser.add_argument(
       '--project', default='', help='Limit analysis to specified project.')
   run_harness_generation_parser.add_argument('--function-name',
                                              default='',
                                              help='Target function')
+  _add_base_harness_gen_arguments(run_harness_generation_parser)
 
   # Run a full end to end generation.
   run_full_parser = subparsers.add_parser(
@@ -698,27 +700,8 @@ def parse_commandline():
                                help='Directory to store output.',
                                default='oss-fuzz-generated')
 
-  run_full_parser.add_argument('--hg-agent',
-                               '-ha',
-                               help='Enable agent harness generation',
-                               action='store_true')
-  run_full_parser.add_argument(
-      '-gm',
-      '--generate-benchmarks-max',
-      help='Max targets to generate per benchmark heuristic.',
-      type=int,
-      default=5)
-  run_full_parser.add_argument('-mr',
-                               '--max-round',
-                               type=int,
-                               default=5,
-                               help='Max trial round for agents.')
-  run_full_parser.add_argument(
-      '--benchmark-oracles',
-      default=
-      'far-reach-low-coverage,low-cov-with-fuzz-keyword,easy-params-far-reach,test-migration'
-  )
   _add_base_build_gen_arguments(run_full_parser)
+  _add_base_harness_gen_arguments(run_full_parser)
 
   return parser.parse_args()
 
