@@ -36,10 +36,11 @@ positional arguments:
     generate-fuzz-introspector-database
                         Generates a fuzz introspector database from auto build projects.
     generate-harnesses  Harness generation of OSS-Fuzz projects.
-    generate-full       End to end generation of OSS-Fuzz projects.
+    generate-full       Generate OSS-Fuzz integration from git URLs.
 
 options:
   -h, --help            show this help message and exit
+
 ```
 
 `oss-fuzz-generator` makes several commands available, and the following
@@ -54,18 +55,22 @@ OSS-Fuzz project generation.
 
 ```sh
 # Use installed binary oss-fuzz-generator to create OSS-Fuzz project
-echo "https://github.com/kgabis/parson" > input.txt
-oss-fuzz-generator generate-full -m gpt-4o -i input.txt
+oss-fuzz-generator generate-full -m ${MODEL} -i "https://github.com/kgabis/parson
 ...
 $ ls final-oss-fuzz-projects/parson-agent/
 build.sh  Dockerfile  empty-fuzzer.0.c  empty-fuzzer.1.c  empty-fuzzer.2.c  empty-fuzzer.3.c  empty-fuzzer.4.c  project.yaml
 ```
 
 **Generating OSS-Fuzz projects for multiple repositories**
+
+OSS-Fuzz generation can also be applied to a list of repositories by
+using a file with a list of URLs to the repositories:
+
 ```sh
 $ cat input.txt 
 https://github.com/zserge/jsmn
 https://github.com/rafagafe/tiny-json
+$ oss-fuzz-generator generate-full -m ${MODEL} -i input.txt
 $ tree final-oss-fuzz-projects/
 final-oss-fuzz-projects/
 ├── jsmn-agent
