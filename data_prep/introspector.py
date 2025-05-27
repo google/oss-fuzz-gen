@@ -157,8 +157,7 @@ def set_introspector_endpoints(endpoint):
       f'{INTROSPECTOR_ENDPOINT}/database-language-stats')
   INTROSPECTOR_GET_TARGET_FUNCTION = (
       f'{INTROSPECTOR_ENDPOINT}/get-target-function')
-  INTROSPECTOR_GET_ALL_FUNCTIONS = (
-      f'{INTROSPECTOR_ENDPOINT}/all-functions')
+  INTROSPECTOR_GET_ALL_FUNCTIONS = f'{INTROSPECTOR_ENDPOINT}/all-functions'
 
 
 def _construct_url(api: str, params: dict) -> str:

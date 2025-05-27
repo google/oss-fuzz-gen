@@ -19,10 +19,9 @@ import os
 from typing import List
 
 from agent.function_analyzer import FunctionAnalyzer
-from experiment import benchmark as benchmarklib
 from experiment.benchmark import Benchmark
+from experiment.workdir import WorkDirs
 from llm_toolkit import models
-
 from run_all_experiments import prepare_experiment_targets
 
 logging.basicConfig(level=logging.INFO)
@@ -67,7 +66,7 @@ if __name__ == "__main__":
   args = parse_args()
 
   # Initialize the working directory
-  args.work_dirs = os.makedirs(args.work_dir, exist_ok=True)
+  args.work_dirs = WorkDirs(args.work_dir)
 
   # Initialize the function analyzer
   function_analyzer = FunctionAnalyzer(trial=1, llm=model, args=args)
@@ -78,13 +77,13 @@ if __name__ == "__main__":
   if len(benchmarks) == 0:
     raise ValueError("No benchmarks found in the YAML file.")
 
-  logger.info("Loaded %d benchmarks from the YAML file %s.", len(benchmarks), args.benchmark_yaml)
+  logger.info("Loaded %d benchmarks from the YAML file %s.", len(benchmarks),
+              args.benchmark_yaml)
 
   # Analyze each benchmark
   for test_benchmark in benchmarks:
     logger.info("Loaded benchmark (%d/%d) for function: %s",
-                benchmarks.index(test_benchmark) + 1,
-                len(benchmarks),
+                benchmarks.index(test_benchmark) + 1, len(benchmarks),
                 test_benchmark.function_name)
 
     # Initialize the function analyzer with the first benchmark
@@ -95,8 +94,9 @@ if __name__ == "__main__":
 
     # If result is available, write it to the work_dirs directory
     if result.result_available and result.result_raw:
-      result_file = os.path.join(args.work_dir,
-                                 f"{test_benchmark.project}_{test_benchmark.function_name}.txt")
+      result_file = os.path.join(
+          args.work_dirs.base,
+          f"{test_benchmark.project}_{test_benchmark.function_name}.txt")
       with open(result_file, 'w') as f:
         # f.write(f"Requirements for {test_benchmark.function_name}:\n")
         # for req in result.requirements:
@@ -104,4 +104,5 @@ if __name__ == "__main__":
         f.write(result.result_raw)
       logger.info("Analysis results written to %s", result_file)
     else:
-      logger.info("No requirements found for benchmark %s", test_benchmark.function_name)
+      logger.info("No requirements found for benchmark %s",
+                  test_benchmark.function_name)

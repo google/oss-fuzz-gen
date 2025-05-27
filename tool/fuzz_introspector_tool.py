@@ -49,7 +49,8 @@ class FuzzIntrospectorTool(BaseTool):
     # A placeholder
     raise NotImplementedError
 
-  def _function_source_with_signature(self, project_name: str, function_signature: str) -> str:
+  def function_source_with_signature(self, project_name: str,
+                                     function_signature: str) -> str:
     """
     Retrieves a function's source from the fuzz introspector API,
       using the project's name and function's signature.
@@ -78,11 +79,13 @@ class FuzzIntrospectorTool(BaseTool):
 
     return function_code
 
-  def _function_source_with_name(self, project_name: str, function_name: str) -> str:
+  def function_source_with_name(self, project_name: str,
+                                function_name: str) -> str:
     """
     Retrieves a function's source from the fuzz introspector API,
       using the project's name and function's name.
-      This function first retrieves the list of all functions in the project, so it can get the function's signature.
+      This function first retrieves the list of all
+      functions in the project, so it can get the function's signature.
       Then it uses the function's signature to retrieve the source code.
 
     Args:
@@ -100,7 +103,8 @@ class FuzzIntrospectorTool(BaseTool):
       logger.info(
           "Project functions not initialized. Initializing for project '%s'.",
           project_name)
-      functions_list = introspector.query_introspector_all_functions(project_name)
+      functions_list = introspector.query_introspector_all_functions(
+          project_name)
       logger.info("Functions list:\n%s", functions_list)
       if functions_list:
         self.project_functions = {
@@ -111,15 +115,16 @@ class FuzzIntrospectorTool(BaseTool):
       else:
         self.project_functions = None
 
-    if self.project_functions is None or function_name not in self.project_functions:
+    if (self.project_functions is None or
+        function_name not in self.project_functions):
       logger.error("Error: Required function not found for project '%s'.",
                    project_name)
       return ""
 
-    function_signature = self.project_functions[function_name]["function_signature"]
+    function_signature = self.project_functions[function_name][
+        "function_signature"]
 
-    return self._function_source_with_signature(project_name,
-                                                  function_signature)
+    return self.function_source_with_signature(project_name, function_signature)
 
   def tutorial(self) -> str:
     raise NotImplementedError

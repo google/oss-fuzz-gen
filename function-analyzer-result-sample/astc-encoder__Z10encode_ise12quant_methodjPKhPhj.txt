@@ -1,0 +1,26 @@
+<input>
+project name: astc-encoder
+function signature: void encode_ise(DW_TAG_enumeration_typequant_method, unsigned int, const uint8_t *, uint8_t *, unsigned int)
+</input>
+
+<description>
+The function `encode_ise` encodes input data based on the specified quantization level and writes the encoded bits to the output data buffer. It handles different encoding schemes based on the number of trits or quints associated with the quantization level, or simply writes out the raw bits if neither trits nor quints are used.
+</description>
+
+<requirements>
+<requirement>
+`character_count` must be greater than 0. This is enforced by the `promise` statement.
+</requirement>
+<requirement>
+`input_data` must be a valid pointer. This pointer is dereferenced to read input values.
+</requirement>
+<requirement>
+`output_data` must be a valid pointer. This pointer is dereferenced in `write_bits` to write output values.
+</requirement>
+<requirement>
+The size of `input_data` should be at least `character_count` bytes. Otherwise, there will be an out-of-bounds read in the loops.
+</requirement>
+<requirement>
+The size of `output_data` should be large enough to hold the encoded data, based on the `character_count`, `quant_level` and `bit_offset`. Otherwise, there will be an out-of-bounds write in `write_bits`.
+</requirement>
+</requirements>
