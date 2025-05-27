@@ -589,16 +589,16 @@ class TrialResult:
 class PreWritingResult(Result):
   """ The result of the function analyzer. """
   result_available: bool
-  requirements: list[str]
-  explanation: str
+  result_raw: str = ''
+  requirements: Optional[list[str]]
 
   def __init__(self,
                benchmark: Benchmark,
                trial: int,
                work_dirs: WorkDirs,
                result_available: bool,
+               result_raw: str = '',
                requirements: Optional[list[str]] = None,
-               explanation: str = '',
                fuzz_target_source: str = '',
                build_script_source: str = '',
                author: Any = None,
@@ -609,9 +609,9 @@ class PreWritingResult(Result):
                      build_script_source, author, chat_history, default_success)
 
     self.result_available = result_available
-    if result_available and requirements is not None:
+    if result_available:
       self.requirements = requirements
-      self.explanation = explanation
+      self.result_raw = result_raw
 
 
 class BenchmarkResult:

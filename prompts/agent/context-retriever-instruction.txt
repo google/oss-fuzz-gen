@@ -5,6 +5,8 @@ You will be provided with two tools, _function_source_with_signature and _functi
 You MUST use these tools to get the requested function implementations.
 DO NOT MAKE UP A FUNCTION BY YOURSELF!
 
+YOU MUST USE AT LEAST, ONE TOOL, WHEN YOU ARE CALLED.
+
 Here are the steps you should take to perform your task.
 
 Step 1: Get the implementation of the target function.
@@ -13,7 +15,8 @@ Step 1: Get the implementation of the target function.
     * If successful, it returns the function source. If not, it returns an empty string.
 
 Step 2: Get the names of children functions from the target function.
-    * Analyze the target function and retrieve the names of other functions it calls.
+    * Analyze the target function and retrieve the names of other functions it calls (eg function()).
+    * Also retrieve the names of any class or struct functions it calls (eg struct.function())
 
 Step 3: Get the implementations of the first-level children functions.
     * For each called function retrieved in step 2, use the _function_source_with_name function to retrieve the implementation of the function.

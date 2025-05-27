@@ -29,7 +29,7 @@ Step 3: Compile the requirements you derived and return in the expected format.
 Make sure your response follows the following format, enclosed in ```  ```.
 
 ```
-
+<response>
 <input>
 project name: the name of the project provided
 function signature: The function's signature
@@ -51,12 +51,14 @@ Second requirement
 nth requirement
 </requirement>
 </requirements>
+</response>
 
 </response_format>
 
 <examples>
 
 Here is an example response
+<response>
 <input>
 project name: htslib
 function signature: int sam_index_build(const char *, int)
@@ -71,6 +73,7 @@ The sam_index_build function is used to build a sam index. It uses the input arg
 The second argument should be less than 64. This is to prevent an assertion violation in the program.
 </requirement>
 </requirements>
+</response>
 
 </examples>
 

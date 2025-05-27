@@ -130,20 +130,22 @@ class FunctionAnalyzer(BaseAgent):
 
       logger.info("Event is %s", event.content)
       if event.is_final_response():
-        if event.content and event.content.parts:
+        if event.content and event.content.parts and event.content.parts[0].text:
           final_response_text = event.content.parts[0].text
           result_available = True
         elif event.actions and event.actions.escalate:
-          error_message = event.error_message or 'No specific message.'
-          final_response_text = f"Agent escalated: {error_message}"
+          error_message = event.error_message
+          logger.error(f"Agent escalated: %s", error_message)
 
     logger.info("<<< Agent response: %s", final_response_text)
 
-    if result_available and final_response_text:
+    if result_available and self._parse_tag(final_response_text, 'response'):
       # Get the requirements from the response
       requirements = self._parse_tags(final_response_text, 'requirement')
+      result_raw = self._parse_tag(final_response_text, 'response')
     else:
       requirements = []
+      result_raw = ''
 
     # Prepare the result
     result = PreWritingResult(
@@ -151,6 +153,7 @@ class FunctionAnalyzer(BaseAgent):
         trial=self.trial,
         work_dirs=self.args.work_dir,
         result_available=result_available,
+        result_raw=result_raw,
         requirements=requirements,
     )
 
