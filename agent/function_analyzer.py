@@ -54,7 +54,7 @@ def get_function_source_tool(project_name: str, function_signature: str):
                 function_signature)
   else:
     logger.info(
-        "Error: Function with signature '%s'" + " not found in project '%s'.",
+        "Error: Function with signature '%s' not found in project '%s'.",
         function_signature, project_name)
 
   return function_code

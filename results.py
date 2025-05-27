@@ -587,7 +587,7 @@ class TrialResult:
 
 
 class PreWritingResult(Result):
-  """ The result of the function analyzer. """
+  """ The result of the function analyzer."""
   result_available: bool
   requirements: list[str]
   explanation: str

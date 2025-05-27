@@ -809,7 +809,7 @@ class CoverageEnhancerTemplateBuilder(PrototyperTemplateBuilder):
 
 
 class FunctionAnalyzerTemplateBuilder(PrototyperTemplateBuilder):
-  """ Builder for function analyzer. """
+  """ Builder for function analyzer."""
 
   def __init__(self,
                model: models.LLM,
