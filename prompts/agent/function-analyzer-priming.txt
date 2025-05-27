@@ -1,9 +1,3 @@
-<Task>
-Analyze and return the description and requirements for the function signature {FUNCTION_SIGNATURE} in the project {PROJECT_NAME}.
-You will be provided the source implementation for the function.
-You MUST ensure that all requirements returned where derived from the function.
-</Task>
-
-<source>
-{FUNCTION_SOURCE}
-</source>
+First, get the implementations of the target function {FUNCTION_SIGNATURE}
+    and all its children functions (functions it calls) in the project {PROJECT_NAME}.
+    Then, analyze the implementation and extract the requirements of the target function.

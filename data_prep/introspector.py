@@ -76,6 +76,7 @@ INTROSPECTOR_TEST_SOURCE = ''
 INTROSPECTOR_HARNESS_SOURCE_AND_EXEC = ''
 INTROSPECTOR_LANGUAGE_STATS = ''
 INTROSPECTOR_GET_TARGET_FUNCTION = ''
+INTROSPECTOR_GET_ALL_FUNCTIONS = ''
 
 INTROSPECTOR_HEADERS_FOR_FUNC = ''
 INTROSPECTOR_SAMPLE_XREFS = ''
@@ -114,7 +115,7 @@ def set_introspector_endpoints(endpoint):
       INTROSPECTOR_ORACLE_ALL_TESTS, INTROSPECTOR_JVM_PROPERTIES, \
       INTROSPECTOR_TEST_SOURCE, INTROSPECTOR_HARNESS_SOURCE_AND_EXEC, \
       INTROSPECTOR_JVM_PUBLIC_CLASSES, INTROSPECTOR_LANGUAGE_STATS, \
-      INTROSPECTOR_GET_TARGET_FUNCTION
+      INTROSPECTOR_GET_TARGET_FUNCTION, INTROSPECTOR_GET_ALL_FUNCTIONS
 
   INTROSPECTOR_ENDPOINT = endpoint
 
@@ -156,6 +157,8 @@ def set_introspector_endpoints(endpoint):
       f'{INTROSPECTOR_ENDPOINT}/database-language-stats')
   INTROSPECTOR_GET_TARGET_FUNCTION = (
       f'{INTROSPECTOR_ENDPOINT}/get-target-function')
+  INTROSPECTOR_GET_ALL_FUNCTIONS = (
+      f'{INTROSPECTOR_ENDPOINT}/all-functions')
 
 
 def _construct_url(api: str, params: dict) -> str:
@@ -166,6 +169,8 @@ def _construct_url(api: str, params: dict) -> str:
 def _query_introspector(api: str, params: dict) -> Optional[requests.Response]:
   """Queries FuzzIntrospector API and returns the json payload,
   returns an empty dict if unable to get data."""
+
+  logger.info('Querying FuzzIntrospector API: %s\n', api)
   for attempt_num in range(1, MAX_RETRY + 1):
     try:
       resp = requests.get(api, params, timeout=TIMEOUT)
@@ -320,6 +325,14 @@ def query_introspector_function_source(project: str, func_sig: str) -> str:
       'function_signature': func_sig
   })
   return _get_data(resp, 'source', '')
+
+
+def query_introspector_all_functions(project: str) -> list[dict]:
+  """Queries FuzzIntrospector API for all functions of |project|."""
+  resp = _query_introspector(INTROSPECTOR_GET_ALL_FUNCTIONS, {
+      'project': project,
+  })
+  return _get_data(resp, 'functions', [])
 
 
 def query_introspector_function_line(project: str, func_sig: str) -> list:

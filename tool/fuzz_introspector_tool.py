@@ -16,6 +16,7 @@ the project's information."""
 import logging
 
 from data_prep import introspector
+from experiment.benchmark import Benchmark
 from tool.base_tool import BaseTool
 
 logger = logging.getLogger(__name__)
@@ -23,6 +24,10 @@ logger = logging.getLogger(__name__)
 
 class FuzzIntrospectorTool(BaseTool):
   """Calls FI API with params."""
+
+  def __init__(self, benchmark: Benchmark, name: str = ''):
+    super().__init__(benchmark, name)
+    self.project_functions = None
 
   def _source_code(self, filename: str, start_line: int, end_line: int) -> str:
     """Calls the source code API of the Fuzz Introspector."""
@@ -44,7 +49,7 @@ class FuzzIntrospectorTool(BaseTool):
     # A placeholder
     raise NotImplementedError
 
-  def _function_source(self, project_name: str, function_signature: str) -> str:
+  def _function_source_with_signature(self, project_name: str, function_signature: str) -> str:
     """
     Retrieves a function's source from the fuzz introspector API,
       using the project's name and function's signature.
@@ -56,6 +61,9 @@ class FuzzIntrospectorTool(BaseTool):
     Returns:
         str: Source code of the function if found, otherwise an empty string.
     """
+
+    logger.info("Retrieving function source for '%s' in project '%s'.",
+                function_signature, project_name)
 
     function_code = introspector.query_introspector_function_source(
         project_name, function_signature)
@@ -69,6 +77,49 @@ class FuzzIntrospectorTool(BaseTool):
           function_signature, project_name)
 
     return function_code
+
+  def _function_source_with_name(self, project_name: str, function_name: str) -> str:
+    """
+    Retrieves a function's source from the fuzz introspector API,
+      using the project's name and function's name.
+      This function first retrieves the list of all functions in the project, so it can get the function's signature.
+      Then it uses the function's signature to retrieve the source code.
+
+    Args:
+        project_name (str): The name of the project.
+        function_name (str): The name of the function.
+
+    Returns:
+        str: Source code of the function if found, otherwise an empty string.
+    """
+
+    logger.info("Retrieving function source for '%s' in project '%s'.",
+                function_name, project_name)
+
+    if self.project_functions is None:
+      logger.info(
+          "Project functions not initialized. Initializing for project '%s'.",
+          project_name)
+      functions_list = introspector.query_introspector_all_functions(project_name)
+      logger.info("Functions list:\n%s", functions_list)
+      if functions_list:
+        self.project_functions = {
+            func["debug_summary"]["name"]: func
+            for func in functions_list
+            if "debug_summary" in func and "name" in func["debug_summary"]
+        }
+      else:
+        self.project_functions = None
+
+    if self.project_functions is None or function_name not in self.project_functions:
+      logger.error("Error: Required function not found for project '%s'.",
+                   project_name)
+      return ""
+
+    function_signature = self.project_functions[function_name]["function_signature"]
+
+    return self._function_source_with_signature(project_name,
+                                                  function_signature)
 
   def tutorial(self) -> str:
     raise NotImplementedError

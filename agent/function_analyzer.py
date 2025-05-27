@@ -17,9 +17,11 @@ The results of this analysis will be used by the writer agents to
 generate correct fuzz target for the function.
 """
 
+import asyncio
 import logging
+from typing import Optional
 
-from google.adk.agents import Agent
+from google.adk.agents import Agent, SequentialAgent, LlmAgent
 from google.adk.runners import Runner
 from google.adk.sessions import InMemorySessionService
 from google.genai import types
@@ -49,22 +51,40 @@ class FunctionAnalyzer(BaseAgent):
     builder = prompt_builder.FunctionAnalyzerTemplateBuilder(
         self.llm, self.benchmark)
 
-    # Get the agent's instructions
-    analyzer_instruction = builder.build_instruction()
-
     # Initialize the Fuzz Introspector tool
     introspector_tool = FuzzIntrospectorTool(benchmark, self.name)
 
+    context_retriever = LlmAgent(
+        name="ContextRetrieverAgent",
+        model='gemini-2.0-flash',
+        description=(
+            "Retrieves the implementation of a function and its children from Fuzz Introspector."),
+        instruction=builder.build_context_retriever_instruction().get(),
+        tools=[introspector_tool._function_source_with_signature, introspector_tool._function_source_with_name],
+        generate_content_config=types.GenerateContentConfig(
+        temperature=0.0,),
+        output_key="FUNCTION_SOURCE",
+    )
+
     # Create the agent using the ADK library
-    function_analyzer = Agent(
-        name=self.name,
+    requirements_extractor = LlmAgent(
+        name="RequirementsExtractorAgent",
         # TODO: Get the model name from args.
         # Currently, the default names are incompatible with the ADK library.
         model='gemini-2.0-flash',
         description=(
-            "Agent to analyze a function and identify its requirements."),
-        instruction=analyzer_instruction.get(),
-        )
+            "Extracts a function's requirements from its source implementation."),
+        instruction=builder.build_instruction().get(),
+        output_key="FUNCTION_REQUIREMENTS",
+    )
+
+    # Create the function analyzer agent
+    function_analyzer = SequentialAgent(
+        name="FunctionAnalyzerAgent",
+        sub_agents=[context_retriever, requirements_extractor],
+        description=(
+            "Sequential agent to retrieve a function's source, analyze it and extract its requirements."),
+    )
 
     # Get user id and session id
     # TODO: Figure out how to get this data
@@ -90,7 +110,7 @@ class FunctionAnalyzer(BaseAgent):
         "Function Analyzer Agent created, with name: %s, and session id: %s",
         self.name, session_id)
 
-  def call_agent(self, query: str, runner: Runner, user_id: str,
+  async def call_agent(self, query: str, runner: Runner, user_id: str,
                  session_id: str) -> PreWritingResult:
     """Call the agent asynchronously with the given query."""
 
@@ -102,7 +122,7 @@ class FunctionAnalyzer(BaseAgent):
 
     result_available = False
 
-    for event in runner.run(
+    async for event in runner.run_async(
         user_id=user_id,
         session_id=session_id,
         new_message=content,
@@ -116,7 +136,6 @@ class FunctionAnalyzer(BaseAgent):
         elif event.actions and event.actions.escalate:
           error_message = event.error_message or 'No specific message.'
           final_response_text = f"Agent escalated: {error_message}"
-        break
 
     logger.info("<<< Agent response: %s", final_response_text)
 
@@ -145,15 +164,15 @@ class FunctionAnalyzer(BaseAgent):
     query = prompt.gettext()
     user_id = "user"
     session_id = "session"
-    result = self.call_agent(query, self.runner, user_id, session_id)
+    result = asyncio.run(self.call_agent(query, self.runner, user_id, session_id))
 
-    if result.result_available:
+    if result and result.result_available:
       # Save the result to the history
       result_history.append(result)
 
     return result
 
-  def _initial_prompt(self, results: list[Result]) -> Prompt:
+  def _initial_prompt(self, results: Optional[list[Result]] = None) -> Prompt:
     """Create the initial prompt for the agent."""
 
     # Initialize the prompt builder
