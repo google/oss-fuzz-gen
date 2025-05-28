@@ -21,22 +21,19 @@ import asyncio
 import logging
 from typing import Optional
 
-from google.adk.agents import LlmAgent, SequentialAgent
-from google.adk.runners import Runner
-from google.adk.sessions import InMemorySessionService
+from google.adk import agents, runners, sessions
 from google.genai import types
 
-from agent.base_agent import BaseAgent
+import results as resultslib
+from agent import base_agent
 from experiment import benchmark as benchmarklib
-from llm_toolkit import prompt_builder
-from llm_toolkit.prompts import Prompt
-from results import PreWritingResult, Result
-from tool.fuzz_introspector_tool import FuzzIntrospectorTool
+from llm_toolkit import prompt_builder, prompts
+from tool import fuzz_introspector_tool
 
 logger = logging.getLogger(__name__)
 
 
-class FunctionAnalyzer(BaseAgent):
+class FunctionAnalyzer(base_agent.BaseAgent):
   """An LLM agent to analyze a function and identify its implicit requirements.
   The results of this analysis will be used by the writer agents to
   generate correct fuzz target for the function.
@@ -52,9 +49,10 @@ class FunctionAnalyzer(BaseAgent):
         self.llm, self.benchmark)
 
     # Initialize the Fuzz Introspector tool
-    introspector_tool = FuzzIntrospectorTool(benchmark, self.name)
+    introspector_tool = fuzz_introspector_tool.FuzzIntrospectorTool(
+        benchmark, self.name)
 
-    context_retriever = LlmAgent(
+    context_retriever = agents.LlmAgent(
         name="ContextRetrieverAgent",
         model='gemini-2.0-flash',
         description="""Retrieves the implementation of a function
@@ -69,7 +67,7 @@ class FunctionAnalyzer(BaseAgent):
     )
 
     # Create the agent using the ADK library
-    requirements_extractor = LlmAgent(
+    requirements_extractor = agents.LlmAgent(
         name="RequirementsExtractorAgent",
         # TODO: Get the model name from args.
         # Currently, the default names are incompatible with the ADK library.
@@ -81,7 +79,7 @@ class FunctionAnalyzer(BaseAgent):
     )
 
     # Create the function analyzer agent
-    function_analyzer = SequentialAgent(
+    function_analyzer = agents.SequentialAgent(
         name="FunctionAnalyzerAgent",
         sub_agents=[context_retriever, requirements_extractor],
         description="""Sequential agent to retrieve a function's source,
@@ -89,7 +87,7 @@ class FunctionAnalyzer(BaseAgent):
     )
 
     # Create the session service
-    session_service = InMemorySessionService()
+    session_service = sessions.InMemorySessionService()
     session_service.create_session(
         app_name=self.name,
         user_id="user",
@@ -97,7 +95,7 @@ class FunctionAnalyzer(BaseAgent):
     )
 
     # Create the runner
-    self.runner = Runner(
+    self.runner = runners.Runner(
         agent=function_analyzer,
         app_name=self.name,
         session_service=session_service,
@@ -105,8 +103,8 @@ class FunctionAnalyzer(BaseAgent):
 
     logger.info("Function Analyzer Agent created, with name: %s", self.name)
 
-  async def call_agent(self, query: str, runner: Runner, user_id: str,
-                       session_id: str) -> PreWritingResult:
+  async def call_agent(self, query: str, runner: runners.Runner, user_id: str,
+                       session_id: str) -> resultslib.PreWritingResult:
     """Call the agent asynchronously with the given query."""
 
     logger.info(">>> User query: %s", query)
@@ -144,7 +142,7 @@ class FunctionAnalyzer(BaseAgent):
       result_raw = ''
 
     # Prepare the result
-    result = PreWritingResult(
+    result = resultslib.PreWritingResult(
         benchmark=self.benchmark,
         trial=self.trial,
         work_dirs=self.args.work_dir,
@@ -155,7 +153,9 @@ class FunctionAnalyzer(BaseAgent):
 
     return result
 
-  def execute(self, result_history: list[Result]) -> PreWritingResult:
+  def execute(
+      self,
+      result_history: list[resultslib.Result]) -> resultslib.PreWritingResult:
     """Execute the agent with the given results."""
 
     # Call the agent asynchronously and return the result
@@ -172,7 +172,9 @@ class FunctionAnalyzer(BaseAgent):
 
     return result
 
-  def _initial_prompt(self, results: Optional[list[Result]] = None) -> Prompt:
+  def _initial_prompt(
+      self,
+      results: Optional[list[resultslib.Result]] = None) -> prompts.Prompt:
     """Create the initial prompt for the agent."""
 
     # Initialize the prompt builder

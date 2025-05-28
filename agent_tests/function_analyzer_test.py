@@ -18,11 +18,11 @@ import logging
 import os
 from typing import List
 
-from agent.function_analyzer import FunctionAnalyzer
-from experiment.benchmark import Benchmark
-from experiment.workdir import WorkDirs
+import run_all_experiments
+from agent import function_analyzer
+from experiment import benchmark as benchmarklib
+from experiment import workdir
 from llm_toolkit import models
-from run_all_experiments import prepare_experiment_targets
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -66,13 +66,17 @@ if __name__ == "__main__":
   args = parse_args()
 
   # Initialize the working directory
-  args.work_dirs = WorkDirs(args.work_dir)
+  args.work_dirs = workdir.WorkDirs(args.work_dir)
 
   # Initialize the function analyzer
-  function_analyzer = FunctionAnalyzer(trial=1, llm=model, args=args)
+  function_analyzer = function_analyzer.FunctionAnalyzer(trial=1,
+                                                         llm=model,
+                                                         args=args)
 
   # Initialize benchmarks
-  benchmarks: List[Benchmark] = prepare_experiment_targets(args)
+  benchmarks: List[
+      benchmarklib.Benchmark] = run_all_experiments.prepare_experiment_targets(
+          args)
 
   if len(benchmarks) == 0:
     raise ValueError("No benchmarks found in the YAML file.")

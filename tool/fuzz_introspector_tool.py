@@ -16,16 +16,16 @@ the project's information."""
 import logging
 
 from data_prep import introspector
-from experiment.benchmark import Benchmark
-from tool.base_tool import BaseTool
+from experiment import benchmark as benchmarklib
+from tool import base_tool
 
 logger = logging.getLogger(__name__)
 
 
-class FuzzIntrospectorTool(BaseTool):
+class FuzzIntrospectorTool(base_tool.BaseTool):
   """Calls FI API with params."""
 
-  def __init__(self, benchmark: Benchmark, name: str = ''):
+  def __init__(self, benchmark: benchmarklib.Benchmark, name: str = ''):
     super().__init__(benchmark, name)
     self.project_functions = None
 
