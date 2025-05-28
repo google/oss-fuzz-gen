@@ -32,8 +32,7 @@ from googleapiclient.discovery import build as cloud_build
 
 import utils
 from agent.base_agent import BaseAgent
-from agent.crash_analyzer import CrashAnalyzer
-from results import Result
+from results import Result, RunResult
 
 OF_REPO = 'https://github.com/google/oss-fuzz.git'
 OFG_ROOT_DIR = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
@@ -181,7 +180,8 @@ class CloudBuilder:
                               files_to_upload)
 
   def _request_cloud_build(self, ofg_repo_url: str, agent_dill_url: str,
-                           results_dill_url: str, oss_fuzz_data_url: str,
+                           results_dill_url: str, artifact_url: str,
+                           artifact_path: str, oss_fuzz_data_url: str,
                            data_dir_url: str, new_result_filename: str) -> str:
     """Requests Cloud Build to execute the operation."""
 
@@ -214,6 +214,15 @@ class CloudBuilder:
                 'name': 'gcr.io/cloud-builders/gsutil',
                 'dir': '/workspace',
                 'args': ['cp', results_dill_url, 'dills/result_history.pkl']
+            },
+            {
+                'name': 'gcr.io/cloud-builders/gsutil',
+                'dir': '/workspace',
+                'args': [
+                    'cp', artifact_url,
+                    f'/workspace/{os.path.basename(artifact_path)}'
+                ],
+                'allowFailure': True,
             },
             # Step 2: Prepare OFG and OF repos.
             {
@@ -414,19 +423,29 @@ class CloudBuilder:
         agent, os.path.join(dill_dir, f'{uuid.uuid4().hex}.pkl'))
     results_dill = utils.serialize_to_dill(
         result_history, os.path.join(dill_dir, f'{uuid.uuid4().hex}.pkl'))
-    # TODO(maoyi): generate artifact_dill and upload it to GCS. How?
     # TODO(dongge): Encrypt dill files?
 
     # Step 2: Upload OFG repo and dill files to GCS.
     ofg_url = self._prepare_and_upload_archive(result_history)
     agent_url = self._upload_to_gcs(agent_dill)
     results_url = self._upload_to_gcs(results_dill)
+    artifact_url = ''
+    artifact_path = ''
+    if isinstance(result_history[-1], RunResult):
+      artifact_path = result_history[-1].artifact_path
+      if artifact_path:
+        logging.info('Found artifact_path: %s in RunResult.', artifact_path)
+        artifact_url = self._upload_to_gcs(artifact_path)
+        logging.info('Uploaded artifact to %s', artifact_url)
+      else:
+        logging.error('No artifact_path found in RunResult.')
     oss_fuzz_data_url = self._upload_oss_fuzz_data()
     data_dir_url = self._upload_fi_oss_fuzz_data()
 
     # Step 3: Request Cloud Build.
     new_result_filename = f'{uuid.uuid4().hex}.pkl'
     build_id = self._request_cloud_build(ofg_url, agent_url, results_url,
+                                         artifact_url, artifact_path,
                                          oss_fuzz_data_url, data_dir_url,
                                          new_result_filename)
 

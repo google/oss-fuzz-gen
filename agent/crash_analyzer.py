@@ -16,7 +16,6 @@ Use it as a usual module locally, or as script in cloud builds.
 """
 import argparse
 import os
-import shutil
 import subprocess as sp
 from typing import Optional
 
@@ -136,22 +135,6 @@ class CrashAnalyzer(BaseAgent):
                                                  prompt)
     return None
 
-  def _copy_cloud_artifact(self, artifact_path: str) -> None:
-    """Copies the artifact from cloud build."""
-    cloud_build_artifact_path = (
-        f'/workspace/{os.path.basename(artifact_path)}')
-    if os.path.exists(cloud_build_artifact_path):
-      os.makedirs(os.path.dirname(artifact_path), exist_ok=True)
-      shutil.copyfile(cloud_build_artifact_path, artifact_path)
-      logger.info('Copied artifact from %s to %s',
-                  cloud_build_artifact_path,
-                  artifact_path,
-                  trial=self.trial)
-    else:
-      logger.warning('Unable to find artifact_path in cloud build: %s',
-                     cloud_build_artifact_path,
-                     trial=self.trial)
-
   def execute(self, result_history: list[Result]) -> AnalysisResult:
     """Executes the agent based on previous run result."""
     WorkDirs(self.args.work_dirs.base)
@@ -160,10 +143,10 @@ class CrashAnalyzer(BaseAgent):
     logger.info('Executing Crash Analyzer', trial=self.trial)
     assert isinstance(last_result, RunResult)
 
-    # TODO(maoyi): move to cloud_builder.
-    if self.args.cloud_experiment_name:
-      self._copy_cloud_artifact(last_result.artifact_path)
-      self.artifact_path = last_result.artifact_path
+    if not os.path.exists(last_result.artifact_path):
+      logger.error('Artifact path %s does not exist',
+                   last_result.artifact_path,
+                   trial=self.trial)
 
     # TODO(dongge): Move these to oss_fuzz_checkout.
     generated_target_name = os.path.basename(benchmark.target_path)
