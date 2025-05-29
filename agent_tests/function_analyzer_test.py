@@ -61,7 +61,7 @@ def parse_args() -> argparse.Namespace:
 
 if __name__ == "__main__":
 
-  model = models.LLM.setup(ai_binary='', name='vertex_ai_gemini-1-5-chat')
+  model = models.LLM.setup(ai_binary='', name='vertex_ai_gemini-2-5-pro-chat')
 
   args = parse_args()
 
@@ -102,9 +102,6 @@ if __name__ == "__main__":
           args.work_dirs.base,
           f"{test_benchmark.project}_{test_benchmark.function_name}.txt")
       with open(result_file, 'w') as f:
-        # f.write(f"Requirements for {test_benchmark.function_name}:\n")
-        # for req in result.requirements:
-        #   f.write(f"- {req}\n")
         f.write(result.result_raw)
       logger.info("Analysis results written to %s", result_file)
     else:

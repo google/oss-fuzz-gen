@@ -17,6 +17,7 @@ The results of this analysis will be used by the writer agents to
 generate correct fuzz target for the function.
 """
 
+import argparse
 import asyncio
 import logging
 from typing import Optional
@@ -27,8 +28,8 @@ from google.genai import types
 import results as resultslib
 from agent import base_agent
 from experiment import benchmark as benchmarklib
-from llm_toolkit import prompt_builder, prompts
-from tool import fuzz_introspector_tool
+from llm_toolkit import models, prompt_builder, prompts
+from tool import base_tool, fuzz_introspector_tool
 
 logger = logging.getLogger(__name__)
 
@@ -38,6 +39,22 @@ class FunctionAnalyzer(base_agent.BaseAgent):
   The results of this analysis will be used by the writer agents to
   generate correct fuzz target for the function.
   """
+
+  def __init__(self,
+               trial: int,
+               llm: models.LLM,
+               args: argparse.Namespace,
+               tools: Optional[list[base_tool.BaseTool]] = None,
+               name: str = ''):
+
+    # Ensure the llm is an instance of VertexAIModel
+    if not isinstance(llm, models.VertexAIModel):
+      raise ValueError(
+          "FunctionAnalyzer agent requires a VertexAIModel instance for llm.")
+
+    self.vertex_ai_model = llm._vertex_ai_model
+
+    super().__init__(trial, llm, args, tools, name)
 
   def initialize(self, benchmark: benchmarklib.Benchmark):
     """Initialize the function analyzer agent with the given benchmark."""
@@ -54,7 +71,7 @@ class FunctionAnalyzer(base_agent.BaseAgent):
 
     context_retriever = agents.LlmAgent(
         name="ContextRetrieverAgent",
-        model='gemini-2.0-flash',
+        model=self.vertex_ai_model,
         description="""Retrieves the implementation of a function
                       and its children from Fuzz Introspector.""",
         instruction=builder.build_context_retriever_instruction().get(),
@@ -69,9 +86,7 @@ class FunctionAnalyzer(base_agent.BaseAgent):
     # Create the agent using the ADK library
     requirements_extractor = agents.LlmAgent(
         name="RequirementsExtractorAgent",
-        # TODO: Get the model name from args.
-        # Currently, the default names are incompatible with the ADK library.
-        model='gemini-2.0-flash',
+        model=self.vertex_ai_model,
         description="""Extracts a function's requirements
                         from its source implementation.""",
         instruction=builder.build_instruction().get(),
