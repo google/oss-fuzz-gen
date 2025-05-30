@@ -31,7 +31,7 @@ logger = logging.getLogger(__name__)
 RESULTS_DIR = './results'
 
 
-NUM_ANA = int(os.getenv('LLM_NUM_ANA', '2'))
+NUM_ANA = int(os.getenv('LLM_NUM_ANA', '1'))
 
 def parse_args() -> argparse.Namespace:
   """Parses command line arguments."""
@@ -126,7 +126,12 @@ def analyze_benchmark(benchmark: benchmarklib.Benchmark,
     logger.info("No requirements found for benchmark %s",
                 benchmark.function_name)
 
-  return result.result_available
+  return (
+      result.result_available
+      and bool(result.result_raw)
+      and result.requirements is not None
+      and len(result.requirements) > 0
+  )
 
 if __name__ == "__main__":
 
@@ -145,17 +150,18 @@ if __name__ == "__main__":
   if len(benchmarks) == 0:
     raise ValueError("No benchmarks found in the YAML file.")
 
-  logger.info("Loaded %d benchmarks from the YAML file %s.", len(benchmarks),
-              args.benchmark_yaml)
+  logger.info("Loaded %d benchmarks.", len(benchmarks))
 
   # Analyze each benchmark
   success_count = 0
 
-  if NUM_ANA == 2:
+  if args.num_pools == 1:
     for test_benchmark in benchmarks:
       if analyze_benchmark(test_benchmark, model, args):
         success_count += 1
   else:
+
+    # TODO: Test this branch
 
     logger.info("Running analysis in parallel with %d processes.", args.num_pools)
     with multiprocessing.Pool(args.num_pools, maxtasksperchild=1) as pool:

@@ -48,11 +48,14 @@ class Prototyper(BaseAgent):
     else:
       project_examples = []
 
+    retriever = ContextRetriever(benchmark)
+
     if self.args.context:
-      retriever = ContextRetriever(benchmark)
       context_info = retriever.get_context_info()
     else:
       context_info = {}
+
+    requirements = retriever.get_function_requirements()
 
     builder = prompt_builder.PrototyperTemplateBuilder(
         model=self.llm,
@@ -63,7 +66,8 @@ class Prototyper(BaseAgent):
                            project_example_content=project_examples,
                            project_context_content=context_info,
                            tool_guides=self.inspect_tool.tutorial(),
-                           project_dir=self.inspect_tool.project_dir)
+                           project_dir=self.inspect_tool.project_dir,
+                           requirements=requirements,)
     return prompt
 
   def _update_fuzz_target_and_build_script(self, response: str,

@@ -1,0 +1,6 @@
+<requirements>
+Here are the input requirements for the target function.
+The fuzz driver you generate MUST satisfy all these requirements.
+
+{REQUIREMENTS}
+</requirements>

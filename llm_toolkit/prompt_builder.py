@@ -133,6 +133,8 @@ class DefaultTemplateBuilder(PromptBuilder):
                                                       'solution.txt')
     self.context_template_file = self._find_template(template_dir,
                                                      'context.txt')
+    self.requirements_template_file = self._find_template(
+        template_dir, 'requirements.txt')
     self.fixer_priming_template_file = self._find_template(
         template_dir, 'fixer_priming.txt')
     self.fixer_problem_template_file = self._find_template(
@@ -205,6 +207,13 @@ class DefaultTemplateBuilder(PromptBuilder):
         xrefs='\n'.join(context_info['xrefs']),
         include_statement=context_info['header'],
     )
+
+
+  def format_requirements(self, requirement_list: str) -> str:
+    """Formats requirements based on the prompt template."""
+    requirements = self._get_template(self.requirements_template_file)
+    requirements = requirements.replace('{REQUIREMENTS}', requirement_list)
+    return requirements
 
   def _select_examples(self, examples: list[list],
                        prompt_size: int) -> list[list[str]]:
@@ -581,13 +590,16 @@ class PrototyperTemplateBuilder(DefaultTemplateBuilder):
                                                       'solution.txt')
     self.context_template_file = self._find_template(template_dir,
                                                      'context.txt')
+    self.requirements_template_file = self._find_template(
+        template_dir, 'requirements.txt')
 
   def build(self,
             example_pair: list[list[str]],
             project_example_content: Optional[list[list[str]]] = None,
             project_context_content: Optional[dict] = None,
             tool_guides: str = '',
-            project_dir: str = '') -> prompts.Prompt:
+            project_dir: str = '',
+            requirements: str = '') -> prompts.Prompt:
     """Constructs a prompt using the templates in |self| and saves it."""
     if not self.benchmark:
       return self._prompt
@@ -599,6 +611,8 @@ class PrototyperTemplateBuilder(DefaultTemplateBuilder):
                       f'</code> in your solution!\n')
     if project_context_content:
       final_problem += self.format_context(project_context_content)
+    if requirements:
+      final_problem += self.format_requirements(requirements)
     self._prepare_prompt(priming, final_problem, example_pair,
                          project_example_content)
     self._prompt.append(tool_guides, True)
