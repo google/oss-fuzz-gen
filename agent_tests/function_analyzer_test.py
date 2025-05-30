@@ -110,7 +110,11 @@ def analyze_benchmark(benchmark: benchmarklib.Benchmark,
   analyzer.initialize(benchmark)
 
   # Run the function analyzer
-  result = analyzer.execute([])
+  try:
+    result = analyzer.execute([])
+  except Exception as e:
+    logger.error("Error during analysis for benchmark %s: %s", benchmark.function_name, e)
+    return False
 
   # If result is available, write it to the work_dirs directory
   if result.result_available and result.result_raw:
