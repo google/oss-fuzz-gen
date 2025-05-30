@@ -126,11 +126,11 @@ def analyze_benchmark(benchmark: benchmarklib.Benchmark,
     logger.info("No requirements found for benchmark %s",
                 benchmark.function_name)
 
-  return result.result_available 
+  return result.result_available
 
 if __name__ == "__main__":
 
-  model = models.LLM.setup(ai_binary='', name='vertex_ai_gemini-1-5-chat')
+  model = models.LLM.setup(ai_binary='', name='vertex_ai_gemini-2-5-pro-chat')
 
   args = parse_args()
 
