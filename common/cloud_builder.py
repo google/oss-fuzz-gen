@@ -300,6 +300,8 @@ class CloudBuilder:
                     '-v',
                     '/workspace:/workspace',
                     '-v',
+                    '/experiment:/experiment',
+                    '-v',
                     '/var/run/docker.sock:/var/run/docker.sock',
                     '-e',
                     'VERTEX_AI_LOCATIONS=' +
