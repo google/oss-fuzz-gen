@@ -30,6 +30,7 @@ import yaml
 
 from data_prep import introspector
 from experimental.build_generator import runner
+from experimental.build_fixer import build_fix
 from llm_toolkit import models
 
 logger = logging.getLogger(name=__name__)
@@ -472,7 +473,7 @@ def run_harness_generation(workdir,
 
 def setup_logging():
   """Initiate logging."""
-  logging.basicConfig(level=logging.INFO, format=LOG_FMT)
+  logging.basicConfig(level=logging.DEBUG, format=LOG_FMT)
 
 
 def _get_next_folder_in_idx(base_name):
@@ -543,6 +544,14 @@ def run_build_generation(args):
     out_folder = args.out
 
   _run_build_generation(abs_workdir, out_folder, args)
+
+def run_cmd_fix_build(args):
+  """Command entrypoint for fixing OSS-Fuzz build scripts."""
+  workdir = setup_workdirs(None)
+  abs_workdir = os.path.abspath(workdir)
+  oss_fuzz_dir = os.path.join(abs_workdir, 'oss-fuzz')
+  args.work_dirs = 'work_dirs'
+  build_fix.fix_build(args, oss_fuzz_dir)
 
 
 def run_cmd_harness_generation(args):
@@ -642,6 +651,28 @@ def parse_commandline():
   parser = argparse.ArgumentParser()
   subparsers = parser.add_subparsers(dest='command')
 
+  # Parser for fixing OSS-Fuzz build
+  fix_build_parser = subparsers.add_parser(
+    'fix-build',
+    help='Fixes OSS-Fuzz build scripts')
+
+  fix_build_parser.add_argument(
+    '--project',
+    type=str,
+    help='The project to fix')
+  fix_build_parser.add_argument(
+    '--model',
+    help='The model to use for build fixing.'
+  )
+  fix_build_parser.add_argument(
+    '-mr',
+    '--max-round',
+    type=int,
+    default=5,
+    help='Max trial round for agents.'
+  )
+
+
   # Run build generation.
   run_build_gen = subparsers.add_parser(
       'generate-builds',
@@ -719,6 +750,8 @@ def main():
     run_build_generation(args)
   if args.command == 'generate-harnesses':
     run_cmd_harness_generation(args)
+  if args.command == 'fix-build':
+    run_cmd_fix_build(args)
 
 
 if __name__ == '__main__':
