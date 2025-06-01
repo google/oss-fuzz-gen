@@ -218,7 +218,8 @@ class CloudBuilder:
             {
                 'name': 'gcr.io/cloud-builders/gsutil',
                 'entrypoint': 'bash',
-                'args': ['-c', f'mkdir -p {os.path.dirname(artifact_path)}']
+                'args': ['-c', f'mkdir -p {os.path.dirname(artifact_path)}'],
+                'allowFailure': True,
             },
             {
                 'name': 'gcr.io/cloud-builders/gsutil',
