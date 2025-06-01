@@ -87,7 +87,7 @@ class BuildFixAgent(BaseAgent):
     prompt.add_problem(template_prompt)
     return prompt
 
-  def execute(self, result_history: list[Result]) -> None:
+  def execute(self, result_history: list[Result]) -> BuildResult:
     """Executes the build fixer agent."""
     result_name = oss_fuzz_checkout.prepare_project_image_by_name(
         self.project_name)
@@ -108,7 +108,8 @@ class BuildFixAgent(BaseAgent):
     # If the build succeeded, we can exit
     if result.returncode == 0:
       logger.info(f'Build succeeded for {self.project_name}.', trial=self.trial)
-      return
+      logger.info('Nothing to fix.', trial=self.trial)
+      sys.exit(0)
 
     self.initial_error_result = result.stderr
 
@@ -136,6 +137,7 @@ class BuildFixAgent(BaseAgent):
       cur_round += 1
     finally:
       self.inspect_tool.terminate()
+    return build_result
 
   def _parse_tag(self, response: str, tag: str) -> str:
     """Parses the tag from LLM response."""

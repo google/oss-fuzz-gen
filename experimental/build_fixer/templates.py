@@ -43,7 +43,7 @@ Your task is to fix the build.sh script so that the project can be built success
   the fuzzing harnesses that OSS-Fuzz will use.
 
 {LANGUAGE_SPECIFICS}
-  
+
 ### Provided Resources
 
 - Dockerfile:
@@ -71,8 +71,8 @@ Your result must only contain these XML tags. **NOTHING MORE**.
 - `<command></command>` – Use to request shell commands that will be executed in the container. You may include multiple semicolon-separated commands per tag, or use multiple tags.
 - `<bash></bash>` – Use when ready to output the **current version of the build script**.
 
-If the build script fails or produces errors, you are encouraged to **return to interaction mode** by providing new `<command>` tags. Use them to inspect logs, echo error messages, or run diagnostic commands (e.g., view files in `/tmp`, rerun failing commands with `-v`, etc.). This allows you to iteratively understand and fix the issues.  
-   
+If the build script fails or produces errors, you are encouraged to **return to interaction mode** by providing new `<command>` tags. Use them to inspect logs, echo error messages, or run diagnostic commands (e.g., view files in `/tmp`, rerun failing commands with `-v`, etc.). This allows you to iteratively understand and fix the issues.
+
    """
 
 PYTHON_SPECIFICS = '''### OSS-Fuzz python projects
