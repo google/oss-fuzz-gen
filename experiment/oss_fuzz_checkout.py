@@ -460,8 +460,9 @@ def prepare_project_image(benchmark: benchmarklib.Benchmark) -> str:
     logger.warning('Unable to find cached project image for %s', project)
   return _build_image(generated_oss_fuzz_project)
 
+
 def create_ossfuzz_project_by_name(original_name: str,
-                           generated_oss_fuzz_project: str) -> str:
+                                   generated_oss_fuzz_project: str) -> str:
   """Creates an OSS-Fuzz project by replicating an existing project."""
   generated_project_path = os.path.join(OSS_FUZZ_DIR, 'projects',
                                         generated_oss_fuzz_project)
@@ -469,8 +470,7 @@ def create_ossfuzz_project_by_name(original_name: str,
     logger.info('Project %s already exists.', generated_project_path)
     return generated_project_path
 
-  oss_fuzz_project_path = os.path.join(OSS_FUZZ_DIR, 'projects',
-                                       original_name)
+  oss_fuzz_project_path = os.path.join(OSS_FUZZ_DIR, 'projects', original_name)
   shutil.copytree(oss_fuzz_project_path, generated_project_path)
   return generated_project_path
 

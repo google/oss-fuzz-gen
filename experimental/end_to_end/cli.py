@@ -29,8 +29,8 @@ import requests
 import yaml
 
 from data_prep import introspector
-from experimental.build_generator import runner
 from experimental.build_fixer import build_fix
+from experimental.build_generator import runner
 from llm_toolkit import models
 
 logger = logging.getLogger(name=__name__)
@@ -545,6 +545,7 @@ def run_build_generation(args):
 
   _run_build_generation(abs_workdir, out_folder, args)
 
+
 def run_cmd_fix_build(args):
   """Command entrypoint for fixing OSS-Fuzz build scripts."""
   workdir = setup_workdirs(None)
@@ -652,26 +653,19 @@ def parse_commandline():
   subparsers = parser.add_subparsers(dest='command')
 
   # Parser for fixing OSS-Fuzz build
-  fix_build_parser = subparsers.add_parser(
-    'fix-build',
-    help='Fixes OSS-Fuzz build scripts')
+  fix_build_parser = subparsers.add_parser('fix-build',
+                                           help='Fixes OSS-Fuzz build scripts')
 
-  fix_build_parser.add_argument(
-    '--project',
-    type=str,
-    help='The project to fix')
-  fix_build_parser.add_argument(
-    '--model',
-    help='The model to use for build fixing.'
-  )
-  fix_build_parser.add_argument(
-    '-mr',
-    '--max-round',
-    type=int,
-    default=5,
-    help='Max trial round for agents.'
-  )
-
+  fix_build_parser.add_argument('--project',
+                                type=str,
+                                help='The project to fix')
+  fix_build_parser.add_argument('--model',
+                                help='The model to use for build fixing.')
+  fix_build_parser.add_argument('-mr',
+                                '--max-round',
+                                type=int,
+                                default=5,
+                                help='Max trial round for agents.')
 
   # Run build generation.
   run_build_gen = subparsers.add_parser(

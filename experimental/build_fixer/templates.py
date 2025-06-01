@@ -18,7 +18,7 @@ BUILD_FIXER_LLM_PRIMING = '''<system>
 You are a developer wanting to fix the build script of an OSS-Fuzz project.
 </system>'''
 
-BUILD_FIX_PROBLEM="""You are a security engineer that needs to fix an OSS-Fuzz
+BUILD_FIX_PROBLEM = """You are a security engineer that needs to fix an OSS-Fuzz
 build project.
 
 OSS-Fuzz projects are composed of a Dockerfile, build.sh, and one or more fuzz
