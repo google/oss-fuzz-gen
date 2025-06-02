@@ -77,11 +77,15 @@ If the build script fails or produces errors, you are encouraged to **return to 
 
 PYTHON_SPECIFICS = '''### OSS-Fuzz python projects
 
-- OSS-Fuzz projects can be written in Python, and the build script should be able to handle Python projects.
-- In general, we prefer to use Python modules by way of `python3`, meaning we want to use
-  `python3 -m pip install ...` instead of `pip install ...`.
-- The build script you are working on is a Python project.
-- The target codebase must be build from scratch, meaning you should not install the target project using a pypi package.
+The project you are working on is a Python project.
+The build script should be as Pythonic as possible.
+If the project has a "pyproject.toml" file, then we can likely install it using `python3 -m pip install .`
+You must prioritise using Python modules by way of `python3`, meaning we want to use `python3 -m pip install ...` instead of `pip install ...`.
+The build script you are working on is a Python project.
+The target codebase must be build from scratch, meaning you should not install the target project using a pypi package.
+If the build script does not unconditionally install the target codebase then the build script is not correct.
+Make sure to install the target codebase and avoid using packages already in installed in the Docker image.
+Avoid using `pip install .` and always use `python3 -m pip install .` instead.
 '''
 
 LLM_RETRY = '''
