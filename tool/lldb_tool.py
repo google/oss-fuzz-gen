@@ -37,7 +37,7 @@ class LLDBTool(ProjectContainerTool):
   def tutorial(self) -> str:
     """Constructs a tool guide tutorial for LLM agents."""
     return self._get_tutorial_file_content('lldb_tool.txt')\
-      .replace('{AFTIFACT_NAME}', self.result.artifact_name)\
+      .replace('{AFTIFACT_PATH}', self.result.artifact_path)\
       .replace('{TARGET_NAME}', self.benchmark.target_name)
 
   def execute(self, command: str) -> sp.CompletedProcess:
