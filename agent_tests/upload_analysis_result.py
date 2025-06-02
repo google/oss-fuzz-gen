@@ -4,7 +4,7 @@ from google.cloud import storage
 
 GCS_BUCKET_NAME = 'pamusuo-tests'
 
-CGS_RESULTS_DIR = "Function-analysis-results"
+GCS_RESULTS_DIR = "Function-analysis-results"
 
 def upload_directory_to_gcs(local_folder_path, bucket_name, destination_blob_prefix=""):
     """
@@ -48,11 +48,14 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Upload a directory to a Google Cloud Storage bucket.")
     parser.add_argument("-d", "--directory", help="Path to the directory to upload", required=True)
     parser.add_argument("-b", "--bucket", help="Name of the GCS bucket", default=GCS_BUCKET_NAME)
+    parser.add_argument("-rp", "--gcs-rel-path", help="Relative path within the GCS bucket", default='')
     args = parser.parse_args()
 
     # Ensure the directory exists
     if not os.path.isdir(args.directory):
         raise ValueError(f"The specified directory does not exist: {args.directory}")
 
+    destination_blob_prefix = f"{GCS_RESULTS_DIR}/{args.gcs_rel_path}" if args.gcs_rel_path else GCS_RESULTS_DIR
+
     # Upload the directory to GCS
-    upload_directory_to_gcs(args.directory, args.bucket, CGS_RESULTS_DIR)
+    upload_directory_to_gcs(args.directory, args.bucket, destination_blob_prefix)

@@ -48,7 +48,7 @@ class Prototyper(BaseAgent):
     else:
       project_examples = []
 
-    retriever = ContextRetriever(benchmark)
+    retriever = ContextRetriever(benchmark, self.args)
 
     if self.args.context:
       context_info = retriever.get_context_info()

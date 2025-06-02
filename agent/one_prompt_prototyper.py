@@ -83,7 +83,7 @@ class OnePromptPrototyper(BaseAgent):
       project_examples = []
 
     if self.args.context:
-      retriever = ContextRetriever(benchmark)
+      retriever = ContextRetriever(benchmark, self.args)
       context_info = retriever.get_context_info()
     else:
       context_info = {}

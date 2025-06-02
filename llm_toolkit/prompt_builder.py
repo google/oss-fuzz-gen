@@ -641,7 +641,8 @@ class PrototyperFixerTemplateBuilder(PrototyperTemplateBuilder):
             project_example_content: Optional[list[list[str]]] = None,
             project_context_content: Optional[dict] = None,
             tool_guides: str = '',
-            project_dir: str = '') -> prompts.Prompt:
+            project_dir: str = '',
+            requirements: str = '') -> prompts.Prompt:
     """Constructs a prompt using the templates in |self| and saves it."""
     del (example_pair, project_example_content, project_context_content,
          tool_guides)
@@ -687,7 +688,8 @@ class CoverageAnalyzerTemplateBuilder(PrototyperTemplateBuilder):
             project_example_content: Optional[list[list[str]]] = None,
             project_context_content: Optional[dict] = None,
             tool_guides: str = '',
-            project_dir: str = '') -> prompts.Prompt:
+            project_dir: str = '',
+            requirements: str = '') -> prompts.Prompt:
     """Constructs a prompt using the templates in |self| and saves it."""
     del (example_pair, project_example_content, project_context_content)
     if not self.benchmark:
@@ -734,7 +736,8 @@ class EnhancerTemplateBuilder(PrototyperTemplateBuilder):
             project_example_content: Optional[list[list[str]]] = None,
             project_context_content: Optional[dict] = None,
             tool_guides: str = '',
-            project_dir: str = '') -> prompts.Prompt:
+            project_dir: str = '',
+            requirements: str = '') -> prompts.Prompt:
     """Constructs a prompt using the templates in |self| and saves it."""
     del (example_pair, project_example_content, project_context_content)
     if not self.benchmark:
@@ -793,7 +796,8 @@ class CoverageEnhancerTemplateBuilder(PrototyperTemplateBuilder):
             project_example_content: Optional[list[list[str]]] = None,
             project_context_content: Optional[dict] = None,
             tool_guides: str = '',
-            project_dir: str = '') -> prompts.Prompt:
+            project_dir: str = '',
+            requirements: str = '') -> prompts.Prompt:
     """Constructs a prompt using the templates in |self| and saves it."""
     del (example_pair, project_example_content, project_context_content)
     if not self.benchmark:
