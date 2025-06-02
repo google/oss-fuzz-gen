@@ -1,0 +1,111 @@
+#!/usr/bin/env python3
+# Copyright 2025 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+"""Templates for the build fixer tool."""
+
+BUILD_FIXER_LLM_PRIMING = '''<system>
+You are a developer wanting to fix the build script of an OSS-Fuzz project.
+</system>'''
+
+BUILD_FIX_PROBLEM = """You are a security engineer that needs to fix an OSS-Fuzz
+build project.
+
+OSS-Fuzz projects are composed of a Dockerfile, build.sh, and one or more fuzz
+targets. The Dockerfile creates a Docker image that contains the build
+environment, and the build.sh script is used to compile the project.
+It is likely that the build.sh script is broken. You should focus only on
+changing the build.sh and not the Dockerfile.
+
+Your task is to fix the build.sh script so that the project can be built successfully.
+
+### OSS-Fuzz Project Structure
+- OSS-Fuzz is an open source project that enables continuous fuzzing of open
+  source software.
+- OSS-Fuzz builds projects within a Docker container, this is the environment
+  the build script will run in.
+- The build script is located at `/src/build.sh` inside the Docker container.
+- It is very likely that only minor adjustments to the build script are needed
+  to fix the build.
+- The build script is expected to produce one or more fuzzing harnesses, which
+  are the targets of the fuzzing process.
+- The build script should not be expected to produce a final binary, but rather
+  the fuzzing harnesses that OSS-Fuzz will use.
+
+{LANGUAGE_SPECIFICS}
+
+### Provided Resources
+
+- Dockerfile:
+  <dockerfile>
+  {DOCKERFILE}
+  </dockerfile>
+
+- Build script
+  <build_script>
+  {BUILD_SCRIPT}
+  </build_script>
+
+- Initial failed build output:
+  <logs>
+  {LOGS}
+  </logs>
+
+### Interaction Protocol
+
+This is an **interactive process**. You must request commands to be run inside the Docker container to discover this information.
+
+You are limited to **{MAX_DISCOVERY_ROUND} discovery rounds**, so plan efficiently.
+
+Your result must only contain these XML tags. **NOTHING MORE**.
+- `<command></command>` – Use to request shell commands that will be executed in the container. You may include multiple semicolon-separated commands per tag, or use multiple tags.
+- `<bash></bash>` – Use when ready to output the **current version of the build script**.
+
+If the build script fails or produces errors, you are encouraged to **return to interaction mode** by providing new `<command>` tags. Use them to inspect logs, echo error messages, or run diagnostic commands (e.g., view files in `/tmp`, rerun failing commands with `-v`, etc.). This allows you to iteratively understand and fix the issues.
+
+   """
+
+PYTHON_SPECIFICS = '''### OSS-Fuzz python projects
+
+The project you are working on is a Python project.
+The build script should be as Pythonic as possible.
+If the project has a "pyproject.toml" file, then we can likely install it using `python3 -m pip install .`
+You must prioritise using Python modules by way of `python3`, meaning we want to use `python3 -m pip install ...` instead of `pip install ...`.
+The build script you are working on is a Python project.
+The target codebase must be build from scratch, meaning you should not install the target project using a pypi package.
+If the build script does not unconditionally install the target codebase then the build script is not correct.
+Make sure to install the target codebase and avoid using packages already in installed in the Docker image.
+Avoid using `pip install .` and always use `python3 -m pip install .` instead.
+'''
+
+LLM_RETRY = '''
+I failed to build the project with the above provided build script.
+Please analyse the result and generate a new build script with the same assumption above.
+You must only returns the content of the build script and nothing else more as always.
+Your output must contain only one XML tag:
+<bash></bash> – wraps the complete build script for both the target project and the fuzzing harness.
+
+Here is a dump of the bash execution result.
+{BASH_RESULT}
+'''
+
+LLM_RETRY_CHECK_ALL = '''The build script worked, but failed to produce actual fuzzing harnesses.
+It is likely the changes you made caused no fuzzing harnesses to be built.
+
+Please analyse the result and generate a new build script with the same assumption above.
+
+Your output must contain only one XML tag:
+<bash></bash> – wraps the complete build script for both the target project and the fuzzing harness.
+
+Here is a dump of the bash execution result.
+{BASH_RESULT}'''
