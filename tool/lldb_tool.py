@@ -42,7 +42,7 @@ class LLDBTool(ProjectContainerTool):
 
   def execute(self, command: str) -> sp.CompletedProcess:
     """Executes the |command| in the container and returns the output."""
-    logger.debug('Executing command (%s) in %s: ', command, self.container_id)
+    logger.error('Executing command (%s) in %s: ', command, self.container_id)
     execute_command_in_container = [
         'docker', 'exec', self.container_id, '/bin/bash', '-c', command
     ]
