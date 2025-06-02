@@ -218,14 +218,13 @@ class CloudBuilder:
             {
                 'name': 'gcr.io/cloud-builders/gsutil',
                 'entrypoint': 'bash',
-                'args': ['-c', f'mkdir -p {os.path.dirname(artifact_path)}'],
+                'args': ['-c', f'mkdir -p /workspace/host/{os.path.dirname(artifact_path)}'],
                 'allowFailure': True,
             },
             {
                 'name': 'gcr.io/cloud-builders/gsutil',
                 'dir': '/workspace',
-                'args': ['cp', artifact_url, artifact_path],
-                'allowFailure': True,
+                'args': ['cp', artifact_url, f'/workspace/host/{artifact_path}']
             },
             # Step 2: Prepare OFG and OF repos.
             {
@@ -300,7 +299,7 @@ class CloudBuilder:
                     '-v',
                     '/workspace:/workspace',
                     '-v',
-                    '/experiment:/experiment',
+                    '/workspace/host/experiment:/experiment',
                     '-v',
                     '/var/run/docker.sock:/var/run/docker.sock',
                     '-e',
