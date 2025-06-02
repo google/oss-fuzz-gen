@@ -28,9 +28,9 @@ class Pipeline():
     1. Writing stage generates or refines the fuzz target and its associated
        build script to improve code coverage and enhance bug-finding
        capabilities for the function under test.
-    2. Evaluation stage assesses the fuzz target's performance by measuring
+    2. Execution stage assesses the fuzz target's performance by measuring
        code coverage and detecting runtime crashes.
-    3. Analysis stage examines the results from the evaluation stage, extracting
+    3. Analysis stage examines the results from the execution stage, extracting
        insights from the coverage and crash data to suggest improvements for the
        writing stage in the next iteration.
     """
@@ -68,7 +68,12 @@ class Pipeline():
                         cycle_count, last_result)
       return True
 
-    if isinstance(last_result, AnalysisResult) and last_result.success:
+    if not isinstance(last_result, AnalysisResult):
+      self.logger.warning('[Cycle %d] Last result is not AnalysisResult: %s',
+                          cycle_count, result_history)
+      return True
+
+    if last_result.success:
       self.logger.info('[Cycle %d] Generation succeeds: %s', cycle_count,
                        result_history)
       return True
@@ -122,6 +127,11 @@ class Pipeline():
     # Analysis stage.
     result_history.append(
         self.analysis_stage.execute(result_history=result_history))
+    # TODO(maoyi): add the indicator for the success of analysis stage
+    if not isinstance(result_history[-1], AnalysisResult):
+      self.logger.warning(
+          '[Cycle %d] Analysis failure, skipping the rest steps', cycle_count)
+      return
     self._update_status(result_history=result_history)
     self.logger.info('[Cycle %d] Analysis result %s: %s', cycle_count,
                      result_history[-1].success, result_history[-1])
@@ -131,8 +141,8 @@ class Pipeline():
     Runs the fuzzing pipeline iteratively to assess and refine the fuzz target.
     1. Writing Stage refines the fuzz target and its build script using insights
     from the previous cycle.
-    2. Evaluation Stage measures the performance of the revised fuzz target.
-    3. Analysis Stage examines the evaluation results to guide the next cycle's
+    2. Execution Stage measures the performance of the revised fuzz target.
+    3. Analysis Stage examines the execution results to guide the next cycle's
     improvements.
     The process repeats until the termination conditions are met.
     """

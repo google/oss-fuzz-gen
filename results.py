@@ -13,6 +13,7 @@
 # limitations under the License.
 """The data structure of all result kinds."""
 import dataclasses
+import os
 from typing import Any, Optional
 
 from experiment import textcov
@@ -127,11 +128,14 @@ class RunResult(BuildResult):
   """The fuzzing run-time result info."""
   crashes: bool
   run_error: str
+  crash_func: dict
   run_log: str
   coverage_summary: dict
   coverage: float
   line_coverage_diff: float
   reproducer_path: str
+  artifact_path: str
+  sanitizer: str
   textcov_diff: Optional[textcov.Textcov]
   log_path: str
   corpus_path: str
@@ -139,6 +143,9 @@ class RunResult(BuildResult):
   cov_pcs: int
   total_pcs: int
   _repr_exclude = BuildResult._repr_exclude | {'textcov_diff'}
+  err_type: str
+  crash_sypmtom: str
+  crash_stacks: Optional[list[list[str]]]
 
   def __init__(
       self,
@@ -152,17 +159,23 @@ class RunResult(BuildResult):
       is_function_referenced: bool = False,
       crashes: bool = False,  # Runtime crash.
       run_error: str = '',  # Runtime crash error message.
+      crash_func: Optional[dict] = None,
       run_log: str = '',  # Full fuzzing output.
       coverage_summary: Optional[dict] = None,
       coverage: float = 0.0,
       line_coverage_diff: float = 0.0,
       textcov_diff: Optional[textcov.Textcov] = None,
       reproducer_path: str = '',
+      artifact_path: str = '',
+      sanitizer: str = '',
       log_path: str = '',
       corpus_path: str = '',
       coverage_report_path: str = '',
       cov_pcs: int = 0,
       total_pcs: int = 0,
+      err_type: str = SemanticCheckResult.NOT_APPLICABLE,
+      crash_sypmtom: str = '',
+      crash_stacks: Optional[list[list[str]]] = None,
       fuzz_target_source: str = '',
       build_script_source: str = '',
       author: Any = None,
@@ -173,17 +186,27 @@ class RunResult(BuildResult):
                      chat_history)
     self.crashes = crashes
     self.run_error = run_error
+    self.crash_func = crash_func or {}
     self.run_log = run_log
     self.coverage_summary = coverage_summary or {}
     self.coverage = coverage
     self.line_coverage_diff = line_coverage_diff
     self.reproducer_path = reproducer_path
+    self.artifact_path = artifact_path
+    self.sanitizer = sanitizer
     self.textcov_diff = textcov_diff
     self.log_path = log_path
     self.corpus_path = corpus_path
     self.coverage_report_path = coverage_report_path
     self.cov_pcs = cov_pcs
     self.total_pcs = total_pcs
+    self.err_type = err_type
+    self.crash_sypmtom = crash_sypmtom
+    self.crash_stacks = crash_stacks or []
+
+  @property
+  def artifact_name(self) -> str:
+    return os.path.basename(self.artifact_path)
 
   def to_dict(self) -> dict:
     return super().to_dict() | {
@@ -191,6 +214,8 @@ class RunResult(BuildResult):
             self.crashes,
         'run_error':
             self.run_error,
+        'crash_func':
+            self.crash_func or {},
         'run_log':
             self.run_log,
         'coverage_summary':
@@ -201,6 +226,12 @@ class RunResult(BuildResult):
             self.line_coverage_diff,
         'reproducer_path':
             self.reproducer_path,
+        'artifact_path':
+            self.artifact_path,
+        'artifact_name':
+            self.artifact_name,
+        'sanitizer':
+            self.sanitizer,
         'textcov_diff':
             dataclasses.asdict(self.textcov_diff) if self.textcov_diff else '',
         'log_path':
@@ -213,16 +244,40 @@ class RunResult(BuildResult):
             self.cov_pcs,
         'total_pcs':
             self.total_pcs,
+        'err_type':
+            self.err_type,
+        'crash_sypmtom':
+            self.crash_sypmtom,
+        'crash_stacks':
+            self.crash_stacks,
     }
 
   # TODO(dongge): Define success property to show if the fuzz target was run.
 
 
-class CrashResult(RunResult):
+class CrashResult(Result):
   """The fuzzing run-time result with crash info."""
   stacktrace: str
   true_bug: bool  # True/False positive crash
   insight: str  # Reason and fixes for crashes
+
+  def __init__(self,
+               *args,
+               stacktrace: str = '',
+               true_bug: bool = False,
+               insight: str = '',
+               **kwargs):
+    super().__init__(*args, **kwargs)
+    self.stacktrace = stacktrace
+    self.true_bug = true_bug
+    self.insight = insight
+
+  def to_dict(self) -> dict:
+    return {
+        'stacktrace': self.stacktrace,
+        'true_bug': self.true_bug,
+        'insight': self.insight,
+    }
 
 
 class CoverageResult():
@@ -281,6 +336,8 @@ class AnalysisResult(Result):
             self.coverage_result.to_dict() if self.coverage_result else {},
     }
 
+  # TODO(maoyi): maybe we should redefine success property or
+  # rename the property
   @property
   def success(self) -> bool:
     if self.semantic_result:
