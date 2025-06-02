@@ -868,6 +868,31 @@ class FunctionAnalyzerTemplateBuilder(DefaultTemplateBuilder):
     prompt = prompt.replace('{FUNCTION_SIGNATURE}',
                             self.benchmark.function_signature)
 
+    # Get the function source
+    func_source = introspector.query_introspector_function_source(
+        self.benchmark.project, self.benchmark.function_signature)
+
+    if not func_source:
+      logger.error(
+          'No function source found for project: %s, function: %s',
+          self.benchmark.project, self.benchmark.function_signature)
+      return prompts.TextPrompt()
+
+    prompt = prompt.replace('{FUNCTION_SOURCE}', func_source)
+
+    # Get the function's references
+    xrefs = introspector.query_introspector_cross_references(self.benchmark.project,
+                                                              self.benchmark.function_signature)
+    if not xrefs:
+      logger.error(
+          'No cross references found for project: %s, function: %s',
+          self.benchmark.project, self.benchmark.function_signature)
+      prompt = prompt.replace('<function-references>\n{FUNCTION_REFERENCES}\n</function-references>}', '')
+    else:
+      references = [f"<reference>\n{xref}\n</reference>" for xref in xrefs]
+      references_str = '\n'.join(references)
+      prompt = prompt.replace('{FUNCTION_REFERENCES}', references_str)
+
     self._prompt.append(prompt)
 
     return self._prompt

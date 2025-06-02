@@ -69,36 +69,17 @@ class FunctionAnalyzer(base_agent.BaseAgent):
     introspector_tool = fuzz_introspector_tool.FuzzIntrospectorTool(
         benchmark, self.name)
 
-    context_retriever = agents.LlmAgent(
-        name="ContextRetrieverAgent",
-        model=self.vertex_ai_model,
-        description="""Retrieves the implementation of a function
-                      and its children from Fuzz Introspector.""",
-        instruction=builder.build_context_retriever_instruction().get(),
-        tools=[
-            introspector_tool.function_source_with_signature,
-            introspector_tool.function_source_with_name
-        ],
-        generate_content_config=types.GenerateContentConfig(temperature=0.0,),
-        output_key="FUNCTION_SOURCE",
-    )
-
     # Create the agent using the ADK library
-    requirements_extractor = agents.LlmAgent(
-        name="RequirementsExtractorAgent",
+    function_analyzer = agents.LlmAgent(
+        name="FunctionAnalyzer",
         model=self.vertex_ai_model,
         description="""Extracts a function's requirements
                         from its source implementation.""",
-        instruction=builder.build_instruction().get(),
-        output_key="FUNCTION_REQUIREMENTS",
-    )
-
-    # Create the function analyzer agent
-    function_analyzer = agents.SequentialAgent(
-        name="FunctionAnalyzerAgent",
-        sub_agents=[context_retriever, requirements_extractor],
-        description="""Sequential agent to retrieve a function's source,
-                        analyze it and extract its requirements.""",
+        instruction="""You are a security engineer tasked with analyzing a function
+        and extracting its input requirements, necessary for it to execute correctly.""",
+        tools=[
+            introspector_tool.function_source_with_name
+        ],
     )
 
     # Create the session service
@@ -122,7 +103,7 @@ class FunctionAnalyzer(base_agent.BaseAgent):
                        session_id: str) -> resultslib.PreWritingResult:
     """Call the agent asynchronously with the given query."""
 
-    logger.info(">>> User query: %s", query)
+    # logger.info(">>> User query: %s", query)
 
     content = types.Content(role='user', parts=[types.Part(text=query)])
 
@@ -136,7 +117,7 @@ class FunctionAnalyzer(base_agent.BaseAgent):
         new_message=content,
     ):
 
-      logger.info("Event is %s", event.content)
+      # logger.info("Event is %s", event.content)
       if event.is_final_response():
         if (event.content and event.content.parts and
             event.content.parts[0].text):
@@ -176,6 +157,11 @@ class FunctionAnalyzer(base_agent.BaseAgent):
     # Call the agent asynchronously and return the result
     prompt = self._initial_prompt(result_history)
     query = prompt.gettext()
+
+    # Validate query is not empty
+    if not query.strip():
+      raise ValueError("Query is empty. Cannot call the agent.")
+
     user_id = "user"
     session_id = f"session_{self.trial}"
     result = asyncio.run(
