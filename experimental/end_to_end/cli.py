@@ -664,7 +664,7 @@ def parse_commandline():
   fix_build_parser.add_argument('-mr',
                                 '--max-round',
                                 type=int,
-                                default=5,
+                                default=20,
                                 help='Max trial round for agents.')
 
   # Run build generation.

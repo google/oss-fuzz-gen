@@ -56,7 +56,7 @@ class BuildFixAgent(BaseAgent):
     self.projet_language = oss_fuzz_checkout.get_project_language(
         self.project_name)
 
-  def _initial_prompt(self, results: list[Result]):
+  def _initial_prompt(self, results: list[Result]):  # pylint: disable=unused-argument
     """Creates the initial prompt for the build fixer agent."""
     with open(
         os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR, 'projects',
@@ -88,7 +88,13 @@ class BuildFixAgent(BaseAgent):
     return prompt
 
   def execute(self, result_history: list[Result]) -> BuildResult:
-    """Executes the build fixer agent."""
+    """Executes the build fixer agent.
+    Creates a container tool and performs an initial build attempt.
+    The output of the build is then used to generate a prompt,
+    and the agent then goes into the iterative process.
+    """
+
+    # Prepare an initial image build.
     result_name = oss_fuzz_checkout.prepare_project_image_by_name(
         self.project_name)
 
@@ -101,6 +107,7 @@ class BuildFixAgent(BaseAgent):
     benchmark = Benchmark(self.project_name, self.project_name, '', '', '', '',
                           [], '')
 
+    # Initial run of compile.
     self.inspect_tool = ProjectContainerTool(benchmark, name='inspect')
     result = self.inspect_tool.compile(
         extra_commands=' && rm -rf /out/* > /dev/null')
@@ -113,28 +120,37 @@ class BuildFixAgent(BaseAgent):
 
     self.initial_error_result = result.stderr
 
+    # Prepare initial prompt.
     prompt = self._initial_prompt(result_history)
-
     build_result = BuildResult(benchmark=benchmark,
                                trial=0,
                                work_dirs=self.work_dirs,
                                author=self,
                                chat_history={self.name: ''})
 
-    # LLM iteration
-    cur_round = 0
+    # Agent loop
+    self.trial = 0
     try:
       client = self.llm.get_chat_client(model=self.llm.get_model())
       while prompt:
-        response = self.chat_llm(cur_round,
+        logger.info(f'Agent Round {self.trial}', trial=self.trial)
+        # Pass prompt history to LLM and get response.
+        logger.info('Sending prompt to LLM', trial=self.trial)
+        response = self.chat_llm(self.trial,
                                  client=client,
                                  prompt=prompt,
-                                 trial=cur_round)
-        prompt = self._container_tool_reaction(cur_round, response,
-                                               build_result)
+                                 trial=self.trial)
+
+        # Handle LLM response.
+        logger.info('Handling LLM response', trial=self.trial)
+        prompt = self._handle_llm_reponse(response, build_result)
         if not prompt:
           break
-      cur_round += 1
+        if self.trial >= self.args.max_round:
+          logger.info(f'Max discovery rounds reached ({self.args.max_round}).',
+                      trial=self.trial)
+          break
+        self.trial += 1
     finally:
       self.inspect_tool.terminate()
     return build_result
@@ -163,10 +179,9 @@ class BuildFixAgent(BaseAgent):
 
     return found_matches
 
-  def _test_check_build(self, tool: BaseTool, build_script) -> bool:
-    """Helper to test the generated build script for introspector build."""
-
-    # Create a copy of the original project name
+  def _test_build_fuzzers(
+      self, build_script: str) -> tuple[subprocess.CompletedProcess, str]:
+    """Runs OSS-Fuzz's build_fuzzers command with the provided build script."""
     target_dst = self.original_project_name + '-copy-' + str(
         uuid.uuid4().hex)[:8]
     shutil.copytree(
@@ -181,36 +196,53 @@ class BuildFixAgent(BaseAgent):
                      'build.sh'), 'w') as f:
       f.write(build_script)
     # Build project
-    try:
-      subprocess.check_call(
-          f'python3 infra/helper.py build_fuzzers {target_dst}',
-          cwd=oss_fuzz_checkout.OSS_FUZZ_DIR,
-          shell=True)
-    except:
-      return False
 
-    try:
-      subprocess.check_call(f'python3 infra/helper.py check_build {target_dst}',
-                            cwd=oss_fuzz_checkout.OSS_FUZZ_DIR,
-                            shell=True)
-    except:
-      return False
-    return True
+    cmd = ['python3', 'infra/helper.py', 'build_fuzzers', target_dst]
+    result = subprocess.run(cmd,
+                            stdout=subprocess.PIPE,
+                            stderr=subprocess.PIPE,
+                            check=False,
+                            text=True,
+                            encoding='utf-8',
+                            errors='ignore',
+                            cwd=oss_fuzz_checkout.OSS_FUZZ_DIR)
+    return result, target_dst
 
-  def _container_handle_bash_commands(self, response: str, tool: BaseTool,
-                                      prompt: Prompt) -> Prompt:
-    """Handles the command from LLM with container |tool|."""
+  def _test_check_fuzzers(self, target_dst) -> subprocess.CompletedProcess:
+    """Runs OSS-Fuzz's check_build command to evaluate build fuzzers."""
+
+    cmd = ['python3', 'infra/helper.py', 'check_build', target_dst]
+    result = subprocess.run(cmd,
+                            stdout=subprocess.PIPE,
+                            stderr=subprocess.PIPE,
+                            check=False,
+                            text=True,
+                            encoding='utf-8',
+                            errors='ignore',
+                            cwd=oss_fuzz_checkout.OSS_FUZZ_DIR)
+    return result
+
+  def _parse_llm_reponse_and_operate(self, response: str, tool: BaseTool,
+                                     prompt: Prompt) -> Prompt:
+    """Parses and LLM response and takes appropriate action. This includes
+    parsing bash commands to be executed in the container tool or extracting
+    the build script and testing it for compilation."""
     # Initialise variables
     prompt_text = ''
     success = False
     self.invalid = False
     self.missing_binary = False
 
+    logger.info('=' * 80, trial=self.trial)
+    logger.info(response, trial=self.trial)
+    logger.info('=' * 80, trial=self.trial)
+
     # Retrieve data from response
     build_script = self._parse_tag(response, 'bash')
     commands = '; '.join(self._parse_tags(response, 'command'))
 
     if commands:
+      logger.info('LLM Requested commands: %s', commands, trial=self.trial)
       self.discovery_stage = True
 
       # Execute the command directly, then return the formatted result
@@ -220,13 +252,8 @@ class BuildFixAgent(BaseAgent):
       if result.returncode == 0:
         success = True
     elif build_script:
+      logger.info('LLM Provided build script.', trial=self.trial)
       self.discovery_stage = False
-
-      # Restart the container to ensure a fresh session for test
-      if isinstance(tool, ProjectContainerTool):
-        tool.terminate()
-      tool = ProjectContainerTool(benchmark=tool.benchmark, name='test')
-      self.inspect_tool = tool
 
       # Fix shebang to ensure docker image failing is reflected.
       lines = build_script.split('\n')
@@ -236,29 +263,34 @@ class BuildFixAgent(BaseAgent):
         lines = ["#!/bin/bash -eu"] + lines
       build_script = '\n'.join(lines)
 
-      # Update build script
-      if isinstance(tool, ProjectContainerTool):
-        tool.write_to_file(build_script, tool.build_script_path)
+      build_result, target_dst = self._test_build_fuzzers(build_script)
+      if build_result.returncode != 0:
+        logger.info('Build failed.', trial=self.trial)
+        parsed_stdout = build_result.stdout
+        tag = '---------------------------------------------------------------'
 
-        # Test and parse result
-        result = tool.execute('compile')
-        format_result = self._format_bash_execution_result(
-            result, previous_prompt=prompt)
-        prompt_text = self._parse_tag(format_result, 'stderr') + '\n'
-        if result.returncode == 0:
-          if result.returncode == 0:
-            success = True
-            self.compiles = True
-
-            # Test check_all passes
-            if self._test_check_build(self.inspect_tool, build_script):
-              self.check_all_passed = True
-            else:
-              self.check_all_passed = False
-          else:
-            # Fuzzer binary not compiled correctly
-            success = False
-            self.missing_binary = True
+        parsed_stdout = tag.join(parsed_stdout.split(tag)[3:])
+        prompt_text = 'Build failed, this is the output:\n'
+        prompt_text += f'<out>{parsed_stdout}</out>'
+        self.compiles = False
+        self.check_all_passed = False
+        success = False
+      else:
+        # Success build
+        logger.info('Build succeeded.', trial=self.trial)
+        logger.info('Testing fuzzers run.', trial=self.trial)
+        test_run_result = self._test_check_fuzzers(target_dst)
+        if test_run_result.returncode == 0:
+          logger.info('Fuzzers run successfully.', trial=self.trial)
+          self.check_all_passed = True
+          success = True
+          self.compiles = True
+        else:
+          logger.info('Fuzzers run failed.', trial=self.trial)
+          prompt_text = test_run_result.stdout
+          self.compiles = True
+          self.check_all_passed = False
+          success = False
     else:
       self.invalid = True
 
@@ -267,17 +299,28 @@ class BuildFixAgent(BaseAgent):
 
     return prompt
 
-  def _container_handle_conclusion(self, cur_round: int, response: str,
-                                   build_result: BuildResult,
-                                   prompt: Prompt) -> Optional[Prompt]:
-    """Runs a compilation tool to validate the new build script from LLM."""
+  def _validate_operation_and_prepare_next_prompt(
+      self, build_result: BuildResult, prompt: Prompt) -> Optional[Prompt]:
+    """Interprets the results from operating on the LLM response and prepares
+    a new prompt for the next round of interaction."""
 
     # Don't need to check for invalid result
     if self.invalid:
       return prompt
 
     # Execution fail
+    if self.discovery_stage:
+      logger.info('Validating BASH command response', trial=self.trial)
+      # Still in bash mode.
+      prompt.add_problem(self.last_result)
+
+      # Store build result
+      build_result.compiles = False
+      build_result.compile_error = self.last_result
+
+      return prompt
     if not self.compiles:
+      logger.info('Validation build failure response', trial=self.trial)
       retry = templates.LLM_RETRY.replace('{BASH_RESULT}', self.last_result)
       prompt.add_problem(retry)
 
@@ -287,6 +330,7 @@ class BuildFixAgent(BaseAgent):
 
       return prompt
     if not self.check_all_passed:
+      logger.info('Validating check_build failure', trial=self.trial)
       retry = templates.LLM_RETRY_CHECK_ALL.replace('{BASH_RESULT}',
                                                     self.last_result)
       prompt.add_problem(retry)
@@ -299,20 +343,22 @@ class BuildFixAgent(BaseAgent):
     # Build script succeeded
     return None
 
-  def _container_tool_reaction(self, cur_round: int, response: str,
-                               build_result: BuildResult) -> Optional[Prompt]:
+  def _handle_llm_reponse(self, response: str,
+                          build_result: BuildResult) -> Optional[Prompt]:
     """Validates LLM conclusion or executes its command."""
     prompt = self.llm.prompt_type()(None)
 
     if response:
-      prompt = self._container_handle_bash_commands(response, self.inspect_tool,
-                                                    prompt)
-
-      prompt = self._container_handle_conclusion(cur_round, response,
-                                                 build_result, prompt)
+      prompt = self._parse_llm_reponse_and_operate(response, self.inspect_tool,
+                                                   prompt)
+      logger.info('Handling conclusions', trial=self.trial)
+      prompt = self._validate_operation_and_prepare_next_prompt(
+          build_result, prompt)
       if prompt is None:
         logger.info('Succeeded fixing build script', trial=self.trial)
+        logger.info('-' * 25 + ' Build script: ' + '-' * 25, trial=self.trial)
         logger.info(self.success_build_script, trial=self.trial)
+        logger.info('-' * 60, trial=self.trial)
         return None
 
     return prompt

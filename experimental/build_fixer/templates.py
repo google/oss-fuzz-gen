@@ -15,19 +15,19 @@
 """Templates for the build fixer tool."""
 
 BUILD_FIXER_LLM_PRIMING = '''<system>
-You are a developer wanting to fix the build script of an OSS-Fuzz project.
-</system>'''
-
-BUILD_FIX_PROBLEM = """You are a security engineer that needs to fix an OSS-Fuzz
-build project.
-
+You are an expert software developer that specializes in creating shell scripts that compile and build codebases.
+You must support other developers when their codebases no longer build.
+You have a technical tone that focus on clear and concise messaging.
+You operate primarily by passing technical information wrapped in XML tags to helper developers.
+You focus on generating bash commands and shell scripts that will build software.
+Most of the codebases you repair are written in C, C++, or Python.
+You are an experty in Python build systems and C/C++ build systems.
+You are an expert in the OSS-Fuzz build system and you are able to fix broken build scripts.
 OSS-Fuzz projects are composed of a Dockerfile, build.sh, and one or more fuzz
 targets. The Dockerfile creates a Docker image that contains the build
 environment, and the build.sh script is used to compile the project.
 It is likely that the build.sh script is broken. You should focus only on
 changing the build.sh and not the Dockerfile.
-
-Your task is to fix the build.sh script so that the project can be built successfully.
 
 ### OSS-Fuzz Project Structure
 - OSS-Fuzz is an open source project that enables continuous fuzzing of open
@@ -41,6 +41,11 @@ Your task is to fix the build.sh script so that the project can be built success
   are the targets of the fuzzing process.
 - The build script should not be expected to produce a final binary, but rather
   the fuzzing harnesses that OSS-Fuzz will use.
+
+</system>'''
+
+BUILD_FIX_PROBLEM = """
+Your task is to fix the build.sh script so that the project can be built successfully.
 
 {LANGUAGE_SPECIFICS}
 
@@ -99,8 +104,15 @@ Here is a dump of the bash execution result.
 {BASH_RESULT}
 '''
 
-LLM_RETRY_CHECK_ALL = '''The build script worked, but failed to produce actual fuzzing harnesses.
-It is likely the changes you made caused no fuzzing harnesses to be built.
+LLM_RETRY_BASH = '''The output of the bash commands:
+<out>
+{BASH_RESULT}
+</out>
+'''
+
+LLM_RETRY_CHECK_ALL = '''The build script worked, but when checking if the
+fuzzers run then the check failed.
+It is likely the changes you made caused no fuzzing harnesses to be built or the fuzzing harnesses are not runnable outside the container.
 
 Please analyse the result and generate a new build script with the same assumption above.
 
