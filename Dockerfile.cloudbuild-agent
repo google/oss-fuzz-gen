@@ -29,9 +29,6 @@ RUN apt-get install -y ca-certificates gnupg lsb-release && \
 # Install c++filt
 RUN apt-get install -y build-essential
 
-# Install other dependencies.
-RUN apt-get install -y screen lldb
-
 ENV DEBIAN_FRONTEND=dialog
 
 # Set the working directory
