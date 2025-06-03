@@ -40,16 +40,6 @@ class LLDBTool(ProjectContainerTool):
       .replace('{AFTIFACT_PATH}', self.result.artifact_path)\
       .replace('{TARGET_NAME}', self.benchmark.target_name)
 
-  def execute(self, command: str) -> sp.CompletedProcess:
-    """Executes the |command| in the container and returns the output."""
-    logger.error('Executing command (%s) in %s: ', command, self.container_id)
-    execute_command_in_container = [
-        'docker', 'exec', self.container_id, '/bin/bash', '-c', command
-    ]
-    process = self._execute_command_in_container(execute_command_in_container)
-    process.args = command
-    return process
-
   def execute_in_screen(self, lldb_command: str) -> sp.CompletedProcess:
     """Sends a command to the lldb_session screen and returns LLDB output."""
     self.execute('screen -S lldb_session -X logfile flush 0')
