@@ -222,6 +222,12 @@ class BuildFixAgent(BaseAgent):
                             cwd=oss_fuzz_checkout.OSS_FUZZ_DIR)
     return result
 
+  def _simple_truncate_build_output(self, output: str) -> str:
+    """Truncates the build output to a manageable size."""
+    if len(output) > 8000:
+      return output[:1500] + '\n... (truncated)' + output[-6500:]
+    return output
+
   def _parse_llm_reponse_and_operate(self, response: str, tool: BaseTool,
                                      prompt: Prompt) -> Prompt:
     """Parses and LLM response and takes appropriate action. This includes
@@ -271,8 +277,7 @@ class BuildFixAgent(BaseAgent):
 
         parsed_stdout = tag.join(parsed_stdout.split(tag)[3:])
         prompt_text = 'Build failed, this is the output:\n'
-        if len(parsed_stdout) > 8000:
-          parsed_stdout = parsed_stdout[:1500] + '\n... (truncated)' + parsed_stdout[-6500:]
+        parsed_stdout = self._simple_truncate_build_output(parsed_stdout)
         prompt_text += f'<out>{parsed_stdout}</out>'
         self.compiles = False
         self.check_all_passed = False
