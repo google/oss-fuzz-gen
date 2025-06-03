@@ -271,6 +271,8 @@ class BuildFixAgent(BaseAgent):
 
         parsed_stdout = tag.join(parsed_stdout.split(tag)[3:])
         prompt_text = 'Build failed, this is the output:\n'
+        if len(parsed_stdout) > 8000:
+          parsed_stdout = parsed_stdout[:1500] + '\n... (truncated)' + parsed_stdout[-6500:]
         prompt_text += f'<out>{parsed_stdout}</out>'
         self.compiles = False
         self.check_all_passed = False
