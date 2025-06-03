@@ -56,7 +56,7 @@ class BuildFixAgent(BaseAgent):
     self.projet_language = oss_fuzz_checkout.get_project_language(
         self.project_name)
 
-  def _initial_prompt(self, results: list[Result]):
+  def _initial_prompt(self, results: list[Result]):  # pylint: disable=unused-argument
     """Creates the initial prompt for the build fixer agent."""
     with open(
         os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR, 'projects',
@@ -143,7 +143,7 @@ class BuildFixAgent(BaseAgent):
 
         # Handle LLM response.
         logger.info('Handling LLM response', trial=self.trial)
-        prompt = self._handle_llm_reponse(self.trial, response, build_result)
+        prompt = self._handle_llm_reponse(response, build_result)
         if not prompt:
           break
         if self.trial >= self.args.max_round:
@@ -270,7 +270,8 @@ class BuildFixAgent(BaseAgent):
         tag = '---------------------------------------------------------------'
 
         parsed_stdout = tag.join(parsed_stdout.split(tag)[3:])
-        prompt_text = f'Build failed, this is the output:\n<out>{parsed_stdout}</out>'
+        prompt_text = 'Build failed, this is the output:\n'
+        prompt_text += f'<out>{parsed_stdout}</out>'
         self.compiles = False
         self.check_all_passed = False
         success = False
@@ -342,7 +343,7 @@ class BuildFixAgent(BaseAgent):
     # Build script succeeded
     return None
 
-  def _handle_llm_reponse(self, cur_round: int, response: str,
+  def _handle_llm_reponse(self, response: str,
                           build_result: BuildResult) -> Optional[Prompt]:
     """Validates LLM conclusion or executes its command."""
     prompt = self.llm.prompt_type()(None)

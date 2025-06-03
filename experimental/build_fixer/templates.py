@@ -110,7 +110,8 @@ LLM_RETRY_BASH = '''The output of the bash commands:
 </out>
 '''
 
-LLM_RETRY_CHECK_ALL = '''The build script worked, but when checking if the fuzzers run then the check failed.
+LLM_RETRY_CHECK_ALL = '''The build script worked, but when checking if the
+fuzzers run then the check failed.
 It is likely the changes you made caused no fuzzing harnesses to be built or the fuzzing harnesses are not runnable outside the container.
 
 Please analyse the result and generate a new build script with the same assumption above.
