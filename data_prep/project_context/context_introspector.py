@@ -37,7 +37,7 @@ class ContextRetriever:
   """Class to retrieve context from introspector for
   better prompt generation."""
 
-  def __init__(self, benchmark: benchmarklib.Benchmark, args: Namespace):
+  def __init__(self, benchmark: benchmarklib.Benchmark, args: Optional[Namespace] = None):
     """Constructor."""
     self._benchmark = benchmark
     self.args = args
@@ -348,11 +348,15 @@ class ContextRetriever:
   def get_function_requirements(self) -> str:
     """Retrieves the function's requirements from the cloud storage bucket."""
 
+    if self.args and hasattr(self.args, 'rel_path') and self.args.rel_path:
+      rel_path = self.args.rel_path
+    else:
+      rel_path = CGS_RESULTS_DIR
+
     logger.info('Retrieving requirements for %s', self._benchmark.id)
 
     client = storage.Client()
     bucket = client.bucket(GCS_BUCKET_NAME)
-    rel_path = f"{CGS_RESULTS_DIR}/{self.args.rel_path}" if hasattr(self.args, 'rel_path') and self.args.rel_path else {CGS_RESULTS_DIR}
     blob_name = f"{rel_path}/{self._benchmark.id}.txt"
     blob = bucket.blob(blob_name)
     try:
