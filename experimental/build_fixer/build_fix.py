@@ -71,16 +71,18 @@ class BuildFixAgent(BaseAgent):
     prompt = self.llm.prompt_type()(None)
 
     template_prompt = templates.BUILD_FIX_PROBLEM
-    template_prompt.replace('{DOCKERFILE}', dockerfile)
-    template_prompt.replace('{BUILD_SCRIPT}', build_script)
-    template_prompt.replace('{LOGS}', self.initial_error_result[-300:])
-    template_prompt.replace('{MAX_DISCOVERY_ROUND}', str(self.args.max_round))
+    template_prompt = template_prompt.replace('{DOCKERFILE}', dockerfile)
+    template_prompt = template_prompt.replace('{BUILD_SCRIPT}', build_script)
+    template_prompt = template_prompt.replace('{LOGS}',
+                                              self.initial_error_result[-300:])
+    template_prompt = template_prompt.replace('{MAX_DISCOVERY_ROUND}',
+                                              str(self.args.max_round))
 
     if self.projet_language.lower() == 'python':
-      template_prompt.replace('{LANGUAGE_SPECIFICS}',
-                              templates.PYTHON_SPECIFICS)
+      template_prompt = template_prompt.replace('{LANGUAGE_SPECIFICS}',
+                                                templates.PYTHON_SPECIFICS)
     else:
-      template_prompt.replace('{LANGUAGE_SPECIFICS}', '')
+      template_prompt = template_prompt.replace('{LANGUAGE_SPECIFICS}', '')
     #prompt.add_priming(template_prompt)
 
     prompt.add_priming(templates.BUILD_FIXER_LLM_PRIMING)
