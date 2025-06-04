@@ -60,7 +60,7 @@ class LLM:
 
   MAX_INPUT_TOKEN: int = sys.maxsize
 
-  _max_attempts = 5  # Maximum number of attempts to get prediction response
+  _max_attempts = 2  # Maximum number of attempts to get prediction response
 
   def __init__(
       self,
@@ -143,6 +143,10 @@ class LLM:
     """Queries LLM a single prompt and returns its response."""
     del prompt
     return ''
+  
+  @abstractmethod
+  def chat_llm_with_tools(self, client: Any, prompt: prompts.Prompt, tools) -> str:
+    """Queries the LLM in the given chat session with tools and returns the response."""
 
   @abstractmethod
   def chat_llm(self, client: Any, prompt: prompts.Prompt) -> str:
@@ -333,6 +337,36 @@ class GPT(LLM):
     self.messages.append({'role': 'assistant', 'content': llm_response})
 
     return llm_response
+
+  def chat_llm_with_tools(self, client: Any, prompt: prompts.Prompt, tools) -> str:
+    """Queries LLM in a chat session and  returns its response."""
+    if self.ai_binary:
+      raise ValueError(f'OpenAI does not use local AI binary: {self.ai_binary}')
+    if self.temperature_list:
+      logger.info('OpenAI does not allow temperature list: %s',
+                  self.temperature_list)
+
+    if prompt:
+      self.messages.extend(prompt.get())
+
+    return client.responses.create(
+      model="gpt-4.1",
+      input=self.messages,
+      tools=tools)
+
+    return client.chat.completions.create(messages=self.messages,
+                                               model=self.name,
+                                               n=self.num_samples,
+                                               temperature=self.temperature,
+                                               tools=tools)
+    #result = self.with_retry_on_error(
+    #    lambda: client.chat.completions.create(messages=self.messages,
+    #                                           model=self.name,
+    #                                           n=self.num_samples,
+    #                                           temperature=self.temperature,
+    #                                           tools=tools),
+    #    [openai.OpenAIError])
+    #return result
 
   def ask_llm(self, prompt: prompts.Prompt) -> str:
     """Queries LLM a single prompt and returns its response."""

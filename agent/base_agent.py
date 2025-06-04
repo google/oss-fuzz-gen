@@ -59,6 +59,22 @@ class BaseAgent(ABC):
       if tool.name == tool_name:
         return tool
     return None
+  
+  def chat_llm_with_tools(self, client: Any, prompt: Prompt, tools, trial) -> str:
+    """Chat with LLM with tools."""
+    logger.info('<CHAT WITH TOOLS PROMPT:ROUND %02d>%s</CHAT PROMPT:ROUND %02d>',
+                trial,
+                prompt.gettext() if prompt else '',
+                trial,
+                trial=trial)
+    response = self.llm.chat_llm_with_tools(client=client, prompt=prompt,
+                                            tools=tools)
+    logger.info('<CHAT WITH TOOLS RESPONSE:ROUND %02d>%s</CHAT RESPONSE:ROUND %02d>',
+                trial,
+                response,
+                trial,
+                trial=trial)
+    return response
 
   def chat_llm(self, cur_round: int, client: Any, prompt: Prompt,
                trial: int) -> str:
