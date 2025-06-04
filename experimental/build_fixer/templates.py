@@ -71,7 +71,6 @@ Your task is to fix the build.sh script so that the project can be built success
   </logs>
 """
 
-
 BUILD_FIX_PROBLEM = """
 Your task is to fix the build.sh script so that the project can be built successfully.
 

@@ -146,8 +146,8 @@ class LLM:
 
   @abstractmethod
   def chat_llm_with_tools(self, client: Any, prompt: prompts.Prompt,
-                          tools) -> str:
-    """Queries the LLM in the given chat session with tools and returns the response."""
+                          tools) -> Any:
+    """Queries the LLM in the given chat session with tools."""
 
   @abstractmethod
   def chat_llm(self, client: Any, prompt: prompts.Prompt) -> str:
@@ -340,8 +340,8 @@ class GPT(LLM):
     return llm_response
 
   def chat_llm_with_tools(self, client: Any, prompt: prompts.Prompt,
-                          tools) -> str:
-    """Queries LLM in a chat session and  returns its response."""
+                          tools) -> Any:
+    """Queries LLM in a chat session with tools."""
     if self.ai_binary:
       raise ValueError(f'OpenAI does not use local AI binary: {self.ai_binary}')
     if self.temperature_list:
@@ -584,10 +584,10 @@ class Claude(LLM):
     # Placeholder: To Be Implemented.
 
   def chat_llm_with_tools(self, client: Any, prompt: prompts.Prompt,
-                          tools) -> str:
-    """Queries the LLM in the given chat session with tools and returns the response."""
+                          tools) -> Any:
+    """Queries the LLM in the given chat session with tools."""
     # Placeholder: To Be Implemented.
-    raise NotImplementedError('please implement.')
+    return
 
 
 class ClaudeHaikuV3(Claude):
@@ -699,10 +699,10 @@ class GoogleModel(LLM):
     raise NotImplementedError
 
   def chat_llm_with_tools(self, client: Any, prompt: prompts.Prompt,
-                          tools) -> str:
-    """Queries the LLM in the given chat session with tools and returns the response."""
+                          tools) -> Any:
+    """Queries the LLM in the given chat session with tools."""
     # Placeholder: To Be Implemented.
-    raise NotImplementedError('please implement.')
+    return
 
 
 class VertexAIModel(GoogleModel):
@@ -984,10 +984,10 @@ class GeminiV1D5Chat(GeminiV1D5):
     return response
 
   def chat_llm_with_tools(self, client: Any, prompt: prompts.Prompt,
-                          tools) -> str:
-    """Queries the LLM in the given chat session with tools and returns the response."""
+                          tools) -> Any:
+    """Queries the LLM in the given chat session with tools."""
     # Placeholder: To Be Implemented.
-    raise NotImplementedError('please implement.')
+    return
 
 
 class GeminiV2FlashChat(GeminiV1D5Chat):
@@ -1048,10 +1048,10 @@ class AIBinaryModel(GoogleModel):
     # Placeholder: To Be Implemented.
 
   def chat_llm_with_tools(self, client: Any, prompt: prompts.Prompt,
-                          tools) -> str:
-    """Queries the LLM in the given chat session with tools and returns the response."""
+                          tools) -> Any:
+    """Queries the LLM in the given chat session with tools."""
     # Placeholder: To Be Implemented.
-    raise NotImplementedError('please implement.')
+    return
 
 
 DefaultModel = GeminiV1D5

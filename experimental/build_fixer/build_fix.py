@@ -14,13 +14,13 @@
 # limitations under the License.
 """Build fixer tooling."""
 
+import json
 import os
 import re
 import shutil
 import subprocess
 import sys
 import uuid
-import json
 from typing import Optional
 
 import logger
@@ -35,6 +35,40 @@ from llm_toolkit.prompts import Prompt
 from results import BuildResult, Result
 from tool.base_tool import BaseTool
 from tool.container_tool import ProjectContainerTool
+
+FIXER_TOOLS = [{
+    'type': 'function',
+    'name': 'test_build_script',
+    'description': 'Tests a build script against target project.',
+    'parameters': {
+        'type': 'object',
+        'properties': {
+            'build_script': {
+                'type': 'string',
+                'description': 'Bash script that builds the project.'
+            }
+        },
+        'required': ['build_script'],
+        'additionalProperties': False
+    }
+}, {
+    'type': 'function',
+    'name': 'run_commands_in_container',
+    'description': 'Runs a command string in the project container.',
+    'parameters': {
+        'type': 'object',
+        'properties': {
+            'command': {
+                'type':
+                    'string',
+                'description':
+                    'Bash commands separated by \';\' to run in the container.'
+            }
+        },
+        'required': ['command'],
+        'additionalProperties': False
+    }
+}]
 
 
 class BuildFixAgent(BaseAgent):
@@ -145,47 +179,15 @@ class BuildFixAgent(BaseAgent):
       self._agent_run_function_based_loop(prompt, build_result)
     else:
       self._agent_raw_loop(prompt, build_result)
+    return build_result
 
-  def _agent_run_function_based_loop(self, prompt: Prompt,
-                                     build_result: BuildResult) -> BuildResult:
+  def _agent_run_function_based_loop(
+      self, prompt: Optional[Prompt], build_result: BuildResult) -> None:  # pylint: disable=unused-argument
     """Runs the agent loop using a function-based approach."""
 
     # Agent loop
     try:
       client = self.llm.get_chat_client(model=self.llm.get_model())
-      tools = [{
-          "type": "function",
-          "name": "test_build_script",
-          "description": "Tests a build script against target project.",
-          "parameters": {
-              "type": "object",
-              "properties": {
-                  "build_script": {
-                      "type": "string",
-                      "description": "Bash script that builds the project."
-                  }
-              },
-              "required": ["build_script"],
-              "additionalProperties": False
-          }
-      }, {
-          "type": "function",
-          "name": "run_commands_in_container",
-          "description": "Runs a command string in the project container.",
-          "parameters": {
-              "type": "object",
-              "properties": {
-                  "command": {
-                      "type":
-                          "string",
-                      "description":
-                          "Bash commands separated by ';' to run in the container."
-                  }
-              },
-              "required": ["command"],
-              "additionalProperties": False
-          }
-      }]
 
       extended_messages = False
       cur_round = 0
@@ -198,7 +200,11 @@ class BuildFixAgent(BaseAgent):
 
         # Pass prompt history to LLM and get response.
         logger.info('Sending prompt to LLM', trial=self.trial)
-        response = self.chat_llm_with_tools(client, prompt, tools, self.trial)
+        if prompt is None:
+          return
+
+        response = self.chat_llm_with_tools(client, prompt, FIXER_TOOLS,
+                                            self.trial)
 
         tools_analysed = 0
         extended_messages = False
@@ -215,11 +221,11 @@ class BuildFixAgent(BaseAgent):
                       trial=self.trial)
           if tool_call.name == 'test_build_script':
             arguments = json.loads(tool_call.arguments)
-            build_result, target_dst = self._test_build_fuzzers(
+            build_fuzzers_result, target_dst = self._test_build_fuzzers(
                 arguments['build_script'])
-            if build_result.returncode != 0:
+            if build_fuzzers_result.returncode != 0:
               logger.info('Build failed.', trial=self.trial)
-              parsed_stdout = build_result.stdout
+              parsed_stdout = build_fuzzers_result.stdout
               parsed_stdout = self._simple_truncate_build_output(parsed_stdout)
 
               logger.info('Parsed stdout: %s', parsed_stdout, trial=self.trial)
@@ -304,9 +310,10 @@ class BuildFixAgent(BaseAgent):
     finally:
       self.inspect_tool.terminate()
 
-  def _agent_raw_loop(self, prompt: Prompt,
-                      build_result: BuildResult) -> BuildResult:
-    """Runs the agent loop, sending prompts to the LLM and handling responses."""
+  def _agent_raw_loop(self, prompt: Optional[Prompt],
+                      build_result: BuildResult) -> None:
+    """Runs the agent loop, sending prompts to the LLM and handling
+    responses."""
     # Agent loop
     self.trial = 0
     try:
@@ -332,7 +339,6 @@ class BuildFixAgent(BaseAgent):
         self.trial += 1
     finally:
       self.inspect_tool.terminate()
-    return build_result
 
   def _parse_tag(self, response: str, tag: str) -> str:
     """Parses the tag from LLM response."""
