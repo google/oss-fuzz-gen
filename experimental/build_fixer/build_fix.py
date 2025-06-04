@@ -75,12 +75,14 @@ class BuildFixAgent(BaseAgent):
     template_prompt = templates.BUILD_FIX_PROBLEM_TOOLS
     template_prompt = template_prompt.replace('{DOCKERFILE}', dockerfile)
     template_prompt = template_prompt.replace('{BUILD_SCRIPT}', build_script)
-    template_prompt = template_prompt.replace('{LOGS}', self.initial_error_result[-300:])
-    template_prompt = template_prompt.replace('{MAX_DISCOVERY_ROUND}', str(self.args.max_round))
+    template_prompt = template_prompt.replace('{LOGS}',
+                                              self.initial_error_result[-300:])
+    template_prompt = template_prompt.replace('{MAX_DISCOVERY_ROUND}',
+                                              str(self.args.max_round))
 
     if self.projet_language.lower() == 'python':
       template_prompt = template_prompt.replace('{LANGUAGE_SPECIFICS}',
-                              templates.PYTHON_SPECIFICS)
+                                                templates.PYTHON_SPECIFICS)
     else:
       template_prompt = template_prompt.replace('{LANGUAGE_SPECIFICS}', '')
     #prompt.add_priming(template_prompt)
@@ -138,11 +140,9 @@ class BuildFixAgent(BaseAgent):
     """Runs the agent loop using a function-based approach."""
 
     # Agent loop
-
     try:
       client = self.llm.get_chat_client(model=self.llm.get_model())
-      tools = [
-      {
+      tools = [{
           "type": "function",
           "name": "test_build_script",
           "description": "Tests a build script against target project.",
@@ -154,13 +154,10 @@ class BuildFixAgent(BaseAgent):
                       "description": "Bash script that builds the project."
                   }
               },
-              "required": [
-                  "build_script"
-              ],
+              "required": ["build_script"],
               "additionalProperties": False
           }
-      },
-      {
+      }, {
           "type": "function",
           "name": "run_commands_in_container",
           "description": "Runs a command string in the project container.",
@@ -168,71 +165,143 @@ class BuildFixAgent(BaseAgent):
               "type": "object",
               "properties": {
                   "command": {
-                      "type": "string",
-                      "description": "Bash commands separated by ';' to run in the container."
+                      "type":
+                          "string",
+                      "description":
+                          "Bash commands separated by ';' to run in the container."
                   }
               },
-              "required": [
-                  "command"
-              ],
+              "required": ["command"],
               "additionalProperties": False
           }
-      }
-      ]
+      }]
 
       extended_messages = False
       cur_round = 0
+      success = False
       while prompt or extended_messages:
+        logger.info(f'Agent Round {cur_round}', trial=self.trial)
         cur_round += 1
-        if cur_round > 2:
+        if cur_round > self.args.max_round:
           sys.exit(0)
-        extended_messages = False
+
+        # Pass prompt history to LLM and get response.
         logger.info('Sending prompt to LLM', trial=self.trial)
         response = self.chat_llm_with_tools(client, prompt, tools, self.trial)
         print('*' * 80)
         print(response)
-        print('<'*20 + '*' * 20)
+        print('<' * 20 + '*' * 20)
         tools_analysed = 0
+        extended_messages = False
+
+        # handle each of the tool calls in the response.
+        logger.info('Iterating response output', trial=self.trial)
         for tool_call in response.output:
+          logger.info('- Response out:' + str(tool_call), trial=self.trial)
           if tool_call.type != 'function_call':
             continue
           tools_analysed += 1
           if tool_call.name == 'test_build_script':
-            logger.info('handling test_build_script tool call', trial=self.trial)
-            logger.info('LLM Provided build script. %s', tool_call.arguments, trial=self.trial)
+            logger.info('handling test_build_script tool call',
+                        trial=self.trial)
+            logger.info('LLM Provided build script. %s',
+                        tool_call.arguments,
+                        trial=self.trial)
             arguments = json.loads(tool_call.arguments)
-            build_result, target_dst = self._test_build_fuzzers(arguments['build_script'])
+            build_result, target_dst = self._test_build_fuzzers(
+                arguments['build_script'])
             if build_result.returncode != 0:
               logger.info('Build failed.', trial=self.trial)
               parsed_stdout = build_result.stdout
-              tag = '---------------------------------------------------------------'
+              parsed_stdout = self._simple_truncate_build_output(parsed_stdout)
+
               logger.info('Parsed stdout: %s', parsed_stdout, trial=self.trial)
 
-
               self.llm.messages.append(tool_call)
-              self.llm.messages.append({'type': 'function_call_output',
-                                        'call_id': tool_call.call_id, 
-                                        'output': str(parsed_stdout)})
+              self.llm.messages.append({
+                  'type': 'function_call_output',
+                  'call_id': tool_call.call_id,
+                  'output': str(parsed_stdout)
+              })
               extended_messages = True
               prompt = None
 
             else:
               logger.info('Build succeeded.', trial=self.trial)
+              # Testing fuzzers run.
+              test_run_result = self._test_check_fuzzers(target_dst)
+              if test_run_result.returncode == 0:
+                logger.info('Fuzzers run successfully.', trial=self.trial)
+                success = True
+                self.success_build_script = arguments['build_script']
+                prompt = None
+                extended_messages = False
+              else:
+                logger.info('Fuzzers run failed.', trial=self.trial)
+                prompt_text = test_run_result.stdout
+                success = False
+                self.llm.messages.append(tool_call)
+                self.llm.messages.append({
+                    'type': 'function_call_output',
+                    'call_id': tool_call.call_id,
+                    'output': str(prompt_text)
+                })
+                extended_messages = True
+                prompt = None
+
           elif tool_call.name == 'run_commands_in_container':
             logger.info('Handling commands tool call', trial=self.trial)
-            logger.info('LLM Provided arguments. %s', tool_call.arguments, trial=self.trial)
+            logger.info('LLM Provided arguments. %s',
+                        tool_call.arguments,
+                        trial=self.trial)
             arguments = json.loads(tool_call.arguments)
             logger.info(json.dumps(arguments, indent=2), trial=self.trial)
+
+            # Execute the command directly, then return the formatted result
+            commands = arguments['command']
+            logger.info('LLM Requested commands: %s',
+                        commands,
+                        trial=self.trial)
+            result = self.inspect_tool.execute(commands)
+            prompt_text = self._format_bash_execution_result(
+                result, previous_prompt=prompt)
+
+            prompt_text = self._simple_truncate_build_output(prompt_text)
+
+            self.llm.messages.append(tool_call)
+            self.llm.messages.append({
+                'type': 'function_call_output',
+                'call_id': tool_call.call_id,
+                'output': str(prompt_text)
+            })
+            extended_messages = True
+            prompt = None
           else:
-            logger.info('Unsupported tool call: %s', tool_call.name,
-                      trial=self.trial)
-        
-        
+            logger.info('Unsupported tool call: %s',
+                        tool_call.name,
+                        trial=self.trial)
+
+        if tools_analysed == 0 and not success:
+          logger.info(
+              'Did not execute any tool calls. At the moment we do not support this, but we should add support for it.',
+              trial=self.trial)
+          prompt = prompt = self.llm.prompt_type()(None)
+          prompt.add_problem(
+              'I was unable to interpret your last message. Use tool calls to direct this process instead of messages.'
+          )
+          cur_round -= 1
+
+        if success:
+          logger.info('Succeeded fixing build script', trial=self.trial)
+          logger.info('-' * 25 + ' Build script: ' + '-' * 25, trial=self.trial)
+          logger.info(self.success_build_script, trial=self.trial)
+          logger.info('-' * 60, trial=self.trial)
+          break
     finally:
       self.inspect_tool.terminate()
 
   def _agent_raw_loop(self, prompt: Prompt,
-                          build_result: BuildResult) -> BuildResult:
+                      build_result: BuildResult) -> BuildResult:
     """Runs the agent loop, sending prompts to the LLM and handling responses."""
     # Agent loop
     self.trial = 0
