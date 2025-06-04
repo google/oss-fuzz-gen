@@ -60,7 +60,7 @@ class BaseAgent(ABC):
         return tool
     return None
 
-  def chat_llm_with_tools(self, client: Any, prompt: Prompt, tools,
+  def chat_llm_with_tools(self, client: Any, prompt: Optional[Prompt], tools,
                           trial) -> Any:
     """Chat with LLM with tools."""
     logger.info(

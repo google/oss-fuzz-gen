@@ -145,7 +145,7 @@ class LLM:
     return ''
 
   @abstractmethod
-  def chat_llm_with_tools(self, client: Any, prompt: prompts.Prompt,
+  def chat_llm_with_tools(self, client: Any, prompt: Optional[prompts.Prompt],
                           tools) -> Any:
     """Queries the LLM in the given chat session with tools."""
 
@@ -339,7 +339,7 @@ class GPT(LLM):
 
     return llm_response
 
-  def chat_llm_with_tools(self, client: Any, prompt: prompts.Prompt,
+  def chat_llm_with_tools(self, client: Any, prompt: Optional[prompts.Prompt],
                           tools) -> Any:
     """Queries LLM in a chat session with tools."""
     if self.ai_binary:
@@ -399,6 +399,11 @@ class GPT4(GPT):
   """OpenAI's GPT-4 model."""
 
   name = 'gpt-4'
+
+class GPT41(GPT):
+  """OpenAI's GPT-4.1 model."""
+
+  name = 'gpt-4.1'
 
 
 class GPT4o(GPT):
@@ -583,7 +588,7 @@ class Claude(LLM):
     del client, prompt
     # Placeholder: To Be Implemented.
 
-  def chat_llm_with_tools(self, client: Any, prompt: prompts.Prompt,
+  def chat_llm_with_tools(self, client: Any, prompt: Optional[prompts.Prompt],
                           tools) -> Any:
     """Queries the LLM in the given chat session with tools."""
     # Placeholder: To Be Implemented.
@@ -698,7 +703,7 @@ class GoogleModel(LLM):
     del client, prompt
     raise NotImplementedError
 
-  def chat_llm_with_tools(self, client: Any, prompt: prompts.Prompt,
+  def chat_llm_with_tools(self, client: Any, prompt: Optional[prompts.Prompt],
                           tools) -> Any:
     """Queries the LLM in the given chat session with tools."""
     # Placeholder: To Be Implemented.
@@ -983,7 +988,7 @@ class GeminiV1D5Chat(GeminiV1D5):
     response = self._do_generate(client, prompt.get(), parameters_list) or ''
     return response
 
-  def chat_llm_with_tools(self, client: Any, prompt: prompts.Prompt,
+  def chat_llm_with_tools(self, client: Any, prompt: Optional[prompts.Prompt],
                           tools) -> Any:
     """Queries the LLM in the given chat session with tools."""
     # Placeholder: To Be Implemented.
@@ -1047,7 +1052,7 @@ class AIBinaryModel(GoogleModel):
     del client, prompt
     # Placeholder: To Be Implemented.
 
-  def chat_llm_with_tools(self, client: Any, prompt: prompts.Prompt,
+  def chat_llm_with_tools(self, client: Any, prompt: Optional[prompts.Prompt],
                           tools) -> Any:
     """Queries the LLM in the given chat session with tools."""
     # Placeholder: To Be Implemented.
