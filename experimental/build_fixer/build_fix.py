@@ -200,9 +200,6 @@ class BuildFixAgent(BaseAgent):
 
         # Pass prompt history to LLM and get response.
         logger.info('Sending prompt to LLM', trial=self.trial)
-        if prompt is None:
-          return
-
         response = self.chat_llm_with_tools(client, prompt, FIXER_TOOLS,
                                             self.trial)
 
