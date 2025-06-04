@@ -105,8 +105,6 @@ class FunctionAnalyzer(base_agent.BaseAgent):
                        session_id: str) -> str:
     """Call the agent asynchronously with the given query."""
 
-    # logger.info(">>> User query: %s", query)
-
     content = types.Content(role='user', parts=[types.Part(text=query)])
 
     final_response_text = ''
@@ -119,7 +117,6 @@ class FunctionAnalyzer(base_agent.BaseAgent):
         new_message=content,
     ):
 
-      # logger.info("Event is %s", event.content)
       if event.is_final_response():
         if (event.content and event.content.parts and
             event.content.parts[0].text):
