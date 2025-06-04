@@ -349,7 +349,7 @@ class ContextRetriever:
     """Retrieves the function's requirements from the cloud storage bucket."""
 
     if self.args and hasattr(self.args, 'rel_path') and self.args.rel_path:
-      rel_path = self.args.rel_path
+      rel_path = f"{CGS_RESULTS_DIR}/{self.args.rel_path}"
     else:
       rel_path = CGS_RESULTS_DIR
 
