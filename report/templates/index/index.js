@@ -1,21 +1,65 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const expandAllButton = document.getElementById('expand-all');
-    if (expandAllButton) {
-        expandAllButton.addEventListener('click', () => {
+    // Summary table expand/collapse buttons
+    const summaryExpandAllButton = document.getElementById('summary-expand-all');
+    if (summaryExpandAllButton) {
+        summaryExpandAllButton.addEventListener('click', () => {
             document.querySelectorAll('[x-ref^="benchmarks_"]').forEach(el => {
                 el.classList.remove('hidden');
             });
         });
     }
 
-    const collapseAllButton = document.getElementById('collapse-all');
-    if (collapseAllButton) {
-        collapseAllButton.addEventListener('click', () => {
+    const summaryCollapseAllButton = document.getElementById('summary-collapse-all');
+    if (summaryCollapseAllButton) {
+        summaryCollapseAllButton.addEventListener('click', () => {
             document.querySelectorAll('[x-ref^="benchmarks_"]').forEach(el => {
                 el.classList.add('hidden');
             });
         });
     }
+
+    const crashesExpandAllButton = document.getElementById('crashes-expand-all');
+    if (crashesExpandAllButton) {
+        crashesExpandAllButton.addEventListener('click', () => {
+            document.querySelectorAll('[x-ref^="project_"]').forEach(el => {
+                el.classList.remove('hidden');
+            });
+            document.querySelectorAll('[x-ref^="samples_"]').forEach(el => {
+                el.classList.remove('hidden');
+            });
+        });
+    }
+
+    const crashesCollapseAllButton = document.getElementById('crashes-collapse-all');
+    if (crashesCollapseAllButton) {
+        crashesCollapseAllButton.addEventListener('click', () => {
+            document.querySelectorAll('[x-ref^="project_"]').forEach(el => {
+                el.classList.add('hidden');
+            });
+            document.querySelectorAll('[x-ref^="samples_"]').forEach(el => {
+                el.classList.add('hidden');
+            });
+        });
+    }
+
+    // Project-level expand/collapse buttons
+    document.querySelectorAll('[id^="project-expand-all-"]').forEach(button => {
+        button.addEventListener('click', () => {
+            const projectIndex = button.id.split('-').pop();
+            document.querySelectorAll(`[x-ref^="samples_"][x-ref$="_${projectIndex}"]`).forEach(el => {
+                el.classList.remove('hidden');
+            });
+        });
+    });
+
+    document.querySelectorAll('[id^="project-collapse-all-"]').forEach(button => {
+        button.addEventListener('click', () => {
+            const projectIndex = button.id.split('-').pop();
+            document.querySelectorAll(`[x-ref^="samples_"][x-ref$="_${projectIndex}"]`).forEach(el => {
+                el.classList.add('hidden');
+            });
+        });
+    });
 
     function prettifyBenchmarkName(name) {
         return name.replace(/^output-[^-]+-/, '');
@@ -88,6 +132,24 @@ document.addEventListener('DOMContentLoaded', function() {
                         } else {
                             appendedRows.push(...allRowsInBody.slice(i));
                             break;
+                        }
+                    }
+                } else if (table_element.id === 'crashes-table') {
+                    for (let i = 0; i < allRowsInBody.length; i += 2) {
+                        if (allRowsInBody[i] && allRowsInBody[i+1]) {
+                            sortableUnits.push({
+                                representativeRow: allRowsInBody[i],
+                                actualRows: [allRowsInBody[i], allRowsInBody[i+1]]
+                            });
+                        }
+                    }
+                } else if (table_element.closest('[x-ref^="project_"]')) {
+                    for (let i = 0; i < allRowsInBody.length; i += 2) {
+                        if (allRowsInBody[i] && allRowsInBody[i+1]) {
+                            sortableUnits.push({
+                                representativeRow: allRowsInBody[i],
+                                actualRows: [allRowsInBody[i], allRowsInBody[i+1]]
+                            });
                         }
                     }
                 } else {
