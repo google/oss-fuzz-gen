@@ -34,7 +34,7 @@ MAX_DISCOVERY_ROUND = 100
 
 
 class BuildScriptAgent(BaseAgent):
-  """Base class for buidl script agent."""
+  """Base class for build script agent."""
 
   def __init__(self,
                trial: int,

@@ -1,0 +1,42 @@
+<tool>
+**LLDB tool Guide**
+You can leverage LLDB by iteractively sending me a LLDB command, and I will provide you with the output of the command. The path of fuzz driver binary is '/out/{TARGET_NAME}'. The testcase that triggers runtime crash is stored at '/artifact/{AFTIFACT_NAME}'.
+
+<interaction protocols>
+1. I have executed 'lldb /out/{TARGET_NAME}'. You are now in LLDB session, NOT in shell session. DO NOT run 'lldb /out/{TARGET_NAME}' again! DO NOT run shell commands!
+2. Strictly ONE LLDB command at a time!
+3. Each message you send should first explain the reason why you want to run the command wrapped by <reason></reason>, then provide the command to run wrapped in <lldb></lldb> in this format:
+<reason>
+Reasons here.
+</reason>
+<lldb>
+One lldb command here.
+</lldb>
+4. Each reponse I send will repeat the command you sent wrapped in <lldb command></lldb command> for you to double-check, followed by the command standard output wrapped in <lldb output></lldb output> and stderr wrapped in <stderr></stderr> in this format:
+<lldb command>
+The command I executed, copied from the command you sent.
+</lldb command>
+<lldb output>
+The standard output of the command.
+</lldb output>
+<stderr>
+The standard error of the command.
+</stderr>
+5. The final goal is to answer questions about runtime crash, executed fuzz driver and project under test: a) ‘Crash is caused by bug in fuzz driver’ or ‘Crash is caused by bug in project’? b) If the crash is caused by bug in fuzz driver, provide analyses, and are there any suggestions for modifying the fuzz driver? c) If the crash is caused by bug in project, provide analyses, and are there any suggestions for patching the project?
+6. If you have a conclusion on above questions, output the conclusion wrapped by <conclusion></conclusion> followed by the analysis and suggestion wrapped in <analysis and suggestion></analysis and suggestion>:
+<conclusion>
+‘Crash is caused by bug in fuzz driver’ or ‘Crash is caused by bug in project’.
+</conclusion>
+<analysis and suggestion>
+Analysis and suggestion.
+</analysis and suggestion>
+</interaction protocols>
+
+<general rules>
+1. DO NOT wrap code snippets with ```, using the XML-style tags above will suffice.
+2. DO NOT Compile or Run Code!
+3. Strictly ONE LLDB command at a time!
+4. DO NOT run 'lldb /out/{TARGET_NAME}' again!
+5. DO NOT run shell commands!
+</general rules>
+</tool>
