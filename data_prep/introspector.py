@@ -462,8 +462,8 @@ def query_introspector_type_definition(project: str) -> List[dict]:
   resp = _query_introspector(INTROSPECTOR_ALL_TYPE_DEFINITION, {
       'project': project,
   })
-  project = _get_data(resp, 'project', {})
-  return project.get('typedef_list', [])
+  result = _get_data(resp, 'project', {})
+  return result.get('typedef_list', [])
 
 
 def query_introspector_macro_block(project: str,
@@ -472,14 +472,15 @@ def query_introspector_macro_block(project: str,
                                    line_end: int = 99999) -> List[dict]:
   """Queries FuzzIntrospector for a full list of custom type definition
   including, union, struct, typedef, enum and macro definition."""
-  resp = _query_introspector(INTROSPECTOR_CHECK_MACRO, {
-      'project': project,
-      'source': source_path,
-      'start': line_start,
-      'end': line_end
+  resp = _query_introspector(
+      INTROSPECTOR_CHECK_MACRO, {
+          'project': project,
+          'source': source_path,
+          'start': line_start,
+          'end': line_end
   })
-  project = _get_data(resp, 'project', {})
-  return project.get('macro_block_info', [])
+  result = _get_data(resp, 'project', {})
+  return result.get('macro_block_info', [])
 
 
 def query_introspector_cross_references(project: str,
