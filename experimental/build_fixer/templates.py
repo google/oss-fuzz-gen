@@ -28,6 +28,10 @@ targets. The Dockerfile creates a Docker image that contains the build
 environment, and the build.sh script is used to compile the project.
 It is likely that the build.sh script is broken. You should focus only on
 changing the build.sh and not the Dockerfile.
+You are interacting with a fully automated system so use the tools provided to you
+to fix the build.sh script.
+Do not provide textual descriptions as response.
+Prioritize technical answers in the form of code of commands.
 
 ### OSS-Fuzz Project Structure
 - OSS-Fuzz is an open source project that enables continuous fuzzing of open
@@ -43,6 +47,29 @@ changing the build.sh and not the Dockerfile.
   the fuzzing harnesses that OSS-Fuzz will use.
 
 </system>'''
+
+BUILD_FIX_PROBLEM_TOOLS = """
+Your task is to fix the build.sh script so that the project can be built successfully.
+
+{LANGUAGE_SPECIFICS}
+
+### Provided Resources
+
+- Dockerfile:
+  <dockerfile>
+  {DOCKERFILE}
+  </dockerfile>
+
+- Build script
+  <build_script>
+  {BUILD_SCRIPT}
+  </build_script>
+
+- Initial failed build output:
+  <logs>
+  {LOGS}
+  </logs>
+"""
 
 BUILD_FIX_PROBLEM = """
 Your task is to fix the build.sh script so that the project can be built successfully.

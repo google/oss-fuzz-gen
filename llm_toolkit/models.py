@@ -145,6 +145,11 @@ class LLM:
     return ''
 
   @abstractmethod
+  def chat_llm_with_tools(self, client: Any, prompt: prompts.Prompt,
+                          tools) -> Any:
+    """Queries the LLM in the given chat session with tools."""
+
+  @abstractmethod
   def chat_llm(self, client: Any, prompt: prompts.Prompt) -> str:
     """Queries the LLM in the given chat session and returns the response."""
 
@@ -333,6 +338,22 @@ class GPT(LLM):
     self.messages.append({'role': 'assistant', 'content': llm_response})
 
     return llm_response
+
+  def chat_llm_with_tools(self, client: Any, prompt: prompts.Prompt,
+                          tools) -> Any:
+    """Queries LLM in a chat session with tools."""
+    if self.ai_binary:
+      raise ValueError(f'OpenAI does not use local AI binary: {self.ai_binary}')
+    if self.temperature_list:
+      logger.info('OpenAI does not allow temperature list: %s',
+                  self.temperature_list)
+
+    if prompt:
+      self.messages.extend(prompt.get())
+
+    return client.responses.create(model=self.name,
+                                   input=self.messages,
+                                   tools=tools)
 
   def ask_llm(self, prompt: prompts.Prompt) -> str:
     """Queries LLM a single prompt and returns its response."""
@@ -562,6 +583,12 @@ class Claude(LLM):
     del client, prompt
     # Placeholder: To Be Implemented.
 
+  def chat_llm_with_tools(self, client: Any, prompt: prompts.Prompt,
+                          tools) -> Any:
+    """Queries the LLM in the given chat session with tools."""
+    # Placeholder: To Be Implemented.
+    return
+
 
 class ClaudeHaikuV3(Claude):
   """Claude Haiku 3."""
@@ -670,6 +697,12 @@ class GoogleModel(LLM):
     """Queries the LLM in the given chat session and returns the response."""
     del client, prompt
     raise NotImplementedError
+
+  def chat_llm_with_tools(self, client: Any, prompt: prompts.Prompt,
+                          tools) -> Any:
+    """Queries the LLM in the given chat session with tools."""
+    # Placeholder: To Be Implemented.
+    return
 
 
 class VertexAIModel(GoogleModel):
@@ -950,6 +983,12 @@ class GeminiV1D5Chat(GeminiV1D5):
     response = self._do_generate(client, prompt.get(), parameters_list) or ''
     return response
 
+  def chat_llm_with_tools(self, client: Any, prompt: prompts.Prompt,
+                          tools) -> Any:
+    """Queries the LLM in the given chat session with tools."""
+    # Placeholder: To Be Implemented.
+    return
+
 
 class GeminiV2FlashChat(GeminiV1D5Chat):
   """Gemini 2 Flash for chat session."""
@@ -1007,6 +1046,12 @@ class AIBinaryModel(GoogleModel):
     """Queries the LLM in the given chat session and returns the response."""
     del client, prompt
     # Placeholder: To Be Implemented.
+
+  def chat_llm_with_tools(self, client: Any, prompt: prompts.Prompt,
+                          tools) -> Any:
+    """Queries the LLM in the given chat session with tools."""
+    # Placeholder: To Be Implemented.
+    return
 
 
 DefaultModel = GeminiV1D5

@@ -14,6 +14,7 @@
 # limitations under the License.
 """Build fixer tooling."""
 
+import json
 import os
 import re
 import shutil
@@ -35,11 +36,50 @@ from results import BuildResult, Result
 from tool.base_tool import BaseTool
 from tool.container_tool import ProjectContainerTool
 
+FIXER_TOOLS = [{
+    'type': 'function',
+    'name': 'test_build_script',
+    'description': 'Tests a build script against target project.',
+    'parameters': {
+        'type': 'object',
+        'properties': {
+            'build_script': {
+                'type': 'string',
+                'description': 'Bash script that builds the project.'
+            }
+        },
+        'required': ['build_script'],
+        'additionalProperties': False
+    }
+}, {
+    'type': 'function',
+    'name': 'run_commands_in_container',
+    'description': 'Runs a command string in the project container.',
+    'parameters': {
+        'type': 'object',
+        'properties': {
+            'command': {
+                'type':
+                    'string',
+                'description':
+                    'Bash commands separated by \';\' to run in the container.'
+            }
+        },
+        'required': ['command'],
+        'additionalProperties': False
+    }
+}]
+
 
 class BuildFixAgent(BaseAgent):
   """Agent for fixing OSS-Fuzz project builds."""
 
-  def __init__(self, llm: LLM, project_name, work_dirs, args):
+  def __init__(self,
+               llm: LLM,
+               project_name,
+               work_dirs,
+               args,
+               use_tools: bool = True):
     super().__init__(trial=1, llm=llm, args=args)
     self.project_name = project_name
     self.original_project_name = project_name
@@ -51,12 +91,14 @@ class BuildFixAgent(BaseAgent):
     self.initial_error_result = ''
     self.trial = 0
 
+    self.use_tools = use_tools
+
     self.success_build_script = ''
 
     self.projet_language = oss_fuzz_checkout.get_project_language(
         self.project_name)
 
-  def _initial_prompt(self, results: list[Result]):  # pylint: disable=unused-argument
+  def _initial_prompt(self, results: list[Result], is_tools: bool = True):  # pylint: disable=unused-argument
     """Creates the initial prompt for the build fixer agent."""
     with open(
         os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR, 'projects',
@@ -70,7 +112,10 @@ class BuildFixAgent(BaseAgent):
 
     prompt = self.llm.prompt_type()(None)
 
-    template_prompt = templates.BUILD_FIX_PROBLEM
+    if is_tools:
+      template_prompt = templates.BUILD_FIX_PROBLEM_TOOLS
+    else:
+      template_prompt = templates.BUILD_FIX_PROBLEM
     template_prompt = template_prompt.replace('{DOCKERFILE}', dockerfile)
     template_prompt = template_prompt.replace('{BUILD_SCRIPT}', build_script)
     template_prompt = template_prompt.replace('{LOGS}',
@@ -118,18 +163,157 @@ class BuildFixAgent(BaseAgent):
     if result.returncode == 0:
       logger.info(f'Build succeeded for {self.project_name}.', trial=self.trial)
       logger.info('Nothing to fix.', trial=self.trial)
+      self.inspect_tool.terminate()
       sys.exit(0)
 
     self.initial_error_result = result.stderr
 
     # Prepare initial prompt.
-    prompt = self._initial_prompt(result_history)
+    prompt = self._initial_prompt(result_history, self.use_tools)
     build_result = BuildResult(benchmark=benchmark,
                                trial=0,
                                work_dirs=self.work_dirs,
                                author=self,
                                chat_history={self.name: ''})
+    if self.use_tools:
+      self._agent_run_function_based_loop(prompt, build_result)
+    else:
+      self._agent_raw_loop(prompt, build_result)
+    return build_result
 
+  def _agent_run_function_based_loop(
+      self, prompt: Optional[Prompt], build_result: BuildResult) -> None:  # pylint: disable=unused-argument
+    """Runs the agent loop using a function-based approach."""
+
+    # Agent loop
+    try:
+      client = self.llm.get_chat_client(model=self.llm.get_model())
+
+      extended_messages = False
+      cur_round = 0
+      success = False
+      while prompt or extended_messages:
+        logger.info(f'Agent Round {cur_round}', trial=self.trial)
+        cur_round += 1
+        if cur_round > self.args.max_round:
+          sys.exit(0)
+
+        # Pass prompt history to LLM and get response.
+        logger.info('Sending prompt to LLM', trial=self.trial)
+        if prompt is None:
+          return
+
+        response = self.chat_llm_with_tools(client, prompt, FIXER_TOOLS,
+                                            self.trial)
+
+        tools_analysed = 0
+        extended_messages = False
+        # handle each of the tool calls in the response.
+        logger.info('Iterating response output', trial=self.trial)
+        for tool_call in response.output:
+          logger.info('- Response out:' + str(tool_call), trial=self.trial)
+          if tool_call.type != 'function_call':
+            continue
+          tools_analysed += 1
+          logger.info('Handling tool call %s', tool_call.name, trial=self.trial)
+          logger.info('Tool call arguments: %s',
+                      tool_call.arguments,
+                      trial=self.trial)
+          if tool_call.name == 'test_build_script':
+            arguments = json.loads(tool_call.arguments)
+            build_fuzzers_result, target_dst = self._test_build_fuzzers(
+                arguments['build_script'])
+            if build_fuzzers_result.returncode != 0:
+              logger.info('Build failed.', trial=self.trial)
+              parsed_stdout = build_fuzzers_result.stdout
+              parsed_stdout = self._simple_truncate_build_output(parsed_stdout)
+
+              logger.info('Parsed stdout: %s', parsed_stdout, trial=self.trial)
+
+              self.llm.messages.append(tool_call)
+              self.llm.messages.append({
+                  'type': 'function_call_output',
+                  'call_id': tool_call.call_id,
+                  'output': str(parsed_stdout)
+              })
+              extended_messages = True
+              prompt = None
+
+            else:
+              logger.info('Build succeeded.', trial=self.trial)
+              # Testing fuzzers run.
+              test_run_result = self._test_check_fuzzers(target_dst)
+              if test_run_result.returncode == 0:
+                logger.info('Fuzzers run successfully.', trial=self.trial)
+                success = True
+                self.success_build_script = arguments['build_script']
+                prompt = None
+                extended_messages = False
+              else:
+                logger.info('Fuzzers run failed.', trial=self.trial)
+                prompt_text = test_run_result.stdout
+                success = False
+                self.llm.messages.append(tool_call)
+                self.llm.messages.append({
+                    'type': 'function_call_output',
+                    'call_id': tool_call.call_id,
+                    'output': str(prompt_text)
+                })
+                extended_messages = True
+                prompt = None
+
+          elif tool_call.name == 'run_commands_in_container':
+            arguments = json.loads(tool_call.arguments)
+            logger.info(json.dumps(arguments, indent=2), trial=self.trial)
+
+            # Execute the command directly, then return the formatted result
+            commands = arguments['command']
+            logger.info('LLM Requested commands: %s',
+                        commands,
+                        trial=self.trial)
+            result = self.inspect_tool.execute(commands)
+            prompt_text = self._format_bash_execution_result(
+                result, previous_prompt=prompt)
+
+            prompt_text = self._simple_truncate_build_output(prompt_text)
+
+            self.llm.messages.append(tool_call)
+            self.llm.messages.append({
+                'type': 'function_call_output',
+                'call_id': tool_call.call_id,
+                'output': str(prompt_text)
+            })
+            extended_messages = True
+            prompt = None
+          else:
+            logger.info('Unsupported tool call: %s',
+                        tool_call.name,
+                        trial=self.trial)
+
+        if tools_analysed == 0 and not success:
+          logger.info(
+              'Did not execute any tool calls. At the moment we do not '
+              'support this, but we should add support for it.',
+              trial=self.trial)
+          prompt = prompt = self.llm.prompt_type()(None)
+          prompt.add_problem(
+              'I was unable to interpret your last message. Use tool '
+              'calls to direct this process instead of messages.')
+          cur_round -= 1
+
+        if success:
+          logger.info('Succeeded fixing build script', trial=self.trial)
+          logger.info('-' * 25 + ' Build script: ' + '-' * 25, trial=self.trial)
+          logger.info(self.success_build_script, trial=self.trial)
+          logger.info('-' * 60, trial=self.trial)
+          break
+    finally:
+      self.inspect_tool.terminate()
+
+  def _agent_raw_loop(self, prompt: Optional[Prompt],
+                      build_result: BuildResult) -> None:
+    """Runs the agent loop, sending prompts to the LLM and handling
+    responses."""
     # Agent loop
     self.trial = 0
     try:
@@ -155,7 +339,6 @@ class BuildFixAgent(BaseAgent):
         self.trial += 1
     finally:
       self.inspect_tool.terminate()
-    return build_result
 
   def _parse_tag(self, response: str, tag: str) -> str:
     """Parses the tag from LLM response."""
@@ -373,7 +556,7 @@ class BuildFixAgent(BaseAgent):
     return prompt
 
 
-def fix_build(args, oss_fuzz_base):
+def fix_build(args, oss_fuzz_base, use_tools: bool = True):
   """Fixes the build of a given project."""
 
   project_name = args.project
@@ -392,7 +575,7 @@ def fix_build(args, oss_fuzz_base):
   llm.MAX_INPUT_TOKEN = 25000
 
   # Set up Build fixer agent
-  agent = BuildFixAgent(llm, project_name, work_dirs, args)
+  agent = BuildFixAgent(llm, project_name, work_dirs, args, use_tools=use_tools)
 
   # Execute the agent
   agent.execute([])
