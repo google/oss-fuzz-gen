@@ -478,7 +478,7 @@ def query_introspector_macro_block(project: str,
           'source': source_path,
           'start': line_start,
           'end': line_end
-  })
+      })
   result = _get_data(resp, 'project', {})
   return result.get('macro_block_info', [])
 
