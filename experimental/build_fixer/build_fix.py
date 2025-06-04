@@ -40,7 +40,12 @@ from tool.container_tool import ProjectContainerTool
 class BuildFixAgent(BaseAgent):
   """Agent for fixing OSS-Fuzz project builds."""
 
-  def __init__(self, llm: LLM, project_name, work_dirs, args):
+  def __init__(self,
+               llm: LLM,
+               project_name,
+               work_dirs,
+               args,
+               use_tools: bool = True):
     super().__init__(trial=1, llm=llm, args=args)
     self.project_name = project_name
     self.original_project_name = project_name
@@ -52,12 +57,14 @@ class BuildFixAgent(BaseAgent):
     self.initial_error_result = ''
     self.trial = 0
 
+    self.use_tools = use_tools
+
     self.success_build_script = ''
 
     self.projet_language = oss_fuzz_checkout.get_project_language(
         self.project_name)
 
-  def _initial_prompt(self, results: list[Result]):  # pylint: disable=unused-argument
+  def _initial_prompt(self, results: list[Result], is_tools: bool = True):  # pylint: disable=unused-argument
     """Creates the initial prompt for the build fixer agent."""
     with open(
         os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR, 'projects',
@@ -71,8 +78,11 @@ class BuildFixAgent(BaseAgent):
 
     prompt = self.llm.prompt_type()(None)
 
-    #template_prompt = templates.BUILD_FIX_PROBLEM
-    template_prompt = templates.BUILD_FIX_PROBLEM_TOOLS
+    if is_tools:
+      template_prompt = templates.BUILD_FIX_PROBLEM_TOOLS
+    else:
+      template_prompt = templates.BUILD_FIX_PROBLEM
+
     template_prompt = template_prompt.replace('{DOCKERFILE}', dockerfile)
     template_prompt = template_prompt.replace('{BUILD_SCRIPT}', build_script)
     template_prompt = template_prompt.replace('{LOGS}',
@@ -126,14 +136,16 @@ class BuildFixAgent(BaseAgent):
     self.initial_error_result = result.stderr
 
     # Prepare initial prompt.
-    prompt = self._initial_prompt(result_history)
+    prompt = self._initial_prompt(result_history, self.use_tools)
     build_result = BuildResult(benchmark=benchmark,
                                trial=0,
                                work_dirs=self.work_dirs,
                                author=self,
                                chat_history={self.name: ''})
-    # self._agent_raw_loop(prompt, build_result)
-    self._agent_run_function_based_loop(prompt, build_result)
+    if self.use_tools:
+      self._agent_run_function_based_loop(prompt, build_result)
+    else:
+      self._agent_raw_loop(prompt, build_result)
 
   def _agent_run_function_based_loop(self, prompt: Prompt,
                                      build_result: BuildResult) -> BuildResult:
@@ -188,12 +200,9 @@ class BuildFixAgent(BaseAgent):
         # Pass prompt history to LLM and get response.
         logger.info('Sending prompt to LLM', trial=self.trial)
         response = self.chat_llm_with_tools(client, prompt, tools, self.trial)
-        print('*' * 80)
-        print(response)
-        print('<' * 20 + '*' * 20)
+
         tools_analysed = 0
         extended_messages = False
-
         # handle each of the tool calls in the response.
         logger.info('Iterating response output', trial=self.trial)
         for tool_call in response.output:
@@ -201,12 +210,11 @@ class BuildFixAgent(BaseAgent):
           if tool_call.type != 'function_call':
             continue
           tools_analysed += 1
+          logger.info('Handling tool call %s', tool_call.name, trial=self.trial)
+          logger.info('Tool call arguments: %s',
+                      tool_call.arguments,
+                      trial=self.trial)
           if tool_call.name == 'test_build_script':
-            logger.info('handling test_build_script tool call',
-                        trial=self.trial)
-            logger.info('LLM Provided build script. %s',
-                        tool_call.arguments,
-                        trial=self.trial)
             arguments = json.loads(tool_call.arguments)
             build_result, target_dst = self._test_build_fuzzers(
                 arguments['build_script'])
@@ -250,10 +258,6 @@ class BuildFixAgent(BaseAgent):
                 prompt = None
 
           elif tool_call.name == 'run_commands_in_container':
-            logger.info('Handling commands tool call', trial=self.trial)
-            logger.info('LLM Provided arguments. %s',
-                        tool_call.arguments,
-                        trial=self.trial)
             arguments = json.loads(tool_call.arguments)
             logger.info(json.dumps(arguments, indent=2), trial=self.trial)
 
@@ -283,12 +287,13 @@ class BuildFixAgent(BaseAgent):
 
         if tools_analysed == 0 and not success:
           logger.info(
-              'Did not execute any tool calls. At the moment we do not support this, but we should add support for it.',
+              'Did not execute any tool calls. At the moment we do not '
+              'support this, but we should add support for it.',
               trial=self.trial)
           prompt = prompt = self.llm.prompt_type()(None)
           prompt.add_problem(
-              'I was unable to interpret your last message. Use tool calls to direct this process instead of messages.'
-          )
+              'I was unable to interpret your last message. Use tool '
+              'calls to direct this process instead of messages.')
           cur_round -= 1
 
         if success:
@@ -546,7 +551,7 @@ class BuildFixAgent(BaseAgent):
     return prompt
 
 
-def fix_build(args, oss_fuzz_base):
+def fix_build(args, oss_fuzz_base, use_tools: bool = True):
   """Fixes the build of a given project."""
 
   project_name = args.project
@@ -565,7 +570,7 @@ def fix_build(args, oss_fuzz_base):
   llm.MAX_INPUT_TOKEN = 25000
 
   # Set up Build fixer agent
-  agent = BuildFixAgent(llm, project_name, work_dirs, args)
+  agent = BuildFixAgent(llm, project_name, work_dirs, args, use_tools=use_tools)
 
   # Execute the agent
   agent.execute([])

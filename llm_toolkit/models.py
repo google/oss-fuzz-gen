@@ -60,7 +60,7 @@ class LLM:
 
   MAX_INPUT_TOKEN: int = sys.maxsize
 
-  _max_attempts = 2  # Maximum number of attempts to get prediction response
+  _max_attempts = 5  # Maximum number of attempts to get prediction response
 
   def __init__(
       self,
@@ -143,9 +143,10 @@ class LLM:
     """Queries LLM a single prompt and returns its response."""
     del prompt
     return ''
-  
+
   @abstractmethod
-  def chat_llm_with_tools(self, client: Any, prompt: prompts.Prompt, tools) -> str:
+  def chat_llm_with_tools(self, client: Any, prompt: prompts.Prompt,
+                          tools) -> str:
     """Queries the LLM in the given chat session with tools and returns the response."""
 
   @abstractmethod
@@ -338,7 +339,8 @@ class GPT(LLM):
 
     return llm_response
 
-  def chat_llm_with_tools(self, client: Any, prompt: prompts.Prompt, tools) -> str:
+  def chat_llm_with_tools(self, client: Any, prompt: prompts.Prompt,
+                          tools) -> str:
     """Queries LLM in a chat session and  returns its response."""
     if self.ai_binary:
       raise ValueError(f'OpenAI does not use local AI binary: {self.ai_binary}')
@@ -349,24 +351,9 @@ class GPT(LLM):
     if prompt:
       self.messages.extend(prompt.get())
 
-    return client.responses.create(
-      model="gpt-4.1",
-      input=self.messages,
-      tools=tools)
-
-    return client.chat.completions.create(messages=self.messages,
-                                               model=self.name,
-                                               n=self.num_samples,
-                                               temperature=self.temperature,
-                                               tools=tools)
-    #result = self.with_retry_on_error(
-    #    lambda: client.chat.completions.create(messages=self.messages,
-    #                                           model=self.name,
-    #                                           n=self.num_samples,
-    #                                           temperature=self.temperature,
-    #                                           tools=tools),
-    #    [openai.OpenAIError])
-    #return result
+    return client.responses.create(model=self.name,
+                                   input=self.messages,
+                                   tools=tools)
 
   def ask_llm(self, prompt: prompts.Prompt) -> str:
     """Queries LLM a single prompt and returns its response."""
@@ -596,6 +583,12 @@ class Claude(LLM):
     del client, prompt
     # Placeholder: To Be Implemented.
 
+  def chat_llm_with_tools(self, client: Any, prompt: prompts.Prompt,
+                          tools) -> str:
+    """Queries the LLM in the given chat session with tools and returns the response."""
+    # Placeholder: To Be Implemented.
+    raise NotImplementedError('please implement.')
+
 
 class ClaudeHaikuV3(Claude):
   """Claude Haiku 3."""
@@ -704,6 +697,12 @@ class GoogleModel(LLM):
     """Queries the LLM in the given chat session and returns the response."""
     del client, prompt
     raise NotImplementedError
+
+  def chat_llm_with_tools(self, client: Any, prompt: prompts.Prompt,
+                          tools) -> str:
+    """Queries the LLM in the given chat session with tools and returns the response."""
+    # Placeholder: To Be Implemented.
+    raise NotImplementedError('please implement.')
 
 
 class VertexAIModel(GoogleModel):
@@ -984,6 +983,12 @@ class GeminiV1D5Chat(GeminiV1D5):
     response = self._do_generate(client, prompt.get(), parameters_list) or ''
     return response
 
+  def chat_llm_with_tools(self, client: Any, prompt: prompts.Prompt,
+                          tools) -> str:
+    """Queries the LLM in the given chat session with tools and returns the response."""
+    # Placeholder: To Be Implemented.
+    raise NotImplementedError('please implement.')
+
 
 class GeminiV2FlashChat(GeminiV1D5Chat):
   """Gemini 2 Flash for chat session."""
@@ -1041,6 +1046,12 @@ class AIBinaryModel(GoogleModel):
     """Queries the LLM in the given chat session and returns the response."""
     del client, prompt
     # Placeholder: To Be Implemented.
+
+  def chat_llm_with_tools(self, client: Any, prompt: prompts.Prompt,
+                          tools) -> str:
+    """Queries the LLM in the given chat session with tools and returns the response."""
+    # Placeholder: To Be Implemented.
+    raise NotImplementedError('please implement.')
 
 
 DefaultModel = GeminiV1D5
