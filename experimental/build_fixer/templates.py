@@ -32,6 +32,7 @@ You are interacting with a fully automated system so use the tools provided to y
 to fix the build.sh script.
 Do not provide textual descriptions as response.
 Prioritize technical answers in the form of code of commands.
+You must always target the most recent version of the target code base and do not revert to older branches.
 
 ### OSS-Fuzz Project Structure
 - OSS-Fuzz is an open source project that enables continuous fuzzing of open
