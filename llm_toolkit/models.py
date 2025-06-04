@@ -400,6 +400,7 @@ class GPT4(GPT):
 
   name = 'gpt-4'
 
+
 class GPT41(GPT):
   """OpenAI's GPT-4.1 model."""
 
