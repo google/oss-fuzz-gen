@@ -44,6 +44,7 @@ class WorkDirs:
       os.makedirs(self.dills, exist_ok=True)
       os.makedirs(self.fuzz_targets, exist_ok=True)
       os.makedirs(self._artifact_base, exist_ok=True)
+      os.makedirs(self.requirements, exist_ok=True)
 
   def __repr__(self) -> str:
     return self._base_dir
@@ -113,6 +114,10 @@ class WorkDirs:
   @property
   def run_logs(self) -> str:
     return os.path.join(self._base_dir, 'logs', 'run')
+
+  @property
+  def requirements(self) -> str:
+    return os.path.join(self._base_dir, 'requirements')
 
   def build_logs_target(self, generated_target_name: str, iteration: int,
                         trial: int) -> str:

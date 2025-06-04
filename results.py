@@ -32,6 +32,7 @@ class Result:
   author: Any
   chat_history: dict
   _repr_exclude = {'_repr_exclude', 'chat_history'}
+  function_analysis: Optional['FunctionAnalysisResult']
 
   def __init__(self,
                benchmark: Benchmark,
@@ -41,7 +42,8 @@ class Result:
                build_script_source: str = '',
                author: Any = None,
                chat_history: Optional[dict] = None,
-               default_success: bool = False) -> None:
+               default_success: bool = False,
+               function_analysis: Optional['FunctionAnalysisResult'] = None) -> None:
     self.benchmark = benchmark
     self.trial = trial
     self.work_dirs = work_dirs
@@ -50,6 +52,7 @@ class Result:
     self.author = author
     self.chat_history = chat_history or {}
     self.default_success = default_success
+    self.function_analysis = function_analysis
 
   def __repr__(self) -> str:
     attributes = [
@@ -736,3 +739,12 @@ class BenchmarkResult:
     for result in self.trial_results:
       all_textcov.merge(result.textcov_diff)
     return all_textcov
+
+
+
+class FunctionAnalysisResult:
+  """The result of the function analyzer."""
+  function_analysis_path: str
+
+  def __init__(self, function_analysis_path: str):
+    self.function_analysis_path = function_analysis_path

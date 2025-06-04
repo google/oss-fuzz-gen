@@ -20,11 +20,13 @@ generate correct fuzz target for the function.
 import argparse
 import asyncio
 import logging
+import os
 from typing import Optional
 
 from google.adk import agents, runners, sessions
 from google.genai import types
 
+from experiment.workdir import WorkDirs
 import results as resultslib
 from agent import base_agent
 from experiment import benchmark as benchmarklib
@@ -100,14 +102,14 @@ class FunctionAnalyzer(base_agent.BaseAgent):
     logger.info("Function Analyzer Agent created, with name: %s", self.name)
 
   async def call_agent(self, query: str, runner: runners.Runner, user_id: str,
-                       session_id: str) -> resultslib.PreWritingResult:
+                       session_id: str) -> str:
     """Call the agent asynchronously with the given query."""
 
     # logger.info(">>> User query: %s", query)
 
     content = types.Content(role='user', parts=[types.Part(text=query)])
 
-    final_response_text = "Agent did not produce a final response."
+    final_response_text = ''
 
     result_available = False
 
@@ -131,28 +133,35 @@ class FunctionAnalyzer(base_agent.BaseAgent):
 
     if result_available and self._parse_tag(final_response_text, 'response'):
       # Get the requirements from the response
-      requirements = self._parse_tags(final_response_text, 'requirement')
-      result_raw = self._parse_tag(final_response_text, 'response')
+      result_str = self._parse_tag(final_response_text, 'response')
     else:
-      requirements = []
-      result_raw = ''
+      result_str = ''
 
-    # Prepare the result
-    result = resultslib.PreWritingResult(
-        benchmark=self.benchmark,
-        trial=self.trial,
-        work_dirs=self.args.work_dir,
-        result_available=result_available,
-        result_raw=result_raw,
-        requirements=requirements,
-    )
+    return result_str
 
-    return result
+  def write_requirements_to_file(self, args, requirements: str) -> str:
+    """Write the requirements to a file."""
+    if not requirements:
+      logger.warning("No requirements to write to file.")
+      return ''
+
+    requirement_path = os.path.join(
+        args.work_dirs.requirements,
+        f"{self.benchmark.id}.txt")
+
+    with open(requirement_path, 'w') as f:
+      f.write(requirements)
+
+    logger.info("Requirements written to %s", requirement_path)
+
+    return requirement_path
 
   def execute(
       self,
-      result_history: list[resultslib.Result]) -> resultslib.PreWritingResult:
+      result_history: list[resultslib.Result]) -> resultslib.Result:
     """Execute the agent with the given results."""
+
+    WorkDirs(self.args.work_dirs.base, keep=True)
 
     # Call the agent asynchronously and return the result
     prompt = self._initial_prompt(result_history)
@@ -164,12 +173,23 @@ class FunctionAnalyzer(base_agent.BaseAgent):
 
     user_id = "user"
     session_id = f"session_{self.trial}"
-    result = asyncio.run(
+    result_str = asyncio.run(
         self.call_agent(query, self.runner, user_id, session_id))
 
-    if result and result.result_available:
-      # Save the result to the history
-      result_history.append(result)
+    if result_str:
+      # Write the requirements to a file
+      requirement_path = self.write_requirements_to_file(
+          self.args, result_str)
+      function_analysis = resultslib.FunctionAnalysisResult(requirement_path)
+    else:
+      function_analysis = None
+
+    result = resultslib.Result(
+        benchmark=self.benchmark,
+        trial=self.trial,
+        work_dirs=self.args.work_dirs,
+        function_analysis=function_analysis,
+    )
 
     return result
 

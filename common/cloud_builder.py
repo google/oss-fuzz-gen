@@ -120,6 +120,22 @@ class CloudBuilder:
         logging.error("Failed to create archive: %s", archive_path)
       return self._upload_to_gcs(archive_path)
 
+  def _upload_directory(self, directory_path: str) -> str:
+    """Archives and uploads local OFG repo to cloud build."""
+
+    if not os.path.isdir(directory_path):
+      logging.error("Directory does not exist: %s", directory_path)
+      return ''
+
+    files_to_upload = list(
+        os.path.relpath(os.path.join(root, file))
+        for root, _, files in os.walk(directory_path)
+        for file in files)
+
+    # TODO(pamusuo): Check if directory_path is the right base directory to use, or OFG_ROOT_DIR?
+    return self._upload_files(f'ofg-exp-{uuid.uuid4().hex}.tar.gz',
+                              directory_path, files_to_upload)
+
   def _upload_to_gcs(self, local_file_path: str) -> str:
     """Uploads a file to Google Cloud Storage."""
     dest_file_name = os.path.basename(local_file_path)
@@ -182,7 +198,8 @@ class CloudBuilder:
   def _request_cloud_build(self, ofg_repo_url: str, agent_dill_url: str,
                            results_dill_url: str, artifact_url: str,
                            artifact_path: str, oss_fuzz_data_url: str,
-                           data_dir_url: str, new_result_filename: str) -> str:
+                           data_dir_url: str, new_result_filename: str,
+                           experiment_url: str, experiment_path: str) -> str:
     """Requests Cloud Build to execute the operation."""
 
     # Used for injecting additional OSS-Fuzz project integrations not in
@@ -199,7 +216,7 @@ class CloudBuilder:
 
     cloud_build_config = {
         'steps': [
-            # Step 1: Download the dill and artifact files from GCS bucket.
+            # Step 1: Download the dill, artifact and experiment files from GCS bucket.
             {
                 'name': 'bash',
                 'dir': '/workspace',
@@ -229,6 +246,18 @@ class CloudBuilder:
                 'dir': '/workspace',
                 'args': [
                     'cp', artifact_url, f'/workspace/host/{artifact_path}'
+                ],
+                'allowFailure': True,
+            },
+            {
+                'name':
+                    'gcr.io/cloud-builders/gsutil',
+                'entrypoint':
+                    'bash',
+                'args': [
+                    '-c', f'gsutil cp {experiment_url} /tmp/ofg-exp.tar.gz && '
+                    f'mkdir /workspace/host/{experiment_path} && '
+                    f'tar -xzf /tmp/ofg-exp.tar.gz -C /workspace/host/{experiment_path}'
                 ],
                 'allowFailure': True,
             },
@@ -449,6 +478,18 @@ class CloudBuilder:
         logging.info('Uploaded artifact to %s', artifact_url)
       else:
         logging.error('No artifact_path found in RunResult.')
+
+    # TODO(pamusuo): Where should we get the experiment path from? self.exp_args.work_dirs.base
+    experiment_path = result_history[-1].work_dirs.base
+    experiment_url = ''
+    if os.path.exists(experiment_path):
+      experiment_url = self._upload_directory(experiment_path)
+    if experiment_url:
+      logging.info('Uploaded experiment to %s', experiment_url)
+    else:
+      logging.error('Experiment path %s empty or invalid.',
+                    experiment_path)
+
     oss_fuzz_data_url = self._upload_oss_fuzz_data()
     data_dir_url = self._upload_fi_oss_fuzz_data()
 
@@ -457,7 +498,8 @@ class CloudBuilder:
     build_id = self._request_cloud_build(ofg_url, agent_url, results_url,
                                          artifact_url, artifact_path,
                                          oss_fuzz_data_url, data_dir_url,
-                                         new_result_filename)
+                                         new_result_filename, experiment_url,
+                                         experiment_path)
 
     # Step 4: Download new result dill.
     cloud_build_log = ''

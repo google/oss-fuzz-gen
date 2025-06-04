@@ -587,7 +587,8 @@ class PrototyperTemplateBuilder(DefaultTemplateBuilder):
             project_example_content: Optional[list[list[str]]] = None,
             project_context_content: Optional[dict] = None,
             tool_guides: str = '',
-            project_dir: str = '') -> prompts.Prompt:
+            project_dir: str = '',
+            function_requirements: str = '') -> prompts.Prompt:
     """Constructs a prompt using the templates in |self| and saves it."""
     if not self.benchmark:
       return self._prompt
@@ -599,6 +600,9 @@ class PrototyperTemplateBuilder(DefaultTemplateBuilder):
                       f'</code> in your solution!\n')
     if project_context_content:
       final_problem += self.format_context(project_context_content)
+    if function_requirements:
+      final_problem += (f'\nHere are the requirements for the function:\n'
+                      f'{function_requirements}\n')
     self._prepare_prompt(priming, final_problem, example_pair,
                          project_example_content)
     self._prompt.append(tool_guides, True)
@@ -627,7 +631,8 @@ class PrototyperFixerTemplateBuilder(PrototyperTemplateBuilder):
             project_example_content: Optional[list[list[str]]] = None,
             project_context_content: Optional[dict] = None,
             tool_guides: str = '',
-            project_dir: str = '') -> prompts.Prompt:
+            project_dir: str = '',
+            function_requirements: str = '') -> prompts.Prompt:
     """Constructs a prompt using the templates in |self| and saves it."""
     del (example_pair, project_example_content, project_context_content,
          tool_guides)
@@ -673,7 +678,8 @@ class CoverageAnalyzerTemplateBuilder(PrototyperTemplateBuilder):
             project_example_content: Optional[list[list[str]]] = None,
             project_context_content: Optional[dict] = None,
             tool_guides: str = '',
-            project_dir: str = '') -> prompts.Prompt:
+            project_dir: str = '',
+            function_requirements: str = '') -> prompts.Prompt:
     """Constructs a prompt using the templates in |self| and saves it."""
     del (example_pair, project_example_content, project_context_content)
     if not self.benchmark:
@@ -720,7 +726,8 @@ class EnhancerTemplateBuilder(PrototyperTemplateBuilder):
             project_example_content: Optional[list[list[str]]] = None,
             project_context_content: Optional[dict] = None,
             tool_guides: str = '',
-            project_dir: str = '') -> prompts.Prompt:
+            project_dir: str = '',
+            function_requirements: str = '') -> prompts.Prompt:
     """Constructs a prompt using the templates in |self| and saves it."""
     del (example_pair, project_example_content, project_context_content)
     if not self.benchmark:
@@ -779,7 +786,8 @@ class CoverageEnhancerTemplateBuilder(PrototyperTemplateBuilder):
             project_example_content: Optional[list[list[str]]] = None,
             project_context_content: Optional[dict] = None,
             tool_guides: str = '',
-            project_dir: str = '') -> prompts.Prompt:
+            project_dir: str = '',
+            function_requirements: str = '') -> prompts.Prompt:
     """Constructs a prompt using the templates in |self| and saves it."""
     del (example_pair, project_example_content, project_context_content)
     if not self.benchmark:

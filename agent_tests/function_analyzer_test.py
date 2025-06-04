@@ -112,21 +112,7 @@ def analyze_benchmark(benchmark: benchmarklib.Benchmark,
     logger.error("Error during analysis for benchmark %s: %s", benchmark.function_name, e)
     return False
 
-  # If result is available, write it to the work_dirs directory
-  if result.result_available and result.result_raw:
-    result_file = os.path.join(
-        args.work_dirs.base,
-        f"{benchmark.id}.txt")
-
-    with open(result_file, 'w') as f:
-      f.write(result.result_raw)
-
-    logger.info("Analysis result for benchmark %s written to %s", benchmark.function_name, result_file)
-  else:
-    logger.info("No requirements found for benchmark %s",
-                benchmark.function_name)
-
-  return result.result_available
+  return result.function_analysis is not None
 
 if __name__ == "__main__":
 
