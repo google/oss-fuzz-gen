@@ -52,6 +52,28 @@ FIXER_TOOLS = [{
         'additionalProperties': False
     }
 }, {
+    'type':
+        'function',
+    'name':
+        'test_build_script_and_dockerfile',
+    'description':
+        'Tests a build script and Dockerfile against target project.',
+    'parameters': {
+        'type': 'object',
+        'properties': {
+            'build_script': {
+                'type': 'string',
+                'description': 'Bash script that builds the project.'
+            },
+            'dockerfile': {
+                'type': 'string',
+                'description': 'Dockerfile that builds the project.'
+            }
+        },
+        'required': ['build_script', 'dockerfile'],
+        'additionalProperties': False
+    }
+}, {
     'type': 'function',
     'name': 'run_commands_in_container',
     'description': 'Runs a command string in the project container.',
@@ -216,7 +238,50 @@ class BuildFixAgent(BaseAgent):
           logger.info('Tool call arguments: %s',
                       tool_call.arguments,
                       trial=self.trial)
-          if tool_call.name == 'test_build_script':
+          if tool_call.name == 'test_build_script_and_dockerfile':
+            arguments = json.loads(tool_call.arguments)
+            build_fuzzers_result, target_dst = self._test_build_fuzzers(
+                arguments['build_script'], arguments['dockerfile'])
+            if build_fuzzers_result.returncode != 0:
+              logger.info('Build failed.', trial=self.trial)
+              parsed_stdout = build_fuzzers_result.stdout
+              parsed_stdout = self._simple_truncate_build_output(parsed_stdout)
+
+              logger.info('Parsed stdout: %s', parsed_stdout, trial=self.trial)
+
+              self.llm.messages.append(tool_call)
+              self.llm.messages.append({
+                  'type': 'function_call_output',
+                  'call_id': tool_call.call_id,
+                  'output': str(parsed_stdout)
+              })
+              extended_messages = True
+              prompt = None
+
+            else:
+              logger.info('Build succeeded.', trial=self.trial)
+              # Testing fuzzers run.
+              test_run_result = self._test_check_fuzzers(target_dst)
+              if test_run_result.returncode == 0:
+                logger.info('Fuzzers run successfully.', trial=self.trial)
+                success = True
+                self.success_build_script = arguments['build_script']
+                self.success_dockerfile = arguments['dockerfile']
+                prompt = None
+                extended_messages = False
+              else:
+                logger.info('Fuzzers run failed.', trial=self.trial)
+                prompt_text = test_run_result.stdout
+                success = False
+                self.llm.messages.append(tool_call)
+                self.llm.messages.append({
+                    'type': 'function_call_output',
+                    'call_id': tool_call.call_id,
+                    'output': str(prompt_text)
+                })
+                extended_messages = True
+                prompt = None
+          elif tool_call.name == 'test_build_script':
             arguments = json.loads(tool_call.arguments)
             build_fuzzers_result, target_dst = self._test_build_fuzzers(
                 arguments['build_script'])
@@ -362,7 +427,9 @@ class BuildFixAgent(BaseAgent):
     return found_matches
 
   def _test_build_fuzzers(
-      self, build_script: str) -> tuple[subprocess.CompletedProcess, str]:
+      self,
+      build_script: str,
+      dockerfile: str = '') -> tuple[subprocess.CompletedProcess, str]:
     """Runs OSS-Fuzz's build_fuzzers command with the provided build script."""
     target_dst = self.original_project_name + '-copy-' + str(
         uuid.uuid4().hex)[:8]
@@ -377,8 +444,15 @@ class BuildFixAgent(BaseAgent):
         os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR, 'projects', target_dst,
                      'build.sh'), 'w') as f:
       f.write(build_script)
-    # Build project
 
+    if dockerfile:
+      # Overwrite the Dockerfile with the new one
+      with open(
+          os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR, 'projects', target_dst,
+                       'Dockerfile'), 'w') as f:
+        f.write(dockerfile)
+
+    # Build project
     cmd = ['python3', 'infra/helper.py', 'build_fuzzers', target_dst]
     result = subprocess.run(cmd,
                             stdout=subprocess.PIPE,
