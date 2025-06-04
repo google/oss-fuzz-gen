@@ -82,7 +82,6 @@ class BuildFixAgent(BaseAgent):
       template_prompt = templates.BUILD_FIX_PROBLEM_TOOLS
     else:
       template_prompt = templates.BUILD_FIX_PROBLEM
-
     template_prompt = template_prompt.replace('{DOCKERFILE}', dockerfile)
     template_prompt = template_prompt.replace('{BUILD_SCRIPT}', build_script)
     template_prompt = template_prompt.replace('{LOGS}',
