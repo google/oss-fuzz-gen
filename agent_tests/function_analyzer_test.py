@@ -97,7 +97,10 @@ def analyze_benchmark(benchmark: benchmarklib.Benchmark, model: models.LLM,
   """Analyzes the benchmark using the function analyzer."""
 
   # Initialize the function analyzer
-  analyzer = function_analyzer.FunctionAnalyzer(trial=1, llm=model, args=args, benchmark=benchmark)
+  analyzer = function_analyzer.FunctionAnalyzer(trial=1,
+                                                llm=model,
+                                                args=args,
+                                                benchmark=benchmark)
 
   # Run the function analyzer
   try:
