@@ -27,6 +27,7 @@ import pipeline
 from agent.coverage_analyzer import CoverageAnalyzer
 from agent.crash_analyzer import CrashAnalyzer
 from agent.enhancer import Enhancer
+from agent.function_analyzer import FunctionAnalyzer
 from agent.one_prompt_enhancer import OnePromptEnhancer
 from agent.one_prompt_prototyper import OnePromptPrototyper
 from agent.prototyper import Prototyper
@@ -247,6 +248,7 @@ def _fuzzing_pipeline(benchmark: Benchmark, model: models.LLM,
     p = pipeline.Pipeline(args=args,
                           trial=trial,
                           writing_stage_agents=[
+                              FunctionAnalyzer(trial=trial, llm=model, args=args, benchmark=benchmark),
                               Prototyper(trial=trial, llm=model, args=args),
                               Enhancer(trial=trial, llm=model, args=args),
                           ],
@@ -263,6 +265,7 @@ def _fuzzing_pipeline(benchmark: Benchmark, model: models.LLM,
     p = pipeline.Pipeline(args=args,
                           trial=trial,
                           writing_stage_agents=[
+                              FunctionAnalyzer(trial=trial, llm=model, args=args, benchmark=benchmark),
                               OnePromptPrototyper(trial=trial,
                                                   llm=model,
                                                   args=args),

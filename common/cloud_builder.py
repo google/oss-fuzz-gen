@@ -338,6 +338,15 @@ class CloudBuilder:
                     '-e',
                     'VERTEX_AI_LOCATIONS=' +
                     os.getenv("VERTEX_AI_LOCATIONS", ""),
+                    '-e',
+                    'GOOGLE_GENAI_USE_VERTEXAI=' +
+                    os.getenv("GOOGLE_GENAI_USE_VERTEXAI", "TRUE"),
+                    '-e',
+                    'GOOGLE_CLOUD_PROJECT=' +
+                    os.getenv("GOOGLE_CLOUD_PROJECT", "oss-fuzz"),
+                    '-e',
+                    'GOOGLE_CLOUD_LOCATION=' +
+                    os.getenv("GOOGLE_CLOUD_LOCATION", "global"),
                     '--network=cloudbuild',
                     # Built from this repo's `Dockerfile.cloudbuild-agent`.
                     ('us-central1-docker.pkg.dev/oss-fuzz/oss-fuzz-gen/'

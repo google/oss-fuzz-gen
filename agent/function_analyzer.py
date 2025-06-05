@@ -46,30 +46,29 @@ class FunctionAnalyzer(base_agent.BaseAgent):
                trial: int,
                llm: models.LLM,
                args: argparse.Namespace,
+               benchmark: benchmarklib.Benchmark,
                tools: Optional[list[base_tool.BaseTool]] = None,
                name: str = ''):
 
     # Ensure the llm is an instance of VertexAIModel
+    # TODO (pamusuo): Provide support for other LLM models
     if not isinstance(llm, models.VertexAIModel):
       raise ValueError(
           "FunctionAnalyzer agent requires a VertexAIModel instance for llm.")
 
-    self.vertex_ai_model = llm._vertex_ai_model
-
     super().__init__(trial, llm, args, tools, name)
 
-  def initialize(self, benchmark: benchmarklib.Benchmark):
-    """Initialize the function analyzer agent with the given benchmark."""
-
+    self.vertex_ai_model = llm._vertex_ai_model
     self.benchmark = benchmark
 
-    # Initialize the prompt builder
-    builder = prompt_builder.FunctionAnalyzerTemplateBuilder(
-        self.llm, self.benchmark)
+    self.initialize()
+
+  def initialize(self):
+    """Initialize the function analyzer agent with the given benchmark."""
 
     # Initialize the Fuzz Introspector tool
     introspector_tool = fuzz_introspector_tool.FuzzIntrospectorTool(
-        benchmark, self.name)
+        self.benchmark, self.name)
 
     # Create the agent using the ADK library
     # TODO(pamusuo): Create another AdkBaseAgent that extends BaseAgent and initializes an ADK agent as well.
