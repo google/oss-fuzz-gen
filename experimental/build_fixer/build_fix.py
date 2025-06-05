@@ -312,6 +312,12 @@ class BuildFixAgent(BaseAgent):
         response = self.chat_llm_with_tools(client, self.working_prompt,
                                             FIXER_TOOLS, self.trial)
 
+        if not response:
+          logger.info('LLM did not return a response, skipping this round.',
+                      trial=self.trial)
+          cur_round += 1
+          continue
+
         # Handle LLM tool calls.
         tools_analysed = 0
         logger.info('Iterating response output', trial=self.trial)
