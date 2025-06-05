@@ -63,9 +63,6 @@ class ContextRetriever:
 
     return nested_item
 
-  def _get_source_line(self, item: dict) -> int:
-    return int(self._get_nested_item(item, 'source', 'source_line'))
-
   def _get_source_file(self, item: dict) -> str:
     return self._get_nested_item(item, 'source', 'source_file')
 
@@ -194,45 +191,36 @@ class ContextRetriever:
 
     return context_info
 
-  def _concat_info_lines(self, info: dict) -> str:
-    """Concatenates source code lines based on |info|."""
-    include_file = self._get_source_file(info)
-    include_lines = sorted([self._get_source_line(info)] + [
-        self._get_source_line(element) for element in info.get('elements', [])
-    ])
-
-    # Add the next line after the last element.
-    return introspector.query_introspector_source_code(self._benchmark.project,
-                                                       include_file,
-                                                       include_lines[0],
-                                                       include_lines[-1] + 1)
-
   def get_type_def(self, type_name: str) -> str:
     """Retrieves the source code definitions for the given |type_name|."""
     type_names = [self._clean_type(type_name)]
     considered_types = []
     type_def = ''
 
-    while type_names:
-      # Breath-first is more suitable for prompting.
-      current_type = type_names.pop(0)
-      info_list = introspector.query_introspector_type_info(
-          self._benchmark.project, current_type)
-      if not info_list:
+    info_list = introspector.query_introspector_type_definition(
+        self._benchmark.project)
+    if not info_list:
+        logging.warning('Could not type info for project.')
+        return type_def
+
+    info_dict = {info['name']: info for info in info_list}
+    for current_type in type_names:
+      type_info = info_dict.get(current_type)
+      if not type_info:
         logging.warning('Could not type info for project: %s type: %s',
                         self._benchmark.project, current_type)
         continue
 
-      for info in info_list:
-        type_def += self._concat_info_lines(info) + '\n'
-        considered_types.append(current_type)
+      # Retrieve position information of the custom type definition
+      source = type_info['pos']['source_file']
+      start = type_info['pos']['line_start']
+      end = type_info['pos']['line_end']
 
-        # Retrieve nested unseen types.
-        new_type_type = info.get('type')
-        new_type_name = info.get('name')
-        if (new_type_type and new_type_type in COMPLEX_TYPES and
-            new_type_name and new_type_name not in considered_types):
-          type_names.append(new_type_name)
+      # Retrieve type definition of the current type
+      # Remark: no need to handle nested type as info_list contains
+      # full custom type definition.
+      type_def += introspector.query_introspector_source_code(
+          self._benchmark.project, source, start, end) + '\n'
 
     return type_def
 
