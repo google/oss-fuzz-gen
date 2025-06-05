@@ -26,10 +26,10 @@ from typing import Optional
 from google.adk import agents, runners, sessions
 from google.genai import types
 
-from experiment.workdir import WorkDirs
 import results as resultslib
 from agent import base_agent
 from experiment import benchmark as benchmarklib
+from experiment.workdir import WorkDirs
 from llm_toolkit import models, prompt_builder, prompts
 from tool import base_tool, fuzz_introspector_tool
 
@@ -78,11 +78,10 @@ class FunctionAnalyzer(base_agent.BaseAgent):
         model=self.vertex_ai_model,
         description="""Extracts a function's requirements
                         from its source implementation.""",
-        instruction="""You are a security engineer tasked with analyzing a function
+        instruction=
+        """You are a security engineer tasked with analyzing a function
         and extracting its input requirements, necessary for it to execute correctly.""",
-        tools=[
-            introspector_tool.function_source_with_name
-        ],
+        tools=[introspector_tool.function_source_with_name],
     )
 
     # Create the session service
@@ -143,9 +142,8 @@ class FunctionAnalyzer(base_agent.BaseAgent):
       logger.warning("No requirements to write to file.")
       return ''
 
-    requirement_path = os.path.join(
-        args.work_dirs.requirements,
-        f"{self.benchmark.id}.txt")
+    requirement_path = os.path.join(args.work_dirs.requirements,
+                                    f"{self.benchmark.id}.txt")
 
     with open(requirement_path, 'w') as f:
       f.write(requirements)
@@ -154,9 +152,8 @@ class FunctionAnalyzer(base_agent.BaseAgent):
 
     return requirement_path
 
-  def execute(
-      self,
-      result_history: list[resultslib.Result]) -> resultslib.Result:
+  def execute(self,
+              result_history: list[resultslib.Result]) -> resultslib.Result:
     """Execute the agent with the given results."""
 
     WorkDirs(self.args.work_dirs.base, keep=True)
@@ -176,8 +173,7 @@ class FunctionAnalyzer(base_agent.BaseAgent):
 
     if result_str:
       # Write the requirements to a file
-      requirement_path = self.write_requirements_to_file(
-          self.args, result_str)
+      requirement_path = self.write_requirements_to_file(self.args, result_str)
       function_analysis = resultslib.FunctionAnalysisResult(requirement_path)
     else:
       function_analysis = None

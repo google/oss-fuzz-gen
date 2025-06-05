@@ -105,7 +105,7 @@ class FuzzIntrospectorTool(base_tool.BaseTool):
           project_name)
       functions_list = introspector.query_introspector_all_functions(
           project_name)
-      
+
       if functions_list:
         self.project_functions = {
             func["debug_summary"]["name"]: func

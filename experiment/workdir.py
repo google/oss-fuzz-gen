@@ -26,7 +26,10 @@ class WorkDirs:
 
   RUN_LOG_NAME_PATTERN = re.compile(r'.*-F(\d+).log')
 
-  def __init__(self, base_dir, keep: bool = False, create_children_dirs: bool = True):
+  def __init__(self,
+               base_dir,
+               keep: bool = False,
+               create_children_dirs: bool = True):
     self._base_dir = os.path.realpath(base_dir)
     if os.path.exists(self._base_dir) and not keep:
       # Clear existing directory.

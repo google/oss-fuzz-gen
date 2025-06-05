@@ -250,10 +250,8 @@ class CloudBuilder:
                 'allowFailure': True,
             },
             {
-                'name':
-                    'gcr.io/cloud-builders/gsutil',
-                'entrypoint':
-                    'bash',
+                'name': 'gcr.io/cloud-builders/gsutil',
+                'entrypoint': 'bash',
                 'args': [
                     '-c', f'gsutil cp {experiment_url} /tmp/ofg-exp.tar.gz && '
                     f'mkdir /workspace/host/{experiment_path} && '
@@ -487,8 +485,7 @@ class CloudBuilder:
     if experiment_url:
       logging.info('Uploaded experiment to %s', experiment_url)
     else:
-      logging.error('Experiment path %s empty or invalid.',
-                    experiment_path)
+      logging.error('Experiment path %s empty or invalid.', experiment_path)
 
     oss_fuzz_data_url = self._upload_oss_fuzz_data()
     data_dir_url = self._upload_fi_oss_fuzz_data()

@@ -30,8 +30,8 @@ logger = logging.getLogger(__name__)
 
 RESULTS_DIR = './results'
 
-
 NUM_ANA = int(os.getenv('LLM_NUM_ANA', '2'))
+
 
 def parse_args() -> argparse.Namespace:
   """Parses command line arguments."""
@@ -57,10 +57,10 @@ def parse_args() -> argparse.Namespace:
       type=str)
 
   parser.add_argument('-np',
-            '--num-pools',
-            type=int,
-            default=NUM_ANA,
-            help='Number of parallel processes to use for analysis.')
+                      '--num-pools',
+                      type=int,
+                      default=NUM_ANA,
+                      help='Number of parallel processes to use for analysis.')
 
   parser.add_argument('-w', '--work-dir', default=RESULTS_DIR)
 
@@ -92,15 +92,12 @@ def parse_args() -> argparse.Namespace:
   return parsed_args
 
 
-def analyze_benchmark(benchmark: benchmarklib.Benchmark,
-                   model: models.LLM,
-                   args: argparse.Namespace) -> bool:
+def analyze_benchmark(benchmark: benchmarklib.Benchmark, model: models.LLM,
+                      args: argparse.Namespace) -> bool:
   """Analyzes the benchmark using the function analyzer."""
 
   # Initialize the function analyzer
-  analyzer = function_analyzer.FunctionAnalyzer(trial=1,
-                                                         llm=model,
-                                                         args=args)
+  analyzer = function_analyzer.FunctionAnalyzer(trial=1, llm=model, args=args)
 
   # Initialize the function analyzer with the first benchmark
   analyzer.initialize(benchmark)
@@ -109,10 +106,12 @@ def analyze_benchmark(benchmark: benchmarklib.Benchmark,
   try:
     result = analyzer.execute([])
   except Exception as e:
-    logger.error("Error during analysis for benchmark %s: %s", benchmark.function_name, e)
+    logger.error("Error during analysis for benchmark %s: %s",
+                 benchmark.function_name, e)
     return False
 
   return result.function_analysis is not None
+
 
 if __name__ == "__main__":
 
@@ -140,25 +139,24 @@ if __name__ == "__main__":
   if NUM_ANA == 1:
     for benchmark in benchmarks:
       logger.info("Loaded benchmark (%d/%d) for function: %s",
-                benchmarks.index(benchmark) + 1, len(benchmarks),
-                benchmark.function_name)
+                  benchmarks.index(benchmark) + 1, len(benchmarks),
+                  benchmark.function_name)
       if analyze_benchmark(benchmark, model, args):
         success_count += 1
   else:
 
-    logger.info("Running analysis in parallel with %d processes.", args.num_pools)
+    logger.info("Running analysis in parallel with %d processes.",
+                args.num_pools)
     with multiprocessing.Pool(args.num_pools, maxtasksperchild=1) as pool:
 
       results = {}
       for benchmark in benchmarks:
         # Pass a new analyzer instance to each process to avoid sharing state
         logger.info("Submitted benchmark (%d/%d) for function: %s to the pool.",
-                benchmarks.index(benchmark) + 1, len(benchmarks),
-                benchmark.function_name)
-        result = pool.apply_async(
-          analyze_benchmark,
-          args=(benchmark, model, args)
-        )
+                    benchmarks.index(benchmark) + 1, len(benchmarks),
+                    benchmark.function_name)
+        result = pool.apply_async(analyze_benchmark,
+                                  args=(benchmark, model, args))
         results[benchmark.id] = result
 
       pool.close()
@@ -172,6 +170,9 @@ if __name__ == "__main__":
           if result.get():
             success_count += 1
         except Exception as e:
-          logger.error(f"Error during analysis for benchmark %s: %s", benchmark_id, e)
+          logger.error(f"Error during analysis for benchmark %s: %s",
+                       benchmark_id, e)
 
-  print(f"{success_count} out of {len(benchmarks)} analyses completed successfully.")
+  print(
+      f"{success_count} out of {len(benchmarks)} analyses completed successfully."
+  )
