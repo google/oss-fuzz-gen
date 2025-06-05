@@ -49,6 +49,7 @@ class WritingStage(BaseStage):
     if result_history and result_history[-1].fuzz_target_source:
       agent = self.get_agent(index=1)
     else:
+      # TODO(pamusuo): Call the function analyzer agent at this point (temporary implementation).
       agent = self.get_agent()
     agent_result = self._execute_agent(agent, result_history)
     build_result = cast(BuildResult, agent_result)

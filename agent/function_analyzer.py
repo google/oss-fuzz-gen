@@ -72,6 +72,7 @@ class FunctionAnalyzer(base_agent.BaseAgent):
         benchmark, self.name)
 
     # Create the agent using the ADK library
+    # TODO(pamusuo): Create another AdkBaseAgent that extends BaseAgent and initializes an ADK agent as well.
     function_analyzer = agents.LlmAgent(
         name="FunctionAnalyzer",
         model=self.vertex_ai_model,
