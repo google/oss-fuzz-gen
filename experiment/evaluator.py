@@ -23,6 +23,7 @@ from typing import Optional
 
 from google.cloud import storage
 
+import results
 from experiment import builder_runner, oss_fuzz_checkout, textcov
 from experiment.benchmark import Benchmark
 from experiment.builder_runner import BuildResult, RunResult
@@ -251,14 +252,18 @@ class Evaluator:
     self.benchmark = benchmark
     self.work_dirs = work_dirs
 
-  def build_log_path(self, generated_target_name: str, iteration: int):
+  def build_log_path(self, generated_target_name: str, iteration: int,
+                     trial: int):
+    return os.path.join(
+        self.work_dirs.run_logs,
+        f'{generated_target_name}-F{iteration}-{trial:02d}.log')
+
+  def run_log_path(self, generated_target_name: str, trial: int):
     return os.path.join(self.work_dirs.run_logs,
-                        f'{generated_target_name}-F{iteration}.log')
+                        f'{generated_target_name}-{trial:02d}.log')
 
-  def run_log_path(self, generated_target_name: str):
-    return os.path.join(self.work_dirs.run_logs, f'{generated_target_name}.log')
-
-  def create_ossfuzz_project(self,
+  @staticmethod
+  def create_ossfuzz_project(benchmark: Benchmark,
                              name: str,
                              target_file: str,
                              build_script_path: str = '') -> str:
@@ -267,7 +272,7 @@ class Evaluator:
     and build script with the new |target_file| and |build_script_path|."""
     logger.info('target file: %s', target_file)
     generated_project_path = oss_fuzz_checkout.create_ossfuzz_project(
-        self.benchmark, name)
+        benchmark, name)
 
     # Copy generated fuzzers to generated_project_path
     shutil.copyfile(
@@ -277,7 +282,7 @@ class Evaluator:
     # Add additional statement in dockerfile to overwrite with generated fuzzer
     with open(os.path.join(generated_project_path, 'Dockerfile'), 'a') as f:
       f.write(f'\nCOPY {os.path.basename(target_file)} '
-              f'{self.benchmark.target_path}\n')
+              f'{benchmark.target_path}\n')
 
     if not build_script_path or os.path.getsize(build_script_path) == 0:
       # Return the generated project path to the caller.
@@ -289,7 +294,8 @@ class Evaluator:
         os.path.join(generated_project_path,
                      os.path.basename('agent-build.sh')))
 
-    # Add additional statement in dockerfile to overwrite with generated fuzzer
+    # Add additional statement in dockerfile to overwrite with generated
+    # build script
     with open(os.path.join(generated_project_path, 'Dockerfile'), 'a') as f:
       f.write('\nRUN cp /src/build.sh /src/build.bk.sh\n')
     with open(os.path.join(generated_project_path, 'Dockerfile'), 'a') as f:
@@ -297,6 +303,39 @@ class Evaluator:
 
     # Return the generated project path to the caller.
     return generated_project_path
+
+  @staticmethod
+  def create_ossfuzz_project_with_lldb(benchmark: Benchmark,
+                                       name: str,
+                                       target_file: str,
+                                       run_result: results.RunResult,
+                                       build_script_path: str = '',
+                                       artifact_path: str = '') -> str:
+    """Creates an OSS-Fuzz project with the generated target and new dockerfile.
+    The new project will replicate an existing project |name| but replace its
+    fuzz target and build script with the new |target_file| and
+    |build_script_path| and modify its dockerfile."""
+    Evaluator.create_ossfuzz_project(benchmark, name, target_file,
+                                     build_script_path)
+    generated_project_path = os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR,
+                                          'projects', name)
+
+    shutil.copyfile(
+        artifact_path,
+        os.path.join(generated_project_path, os.path.basename(artifact_path)))
+    # Add additional statement in dockerfile to copy testcase,
+    # enable -g, install lldb and screen
+    with open(os.path.join(generated_project_path, 'Dockerfile'), 'a') as f:
+      f.write(
+          '\nRUN mkdir -p /artifact\n'
+          f'\nCOPY {os.path.basename(run_result.artifact_path)} /artifact/\n'
+          '\nENV CFLAGS="${CFLAGS} -g -O0"\n'
+          '\nENV CXXFLAGS="${CXXFLAGS} -g -O0"\n'
+          '\nRUN apt-get update\n'
+          '\nRUN apt-get install -y lldb\n'
+          '\nRUN apt-get install -y screen\n')
+
+    return name
 
   def _fix_generated_fuzz_target(self, ai_binary: str,
                                  generated_oss_fuzz_project: str,
@@ -382,7 +421,8 @@ class Evaluator:
     generated_oss_fuzz_project = f'{self.benchmark.id}-{sample_id}'
     generated_oss_fuzz_project = oss_fuzz_checkout.rectify_docker_tag(
         generated_oss_fuzz_project)
-    self.create_ossfuzz_project(generated_oss_fuzz_project, target_path)
+    Evaluator.create_ossfuzz_project(self.benchmark, generated_oss_fuzz_project,
+                                     target_path)
 
     status_path = os.path.join(self.work_dirs.status, sample_id)
     os.makedirs(status_path, exist_ok=True)

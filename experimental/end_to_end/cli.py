@@ -28,10 +28,10 @@ import time
 import requests
 import yaml
 
+from data_prep import introspector
+from experimental.build_fixer import build_fix
 from experimental.build_generator import runner
 from llm_toolkit import models
-
-silent_global = False
 
 logger = logging.getLogger(name=__name__)
 LOG_FMT = ('%(asctime)s %(levelname)s [%(filename)s:%(lineno)d] '
@@ -195,7 +195,7 @@ def wait_until_fi_webapp_is_launched():
   sys.exit(0)
 
 
-def run_ofg_generation(projects_to_run, workdir, args):
+def run_ofg_generation(projects_to_run, workdir, args, target_benchmarks=''):
   """Runs harness generation"""
   logger.info('Running OFG experiment: %s', os.getcwd())
   oss_fuzz_dir = os.path.join(workdir, 'oss-fuzz')
@@ -203,12 +203,17 @@ def run_ofg_generation(projects_to_run, workdir, args):
   cmd = ['python3', os.path.join(OFG_BASE_DIR, 'run_all_experiments.py')]
   cmd.append('--model')
   cmd.append(args.model)
-  cmd.append('-g')
-  cmd.append(args.benchmark_oracles)
-  cmd.append('-gp')
-  cmd.append(','.join(projects_to_run))
-  cmd.append('-gm')
-  cmd.append(str(args.generate_benchmarks_max))
+
+  if not target_benchmarks:
+    cmd.append('-g')
+    cmd.append(args.benchmark_oracles)
+    cmd.append('-gp')
+    cmd.append(','.join(projects_to_run))
+    cmd.append('-gm')
+    cmd.append(str(args.generate_benchmarks_max))
+  else:
+    cmd.append('-b')
+    cmd.append(target_benchmarks)
   cmd.append('--context')
   cmd.append('-of')
   cmd.append(oss_fuzz_dir)
@@ -416,7 +421,10 @@ def prepare_fuzz_introspector_db(out_gen, workdir, parallel_introspector_jobs):
   create_fi_db(workdir)
 
 
-def run_harness_generation(workdir, args):
+def run_harness_generation(workdir,
+                           args,
+                           target_project='',
+                           target_function=''):
   """Runs harness generation based on the projects in `out_gen`"""
 
   # Read the json file from FI to get all current projects.
@@ -428,10 +436,13 @@ def run_harness_generation(workdir, args):
     set()
 
   projects_to_run = []
-  with open(fi_project_json, 'r') as f:
-    json_content = json.load(f)
-  for elem in json_content:
-    projects_to_run.append(elem['project_name'])
+  if target_project:
+    projects_to_run = [target_project]
+  else:
+    with open(fi_project_json, 'r') as f:
+      json_content = json.load(f)
+    for elem in json_content:
+      projects_to_run.append(elem['project_name'])
 
   # Launch the fuzz introspector webapp so it's ready for OFG core
   shutdown_fi_webapp()
@@ -440,8 +451,21 @@ def run_harness_generation(workdir, args):
   dst_data_dir = _create_data_dir(workdir)
   logger.info('Wrote data directory for OFG experiments in %s', dst_data_dir)
 
+  # Generate benchmarks if asked to
+  if target_project and target_function:
+    logger.info('Generating benchmark for specific function')
+    introspector.set_introspector_endpoints('http://127.0.0.1:8080/api')
+    benchmark_dir = introspector.generate_benchmark_for_targeted_function(
+        target_project, target_function)
+    if not benchmark_dir:
+      logger.info('Failed to generated benchmarks.')
+      sys.exit(1)
+  else:
+    logger.info('Generating a broad set of benchmarks')
+    benchmark_dir = ''
+
   # Run OFG core using local OSS-Fuzz and local Fuzz Introspector.
-  run_ofg_generation(projects_to_run, workdir, args)
+  run_ofg_generation(projects_to_run, workdir, args, benchmark_dir)
 
   create_merged_oss_fuzz_projects(projects_to_run, workdir)
   return projects_to_run
@@ -449,7 +473,7 @@ def run_harness_generation(workdir, args):
 
 def setup_logging():
   """Initiate logging."""
-  logging.basicConfig(level=logging.INFO, format=LOG_FMT)
+  logging.basicConfig(level=logging.DEBUG, format=LOG_FMT)
 
 
 def _get_next_folder_in_idx(base_name):
@@ -476,13 +500,13 @@ def _run_build_generation(workdir, out_folder, args):
   """ Build script generation. """
   oss_fuzz_dir = os.path.join(workdir, 'oss-fuzz-1')
   target_repositories = runner.extract_target_repositories(args.input)
-  if args.agent:
+  if args.build_generation_mode == 'agent':
     # Prepare arguments used deeper in OFG core.
     # TODO(David) make this cleaner.
     args.oss_fuzz = oss_fuzz_dir
     args.work_dirs = 'work_dirs'
     runner.run_agent(target_repositories, args)
-  else:
+  elif args.build_generation_mode == 'template-based':
     runner.run_parallels(os.path.abspath(oss_fuzz_dir),
                          target_repositories,
                          args.model,
@@ -490,16 +514,21 @@ def _run_build_generation(workdir, out_folder, args):
                          out_folder,
                          parallel_jobs=args.build_jobs,
                          max_timeout=args.build_timeout)
+  else:
+    logger.info('Unknown build generation mode: %s', args.build_generation_mode)
+    sys.exit(1)
 
 
-def run_fuzz_introspector_db_creation(args):
+def run_fuzz_introspector_db_creation(workdir, generated_builds,
+                                      parallel_build_jobs):
   """Entrypoint for fuzz introspector database creation."""
-  args.workdir = os.path.abspath(args.workdir)
+
+  workdir = os.path.abspath(workdir)
+
   # Create working directory if it doesn't exist.
-  if not os.path.isdir(args.workdir):
-    args.workdir = setup_workdirs(args.workdir)
-  prepare_fuzz_introspector_db(args.generated_builds, args.workdir,
-                               args.parallel_build_jobs)
+  if not os.path.isdir(workdir):
+    workdir = setup_workdirs(workdir)
+  prepare_fuzz_introspector_db(generated_builds, workdir, parallel_build_jobs)
 
 
 def run_build_generation(args):
@@ -517,6 +546,15 @@ def run_build_generation(args):
   _run_build_generation(abs_workdir, out_folder, args)
 
 
+def run_cmd_fix_build(args):
+  """Command entrypoint for fixing OSS-Fuzz build scripts."""
+  workdir = setup_workdirs(None)
+  abs_workdir = os.path.abspath(workdir)
+  oss_fuzz_dir = os.path.join(abs_workdir, 'oss-fuzz')
+  args.work_dirs = 'work_dirs'
+  build_fix.fix_build(args, oss_fuzz_dir)
+
+
 def run_cmd_harness_generation(args):
   """Entrypoint for command for harness generation."""
 
@@ -524,7 +562,8 @@ def run_cmd_harness_generation(args):
   abs_workdir = os.path.abspath(args.workdir)
 
   # Run harness generation.
-  projects_run = run_harness_generation(abs_workdir, args)
+  projects_run = run_harness_generation(abs_workdir, args, args.project,
+                                        args.function_name)
 
   # Log results.
   logger.info('Finished analysis')
@@ -556,54 +595,92 @@ def run_full(args):
   logger.info('Projects generated (%d): ', len(projects_run))
 
 
+def _add_base_build_gen_arguments(parser):
+  """Adds base arguments for build generation."""
+  parser.add_argument('--build-generation-mode',
+                      '-bgm',
+                      default='agent',
+                      help='Build generation mode. Defines how the build '
+                      'generation is done. '
+                      'Available modes: agent, template-based.')
+  parser.add_argument(
+      '--input',
+      '-i',
+      help=('Input to analyze. This can be either a URL to a git repository '
+            'or a file with each line being a URL to a git reopsitory.'))
+  parser.add_argument('--model',
+                      '-m',
+                      help=('Models available: '
+                            f'{", ".join(models.LLM.all_llm_names())}.'),
+                      type=str)
+  parser.add_argument('--build-jobs',
+                      help='Parallel build-generator jobs to run.',
+                      default=2,
+                      type=int)
+  parser.add_argument(
+      '--build-timeout',
+      help='Timeout for build generation per project, in seconds.',
+      default=0,
+      type=int)
+  parser.add_argument('-w', '--workdir', help='Work directory to use')
+
+
+def _add_base_harness_gen_arguments(parser):
+  """Adds base arguments for harness generation."""
+  parser.add_argument('--hg-agent',
+                      '-ha',
+                      help='Enable agent harness generation',
+                      action='store_true')
+  parser.add_argument('-gm',
+                      '--generate-benchmarks-max',
+                      help='Max targets to generate per benchmark heuristic.',
+                      type=int,
+                      default=5)
+  parser.add_argument('-mr',
+                      '--max-round',
+                      type=int,
+                      default=5,
+                      help='Max trial round for agents.')
+  parser.add_argument(
+      '--benchmark-oracles',
+      default=('far-reach-low-coverage,low-cov-with-fuzz-keyword,'
+               'easy-params-far-reach,test-migration'))
+
+
 def parse_commandline():
   """Parse the commandline."""
   parser = argparse.ArgumentParser()
   subparsers = parser.add_subparsers(dest='command')
 
+  # Parser for fixing OSS-Fuzz build
+  fix_build_parser = subparsers.add_parser('fix-build',
+                                           help='Fixes OSS-Fuzz build scripts')
+
+  fix_build_parser.add_argument('--project',
+                                type=str,
+                                help='The project to fix')
+  fix_build_parser.add_argument('--model',
+                                help='The model to use for build fixing.')
+  fix_build_parser.add_argument('-mr',
+                                '--max-round',
+                                type=int,
+                                default=20,
+                                help='Max trial round for agents.')
+
   # Run build generation.
   run_build_gen = subparsers.add_parser(
       'generate-builds',
       help='Generate OSS-Fuzz projects with build scripts but empty fuzzers.')
-  run_build_gen.add_argument('--input', '-i', help='Input to analyze')
   run_build_gen.add_argument('--out',
                              '-o',
                              help='Directory to store output.',
                              default='oss-fuzz-generated')
-  run_build_gen.add_argument('--silent',
-                             '-s',
-                             help='Disable logging in subprocess.',
-                             action='store_true')
-  run_build_gen.add_argument('--model',
-                             '-m',
-                             help=('Models available: '
-                                   f'{", ".join(models.LLM.all_llm_names())}.'),
-                             type=str)
-  run_build_gen.add_argument('--agent',
-                             '-a',
-                             help='Enable agent workflow',
-                             action='store_true')
-  run_build_gen.add_argument(
-      '-gm',
-      '--generate-benchmarks-max',
-      help='Max targets to generate per benchmark heuristic.',
-      type=int,
-      default=5)
   run_build_gen.add_argument('-mr',
                              '--max-round',
                              type=int,
                              default=5,
                              help='Max trial round for agents.')
-  run_build_gen.add_argument('--build-jobs',
-                             help='Parallel build-generator jobs to run.',
-                             default=2,
-                             type=int)
-  run_build_gen.add_argument(
-      '--build-timeout',
-      help='Timeout for build generation per project, in seconds.',
-      default=0,
-      type=int)
-  run_build_gen.add_argument('-w', '--workdir', help='Work directory to use')
+  _add_base_build_gen_arguments(run_build_gen)
 
   # Generate fuzz introspector database.
   run_generate_fi_db_parser = subparsers.add_parser(
@@ -615,10 +692,6 @@ def parse_commandline():
   run_generate_fi_db_parser.add_argument('--parallel-build-jobs',
                                          type=int,
                                          default=5)
-  run_generate_fi_db_parser.add_argument('--silent',
-                                         '-s',
-                                         help='Disable logging in subprocess.',
-                                         action='store_true')
 
   # Run harness generation
   run_harness_generation_parser = subparsers.add_parser(
@@ -627,118 +700,52 @@ def parse_commandline():
   )
 
   run_harness_generation_parser.add_argument(
-      '--silent',
-      '-s',
-      help='Disable logging in subprocess.',
-      action='store_true')
-  run_harness_generation_parser.add_argument(
       '--model',
       '-m',
       help=('Models available: '
             f'{", ".join(models.LLM.all_llm_names())}.'),
       type=str)
-  run_harness_generation_parser.add_argument('--agent',
-                                             '-a',
-                                             help='Enable agent workflow',
-                                             action='store_true')
-  run_harness_generation_parser.add_argument(
-      '--hg-agent',
-      '-ha',
-      help='Enable agent harness generation',
-      action='store_true')
-  run_harness_generation_parser.add_argument(
-      '-gm',
-      '--generate-benchmarks-max',
-      help='Max targets to generate per benchmark heuristic.',
-      type=int,
-      default=5)
-  run_harness_generation_parser.add_argument('-mr',
-                                             '--max-round',
-                                             type=int,
-                                             default=5,
-                                             help='Max trial round for agents.')
   run_harness_generation_parser.add_argument('-w',
                                              '--workdir',
                                              help='Work directory to use')
   run_harness_generation_parser.add_argument(
-      '--benchmark-oracles',
-      default=
-      'far-reach-low-coverage,low-cov-with-fuzz-keyword,easy-params-far-reach,test-migration'
-  )
+      '--project', default='', help='Limit analysis to specified project.')
+  run_harness_generation_parser.add_argument('--function-name',
+                                             default='',
+                                             help='Target function')
+  _add_base_harness_gen_arguments(run_harness_generation_parser)
 
   # Run a full end to end generation.
   run_full_parser = subparsers.add_parser(
       'generate-full',
-      help="End to end generation of OSS-Fuzz projects.",
+      help="Generate OSS-Fuzz integration from git URLs.",
   )
-  run_full_parser.add_argument('--input', '-i', help='Input to analyze')
   run_full_parser.add_argument('--out',
                                '-o',
                                help='Directory to store output.',
                                default='oss-fuzz-generated')
-  run_full_parser.add_argument('--silent',
-                               '-s',
-                               help='Disable logging in subprocess.',
-                               action='store_true')
-  run_full_parser.add_argument(
-      '--model',
-      '-m',
-      help=('Models available: '
-            f'{", ".join(models.LLM.all_llm_names())}.'),
-      type=str)
-  run_full_parser.add_argument('--agent',
-                               '-a',
-                               help='Enable agent workflow',
-                               action='store_true')
-  run_full_parser.add_argument('--hg-agent',
-                               '-ha',
-                               help='Enable agent harness generation',
-                               action='store_true')
-  run_full_parser.add_argument(
-      '-gm',
-      '--generate-benchmarks-max',
-      help='Max targets to generate per benchmark heuristic.',
-      type=int,
-      default=5)
-  run_full_parser.add_argument('-mr',
-                               '--max-round',
-                               type=int,
-                               default=5,
-                               help='Max trial round for agents.')
-  run_full_parser.add_argument('--build-jobs',
-                               help='Parallel build-generator jobs to run.',
-                               default=2,
-                               type=int)
-  run_full_parser.add_argument(
-      '--benchmark-oracles',
-      default=
-      'far-reach-low-coverage,low-cov-with-fuzz-keyword,easy-params-far-reach,test-migration'
-  )
 
-  run_full_parser.add_argument(
-      '--build-timeout',
-      help='Timeout for build generation per project, in seconds.',
-      default=0,
-      type=int)
-  run_full_parser.add_argument('-w', '--workdir', help='Work directory to use')
+  _add_base_build_gen_arguments(run_full_parser)
+  _add_base_harness_gen_arguments(run_full_parser)
 
   return parser.parse_args()
 
 
 def main():
-  global silent_global
   args = parse_commandline()
   setup_logging()
-  silent_global = args.silent
 
   if args.command == 'generate-full':
     run_full(args)
   if args.command == 'generate-fuzz-introspector-database':
-    run_fuzz_introspector_db_creation(args)
+    run_fuzz_introspector_db_creation(args.workdir, args.generated_builds,
+                                      args.parallel_build_jobs)
   if args.command == 'generate-builds':
     run_build_generation(args)
   if args.command == 'generate-harnesses':
     run_cmd_harness_generation(args)
+  if args.command == 'fix-build':
+    run_cmd_fix_build(args)
 
 
 if __name__ == '__main__':
