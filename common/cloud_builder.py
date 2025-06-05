@@ -132,7 +132,6 @@ class CloudBuilder:
         for root, _, files in os.walk(directory_path)
         for file in files)
 
-    # TODO(pamusuo): Check if directory_path is the right base directory to use, or OFG_ROOT_DIR?
     return self._upload_files(f'ofg-exp-{uuid.uuid4().hex}.tar.gz',
                               directory_path, files_to_upload)
 
@@ -479,13 +478,7 @@ class CloudBuilder:
 
     # TODO(pamusuo): Where should we get the experiment path from? self.exp_args.work_dirs.base
     experiment_path = result_history[-1].work_dirs.base
-    experiment_url = ''
-    if os.path.exists(experiment_path):
-      experiment_url = self._upload_directory(experiment_path)
-    if experiment_url:
-      logging.info('Uploaded experiment to %s', experiment_url)
-    else:
-      logging.error('Experiment path %s empty or invalid.', experiment_path)
+    experiment_url = self._upload_directory(experiment_path)
 
     oss_fuzz_data_url = self._upload_oss_fuzz_data()
     data_dir_url = self._upload_fi_oss_fuzz_data()
