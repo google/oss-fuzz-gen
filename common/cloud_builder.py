@@ -128,7 +128,7 @@ class CloudBuilder:
       return ''
 
     files_to_upload = list(
-        os.path.relpath(os.path.join(root, file))
+        os.path.relpath(os.path.join(root, file), directory_path)
         for root, _, files in os.walk(directory_path)
         for file in files)
 
