@@ -60,15 +60,17 @@ class ExecutionStage(BaseStage):
                                     f'{self.trial:02d}.fuzz_target')
     build_script_path = os.path.join(last_result.work_dirs.fuzz_targets,
                                      f'{self.trial:02d}.build_script')
-    generated_project_path = evaluator.create_ossfuzz_project(benchmark, generated_oss_fuzz_project,
-                                     fuzz_target_path, build_script_path)
+    generated_project_path = evaluator.create_ossfuzz_project(
+        benchmark, generated_oss_fuzz_project, fuzz_target_path,
+        build_script_path)
 
     status_path = os.path.join(last_result.work_dirs.status,
                                f'{self.trial:02d}')
     os.makedirs(status_path, exist_ok=True)
 
     # Get the source code of the fuzz target and build script from the generated oss-fuzz projects.
-    fuzz_target_source_path = os.path.join(generated_project_path, f'{last_result.trial:02d}.fuzz_target')
+    fuzz_target_source_path = os.path.join(
+        generated_project_path, f'{last_result.trial:02d}.fuzz_target')
 
     if fuzz_target_source_path and os.path.isfile(fuzz_target_source_path):
       with open(fuzz_target_source_path, 'r') as f:
@@ -76,7 +78,8 @@ class ExecutionStage(BaseStage):
     else:
       fuzz_target_source = ''
 
-    build_script_source_path = os.path.join(generated_project_path, f'{last_result.trial:02d}.build_script')
+    build_script_source_path = os.path.join(
+        generated_project_path, f'{last_result.trial:02d}.build_script')
 
     if build_script_source_path and os.path.isfile(build_script_source_path):
       with open(build_script_source_path, 'r') as f:
@@ -158,10 +161,9 @@ class ExecutionStage(BaseStage):
         run_log_content = ''
 
       # Add fuzz_target_source and build_script_source to the report log.
-      run_log_content = (
-          f'Fuzz target source:\n{fuzz_target_source}\n'
-          f'Build script source:\n{build_script_source}\n'
-          f'{run_log_content}')
+      run_log_content = (f'Fuzz target source:\n{fuzz_target_source}\n'
+                         f'Build script source:\n{build_script_source}\n'
+                         f'{run_log_content}')
 
       runresult = RunResult(
           benchmark=benchmark,
