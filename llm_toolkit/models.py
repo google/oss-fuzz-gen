@@ -351,9 +351,11 @@ class GPT(LLM):
     if prompt:
       self.messages.extend(prompt.get())
 
-    return client.responses.create(model=self.name,
-                                   input=self.messages,
-                                   tools=tools)
+    result = self.with_retry_on_error(
+        lambda: client.responses.create(
+            model=self.name, input=self.messages, tools=tools),
+        [openai.OpenAIError])
+    return result
 
   def ask_llm(self, prompt: prompts.Prompt) -> str:
     """Queries LLM a single prompt and returns its response."""
