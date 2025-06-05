@@ -326,8 +326,8 @@ class BuildFixAgent(BaseAgent):
                       trial=self.trial)
           self._dispatch_tool_call(tool_call)
 
-        # If no tool calls were made prepare LLM response saying we do not understand
-        # the message received.
+        # If no tool calls were made prepare LLM response saying we do not
+        # understand the message received.
         if tools_analysed == 0 and not self.exit_condition_met:
           logger.info(
               'Did not execute any tool calls and there is no exit condition.',
