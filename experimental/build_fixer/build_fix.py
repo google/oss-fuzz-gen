@@ -21,7 +21,7 @@ import shutil
 import subprocess
 import sys
 import uuid
-from typing import Optional
+from typing import Any, Optional
 
 import logger
 from agent.base_agent import BaseAgent
@@ -203,31 +203,117 @@ class BuildFixAgent(BaseAgent):
       self._agent_raw_loop(prompt, build_result)
     return build_result
 
+  def _test_buildscript_and_dockerfile(self, tool_call, build_script,
+                                       dockerfile):
+    """Tests a build script and Dockerfile against the target project."""
+    build_fuzzers_result, target_dst = self._test_build_fuzzers(
+        build_script, dockerfile)
+    if build_fuzzers_result.returncode != 0:
+      logger.info('Build failed.', trial=self.trial)
+      parsed_stdout = build_fuzzers_result.stdout
+      parsed_stdout = self._simple_truncate_build_output(parsed_stdout)
+
+      logger.info('Parsed stdout: %s', parsed_stdout, trial=self.trial)
+
+      # Prepare for next iteration by adding messages to the chat.
+      self.llm.messages.append(tool_call)
+      self.llm.messages.append({
+          'type': 'function_call_output',
+          'call_id': tool_call.call_id,
+          'output': str(parsed_stdout)
+      })
+      self.working_prompt = None
+
+    else:
+      logger.info('Build succeeded.', trial=self.trial)
+      # Testing fuzzers run.
+      test_run_result = self._test_check_fuzzers(target_dst)
+      if test_run_result.returncode == 0:
+        logger.info('Fuzzers run successfully.', trial=self.trial)
+        self.success_build_script = build_script
+        self.success_dockerfile = dockerfile
+
+        self.exit_condition_met = True
+      else:
+        logger.info('Fuzzers run failed.', trial=self.trial)
+        prompt_text = test_run_result.stdout
+        # Prepare for next iteration by adding messages to the chat.
+        self.llm.messages.append(tool_call)
+        self.llm.messages.append({
+            'type': 'function_call_output',
+            'call_id': tool_call.call_id,
+            'output': str(prompt_text)
+        })
+
+        self.working_prompt = None
+
+  def _func_handle_run_commands_in_container(self, tool_call, command_string):
+    """Runs a command string in the project container."""
+
+    # Execute the command directly, then return the formatted result
+    commands = command_string
+    logger.info('LLM Requested commands: %s', commands, trial=self.trial)
+    result = self.inspect_tool.execute(commands)
+    prompt_text = self._format_bash_execution_result(
+        result, previous_prompt=self.working_prompt)
+
+    prompt_text = self._simple_truncate_build_output(prompt_text)
+
+    # Extend messages to prepare for next iteration.
+    self.llm.messages.append(tool_call)
+    self.llm.messages.append({
+        'type': 'function_call_output',
+        'call_id': tool_call.call_id,
+        'output': str(prompt_text)
+    })
+    self.working_prompt = None
+
+  def _log_success(self):
+    """Utility funciton to log success of fixing."""
+    logger.info('Succeeded fixing build script', trial=self.trial)
+    logger.info('-' * 25 + ' Build script: ' + '-' * 25, trial=self.trial)
+    logger.info(self.success_build_script, trial=self.trial)
+    logger.info('-' * 60, trial=self.trial)
+
+  def _dispatch_tool_call(self, tool_call: Any) -> None:
+    """Dispatches a function call to the appropriate handler."""
+    if tool_call.name == 'test_build_script_and_dockerfile':
+      arguments = json.loads(tool_call.arguments)
+      self._test_buildscript_and_dockerfile(tool_call,
+                                            arguments['build_script'],
+                                            arguments['dockerfile'])
+    elif tool_call.name == 'test_build_script':
+      arguments = json.loads(tool_call.arguments)
+      self._test_buildscript_and_dockerfile(tool_call,
+                                            arguments['build_script'], '')
+    elif tool_call.name == 'run_commands_in_container':
+      arguments = json.loads(tool_call.arguments)
+      self._func_handle_run_commands_in_container(tool_call,
+                                                  arguments['command'])
+    else:
+      logger.info('Unsupported tool call: %s', tool_call.name, trial=self.trial)
+
   def _agent_run_function_based_loop(
       self, prompt: Optional[Prompt], build_result: BuildResult) -> None:  # pylint: disable=unused-argument
     """Runs the agent loop using a function-based approach."""
-
+    self.working_prompt = prompt
     # Agent loop
     try:
       client = self.llm.get_chat_client(model=self.llm.get_model())
 
-      extended_messages = False
       cur_round = 0
-      success = False
-      while prompt or extended_messages:
+      self.exit_condition_met = False
+      # Function execution and LLM communication loop.
+      while self.exit_condition_met is False:
         logger.info(f'Agent Round {cur_round}', trial=self.trial)
-        cur_round += 1
-        if cur_round > self.args.max_round:
-          sys.exit(0)
 
-        # Pass prompt history to LLM and get response.
+        # Send prompt to LLM and get response.
         logger.info('Sending prompt to LLM', trial=self.trial)
-        response = self.chat_llm_with_tools(client, prompt, FIXER_TOOLS,
-                                            self.trial)
+        response = self.chat_llm_with_tools(client, self.working_prompt,
+                                            FIXER_TOOLS, self.trial)
 
+        # Handle LLM tool calls.
         tools_analysed = 0
-        extended_messages = False
-        # handle each of the tool calls in the response.
         logger.info('Iterating response output', trial=self.trial)
         for tool_call in response.output:
           logger.info('- Response out:' + str(tool_call), trial=self.trial)
@@ -238,137 +324,40 @@ class BuildFixAgent(BaseAgent):
           logger.info('Tool call arguments: %s',
                       tool_call.arguments,
                       trial=self.trial)
-          if tool_call.name == 'test_build_script_and_dockerfile':
-            arguments = json.loads(tool_call.arguments)
-            build_fuzzers_result, target_dst = self._test_build_fuzzers(
-                arguments['build_script'], arguments['dockerfile'])
-            if build_fuzzers_result.returncode != 0:
-              logger.info('Build failed.', trial=self.trial)
-              parsed_stdout = build_fuzzers_result.stdout
-              parsed_stdout = self._simple_truncate_build_output(parsed_stdout)
+          self._dispatch_tool_call(tool_call)
 
-              logger.info('Parsed stdout: %s', parsed_stdout, trial=self.trial)
-
-              self.llm.messages.append(tool_call)
-              self.llm.messages.append({
-                  'type': 'function_call_output',
-                  'call_id': tool_call.call_id,
-                  'output': str(parsed_stdout)
-              })
-              extended_messages = True
-              prompt = None
-
-            else:
-              logger.info('Build succeeded.', trial=self.trial)
-              # Testing fuzzers run.
-              test_run_result = self._test_check_fuzzers(target_dst)
-              if test_run_result.returncode == 0:
-                logger.info('Fuzzers run successfully.', trial=self.trial)
-                success = True
-                self.success_build_script = arguments['build_script']
-                self.success_dockerfile = arguments['dockerfile']
-                prompt = None
-                extended_messages = False
-              else:
-                logger.info('Fuzzers run failed.', trial=self.trial)
-                prompt_text = test_run_result.stdout
-                success = False
-                self.llm.messages.append(tool_call)
-                self.llm.messages.append({
-                    'type': 'function_call_output',
-                    'call_id': tool_call.call_id,
-                    'output': str(prompt_text)
-                })
-                extended_messages = True
-                prompt = None
-          elif tool_call.name == 'test_build_script':
-            arguments = json.loads(tool_call.arguments)
-            build_fuzzers_result, target_dst = self._test_build_fuzzers(
-                arguments['build_script'])
-            if build_fuzzers_result.returncode != 0:
-              logger.info('Build failed.', trial=self.trial)
-              parsed_stdout = build_fuzzers_result.stdout
-              parsed_stdout = self._simple_truncate_build_output(parsed_stdout)
-
-              logger.info('Parsed stdout: %s', parsed_stdout, trial=self.trial)
-
-              self.llm.messages.append(tool_call)
-              self.llm.messages.append({
-                  'type': 'function_call_output',
-                  'call_id': tool_call.call_id,
-                  'output': str(parsed_stdout)
-              })
-              extended_messages = True
-              prompt = None
-
-            else:
-              logger.info('Build succeeded.', trial=self.trial)
-              # Testing fuzzers run.
-              test_run_result = self._test_check_fuzzers(target_dst)
-              if test_run_result.returncode == 0:
-                logger.info('Fuzzers run successfully.', trial=self.trial)
-                success = True
-                self.success_build_script = arguments['build_script']
-                prompt = None
-                extended_messages = False
-              else:
-                logger.info('Fuzzers run failed.', trial=self.trial)
-                prompt_text = test_run_result.stdout
-                success = False
-                self.llm.messages.append(tool_call)
-                self.llm.messages.append({
-                    'type': 'function_call_output',
-                    'call_id': tool_call.call_id,
-                    'output': str(prompt_text)
-                })
-                extended_messages = True
-                prompt = None
-
-          elif tool_call.name == 'run_commands_in_container':
-            arguments = json.loads(tool_call.arguments)
-            logger.info(json.dumps(arguments, indent=2), trial=self.trial)
-
-            # Execute the command directly, then return the formatted result
-            commands = arguments['command']
-            logger.info('LLM Requested commands: %s',
-                        commands,
-                        trial=self.trial)
-            result = self.inspect_tool.execute(commands)
-            prompt_text = self._format_bash_execution_result(
-                result, previous_prompt=prompt)
-
-            prompt_text = self._simple_truncate_build_output(prompt_text)
-
-            self.llm.messages.append(tool_call)
-            self.llm.messages.append({
-                'type': 'function_call_output',
-                'call_id': tool_call.call_id,
-                'output': str(prompt_text)
-            })
-            extended_messages = True
-            prompt = None
-          else:
-            logger.info('Unsupported tool call: %s',
-                        tool_call.name,
-                        trial=self.trial)
-
-        if tools_analysed == 0 and not success:
+        # If no tool calls were made prepare LLM response saying we do not understand
+        # the message received.
+        if tools_analysed == 0 and not self.exit_condition_met:
           logger.info(
-              'Did not execute any tool calls. At the moment we do not '
-              'support this, but we should add support for it.',
+              'Did not execute any tool calls and there is no exit condition.',
               trial=self.trial)
-          prompt = prompt = self.llm.prompt_type()(None)
-          prompt.add_problem(
+          self.working_prompt = self.llm.prompt_type()(None)
+          self.working_prompt.add_problem(
               'I was unable to interpret your last message. Use tool '
               'calls to direct this process instead of messages.')
           cur_round -= 1
 
-        if success:
-          logger.info('Succeeded fixing build script', trial=self.trial)
-          logger.info('-' * 25 + ' Build script: ' + '-' * 25, trial=self.trial)
-          logger.info(self.success_build_script, trial=self.trial)
-          logger.info('-' * 60, trial=self.trial)
+        # Break if an exit condition is met, otherwise we proceed to increment
+        # the round counter.
+        if self.exit_condition_met:
           break
+
+        # Increment the round counter, but trigger exit condition if max
+        # rounds reached.
+        cur_round += 1
+        if cur_round > self.args.max_round:
+          logger.info('Max discovery rounds reached (%s).',
+                      self.args.max_round,
+                      trial=self.trial)
+          self.exit_condition_met = True
+
+      # Post LLM communication and function execution loop.
+      # Log details on success.
+      if self.exit_condition_met:
+        self._log_success()
+
+      # TODO (David): Add handling for "why did we not succeed" case.
     finally:
       self.inspect_tool.terminate()
 
