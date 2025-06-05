@@ -15,6 +15,7 @@
 
 import argparse
 import logging
+import multiprocessing
 import os
 from typing import List
 
@@ -29,6 +30,8 @@ logger = logging.getLogger(__name__)
 
 RESULTS_DIR = './results'
 
+NUM_ANA = int(os.getenv('LLM_NUM_ANA', '2'))
+
 
 def parse_args() -> argparse.Namespace:
   """Parses command line arguments."""
@@ -38,13 +41,26 @@ def parse_args() -> argparse.Namespace:
   parser.add_argument('-y',
                       '--benchmark-yaml',
                       type=str,
-                      required=True,
                       help='A benchmark YAML file.')
 
-  parser.add_argument('-d',
+  parser.add_argument('-b',
                       '--benchmarks-directory',
                       type=str,
                       help='A directory containing benchmark YAML files.')
+
+  parser.add_argument(
+      '-g',
+      '--generate-benchmarks',
+      help=('Generate benchmarks and use those for analysis. This is a string '
+            'of comma-separated heuristics to use when identifying benchmark '
+            'targets.'),
+      type=str)
+
+  parser.add_argument('-np',
+                      '--num-pools',
+                      type=int,
+                      default=NUM_ANA,
+                      help='Number of parallel processes to use for analysis.')
 
   parser.add_argument('-w', '--work-dir', default=RESULTS_DIR)
 
@@ -56,7 +72,45 @@ def parse_args() -> argparse.Namespace:
 
   parsed_args = parser.parse_args()
 
+  benchmark_yaml = parsed_args.benchmark_yaml
+  if benchmark_yaml:
+    assert (benchmark_yaml.endswith('.yaml') or
+            benchmark_yaml.endswith('yml')), (
+                "--benchmark-yaml needs to take an YAML file.")
+
+  bench_yml = bool(benchmark_yaml)
+  bench_dir = bool(parsed_args.benchmarks_directory)
+  bench_gen = bool(parsed_args.generate_benchmarks)
+
+  num_options = int(bench_yml) + int(bench_dir) + int(bench_gen)
+  assert num_options == 1, (
+      'One and only one of --benchmark-yaml, --benchmarks-directory and '
+      '--generate-benchmarks. --benchmark-yaml takes one benchmark YAML file, '
+      '--benchmarks-directory takes: a directory of them and '
+      '--generate-benchmarks generates them during analysis.')
+
   return parsed_args
+
+
+def analyze_benchmark(benchmark: benchmarklib.Benchmark, model: models.LLM,
+                      args: argparse.Namespace) -> bool:
+  """Analyzes the benchmark using the function analyzer."""
+
+  # Initialize the function analyzer
+  analyzer = function_analyzer.FunctionAnalyzer(trial=1, llm=model, args=args)
+
+  # Initialize the function analyzer with the first benchmark
+  analyzer.initialize(benchmark)
+
+  # Run the function analyzer
+  try:
+    result = analyzer.execute([])
+  except Exception as e:
+    logger.error("Error during analysis for benchmark %s: %s",
+                 benchmark.function_name, e)
+    return False
+
+  return result.function_analysis is not None
 
 
 if __name__ == "__main__":
@@ -66,12 +120,7 @@ if __name__ == "__main__":
   args = parse_args()
 
   # Initialize the working directory
-  args.work_dirs = workdir.WorkDirs(args.work_dir)
-
-  # Initialize the function analyzer
-  function_analyzer = function_analyzer.FunctionAnalyzer(trial=1,
-                                                         llm=model,
-                                                         args=args)
+  args.work_dirs = workdir.WorkDirs(args.work_dir, create_children_dirs=False)
 
   # Initialize benchmarks
   benchmarks: List[
@@ -85,25 +134,45 @@ if __name__ == "__main__":
               args.benchmark_yaml)
 
   # Analyze each benchmark
-  for test_benchmark in benchmarks:
-    logger.info("Loaded benchmark (%d/%d) for function: %s",
-                benchmarks.index(test_benchmark) + 1, len(benchmarks),
-                test_benchmark.function_name)
+  success_count = 0
 
-    # Initialize the function analyzer with the first benchmark
-    function_analyzer.initialize(test_benchmark)
+  if NUM_ANA == 1:
+    for benchmark in benchmarks:
+      logger.info("Loaded benchmark (%d/%d) for function: %s",
+                  benchmarks.index(benchmark) + 1, len(benchmarks),
+                  benchmark.function_name)
+      if analyze_benchmark(benchmark, model, args):
+        success_count += 1
+  else:
 
-    # Run the function analyzer
-    result = function_analyzer.execute([])
+    logger.info("Running analysis in parallel with %d processes.",
+                args.num_pools)
+    with multiprocessing.Pool(args.num_pools, maxtasksperchild=1) as pool:
 
-    # If result is available, write it to the work_dirs directory
-    if result.result_available and result.result_raw:
-      result_file = os.path.join(
-          args.work_dirs.base,
-          f"{test_benchmark.project}_{test_benchmark.function_name}.txt")
-      with open(result_file, 'w') as f:
-        f.write(result.result_raw)
-      logger.info("Analysis results written to %s", result_file)
-    else:
-      logger.info("No requirements found for benchmark %s",
-                  test_benchmark.function_name)
+      results = {}
+      for benchmark in benchmarks:
+        # Pass a new analyzer instance to each process to avoid sharing state
+        logger.info("Submitted benchmark (%d/%d) for function: %s to the pool.",
+                    benchmarks.index(benchmark) + 1, len(benchmarks),
+                    benchmark.function_name)
+        result = pool.apply_async(analyze_benchmark,
+                                  args=(benchmark, model, args))
+        results[benchmark.id] = result
+
+      pool.close()
+
+      # Wait for all processes to complete
+      pool.join()
+
+      # Wait for all results to complete and count successes
+      for benchmark_id, result in results.items():
+        try:
+          if result.get():
+            success_count += 1
+        except Exception as e:
+          logger.error(f"Error during analysis for benchmark %s: %s",
+                       benchmark_id, e)
+
+  print(
+      f"{success_count} out of {len(benchmarks)} analyses completed successfully."
+  )
