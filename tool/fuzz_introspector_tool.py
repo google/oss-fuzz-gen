@@ -79,14 +79,11 @@ class FuzzIntrospectorTool(base_tool.BaseTool):
 
     return function_code
 
-  def function_source_with_name(self, project_name: str,
-                                function_name: str) -> str:
+  def get_function_implementation(self, project_name: str,
+                                  function_name: str) -> str:
     """
     Retrieves a function's source from the fuzz introspector API,
-      using the project's name and function's name.
-      This function first retrieves the list of all
-      functions in the project, so it can get the function's signature.
-      Then it uses the function's signature to retrieve the source code.
+      using the project's name and function's name
 
     Args:
         project_name (str): The name of the project.

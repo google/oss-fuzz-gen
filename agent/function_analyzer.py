@@ -31,7 +31,7 @@ from agent import base_agent
 from experiment import benchmark as benchmarklib
 from experiment.workdir import WorkDirs
 from llm_toolkit import models, prompt_builder, prompts
-from tool import base_tool, fuzz_introspector_tool
+from tool import base_tool, container_tool, fuzz_introspector_tool
 
 
 class FunctionAnalyzer(base_agent.BaseAgent):
@@ -80,7 +80,10 @@ class FunctionAnalyzer(base_agent.BaseAgent):
         """You are a security engineer tasked with analyzing a function
         and extracting its input requirements,
         necessary for it to execute correctly.""",
-        tools=[introspector_tool.function_source_with_name],
+        tools=[
+            introspector_tool.get_function_implementation,
+            self.search_project_files
+        ],
     )
 
     # Create the session service
@@ -179,6 +182,10 @@ class FunctionAnalyzer(base_agent.BaseAgent):
           trial=self.trial)
       return result
 
+    # Initialize the ProjectContainerTool for local file search
+    self.inspect_tool = container_tool.ProjectContainerTool(self.benchmark)
+    self.inspect_tool.compile(extra_commands=' && rm -rf /out/* > /dev/null')
+
     logger.info("Initial prompt created. Calling LLM...", trial=self.trial)
 
     user_id = self.benchmark.id
@@ -191,6 +198,8 @@ class FunctionAnalyzer(base_agent.BaseAgent):
       requirement_path = self.write_requirements_to_file(self.args, result_str)
       function_analysis = resultslib.FunctionAnalysisResult(requirement_path)
       result.function_analysis = function_analysis
+
+    self.inspect_tool.terminate()
 
     return result
 
@@ -205,4 +214,33 @@ class FunctionAnalyzer(base_agent.BaseAgent):
 
     prompt = builder.build_prompt()
 
+    prompt.append(self.inspect_tool.tutorial())
+
     return prompt
+
+  def search_project_files(self, request: str) -> str:
+    """
+    This function tool uses bash commands to search the project's source files,
+      and retrieve requested code snippets or file contents.
+    Args:
+      request (str): The bash command to execute and its justification, formatted using the <reason> and <bash> tags.
+    Returns:
+      str: The response from executing the bash commands, formatted using the <bash>, <stdout> and <stderr> tags.
+    """
+
+    logger.info('Received ProjectContainerTool request: %s',
+                request,
+                trial=self.trial)
+
+    prompt = prompt_builder.DefaultTemplateBuilder(self.llm, None).build([])
+
+    if request:
+      prompt = self._container_handle_bash_commands(request, self.inspect_tool,
+                                                    prompt)
+
+    # Finally check invalid request.
+    if not request or not prompt.get():
+      prompt = self._container_handle_invalid_tool_usage(
+          self.inspect_tool, 0, request, prompt)
+
+    return prompt.get()
