@@ -200,8 +200,8 @@ class ContextRetriever:
     info_list = introspector.query_introspector_type_definition(
         self._benchmark.project)
     if not info_list:
-        logging.warning('Could not type info for project.')
-        return type_def
+      logging.warning('Could not type info for project.')
+      return type_def
 
     info_dict = {info['name']: info for info in info_list}
     for current_type in type_names:
