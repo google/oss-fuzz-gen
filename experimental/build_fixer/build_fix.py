@@ -360,6 +360,15 @@ class BuildFixAgent(BaseAgent):
       while self.exit_condition_met is False:
         logger.info(f'Agent Round {cur_round}', trial=self.trial)
 
+        # Increment the round counter, but trigger exit condition if max
+        # rounds reached.
+        if cur_round > self.args.max_round:
+          logger.info('Max discovery rounds reached (%s).',
+                      self.args.max_round,
+                      trial=self.trial)
+          break
+        cur_round += 1
+
         # Send prompt to LLM and get response.
         logger.info('Sending prompt to LLM', trial=self.trial)
         response = self.chat_llm_with_tools(client, self.working_prompt,
@@ -368,7 +377,6 @@ class BuildFixAgent(BaseAgent):
         if not response:
           logger.info('LLM did not return a response, skipping this round.',
                       trial=self.trial)
-          cur_round += 1
           continue
 
         # Handle LLM tool calls.
@@ -395,21 +403,6 @@ class BuildFixAgent(BaseAgent):
           self.working_prompt.add_problem(
               'I was unable to interpret your last message. Use tool '
               'calls to direct this process instead of messages.')
-          cur_round -= 1
-
-        # Break if an exit condition is met, otherwise we proceed to increment
-        # the round counter.
-        if self.exit_condition_met:
-          break
-
-        # Increment the round counter, but trigger exit condition if max
-        # rounds reached.
-        cur_round += 1
-        if cur_round > self.args.max_round:
-          logger.info('Max discovery rounds reached (%s).',
-                      self.args.max_round,
-                      trial=self.trial)
-          break
 
       # Post LLM communication and function execution loop.
       # Log details on success.
