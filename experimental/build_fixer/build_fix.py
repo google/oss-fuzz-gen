@@ -324,7 +324,7 @@ class BuildFixAgent(BaseAgent):
       return raw_response[quote_locations[0] + 1:quote_locations[1]]
     return None
 
-  def _dispatch_tool_call(self, tool_call: Any) -> None:
+  def _dispatch_tool_call(self, tool_call: Any) -> int:
     """Dispatches a function call to the appropriate handler."""
     arguments = self._load_tool_arguments(tool_call)
     if arguments is None:
@@ -334,11 +334,11 @@ class BuildFixAgent(BaseAgent):
                                             arguments['build_script'],
                                             arguments['dockerfile'])
       return 1
-    elif tool_call.name == 'test_build_script':
+    if tool_call.name == 'test_build_script':
       self._test_buildscript_and_dockerfile(tool_call,
                                             arguments['build_script'], '')
       return 1
-    elif tool_call.name == 'run_commands_in_container':
+    if tool_call.name == 'run_commands_in_container':
       self._func_handle_run_commands_in_container(tool_call,
                                                   arguments['command'])
       return 1
