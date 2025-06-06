@@ -203,6 +203,7 @@ class DefaultTemplateBuilder(PromptBuilder):
         must_insert=context_info['decl'],
         func_source=context_info['func_source'],
         xrefs='\n'.join(context_info['xrefs']),
+        macro='\n'.join(context_info['macro']),
         include_statement=context_info['header'],
     )
 
