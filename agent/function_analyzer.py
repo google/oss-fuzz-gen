@@ -157,13 +157,20 @@ class FunctionAnalyzer(base_agent.BaseAgent):
 
     WorkDirs(self.args.work_dirs.base, keep=True)
 
+    result = resultslib.Result(
+        benchmark=self.benchmark,
+        trial=self.trial,
+        work_dirs=self.args.work_dirs,
+    )
+
     # Call the agent asynchronously and return the result
     prompt = self._initial_prompt(result_history)
     query = prompt.gettext()
 
     # Validate query is not empty
     if not query.strip():
-      raise ValueError("Query is empty. Cannot call the agent.")
+      logger.error("Error occurred while building initial prompt. Cannot call the agent.")
+      return result
 
     user_id = "user"
     session_id = f"session_{self.trial}"
@@ -174,15 +181,7 @@ class FunctionAnalyzer(base_agent.BaseAgent):
       # Write the requirements to a file
       requirement_path = self.write_requirements_to_file(self.args, result_str)
       function_analysis = resultslib.FunctionAnalysisResult(requirement_path)
-    else:
-      function_analysis = None
-
-    result = resultslib.Result(
-        benchmark=self.benchmark,
-        trial=self.trial,
-        work_dirs=self.args.work_dirs,
-        function_analysis=function_analysis,
-    )
+      result.function_analysis = function_analysis
 
     return result
 

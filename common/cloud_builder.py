@@ -254,8 +254,8 @@ class CloudBuilder:
                 'entrypoint': 'bash',
                 'args': [
                     '-c', f'gsutil cp {experiment_url} /tmp/ofg-exp.tar.gz && '
-                    f'mkdir /workspace/host/{experiment_path} && '
-                    f'tar -xzf /tmp/ofg-exp.tar.gz -C /workspace/host/{experiment_path}'
+                    f'mkdir {os.path.join('/workspace/host/', experiment_path)} && '
+                    f'tar -xzf /tmp/ofg-exp.tar.gz -C {os.path.join('/workspace/host/', experiment_path)}'
                 ],
                 'allowFailure': True,
             },
@@ -396,7 +396,7 @@ class CloudBuilder:
                                     body=cloud_build_config).execute()
     build_id = build_info.get('metadata', {}).get('build', {}).get('id', '')
 
-    logging.info('Created Cloud Build ID %s at %s', build_id, REGION)
+    logging.info('Created Cloud Build ID %s for agent %s at %s', build_id,  REGION)
     return build_id
 
   def _wait_for_build(self, build_id: str) -> str:
