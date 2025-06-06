@@ -342,8 +342,8 @@ class BuildFixAgent(BaseAgent):
       self._func_handle_run_commands_in_container(tool_call,
                                                   arguments['command'])
       return 1
-    else:
-      logger.info('Unsupported tool call: %s', tool_call.name, trial=self.trial)
+
+    logger.info('Unsupported tool call: %s', tool_call.name, trial=self.trial)
     return 0
 
   def _agent_run_function_based_loop(
