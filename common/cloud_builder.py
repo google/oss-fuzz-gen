@@ -32,7 +32,7 @@ from googleapiclient.discovery import build as cloud_build
 
 import utils
 from agent.base_agent import BaseAgent
-from results import Result
+from results import Result, RunResult
 
 OF_REPO = 'https://github.com/google/oss-fuzz.git'
 OFG_ROOT_DIR = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
@@ -82,11 +82,42 @@ class CloudBuilder:
   def _upload_files(self, archive_name: str, target_dir: str,
                     files_to_upload: list[str]) -> str:
     """Archive and upload files to GCS."""
+    valid_files = []
+    for f in files_to_upload:
+      file_path = os.path.join(target_dir, f)
+      if os.path.exists(file_path):
+        valid_files.append(f)
+      else:
+        logging.error("File does not exist: %s", file_path)
+
+    valid_files.sort()
+
     with tempfile.TemporaryDirectory() as tmpdirname:
       archive_path = os.path.join(tmpdirname, archive_name)
-      tar_command = ['tar', '-czf', archive_path] + files_to_upload
-      subprocess.run(tar_command, cwd=target_dir, check=True)
-      logging.info('Created archive: %s', archive_path)
+      tar_command = ['tar', '-czf', archive_path] + valid_files
+      logging.error("Archive path: %s (exists: %s)", archive_path,
+                    os.path.exists(archive_path))
+      logging.error("Tar command: %s", ' '.join(tar_command))
+
+      try:
+        result = subprocess.run(tar_command,
+                                cwd=target_dir,
+                                check=True,
+                                stdout=subprocess.PIPE,
+                                stderr=subprocess.PIPE,
+                                text=True)
+        logging.error("subprocess stdout:\n%s", result.stdout)
+        logging.error("subprocess stderr:\n%s", result.stderr)
+      except subprocess.CalledProcessError as e:
+        logging.error("Tar command failed with return code %d", e.returncode)
+        logging.error("stdout:\n%s", e.stdout)
+        logging.error("stderr:\n%s", e.stderr)
+        raise
+
+      if os.path.exists(archive_path):
+        logging.info("Successfully created archive: %s", archive_path)
+      else:
+        logging.error("Failed to create archive: %s", archive_path)
       return self._upload_to_gcs(archive_path)
 
   def _upload_to_gcs(self, local_file_path: str) -> str:
@@ -149,7 +180,8 @@ class CloudBuilder:
                               files_to_upload)
 
   def _request_cloud_build(self, ofg_repo_url: str, agent_dill_url: str,
-                           results_dill_url: str, oss_fuzz_data_url: str,
+                           results_dill_url: str, artifact_url: str,
+                           artifact_path: str, oss_fuzz_data_url: str,
                            data_dir_url: str, new_result_filename: str) -> str:
     """Requests Cloud Build to execute the operation."""
 
@@ -167,7 +199,7 @@ class CloudBuilder:
 
     cloud_build_config = {
         'steps': [
-            # Step 1: Download the dill files from GCS bucket.
+            # Step 1: Download the dill and artifact files from GCS bucket.
             {
                 'name': 'bash',
                 'dir': '/workspace',
@@ -182,6 +214,23 @@ class CloudBuilder:
                 'name': 'gcr.io/cloud-builders/gsutil',
                 'dir': '/workspace',
                 'args': ['cp', results_dill_url, 'dills/result_history.pkl']
+            },
+            {
+                'name': 'gcr.io/cloud-builders/gsutil',
+                'entrypoint': 'bash',
+                'args': [
+                    '-c',
+                    f'mkdir -p /workspace/host/{os.path.dirname(artifact_path)}'
+                ],
+                'allowFailure': True,
+            },
+            {
+                'name': 'gcr.io/cloud-builders/gsutil',
+                'dir': '/workspace',
+                'args': [
+                    'cp', artifact_url, f'/workspace/host/{artifact_path}'
+                ],
+                'allowFailure': True,
             },
             # Step 2: Prepare OFG and OF repos.
             {
@@ -256,6 +305,8 @@ class CloudBuilder:
                     '-v',
                     '/workspace:/workspace',
                     '-v',
+                    '/workspace/host/experiment:/experiment',
+                    '-v',
                     '/var/run/docker.sock:/var/run/docker.sock',
                     '-e',
                     'VERTEX_AI_LOCATIONS=' +
@@ -275,7 +326,7 @@ class CloudBuilder:
                     '/workspace/dills/new_result.pkl'
                 ],
             },
-            # Step 4: Upload the result to GCS bucket
+            # Step 6: Upload the result to GCS bucket
             {
                 'name': 'bash',
                 'dir': '/workspace',
@@ -388,12 +439,23 @@ class CloudBuilder:
     ofg_url = self._prepare_and_upload_archive(result_history)
     agent_url = self._upload_to_gcs(agent_dill)
     results_url = self._upload_to_gcs(results_dill)
+    artifact_url = ''
+    artifact_path = ''
+    if isinstance(result_history[-1], RunResult):
+      artifact_path = result_history[-1].artifact_path
+      if artifact_path:
+        logging.info('Found artifact_path: %s in RunResult.', artifact_path)
+        artifact_url = self._upload_to_gcs(artifact_path)
+        logging.info('Uploaded artifact to %s', artifact_url)
+      else:
+        logging.error('No artifact_path found in RunResult.')
     oss_fuzz_data_url = self._upload_oss_fuzz_data()
     data_dir_url = self._upload_fi_oss_fuzz_data()
 
     # Step 3: Request Cloud Build.
     new_result_filename = f'{uuid.uuid4().hex}.pkl'
     build_id = self._request_cloud_build(ofg_url, agent_url, results_url,
+                                         artifact_url, artifact_path,
                                          oss_fuzz_data_url, data_dir_url,
                                          new_result_filename)
 
@@ -416,7 +478,7 @@ class CloudBuilder:
 
     cloud_build_log += self._get_build_log(build_id)
 
-    # Step 4: Deserialize dilld file.
+    # Step 5: Deserialize dilld file.
     result = utils.deserialize_from_dill(new_result_dill)
     if not result:
       cloud_build_log += f'Failed to deserialize from dill {new_result_dill}.\n'

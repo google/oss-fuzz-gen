@@ -60,6 +60,26 @@ class BaseAgent(ABC):
         return tool
     return None
 
+  def chat_llm_with_tools(self, client: Any, prompt: Optional[Prompt], tools,
+                          trial) -> Any:
+    """Chat with LLM with tools."""
+    logger.info(
+        '<CHAT WITH TOOLS PROMPT:ROUND %02d>%s</CHAT PROMPT:ROUND %02d>',
+        trial,
+        prompt.gettext() if prompt else '',
+        trial,
+        trial=trial)
+    response = self.llm.chat_llm_with_tools(client=client,
+                                            prompt=prompt,
+                                            tools=tools)
+    logger.info(
+        '<CHAT WITH TOOLS RESPONSE:ROUND %02d>%s</CHAT RESPONSE:ROUND %02d>',
+        trial,
+        response,
+        trial,
+        trial=trial)
+    return response
+
   def chat_llm(self, cur_round: int, client: Any, prompt: Prompt,
                trial: int) -> str:
     """Chat with LLM."""
@@ -77,14 +97,14 @@ class BaseAgent(ABC):
     return response
 
   def ask_llm(self, cur_round: int, prompt: Prompt, trial: int) -> str:
-    """Chat with LLM."""
-    logger.info('<CHAT PROMPT:ROUND %02d>%s</CHAT PROMPT:ROUND %02d>',
+    """Ask LLM."""
+    logger.info('<ASK PROMPT:ROUND %02d>%s</ASK PROMPT:ROUND %02d>',
                 cur_round,
                 prompt.gettext(),
                 cur_round,
                 trial=trial)
     response = self.llm.ask_llm(prompt=prompt)
-    logger.info('<CHAT RESPONSE:ROUND %02d>%s</CHAT RESPONSE:ROUND %02d>',
+    logger.info('<ASK RESPONSE:ROUND %02d>%s</ASK RESPONSE:ROUND %02d>',
                 cur_round,
                 response,
                 cur_round,

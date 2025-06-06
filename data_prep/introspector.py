@@ -40,6 +40,10 @@ T = TypeVar('T', str, list, dict, int)  # Generic type.
 TIMEOUT = 45
 MAX_RETRY = 5
 
+BENCHMARK_ROOT: str = './benchmark-sets'
+BENCHMARK_DIR: str = f'{BENCHMARK_ROOT}/comparison'
+GENERATED_BENCHMARK: str = 'generated-benchmark-'
+
 USE_FI_TO_GET_TARGETS = bool(int(os.getenv('OSS_FI_TO_GET_TARGETS', '1')))
 
 # By default exclude static functions when identifying fuzz target candidates
@@ -72,6 +76,7 @@ INTROSPECTOR_ALL_FUNC_TYPES = ''
 INTROSPECTOR_TEST_SOURCE = ''
 INTROSPECTOR_HARNESS_SOURCE_AND_EXEC = ''
 INTROSPECTOR_LANGUAGE_STATS = ''
+INTROSPECTOR_GET_TARGET_FUNCTION = ''
 
 INTROSPECTOR_HEADERS_FOR_FUNC = ''
 INTROSPECTOR_SAMPLE_XREFS = ''
@@ -110,7 +115,7 @@ def set_introspector_endpoints(endpoint):
       INTROSPECTOR_ORACLE_ALL_TESTS, INTROSPECTOR_JVM_PROPERTIES, \
       INTROSPECTOR_TEST_SOURCE, INTROSPECTOR_HARNESS_SOURCE_AND_EXEC, \
       INTROSPECTOR_JVM_PUBLIC_CLASSES, INTROSPECTOR_LANGUAGE_STATS, \
-      INTROSPECTOR_ORACLE_ALL_TESTS_XREF
+      INTROSPECTOR_GET_TARGET_FUNCTION, INTROSPECTOR_ORACLE_ALL_TESTS_XREF
 
   INTROSPECTOR_ENDPOINT = endpoint
 
@@ -152,6 +157,8 @@ def set_introspector_endpoints(endpoint):
       f'{INTROSPECTOR_ENDPOINT}/all-public-classes')
   INTROSPECTOR_LANGUAGE_STATS = (
       f'{INTROSPECTOR_ENDPOINT}/database-language-stats')
+  INTROSPECTOR_GET_TARGET_FUNCTION = (
+      f'{INTROSPECTOR_ENDPOINT}/get-target-function')
 
 
 def _construct_url(api: str, params: dict) -> str:
@@ -526,6 +533,33 @@ def query_introspector_addr_type_info(project: str, addr: str) -> str:
   return _get_data(resp, 'dwarf-map', '')
 
 
+def get_next_generated_benchmarks_dir() -> str:
+  """Retuns the next folder to be used for generated benchmarks."""
+  max_idx = -1
+  # When generating benchmarks dynamically sometimes we may not have a
+  # benchmark folder, as the command will be run from an arbitrary directory.
+  # Create the benchmark folder if this is the case.
+  if not os.path.isdir(BENCHMARK_ROOT):
+    os.makedirs(BENCHMARK_ROOT)
+  for benchmark_folder in os.listdir(BENCHMARK_ROOT):
+    try:
+      max_idx = max(max_idx,
+                    int(benchmark_folder.replace(GENERATED_BENCHMARK, '')))
+    except (ValueError, TypeError) as _:
+      pass
+  max_idx += 1
+  return os.path.join(BENCHMARK_ROOT, f'{GENERATED_BENCHMARK}{max_idx}')
+
+
+def query_introspector_target_function(project: str, function: str) -> dict:
+  resp = _query_introspector(INTROSPECTOR_GET_TARGET_FUNCTION, {
+      'project': project,
+      'function': function
+  })
+
+  return _get_data(resp, 'function', {})
+
+
 def query_introspector_for_far_reach_low_cov(project):
   functions = query_introspector_oracle(project, INTROSPECTOR_ORACLE_FAR_REACH)
   return functions
@@ -823,6 +857,37 @@ def populate_benchmarks_using_test_migration(
                                preferred_target_name=target_name,
                                test_file_path=test_file))
   return potential_benchmarks[:limit]
+
+
+def generate_benchmark_for_targeted_function(project: str, function_name: str):
+  """generates a benchmark for a single function."""
+  function_dict = query_introspector_target_function(project, function_name)
+  project_lang = oss_fuzz_checkout.get_project_language(project)
+
+  harness, target_name, _ = _get_harness_intrinsics(project, [], project_lang)
+  if not harness:
+    return ''
+  target_benchmarks = [
+      benchmarklib.Benchmark(
+          benchmark_id='cli',
+          project=project,
+          language=project_lang,
+          function_signature=function_dict.get('function_signature', ''),
+          function_name=get_raw_function_name(function_dict, project),
+          return_type=_get_clean_return_type(function_dict, project),
+          params=_group_function_params(
+              _get_clean_arg_types(function_dict, project),
+              _get_arg_names(function_dict, project, project_lang),
+              project_lang),
+          target_path=harness,
+          preferred_target_name=target_name,
+          function_dict=function_dict)
+  ]
+
+  benchmark_dir = get_next_generated_benchmarks_dir()
+  os.makedirs(benchmark_dir)
+  benchmarklib.Benchmark.to_yaml(target_benchmarks, outdir=benchmark_dir)
+  return benchmark_dir
 
 
 def populate_benchmarks_using_introspector(project: str, language: str,
