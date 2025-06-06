@@ -275,23 +275,76 @@ class BuildFixAgent(BaseAgent):
     logger.info(self.success_build_script, trial=self.trial)
     logger.info('-' * 60, trial=self.trial)
 
-  def _dispatch_tool_call(self, tool_call: Any) -> None:
+  def _load_tool_arguments(self, tool_call: Any) -> Optional[dict]:
+    """Loads the arguments for a tool call."""
+    try:
+      return json.loads(tool_call.arguments)
+    except json.JSONDecodeError as e:
+      logger.error('Failed to decode tool call arguments: %s',
+                   e,
+                   trial=self.trial)
+
+    # Getting here means the arguments were not valid JSON.
+    # This happens sometimes, and to overcome this we extract
+    # the arguments using some simple manual parsing.
+    args = {}
+
+    # 1: find the relevant function
+    # 2: For each argument of the function extract that
+    # keyword from the response.
+    for function_tool in FIXER_TOOLS:
+      if function_tool['name'] == tool_call.name:
+        for arg in function_tool['parameters']['properties']:
+          # Extract the argument value from the response.
+          val = self._extract_argument_from_broken_json(tool_call.arguments,
+                                                        arg)
+          args[arg] = val
+
+        if len(args) != len(function_tool['parameters']['properties']):
+          return None
+    return args
+
+  def _extract_argument_from_broken_json(self, raw_response, key):
+    """Extracts a single argument from a broken JSON response."""
+    # Find the first key
+    search_word = f'"{key}":'
+    location_idx = raw_response.find(search_word)
+    start_idx = location_idx + len(search_word)
+
+    # Find the next two quotes, and take everything within them.
+    quote_locations = []
+    for idx in range(len(raw_response[start_idx:])):
+      if raw_response[idx + start_idx] == '"':
+        # If this is escaped, discount
+        if raw_response[idx + start_idx - 1] == '\\':
+          continue
+        # We have a quote
+        quote_locations.append(idx + start_idx)
+    if len(quote_locations) == 2:
+      return raw_response[quote_locations[0] + 1:quote_locations[1]]
+    return None
+
+  def _dispatch_tool_call(self, tool_call: Any) -> int:
     """Dispatches a function call to the appropriate handler."""
+    arguments = self._load_tool_arguments(tool_call)
+    if arguments is None:
+      return 0
     if tool_call.name == 'test_build_script_and_dockerfile':
-      arguments = json.loads(tool_call.arguments)
       self._test_buildscript_and_dockerfile(tool_call,
                                             arguments['build_script'],
                                             arguments['dockerfile'])
-    elif tool_call.name == 'test_build_script':
-      arguments = json.loads(tool_call.arguments)
+      return 1
+    if tool_call.name == 'test_build_script':
       self._test_buildscript_and_dockerfile(tool_call,
                                             arguments['build_script'], '')
-    elif tool_call.name == 'run_commands_in_container':
-      arguments = json.loads(tool_call.arguments)
+      return 1
+    if tool_call.name == 'run_commands_in_container':
       self._func_handle_run_commands_in_container(tool_call,
                                                   arguments['command'])
-    else:
-      logger.info('Unsupported tool call: %s', tool_call.name, trial=self.trial)
+      return 1
+
+    logger.info('Unsupported tool call: %s', tool_call.name, trial=self.trial)
+    return 0
 
   def _agent_run_function_based_loop(
       self, prompt: Optional[Prompt], build_result: BuildResult) -> None:  # pylint: disable=unused-argument
@@ -325,12 +378,12 @@ class BuildFixAgent(BaseAgent):
           logger.info('- Response out:' + str(tool_call), trial=self.trial)
           if tool_call.type != 'function_call':
             continue
-          tools_analysed += 1
+
           logger.info('Handling tool call %s', tool_call.name, trial=self.trial)
           logger.info('Tool call arguments: %s',
                       tool_call.arguments,
                       trial=self.trial)
-          self._dispatch_tool_call(tool_call)
+          tools_analysed += self._dispatch_tool_call(tool_call)
 
         # If no tool calls were made prepare LLM response saying we do not
         # understand the message received.
