@@ -38,7 +38,8 @@ class Prototyper(BaseAgent):
 
   def _initial_prompt(self, results: list[Result]) -> Prompt:
     """Constructs initial prompt of the agent."""
-    benchmark = results[-1].benchmark
+    last_result = results[-1]
+    benchmark = last_result.benchmark
 
     if benchmark.use_project_examples:
       project_examples = project_targets.generate_data(
@@ -54,16 +55,27 @@ class Prototyper(BaseAgent):
     else:
       context_info = {}
 
+    function_analysis = last_result.function_analysis
+    if function_analysis and os.path.isfile(
+        function_analysis.function_analysis_path):
+      with open(function_analysis.function_analysis_path, 'r') as file:
+        function_requirements = file.read()
+    else:
+      function_requirements = ''
+
     builder = prompt_builder.PrototyperTemplateBuilder(
         model=self.llm,
         benchmark=benchmark,
     )
-    prompt = builder.build(example_pair=prompt_builder.EXAMPLES.get(
-        benchmark.file_type.value.lower(), []),
-                           project_example_content=project_examples,
-                           project_context_content=context_info,
-                           tool_guides=self.inspect_tool.tutorial(),
-                           project_dir=self.inspect_tool.project_dir)
+    prompt = builder.build(
+        example_pair=prompt_builder.EXAMPLES.get(
+            benchmark.file_type.value.lower(), []),
+        project_example_content=project_examples,
+        project_context_content=context_info,
+        tool_guides=self.inspect_tool.tutorial(),
+        project_dir=self.inspect_tool.project_dir,
+        function_requirements=function_requirements,
+    )
     return prompt
 
   def _update_fuzz_target_and_build_script(self, response: str,
