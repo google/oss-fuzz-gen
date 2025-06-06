@@ -165,6 +165,9 @@ class ContextRetriever:
   def _get_macro_block(self) -> list[str]:
     """Queries FI to check macro block around this function."""
     project = self._benchmark.project
+    if not self._benchmark.function_dict:
+      return []
+
     source = self._benchmark.function_dict.get('function_filename', '')
     start = self._benchmark.function_dict.get('source_line_begin', 0)
     end = self._benchmark.function_dict.get('source_end_begin', 99999)
