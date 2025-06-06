@@ -214,8 +214,6 @@ class CloudBuilder:
     if data_dir_url:
       target_data_dir = '/workspace/data-dir'
 
-    workspace_exp_path = os.path.join('/workspace', 'host', experiment_path)
-
     cloud_build_config = {
         'steps': [
             # Step 1: Download the dill, artifact and experiment files from GCS bucket.
@@ -256,8 +254,8 @@ class CloudBuilder:
                 'entrypoint': 'bash',
                 'args': [
                     '-c', f'gsutil cp {experiment_url} /tmp/ofg-exp.tar.gz && '
-                    f'mkdir -p {workspace_exp_path} && '
-                    f'tar -xzf /tmp/ofg-exp.tar.gz -C {workspace_exp_path}'
+                    f'mkdir -p /workspace/host/{experiment_path} && '
+                    f'tar -xzf /tmp/ofg-exp.tar.gz -C /workspace/host/{experiment_path}'
                 ],
                 'allowFailure': True,
             },
@@ -384,15 +382,17 @@ class CloudBuilder:
             {
                 'name': 'bash',
                 'dir': '/workspace',
-                'args': ['ls', '-R', workspace_exp_path]
+                'args': ['ls', '-R', f'/workspace/host/{experiment_path}']
             },
             {
                 'name': 'gcr.io/cloud-builders/gsutil',
                 'entrypoint': 'bash',
                 'args': [
-                    '-c', f'test -d {workspace_exp_path} && '
-                    f'tar -czf /tmp/{new_experiment_filename} -C {workspace_exp_path} . && '
-                    f'gsutil cp /tmp/{new_experiment_filename} gs://{self.bucket_name}/{new_experiment_filename}'
+                    '-c', f'test -d /workspace/host/{experiment_path} && '
+                    f'tar -czf /tmp/{new_experiment_filename} '
+                    f'-C /workspace/host/{experiment_path} . && '
+                    f'gsutil cp /tmp/{new_experiment_filename} '
+                    f'gs://{self.bucket_name}/{new_experiment_filename}'
                 ],
                 'allowFailure': True,
             },
