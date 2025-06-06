@@ -1,6 +1,6 @@
 <tool>
 **LLDB tool Guide**
-You can leverage LLDB by iteractively sending me a LLDB command, and I will provide you with the output of the command. The path of fuzz driver binary is '/out/{TARGET_NAME}'. The testcase that triggers runtime crash is stored at '/artifact/{AFTIFACT_NAME}'.
+You can leverage LLDB by iteractively sending me a LLDB command, and I will provide you with the output of the command. The path of fuzz driver binary is '/out/{TARGET_NAME}'. The testcase that triggers runtime crash is stored at '{AFTIFACT_PATH}'.
 
 <interaction protocols>
 1. I have executed 'lldb /out/{TARGET_NAME}'. You are now in LLDB session, NOT in shell session. DO NOT run 'lldb /out/{TARGET_NAME}' again! DO NOT run shell commands!

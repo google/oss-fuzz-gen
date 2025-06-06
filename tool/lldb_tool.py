@@ -37,18 +37,8 @@ class LLDBTool(ProjectContainerTool):
   def tutorial(self) -> str:
     """Constructs a tool guide tutorial for LLM agents."""
     return self._get_tutorial_file_content('lldb_tool.txt')\
-      .replace('{AFTIFACT_NAME}', self.result.artifact_name)\
+      .replace('{AFTIFACT_PATH}', self.result.artifact_path)\
       .replace('{TARGET_NAME}', self.benchmark.target_name)
-
-  def execute(self, command: str) -> sp.CompletedProcess:
-    """Executes the |command| in the container and returns the output."""
-    logger.debug('Executing command (%s) in %s: ', command, self.container_id)
-    execute_command_in_container = [
-        'docker', 'exec', self.container_id, '/bin/bash', '-c', command
-    ]
-    process = self._execute_command_in_container(execute_command_in_container)
-    process.args = command
-    return process
 
   def execute_in_screen(self, lldb_command: str) -> sp.CompletedProcess:
     """Sends a command to the lldb_session screen and returns LLDB output."""
