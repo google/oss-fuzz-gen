@@ -170,7 +170,7 @@ if __name__ == "__main__":
           if result.get():
             success_count += 1
         except Exception as e:
-          logger.error(f"Error during analysis for benchmark %s: %s",
+          logger.error("Error during analysis for benchmark %s: %s",
                        benchmark_id, e)
 
   print(

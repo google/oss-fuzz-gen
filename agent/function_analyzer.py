@@ -71,7 +71,8 @@ class FunctionAnalyzer(base_agent.BaseAgent):
         self.benchmark, self.name)
 
     # Create the agent using the ADK library
-    # TODO(pamusuo): Create another AdkBaseAgent that extends BaseAgent and initializes an ADK agent as well.
+    # TODO(pamusuo): Create another AdkBaseAgent that extends
+    # BaseAgent and initializes an ADK agent as well.
     function_analyzer = agents.LlmAgent(
         name="FunctionAnalyzer",
         model=self.vertex_ai_model,
@@ -79,7 +80,8 @@ class FunctionAnalyzer(base_agent.BaseAgent):
                         from its source implementation.""",
         instruction=
         """You are a security engineer tasked with analyzing a function
-        and extracting its input requirements, necessary for it to execute correctly.""",
+        and extracting its input requirements,
+        necessary for it to execute correctly.""",
         tools=[introspector_tool.function_source_with_name],
     )
 
@@ -169,7 +171,9 @@ class FunctionAnalyzer(base_agent.BaseAgent):
 
     # Validate query is not empty
     if not query.strip():
-      logger.error("Error occurred while building initial prompt. Cannot call the agent.")
+      logger.error(
+          "Error occurred while building initial prompt. Cannot call the agent."
+      )
       return result
 
     user_id = "user"

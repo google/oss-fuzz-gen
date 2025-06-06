@@ -132,7 +132,6 @@ class CloudBuilder:
         for root, _, files in os.walk(directory_path)
         for file in files)
 
-    # TODO(pamusuo): Check if directory_path is the right base directory to use, or OFG_ROOT_DIR?
     return self._upload_files(f'ofg-exp-{uuid.uuid4().hex}.tar.gz',
                               directory_path, files_to_upload)
 
@@ -214,6 +213,8 @@ class CloudBuilder:
     if data_dir_url:
       target_data_dir = '/workspace/data-dir'
 
+    workspace_exp_path = os.path.join('/workspace', 'host', experiment_path)
+
     cloud_build_config = {
         'steps': [
             # Step 1: Download the dill, artifact and experiment files from GCS bucket.
@@ -254,8 +255,8 @@ class CloudBuilder:
                 'entrypoint': 'bash',
                 'args': [
                     '-c', f'gsutil cp {experiment_url} /tmp/ofg-exp.tar.gz && '
-                    f'mkdir {os.path.join('/workspace/host/', experiment_path)} && '
-                    f'tar -xzf /tmp/ofg-exp.tar.gz -C {os.path.join('/workspace/host/', experiment_path)}'
+                    f'mkdir {workspace_exp_path} && '
+                    f'tar -xzf /tmp/ofg-exp.tar.gz -C {workspace_exp_path}'
                 ],
                 'allowFailure': True,
             },
@@ -396,7 +397,8 @@ class CloudBuilder:
                                     body=cloud_build_config).execute()
     build_id = build_info.get('metadata', {}).get('build', {}).get('id', '')
 
-    logging.info('Created Cloud Build ID %s for agent %s at %s', build_id,  REGION)
+    logging.info('Created Cloud Build ID %s at %s', build_id,
+                 REGION)
     return build_id
 
   def _wait_for_build(self, build_id: str) -> str:
@@ -486,7 +488,6 @@ class CloudBuilder:
       else:
         logging.error('No artifact_path found in RunResult.')
 
-    # TODO(pamusuo): Where should we get the experiment path from? self.exp_args.work_dirs.base
     experiment_path = result_history[-1].work_dirs.base
     experiment_url = ''
     if os.path.exists(experiment_path):
