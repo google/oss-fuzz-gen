@@ -222,15 +222,30 @@ class GenerateReport:
         sample_targets = self._results.get_targets(benchmark.id, sample.id)
         self._write_benchmark_sample(benchmark, sample, sample_targets)
 
+    time_results = self.read_timings()
+
+    # 3) Enrich each benchmark with its own aggregated metrics and execution time
+    for bm in benchmarks:
+      # a) per-benchmark accumulated results
+      bm.accumulated_results = self._results.get_macro_insights([bm])
+      # b) parse total_run_time "HH:MM:SS(.sss)" into seconds
+      rt_str = time_results.get('total_run_time', '0:00:00')
+      try:
+        h, m, s = rt_str.split(':')
+        bm.execution_time = int(h) * 3600 + int(m) * 60 + float(s)
+      except Exception:
+        bm.execution_time = 0.0
+
     accumulated_results = self._results.get_macro_insights(benchmarks)
     projects = self._results.get_project_summary(benchmarks)
     coverage_language_gains = self._results.get_coverage_language_gains()
 
-    time_results = self.read_timings()
-
     self._write_index_html(benchmarks, accumulated_results, time_results,
                            projects, samples_with_bugs, coverage_language_gains)
-    self._write_index_json(benchmarks)
+    self._write_index_json(benchmarks,
+                           accumulated_results=accumulated_results,
+                           time_results=time_results,
+                           projects=projects)
 
   def _write(self, output_path: str, content: str):
     """Utility write to filesystem function."""
@@ -268,9 +283,15 @@ class GenerateReport:
         index_js_content=index_js_content)
     self._write('index.html', rendered)
 
-  def _write_index_json(self, benchmarks: List[Benchmark]):
+  def _write_index_json(self, benchmarks: List[Benchmark],
+                        accumulated_results: AccumulatedResult,
+                        time_results: dict[str, Any], projects: list[Project]):
     """Generate the report index.json and write to filesystem."""
-    rendered = self._jinja.render('index.json', benchmarks=benchmarks)
+    rendered = self._jinja.render('index.json',
+                                  benchmarks=benchmarks,
+                                  accumulated_results=accumulated_results,
+                                  time_results=time_results,
+                                  projects=projects)
     self._write('index.json', rendered)
 
   def _write_benchmark_index(self, benchmark: Benchmark, samples: List[Sample],
