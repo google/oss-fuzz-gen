@@ -14,26 +14,33 @@
 """Class to retrieve context from introspector for
 better prompt generation."""
 
+from argparse import Namespace
 import logging
 import os
+import re
 from difflib import SequenceMatcher
 from typing import Any, Optional
 
 from data_prep import introspector
 from experiment import benchmark as benchmarklib
+from google.cloud import storage
 
 logger = logging.getLogger(__name__)
 
 COMPLEX_TYPES = ['const', 'enum', 'struct', 'union', 'volatile']
 
+GCS_BUCKET_NAME = 'pamusuo-tests'
+
+CGS_RESULTS_DIR = "Function-analysis-results"
 
 class ContextRetriever:
   """Class to retrieve context from introspector for
   better prompt generation."""
 
-  def __init__(self, benchmark: benchmarklib.Benchmark):
+  def __init__(self, benchmark: benchmarklib.Benchmark, args: Namespace):
     """Constructor."""
     self._benchmark = benchmark
+    self.args = args
 
   def _get_embeddable_declaration(self) -> str:
     """Retrieves declaration by language.  Attach extern C if needed."""
@@ -331,3 +338,37 @@ class ContextRetriever:
     include_statement = f'#include "{os.path.normpath(source_file)}"'
     return (f'extern "C" {{\n{include_statement}\n}}'
             if self._benchmark.needs_extern else include_statement)
+
+
+  def parse_tag(self, response: str, tag: str) -> str:
+    """Parses the XML-style tags from LLM response."""
+    match = re.search(rf'<{tag}>(.*?)</{tag}>', response, re.DOTALL)
+    return match.group(1).strip() if match else ''
+
+  def get_function_requirements(self) -> str:
+    """Retrieves the function's requirements from the cloud storage bucket."""
+
+    logger.info('Retrieving requirements for %s', self._benchmark.id)
+
+    client = storage.Client()
+    bucket = client.bucket(GCS_BUCKET_NAME)
+    rel_path = f"{CGS_RESULTS_DIR}/{self.args.rel_path}" if hasattr(self.args, 'rel_path') and self.args.rel_path else {CGS_RESULTS_DIR}
+    blob_name = f"{rel_path}/{self._benchmark.id}.txt"
+    blob = bucket.blob(blob_name)
+    try:
+      requirement_file = blob.download_as_text()
+    except Exception as e:
+      logger.warning('Failed to download requirements for %s: %s', self._benchmark.id, e)
+      return ''
+
+    requirements = self.parse_tag(requirement_file, 'requirements')
+
+    if not requirements:
+      logger.warning('No requirements found in the requirements file for %s', self._benchmark.id)
+      return ''
+
+    logger.info('Requirements found for %s.\n%s', self._benchmark.id, requirements)
+
+    return requirements
+
+

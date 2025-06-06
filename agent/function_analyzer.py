@@ -17,54 +17,44 @@ The results of this analysis will be used by the writer agents to
 generate correct fuzz target for the function.
 """
 
+import argparse
+import asyncio
 import logging
+from typing import Optional
 
-from google.adk.agents import Agent
-from google.adk.runners import Runner
-from google.adk.sessions import InMemorySessionService
-from google.genai import types  # For creating message Content/Parts
+from google.adk import agents, runners, sessions
+from google.genai import types
 
-from agent.base_agent import BaseAgent
-from data_prep import introspector
+import results as resultslib
+from agent import base_agent
 from experiment import benchmark as benchmarklib
-from llm_toolkit import prompt_builder
-from llm_toolkit.prompts import Prompt
-from results import PreWritingResult, Result
+from llm_toolkit import models, prompt_builder, prompts
+from tool import base_tool, fuzz_introspector_tool
 
 logger = logging.getLogger(__name__)
 
 
-def get_function_source_tool(project_name: str, function_signature: str):
-  """
-  Retrieves a function's source using the project name and function signature.
-
-  Args:
-    project_name (str): The name of the project.
-    function_signature (str): The signature of the function.
-
-  Returns:
-    str: The source code of the function if found, otherwise an empty string.
-  """
-
-  function_code = introspector.query_introspector_function_source(
-      project_name, function_signature)
-
-  if function_code:
-    logger.info("Function with signature '%s' found and extracted.",
-                function_signature)
-  else:
-    logger.info(
-        "Error: Function with signature '%s' not found in project '%s'.",
-        function_signature, project_name)
-
-  return function_code
-
-
-class FunctionAnalyzer(BaseAgent):
+class FunctionAnalyzer(base_agent.BaseAgent):
   """An LLM agent to analyze a function and identify its implicit requirements.
   The results of this analysis will be used by the writer agents to
   generate correct fuzz target for the function.
   """
+
+  def __init__(self,
+               trial: int,
+               llm: models.LLM,
+               args: argparse.Namespace,
+               tools: Optional[list[base_tool.BaseTool]] = None,
+               name: str = ''):
+
+    # Ensure the llm is an instance of VertexAIModel
+    if not isinstance(llm, models.VertexAIModel):
+      raise ValueError(
+          "FunctionAnalyzer agent requires a VertexAIModel instance for llm.")
+
+    self.vertex_ai_model = llm._vertex_ai_model
+
+    super().__init__(trial, llm, args, tools, name)
 
   def initialize(self, benchmark: benchmarklib.Benchmark):
     """Initialize the function analyzer agent with the given benchmark."""
@@ -72,49 +62,64 @@ class FunctionAnalyzer(BaseAgent):
     self.benchmark = benchmark
 
     # Initialize the prompt builder
-    self.prompt_builder = prompt_builder.FunctionAnalyzerTemplateBuilder(
+    builder = prompt_builder.FunctionAnalyzerTemplateBuilder(
         self.llm, self.benchmark)
 
-    # Get the agent's instructions
-    analyzer_instruction = self.prompt_builder.build_instruction()
+    # Initialize the Fuzz Introspector tool
+    introspector_tool = fuzz_introspector_tool.FuzzIntrospectorTool(
+        benchmark, self.name)
+
+    context_retriever = agents.LlmAgent(
+        name="ContextRetrieverAgent",
+        model=self.vertex_ai_model,
+        description="""Retrieves the implementation of a function
+                      and its children from Fuzz Introspector.""",
+        instruction=builder.build_context_retriever_instruction().get(),
+        tools=[
+            introspector_tool.function_source_with_signature,
+            introspector_tool.function_source_with_name
+        ],
+        generate_content_config=types.GenerateContentConfig(temperature=0.0,),
+        output_key="FUNCTION_SOURCE",
+    )
 
     # Create the agent using the ADK library
-    function_analyzer = Agent(
-        name=self.name,
-        # TODO: Get the model name from args.
-        # Currently, the default names are incompatible with the ADK library.
-        model='gemini-2.0-flash',
-        description=(
-            "Agent to analyze a function and identify its requirements."),
-        instruction=analyzer_instruction.get(),
-        tools=[get_function_source_tool])
+    requirements_extractor = agents.LlmAgent(
+        name="RequirementsExtractorAgent",
+        model=self.vertex_ai_model,
+        description="""Extracts a function's requirements
+                        from its source implementation.""",
+        instruction=builder.build_instruction().get(),
+        output_key="FUNCTION_REQUIREMENTS",
+    )
 
-    # Get user id and session id
-    # TODO: Figure out how to get this data
-    user_id = "user"
-    session_id = "session"
+    # Create the function analyzer agent
+    function_analyzer = agents.SequentialAgent(
+        name="FunctionAnalyzerAgent",
+        sub_agents=[context_retriever, requirements_extractor],
+        description="""Sequential agent to retrieve a function's source,
+                        analyze it and extract its requirements.""",
+    )
 
     # Create the session service
-    session_service = InMemorySessionService()
+    session_service = sessions.InMemorySessionService()
     session_service.create_session(
         app_name=self.name,
-        user_id=user_id,
-        session_id=session_id,
+        user_id="user",
+        session_id=f"session_{self.trial}",
     )
 
     # Create the runner
-    self.runner = Runner(
+    self.runner = runners.Runner(
         agent=function_analyzer,
         app_name=self.name,
         session_service=session_service,
     )
 
-    logger.info(
-        "Function Analyzer Agent created, with name: %s, and session id: %s",
-        self.name, session_id)
+    logger.info("Function Analyzer Agent created, with name: %s", self.name)
 
-  def call_agent(self, query: str, runner: Runner, user_id: str,
-                 session_id: str) -> PreWritingResult:
+  async def call_agent(self, query: str, runner: runners.Runner, user_id: str,
+                       session_id: str) -> resultslib.PreWritingResult:
     """Call the agent asynchronously with the given query."""
 
     logger.info(">>> User query: %s", query)
@@ -125,60 +130,72 @@ class FunctionAnalyzer(BaseAgent):
 
     result_available = False
 
-    for event in runner.run(
+    async for event in runner.run_async(
         user_id=user_id,
         session_id=session_id,
         new_message=content,
     ):
+
+      logger.info("Event is %s", event.content)
       if event.is_final_response():
-        if event.content and event.content.parts:
+        if (event.content and event.content.parts and
+            event.content.parts[0].text):
           final_response_text = event.content.parts[0].text
           result_available = True
         elif event.actions and event.actions.escalate:
-          error_message = event.error_message or 'No specific message.'
-          final_response_text = f"Agent escalated: {error_message}"
-        break
+          error_message = event.error_message
+          logger.error("Agent escalated: %s", error_message)
 
     logger.info("<<< Agent response: %s", final_response_text)
 
-    if result_available and final_response_text:
+    if result_available and self._parse_tag(final_response_text, 'response'):
       # Get the requirements from the response
       requirements = self._parse_tags(final_response_text, 'requirement')
+      result_raw = self._parse_tag(final_response_text, 'response')
     else:
       requirements = []
+      result_raw = ''
 
     # Prepare the result
-    result = PreWritingResult(
+    result = resultslib.PreWritingResult(
         benchmark=self.benchmark,
         trial=self.trial,
         work_dirs=self.args.work_dir,
         result_available=result_available,
+        result_raw=result_raw,
         requirements=requirements,
     )
 
     return result
 
-  def execute(self, result_history: list[Result]) -> PreWritingResult:
+  def execute(
+      self,
+      result_history: list[resultslib.Result]) -> resultslib.PreWritingResult:
     """Execute the agent with the given results."""
 
     # Call the agent asynchronously and return the result
     prompt = self._initial_prompt(result_history)
     query = prompt.gettext()
     user_id = "user"
-    session_id = "session"
-    result = self.call_agent(query, self.runner, user_id, session_id)
+    session_id = f"session_{self.trial}"
+    result = asyncio.run(
+        self.call_agent(query, self.runner, user_id, session_id))
 
-    if result.result_available:
+    if result and result.result_available:
       # Save the result to the history
       result_history.append(result)
 
     return result
 
-  def _initial_prompt(self, results: list[Result]) -> Prompt:
+  def _initial_prompt(
+      self,
+      results: Optional[list[resultslib.Result]] = None) -> prompts.Prompt:
     """Create the initial prompt for the agent."""
 
-    prompt = self.prompt_builder.build(
-        project_name=self.benchmark.project,
-        function_signature=self.benchmark.function_signature)
+    # Initialize the prompt builder
+    builder = prompt_builder.FunctionAnalyzerTemplateBuilder(
+        self.llm, self.benchmark)
+
+    prompt = builder.build_prompt()
 
     return prompt
