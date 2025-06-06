@@ -397,8 +397,7 @@ class CloudBuilder:
                                     body=cloud_build_config).execute()
     build_id = build_info.get('metadata', {}).get('build', {}).get('id', '')
 
-    logging.info('Created Cloud Build ID %s at %s', build_id,
-                 REGION)
+    logging.info('Created Cloud Build ID %s at %s', build_id, REGION)
     return build_id
 
   def _wait_for_build(self, build_id: str) -> str:
