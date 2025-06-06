@@ -20,6 +20,11 @@ Here is the source code of the function being tested:
 {% endif %}
 {% if xrefs %}
 
+Here are all the macro conditions wrapped around or present in the target functions:
+<code>
+{{ macro }}
+</code>
+
 Here is the source code for functions which reference the function being tested:
 <code>
 {{ xrefs }}
