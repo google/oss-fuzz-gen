@@ -198,7 +198,8 @@ class CloudBuilder:
                            results_dill_url: str, artifact_url: str,
                            artifact_path: str, oss_fuzz_data_url: str,
                            data_dir_url: str, new_result_filename: str,
-                           experiment_url: str, experiment_path: str) -> str:
+                           experiment_url: str, experiment_path: str,
+                           new_experiment_filename: str) -> str:
     """Requests Cloud Build to execute the operation."""
 
     # Used for injecting additional OSS-Fuzz project integrations not in
@@ -255,7 +256,7 @@ class CloudBuilder:
                 'entrypoint': 'bash',
                 'args': [
                     '-c', f'gsutil cp {experiment_url} /tmp/ofg-exp.tar.gz && '
-                    f'mkdir {workspace_exp_path} && '
+                    f'mkdir -p {workspace_exp_path} && '
                     f'tar -xzf /tmp/ofg-exp.tar.gz -C {workspace_exp_path}'
                 ],
                 'allowFailure': True,
@@ -378,7 +379,23 @@ class CloudBuilder:
                     'cp', '/workspace/dills/new_result.pkl',
                     f'gs://{self.bucket_name}/{new_result_filename}'
                 ]
-            }
+            },
+            # Step 7: Upload the experiment directory to GCS bucket
+            {
+                'name': 'bash',
+                'dir': '/workspace',
+                'args': ['ls', '-R', workspace_exp_path]
+            },
+            {
+                'name': 'gcr.io/cloud-builders/gsutil',
+                'entrypoint': 'bash',
+                'args': [
+                    '-c', f'test -d {workspace_exp_path} && '
+                    f'tar -czf /tmp/{new_experiment_filename} -C {workspace_exp_path} . && '
+                    f'gsutil cp /tmp/{new_experiment_filename} gs://{self.bucket_name}/{new_experiment_filename}'
+                ],
+                'allowFailure': True,
+            },
         ],
         'tags': self.tags,
         'timeout': '10800s',  # 3 hours
@@ -454,6 +471,37 @@ class CloudBuilder:
     blob.download_to_filename(destination_file_name)
     logging.info('Downloaded %s to %s', source_blob_name, destination_file_name)
 
+  def _update_experiment_directory(self, experiment_path: str,
+                                 new_experiment_url: str) -> None:
+    """Updates the experiment directory with new files from GCS."""
+    if not os.path.exists(experiment_path):
+      logging.error('Experiment path %s does not exist.', experiment_path)
+      return
+
+    # Download the new experiment archive.
+    temp_dest_path = f'/tmp/{os.path.basename(new_experiment_url)}'
+    self._download_from_gcs(temp_dest_path)
+
+    tar_command = ['tar', '--skip-old-files', '-xzf', temp_dest_path, '-C', experiment_path]
+    logging.info('Tar command: %s', ' '.join(tar_command))
+
+    # Extract the archive into the experiment directory.
+    try:
+      result = subprocess.run(tar_command,
+                    check=True,
+                                  stdout=subprocess.PIPE,
+                                  stderr=subprocess.PIPE,
+                                  text=True)
+      logging.error("subprocess stdout:\n%s", result.stdout)
+      logging.error("subprocess stderr:\n%s", result.stderr)
+    except subprocess.CalledProcessError as e:
+      logging.error("Tar command failed with return code %d", e.returncode)
+      logging.error("stdout:\n%s", e.stdout)
+      logging.error("stderr:\n%s", e.stderr)
+      raise
+    logging.info('Updated experiment directory with new files from %s',
+                new_experiment_url)
+
   def run(self, agent: BaseAgent, result_history: list[Result],
           dill_dir: str) -> Any:
     """Runs agent on cloud build."""
@@ -501,11 +549,12 @@ class CloudBuilder:
 
     # Step 3: Request Cloud Build.
     new_result_filename = f'{uuid.uuid4().hex}.pkl'
+    new_experiment_filename = f'{uuid.uuid4().hex}.tar.gz'
     build_id = self._request_cloud_build(ofg_url, agent_url, results_url,
                                          artifact_url, artifact_path,
                                          oss_fuzz_data_url, data_dir_url,
                                          new_result_filename, experiment_url,
-                                         experiment_path)
+                                         experiment_path, new_experiment_filename)
 
     # Step 4: Download new result dill.
     cloud_build_log = ''
@@ -537,4 +586,9 @@ class CloudBuilder:
                       author=agent)
     result.chat_history = {agent.name: cloud_build_log}
 
+    # Step 6: Update work directory with any new files created by the agent.
+    new_experiment_url = f'gs://{self.bucket_name}/{new_experiment_filename}'
+    self._update_experiment_directory(experiment_path, new_experiment_url)
+
     return result
+
