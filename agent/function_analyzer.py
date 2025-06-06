@@ -19,21 +19,19 @@ generate correct fuzz target for the function.
 
 import argparse
 import asyncio
-import logging
 import os
 from typing import Optional
 
 from google.adk import agents, runners, sessions
 from google.genai import types
 
+import logger
 import results as resultslib
 from agent import base_agent
 from experiment import benchmark as benchmarklib
 from experiment.workdir import WorkDirs
 from llm_toolkit import models, prompt_builder, prompts
 from tool import base_tool, fuzz_introspector_tool
-
-logger = logging.getLogger(__name__)
 
 
 class FunctionAnalyzer(base_agent.BaseAgent):
@@ -89,7 +87,7 @@ class FunctionAnalyzer(base_agent.BaseAgent):
     session_service = sessions.InMemorySessionService()
     session_service.create_session(
         app_name=self.name,
-        user_id="user",
+        user_id=self.benchmark.id,
         session_id=f"session_{self.trial}",
     )
 
@@ -100,7 +98,9 @@ class FunctionAnalyzer(base_agent.BaseAgent):
         session_service=session_service,
     )
 
-    logger.info("Function Analyzer Agent created, with name: %s", self.name)
+    logger.info("Function Analyzer Agent created, with name: %s",
+                self.name,
+                trial=self.trial)
 
   async def call_agent(self, query: str, runner: runners.Runner, user_id: str,
                        session_id: str) -> str:
@@ -125,9 +125,9 @@ class FunctionAnalyzer(base_agent.BaseAgent):
           result_available = True
         elif event.actions and event.actions.escalate:
           error_message = event.error_message
-          logger.error("Agent escalated: %s", error_message)
+          logger.error("Agent escalated: %s", error_message, trial=self.trial)
 
-    logger.info("<<< Agent response: %s", final_response_text)
+    logger.info("<<< Agent response: %s", final_response_text, trial=self.trial)
 
     if result_available and self._parse_tag(final_response_text, 'response'):
       # Get the requirements from the response
@@ -140,7 +140,7 @@ class FunctionAnalyzer(base_agent.BaseAgent):
   def write_requirements_to_file(self, args, requirements: str) -> str:
     """Write the requirements to a file."""
     if not requirements:
-      logger.warning("No requirements to write to file.")
+      logger.warning("No requirements to write to file.", trial=self.trial)
       return ''
 
     requirement_path = os.path.join(args.work_dirs.requirements,
@@ -149,7 +149,9 @@ class FunctionAnalyzer(base_agent.BaseAgent):
     with open(requirement_path, 'w') as f:
       f.write(requirements)
 
-    logger.info("Requirements written to %s", requirement_path)
+    logger.info("Requirements written to %s",
+                requirement_path,
+                trial=self.trial)
 
     return requirement_path
 
@@ -158,6 +160,7 @@ class FunctionAnalyzer(base_agent.BaseAgent):
     """Execute the agent with the given results."""
 
     WorkDirs(self.args.work_dirs.base, keep=True)
+    logger.info('Executing %s', self.name, trial=self.trial)
 
     result = resultslib.Result(
         benchmark=self.benchmark,
@@ -172,11 +175,13 @@ class FunctionAnalyzer(base_agent.BaseAgent):
     # Validate query is not empty
     if not query.strip():
       logger.error(
-          "Error occurred while building initial prompt. Cannot call the agent."
-      )
+          "Error occurred while building initial prompt. Cannot call the agent.",
+          trial=self.trial)
       return result
 
-    user_id = "user"
+    logger.info("Initial prompt created. Calling LLM...", trial=self.trial)
+
+    user_id = self.benchmark.id
     session_id = f"session_{self.trial}"
     result_str = asyncio.run(
         self.call_agent(query, self.runner, user_id, session_id))
