@@ -15,11 +15,13 @@
 
 import argparse
 import logging
+import os
 from typing import List
 
-from agent.function_analyzer import FunctionAnalyzer
+import run_all_experiments
+from agent import function_analyzer
 from experiment import benchmark as benchmarklib
-from experiment.benchmark import Benchmark
+from experiment import workdir
 from llm_toolkit import models
 
 logging.basicConfig(level=logging.INFO)
@@ -39,6 +41,11 @@ def parse_args() -> argparse.Namespace:
                       required=True,
                       help='A benchmark YAML file.')
 
+  parser.add_argument('-d',
+                      '--benchmarks-directory',
+                      type=str,
+                      help='A directory containing benchmark YAML files.')
+
   parser.add_argument('-w', '--work-dir', default=RESULTS_DIR)
 
   parser.add_argument('-mr',
@@ -54,29 +61,49 @@ def parse_args() -> argparse.Namespace:
 
 if __name__ == "__main__":
 
-  model = models.LLM.setup(ai_binary='', name='vertex_ai_gemini-1-5-chat')
+  model = models.LLM.setup(ai_binary='', name='vertex_ai_gemini-2-5-pro-chat')
 
   args = parse_args()
 
-  function_analyzer = FunctionAnalyzer(trial=1, llm=model, args=args)
+  # Initialize the working directory
+  args.work_dirs = workdir.WorkDirs(args.work_dir)
 
-  benchmarks: List[Benchmark] = benchmarklib.Benchmark.from_yaml(
-      args.benchmark_yaml)
+  # Initialize the function analyzer
+  function_analyzer = function_analyzer.FunctionAnalyzer(trial=1,
+                                                         llm=model,
+                                                         args=args)
+
+  # Initialize benchmarks
+  benchmarks: List[
+      benchmarklib.Benchmark] = run_all_experiments.prepare_experiment_targets(
+          args)
 
   if len(benchmarks) == 0:
     raise ValueError("No benchmarks found in the YAML file.")
 
-  test_benchmark = benchmarks[0]
-  logger.info("Loaded benchmark for function: %s", test_benchmark.function_name)
+  logger.info("Loaded %d benchmarks from the YAML file %s.", len(benchmarks),
+              args.benchmark_yaml)
 
-  # Initialize the function analyzer with the first benchmark
-  function_analyzer.initialize(test_benchmark)
+  # Analyze each benchmark
+  for test_benchmark in benchmarks:
+    logger.info("Loaded benchmark (%d/%d) for function: %s",
+                benchmarks.index(test_benchmark) + 1, len(benchmarks),
+                test_benchmark.function_name)
 
-  # Run the function analyzer
-  result = function_analyzer.execute([])
+    # Initialize the function analyzer with the first benchmark
+    function_analyzer.initialize(test_benchmark)
 
-  # Print the result
-  logger.info("Function Analyzer Result:")
-  logger.info("Result available: %s", result.result_available)
-  if result.result_available:
-    logger.info("Requirements: %s", result.requirements)
+    # Run the function analyzer
+    result = function_analyzer.execute([])
+
+    # If result is available, write it to the work_dirs directory
+    if result.result_available and result.result_raw:
+      result_file = os.path.join(
+          args.work_dirs.base,
+          f"{test_benchmark.project}_{test_benchmark.function_name}.txt")
+      with open(result_file, 'w') as f:
+        f.write(result.result_raw)
+      logger.info("Analysis results written to %s", result_file)
+    else:
+      logger.info("No requirements found for benchmark %s",
+                  test_benchmark.function_name)
