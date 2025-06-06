@@ -356,7 +356,7 @@ class BuildFixAgent(BaseAgent):
           logger.info('Max discovery rounds reached (%s).',
                       self.args.max_round,
                       trial=self.trial)
-          self.exit_condition_met = True
+          break
 
       # Post LLM communication and function execution loop.
       # Log details on success.
