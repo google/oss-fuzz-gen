@@ -118,7 +118,6 @@ Your result must only contain these XML tags. **NOTHING MORE**.
 If the build script fails or produces errors, you are encouraged to **return to interaction mode** by providing new `<command>` tags. Use them to inspect logs, echo error messages, or run diagnostic commands (e.g., view files in `/tmp`, rerun failing commands with `-v`, etc.). This allows you to iteratively understand and fix the issues.
 """
 
-
 C_CPP_SPECIFICS = '''### OSS-Fuzz C/C++ projects
 The project you are working on is a C/C++ project.
 
@@ -126,7 +125,6 @@ You must use the relevant environment variables to compile the project: CC, CXX,
 
 The build script should be as C/C++ idiomatic as possible.
 '''
-
 
 PYTHON_SPECIFICS = '''### OSS-Fuzz python projects
 
