@@ -702,6 +702,9 @@ def fix_build(args, oss_fuzz_base, use_tools: bool = True):
   project_name = args.project
   oss_fuzz_checkout.OSS_FUZZ_DIR = oss_fuzz_base
 
+  # Disabling caching
+  oss_fuzz_checkout.ENABLE_CACHING = False
+
   work_dirs = WorkDirs(args.work_dirs, keep=True)
 
   # Prepare LLM model
