@@ -509,7 +509,7 @@ class GenerateReport:
               data['crash_address'] = ''
             return data
           except Exception as e:
-            logging.error("DEBUG Error: %s", e)
+            logging.error("Error parsing semantic analyzer log: %s", e)
             return {}
       return {}
 
