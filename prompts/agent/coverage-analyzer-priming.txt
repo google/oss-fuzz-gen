@@ -25,7 +25,7 @@ True
 <insights>
 The low coverage comes from the fact that the current fuzz target exercises only one very narrow code path—in this case, a single call to {FUNCTION_SIGNATURE} with naive argument derived directly from the input data. This approach misses many branches within the {PROJECT} because:
 
-* Single Argument Limitation: By always providing a unprocessed and naive argument, the fuzz target never tests the handling of complex values, which likely involves additional logic (e.g., iterating over the array, handling edge cases like empty or very long tokens, and validating numeric conversions for lengths).
+* Single Argument Limitation: By always providing an unprocessed and naive argument, the fuzz target never tests the handling of complex values, which likely involves additional logic (e.g., iterating over the array, handling edge cases like empty or very long tokens, and validating numeric conversions for lengths).
 
 * Lack of Input Variation: Since the fuzzer input is used verbatim as the only command argument, many conditional paths (e.g., those triggered by specific token contents or argument counts) remain untested.
 

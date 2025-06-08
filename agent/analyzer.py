@@ -16,4 +16,4 @@ from agent.base_agent import BaseAgent
 
 
 class Analyzer(BaseAgent):
-  pass
+    pass
