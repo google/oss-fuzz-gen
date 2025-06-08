@@ -47,7 +47,7 @@ For each input parameter, understand:
 
 Step 6: Plan Fuzz Target Implementation.
 Decide how to implement the refined fuzz target:
-* The fuzz target can compile so your can reuse most of the code as a scaffold.
+* The fuzz target can compile so you can reuse most of the code as a scaffold.
 * Only modify the parts caused the low coverage.
 * Prepare to output the FULL new fuzz target, do not leave out any code that is the same as before.
 * **Extract parameters** from the `data` and `size` variable of `LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)`.
