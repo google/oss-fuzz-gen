@@ -366,7 +366,7 @@ class GenerateReport:
     }
 
     rendered = self._jinja.render('benchmark/benchmark.html',
-                                  benchmark=benchmark.id,
+                                  benchmark=benchmark,
                                   samples=samples,
                                   prompt=prompt,
                                   benchmark_css_content=benchmark_css_content,
@@ -407,6 +407,8 @@ class GenerateReport:
           'time_results': self.read_timings(),
       }
 
+      semantic_log = self._get_semantic_analyzer_log(benchmark.id, sample.id)
+
       rendered = self._jinja.render('sample/sample.html',
                                     benchmark=benchmark,
                                     sample=sample,
@@ -414,6 +416,7 @@ class GenerateReport:
                                     run_logs=run_logs,
                                     triage=triage,
                                     targets=sample_targets,
+                                    semantic_log=semantic_log,
                                     sample_css_content=sample_css_content,
                                     sample_js_content=sample_js_content,
                                     **common_data)
@@ -439,6 +442,39 @@ class GenerateReport:
       except Exception:
         pass  # Ignore errors in error handling
 
+  def _get_semantic_analyzer_log(self, benchmark_id: str, sample_id: str) -> dict:
+      """Get the semantic analyzer log for a sample."""
+      log_path = os.path.join(self.results_dir, benchmark_id, 'status', sample_id, 'log.txt')
+      if not os.path.exists(log_path):
+        return {}
+      
+      with open(log_path, 'r') as f:
+        content = f.read().strip()
+        if not content:
+          return {}
+        
+        lines = content.split('\n')
+        for i, line in enumerate(lines):
+          if line.startswith('SemanticAnalyzer'):
+            try:
+              data = eval(lines[i+1])
+              if data.get('crash_symptom'):
+                error_msg = data['crash_symptom']
+                
+                if 'AddressSanitizer:' in error_msg:
+                  data['sanitizer'] = 'AddressSanitizer'
+                  after_asan = error_msg.split('AddressSanitizer:')[1].strip()
+                  if 'on address' in after_asan:
+                      data['error_type'] = after_asan.split('on address')[0].strip()
+                      data['crash_address'] = after_asan.split('on address')[1].split('at pc')[0].strip()
+                  else:
+                      data['error_type'] = after_asan.split()[0].strip()
+                      data['crash_address'] = ''
+              return data
+            except Exception as e:
+              logging.error("DEBUG Error: %s", e)  
+              return {}
+        return {}
 
 def generate_report(args: argparse.Namespace) -> None:
   """Generates static web server files."""

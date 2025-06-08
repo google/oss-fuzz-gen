@@ -203,7 +203,8 @@ tbody tr:nth-child(odd) {
         <div class="flex flex-col items-center md:items-start">
             <h1 class="text-2xl md:text-3xl font-bold font-mono pb-2">
                 {% if benchmark %}
-                    <span class="prettify-benchmark-name">Benchmark: {{ benchmark }}</span>
+                    <span>Benchmark:</span>
+                    <span class="prettify-benchmark-name">{{ benchmark.id }}</span>
                 {% else %}
                     Experiment Report
                 {% endif %}
@@ -304,10 +305,10 @@ tbody tr:nth-child(odd) {
             <svg class="h-4 w-4" :class="darkMode ? 'text-gray-500' : 'text-gray-400'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
             </svg>
-            <a href="../../benchmark/{{ benchmark|urlencode }}/index.html"
+            <a href="../../benchmark/{{ benchmark.id|urlencode }}/index.html"
                class="hover:text-gray-600 transition-colors"
                :class="darkMode ? 'text-gray-300 hover:text-gray-400' : 'text-gray-600'">
-                <span class="prettify-benchmark-name">{{ benchmark }}</span>
+                <span class="prettify-benchmark-name">{{ benchmark.id }}</span>
             </a>
         </li>
         {% endif %}

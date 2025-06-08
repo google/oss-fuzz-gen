@@ -28,15 +28,8 @@ limitations under the License.
 </script>
 {% endif %}
 
-<script>
-window.benchmarkData = {
-    name: "{{ benchmark }}",
-    language: "{% if samples and samples|length > 0 %}c{% else %}plaintext{% endif %}"
-};
-</script>
-
 <h1 class="text-2xl font-bold mb-6" >
-    <span class="prettify-benchmark-name">{{ benchmark }}</span>
+    <span class="prettify-benchmark-name">{{ benchmark.id }}</span>
 </h1>
 
 <table class="sortable-table">
@@ -58,7 +51,7 @@ window.benchmarkData = {
         {% for sample in samples %}
         <tr>
             <td class="table-index">{{ loop.index }}</td>
-            <td data-sort-value="{{ sample.id }}"><a href="../../sample/{{ benchmark|urlencode }}/{{ sample.id }}.html">{{ sample.id }}</a></td>
+            <td data-sort-value="{{ sample.id }}"><a href="../../sample/{{ benchmark.id|urlencode }}/{{ sample.id }}.html">{{ sample.id }}</a></td>
             <td data-sort-value="{{ sample.status }}">{{ sample.status }}</td>
             {% if sample.result %}
             <td data-sort-value="{{ sample.result.compiles }}" style="background-color: {{ '#C8E6C9' if sample.result.compiles }}">{{ sample.result.compiles }}</td>

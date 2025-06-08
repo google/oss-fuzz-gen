@@ -15,6 +15,7 @@ limitations under the License.
 
 #}{% extends 'base.html' %}
 
+
 {% if sample_css_content %}
 <style>
 {{ sample_css_content | safe }}
@@ -28,69 +29,255 @@ limitations under the License.
 {% endif %}
 
 {% block content %}
-<h1>{{ benchmark_id }} / {{ sample.id }}</h1>
-Bug: {{ sample.result.crashes|default(false) and not sample.result.is_semantic_error|default(false) }}
-<br>
-Crash reason: {{ sample.result.semantic_error|default('') }}
-<br>
-<br>
 
-{% if triage.result %}
-<h2>Triage</h2>
-<pre>
-{{ triage.result }}
-</pre>
-<br>
-{% endif %}
+<div class="space-y-6">
+  <div class="border rounded-lg p-6">
+      <div class="flex items-center gap-4 mb-4">
+          <h1 class="text-2xl font-bold">
+            <span class="prettify-benchmark-name">{{ benchmark.id }}</span>
+            <span class="text-gray-500">/ {{ sample.id }}</span>
+          </h1>
+          <span class="inline-flex items-center px-3 py-1 rounded-full
+              {% if sample.result.crashes %}
+                  bg-red-500 text-white
+              {% else %}
+                  bg-green-300 text-black
+              {% endif %}">
+              {% if sample.result.crashes %}
+                  Crashed
+              {% else %}
+                  No Crash
+              {% endif %}
+          </span>
+          <span class="inline-flex items-center px-3 py-1 rounded-full
+            {% if sample.result.crashes and not sample.result.is_semantic_error %}
+                bg-red-500 text-white
+            {% else %}
+                bg-green-300 text-black
+            {% endif %}">
+            {% if sample.result.crashes and not sample.result.is_semantic_error %}
+                Potential Vulnerability
+            {% else %}
+                No Potential Vulnerability
+            {% endif %}
+        </span>
+      </div>
+      <div class="flex flex-col gap-2 mt-8">
 
-{% if triage.triager_prompt %}
-<h3>Triager prompt</h3>
-<pre>
-{{ triage.triager_prompt }}
-</pre>
-<br>
-{% endif %}
+        {% if sample.result.semantic_error or semantic_log %}
+          <div class="border rounded-lg p-6 shadow-sm">
 
-{% for target in targets %}
-{% if target.fixer_prompt %}
-<h3>Fixer prompt #{{ loop.index - 1 }}</h3>
-<pre>
-{{ target.fixer_prompt }}
-</pre>
-{% endif %}
+            {% if sample.result.semantic_error %}
+            <div class="mb-5 p-4 bg-amber-50 border-l-4 border-amber-500 rounded-md">
+              <p class="flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-amber-600" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+                </svg>
+                <span class="font-medium text-amber-800">Diagnosis:</span>
+                <span class="text-amber-900">{{ sample.result.semantic_error }}</span>
+              </p>
+            </div>
+            {% endif %}
 
-{% if loop.index == 1 %}
-<h3>Final code</h3>
-{% else %}
-<h3>Code #{{ loop.index - 1}}</h3>
-{% endif %}
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+              <div class="p-4 rounded-lg">
+                <p class="text-sm uppercase tracking-wide">Sanitizer</p>
+                <p class="font-medium mt-1">{{ semantic_log.sanitizer }}</p>
+              </div>
+              <div class="p-4 rounded-lg">
+                <p class="text-sm uppercase tracking-wide">Bug Type</p>
+                <p class="font-medium mt-1">{{ semantic_log.error_type }}</p>
+              </div>
+              <div class="p-4 rounded-lg">
+                <p class="text-sm uppercase tracking-wide">Crash Address</p>
+                <p class="font-medium mt-1 font-mono">{{ semantic_log.crash_address }}</p>
+              </div>
+            </div>
 
-{% if target.code is defined and target.code %}
-<div class="code-container">
-    <pre class="line-numbers">{% for line in target.code|remove_trailing_empty_lines|splitlines %}<span>{{ loop.index }}</span>{% endfor %}</pre>
-    <pre class="code-content"><code class="syntax-highlight language-{% if benchmark.language is defined and benchmark.language %}{{ benchmark.language | lower }}{% else %}plaintext{% endif %}">{{ target.code|remove_trailing_empty_lines }}</code></pre>
+            {% if semantic_log.crash_stacks %}
+            <div class="mb-6">
+              <h3 class="font-semibold text-lg mb-3">Stack Traces</h3>
+              <div class="space-y-3">
+                {% for stack in semantic_log.crash_stacks %}
+                  <details class="rounded-lg shadow-sm border">
+                    <summary class="font-medium cursor-pointer p-4 flex justify-between items-center">
+                      <div class="flex items-center gap-2">
+                        <span>Stack Trace #{{ loop.index }}</span>
+                      </div>
+                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                      </svg>
+                    </summary>
+                    <div class="border-t">
+                      <!-- This space is needed to split up the stack traces -->
+                      <pre class="p-4 whitespace-pre-wrap text-sm font-mono break-words">{% for line in stack %}{{ line }}
+                        
+{% endfor %}</pre>
+                    </div>
+                  </details>
+                {% endfor %}
+              </div>
+            </div>
+            {% endif %}
+
+            {% if semantic_log.crash_func %}
+            <div>
+              <h3 class="font-semibold text-lg mb-3">Crash Functions</h3>
+              <div class="space-y-1">
+                {% for func, lines in semantic_log.crash_func.items() %}
+                  <div class="rounded-lg p-4">
+                    <div class="flex items-center gap-2 mb-1">
+                      <code class="text-red-500 font-semibold font-mono px-2 py-1 rounded">{{ func }}</code>
+                      <span>at line{% if lines|length > 1 %}s{% endif %}:</span>
+                    </div>
+                    <div class="flex flex-wrap gap-2 mt-2">
+                      {% for line in lines %}
+                        <code class="px-3 py-1 rounded-md font-mono border">{{ line }}</code>
+                      {% endfor %}
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+            {% endif %}
+          </div>
+          {% endif %}
+
+    </div>
+
+  {% if triage.result %}
+  <div class="border rounded-lg p-6">
+      <h2 class="text-xl font-bold mb-4">Triage</h2>
+      <pre class="bg-gray-50 dark:bg-gray-800 p-4 rounded-md overflow-x-auto">{{ triage.result }}</pre>
+  </div>
+  {% endif %}
+
+  {% if triage.triager_prompt %}
+  <div class="border rounded-lg p-6">
+      <h3 class="text-lg font-bold mb-4">Triager Prompt</h3>
+      <pre class="bg-gray-50 dark:bg-gray-800 p-4 rounded-md overflow-x-auto">{{ triage.triager_prompt }}</pre>
+  </div>
+  {% endif %}
+
+  <div x-data="{
+      codeOpen: true,
+      logsOpen: false,
+      runlogsOpen: false,
+      coverageOpen: false
+  }" class="space-y-2">
+      <div class="border rounded-lg">
+          <button @click="codeOpen = !codeOpen"
+                  class="w-full p-4 flex justify-between items-center">
+              <span class="text-lg font-bold">Final Code</span>
+              <svg class="w-5 h-5 transform transition-transform duration-200"
+                   :class="{'rotate-180': codeOpen}"
+                   fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+              </svg>
+          </button>
+          <div x-show="codeOpen"
+               class="p-4 border-t">
+              {% for target in targets %}
+              
+                <h3>Code #{{ loop.index - 1}}</h3>
+              
+                {% if target.code is defined and target.code %}
+                <div class="code-container">
+                    <pre class="line-numbers">{% for line in target.code|remove_trailing_empty_lines|splitlines %}<span>{{ loop.index }}</span>{% endfor %}</pre>
+                    <pre class="code-content"><code class="syntax-highlight language-{% if benchmark.language is defined and benchmark.language %}{{ benchmark.language | lower }}{% else %}plaintext{% endif %}">{{ target.code|remove_trailing_empty_lines }}</code></pre>
+                </div>
+                {% endif %}
+
+                {% if target.build_script_code is defined and target.build_script_code %}
+                <h3>Build Script</h3>
+                <div class="code-container">
+                    <pre class="line-numbers">{% for line in target.build_script_code|remove_trailing_empty_lines|splitlines %}<span>{{ loop.index }}</span>{% endfor %}</pre>
+                    <pre class="code-content"><code class="syntax-highlight language-bash">{{ target.build_script_code|remove_trailing_empty_lines }}</code></pre>
+                </div>
+                {% endif %}
+                {% endfor %}
+          </div>
+      </div>
+
+      <div class="border rounded-lg">
+          <button @click="logsOpen = !logsOpen"
+                  class="w-full p-4 flex justify-between items-center">
+              <span class="text-lg font-bold">Logs</span>
+              <svg class="w-5 h-5 transform transition-transform duration-200"
+                   :class="{'rotate-180': logsOpen}"
+                   fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+              </svg>
+          </button>
+          <div x-show="logsOpen"
+               class="p-4 border-t">
+              {% for part in logs %}
+              <pre class="{% if part.chat_prompt %}chat_prompt bg-gray-50{% elif part.chat_response %}chat_response bg-gray-100{% endif %} p-4 rounded-md mb-4 overflow-x-auto">{{ part.content }}</pre>
+              {% endfor %}
+          </div>
+      </div>
+
+      <div class="border rounded-lg">
+          <button @click="runlogsOpen = !runlogsOpen"
+                  class="w-full p-4 flex justify-between items-center">
+              <span class="text-lg font-bold">Run Logs</span>
+              <svg class="w-5 h-5 transform transition-transform duration-200"
+                   :class="{'rotate-180': runlogsOpen}"
+                   fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+              </svg>
+          </button>
+          <div x-show="runlogsOpen"
+               class="p-4 border-t">
+              <pre class="bg-gray-50 dark:bg-gray-800 p-4 rounded-md overflow-x-auto">{{ run_logs }}</pre>
+          </div>
+      </div>
+
+      {% if sample.result.coverage_report_path %}
+      <div class="border rounded-lg"
+           x-data="{
+              coverageOpen: false,
+              iframeHeight: '500px',
+              initIframe() {
+                  const observer = new ResizeObserver(entries => {
+                      for (let entry of entries) {
+                          const height = entry.target.contentDocument?.documentElement?.scrollHeight;
+                          if (height) {
+                              this.iframeHeight = `${height}px`;
+                          }
+                      }
+                  });
+
+                  const iframe = this.$refs.coverageIframe;
+                  iframe.addEventListener('load', () => {
+                      observer.observe(iframe);
+                  });
+              }
+           }"
+           x-init="initIframe">
+          <button @click="coverageOpen = !coverageOpen"
+                  class="w-full p-4 flex justify-between items-center">
+              <span class="text-lg font-bold">Coverage Report (embedded)</span>
+              <svg class="w-5 h-5 transform transition-transform duration-200"
+                   :class="{'rotate-180': coverageOpen}"
+                   fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+              </svg>
+          </button>
+          <div x-show="coverageOpen"
+               x-cloak
+               class="p-4 border-t">
+              <iframe x-ref="coverageIframe"
+                      src="{{ sample.result.coverage_report_path }}report.html"
+                      class="w-full border-0 rounded-md"
+                      :style="'height:' + iframeHeight"
+                      frameborder="0"
+                      scrolling="yes"
+                      title="Coverage Report"></iframe>
+          </div>
+      </div>
+      {% endif %}
+  </div>
 </div>
-{% endif %}
-
-{% if target.build_script_code is defined and target.build_script_code %}
-<h3>Build Script</h3>
-<div class="code-container">
-    <pre class="line-numbers">{% for line in target.build_script_code|remove_trailing_empty_lines|splitlines %}<span>{{ loop.index }}</span>{% endfor %}</pre>
-    <pre class="code-content"><code class="syntax-highlight language-bash">{{ target.build_script_code|remove_trailing_empty_lines }}</code></pre>
-</div>
-{% endif %}
-{% endfor %}
-
-<h2>Logs</h2>
-{% for part in logs %}
-<pre {% if part.chat_prompt %}class="chat_prompt"{% elif part.chat_response %}class="chat_response"{% endif %}>
-{{ part.content }}
-</pre>
-{% endfor %}
-
-<h2>Run logs</h2>
-<pre>
-{{ run_logs }}
-</pre>
 
 {% endblock %}
