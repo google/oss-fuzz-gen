@@ -18,6 +18,9 @@ limitations under the License.
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Experiment results</title>
+<link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Overpass+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Overpass:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 * {
     box-sizing: border-box;
@@ -137,11 +140,202 @@ tbody tr:nth-child(odd) {
     padding: 0;
 }
 </style>
-<!-- tailwind -->
-<link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
-<!-- fonts -->
-<link href="https://fonts.googleapis.com/css2?family=Overpass+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Overpass:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<body
+      x-data="{
+        darkMode: localStorage.getItem('darkMode') === 'true',
+        detailsOpen: true,
+        toggleDarkMode() {
+          this.darkMode = !this.darkMode;
+          localStorage.setItem('darkMode', this.darkMode);
+        }
+      }"
+      :class="darkMode ? 'bg-gray-900 text-white dark-mode' : 'bg-[#f7f9fc] text-gray-800'">
+
+  <div class="p-4 shadow-md border-b">
+    <div class="flex items-center gap-4 justify-end">
+        <button @click="toggleDarkMode()" class="p-2 rounded-full focus:outline-none transition duration-150">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" :class="darkMode ? 'hidden' : 'block'" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+            </svg>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" :class="darkMode ? 'block' : 'hidden'" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+            </svg>
+        </button>
+        <div x-data="{ exportOpen: false }" class="relative">
+            <button @click="exportOpen = !exportOpen" class="border font-medium py-2 px-4 rounded text-sm shadow flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                <span>Export</span>
+            </button>
+
+            <div
+                x-show="exportOpen"
+                @click.away="exportOpen = false"
+                class="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5"
+                :class="darkMode ? 'bg-gray-800 text-white' : 'bg-white text-gray-800'"
+            >
+                <div class="py-1" role="menu">
+                    <a href="#" class="block px-4 py-2 text-sm" role="menuitem">Export as PDF (.pdf)</a>
+                    <a href="#" class="block px-4 py-2 text-sm" role="menuitem">Export as CSV (.csv)</a>
+                    <a href="#" class="block px-4 py-2 text-sm" role="menuitem">Export as Google Sheet</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mx-auto flex flex-col md:flex-row justify-between items-center">
+        <div class="flex flex-col items-center md:items-start">
+            <h1 class="text-2xl md:text-3xl font-bold font-mono pb-2">
+                {% if benchmark %}
+                    {{ benchmark }}
+                {% else %}
+                    Experiment Report
+                {% endif %}
+            </h1>
+            <p><span class="font-medium">Model:</span> <strong>{{model}}</strong></p>
+        </div>
+
+        {% if accumulated_results %}
+            <div class="text-center md:text-right space-y-2 text-nowrap flex-shrink-0 min-w-[300px]"
+                 x-data="{
+                    formatDate(timestamp) {
+                        const date = new Date(timestamp);
+                        const day = date.getDate().toString().padStart(2, '0');
+                        const month = date.toLocaleString('en-AU', { month: 'long' });
+                        const year = date.getFullYear();
+                        const hours = date.getHours().toString().padStart(2, '0');
+                        const minutes = date.getMinutes().toString().padStart(2, '0');
+                        return `${day} ${month} ${year}, ${hours}:${minutes}`;
+                    }
+                 }">
+                <p class="text-center md:text-left font-bold text-nowrap">
+                    {% if time_results.start_time %}
+                        <span x-text="formatDate('{{ time_results.start_time }}')"></span>
+                        →
+                        <span x-text="formatDate('{{ time_results.completion_time }}')"></span>
+                    {% endif %}
+                </p>
+                <p class="text-lg md:text-2xl">Build success rate: <strong>{{ accumulated_results.build_rate|percent }}%</strong></p>
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="container mx-auto mt-6">
+        <button
+            @click="detailsOpen = !detailsOpen"
+            class="w-full flex items-center justify-between p-3 focus:outline-none"
+            :class="detailsOpen ? 'border-b border-gray-500' : ''"
+        >
+            <span class="font-medium">Accumulated Results</span>
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5 transform transition-transform duration-200"
+                :class="detailsOpen ? 'rotate-180' : ''"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+            >
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+        </button>
+
+        <div
+            x-show="detailsOpen"
+            class="mt-4 p-6 rounded-lg grid grid-cols-1 md:grid-cols-2 gap-4 border border-dashed border-gray-500"
+        >
+            <div class="space-y-2">
+                <p><span class="font-medium">Total Benchmarks:</span> {{accumulated_results.total_runs}}</p>
+                <p><span class="font-medium">Successful Builds:</span> {{accumulated_results.compiles}}</p>
+                <p><span class="font-medium">Average Coverage:</span> {{accumulated_results.average_coverage |percent }}%</p>
+            </div>
+            <div class="space-y-2">
+                <p><span class="font-medium">Coverage Diff:</span> {{accumulated_results.average_line_coverage_diff |percent }}%</p>
+                <p><span class="font-medium">Crashes:</span> {{accumulated_results.crashes}}</p>
+                <p><span class="font-medium">Total Runtime:</span> {{time_results.total_run_time}}</p>
+            </div>
+        </div>
+    </div>
+  </div>
+
+  <nav class="text-base mt-5 container mx-auto">
+    <ol class="flex items-center space-x-2">
+        <li class="flex items-center space-x-2">
+            <svg class="h-4 w-4" :class="darkMode ? 'text-gray-500' : 'text-gray-400'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+            <a href="/" class="hover:text-gray-600 transition-colors" :class="darkMode ? 'text-gray-300 hover:text-gray-400' : 'text-gray-600'">
+                Main Index
+            </a>
+        </li>
+
+        {% if benchmark %}
+        <li class="flex items-center space-x-2">
+            <svg class="h-4 w-4" :class="darkMode ? 'text-gray-500' : 'text-gray-400'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+            <a href="../../benchmark/{{ benchmark|urlencode }}/index.html"
+               class="hover:text-gray-600 transition-colors"
+               :class="darkMode ? 'text-gray-300 hover:text-gray-400' : 'text-gray-600'">
+                {{ benchmark }}
+            </a>
+        </li>
+        {% endif %}
+
+        {% if sample %}
+        <li class="flex items-center space-x-2">
+            <svg class="h-4 w-4" :class="darkMode ? 'text-gray-500' : 'text-gray-400'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+            <span class="text-gray-500" :class="darkMode ? 'text-gray-400' : 'text-gray-500'">
+                Sample {{ sample.id }}
+            </span>
+        </li>
+        {% endif %}
+    </ol>
+  </nav>
+
+
+  <div class="controls mt-4 flex flex-col gap-4 mx-auto container">
+    <div class="search-controls flex flex-wrap gap-4 items-center">
+        <div class="search-bar flex-grow max-w-2xl">
+            <input type="text"
+                   id="searchInput"
+                   placeholder="Search..."
+                   class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-transparent">
+        </div>
+        <div class="filter-buttons flex gap-2">
+            <button onclick="toggleFilter('bugs')"
+                    id="bugsFilter"
+                    class="filter-btn px-3 py-1 rounded-full text-sm border">
+                Has Bugs
+            </button>
+            <button onclick="toggleFilter('crashes')"
+                    id="crashesFilter"
+                    class="filter-btn px-3 py-1 rounded-full text-sm border">
+                Has Crashes
+            </button>
+            <button onclick="toggleFilter('error')"
+                    id="errorFilter"
+                    class="filter-btn px-3 py-1 rounded-full text-sm border">
+                Has Error
+            </button>
+        </div>
+    </div>
+    <div class="active-filters flex flex-wrap gap-2" id="activeFilters">
+        <!-- Active filters -->
+    </div>
+</div>
+
+  <div class="container mx-auto mt-8">
+    {% block content %}{% endblock %}
+  </div>
+
+  <div class="mb-20"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.10.3/cdn.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+</body>
 <!-- added highlight.js for syntax highlighting -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/default.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
@@ -153,8 +347,6 @@ tbody tr:nth-child(odd) {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/python.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/rust.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/go.min.js"></script>
-<!-- alpine.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.10.3/cdn.min.js" defer></script>
 <script>
 document.addEventListener('DOMContentLoaded', (event) => {
     document.querySelectorAll('pre code.syntax-highlight').forEach((block) => {
@@ -162,9 +354,3 @@ document.addEventListener('DOMContentLoaded', (event) => {
     });
 });
 </script>
-<body>
-    <div class="container mx-auto mt-8">
-        LLM: {{ model }}
-        {% block content %}{% endblock %}
-    </div>
-</body>

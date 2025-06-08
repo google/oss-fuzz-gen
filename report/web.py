@@ -231,6 +231,7 @@ class GenerateReport:
     self._write_index_html(benchmarks, accumulated_results, time_results,
                            projects, samples_with_bugs, coverage_language_gains)
     self._write_index_json(benchmarks)
+    self._write_unified_json(benchmarks, projects)
 
   def _write(self, output_path: str, content: str):
     """Utility write to filesystem function."""
@@ -255,12 +256,16 @@ class GenerateReport:
     """Generate the report index.html and write to filesystem."""
     index_css_content = self._read_static_file('index/index.css')
     index_js_content = self._read_static_file('index/index.js')
+    
+    # Common data that should be available in base.html
+    common_data = {
+        'accumulated_results': accumulated_results,
+    }
 
     rendered = self._jinja.render(
         'index/index.html',
         benchmarks=benchmarks,
-        accumulated_results=accumulated_results,
-        time_results=time_results,
+        **common_data,
         projects=projects,
         samples_with_bugs=samples_with_bugs,
         coverage_language_gains=coverage_language_gains,
@@ -273,18 +278,100 @@ class GenerateReport:
     rendered = self._jinja.render('index.json', benchmarks=benchmarks)
     self._write('index.json', rendered)
 
+  def _write_unified_json(self, benchmarks: List[Benchmark], projects: list[Project]):
+    """Generate a unified JSON file with all benchmark and sample data."""
+    unified_data = {
+      project.name: {
+        "project": project.name,
+        "benchmarks": {},
+        "average_max_coverage": project.coverage_gain,
+        "average_max_line_coverage_diff": project.coverage_relative_gain,
+        "ofg_total_new_covered_lines": project.coverage_ofg_total_new_covered_lines,
+        "ofg_total_covered_lines": project.coverage_ofg_total_covered_lines,
+        "existing_total_covered_lines": project.coverage_existing_total_covered_lines,
+        "existing_total_lines": project.coverage_existing_total_lines
+      } for project in projects
+    }
+  
+    project_build_successes = {}
+    project_crashes = {}
+
+    for benchmark in benchmarks:
+        samples = self._results.get_samples(*self._results.get_results(benchmark.id))
+        samples_data = []
+
+        benchmark_metrics = {"crashes": 0, "compiles": 0, "total_coverage": 0, "total_line_coverage_diff": 0}
+        
+        for sample in samples:
+            sample_data = {
+                "sample": sample.id,
+                "status": sample.result.finished,
+                "compiles": sample.result.compiles,
+                "crashes": sample.result.crashes,
+                "total_coverage": sample.result.coverage,
+                "total_line_coverage_diff": sample.result.line_coverage_diff
+            }
+            samples_data.append(sample_data)
+            benchmark_metrics["total_coverage"] += sample.result.coverage
+            benchmark_metrics["total_line_coverage_diff"] += sample.result.line_coverage_diff
+            benchmark_metrics["crashes"] += sample.result.crashes
+            benchmark_metrics["compiles"] += sample.result.compiles
+
+        if len(samples) > 0:
+            build_success_rate = float(benchmark_metrics["compiles"]) / float(len(samples))
+            crash_rate = float(benchmark_metrics["crashes"]) / float(len(samples))
+            average_coverage = benchmark_metrics["total_coverage"] / float(len(samples))
+            average_line_coverage_diff = benchmark_metrics["total_line_coverage_diff"] / float(len(samples))
+        else:
+            build_success_rate = 0
+            crash_rate = 0
+            average_coverage = 0
+            average_line_coverage_diff = 0
+        
+        unified_data[benchmark.project]["benchmarks"][benchmark.id] = {
+            "samples": samples_data,
+            "status": benchmark.status,
+            "build_success_rate": build_success_rate,
+            "crash_rate": crash_rate,
+            "total_coverage": benchmark_metrics["total_coverage"],
+            "average_coverage": average_coverage,
+            "total_line_coverage_diff": benchmark_metrics["total_line_coverage_diff"],
+            "average_line_coverage_diff": average_line_coverage_diff
+        }
+
+        if benchmark.project not in project_build_successes:
+            project_build_successes[benchmark.project] = 0
+            project_crashes[benchmark.project] = 0
+        
+        project_build_successes[benchmark.project] += build_success_rate
+        project_crashes[benchmark.project] += crash_rate
+
+    for project_name in unified_data:
+        benchmark_count = len(unified_data[project_name]["benchmarks"])
+        if benchmark_count > 0:
+            if project_name in project_build_successes:
+                unified_data[project_name]["average_build_success_rate"] = project_build_successes[project_name] / benchmark_count
+                unified_data[project_name]["average_crash_rate"] = project_crashes[project_name] / benchmark_count
+    
+    self._write('unified_data.json', json.dumps(unified_data, indent=2))
+
   def _write_benchmark_index(self, benchmark: Benchmark, samples: List[Sample],
                              prompt: Optional[str]):
     """Generate the benchmark index.html and write to filesystem."""
     benchmark_css_content = self._read_static_file('benchmark/benchmark.css')
     benchmark_js_content = self._read_static_file('benchmark/benchmark.js')
 
+    common_data = {
+        'accumulated_results': self._results.get_macro_insights([benchmark]),
+    }
+
     rendered = self._jinja.render('benchmark/benchmark.html',
                                   benchmark=benchmark.id,
                                   samples=samples,
                                   prompt=prompt,
                                   benchmark_css_content=benchmark_css_content,
-                                  benchmark_js_content=benchmark_js_content)
+                                  benchmark_js_content=benchmark_js_content,
+                                  **common_data)
     self._write(f'benchmark/{benchmark.id}/index.html', rendered)
 
   def _write_benchmark_crash(self, benchmark: Benchmark, samples: List[Sample]):
@@ -315,17 +402,21 @@ class GenerateReport:
 
       sample_css_content = self._read_static_file('sample/sample.css')
       sample_js_content = self._read_static_file('sample/sample.js')
+      common_data = {
+          'accumulated_results': self._results.get_macro_insights([benchmark])
+      }
 
       rendered = self._jinja.render('sample/sample.html',
                                     benchmark=benchmark,
-                                    benchmark_id=benchmark.id,
                                     sample=sample,
                                     logs=logs,
                                     run_logs=run_logs,
                                     triage=triage,
                                     targets=sample_targets,
                                     sample_css_content=sample_css_content,
-                                    sample_js_content=sample_js_content)
+                                    sample_js_content=sample_js_content,
+                                    **common_data)
+    
       self._write(f'sample/{benchmark.id}/{sample.id}.html', rendered)
     except Exception as e:
       logging.error('Failed to write sample/%s/%s:\n%s', benchmark.id,
