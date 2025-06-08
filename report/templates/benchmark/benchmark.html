@@ -28,46 +28,85 @@ limitations under the License.
 </script>
 {% endif %}
 
-<h1>{{ benchmark }}</h1>
-<table>
-    <tr>
-        <th>Sample</th>
-        <th>Status</th>
-        <th>Builds</th>
-        <th>Crashes</th>
-        <th>Potential Vulnerability</th>
-        <th>Diagnosis</th>
-        <th>Triage</th>
-        <th>Coverage</th>
-        <th>Line coverage diff</th>
-    </tr>
-    {% for sample in samples %}
-    <tr>
-        <td><a href="../../sample/{{ benchmark|urlencode }}/{{ sample.id }}.html">{{ sample.id }}</a></li></td>
-        <td>{{ sample.status }}</td>
-        {% if sample.result %}
-        <td style="background-color: {{ '#C8E6C9' if sample.result.compiles }}">{{ sample.result.compiles }}</td>
-        <td style="background-color: {{ '#FFCDD2' if sample.result.crashes }}">{{ sample.result.crashes }}</td>
-        <td style="background-color: {{ '#FFCDD2' if sample.result.crashes and not sample.result.is_semantic_error }}">{{ sample.result.crashes and not sample.result.is_semantic_error }}</td>
-        <td>{{ sample.result.semantic_error }} </td>
-        <td>{{ sample.result.triage }}</td>
-        <td>{{ sample.result.coverage |percent }}</td>
-        <td><a href="{{ sample.result.coverage_report_path | cov_report_link }}">{{ sample.result.line_coverage_diff|percent }}</a></td>
-        {% else %}
-        <td>N/A</td>
-        <td>N/A</td>
-        <td>N/A</td>
-        <td>N/A</td>
-        <td>N/A</td>
-        <td>N/A</td>
-        {% endif %}
-    </tr>
-    {% endfor %}
+<script>
+window.benchmarkData = {
+    name: "{{ benchmark }}",
+    language: "{% if samples and samples|length > 0 %}c{% else %}plaintext{% endif %}"
+};
+</script>
+
+<h1 class="text-2xl font-bold mb-6" >
+    <span class="prettify-benchmark-name">{{ benchmark }}</span>
+</h1>
+
+<table class="sortable-table">
+    <thead>
+        <tr>
+            <th></th>
+            <th data-sorted="asc">Sample</th>
+            <th>Status</th>
+            <th data-sort-number>Builds</th>
+            <th data-sort-number>Crashes</th>
+            <th data-sort-number>Potential Vulnerability</th>
+            <th>Diagnosis</th>
+            <th>Triage</th>
+            <th data-sort-number>Coverage</th>
+            <th data-sort-number>Line coverage diff</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for sample in samples %}
+        <tr>
+            <td class="table-index">{{ loop.index }}</td>
+            <td data-sort-value="{{ sample.id }}"><a href="../../sample/{{ benchmark|urlencode }}/{{ sample.id }}.html">{{ sample.id }}</a></td>
+            <td data-sort-value="{{ sample.status }}">{{ sample.status }}</td>
+            {% if sample.result %}
+            <td data-sort-value="{{ sample.result.compiles }}" style="background-color: {{ '#C8E6C9' if sample.result.compiles }}">{{ sample.result.compiles }}</td>
+            <td data-sort-value="{{ sample.result.crashes }}" style="background-color: {{ '#FFCDD2' if sample.result.crashes }}">{{ sample.result.crashes }}</td>
+            <td data-sort-value="{{ sample.result.crashes and not sample.result.is_semantic_error }}" style="background-color: {{ '#FFCDD2' if sample.result.crashes and not sample.result.is_semantic_error }}">{{ sample.result.crashes and not sample.result.is_semantic_error }}</td>
+            <td>{{ sample.result.semantic_error }}</td>
+            <td>{{ sample.result.triage }}</td>
+            <td data-sort-value="{{ sample.result.coverage }}">{{ sample.result.coverage |percent }}</td>
+            <td data-sort-value="{{ sample.result.line_coverage_diff }}"><a href="{{ sample.result.coverage_report_path | cov_report_link }}">{{ sample.result.line_coverage_diff|percent }}</a></td>
+            {% else %}
+            <td data-sort-value="0">N/A</td>
+            <td data-sort-value="0">N/A</td>
+            <td data-sort-value="0">N/A</td>
+            <td>N/A</td>
+            <td>N/A</td>
+            <td data-sort-value="0">N/A</td>
+            <td data-sort-value="0">N/A</td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+    </tbody>
 </table>
 
-<h2>Prompt</h2>
-<pre>
-{{ prompt }}
-</pre>
+<h2 class="text-xl font-semibold mt-8 mb-4">Initial prompt breakdown</h2>
+
+<div class="flex justify-between mb-4">
+    <div class="controls flex gap-2">
+        <button id="prompts-expand-all" class="border rounded-lg p-2">
+            Expand All
+        </button>
+        <button id="prompts-collapse-all" class="border rounded-lg p-2">
+            Collapse All
+        </button>
+    </div>
+</div>
+
+<div class="space-y-6">
+    <!-- Structured Prompt -->
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow" id="structured-prompt">
+        <!-- Tags will be inserted here by JavaScript -->
+    </div>
+
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow">
+        <div class="p-4">
+            <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">Raw Prompt</h3>
+            <pre class="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg overflow-x-auto whitespace-pre-wrap">{{ prompt }}</pre>
+        </div>
+    </div>
+</div>
 
 {% endblock %}

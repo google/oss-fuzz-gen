@@ -203,7 +203,7 @@ tbody tr:nth-child(odd) {
         <div class="flex flex-col items-center md:items-start">
             <h1 class="text-2xl md:text-3xl font-bold font-mono pb-2">
                 {% if benchmark %}
-                    <span class="prettify-benchmark-name">{{ benchmark }}</span>
+                    <span class="prettify-benchmark-name">Benchmark: {{ benchmark }}</span>
                 {% else %}
                     Experiment Report
                 {% endif %}
@@ -331,7 +331,7 @@ tbody tr:nth-child(odd) {
         <div class="search-bar flex-grow max-w-2xl">
             <input type="text"
                    id="searchInput"
-                   placeholder="Search..."
+                   placeholder="Search... (TODO)"
                    class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-transparent">
         </div>
         <div class="filter-buttons flex gap-2">

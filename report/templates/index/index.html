@@ -378,59 +378,6 @@ limitations under the License.
         </div>
     </div>
 
-    <div class="border rounded-lg">
-        <button class="w-full p-4 flex justify-between items-center">
-            <span class="text-lg font-bold">
-                Accumulated results
-            </span>
-        </button>
-        <div class="p-4 border-t">
-            <table class="sortable-table min-w-full">
-                <thead>
-                <th>Metric</th>
-                <th>Value</th>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>Total sample benchmarks</td>
-                    <td>{{ accumulated_results.total_runs }}</td>
-                </tr>
-                <tr>
-                    <td>Successful Builds</td>
-                    <td>{{ accumulated_results.compiles }}</td>
-                </tr>
-                <tr>
-                    <td>Build rate</td>
-                    <td>{{ accumulated_results.build_rate |percent }}%</td>
-                </tr>
-                <tr>
-                    <td>Average coverage</td>
-                    <td>{{ accumulated_results.average_coverage |percent }}%</td>
-                </tr>
-                <tr>
-                    <td>Average line coverage diff</td>
-                    <td>{{ accumulated_results.average_line_coverage_diff |percent }}%</td>
-                </tr>
-                <tr>
-                    <td>Benchmarks with crashes</td>
-                    <td>{{ accumulated_results.crashes }}</td>
-                </tr>
-                <tr>
-                    <td>Experiment start time</td>
-                    <td>{{time_results.start_time}}</td>
-                </tr>
-                <tr>
-                    <td>Experiment end time</td>
-                    <td>{{time_results.completion_time}}</td>
-                </tr>
-                <tr>
-                    <td>Experiment total run time</td>
-                    <td>{{time_results.total_run_time}}</td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
 </div>
 
 
