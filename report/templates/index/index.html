@@ -90,7 +90,7 @@ limitations under the License.
                             </td>
                             {% set ns = namespace(bug_found=false) %}
                             <td data-sort-value="{{ project.name }}" class="w-full">
-                                <button @click="$refs.benchmarks_{{ loop.index }}.classList.toggle('hidden')" class="text-left font-medium hover:text-blue-600 focus:outline-none toc-subsection">
+                                <button @click="$refs.benchmarks_{{ loop.index }}.classList.toggle('hidden')" class="text-left hover:text-blue-600 focus:outline-none toc-subsection">
                                     {{ project.name }}
                                     {% set ns = namespace(
                                         bug_found=false,
@@ -296,7 +296,7 @@ limitations under the License.
                                                 </button>
                                             </td>
                                             <td data-sort-value="{{ benchmark_id }}">
-                                                <button @click="$refs.samples_{{ loop.index }}_{{ project_loop.index }}.classList.toggle('hidden')" class="text-left font-medium hover:text-blue-600 focus:outline-none toc-item">
+                                                <button @click="$refs.samples_{{ loop.index }}_{{ project_loop.index }}.classList.toggle('hidden')" class="text-left hover:text-blue-600 focus:outline-none toc-item">
                                                     <pre class="signature">
                                                         <a href="benchmark/{{ benchmark_id|urlencode }}/index.html" class="prettify-benchmark-name">{{ benchmark_id }}</a>
                                                     </pre>
@@ -318,7 +318,7 @@ limitations under the License.
                                                         <pre class="signature">
                                                             <a href="sample/{{ bug.benchmark.id|urlencode }}/{{ bug.sample.id }}.html">Sample {{ bug.sample.id }}</a>
                                                         </pre>
-                                                        <span class="p-2 rounded-lg {{ 'bg-red-300' if bug.sample.result.crashes and not bug.sample.result.is_semantic_error else 'bg-green-300' }}">
+                                                        <span class="p-2 rounded-lg {{ 'bg-red-300 text-black' if bug.sample.result.crashes and not bug.sample.result.is_semantic_error else 'bg-green-300 text-black' }}">
                                                             {{ 'False positive' if bug.sample.result.is_semantic_error else 'True positive' }}
                                                         </span>
                                                     </div>

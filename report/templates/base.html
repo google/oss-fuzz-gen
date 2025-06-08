@@ -250,7 +250,6 @@ tbody tr:nth-child(odd) {
 }
 
 .toc-section {
-    font-weight: 600;
     color: #111827;
     margin-bottom: 12px;
 }
@@ -261,7 +260,6 @@ tbody tr:nth-child(odd) {
 
 .toc-subsection {
     color: #4b5563;
-    font-weight: 500;
 }
 
 .dark-mode .toc-subsection {
@@ -524,7 +522,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     document.querySelectorAll('pre code.syntax-highlight').forEach((block) => {
         hljs.highlightElement(block);
     });
-    
+
     document.querySelectorAll('.prettify-benchmark-name').forEach(el => {
         el.textContent = prettifyBenchmarkName(el.textContent);
     });
@@ -544,7 +542,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
         const subsectionButtons = section.querySelectorAll('button.toc-subsection');
         if (subsectionButtons.length > 0) {
             const subsectionsUl = document.createElement('ul');
-            
+
             subsectionButtons.forEach(subsectionBtn => {
                 const subsectionName = subsectionBtn.textContent.trim();
                 const subsectionLi = document.createElement('li');
@@ -556,19 +554,19 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
                 const subsectionRow = subsectionBtn.closest('tr');
                 const itemsContainer = subsectionRow ? subsectionRow.nextElementSibling : null;
-                
+
                 if (itemsContainer) {
                     const itemButtons = itemsContainer.querySelectorAll('button.toc-item');
                     const itemLinks = itemsContainer.querySelectorAll('pre.signature.toc-item a');
-                    
+
                     if (itemButtons.length > 0 || itemLinks.length > 0) {
                         const itemsUl = document.createElement('ul');
-                        
+
                         itemButtons.forEach(itemBtn => {
                             const itemLi = document.createElement('li');
                             const itemLink = document.createElement('a');
-                            const itemText = itemBtn.querySelector('pre.signature a') ? 
-                                itemBtn.querySelector('pre.signature a').textContent.trim() : 
+                            const itemText = itemBtn.querySelector('pre.signature a') ?
+                                itemBtn.querySelector('pre.signature a').textContent.trim() :
                                 itemBtn.textContent.trim();
                             itemLink.textContent = itemText;
                             itemLink.href = `#item-${itemText}`;
@@ -587,7 +585,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
                             itemLi.appendChild(itemLink);
                             itemsUl.appendChild(itemLi);
                         });
-                        
+
                         itemLinks.forEach(itemLinkEl => {
                             const itemLi = document.createElement('li');
                             const itemLink = document.createElement('a');
@@ -608,7 +606,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
                             itemLi.appendChild(itemLink);
                             itemsUl.appendChild(itemLi);
                         });
-                        
+
                         subsectionLi.appendChild(itemsUl);
                     }
                 }

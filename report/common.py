@@ -489,7 +489,7 @@ class Results:
       benchmark = benchmarks[0]
       results, targets = self.get_results(benchmark.id)
       samples = self.get_samples(results, targets)
-      
+
       for sample in samples:
         if sample.result and sample.result.finished:
           accumulated_results.compiles += int(sample.result.compiles)
@@ -497,7 +497,8 @@ class Results:
           accumulated_results.crash_cases += int(sample.result.crashes)
           accumulated_results.total_coverage += sample.result.coverage
           accumulated_results.total_runs += 1
-          accumulated_results.total_line_coverage_diff += sample.result.line_coverage_diff
+          accumulated_results.total_line_coverage_diff += (
+              sample.result.line_coverage_diff)
       return accumulated_results
 
     for benchmark in benchmarks:

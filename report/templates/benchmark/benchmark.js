@@ -26,7 +26,7 @@ function parsePromptTags(rawPrompt) {
 function createAccordionSection(tagName, contents, index) {
     const id = `${tagName}-${index}`;
     const icon = getTagIcon(tagName);
-    const formattedContent = tagName === 'solution' 
+    const formattedContent = tagName === 'solution'
         ? `<code class="syntax-highlight language-${getLanguageClass()}">${escapeHtml(contents)}</code>`
         : formatContent(contents);
 

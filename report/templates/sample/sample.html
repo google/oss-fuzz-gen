@@ -111,7 +111,7 @@ limitations under the License.
                     <div class="border-t">
                       <!-- This space is needed to split up the stack traces -->
                       <pre class="p-4 whitespace-pre-wrap text-sm font-mono break-words">{% for line in stack %}{{ line }}
-                        
+
 {% endfor %}</pre>
                     </div>
                   </details>
@@ -178,9 +178,9 @@ limitations under the License.
           <div x-show="codeOpen"
                class="p-4 border-t">
               {% for target in targets %}
-              
+
                 <h3>Code #{{ loop.index - 1}}</h3>
-              
+
                 {% if target.code is defined and target.code %}
                 <div class="code-container">
                     <pre class="line-numbers">{% for line in target.code|remove_trailing_empty_lines|splitlines %}<span>{{ loop.index }}</span>{% endfor %}</pre>
