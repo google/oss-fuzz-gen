@@ -61,14 +61,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    function prettifyBenchmarkName(name) {
-        return name.replace(/^output-[^-]+-/, '');
-    }
-
-    document.querySelectorAll('.prettify-benchmark-name').forEach(el => {
-        el.textContent = prettifyBenchmarkName(el.textContent);
-    });
-
     function compareTableCells(cellA, cellB, sortNumber, sortAsc) {
         if (!cellA || !cellB) return 0;
 

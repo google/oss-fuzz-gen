@@ -203,12 +203,12 @@ tbody tr:nth-child(odd) {
         <div class="flex flex-col items-center md:items-start">
             <h1 class="text-2xl md:text-3xl font-bold font-mono pb-2">
                 {% if benchmark %}
-                    {{ benchmark }}
+                    <span class="prettify-benchmark-name">{{ benchmark }}</span>
                 {% else %}
                     Experiment Report
                 {% endif %}
             </h1>
-            <p><span class="font-medium">Model:</span> <strong>{{model}}</strong></p>
+
         </div>
 
         {% if accumulated_results %}
@@ -267,13 +267,22 @@ tbody tr:nth-child(odd) {
             class="mt-4 p-6 rounded-lg grid grid-cols-1 md:grid-cols-2 gap-4 border border-dashed border-gray-500"
         >
             <div class="space-y-2">
-                <p><span class="font-medium">Total Benchmarks:</span> {{accumulated_results.total_runs}}</p>
+                <p><span class="font-medium">Total
+                    {% if benchmark %}
+                        Samples:
+                    {% else %}
+                        Benchmarks:
+                    {% endif %}
+                    </span>
+                    {{accumulated_results.total_runs}}
+                </p>
                 <p><span class="font-medium">Successful Builds:</span> {{accumulated_results.compiles}}</p>
                 <p><span class="font-medium">Average Coverage:</span> {{accumulated_results.average_coverage |percent }}%</p>
             </div>
             <div class="space-y-2">
                 <p><span class="font-medium">Coverage Diff:</span> {{accumulated_results.average_line_coverage_diff |percent }}%</p>
                 <p><span class="font-medium">Crashes:</span> {{accumulated_results.crashes}}</p>
+                <p><span class="font-medium">Model:</span> <strong>{{model}}</strong></p>
             </div>
         </div>
     </div>
@@ -298,7 +307,7 @@ tbody tr:nth-child(odd) {
             <a href="../../benchmark/{{ benchmark|urlencode }}/index.html"
                class="hover:text-gray-600 transition-colors"
                :class="darkMode ? 'text-gray-300 hover:text-gray-400' : 'text-gray-600'">
-                {{ benchmark }}
+                <span class="prettify-benchmark-name">{{ benchmark }}</span>
             </a>
         </li>
         {% endif %}
@@ -369,9 +378,17 @@ tbody tr:nth-child(odd) {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/rust.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/go.min.js"></script>
 <script>
+function prettifyBenchmarkName(name) {
+    return name.replace(/^output-[^-]+-/, '');
+}
+
 document.addEventListener('DOMContentLoaded', (event) => {
     document.querySelectorAll('pre code.syntax-highlight').forEach((block) => {
         hljs.highlightElement(block);
+    });
+    
+    document.querySelectorAll('.prettify-benchmark-name').forEach(el => {
+        el.textContent = prettifyBenchmarkName(el.textContent);
     });
 });
 </script>
