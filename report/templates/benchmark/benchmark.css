@@ -59,3 +59,13 @@
 .dark-mode .sortable-table th[data-sorted="desc"]:after {
     color: #e5e7eb;
 }
+
+.dark-mode .accordion-content {
+    background-color: #292929;
+    color: #f7f9fc;
+}
+
+.dark-mode .accordion-header {
+    background-color: #292929;
+    color: #f7f9fc;
+}

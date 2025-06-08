@@ -26,28 +26,27 @@ function parsePromptTags(rawPrompt) {
 function createAccordionSection(tagName, contents, index) {
     const id = `${tagName}-${index}`;
     const icon = getTagIcon(tagName);
-    const bgColor = getTagColor(tagName);
     const formattedContent = tagName === 'solution' 
         ? `<code class="syntax-highlight language-${getLanguageClass()}">${escapeHtml(contents)}</code>`
         : formatContent(contents);
 
     return `
-        <div class="border-b last:border-b-0 dark:border-gray-700">
-            <button class="accordion-header w-full p-4 flex items-center justify-between ${bgColor} rounded-t-lg hover:bg-opacity-90 transition-colors duration-200"
+        <div class="border-b last:border-b-0">
+            <button class="accordion-header w-full p-4 flex items-center justify-between rounded-t-lg hover:bg-opacity-90 transition-colors duration-200"
                     onclick="toggleAccordion('${id}')"
                     aria-expanded="false"
                     aria-controls="${id}-content">
                 <div class="flex items-center space-x-2">
                     ${icon}
                     <span class="text-lg font-medium">${tagName}</span>
-                    ${index > 0 ? `<span class="text-sm text-gray-500 dark:text-gray-400">(${index + 1})</span>` : ''}
+                    ${index > 0 ? `<span class="text-sm">(${index + 1})</span>` : ''}
                 </div>
                 <svg class="w-5 h-5 transform transition-transform duration-200" id="${id}-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
                 </svg>
             </button>
-            <div class="accordion-content hidden p-4 bg-white dark:bg-gray-800" id="${id}-content">
-                <pre class="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg overflow-x-auto whitespace-pre-wrap">${formattedContent}</pre>
+            <div class="accordion-content hidden p-4" id="${id}-content">
+                <pre class="p-4 rounded-lg overflow-x-auto whitespace-pre-wrap">${formattedContent}</pre>
             </div>
         </div>
     `;
@@ -62,17 +61,6 @@ function getTagIcon(tagName) {
         solution: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>'
     };
     return icons[tagName] || '';
-}
-
-function getTagColor(tagName) {
-    const colors = {
-        system: 'bg-blue-100 dark:bg-blue-900',
-        instruction: 'bg-green-100 dark:bg-green-900',
-        code: 'bg-yellow-100 dark:bg-yellow-900',
-        task: 'bg-purple-100 dark:bg-purple-900',
-        solution: 'bg-red-100 dark:bg-red-900'
-    };
-    return colors[tagName] || 'bg-gray-100 dark:bg-gray-900';
 }
 
 function formatContent(content) {
