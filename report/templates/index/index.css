@@ -256,9 +256,142 @@ td .signature {
 
 .filter-tag button {
     color: #6b7280;
-    hover:color: #374151;
+}
+
+.project:hover {
+    color: #374151;
 }
 
 .benchmark-row-hidden {
     display: none;
+}
+
+
+.toc {
+    position: fixed;
+    right: -400px;
+    top: 80px;
+    width: 400px;
+    background-color: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px 0 0 8px;
+    padding: 16px;
+    max-height: 80vh;
+    overflow-y: auto;
+    transition: right 0.3s ease;
+    box-shadow: -2px 0 8px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+
+.toc.open {
+    right: 0;
+}
+
+.toc-toggle {
+    position: fixed;
+    right: 20px;
+    top: 80px;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 8px;
+    cursor: pointer;
+    z-index: 1001;
+    transition: right 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.toc-toggle.open {
+    right: 405px;
+}
+
+.dark-mode .toc,
+.dark-mode .toc-toggle {
+    background: #292929;
+    border-color: #3d3d3d;
+}
+
+.toc-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.dark-mode .toc-header {
+    border-color: #3d3d3d;
+}
+
+.toc-tree {
+    list-style: none;
+    padding-left: 0;
+    font-size: 16px;
+}
+
+.toc-tree ul {
+    list-style: none;
+    padding-left: 16px;
+    margin: 4px 0;
+    border-left: 1px solid #e5e7eb;
+}
+
+.dark-mode .toc-tree ul {
+    border-color: #3d3d3d;
+}
+
+.toc-tree li {
+    margin: 8px 0;
+    line-height: 1.4;
+}
+
+.toc-link {
+    color: #374151;
+    text-decoration: none;
+    display: block;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+
+.dark-mode .toc-link {
+    color: #e5e7eb;
+}
+
+.toc-link:hover {
+    color: #3b82f6;
+    background: #f3f4f6;
+}
+
+.dark-mode .toc-link:hover {
+    background: #333333;
+}
+
+.toc-section {
+    font-weight: 600;
+    color: #111827;
+    margin-bottom: 12px;
+}
+
+.dark-mode .toc-section {
+    color: #f3f4f6;
+}
+
+.toc-subsection {
+    color: #4b5563;
+    font-weight: 500;
+}
+
+.dark-mode .toc-subsection {
+    color: #d1d5db;
+}
+
+.toc-item {
+    color: #6b7280;
+    font-size: 13px;
+}
+
+.dark-mode .toc-item {
+    color: #9ca3af;
 }

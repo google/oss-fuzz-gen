@@ -36,7 +36,7 @@ limitations under the License.
     ofgMetricsOpen: true,
 }" class="space-y-2">
 
-    <div class="border rounded-lg">
+    <div class="border rounded-lg toc-section">
         <button @click="projectOpen = !projectOpen"
                 class="w-full p-4 flex justify-between items-center">
             <span class="text-lg font-bold">
@@ -90,7 +90,7 @@ limitations under the License.
                             </td>
                             {% set ns = namespace(bug_found=false) %}
                             <td data-sort-value="{{ project.name }}" class="w-full">
-                                <button @click="$refs.benchmarks_{{ loop.index }}.classList.toggle('hidden')" class="text-left font-medium hover:text-blue-600 focus:outline-none">
+                                <button @click="$refs.benchmarks_{{ loop.index }}.classList.toggle('hidden')" class="text-left font-medium hover:text-blue-600 focus:outline-none toc-subsection">
                                     {{ project.name }}
                                     {% set ns = namespace(
                                         bug_found=false,
@@ -150,7 +150,7 @@ limitations under the License.
                                                     {{ bench_ns.index }}
                                                 </td>
                                                 <td data-sort-value="{{ benchmark.id }}">
-                                                    <pre class="signature">
+                                                    <pre class="signature toc-item">
                                                         <a href="benchmark/{{ benchmark.id|urlencode }}/index.html" class="prettify-benchmark-name">{{ benchmark.signature }}</a>
                                                     </pre>
                                                 </td>
@@ -185,7 +185,7 @@ limitations under the License.
         </div>
     </div>
 
-    <div class="border rounded-lg">
+    <div class="border rounded-lg toc-section">
         <button @click="crashesFoundOpen = !crashesFoundOpen"
                 class="w-full p-4 flex justify-between items-center">
             <span class="text-lg font-bold">
@@ -249,7 +249,7 @@ limitations under the License.
                             </button>
                         </td>
                         <td data-sort-value="{{ project_name }}">
-                            <button @click="$refs.project_{{ loop.index }}.classList.toggle('hidden')" class="text-left font-medium hover:text-blue-600 focus:outline-none">
+                            <button @click="$refs.project_{{ loop.index }}.classList.toggle('hidden')" class="text-left font-medium hover:text-blue-600 focus:outline-none toc-subsection">
                                 {{ project_name }}
                             </button>
                         </td>
@@ -296,7 +296,7 @@ limitations under the License.
                                                 </button>
                                             </td>
                                             <td data-sort-value="{{ benchmark_id }}">
-                                                <button @click="$refs.samples_{{ loop.index }}_{{ project_loop.index }}.classList.toggle('hidden')" class="text-left font-medium hover:text-blue-600 focus:outline-none">
+                                                <button @click="$refs.samples_{{ loop.index }}_{{ project_loop.index }}.classList.toggle('hidden')" class="text-left font-medium hover:text-blue-600 focus:outline-none toc-item">
                                                     <pre class="signature">
                                                         <a href="benchmark/{{ benchmark_id|urlencode }}/index.html" class="prettify-benchmark-name">{{ benchmark_id }}</a>
                                                     </pre>
@@ -338,7 +338,7 @@ limitations under the License.
         </div>
     </div>
 
-    <div class="border rounded-lg">
+    <div class="border rounded-lg toc-section">
         <button @click="languageOpen = !languageOpen"
                 class="w-full p-4 flex justify-between items-center">
             <span class="text-lg font-bold">
@@ -380,5 +380,20 @@ limitations under the License.
 
 </div>
 
+<button class="toc-toggle" id="tocToggle">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">Add commentMore actions
+        <line x1="3" y1="12" x2="21" y2="12"></line>
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+</button>
+
+
+<div id="toc" class="toc">
+    <div class="toc-header">
+        <h3 class="text-lg font-semibold">Table of Contents</h3>
+    </div>
+    <ul class="toc-tree" id="toc-tree"></ul>
+</div>
 
 {% endblock %}
