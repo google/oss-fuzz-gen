@@ -20,32 +20,33 @@ from stage.base_stage import BaseStage
 
 
 class AnalysisStage(BaseStage):
-  """Analyzes the runtime performance of fuzz targets and suggests improvements.
-  This stage examines whether crashes are due to bugs in the fuzz target or
-  if there are significant code blocks left uncovered. Based on this analysis,
-  it provides recommendations for refining the fuzz target in subsequent stages.
-  Additionally, it prepares to terminate the experiment if the fuzz target
-  crashes due to a bug in the project under test or if all major code paths have
-  been sufficiently covered."""
+    """Analyzes the runtime performance of fuzz targets and suggests improvements.
+    This stage examines whether crashes are due to bugs in the fuzz target or
+    if there are significant code blocks left uncovered. Based on this analysis,
+    it provides recommendations for refining the fuzz target in subsequent stages.
+    Additionally, it prepares to terminate the experiment if the fuzz target
+    crashes due to a bug in the project under test or if all major code paths have
+    been sufficiently covered."""
 
-  def execute(self, result_history: list[Result]) -> Result:
-    """Selects agent based on run result and executes it."""
-    self.logger.info('Analysis Stage')
-    last_result = result_history[-1]
-    assert isinstance(last_result, RunResult)
+    def execute(self, result_history: list[Result]) -> Result:
+        """Selects agent based on run result and executes it."""
+        self.logger.info("Analysis Stage")
+        last_result = result_history[-1]
+        assert isinstance(last_result, RunResult)
 
-    if last_result.crashes:
-      agent = self.get_agent(agent_name='CrashAnalyzer')
-    else:
-      try:
-        agent = self.get_agent(agent_name='CoverageAnalyzer')
-      except RuntimeError:
-        agent = self.get_agent(agent_name='SemanticAnalyzer')
-    analysis_result = self._execute_agent(agent, result_history)
+        if last_result.crashes:
+            agent = self.get_agent(agent_name="CrashAnalyzer")
+        else:
+            try:
+                agent = self.get_agent(agent_name="CoverageAnalyzer")
+            except RuntimeError:
+                agent = self.get_agent(agent_name="SemanticAnalyzer")
+        analysis_result = self._execute_agent(agent, result_history)
 
-    # TODO(dongge): Save logs and more info into workdir.
-    self.logger.write_chat_history(analysis_result)
-    self.logger.debug('Analysis stage completed with with result:\n%s',
-                      analysis_result)
+        # TODO(dongge): Save logs and more info into workdir.
+        self.logger.write_chat_history(analysis_result)
+        self.logger.debug(
+            "Analysis stage completed with with result:\n%s", analysis_result
+        )
 
-    return analysis_result
+        return analysis_result

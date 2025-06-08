@@ -23,70 +23,77 @@ from results import AnalysisResult, BuildResult, Result
 
 
 class OnePromptEnhancer(OnePromptPrototyper):
-  """The Agent to generate a simple but valid fuzz target from scratch."""
+    """The Agent to generate a simple but valid fuzz target from scratch."""
 
-  def _initial_prompt(self, results: list[Result]) -> Prompt:
-    """Constructs initial prompt of the agent."""
-    last_result = results[-1]
-    benchmark = last_result.benchmark
+    def _initial_prompt(self, results: list[Result]) -> Prompt:
+        """Constructs initial prompt of the agent."""
+        last_result = results[-1]
+        benchmark = last_result.benchmark
 
-    if not isinstance(last_result, AnalysisResult):
-      logger.error('The last result in Enhancer is not AnalysisResult: %s',
-                   results,
-                   trial=self.trial)
-      return Prompt()
+        if not isinstance(last_result, AnalysisResult):
+            logger.error(
+                "The last result in Enhancer is not AnalysisResult: %s",
+                results,
+                trial=self.trial,
+            )
+            return Prompt()
 
-    if benchmark.language == 'jvm':
-      # TODO: Do this in a separate agent for JVM coverage.
-      builder = JvmFixingBuilder(self.llm, benchmark,
-                                 last_result.run_result.fuzz_target_source, [])
-      prompt = builder.build([], None, None)
-    else:
-      # TODO(dongge): Refine this logic.
-      builder = DefaultTemplateBuilder(self.llm)
-      if last_result.semantic_result:
-        error_desc, errors = last_result.semantic_result.get_error_info()
-        prompt = builder.build_fixer_prompt(benchmark,
-                                            last_result.fuzz_target_source,
-                                            error_desc,
-                                            errors,
-                                            context='',
-                                            instruction='')
-      else:
-        prompt = builder.build_fixer_prompt(
-            benchmark=benchmark,
-            raw_code=last_result.fuzz_target_source,
-            error_desc='',
-            errors=[],
-            coverage_result=last_result.coverage_result,
-            context='',
-            instruction='')
-      # TODO: A different file name/dir.
-      prompt.save(self.args.work_dirs.prompt)
+        if benchmark.language == "jvm":
+            # TODO: Do this in a separate agent for JVM coverage.
+            builder = JvmFixingBuilder(
+                self.llm, benchmark, last_result.run_result.fuzz_target_source, []
+            )
+            prompt = builder.build([], None, None)
+        else:
+            # TODO(dongge): Refine this logic.
+            builder = DefaultTemplateBuilder(self.llm)
+            if last_result.semantic_result:
+                error_desc, errors = last_result.semantic_result.get_error_info()
+                prompt = builder.build_fixer_prompt(
+                    benchmark,
+                    last_result.fuzz_target_source,
+                    error_desc,
+                    errors,
+                    context="",
+                    instruction="",
+                )
+            else:
+                prompt = builder.build_fixer_prompt(
+                    benchmark=benchmark,
+                    raw_code=last_result.fuzz_target_source,
+                    error_desc="",
+                    errors=[],
+                    coverage_result=last_result.coverage_result,
+                    context="",
+                    instruction="",
+                )
+            # TODO: A different file name/dir.
+            prompt.save(self.args.work_dirs.prompt)
 
-    return prompt
+        return prompt
 
-  def execute(self, result_history: list[Result]) -> BuildResult:
-    """Executes the agent based on previous result."""
-    last_result = result_history[-1]
-    logger.info('Executing One Prompt Enhancer', trial=last_result.trial)
-    # Use keep to avoid deleting files, such as benchmark.yaml
-    WorkDirs(self.args.work_dirs.base, keep=True)
+    def execute(self, result_history: list[Result]) -> BuildResult:
+        """Executes the agent based on previous result."""
+        last_result = result_history[-1]
+        logger.info("Executing One Prompt Enhancer", trial=last_result.trial)
+        # Use keep to avoid deleting files, such as benchmark.yaml
+        WorkDirs(self.args.work_dirs.base, keep=True)
 
-    prompt = self._initial_prompt(result_history)
-    cur_round = 1
-    build_result = BuildResult(benchmark=last_result.benchmark,
-                               trial=last_result.trial,
-                               work_dirs=last_result.work_dirs,
-                               author=self,
-                               chat_history={self.name: prompt.gettext()})
+        prompt = self._initial_prompt(result_history)
+        cur_round = 1
+        build_result = BuildResult(
+            benchmark=last_result.benchmark,
+            trial=last_result.trial,
+            work_dirs=last_result.work_dirs,
+            author=self,
+            chat_history={self.name: prompt.gettext()},
+        )
 
-    while prompt and cur_round <= self.max_round:
-      self._generate_fuzz_target(prompt, result_history, build_result,
-                                 cur_round)
+        while prompt and cur_round <= self.max_round:
+            self._generate_fuzz_target(prompt, result_history, build_result, cur_round)
 
-      self._validate_fuzz_target(cur_round, build_result)
-      prompt = self._advice_fuzz_target(build_result, cur_round)
-      cur_round += 1
+            self._validate_fuzz_target(cur_round, build_result)
+            prompt = self._advice_fuzz_target(build_result, cur_round)
+            cur_round += 1
 
-    return build_result
+        return build_result

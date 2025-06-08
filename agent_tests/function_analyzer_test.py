@@ -25,58 +25,54 @@ from llm_toolkit import models
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-RESULTS_DIR = './results'
+RESULTS_DIR = "./results"
 
 
 def parse_args() -> argparse.Namespace:
-  """Parses command line arguments."""
-  parser = argparse.ArgumentParser(
-      description='Evaluate the function analyzer agent.')
+    """Parses command line arguments."""
+    parser = argparse.ArgumentParser(
+        description="Evaluate the function analyzer agent."
+    )
 
-  parser.add_argument('-y',
-                      '--benchmark-yaml',
-                      type=str,
-                      required=True,
-                      help='A benchmark YAML file.')
+    parser.add_argument(
+        "-y", "--benchmark-yaml", type=str, required=True, help="A benchmark YAML file."
+    )
 
-  parser.add_argument('-w', '--work-dir', default=RESULTS_DIR)
+    parser.add_argument("-w", "--work-dir", default=RESULTS_DIR)
 
-  parser.add_argument('-mr',
-                      '--max-round',
-                      type=int,
-                      default=100,
-                      help='Max trial round for agents.')
+    parser.add_argument(
+        "-mr", "--max-round", type=int, default=100, help="Max trial round for agents."
+    )
 
-  parsed_args = parser.parse_args()
+    parsed_args = parser.parse_args()
 
-  return parsed_args
+    return parsed_args
 
 
 if __name__ == "__main__":
 
-  model = models.LLM.setup(ai_binary='', name='vertex_ai_gemini-1-5-chat')
+    model = models.LLM.setup(ai_binary="", name="vertex_ai_gemini-1-5-chat")
 
-  args = parse_args()
+    args = parse_args()
 
-  function_analyzer = FunctionAnalyzer(trial=1, llm=model, args=args)
+    function_analyzer = FunctionAnalyzer(trial=1, llm=model, args=args)
 
-  benchmarks: List[Benchmark] = benchmarklib.Benchmark.from_yaml(
-      args.benchmark_yaml)
+    benchmarks: List[Benchmark] = benchmarklib.Benchmark.from_yaml(args.benchmark_yaml)
 
-  if len(benchmarks) == 0:
-    raise ValueError("No benchmarks found in the YAML file.")
+    if len(benchmarks) == 0:
+        raise ValueError("No benchmarks found in the YAML file.")
 
-  test_benchmark = benchmarks[0]
-  logger.info("Loaded benchmark for function: %s", test_benchmark.function_name)
+    test_benchmark = benchmarks[0]
+    logger.info("Loaded benchmark for function: %s", test_benchmark.function_name)
 
-  # Initialize the function analyzer with the first benchmark
-  function_analyzer.initialize(test_benchmark)
+    # Initialize the function analyzer with the first benchmark
+    function_analyzer.initialize(test_benchmark)
 
-  # Run the function analyzer
-  result = function_analyzer.execute([])
+    # Run the function analyzer
+    result = function_analyzer.execute([])
 
-  # Print the result
-  logger.info("Function Analyzer Result:")
-  logger.info("Result available: %s", result.result_available)
-  if result.result_available:
-    logger.info("Requirements: %s", result.requirements)
+    # Print the result
+    logger.info("Function Analyzer Result:")
+    logger.info("Result available: %s", result.result_available)
+    if result.result_available:
+        logger.info("Requirements: %s", result.requirements)
