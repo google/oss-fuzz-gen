@@ -226,9 +226,7 @@ class GenerateReport:
     projects = self._results.get_project_summary(benchmarks)
     coverage_language_gains = self._results.get_coverage_language_gains()
 
-    time_results = self.read_timings()
-
-    self._write_index_html(benchmarks, accumulated_results, time_results,
+    self._write_index_html(benchmarks, accumulated_results,
                            projects, samples_with_bugs, coverage_language_gains)
     self._write_index_json(benchmarks)
     self._write_unified_json(benchmarks, projects)
@@ -250,7 +248,7 @@ class GenerateReport:
 
   def _write_index_html(self, benchmarks: List[Benchmark],
                         accumulated_results: AccumulatedResult,
-                        time_results: dict[str, Any], projects: list[Project],
+                        projects: list[Project],
                         samples_with_bugs: list[dict[str, Any]],
                         coverage_language_gains: dict[str, Any]):
     """Generate the report index.html and write to filesystem."""
@@ -260,6 +258,7 @@ class GenerateReport:
     # Common data that should be available in base.html
     common_data = {
         'accumulated_results': accumulated_results,
+        'time_results': self.read_timings(),
     }
 
     rendered = self._jinja.render(
@@ -363,6 +362,7 @@ class GenerateReport:
 
     common_data = {
         'accumulated_results': self._results.get_macro_insights([benchmark]),
+        'time_results': self.read_timings(),
     }
 
     rendered = self._jinja.render('benchmark/benchmark.html',
@@ -403,7 +403,8 @@ class GenerateReport:
       sample_css_content = self._read_static_file('sample/sample.css')
       sample_js_content = self._read_static_file('sample/sample.js')
       common_data = {
-          'accumulated_results': self._results.get_macro_insights([benchmark])
+          'accumulated_results': self._results.get_macro_insights([benchmark]),
+          'time_results': self.read_timings(),
       }
 
       rendered = self._jinja.render('sample/sample.html',
