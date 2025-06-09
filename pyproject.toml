@@ -66,7 +66,7 @@ py-modules = [
   "tool.base_tool",
   "tool.container_tool",
   "tool.gbucket_tool",
-  "tool.lldb_tool",
+  "tool.gdb_tool",
   "tool.bash_tool",
   "tool.fuzz_introspector_tool",
   "experiment.fuzz_target_error",

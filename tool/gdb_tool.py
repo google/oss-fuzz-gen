@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""A tool for LLM agents to interact within a LLDB."""
+"""A tool for LLM agents to interact within a GDB."""
 import logging
 import subprocess as sp
 import time
@@ -23,8 +23,8 @@ from tool.container_tool import ProjectContainerTool
 logger = logging.getLogger(__name__)
 
 
-class LLDBTool(ProjectContainerTool):
-  """A tool for LLM agents to interact within a LLDB."""
+class GDBTool(ProjectContainerTool):
+  """A tool for LLM agents to interact within a GDB."""
 
   def __init__(self,
                benchmark: Benchmark,
@@ -36,18 +36,18 @@ class LLDBTool(ProjectContainerTool):
 
   def tutorial(self) -> str:
     """Constructs a tool guide tutorial for LLM agents."""
-    return self._get_tutorial_file_content('lldb_tool.txt')\
+    return self._get_tutorial_file_content('gdb_tool.txt')\
       .replace('{AFTIFACT_PATH}', self.result.artifact_path)\
       .replace('{TARGET_NAME}', self.benchmark.target_name)
 
-  def execute_in_screen(self, lldb_command: str) -> sp.CompletedProcess:
-    """Sends a command to the lldb_session screen and returns LLDB output."""
-    self.execute('screen -S lldb_session -X logfile flush 0')
-    self.execute('truncate -s 0 /tmp/lldb_log.txt')
+  def execute_in_screen(self, gdb_command: str) -> sp.CompletedProcess:
+    """Sends a command to the gdb_session screen and returns GDB output."""
+    self.execute('screen -S gdb_session -X logfile flush 0')
+    self.execute('truncate -s 0 /tmp/gdb_log.txt')
 
-    safe_cmd = lldb_command.replace('"', '\\"') + '\r'
-    self.execute(f'screen -S lldb_session -X stuff "{safe_cmd}"')
+    safe_cmd = gdb_command.replace('"', '\\"') + '\r'
+    self.execute(f'screen -S gdb_session -X stuff "{safe_cmd}"')
 
     time.sleep(1.0)
-    self.execute('screen -S lldb_session -X logfile flush 0')
-    return self.execute('cat /tmp/lldb_log.txt')
+    self.execute('screen -S gdb_session -X logfile flush 0')
+    return self.execute('cat /tmp/gdb_log.txt')

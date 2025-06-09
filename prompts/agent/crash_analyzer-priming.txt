@@ -1,4 +1,4 @@
-Given the following crash report, fuzz driver code and relevant project function code, analyze the cause of the crash using LLDB tool step by step.
+Given the following crash report, fuzz driver code and relevant project function code, analyze the cause of the crash using GDB tool step by step.
 First, make a conclusion, only answer “Crash is caused by bug in fuzz driver” or “Crash is caused by bug in project”. Second, offer succinct and to-the-point analyses and suggestions.
 
 Below is crash report:
@@ -16,4 +16,4 @@ Below is relevant project function code:
 {PROJECT_FUNCTION_CODE}
 </code>
 
-To help analyze the root cause behind the runtime crash, you can leverage LLDB tool and BASH tool to obtain information.
+To help analyze the root cause behind the runtime crash, you can leverage GDB tool and BASH tool to obtain information.

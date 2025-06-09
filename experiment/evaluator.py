@@ -303,7 +303,7 @@ class Evaluator:
     return name
 
   @staticmethod
-  def create_ossfuzz_project_with_lldb(benchmark: Benchmark,
+  def create_ossfuzz_project_with_gdb(benchmark: Benchmark,
                                        name: str,
                                        target_file: str,
                                        run_result: results.RunResult,
@@ -322,7 +322,7 @@ class Evaluator:
         artifact_path,
         os.path.join(generated_project_path, os.path.basename(artifact_path)))
     # Add additional statement in dockerfile to copy testcase,
-    # enable -g, install lldb and screen
+    # enable -g, install gdb and screen
     with open(os.path.join(generated_project_path, 'Dockerfile'), 'a') as f:
       f.write(
           '\nRUN mkdir -p /artifact\n'
@@ -330,7 +330,7 @@ class Evaluator:
           '\nENV CFLAGS="${CFLAGS} -g -O0"\n'
           '\nENV CXXFLAGS="${CXXFLAGS} -g -O0"\n'
           '\nRUN apt-get update\n'
-          '\nRUN apt-get install -y lldb\n'
+          '\nRUN apt-get install -y gdb\n'
           '\nRUN apt-get install -y screen\n')
 
     return name
