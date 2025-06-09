@@ -304,11 +304,11 @@ class Evaluator:
 
   @staticmethod
   def create_ossfuzz_project_with_gdb(benchmark: Benchmark,
-                                       name: str,
-                                       target_file: str,
-                                       run_result: results.RunResult,
-                                       build_script_path: str = '',
-                                       artifact_path: str = '') -> str:
+                                      name: str,
+                                      target_file: str,
+                                      run_result: results.RunResult,
+                                      build_script_path: str = '',
+                                      artifact_path: str = '') -> str:
     """Creates an OSS-Fuzz project with the generated target and new dockerfile.
     The new project will replicate an existing project |name| but replace its
     fuzz target and build script with the new |target_file| and

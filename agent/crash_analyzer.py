@@ -93,7 +93,7 @@ class CrashAnalyzer(BaseAgent):
             f'<stderr>\n{stderr}\n</stderr>\n')
 
   def _container_handle_gdb_command(self, response: str, tool: GDBTool,
-                                     prompt: Prompt) -> Prompt:
+                                    prompt: Prompt) -> Prompt:
     """Handles the command from LLM with gdb tool."""
     prompt_text = ''
     for command in self._parse_tags(response, 'gdb'):
@@ -136,8 +136,7 @@ class CrashAnalyzer(BaseAgent):
     prompt = prompt_builder.CrashAnalyzerTemplateBuilder(self.llm,
                                                          None).build([])
     if self._parse_tag(response, 'gdb'):
-      return self._container_handle_gdb_command(response, self.gdb_tool,
-                                                 prompt)
+      return self._container_handle_gdb_command(response, self.gdb_tool, prompt)
     if self._parse_tag(response, 'bash'):
       return self._container_handle_bash_command(response, self.bash_tool,
                                                  prompt)
@@ -182,11 +181,17 @@ class CrashAnalyzer(BaseAgent):
         build_script_path, last_result.artifact_path)
 
     self.gdb_tool = GDBTool(benchmark,
-                                 result=last_result,
-                                 name='gdb',
-                                 project_name=generated_oss_fuzz_project)
-    #TODO(maoyi): Use a dedicated debugger image, which has the binary and source code.
-    self.gdb_tool.execute('apt update && apt install -y software-properties-common && add-apt-repository ppa:ubuntu-toolchain-r/test && apt update && apt install -y gdb screen')
+                            result=last_result,
+                            name='gdb',
+                            project_name=generated_oss_fuzz_project)
+    #TODO(maoyi): Use a dedicated debugger image, which has the binary and
+    #source code.
+    self.gdb_tool.execute(
+        'apt update && '
+        'apt install -y software-properties-common && '
+        'add-apt-repository -y ppa:ubuntu-toolchain-r/test && '
+        'apt update && '
+        'apt install -y gdb screen')
     self.gdb_tool.execute('export CFLAGS="$CFLAGS -g -O0"')
     self.gdb_tool.execute('export CXXFLAGS="$CXXFLAGS -g -O0"')
     self.gdb_tool.execute('compile > /dev/null')
