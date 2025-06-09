@@ -62,7 +62,7 @@ class ProjectContainerTool(BaseTool):
                       encoding='utf-8',
                       errors='ignore')
 
-      logger.error(
+      logger.debug(
           'Executing command (%s) in container %s: Return code %d. STDOUT: %s, '
           'STDERR: %s', command, self.container_id, result.returncode,
           result.stdout, result.stderr)
