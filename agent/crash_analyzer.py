@@ -111,9 +111,9 @@ class CrashAnalyzer(BaseAgent):
                 trial=self.trial)
 
     conclusion = self._parse_tag(response, 'conclusion')
-    if conclusion == 'Crash is caused by bug in fuzz driver.':
+    if conclusion == 'False':
       crash_result.true_bug = False
-    elif conclusion == 'Crash is caused by bug in project.':
+    elif conclusion == 'True':
       crash_result.true_bug = True
     else:
       logger.error('***** Failed to match conclusion in %02d rounds *****',
