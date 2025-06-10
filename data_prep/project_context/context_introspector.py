@@ -49,23 +49,6 @@ class ContextRetriever:
 
     return sig
 
-  def _get_nested_item(self, element: dict, *path: str) -> Any:
-    """Safely retrieve a nested item from a dictionary without
-    throwing an error. Logs whenever an item can not be found
-    with a given key."""
-    nested_item = element
-
-    for key in path:
-      next_nested_item = nested_item.get(key, '')
-      if not next_nested_item:
-        logging.warning('Missing item "%s" in object: %s', key, nested_item)
-      nested_item = next_nested_item
-
-    return nested_item
-
-  def _get_source_file(self, item: dict) -> str:
-    return self._get_nested_item(item, 'source', 'source_file')
-
   def _get_files_to_include(self) -> list[str]:
     """Retrieves files to include.
     These files are found from the source files for complex types seen
@@ -82,38 +65,53 @@ class ContextRetriever:
         types.append(cleaned_type)
 
     for current_type in types:
-      info_list = introspector.query_introspector_type_info(
-          self._benchmark.project, current_type)
+      # Retrieve full custom definition of the project
+      info_list = introspector.query_introspector_type_definition(
+          self._benchmark.project)
       if not info_list:
-        logging.warning('Could not retrieve info for project: %s type: %s',
+        logging.warning('Could not type info for project.')
+        continue
+
+      # Retrieve specific type definition
+      info_dict = {info['name']: info for info in info_list}
+      type_info = info_dict.get(current_type)
+      if not type_info:
+        logging.warning('Could not type info for project: %s type: %s',
                         self._benchmark.project, current_type)
         continue
 
-      for info in info_list:
-        include_file = self._get_source_file(info)
-        include_file = os.path.normpath(include_file)
-        include_base = os.path.basename(include_file)
+      # Retrieve possible file candidates
+      include_file = type_info.get('pos', {}).get('source_file')
+      if not include_file:
+        logging.warning('Failed to obtain the source file information.')
+        continue
 
-        # Ensure include_file is a file.
-        if not include_base or '.' not in include_base:
-          logging.warning('File %s found as a source path for project: %s',
+      # Retrieve file details from the source file path
+      include_file = os.path.normpath(include_file)
+      include_base = os.path.basename(include_file)
+
+      # Ensure include_file is a file.
+      if not include_base or '.' not in include_base:
+        logging.warning('File %s found as a source path for project: %s',
                           include_file, self._benchmark.project)
-          continue
-        # Ensure it is a header file (suffix starting with .h).
-        if include_base.endswith(('.h', '.hxx', '.hpp')):
-          logging.warning(
-              'File found with unexpected suffix %s for project: %s',
-              include_file, self._benchmark.project)
-          continue
-        # Remove "system" header files.
-        # Assuming header files under /usr/ are irrelevant.
-        if include_file.startswith('/usr/'):
-          logging.debug('Header file removed: %s', include_file)
-          continue
-        # TODO: Dynamically adjust path prefixes
-        # (e.g. based on existing fuzz targets).
+        continue
 
-        files.add(include_file)
+      # Ensure it is a header file (suffix starting with .h).
+      if include_base.endswith(('.h', '.hxx', '.hpp')):
+        logging.warning(
+            'File found with unexpected suffix %s for project: %s',
+            include_file, self._benchmark.project)
+        continue
+
+      # Remove "system" header files.
+      # Assuming header files under /usr/ are irrelevant.
+      if include_file.startswith('/usr/'):
+        logging.debug('Header file removed: %s', include_file)
+        continue
+
+      # TODO: Dynamically adjust path prefixes
+      # (e.g. based on existing fuzz targets).
+      files.add(include_file)
 
     return list(files)
 
