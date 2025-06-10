@@ -81,8 +81,8 @@ class CrashAnalyzer(BaseAgent):
     if raw_lines and raw_lines[-1].strip().startswith("(gdb)"):
       raw_lines.pop()
     if raw_lines:
-      raw_lines[0] = f"(gdb) {raw_lines[0].strip()}"
-    processed_stdout = "\n".join(raw_lines)
+      raw_lines[0] = f'(gdb) {raw_lines[0].strip()}'
+    processed_stdout = '\n'.join(raw_lines)
 
     stdout = self.llm.truncate_prompt(processed_stdout,
                                       previous_prompt_text).strip()
@@ -184,7 +184,7 @@ class CrashAnalyzer(BaseAgent):
                             result=last_result,
                             name='gdb',
                             project_name=generated_oss_fuzz_project)
-    #TODO(maoyi): Use a dedicated debugger image, which has the binary and
+    #TODO(dongge): Use a dedicated debugger image, which has the binary and
     #source code.
     self.gdb_tool.execute(
         'apt update && '
