@@ -17,7 +17,7 @@ better prompt generation."""
 import logging
 import os
 from difflib import SequenceMatcher
-from typing import Any, Optional
+from typing import Optional
 
 from data_prep import introspector
 from experiment import benchmark as benchmarklib
@@ -93,14 +93,13 @@ class ContextRetriever:
       # Ensure include_file is a file.
       if not include_base or '.' not in include_base:
         logging.warning('File %s found as a source path for project: %s',
-                          include_file, self._benchmark.project)
+                        include_file, self._benchmark.project)
         continue
 
       # Ensure it is a header file (suffix starting with .h).
       if include_base.endswith(('.h', '.hxx', '.hpp')):
-        logging.warning(
-            'File found with unexpected suffix %s for project: %s',
-            include_file, self._benchmark.project)
+        logging.warning('File found with unexpected suffix %s for project: %s',
+                        include_file, self._benchmark.project)
         continue
 
       # Remove "system" header files.
@@ -192,7 +191,6 @@ class ContextRetriever:
   def get_type_def(self, type_name: str) -> str:
     """Retrieves the source code definitions for the given |type_name|."""
     type_names = [self._clean_type(type_name)]
-    considered_types = []
     type_def = ''
 
     info_list = introspector.query_introspector_type_definition(
