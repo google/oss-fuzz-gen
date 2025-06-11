@@ -350,14 +350,20 @@ class ADKBaseAgent(BaseAgent):
                 self.name,
                 trial=self.trial)
 
+  def chat_llm(self, cur_round: int, client: Any, prompt: Prompt,
+               trial: int) -> str:
+    """Call the agent with the given prompt, running async code in sync."""
 
-  def query_llm(self, query: str) -> str:
-    """Call the agent with the given query, running async code in sync."""
+    logger.info('<CHAT PROMPT:ROUND %02d>%s</CHAT PROMPT:ROUND %02d>',
+                cur_round,
+                prompt.gettext(),
+                cur_round,
+                trial=trial)
 
     async def _call():
       user_id = self.benchmark.id
       session_id = f"session_{self.trial}"
-      content = types.Content(role='user', parts=[types.Part(text=query)])
+      content = types.Content(role='user', parts=[types.Part(text=prompt.get())])
 
       final_response_text = ''
 
@@ -374,7 +380,12 @@ class ADKBaseAgent(BaseAgent):
             error_message = event.error_message
             logger.error("Agent escalated: %s", error_message, trial=self.trial)
 
-      logger.info("<<< Agent response: %s", final_response_text, trial=self.trial)
+      logger.info('<CHAT RESPONSE:ROUND %02d>%s</CHAT RESPONSE:ROUND %02d>',
+                cur_round,
+                final_response_text,
+                cur_round,
+                trial=trial)
+
       return final_response_text
 
     return self.llm.with_retry_on_error(

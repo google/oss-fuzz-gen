@@ -883,7 +883,6 @@ class FunctionAnalyzerTemplateBuilder(DefaultTemplateBuilder):
     if not func_source:
       logger.error('No function source found for project: %s, function: %s',
                    self.benchmark.project, self.benchmark.function_signature)
-      return prompts.TextPrompt()
 
     prompt = prompt.replace('{FUNCTION_SOURCE}', func_source)
 

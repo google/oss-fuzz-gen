@@ -108,18 +108,15 @@ class FunctionAnalyzer(base_agent.ADKBaseAgent):
         work_dirs=self.args.work_dirs,
     )
 
+    cur_round = 1
+
     # Call the agent asynchronously and return the result
     prompt = self._initial_prompt(result_history)
-    query = prompt.gettext()
 
-    # Validate query is not empty
-    if not query.strip():
-      logger.error(
-          "Error occurred while building initial prompt. Cannot call the agent.",
-          trial=self.trial)
-      return result
-
-    final_response_text = self.query_llm(query)
+    final_response_text = self.chat_llm(cur_round,
+                                 client=None,
+                                 prompt=prompt,
+                                 trial=result_history[-1].trial)
 
     self.handle_llm_response(final_response_text, result)
 
