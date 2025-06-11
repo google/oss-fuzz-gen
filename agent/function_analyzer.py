@@ -58,9 +58,7 @@ class FunctionAnalyzer(base_agent.ADKBaseAgent):
     necessary for it to execute correctly.
     """
 
-    tools = [
-        self.get_function_implementation, self.search_project_files
-    ]
+    tools = [self.get_function_implementation, self.search_project_files]
 
     super().__init__(trial, llm, args, benchmark, description, instruction,
                      tools)
@@ -174,13 +172,12 @@ class FunctionAnalyzer(base_agent.ADKBaseAgent):
     # TODO(pamusuo): Move this logging to ADKBaseAgent.
     self.round += 1
     logger.info('<CHAT RESPONSE:ROUND %02d>%s</CHAT RESPONSE:ROUND %02d>',
-                  self.round,
-                  response,
-                  self.round,
-                  trial=self.trial)
+                self.round,
+                response,
+                self.round,
+                trial=self.trial)
 
     return response
-
 
   def get_function_implementation(self, project_name: str,
                                   function_name: str) -> str:
@@ -208,7 +205,8 @@ class FunctionAnalyzer(base_agent.ADKBaseAgent):
     if self.project_functions is None:
       logger.info(
           "Project functions not initialized. Initializing for project '%s'.",
-          project_name, trial=self.trial)
+          project_name,
+          trial=self.trial)
       functions_list = introspector.query_introspector_all_functions(
           project_name)
 
@@ -224,19 +222,21 @@ class FunctionAnalyzer(base_agent.ADKBaseAgent):
     if (self.project_functions is None or
         function_name not in self.project_functions):
       logger.error("Error: Required function not found for project '%s'.",
-                   project_name, trial=self.trial)
+                   project_name,
+                   trial=self.trial)
       return ""
 
     function_signature = self.project_functions[function_name][
         "function_signature"]
 
-    function_source = introspector.query_introspector_function_source(project_name, function_signature)
+    function_source = introspector.query_introspector_function_source(
+        project_name, function_signature)
 
     self.round += 1
     logger.info('<CHAT RESPONSE:ROUND %02d>%s</CHAT RESPONSE:ROUND %02d>',
-                  self.round,
-                  function_source,
-                  self.round,
-                  trial=self.trial)
+                self.round,
+                function_source,
+                self.round,
+                trial=self.trial)
 
     return function_source
