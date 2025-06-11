@@ -343,11 +343,15 @@ class ADKBaseAgent(BaseAgent):
         session_service=session_service,
     )
 
+    self.round = 0
+
     logger.info("ADK Agent %s created.", self.name, trial=self.trial)
 
   def chat_llm(self, cur_round: int, client: Any, prompt: Prompt,
                trial: int) -> str:
     """Call the agent with the given prompt, running async code in sync."""
+
+    self.round = cur_round
 
     logger.info('<CHAT PROMPT:ROUND %02d>%s</CHAT PROMPT:ROUND %02d>',
                 cur_round,
@@ -377,9 +381,9 @@ class ADKBaseAgent(BaseAgent):
             logger.error("Agent escalated: %s", error_message, trial=self.trial)
 
       logger.info('<CHAT RESPONSE:ROUND %02d>%s</CHAT RESPONSE:ROUND %02d>',
-                  cur_round,
+                  self.round,
                   final_response_text,
-                  cur_round,
+                  self.round,
                   trial=trial)
 
       return final_response_text
