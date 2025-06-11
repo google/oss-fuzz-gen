@@ -16,7 +16,7 @@
 import json
 import subprocess as sp
 import time
-from typing import Optional, Any
+from typing import Any, Optional
 
 import logger
 from agent.base_agent import BaseAgent
@@ -278,13 +278,13 @@ class FunctionToolPrototyper(BaseAgent):
     if tool_call.name == 'list_functions_in_project':
       self._func_handle_get_all_functions_in_project(tool_call, args)
       return 1
-    elif tool_call.name == 'run_commands_in_container':
+    if tool_call.name == 'run_commands_in_container':
       self._func_handle_run_commands_in_container(tool_call, args)
       return 1
-    elif tool_call.name == 'get_source_code_of_function':
+    if tool_call.name == 'get_source_code_of_function':
       self._func_handler_run_get_source_code_of_function(tool_call, args)
       return 1
-    elif tool_call.name == 'test_fuzz_harness_build':
+    if tool_call.name == 'test_fuzz_harness_build':
       self._func_handler_run_harness_build(tool_call, args)
       return 1
     return 0
@@ -388,7 +388,7 @@ class FunctionToolPrototyper(BaseAgent):
           tools_analysed += self.dispatch_tool_call(tool_call)
 
         # If a correct fuzzing harness was built, we can stop execution.
-        if self.fuzzer_build_success:
+        if self.fuzzer_build_success and self.compile_result is not None:
           logger.info('Fuzzer build succeeded, stopping execution.', trial=-1)
           build_result.fuzz_target_source = self.fuzzer_source_code
           self._update_build_result(build_result,

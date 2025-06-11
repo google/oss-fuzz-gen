@@ -78,6 +78,7 @@ INTROSPECTOR_HARNESS_SOURCE_AND_EXEC = ''
 INTROSPECTOR_LANGUAGE_STATS = ''
 INTROSPECTOR_GET_TARGET_FUNCTION = ''
 INTROSPECTOR_CHECK_MACRO = ''
+INTROSPECTOR_ALL_FUNCTIONS = ''
 
 INTROSPECTOR_HEADERS_FOR_FUNC = ''
 INTROSPECTOR_SAMPLE_XREFS = ''
@@ -254,6 +255,7 @@ def query_introspector_for_harness_intrinsics(
       'project': project,
   })
   return _get_data(resp, 'pairs', [])
+
 
 def query_introspector_all_functions(project: str) -> list[str]:
   """Queries FuzzIntrospector API for all functions in a project."""
