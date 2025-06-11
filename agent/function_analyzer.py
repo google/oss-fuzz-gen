@@ -47,11 +47,11 @@ class FunctionAnalyzer(base_agent.ADKBaseAgent):
                benchmark: benchmarklib.Benchmark,\
                name: str = ''):
 
-    description="""
+    description = """
     Extracts a function's requirements
     from its source implementation.
     """
-    instruction= """
+    instruction = """
     You are a security engineer tasked with analyzing a function
     and extracting its input requirements,
     necessary for it to execute correctly.
@@ -61,8 +61,8 @@ class FunctionAnalyzer(base_agent.ADKBaseAgent):
         self.benchmark, self.name)
     tools = [introspector_tool.function_source_with_name]
 
-    super().__init__(trial, llm, args, benchmark, description, instruction, tools)
-
+    super().__init__(trial, llm, args, benchmark, description, instruction,
+                     tools)
 
   def write_requirements_to_file(self, args, requirements: str) -> str:
     """Write the requirements to a file."""
@@ -82,9 +82,8 @@ class FunctionAnalyzer(base_agent.ADKBaseAgent):
 
     return requirement_path
 
-  def handle_llm_response(
-      self, final_response_text: str,
-      result: resultslib.Result) -> None:
+  def handle_llm_response(self, final_response_text: str,
+                          result: resultslib.Result) -> None:
     """Handle the LLM response and update the result."""
 
     result_str = self._parse_tag(final_response_text, 'response')
@@ -114,9 +113,9 @@ class FunctionAnalyzer(base_agent.ADKBaseAgent):
     prompt = self._initial_prompt(result_history)
 
     final_response_text = self.chat_llm(cur_round,
-                                 client=None,
-                                 prompt=prompt,
-                                 trial=result_history[-1].trial)
+                                        client=None,
+                                        prompt=prompt,
+                                        trial=result_history[-1].trial)
 
     self.handle_llm_response(final_response_text, result)
 

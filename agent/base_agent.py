@@ -13,6 +13,7 @@
 # limitations under the License.
 """The abstract base class for LLM agents in stages."""
 import argparse
+import asyncio
 import os
 import random
 import re
@@ -23,10 +24,8 @@ from abc import ABC, abstractmethod
 from typing import Any, Optional
 
 import requests
-
 from google.adk import agents, runners, sessions
-from google.genai import types, errors
-
+from google.genai import errors, types
 
 import logger
 import utils
@@ -36,7 +35,6 @@ from llm_toolkit.models import LLM, VertexAIModel
 from llm_toolkit.prompts import Prompt
 from results import Result
 from tool.base_tool import BaseTool
-import asyncio
 
 
 class BaseAgent(ABC):
@@ -304,14 +302,14 @@ class BaseAgent(ABC):
 class ADKBaseAgent(BaseAgent):
 
   def __init__(self,
-              trial: int,
-              llm: LLM,
-              args: argparse.Namespace,
-              benchmark: benchmarklib.Benchmark,
-              description: str = '',
-              instruction: str = '',
-              tools: list = [],
-              name: str = ''):
+               trial: int,
+               llm: LLM,
+               args: argparse.Namespace,
+               benchmark: benchmarklib.Benchmark,
+               description: str = '',
+               instruction: str = '',
+               tools: list = [],
+               name: str = ''):
 
     super().__init__(trial, llm, args, tools, name)
 
@@ -319,8 +317,7 @@ class ADKBaseAgent(BaseAgent):
 
     # For now, ADKBaseAgents only support the Vertex AI Models.
     if not isinstance(llm, VertexAIModel):
-      raise ValueError(
-          f'{self.name} only supports Vertex AI models.')
+      raise ValueError(f'{self.name} only supports Vertex AI models.')
 
     # Create the agent using the ADK library
     adk_agent = agents.LlmAgent(
@@ -346,9 +343,7 @@ class ADKBaseAgent(BaseAgent):
         session_service=session_service,
     )
 
-    logger.info("ADK Agent %s created.",
-                self.name,
-                trial=self.trial)
+    logger.info("ADK Agent %s created.", self.name, trial=self.trial)
 
   def chat_llm(self, cur_round: int, client: Any, prompt: Prompt,
                trial: int) -> str:
@@ -363,7 +358,8 @@ class ADKBaseAgent(BaseAgent):
     async def _call():
       user_id = self.benchmark.id
       session_id = f"session_{self.trial}"
-      content = types.Content(role='user', parts=[types.Part(text=prompt.get())])
+      content = types.Content(role='user',
+                              parts=[types.Part(text=prompt.get())])
 
       final_response_text = ''
 
@@ -381,15 +377,15 @@ class ADKBaseAgent(BaseAgent):
             logger.error("Agent escalated: %s", error_message, trial=self.trial)
 
       logger.info('<CHAT RESPONSE:ROUND %02d>%s</CHAT RESPONSE:ROUND %02d>',
-                cur_round,
-                final_response_text,
-                cur_round,
-                trial=trial)
+                  cur_round,
+                  final_response_text,
+                  cur_round,
+                  trial=trial)
 
       return final_response_text
 
-    return self.llm.with_retry_on_error(
-        lambda: asyncio.run(_call()), [errors.ClientError])
+    return self.llm.with_retry_on_error(lambda: asyncio.run(_call()),
+                                        [errors.ClientError])
 
 
 if __name__ == "__main__":
