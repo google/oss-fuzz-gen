@@ -534,6 +534,9 @@ def setup_logging():
 
 
 def extract_target_repositories(target_input) -> list[str]:
+  if not target_input:
+    return []
+
   if os.path.isfile(target_input):
     target_repositories = read_targets_file(target_input)
   else:

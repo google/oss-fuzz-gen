@@ -72,11 +72,13 @@ INTROSPECTOR_FUNC_SIG = ''
 INTROSPECTOR_ADDR_TYPE = ''
 INTROSPECTOR_ALL_HEADER_FILES = ''
 INTROSPECTOR_ALL_FUNC_TYPES = ''
+INTROSPECTOR_ALL_TYPE_DEFINITION = ''
 INTROSPECTOR_TEST_SOURCE = ''
 INTROSPECTOR_HARNESS_SOURCE_AND_EXEC = ''
 INTROSPECTOR_LANGUAGE_STATS = ''
 INTROSPECTOR_GET_TARGET_FUNCTION = ''
-INTROSPECTOR_GET_ALL_FUNCTIONS = ''
+INTROSPECTOR_CHECK_MACRO = ''
+INTROSPECTOR_ALL_FUNCTIONS = ''
 
 INTROSPECTOR_HEADERS_FOR_FUNC = ''
 INTROSPECTOR_SAMPLE_XREFS = ''
@@ -115,7 +117,8 @@ def set_introspector_endpoints(endpoint):
       INTROSPECTOR_ORACLE_ALL_TESTS, INTROSPECTOR_JVM_PROPERTIES, \
       INTROSPECTOR_TEST_SOURCE, INTROSPECTOR_HARNESS_SOURCE_AND_EXEC, \
       INTROSPECTOR_JVM_PUBLIC_CLASSES, INTROSPECTOR_LANGUAGE_STATS, \
-      INTROSPECTOR_GET_TARGET_FUNCTION, INTROSPECTOR_GET_ALL_FUNCTIONS
+      INTROSPECTOR_GET_TARGET_FUNCTION, INTROSPECTOR_ALL_TYPE_DEFINITION, \
+      INTROSPECTOR_CHECK_MACRO, INTROSPECTOR_ALL_FUNCTIONS
 
   INTROSPECTOR_ENDPOINT = endpoint
 
@@ -139,6 +142,8 @@ def set_introspector_endpoints(endpoint):
       f'{INTROSPECTOR_ENDPOINT}/addr-to-recursive-dwarf-info')
   INTROSPECTOR_ALL_HEADER_FILES = f'{INTROSPECTOR_ENDPOINT}/all-header-files'
   INTROSPECTOR_ALL_FUNC_TYPES = f'{INTROSPECTOR_ENDPOINT}/func-debug-types'
+  INTROSPECTOR_ALL_TYPE_DEFINITION = (
+      f'{INTROSPECTOR_ENDPOINT}/full-type-definition')
   INTROSPECTOR_HEADERS_FOR_FUNC = (
       f'{INTROSPECTOR_ENDPOINT}/get-header-files-needed-for-function')
   INTROSPECTOR_SAMPLE_XREFS = (
@@ -158,6 +163,8 @@ def set_introspector_endpoints(endpoint):
   INTROSPECTOR_GET_TARGET_FUNCTION = (
       f'{INTROSPECTOR_ENDPOINT}/get-target-function')
   INTROSPECTOR_GET_ALL_FUNCTIONS = f'{INTROSPECTOR_ENDPOINT}/all-functions'
+  INTROSPECTOR_CHECK_MACRO = f'{INTROSPECTOR_ENDPOINT}/check_macro'
+  INTROSPECTOR_ALL_FUNCTIONS = f'{INTROSPECTOR_ENDPOINT}/all-functions'
 
 
 def _construct_url(api: str, params: dict) -> str:
@@ -253,6 +260,23 @@ def query_introspector_for_harness_intrinsics(
   return _get_data(resp, 'pairs', [])
 
 
+def query_introspector_all_functions(project: str) -> list[dict]:
+  """Queries FuzzIntrospector API for all functions in a project."""
+  resp = _query_introspector(INTROSPECTOR_ALL_FUNCTIONS, {
+      'project': project,
+  })
+  return _get_data(resp, 'functions', [])
+
+
+def query_introspector_all_signatures(project: str) -> list[str]:
+  """Queries FuzzIntrospector API for all functions in a project."""
+  functions: list[dict] = query_introspector_all_functions(project)
+  new_funcs = []
+  for func in functions:
+    new_funcs.append(func['function_signature'])
+  return new_funcs
+
+
 def query_introspector_oracle(project: str, oracle_api: str) -> list[dict]:
   """Queries a fuzz target oracle API from Fuzz Introspector."""
   resp = _query_introspector(
@@ -324,14 +348,6 @@ def query_introspector_function_source(project: str, func_sig: str) -> str:
       'function_signature': func_sig
   })
   return _get_data(resp, 'source', '')
-
-
-def query_introspector_all_functions(project: str) -> list[dict]:
-  """Queries FuzzIntrospector API for all functions of |project|."""
-  resp = _query_introspector(INTROSPECTOR_GET_ALL_FUNCTIONS, {
-      'project': project,
-  })
-  return _get_data(resp, 'functions', [])
 
 
 def query_introspector_function_line(project: str, func_sig: str) -> list:
@@ -460,6 +476,33 @@ def query_introspector_function_debug_arg_types(project: str,
   })
   arg_types = _get_data(resp, 'arg-types', [])
   return arg_types
+
+
+def query_introspector_type_definition(project: str) -> List[dict]:
+  """Queries FuzzIntrospector for a full list of custom type definition
+  including, union, struct, typedef, enum and macro definition."""
+  resp = _query_introspector(INTROSPECTOR_ALL_TYPE_DEFINITION, {
+      'project': project,
+  })
+  result = _get_data(resp, 'project', {})
+  return result.get('typedef_list', [])
+
+
+def query_introspector_macro_block(project: str,
+                                   source_path: str,
+                                   line_start: int = 0,
+                                   line_end: int = 99999) -> List[dict]:
+  """Queries FuzzIntrospector for a full list of custom type definition
+  including, union, struct, typedef, enum and macro definition."""
+  resp = _query_introspector(
+      INTROSPECTOR_CHECK_MACRO, {
+          'project': project,
+          'source': source_path,
+          'start': line_start,
+          'end': line_end
+      })
+  result = _get_data(resp, 'project', {})
+  return result.get('macro_block_info', [])
 
 
 def query_introspector_cross_references(project: str,

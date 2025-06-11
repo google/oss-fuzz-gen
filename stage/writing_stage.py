@@ -53,6 +53,7 @@ class WritingStage(BaseStage):
       # First, execute the FunctionAnalyzer agent
       agent = self.get_agent(index=0)
       agent_result = self._execute_agent(agent, result_history)
+      self.logger.write_chat_history(agent_result)
       result_history.append(agent_result)
 
       # Then, execute the Prototyper agent

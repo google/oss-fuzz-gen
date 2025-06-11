@@ -30,7 +30,7 @@ from llm_toolkit.prompts import Prompt
 from results import AnalysisResult, CrashResult, Result, RunResult
 from tool.base_tool import BaseTool
 from tool.container_tool import ProjectContainerTool
-from tool.lldb_tool import LLDBTool
+from tool.gdb_tool import GDBTool
 
 MAX_ROUND = 100
 
@@ -66,31 +66,39 @@ class CrashAnalyzer(BaseAgent):
                  trial=self.trial)
     return prompt_builder.CrashAnalyzerTemplateBuilder(self.llm).build([])
 
-  def _format_lldb_execution_result(
+  def _format_gdb_execution_result(
       self,
-      lldb_command: str,
+      gdb_command: str,
       process: sp.CompletedProcess,
       previous_prompt: Optional[Prompt] = None) -> str:
-    """Formats a prompt based on lldb execution result."""
+    """Formats a prompt based on gdb execution result."""
     if previous_prompt:
       previous_prompt_text = previous_prompt.get()
     else:
       previous_prompt_text = ''
-    stdout = self.llm.truncate_prompt(process.stdout,
+
+    raw_lines = process.stdout.strip().splitlines()
+    if raw_lines and raw_lines[-1].strip().startswith("(gdb)"):
+      raw_lines.pop()
+    if raw_lines:
+      raw_lines[0] = f'(gdb) {raw_lines[0].strip()}'
+    processed_stdout = '\n'.join(raw_lines)
+
+    stdout = self.llm.truncate_prompt(processed_stdout,
                                       previous_prompt_text).strip()
     stderr = self.llm.truncate_prompt(process.stderr,
                                       stdout + previous_prompt_text).strip()
-    return (f'<lldb command>\n{lldb_command.strip()}\n</lldb command>\n'
-            f'<lldb output>\n{stdout}\n</lldb output>\n'
+    return (f'<gdb command>\n{gdb_command.strip()}\n</gdb command>\n'
+            f'<gdb output>\n{stdout}\n</gdb output>\n'
             f'<stderr>\n{stderr}\n</stderr>\n')
 
-  def _container_handle_lldb_command(self, response: str, tool: LLDBTool,
-                                     prompt: Prompt) -> Prompt:
-    """Handles the command from LLM with lldb tool."""
+  def _container_handle_gdb_command(self, response: str, tool: GDBTool,
+                                    prompt: Prompt) -> Prompt:
+    """Handles the command from LLM with gdb tool."""
     prompt_text = ''
-    for command in self._parse_tags(response, 'lldb'):
+    for command in self._parse_tags(response, 'gdb'):
       process = tool.execute_in_screen(command)
-      prompt_text += self._format_lldb_execution_result(
+      prompt_text += self._format_gdb_execution_result(
           command, process, previous_prompt=prompt) + '\n'
       prompt.append(prompt_text)
     return prompt
@@ -103,9 +111,9 @@ class CrashAnalyzer(BaseAgent):
                 trial=self.trial)
 
     conclusion = self._parse_tag(response, 'conclusion')
-    if conclusion == 'Crash is caused by bug in fuzz driver.':
+    if conclusion == 'False':
       crash_result.true_bug = False
-    elif conclusion == 'Crash is caused by bug in project.':
+    elif conclusion == 'True':
       crash_result.true_bug = True
     else:
       logger.error('***** Failed to match conclusion in %02d rounds *****',
@@ -127,11 +135,10 @@ class CrashAnalyzer(BaseAgent):
                                                crash_result)
     prompt = prompt_builder.CrashAnalyzerTemplateBuilder(self.llm,
                                                          None).build([])
-    if self._parse_tag(response, 'lldb'):
-      return self._container_handle_lldb_command(response, self.analyze_tool,
-                                                 prompt)
+    if self._parse_tag(response, 'gdb'):
+      return self._container_handle_gdb_command(response, self.gdb_tool, prompt)
     if self._parse_tag(response, 'bash'):
-      return self._container_handle_bash_command(response, self.check_tool,
+      return self._container_handle_bash_command(response, self.bash_tool,
                                                  prompt)
     return None
 
@@ -152,7 +159,7 @@ class CrashAnalyzer(BaseAgent):
     generated_target_name = os.path.basename(benchmark.target_path)
     sample_id = os.path.splitext(generated_target_name)[0]
     generated_oss_fuzz_project = (
-        f'{benchmark.id}-{sample_id}-lldb-{self.trial:02d}')
+        f'{benchmark.id}-{sample_id}-gdb-{self.trial:02d}')
     generated_oss_fuzz_project = oss_fuzz_checkout.rectify_docker_tag(
         generated_oss_fuzz_project)
 
@@ -169,25 +176,35 @@ class CrashAnalyzer(BaseAgent):
     else:
       build_script_path = ''
 
-    evaluator_lib.Evaluator.create_ossfuzz_project_with_lldb(
+    evaluator_lib.Evaluator.create_ossfuzz_project_with_gdb(
         benchmark, generated_oss_fuzz_project, fuzz_target_path, last_result,
         build_script_path, last_result.artifact_path)
 
-    self.analyze_tool = LLDBTool(benchmark,
-                                 result=last_result,
-                                 name='lldb',
-                                 project_name=generated_oss_fuzz_project)
-    self.analyze_tool.execute('compile > /dev/null')
-    # Launch LLDB and load fuzz target binary
-    self.analyze_tool.execute(f'screen -dmS lldb_session -L '
-                              f'-Logfile /tmp/lldb_log.txt '
-                              f'lldb /out/{last_result.benchmark.target_name}')
-    self.check_tool = ProjectContainerTool(
+    self.gdb_tool = GDBTool(benchmark,
+                            result=last_result,
+                            name='gdb',
+                            project_name=generated_oss_fuzz_project)
+    #TODO(dongge): Use a dedicated debugger image, which has the binary and
+    #source code.
+    self.gdb_tool.execute(
+        'apt update && '
+        'apt install -y software-properties-common && '
+        'add-apt-repository -y ppa:ubuntu-toolchain-r/test && '
+        'apt update && '
+        'apt install -y gdb screen')
+    self.gdb_tool.execute('export CFLAGS="$CFLAGS -g -O0"')
+    self.gdb_tool.execute('export CXXFLAGS="$CXXFLAGS -g -O0"')
+    self.gdb_tool.execute('compile > /dev/null')
+    # Launch GDB and load fuzz target binary
+    self.gdb_tool.execute(f'screen -dmS gdb_session -L '
+                          f'-Logfile /tmp/gdb_log.txt '
+                          f'gdb /out/{last_result.benchmark.target_name}')
+    self.bash_tool = ProjectContainerTool(
         benchmark, name='check', project_name=generated_oss_fuzz_project)
-    self.check_tool.compile(extra_commands=' && rm -rf /out/* > /dev/null')
+    self.bash_tool.compile(extra_commands=' && rm -rf /out/* > /dev/null')
     prompt = self._initial_prompt(result_history)
-    prompt.add_problem(self.analyze_tool.tutorial())
-    prompt.add_problem(self.check_tool.tutorial())
+    prompt.add_problem(self.gdb_tool.tutorial())
+    prompt.add_problem(self.bash_tool.tutorial())
     crash_result = CrashResult(benchmark=benchmark,
                                trial=last_result.trial,
                                work_dirs=last_result.work_dirs,
@@ -208,9 +225,9 @@ class CrashAnalyzer(BaseAgent):
     finally:
       # Cleanup: stop the container
       logger.debug('Stopping the crash analyze container %s',
-                   self.analyze_tool.container_id,
+                   self.gdb_tool.container_id,
                    trial=self.trial)
-      self.analyze_tool.terminate()
+      self.gdb_tool.terminate()
 
     analysis_result = AnalysisResult(
         author=self,

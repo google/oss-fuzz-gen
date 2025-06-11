@@ -13,6 +13,7 @@
 # limitations under the License.
 """The abstract base class for LLM agents in stages."""
 import argparse
+import asyncio
 import os
 import random
 import re
@@ -23,11 +24,14 @@ from abc import ABC, abstractmethod
 from typing import Any, Optional
 
 import requests
+from google.adk import agents, runners, sessions
+from google.genai import errors, types
 
 import logger
 import utils
 from data_prep import introspector
-from llm_toolkit.models import LLM
+from experiment import benchmark as benchmarklib
+from llm_toolkit.models import LLM, VertexAIModel
 from llm_toolkit.prompts import Prompt
 from results import Result
 from tool.base_tool import BaseTool
@@ -66,7 +70,7 @@ class BaseAgent(ABC):
     logger.info(
         '<CHAT WITH TOOLS PROMPT:ROUND %02d>%s</CHAT PROMPT:ROUND %02d>',
         trial,
-        prompt.gettext() if prompt else '',
+        prompt.get() if prompt else '',
         trial,
         trial=trial)
     response = self.llm.chat_llm_with_tools(client=client,
@@ -293,6 +297,95 @@ class BaseAgent(ABC):
   @abstractmethod
   def execute(self, result_history: list[Result]) -> Result:
     """Executes the agent based on previous result."""
+
+
+class ADKBaseAgent(BaseAgent):
+
+  def __init__(self,
+               trial: int,
+               llm: LLM,
+               args: argparse.Namespace,
+               benchmark: benchmarklib.Benchmark,
+               description: str = '',
+               instruction: str = '',
+               tools: list = [],
+               name: str = ''):
+
+    super().__init__(trial, llm, args, tools, name)
+
+    self.benchmark = benchmark
+
+    # For now, ADKBaseAgents only support the Vertex AI Models.
+    if not isinstance(llm, VertexAIModel):
+      raise ValueError(f'{self.name} only supports Vertex AI models.')
+
+    # Create the agent using the ADK library
+    adk_agent = agents.LlmAgent(
+        name=name,
+        model=llm._vertex_ai_model,
+        description=description,
+        instruction=instruction,
+        tools=tools,
+    )
+
+    # Create the session service
+    session_service = sessions.InMemorySessionService()
+    session_service.create_session(
+        app_name=self.name,
+        user_id=benchmark.id,
+        session_id=f"session_{self.trial}",
+    )
+
+    # Create the runner
+    self.runner = runners.Runner(
+        agent=adk_agent,
+        app_name=self.name,
+        session_service=session_service,
+    )
+
+    logger.info("ADK Agent %s created.", self.name, trial=self.trial)
+
+  def chat_llm(self, cur_round: int, client: Any, prompt: Prompt,
+               trial: int) -> str:
+    """Call the agent with the given prompt, running async code in sync."""
+
+    logger.info('<CHAT PROMPT:ROUND %02d>%s</CHAT PROMPT:ROUND %02d>',
+                cur_round,
+                prompt.gettext(),
+                cur_round,
+                trial=trial)
+
+    async def _call():
+      user_id = self.benchmark.id
+      session_id = f"session_{self.trial}"
+      content = types.Content(role='user',
+                              parts=[types.Part(text=prompt.get())])
+
+      final_response_text = ''
+
+      async for event in self.runner.run_async(
+          user_id=user_id,
+          session_id=session_id,
+          new_message=content,
+      ):
+        if event.is_final_response():
+          if (event.content and event.content.parts and
+              event.content.parts[0].text):
+            final_response_text = event.content.parts[0].text
+          elif event.actions and event.actions.escalate:
+            error_message = event.error_message
+            logger.error("Agent escalated: %s", error_message, trial=self.trial)
+
+      logger.info('<CHAT RESPONSE:ROUND %02d>%s</CHAT RESPONSE:ROUND %02d>',
+                  cur_round,
+                  final_response_text,
+                  cur_round,
+                  trial=trial)
+
+      return final_response_text
+
+    return self.llm.with_retry_on_error(lambda: asyncio.run(_call()),
+                                        [errors.ClientError])
 
 
 if __name__ == "__main__":
