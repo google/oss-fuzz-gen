@@ -66,7 +66,7 @@ class BaseAgent(ABC):
     logger.info(
         '<CHAT WITH TOOLS PROMPT:ROUND %02d>%s</CHAT PROMPT:ROUND %02d>',
         trial,
-        prompt.gettext() if prompt else '',
+        prompt.get() if prompt else '',
         trial,
         trial=trial)
     response = self.llm.chat_llm_with_tools(client=client,

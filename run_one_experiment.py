@@ -30,6 +30,7 @@ from agent.enhancer import Enhancer
 from agent.one_prompt_enhancer import OnePromptEnhancer
 from agent.one_prompt_prototyper import OnePromptPrototyper
 from agent.prototyper import Prototyper
+from agent.function_based_prototyper import FunctionToolPrototyper
 from agent.semantic_analyzer import SemanticAnalyzer
 from experiment import builder_runner as builder_runner_lib
 from experiment import evaluator as exp_evaluator
@@ -243,11 +244,33 @@ def _fuzzing_pipeline(benchmark: Benchmark, model: models.LLM,
   """Runs the predefined 3-stage pipeline for one trial."""
   trial_logger = logger.get_trial_logger(trial=trial, level=logging.DEBUG)
   trial_logger.info('Trial Starts')
-  if args.agent:
+
+  # Support custom pipeline.
+  if args.custom_pipeline == 'function_based_prototyper':
     p = pipeline.Pipeline(args=args,
                           trial=trial,
                           writing_stage_agents=[
-                              Prototyper(trial=trial, llm=model, args=args),
+                              FunctionToolPrototyper(trial=trial,
+                                                     llm=model,
+                                                     args=args),
+                              Enhancer(trial=trial, llm=model, args=args),
+                          ],
+                          analysis_stage_agents=[
+                              SemanticAnalyzer(trial=trial,
+                                               llm=model,
+                                               args=args),
+                              CoverageAnalyzer(trial=trial,
+                                               llm=model,
+                                               args=args),
+                              CrashAnalyzer(trial=trial, llm=model, args=args),
+                          ])
+  elif args.agent:
+    p = pipeline.Pipeline(args=args,
+                          trial=trial,
+                          writing_stage_agents=[
+                              FunctionToolPrototyper(trial=trial,
+                                                     llm=model,
+                                                     args=args),
                               Enhancer(trial=trial, llm=model, args=args),
                           ],
                           analysis_stage_agents=[
