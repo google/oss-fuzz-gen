@@ -198,8 +198,7 @@ class FunctionToolPrototyper(BaseAgent):
     commands = args['command']
     logger.info('LLM Requested commands: %s', commands, trial=-1)
     result = self.inspect_tool.execute(commands)
-    prompt_text = self._format_bash_execution_result(
-        result)
+    prompt_text = self._format_bash_execution_result(result)
 
     # Extend messages to prepare for next iteration.
     self.new_llm_messages.append(tool_call)
@@ -263,7 +262,7 @@ class FunctionToolPrototyper(BaseAgent):
 
   def dispatch_tool_call(self, tool_call) -> int:
     """Dispatches the tool call to the appropriate function."""
-    logger.info('#' * 20 + ' Tool call ' + '#'*20, trial=-1)
+    logger.info('#' * 20 + ' Tool call ' + '#' * 20, trial=-1)
     args = self._load_tool_arguments(tool_call)
     logger.info('Dispatching tool call: %s', tool_call.name, trial=-1)
     logger.info('Tool call arguments: %s', args, trial=-1)
