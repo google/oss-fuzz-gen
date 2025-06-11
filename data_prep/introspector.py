@@ -267,6 +267,7 @@ def query_introspector_all_functions(project: str) -> list[dict]:
   })
   return _get_data(resp, 'functions', [])
 
+
 def query_introspector_all_signatures(project: str) -> list[str]:
   """Queries FuzzIntrospector API for all functions in a project."""
   functions: list[dict] = query_introspector_all_functions(project)
