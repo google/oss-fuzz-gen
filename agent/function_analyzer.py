@@ -59,10 +59,9 @@ class FunctionAnalyzer(base_agent.ADKBaseAgent):
 
     introspector_tool = fuzz_introspector_tool.FuzzIntrospectorTool(
         self.benchmark, self.name)
-    tools=[
-            introspector_tool.get_function_implementation,
-            self.search_project_files
-        ]
+    tools = [
+        introspector_tool.get_function_implementation, self.search_project_files
+    ]
 
     super().__init__(trial, llm, args, benchmark, description, instruction,
                      tools)
