@@ -34,7 +34,7 @@ from llm_toolkit import models, prompt_builder, prompts
 from tool import base_tool, fuzz_introspector_tool
 
 
-class FunctionAnalyzer(base_agent.BaseAgent):
+class FunctionAnalyzer(base_agent.ADKBaseAgent):
   """An LLM agent to analyze a function and identify its implicit requirements.
   The results of this analysis will be used by the writer agents to
   generate correct fuzz target for the function.
@@ -44,98 +44,25 @@ class FunctionAnalyzer(base_agent.BaseAgent):
                trial: int,
                llm: models.LLM,
                args: argparse.Namespace,
-               benchmark: benchmarklib.Benchmark,
-               tools: Optional[list[base_tool.BaseTool]] = None,
+               benchmark: benchmarklib.Benchmark,\
                name: str = ''):
 
-    # Ensure the llm is an instance of VertexAIModel
-    # TODO (pamusuo): Provide support for other LLM models
-    if not isinstance(llm, models.VertexAIModel):
-      raise ValueError(
-          "FunctionAnalyzer agent requires a VertexAIModel instance for llm.")
+    description="""
+    Extracts a function's requirements
+    from its source implementation.
+    """
+    instruction= """
+    You are a security engineer tasked with analyzing a function
+    and extracting its input requirements,
+    necessary for it to execute correctly.
+    """
 
-    super().__init__(trial, llm, args, tools, name)
-
-    self.vertex_ai_model = llm._vertex_ai_model
-    self.benchmark = benchmark
-
-    self.initialize()
-
-  def initialize(self):
-    """Initialize the function analyzer agent with the given benchmark."""
-
-    # Initialize the Fuzz Introspector tool
     introspector_tool = fuzz_introspector_tool.FuzzIntrospectorTool(
         self.benchmark, self.name)
+    tools = [introspector_tool.function_source_with_name]
 
-    # Create the agent using the ADK library
-    # TODO(pamusuo): Create another AdkBaseAgent that extends
-    # BaseAgent and initializes an ADK agent as well.
-    function_analyzer = agents.LlmAgent(
-        name="FunctionAnalyzer",
-        model=self.vertex_ai_model,
-        description="""Extracts a function's requirements
-                        from its source implementation.""",
-        instruction=
-        """You are a security engineer tasked with analyzing a function
-        and extracting its input requirements,
-        necessary for it to execute correctly.""",
-        tools=[introspector_tool.function_source_with_name],
-    )
+    super().__init__(trial, llm, args, benchmark, description, instruction, tools)
 
-    # Create the session service
-    session_service = sessions.InMemorySessionService()
-    session_service.create_session(
-        app_name=self.name,
-        user_id=self.benchmark.id,
-        session_id=f"session_{self.trial}",
-    )
-
-    # Create the runner
-    self.runner = runners.Runner(
-        agent=function_analyzer,
-        app_name=self.name,
-        session_service=session_service,
-    )
-
-    logger.info("Function Analyzer Agent created, with name: %s",
-                self.name,
-                trial=self.trial)
-
-  async def call_agent(self, query: str, runner: runners.Runner, user_id: str,
-                       session_id: str) -> str:
-    """Call the agent asynchronously with the given query."""
-
-    content = types.Content(role='user', parts=[types.Part(text=query)])
-
-    final_response_text = ''
-
-    result_available = False
-
-    async for event in runner.run_async(
-        user_id=user_id,
-        session_id=session_id,
-        new_message=content,
-    ):
-
-      if event.is_final_response():
-        if (event.content and event.content.parts and
-            event.content.parts[0].text):
-          final_response_text = event.content.parts[0].text
-          result_available = True
-        elif event.actions and event.actions.escalate:
-          error_message = event.error_message
-          logger.error("Agent escalated: %s", error_message, trial=self.trial)
-
-    logger.info("<<< Agent response: %s", final_response_text, trial=self.trial)
-
-    if result_available and self._parse_tag(final_response_text, 'response'):
-      # Get the requirements from the response
-      result_str = self._parse_tag(final_response_text, 'response')
-    else:
-      result_str = ''
-
-    return result_str
 
   def write_requirements_to_file(self, args, requirements: str) -> str:
     """Write the requirements to a file."""
@@ -154,6 +81,19 @@ class FunctionAnalyzer(base_agent.BaseAgent):
                 trial=self.trial)
 
     return requirement_path
+
+  def handle_llm_response(
+      self, final_response_text: str,
+      result: resultslib.Result) -> None:
+    """Handle the LLM response and update the result."""
+
+    result_str = self._parse_tag(final_response_text, 'response')
+    requirements = self._parse_tag(result_str, 'requirements')
+    if requirements:
+      # Write the requirements to a file
+      requirement_path = self.write_requirements_to_file(self.args, result_str)
+      function_analysis = resultslib.FunctionAnalysisResult(requirement_path)
+      result.function_analysis = function_analysis
 
   def execute(self,
               result_history: list[resultslib.Result]) -> resultslib.Result:
@@ -179,18 +119,9 @@ class FunctionAnalyzer(base_agent.BaseAgent):
           trial=self.trial)
       return result
 
-    logger.info("Initial prompt created. Calling LLM...", trial=self.trial)
+    final_response_text = self.query_llm(query)
 
-    user_id = self.benchmark.id
-    session_id = f"session_{self.trial}"
-    result_str = asyncio.run(
-        self.call_agent(query, self.runner, user_id, session_id))
-
-    if result_str:
-      # Write the requirements to a file
-      requirement_path = self.write_requirements_to_file(self.args, result_str)
-      function_analysis = resultslib.FunctionAnalysisResult(requirement_path)
-      result.function_analysis = function_analysis
+    self.handle_llm_response(final_response_text, result)
 
     return result
 
