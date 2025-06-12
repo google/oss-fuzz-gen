@@ -37,9 +37,12 @@ from tool.base_tool import BaseTool
 from tool.container_tool import ProjectContainerTool
 
 FIXER_TOOLS = [{
-    'type': 'function',
-    'name': 'test_build_script',
-    'description': 'Tests a build script against target project.',
+    'type':
+        'function',
+    'name':
+        'test_build_script',
+    'description':
+        'Tests a build script against target project. Use this for tesing build scripts that you suspect might work.',
     'parameters': {
         'type': 'object',
         'properties': {
@@ -74,9 +77,12 @@ FIXER_TOOLS = [{
         'additionalProperties': False
     }
 }, {
-    'type': 'function',
-    'name': 'run_commands_in_container',
-    'description': 'Runs a command string in the project container.',
+    'type':
+        'function',
+    'name':
+        'run_commands_in_container',
+    'description':
+        'Runs a command string in the project container. Use this for exploring the target project, such as running commands to inspect the project or its dependencies.',
     'parameters': {
         'type': 'object',
         'properties': {
@@ -117,20 +123,39 @@ class BuildFixAgent(BaseAgent):
 
     self.success_build_script = ''
 
-    self.projet_language = oss_fuzz_checkout.get_project_language(
+    self.project_language = oss_fuzz_checkout.get_project_language(
         self.project_name)
+
+  def _strip_license_from_file(self, file_content: str) -> str:
+    """Strips the license header from a file content."""
+    # Strip first comments in a file.
+    new_content = ''
+    past_license = False
+    for line in file_content.splitlines():
+      if past_license:
+        new_content += line + '\n'
+        continue
+
+      if '#################' in line:
+        past_license = True
+        continue
+
+      if line.startswith('#') and 'bash' not in line or 'python' not in line:
+        continue
+      new_content += line + '\n'
+    return new_content
 
   def _initial_prompt(self, results: list[Result], is_tools: bool = True):  # pylint: disable=unused-argument
     """Creates the initial prompt for the build fixer agent."""
     with open(
         os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR, 'projects',
                      self.project_name, 'build.sh'), 'r') as f:
-      build_script = f.read()
+      build_script = self._strip_license_from_file(f.read())
 
     with open(
         os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR, 'projects',
                      self.project_name, 'Dockerfile'), 'r') as f:
-      dockerfile = f.read()
+      dockerfile = self._strip_license_from_file(f.read())
 
     prompt = self.llm.prompt_type()(None)
 
@@ -145,9 +170,12 @@ class BuildFixAgent(BaseAgent):
     template_prompt = template_prompt.replace('{MAX_DISCOVERY_ROUND}',
                                               str(self.args.max_round))
 
-    if self.projet_language.lower() == 'python':
+    if self.project_language.lower() == 'python':
       template_prompt = template_prompt.replace('{LANGUAGE_SPECIFICS}',
                                                 templates.PYTHON_SPECIFICS)
+    elif self.project_language.lower() in ['c', 'c++']:
+      template_prompt = template_prompt.replace('{LANGUAGE_SPECIFICS}',
+                                                templates.C_CPP_SPECIFICS)
     else:
       template_prompt = template_prompt.replace('{LANGUAGE_SPECIFICS}', '')
     #prompt.add_priming(template_prompt)
@@ -673,6 +701,10 @@ def fix_build(args, oss_fuzz_base, use_tools: bool = True):
 
   project_name = args.project
   oss_fuzz_checkout.OSS_FUZZ_DIR = oss_fuzz_base
+
+  # Disabling caching
+  oss_fuzz_checkout.ENABLE_CACHING = False
+
   work_dirs = WorkDirs(args.work_dirs, keep=True)
 
   # Prepare LLM model
