@@ -108,11 +108,12 @@ class FunctionAnalyzer(base_agent.ADKBaseAgent):
 
     cur_round = 1
 
-    # Call the agent asynchronously and return the result
-    prompt = self._initial_prompt(result_history)
     # Initialize the ProjectContainerTool for local file search
     self.inspect_tool = container_tool.ProjectContainerTool(self.benchmark)
     self.inspect_tool.compile(extra_commands=' && rm -rf /out/* > /dev/null')
+
+    # Call the agent asynchronously and return the result
+    prompt = self._initial_prompt(result_history)
 
     final_response_text = self.chat_llm(cur_round,
                                         client=None,
