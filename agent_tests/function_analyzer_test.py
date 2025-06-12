@@ -120,7 +120,7 @@ if __name__ == "__main__":
   args = parse_args()
 
   # Initialize the working directory
-  args.work_dirs = workdir.WorkDirs(args.work_dir, create_children_dirs=False)
+  args.work_dirs = workdir.WorkDirs(args.work_dir)
 
   # Initialize benchmarks
   benchmarks: List[

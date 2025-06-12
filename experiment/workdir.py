@@ -28,8 +28,7 @@ class WorkDirs:
 
   def __init__(self,
                base_dir,
-               keep: bool = False,
-               create_children_dirs: bool = True):
+               keep: bool = False):
     self._base_dir = os.path.realpath(base_dir)
     if os.path.exists(self._base_dir) and not keep:
       # Clear existing directory.
@@ -37,17 +36,16 @@ class WorkDirs:
 
     os.makedirs(self._base_dir, exist_ok=True)
 
-    if create_children_dirs:
-      os.makedirs(self.status, exist_ok=True)
-      os.makedirs(self.raw_targets, exist_ok=True)
-      os.makedirs(self.fixed_targets, exist_ok=True)
-      os.makedirs(self.build_logs, exist_ok=True)
-      os.makedirs(self.run_logs, exist_ok=True)
-      os.makedirs(self._corpus_base, exist_ok=True)
-      os.makedirs(self.dills, exist_ok=True)
-      os.makedirs(self.fuzz_targets, exist_ok=True)
-      os.makedirs(self._artifact_base, exist_ok=True)
-      os.makedirs(self.requirements, exist_ok=True)
+    os.makedirs(self.status, exist_ok=True)
+    os.makedirs(self.raw_targets, exist_ok=True)
+    os.makedirs(self.fixed_targets, exist_ok=True)
+    os.makedirs(self.build_logs, exist_ok=True)
+    os.makedirs(self.run_logs, exist_ok=True)
+    os.makedirs(self._corpus_base, exist_ok=True)
+    os.makedirs(self.dills, exist_ok=True)
+    os.makedirs(self.fuzz_targets, exist_ok=True)
+    os.makedirs(self._artifact_base, exist_ok=True)
+    os.makedirs(self.requirements, exist_ok=True)
 
   def __repr__(self) -> str:
     return self._base_dir
