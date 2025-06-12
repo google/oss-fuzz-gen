@@ -1,17 +1,17 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Summary table expand/collapse buttons
-    const summaryExpandAllButton = document.getElementById('summary-expand-all');
-    if (summaryExpandAllButton) {
-        summaryExpandAllButton.addEventListener('click', () => {
+    // Project summary table expand/collapse buttons
+    const projectSummaryExpandAllButton = document.getElementById('project-summary-expand-all');
+    if (projectSummaryExpandAllButton) {
+        projectSummaryExpandAllButton.addEventListener('click', () => {
             document.querySelectorAll('[x-ref^="benchmarks_"]').forEach(el => {
                 el.classList.remove('hidden');
             });
         });
     }
 
-    const summaryCollapseAllButton = document.getElementById('summary-collapse-all');
-    if (summaryCollapseAllButton) {
-        summaryCollapseAllButton.addEventListener('click', () => {
+    const projectSummaryCollapseAllButton = document.getElementById('project-summary-collapse-all');
+    if (projectSummaryCollapseAllButton) {
+        projectSummaryCollapseAllButton.addEventListener('click', () => {
             document.querySelectorAll('[x-ref^="benchmarks_"]').forEach(el => {
                 el.classList.add('hidden');
             });
@@ -112,7 +112,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 let sortableUnits = [];
                 let appendedRows = [];
 
-                if (table_element.id === 'summary-table') {
+                if (table_element.id === 'project-summary-table') {
                     for (let i = 0; i < allRowsInBody.length; i += 2) {
                         if (allRowsInBody[i] && allRowsInBody[i+1] &&
                             allRowsInBody[i].classList.contains('project-data-row') &&

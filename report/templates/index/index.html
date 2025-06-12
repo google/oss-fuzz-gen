@@ -30,11 +30,32 @@ limitations under the License.
 {% endif %}
 
 <div x-data="{
+    benchmarkOpen: true,
     projectOpen: true,
     languageOpen: true,
     crashesFoundOpen: true,
     ofgMetricsOpen: true,
 }" class="space-y-2">
+
+    <div class="border rounded-lg toc-section">
+        <button @click="benchmarkOpen = !benchmarkOpen"
+                class="w-full p-4 flex justify-between items-center">
+            <span class="text-lg font-bold">
+                Benchmark summary
+            </span>    
+            <svg class="w-5 h-5 transform transition-transform duration-200"
+                 :class="{'rotate-180': projectOpen}"
+                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+        </button>
+
+        <div x-show="benchmarkOpen"
+            class="p-4 border-t">
+            
+        </div>
+    
+    </div>
 
     <div class="border rounded-lg toc-section">
         <button @click="projectOpen = !projectOpen"
@@ -53,17 +74,17 @@ limitations under the License.
 
             <div class="flex justify-between">
                 <div class="controls flex gap-2">
-                    <button id="summary-expand-all" class="border rounded-lg p-5">
+                    <button id="project-summary-expand-all" class="border rounded-lg p-5">
                         Expand All
                     </button>
-                    <button id="summary-collapse-all" class="border rounded-lg p-5">
+                    <button id="project-summary-collapse-all" class="border rounded-lg p-5">
                         Collapse All
                     </button>
                 </div>
             </div>
 
             <div class="overflow-x-auto">
-                <table class="sortable-table min-w-full" id="summary-table">
+                <table class="sortable-table min-w-full" id="project-summary-table">
                     <thead>
                         <tr>
                             <th></th>
