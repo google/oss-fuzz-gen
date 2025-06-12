@@ -63,6 +63,8 @@ class FunctionAnalyzer(base_agent.ADKBaseAgent):
     super().__init__(trial, llm, args, benchmark, description, instruction,
                      tools)
 
+    self.project_functions = None
+
   def write_requirements_to_file(self, args, requirements: str) -> str:
     """Write the requirements to a file."""
     if not requirements:
