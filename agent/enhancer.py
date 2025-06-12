@@ -17,6 +17,7 @@ Use it as a usual module locally, or as script in cloud builds.
 import logger
 from agent.prototyper import Prototyper
 from llm_toolkit.prompt_builder import (CoverageEnhancerTemplateBuilder,
+                                        CrashEnhancerTemplateBuilder,
                                         EnhancerTemplateBuilder,
                                         JvmFixingBuilder)
 from llm_toolkit.prompts import Prompt, TextPrompt
@@ -59,6 +60,12 @@ class Enhancer(Prototyper):
         error_desc, errors = last_result.semantic_result.get_error_info()
         builder = EnhancerTemplateBuilder(self.llm, benchmark,
                                           last_build_result, error_desc, errors)
+      elif last_result.crash_result:
+        crash_result = last_result.crash_result
+        builder = CrashEnhancerTemplateBuilder(self.llm, benchmark,
+                                          last_build_result,
+                                          crash_result.insight,
+                                          crash_result.stacktrace)
       elif last_result.coverage_result:
         builder = CoverageEnhancerTemplateBuilder(
             self.llm,

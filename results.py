@@ -317,10 +317,12 @@ class AnalysisResult(Result):
                semantic_result: Optional[SemanticCheckResult] = None,
                crash_result: Optional[CrashResult] = None,
                coverage_result: Optional[CoverageResult] = None,
-               chat_history: Optional[dict] = None) -> None:
+               chat_history: Optional[dict] = None,
+               default_success: bool = False) -> None:
     super().__init__(run_result.benchmark, run_result.trial,
                      run_result.work_dirs, run_result.fuzz_target_source,
-                     run_result.build_script_source, author, chat_history)
+                     run_result.build_script_source, author, chat_history,
+                     default_success)
     self.run_result = run_result
     self.semantic_result = semantic_result
     self.crash_result = crash_result
