@@ -540,7 +540,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
         section.id = `section-${index}`;
         sectionLi.appendChild(sectionLink);
 
-        const subsectionButtons = section.querySelectorAll('button.toc-subsection');
+        const subsectionButtons = section.querySelectorAll('.toc-subsection');
         if (subsectionButtons.length > 0) {
             const subsectionsUl = document.createElement('ul');
 
