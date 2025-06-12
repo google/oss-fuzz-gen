@@ -321,7 +321,7 @@ class ADKBaseAgent(BaseAgent):
 
     # Create the agent using the ADK library
     adk_agent = agents.LlmAgent(
-        name=name,
+        name=self.name,
         model=llm._vertex_ai_model,
         description=description,
         instruction=instruction,
