@@ -209,7 +209,8 @@ class CrashAnalyzer(BaseAgent):
                                trial=last_result.trial,
                                work_dirs=last_result.work_dirs,
                                author=self,
-                               chat_history={self.name: ''})
+                               chat_history={self.name: ''},
+                               stacktrace=last_result.run_error)
     cur_round = 1
     try:
       client = self.llm.get_chat_client(model=self.llm.get_model())
@@ -233,5 +234,6 @@ class CrashAnalyzer(BaseAgent):
         author=self,
         run_result=last_result,
         crash_result=crash_result,
-        chat_history={self.name: crash_result.to_dict()})
+        chat_history={self.name: crash_result.to_dict()},
+        default_success=crash_result.true_bug)
     return analysis_result
