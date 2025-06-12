@@ -213,7 +213,7 @@ class FunctionToolPrototyper(BaseAgent):
     """Handles getting all functions in the project."""
     logger.info('Handling list_functions_in_project: %s', args, trial=-1)
 
-    functions = introspector.query_introspector_all_functions(
+    functions = introspector.query_introspector_all_signatures(
         self.benchmark.project)
     logger.info('Functions in project: %s', functions, trial=-1)
     # Extend messages to prepare for next iteration.
