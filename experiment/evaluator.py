@@ -305,12 +305,12 @@ class Evaluator:
     return generated_project_path
 
   @staticmethod
-  def create_ossfuzz_project_with_lldb(benchmark: Benchmark,
-                                       name: str,
-                                       target_file: str,
-                                       run_result: results.RunResult,
-                                       build_script_path: str = '',
-                                       artifact_path: str = '') -> str:
+  def create_ossfuzz_project_with_gdb(benchmark: Benchmark,
+                                      name: str,
+                                      target_file: str,
+                                      run_result: results.RunResult,
+                                      build_script_path: str = '',
+                                      artifact_path: str = '') -> str:
     """Creates an OSS-Fuzz project with the generated target and new dockerfile.
     The new project will replicate an existing project |name| but replace its
     fuzz target and build script with the new |target_file| and
@@ -324,7 +324,7 @@ class Evaluator:
         artifact_path,
         os.path.join(generated_project_path, os.path.basename(artifact_path)))
     # Add additional statement in dockerfile to copy testcase,
-    # enable -g, install lldb and screen
+    # enable -g, install gdb and screen
     with open(os.path.join(generated_project_path, 'Dockerfile'), 'a') as f:
       f.write(
           '\nRUN mkdir -p /artifact\n'
@@ -332,7 +332,7 @@ class Evaluator:
           '\nENV CFLAGS="${CFLAGS} -g -O0"\n'
           '\nENV CXXFLAGS="${CXXFLAGS} -g -O0"\n'
           '\nRUN apt-get update\n'
-          '\nRUN apt-get install -y lldb\n'
+          '\nRUN apt-get install -y gdb\n'
           '\nRUN apt-get install -y screen\n')
 
     return name
