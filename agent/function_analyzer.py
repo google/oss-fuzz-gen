@@ -125,9 +125,6 @@ class FunctionAnalyzer(base_agent.ADKBaseAgent):
   def _initial_prompt(
       self,
       results: Optional[list[resultslib.Result]] = None) -> prompts.Prompt:
-  def _initial_prompt(
-      self,
-      results: Optional[list[resultslib.Result]] = None) -> prompts.Prompt:
     """Create the initial prompt for the agent."""
 
     # Initialize the prompt builder
