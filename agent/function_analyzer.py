@@ -108,8 +108,6 @@ class FunctionAnalyzer(base_agent.ADKBaseAgent):
         work_dirs=self.args.work_dirs,
     )
 
-    cur_round = 1
-
     # Initialize the ProjectContainerTool for local file search
     self.inspect_tool = container_tool.ProjectContainerTool(self.benchmark)
     self.inspect_tool.compile(extra_commands=' && rm -rf /out/* > /dev/null')
@@ -117,7 +115,7 @@ class FunctionAnalyzer(base_agent.ADKBaseAgent):
     # Call the agent asynchronously and return the result
     prompt = self._initial_prompt(result_history)
 
-    final_response_text = self.chat_llm(cur_round,
+    final_response_text = self.chat_llm(self.round,
                                         client=None,
                                         prompt=prompt,
                                         trial=result_history[-1].trial)
@@ -153,11 +151,7 @@ class FunctionAnalyzer(base_agent.ADKBaseAgent):
       str: The response from executing the bash commands, formatted using the <bash>, <stdout> and <stderr> tags.
     """
 
-    logger.info('<CHAT PROMPT:ROUND %02d>%s</CHAT PROMPT:ROUND %02d>',
-                self.round,
-                request,
-                self.round,
-                trial=self.trial)
+    self.log_llm_response(request)
 
     prompt = prompt_builder.DefaultTemplateBuilder(self.llm, None).build([])
 
@@ -170,17 +164,11 @@ class FunctionAnalyzer(base_agent.ADKBaseAgent):
       prompt = self._container_handle_invalid_tool_usage(
           self.inspect_tool, 0, request, prompt)
 
-    response = prompt.get()
+    tool_response = prompt.get()
 
-    # TODO(pamusuo): Move this logging to ADKBaseAgent.
-    self.round += 1
-    logger.info('<CHAT RESPONSE:ROUND %02d>%s</CHAT RESPONSE:ROUND %02d>',
-                self.round,
-                response,
-                self.round,
-                trial=self.trial)
+    self.log_llm_prompt(tool_response)
 
-    return response
+    return tool_response
 
   def get_function_implementation(self, project_name: str,
                                   function_name: str) -> str:
@@ -196,14 +184,12 @@ class FunctionAnalyzer(base_agent.ADKBaseAgent):
         str: Source code of the function if found, otherwise an empty string.
     """
     request = f"""
-    Retrieve the source code of the function '{function_name}' from the project '{project_name}'.
-    """
+      Requesting implementation for the function:
+      Function name: {function_name}
+      Project name: {project_name}
+      """
 
-    logger.info('<CHAT PROMPT:ROUND %02d> %s </CHAT PROMPT:ROUND %02d>',
-                self.round,
-                request,
-                self.round,
-                trial=self.trial)
+    self.log_llm_response(request)
 
     if self.project_functions is None:
       logger.info(
@@ -235,11 +221,6 @@ class FunctionAnalyzer(base_agent.ADKBaseAgent):
     function_source = introspector.query_introspector_function_source(
         project_name, function_signature)
 
-    self.round += 1
-    logger.info('<CHAT RESPONSE:ROUND %02d>%s</CHAT RESPONSE:ROUND %02d>',
-                self.round,
-                function_source,
-                self.round,
-                trial=self.trial)
+    self.log_llm_prompt(function_source)
 
     return function_source

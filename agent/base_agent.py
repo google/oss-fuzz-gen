@@ -353,11 +353,7 @@ class ADKBaseAgent(BaseAgent):
 
     self.round = cur_round
 
-    logger.info('<CHAT PROMPT:ROUND %02d>%s</CHAT PROMPT:ROUND %02d>',
-                cur_round,
-                prompt.gettext(),
-                cur_round,
-                trial=trial)
+    self.log_llm_prompt(prompt.get())
 
     async def _call():
       user_id = self.benchmark.id
@@ -380,16 +376,28 @@ class ADKBaseAgent(BaseAgent):
             error_message = event.error_message
             logger.error("Agent escalated: %s", error_message, trial=self.trial)
 
-      logger.info('<CHAT RESPONSE:ROUND %02d>%s</CHAT RESPONSE:ROUND %02d>',
-                  self.round,
-                  final_response_text,
-                  self.round,
-                  trial=trial)
+      self.log_llm_response(final_response_text)
 
       return final_response_text
 
     return self.llm.with_retry_on_error(lambda: asyncio.run(_call()),
                                         [errors.ClientError])
+
+  def log_llm_prompt(self, promt: str) -> None:
+    self.round += 1
+    logger.info('<CHAT PROMPT:ROUND %02d>%s</CHAT PROMPT:ROUND %02d>',
+                self.round,
+                promt,
+                self.round,
+                trial=self.trial)
+
+  def log_llm_response(self, response: str) -> None:
+    logger.info('<CHAT RESPONSE:ROUND %02d>%s</CHAT RESPONSE:ROUND %02d>',
+                self.round,
+                response,
+                self.round,
+                trial=self.trial)
+
 
 
 if __name__ == "__main__":
