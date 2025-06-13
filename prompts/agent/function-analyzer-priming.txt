@@ -40,9 +40,8 @@ Here is the provided data.
 You MUST return your response in the format below.
 
 <response_format>
-Make sure your response follows the following format, enclosed in ```  ```.
+Make sure your response follows the following format.
 
-```
 <response>
 <input>
 project name: the name of the project provided
@@ -67,7 +66,6 @@ nth requirement
 </requirements>
 
 </response>
-```
 
 </response_format>
 
@@ -98,7 +96,6 @@ The third argument should be greater than zero. This is to prevent an assertion 
 The third argument should be less than 16. This is to prevent an out-of-bound array access when the argument is used to index the fixed-size array `stores`.
 </requirement>
 </requirements>
-</response>
 
 </examples>
 
