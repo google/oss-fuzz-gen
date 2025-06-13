@@ -135,7 +135,23 @@ limitations under the License.
                         </tr>
                     </thead>
                     <tbody>
+                        <!-- TODO: Revisit coverage and relative gains in the future, currently they're sums of percentages -->
+                        {% set ns_projects = namespace(
+                            sum_successful_benchmarks=0,
+                            sum_total_coverage_gain=0,
+                            sum_total_relative_gain=0,
+                            sum_ofg_total_covered_lines=0,
+                            sum_ofg_new_covered_lines=0,
+                            sum_existing_covered_lines=0,
+                            sum_total_project_lines=0) %}
+
                         {% for project in projects %}
+
+                        {% set ns_projects.sum_successful_benchmarks = ns_projects.sum_successful_benchmarks + project.count %}
+                        {% set ns_projects.sum_ofg_total_covered_lines = ns_projects.sum_ofg_total_covered_lines + project.coverage_ofg_total_covered_lines %}
+                        {% set ns_projects.sum_ofg_new_covered_lines = ns_projects.sum_ofg_new_covered_lines + project.coverage_ofg_total_new_covered_lines %}
+                        {% set ns_projects.sum_existing_covered_lines = ns_projects.sum_existing_covered_lines + project.coverage_existing_total_covered_lines %}
+                        {% set ns_projects.sum_total_project_lines = ns_projects.sum_total_project_lines + project.coverage_existing_total_lines %}
                         <tr class="project-data-row">
                             <td class="table-index">
                                 <button class="w-5 h-5 flex items-center justify-center focus:outline-none" @click="$refs.benchmarks_{{ loop.index }}.classList.toggle('hidden')">
@@ -144,7 +160,6 @@ limitations under the License.
                                     </svg>
                                 </button>
                             </td>
-                            {% set ns = namespace(bug_found=false) %}
                             <td data-sort-value="{{ project.name }}" class="w-full">
                                 <button @click="$refs.benchmarks_{{ loop.index }}.classList.toggle('hidden')" class="text-left hover:text-blue-600 focus:outline-none toc-subsection">
                                     {{ project.name }}
@@ -175,10 +190,10 @@ limitations under the License.
                             <td data-sort-value="{{ project.success }}">{{ project.success }}</td>
                             <td data-sort-value="{{ project.coverage_gain|percent }}">{{ project.coverage_gain|percent }}%</td>
                             <td data-sort-value="{{ project.coverage_relative_gain|percent}}">{{ project.coverage_relative_gain | percent }}%</td>
-                            <td data-sort-value="{{ project.coverage_ofg_total_covered_lines}}">{{project.coverage_ofg_total_covered_lines}}</td>
-                            <td data-sort-value="{{ project.coverage_ofg_total_new_covered_lines}}">{{ project.coverage_ofg_total_new_covered_lines}}</td>
-                            <td data-sort-value="{{ project.coverage_existing_total_covered_lines}}">{{ project.coverage_existing_total_covered_lines}}</td>
-                            <td data-sort-value="{{ project.coverage_existing_total_lines}}">{{ project.coverage_existing_total_lines}}</td>
+                            <td data-sort-value="{{ project.coverage_ofg_total_covered_lines}}">{{project.coverage_ofg_total_covered_lines }}</td>
+                            <td data-sort-value="{{ project.coverage_ofg_total_new_covered_lines}}">{{ project.coverage_ofg_total_new_covered_lines }}</td>
+                            <td data-sort-value="{{ project.coverage_existing_total_covered_lines}}">{{ project.coverage_existing_total_covered_lines }}</td>
+                            <td data-sort-value="{{ project.coverage_existing_total_lines}}">{{ project.coverage_existing_total_lines }}</td>
                         </tr>
                         <tr class="project-benchmarks-container-row">
                             <td colspan="10" class="">
@@ -235,6 +250,29 @@ limitations under the License.
                             </td>
                         </tr>
                         {% endfor %}
+                        {% if ns_projects.sum_total_project_lines > 0 %}
+                            {% set ns_projects.sum_total_coverage_gain = ns_projects.sum_ofg_new_covered_lines / ns_projects.sum_total_project_lines %}
+                        {% else %}
+                            {% set ns_projects.sum_total_coverage_gain = 0 %}
+                        {% endif %}
+
+                        {% if ns_projects.sum_existing_covered_lines > 0 %}
+                            {% set ns_projects.sum_total_relative_gain = ns_projects.sum_ofg_new_covered_lines / ns_projects.sum_existing_covered_lines %}
+                        {% else %}
+                             {% set ns_projects.sum_total_relative_gain = 0 %}
+                        {% endif %}
+                        <tr class="font-bold">
+                            <td></td>
+                            <td>Total</td>
+                            <td>{{ accumulated_results.total_runs }}</td>
+                            <td>{{ ns_projects.sum_successful_benchmarks }}</td>
+                            <td>{{ ns_projects.sum_total_coverage_gain|percent }}%</td>
+                            <td>{{ ns_projects.sum_total_relative_gain|percent }}%</td>
+                            <td>{{ ns_projects.sum_ofg_total_covered_lines }}</td>
+                            <td>{{ ns_projects.sum_ofg_new_covered_lines }}</td>
+                            <td>{{ ns_projects.sum_existing_covered_lines }}</td>
+                            <td>{{ ns_projects.sum_total_project_lines }}</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
