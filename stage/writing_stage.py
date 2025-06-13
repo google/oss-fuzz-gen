@@ -47,9 +47,16 @@ class WritingStage(BaseStage):
   def execute(self, result_history: list[Result]) -> Result:
     """Executes the writing stage."""
     if result_history and result_history[-1].fuzz_target_source:
-      agent = self.get_agent(index=1)
+      # Execute the Enhancer agent
+      agent = self.get_agent(index=2)
     else:
-      agent = self.get_agent()
+      # First, execute the FunctionAnalyzer agent
+      agent = self.get_agent(index=0)
+      agent_result = self._execute_agent(agent, result_history)
+      result_history.append(agent_result)
+
+      # Then, execute the Prototyper agent
+      agent = self.get_agent(index=1)
     agent_result = self._execute_agent(agent, result_history)
     build_result = cast(BuildResult, agent_result)
 
