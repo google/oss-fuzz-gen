@@ -767,7 +767,7 @@ class EnhancerTemplateBuilder(PrototyperTemplateBuilder):
                                          '')
     if function_requirements:
       problem += (f'\nHere are the requirements for the function.\n'
-                        f'{function_requirements}\n')
+                  f'{function_requirements}\n')
 
     self._prepare_prompt(priming, problem)
     return self._prompt
@@ -833,7 +833,7 @@ class CrashEnhancerTemplateBuilder(PrototyperTemplateBuilder):
 
     if function_requirements:
       problem += (f'\nHere are the requirements for the function.\n'
-                        f'{function_requirements}\n')
+                  f'{function_requirements}\n')
 
     self._prepare_prompt(priming, problem)
     return self._prompt
@@ -891,7 +891,7 @@ class CoverageEnhancerTemplateBuilder(PrototyperTemplateBuilder):
 
     if function_requirements:
       requirements = (f'\nHere are the requirements for the function.\n'
-                        f'{function_requirements}\n')
+                      f'{function_requirements}\n')
       self._prompt.append(requirements)
     return self._prompt
 
