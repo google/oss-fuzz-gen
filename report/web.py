@@ -143,9 +143,13 @@ class GenerateReport:
     self.results_dir = results_dir
 
   def read_timings(self):
-    with open(os.path.join(self.results_dir, 'report.json'), 'r') as f:
-      timings_dict = json.loads(f.read())
-    return timings_dict
+    try:
+      with open(os.path.join(self.results_dir, 'report.json'), 'r') as f:
+        timings_dict = json.loads(f.read())
+      return timings_dict
+    except (FileNotFoundError, json.JSONDecodeError) as e:
+      logging.warning('Could not read timings file: %s', e)
+      return {}
 
   def _copy_and_set_coverage_report(self, benchmark, sample):
     """Prepares coverage reports in local runs."""
@@ -203,6 +207,7 @@ class GenerateReport:
     """Generate and write every report file."""
     benchmarks = []
     samples_with_bugs = []
+    time_results = self.read_timings()
     for benchmark_id in self._results.list_benchmark_ids():
       results, targets = self._results.get_results(benchmark_id)
       benchmark = self._results.match_benchmark(benchmark_id, results, targets)
@@ -214,21 +219,23 @@ class GenerateReport:
         # If this is a local run then we need to set up coverage reports.
         self._copy_and_set_coverage_report(benchmark, sample)
 
-      self._write_benchmark_index(benchmark, samples, prompt)
+      self._write_benchmark_index(benchmark, samples, prompt, time_results)
       self._write_benchmark_crash(benchmark, samples)
 
       for sample in samples:
         if sample.result.crashes:
           samples_with_bugs.append({'benchmark': benchmark, 'sample': sample})
         sample_targets = self._results.get_targets(benchmark.id, sample.id)
-        self._write_benchmark_sample(benchmark, sample, sample_targets)
+        self._write_benchmark_sample(benchmark, sample, sample_targets,
+                                     time_results)
 
     accumulated_results = self._results.get_macro_insights(benchmarks)
     projects = self._results.get_project_summary(benchmarks)
     coverage_language_gains = self._results.get_coverage_language_gains()
 
     self._write_index_html(benchmarks, accumulated_results, projects,
-                           samples_with_bugs, coverage_language_gains)
+                           samples_with_bugs, coverage_language_gains,
+                           time_results)
     self._write_index_json(benchmarks)
     self._write_unified_json(benchmarks, projects)
 
@@ -251,7 +258,8 @@ class GenerateReport:
                         accumulated_results: AccumulatedResult,
                         projects: list[Project],
                         samples_with_bugs: list[dict[str, Any]],
-                        coverage_language_gains: dict[str, Any]):
+                        coverage_language_gains: dict[str, Any],
+                        time_results: dict[str, Any]):
     """Generate the report index.html and write to filesystem."""
     index_css_content = self._read_static_file('index/index.css')
     index_js_content = self._read_static_file('index/index.js')
@@ -259,7 +267,7 @@ class GenerateReport:
     # Common data that should be available in base.html
     common_data = {
         'accumulated_results': accumulated_results,
-        'time_results': self.read_timings(),
+        'time_results': time_results,
     }
 
     rendered = self._jinja.render(
@@ -385,14 +393,15 @@ class GenerateReport:
     self._write('unified_data.json', json.dumps(unified_data, indent=2))
 
   def _write_benchmark_index(self, benchmark: Benchmark, samples: List[Sample],
-                             prompt: Optional[str]):
+                             prompt: Optional[str], time_results: dict[str,
+                                                                       Any]):
     """Generate the benchmark index.html and write to filesystem."""
     benchmark_css_content = self._read_static_file('benchmark/benchmark.css')
     benchmark_js_content = self._read_static_file('benchmark/benchmark.js')
 
     common_data = {
         'accumulated_results': self._results.get_macro_insights([benchmark]),
-        'time_results': self.read_timings(),
+        'time_results': time_results,
     }
 
     rendered = self._jinja.render('benchmark/benchmark.html',
@@ -419,7 +428,8 @@ class GenerateReport:
                     benchmark.id, e)
 
   def _write_benchmark_sample(self, benchmark: Benchmark, sample: Sample,
-                              sample_targets: List[Target]):
+                              sample_targets: List[Target],
+                              time_results: dict[str, Any]):
     """Generate the sample page and write to filesystem."""
     try:
       # Ensure all required variables are available
@@ -434,7 +444,7 @@ class GenerateReport:
       sample_js_content = self._read_static_file('sample/sample.js')
       common_data = {
           'accumulated_results': self._results.get_macro_insights([benchmark]),
-          'time_results': self.read_timings(),
+          'time_results': time_results,
       }
 
       semantic_log = self._get_semantic_analyzer_log(benchmark.id, sample.id)
