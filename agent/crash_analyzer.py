@@ -234,6 +234,5 @@ class CrashAnalyzer(BaseAgent):
         author=self,
         run_result=last_result,
         crash_result=crash_result,
-        chat_history={self.name: crash_result.to_dict()},
-        default_success=crash_result.true_bug)
+        chat_history={self.name: crash_result.to_dict()})
     return analysis_result

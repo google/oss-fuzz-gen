@@ -370,6 +370,12 @@ class DefaultTemplateBuilder(PromptBuilder):
       instruction = instruction_template.replace('{INSTRUCTION}', instruction)
     problem = problem.replace('{INSTRUCTION}', instruction)
 
+    # If errors list is empty, return the formatted prompt
+    if not errors:
+      return problem.replace('<error>\n', '')\
+                    .replace('{ERROR_MESSAGES}\n', '')\
+                    .replace('</error>\n', '')
+
     problem_prompt = self._prompt.create_prompt_piece(problem, 'user')
     template_piece = self._prompt.create_prompt_piece('{ERROR_MESSAGES}',
                                                       'user')
@@ -816,9 +822,7 @@ class CrashEnhancerTemplateBuilder(PrototyperTemplateBuilder):
     {self.insight}
 
     Below is crash report:
-    <log>
     {self.stacktrace}
-    </log>
     """
     errors = []
     problem = self._format_fixer_problem(self.build_result.fuzz_target_source,
