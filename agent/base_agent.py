@@ -300,6 +300,7 @@ class BaseAgent(ABC):
 
 
 class ADKBaseAgent(BaseAgent):
+  """The abstract base class for agents created using the ADK library."""
 
   def __init__(self,
                trial: int,
@@ -308,7 +309,7 @@ class ADKBaseAgent(BaseAgent):
                benchmark: benchmarklib.Benchmark,
                description: str = '',
                instruction: str = '',
-               tools: list = [],
+               tools: Optional[list] = None,
                name: str = ''):
 
     super().__init__(trial, llm, args, tools, name)
@@ -325,7 +326,7 @@ class ADKBaseAgent(BaseAgent):
         model=llm._vertex_ai_model,
         description=description,
         instruction=instruction,
-        tools=tools,
+        tools=tools or [],
     )
 
     # Create the session service
@@ -397,7 +398,6 @@ class ADKBaseAgent(BaseAgent):
                 response,
                 self.round,
                 trial=self.trial)
-
 
 
 if __name__ == "__main__":

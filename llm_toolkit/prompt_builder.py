@@ -892,9 +892,9 @@ class FunctionAnalyzerTemplateBuilder(DefaultTemplateBuilder):
     if not xrefs:
       logger.error('No cross references found for project: %s, function: %s',
                    self.benchmark.project, self.benchmark.function_signature)
-      prompt = prompt.replace(
-          '<function-references>\n{FUNCTION_REFERENCES}\n</function-references>}',
-          '')
+      prompt = prompt.replace('<function-references>', '')\
+                      .replace('{FUNCTION_REFERENCES}', '')\
+                        .replace('</function-references>', '')
     else:
       references = [f"<reference>\n{xref}\n</reference>" for xref in xrefs]
       references_str = '\n'.join(references)

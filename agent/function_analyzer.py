@@ -18,12 +18,8 @@ generate correct fuzz target for the function.
 """
 
 import argparse
-import asyncio
 import os
 from typing import Optional
-
-from google.adk import agents, runners, sessions
-from google.genai import types
 
 import logger
 import results as resultslib
@@ -32,7 +28,7 @@ from data_prep import introspector
 from experiment import benchmark as benchmarklib
 from experiment.workdir import WorkDirs
 from llm_toolkit import models, prompt_builder, prompts
-from tool import base_tool, container_tool, fuzz_introspector_tool
+from tool import container_tool
 
 
 class FunctionAnalyzer(base_agent.ADKBaseAgent):
@@ -61,7 +57,7 @@ class FunctionAnalyzer(base_agent.ADKBaseAgent):
     tools = [self.get_function_implementation, self.search_project_files]
 
     super().__init__(trial, llm, args, benchmark, description, instruction,
-                     tools)
+                     tools, name)
 
     self.project_functions = None
 
@@ -146,9 +142,11 @@ class FunctionAnalyzer(base_agent.ADKBaseAgent):
     This function tool uses bash commands to search the project's source files,
       and retrieve requested code snippets or file contents.
     Args:
-      request (str): The bash command to execute and its justification, formatted using the <reason> and <bash> tags.
+      request (str): The bash command to execute and its justification,
+        formatted using the <reason> and <bash> tags.
     Returns:
-      str: The response from executing the bash commands, formatted using the <bash>, <stdout> and <stderr> tags.
+      str: The response from executing the bash commands,
+        formatted using the <bash>, <stdout> and <stderr> tags.
     """
 
     self.log_llm_response(request)
