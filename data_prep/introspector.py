@@ -64,6 +64,7 @@ INTROSPECTOR_ORACLE_EASY_PARAMS = ''
 INTROSPECTOR_ORACLE_ALL_PUBLIC_CANDIDATES = ''
 INTROSPECTOR_ORACLE_OPTIMAL = ''
 INTROSPECTOR_ORACLE_ALL_TESTS = ''
+INTROSPECTOR_ORACLE_ALL_TESTS_XREF = ''
 INTROSPECTOR_FUNCTION_SOURCE = ''
 INTROSPECTOR_PROJECT_SOURCE = ''
 INTROSPECTOR_XREF = ''
@@ -118,7 +119,11 @@ def set_introspector_endpoints(endpoint):
       INTROSPECTOR_TEST_SOURCE, INTROSPECTOR_HARNESS_SOURCE_AND_EXEC, \
       INTROSPECTOR_JVM_PUBLIC_CLASSES, INTROSPECTOR_LANGUAGE_STATS, \
       INTROSPECTOR_GET_TARGET_FUNCTION, INTROSPECTOR_ALL_TYPE_DEFINITION, \
+<<<<<<< new-test-xref-api
+      INTROSPECTOR_CHECK_MACRO, INTROSPECTOR_ORACLE_ALL_TESTS_XREF
+=======
       INTROSPECTOR_CHECK_MACRO, INTROSPECTOR_ALL_FUNCTIONS
+>>>>>>> main
 
   INTROSPECTOR_ENDPOINT = endpoint
 
@@ -153,6 +158,8 @@ def set_introspector_endpoints(endpoint):
   INTROSPECTOR_FUNCTION_WITH_MATCHING_RETURN_TYPE = (
       f'{INTROSPECTOR_ENDPOINT}/function-with-matching-return-type')
   INTROSPECTOR_ORACLE_ALL_TESTS = f'{INTROSPECTOR_ENDPOINT}/project-tests'
+  INTROSPECTOR_ORACLE_ALL_TESTS_XREF = (
+      f'{INTROSPECTOR_ENDPOINT}/project-tests-for-functions')
   INTROSPECTOR_JVM_PROPERTIES = f'{INTROSPECTOR_ENDPOINT}/jvm-method-properties'
   INTROSPECTOR_HARNESS_SOURCE_AND_EXEC = (
       f'{INTROSPECTOR_ENDPOINT}/harness-source-and-executable')
@@ -249,6 +256,30 @@ def query_introspector_for_tests(project: str) -> list[str]:
       'project': project,
   })
   return _get_data(resp, 'test-file-list', [])
+
+
+def query_introspector_for_tests_xref(
+    project: str, functions: Optional[list[str]]) -> list[str]:
+  """Gets the list of functions and xref test files in the target project."""
+  data = {'project': project}
+  if functions:
+    data['functions'] = ','.join(functions)
+
+  resp = _query_introspector(INTROSPECTOR_ORACLE_ALL_TESTS_XREF, data)
+
+  test_files = _get_data(resp, 'test-files', {})
+
+  handled = set()
+  result_list = []
+  for test_paths in test_files.values():
+    for test_path in test_paths:
+      if test_path in handled:
+        continue
+
+      handled.add(test_path)
+      result_list.append(query_introspector_test_source(project, test_path))
+
+  return result_list
 
 
 def query_introspector_for_harness_intrinsics(
