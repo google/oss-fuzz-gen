@@ -31,7 +31,7 @@ class ExecutionStage(BaseStage):
   stages to analyze and improve on. It uses OSS-Fuzz infra to perform these
   tasks."""
 
-  def get_source_from_project(self, project: str, filename:str) -> str:
+  def get_source_from_project(self, project: str, filename: str) -> str:
     """Retrieves the source code of the fuzz target from the generated oss-fuzz
     project."""
     target_path = os.path.join(project, filename)
@@ -40,10 +40,8 @@ class ExecutionStage(BaseStage):
         return file.read()
     return ''
 
-  def log_fuzz_target_and_build_script(self,
-                                      fuzz_target_source: str,
-                                      build_script_source: str) -> None:
-
+  def log_fuzz_target_and_build_script(self, fuzz_target_source: str,
+                                       build_script_source: str) -> None:
     """Logs the fuzz target and build script source code from the generated
     oss-fuzz project."""
 
@@ -57,7 +55,6 @@ class ExecutionStage(BaseStage):
     else:
       self.logger.warning('Build script source not found. ' \
                           'Original build script will be used.')
-
 
   def execute(self, result_history: list[Result]) -> Result:
     """Executes the fuzz target and build script in the latest result."""
@@ -104,7 +101,7 @@ class ExecutionStage(BaseStage):
         generated_project_path, f'{self.trial:02d}.build_script')
 
     self.log_fuzz_target_and_build_script(fuzz_target_source,
-                                         build_script_source)
+                                          build_script_source)
 
     # Try building and running the new target.
 
