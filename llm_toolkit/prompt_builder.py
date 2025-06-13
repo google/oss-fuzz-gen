@@ -759,6 +759,9 @@ class EnhancerTemplateBuilder(PrototyperTemplateBuilder):
     problem = self._format_fixer_problem(self.build_result.fuzz_target_source,
                                          error_desc, errors, priming_weight, '',
                                          '')
+    if function_requirements:
+      problem += (f'\nHere are the requirements for the function.\n'
+                        f'{function_requirements}\n')
 
     self._prepare_prompt(priming, problem)
     return self._prompt
@@ -813,6 +816,11 @@ class CoverageEnhancerTemplateBuilder(PrototyperTemplateBuilder):
     prompt = prompt.replace('{INSIGHTS}', self.coverage_result.insight)
     prompt = prompt.replace('{SUGGESTIONS}', self.coverage_result.suggestions)
     self._prompt.append(prompt)
+
+    if function_requirements:
+      requirements = (f'\nHere are the requirements for the function.\n'
+                        f'{function_requirements}\n')
+      self._prompt.append(requirements)
     return self._prompt
 
 

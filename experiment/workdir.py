@@ -133,6 +133,9 @@ class WorkDirs:
     return os.path.join(
         self.run_logs, f'{generated_target_name}-F{iteration}-{trial:02d}.log')
 
+  def requirements_file_path(self, trial: int) -> str:
+    return os.path.join(self.requirements, f'{trial:02d}.txt')
+
   @classmethod
   def get_run_log_iteration(cls, filename: str) -> Optional[int]:
     match = cls.RUN_LOG_NAME_PATTERN.match(filename)

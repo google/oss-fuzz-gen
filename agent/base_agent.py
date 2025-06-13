@@ -273,6 +273,18 @@ class BaseAgent(ABC):
 
     introspector.set_introspector_endpoints('http://127.0.0.1:8080/api')
 
+  def get_function_requirements(self) -> str:
+    """Gets the function requirements from the result."""
+
+    requirements_path = self.args.work_dirs.requirements_file_path(self.trial)
+    if os.path.isfile(requirements_path):
+      with open(requirements_path, 'r') as file:
+        function_requirements = file.read()
+    else:
+      function_requirements = ''
+
+    return function_requirements
+
   @classmethod
   def cloud_main(cls) -> None:
     """Executes agent using dill files. This is for cloud experiments launched
