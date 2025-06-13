@@ -25,3 +25,12 @@ Here is the source code for functions which reference the function being tested:
 {{ xrefs }}
 </code>
 {% endif %}
+{% if macro %}
+
+Here are all the macro conditions wrapped around or present in the target functions:
+<code>
+{{ macro }}
+</code>
+{% endif %}
+
+
