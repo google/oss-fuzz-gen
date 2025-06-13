@@ -831,6 +831,10 @@ class CrashEnhancerTemplateBuilder(PrototyperTemplateBuilder):
                                          error_desc, errors, priming_weight, '',
                                          '')
 
+    if function_requirements:
+      problem += (f'\nHere are the requirements for the function.\n'
+                        f'{function_requirements}\n')
+
     self._prepare_prompt(priming, problem)
     return self._prompt
 
