@@ -31,6 +31,34 @@ class ExecutionStage(BaseStage):
   stages to analyze and improve on. It uses OSS-Fuzz infra to perform these
   tasks."""
 
+  def get_source_from_project(self, project: str, filename:str) -> str:
+    """Retrieves the source code of the fuzz target from the generated oss-fuzz
+    project."""
+    target_path = os.path.join(project, filename)
+    if os.path.isfile(target_path):
+      with open(target_path, 'r') as file:
+        return file.read()
+    return ''
+
+  def log_fuzz_target_and_build_script(self,
+                                      fuzz_target_source: str,
+                                      build_script_source: str) -> None:
+
+    """Logs the fuzz target and build script source code from the generated
+    oss-fuzz project."""
+
+    if fuzz_target_source:
+      self.logger.info('\nFuzz target source: \n%s\n', fuzz_target_source)
+    else:
+      self.logger.error('Fuzz target source not found')
+
+    if build_script_source:
+      self.logger.info('\nBuild script source: \n%s\n', build_script_source)
+    else:
+      self.logger.warning('Build script source not found. ' \
+                          'Original build script will be used.')
+
+
   def execute(self, result_history: list[Result]) -> Result:
     """Executes the fuzz target and build script in the latest result."""
     last_result = result_history[-1]
@@ -69,27 +97,14 @@ class ExecutionStage(BaseStage):
     os.makedirs(status_path, exist_ok=True)
 
     # Get the source code of the fuzz target and build script from the generated oss-fuzz projects.
-    fuzz_target_source_path = os.path.join(
-        generated_project_path, f'{last_result.trial:02d}.fuzz_target')
+    fuzz_target_source = self.get_source_from_project(
+        generated_project_path, f'{self.trial:02d}.fuzz_target')
 
-    if fuzz_target_source_path and os.path.isfile(fuzz_target_source_path):
-      with open(fuzz_target_source_path, 'r') as f:
-        fuzz_target_source = f.read()
-    else:
-      fuzz_target_source = ''
+    build_script_source = self.get_source_from_project(
+        generated_project_path, f'{self.trial:02d}.build_script')
 
-    build_script_source_path = os.path.join(
-        generated_project_path, f'{last_result.trial:02d}.build_script')
-
-    if build_script_source_path and os.path.isfile(build_script_source_path):
-      with open(build_script_source_path, 'r') as f:
-        build_script_source = f.read()
-    else:
-      build_script_source = ''
-
-    # log the fuzz target and build script's source code.
-    self.logger.info('\nFuzz target source: \n%s\n', fuzz_target_source)
-    self.logger.info('\nBuild script source: \n%s\n', build_script_source)
+    self.log_fuzz_target_and_build_script(fuzz_target_source,
+                                         build_script_source)
 
     # Try building and running the new target.
 
