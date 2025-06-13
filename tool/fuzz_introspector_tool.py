@@ -63,19 +63,18 @@ class FuzzIntrospectorTool(base_tool.BaseTool):
         str: Source code of the function if found, otherwise an empty string.
     """
 
-    logger.info("Retrieving function source for '%s' in project '%s'.",
+    logger.info('Retrieving function source for %s in project %s.',
                 function_signature, project_name)
 
     function_code = introspector.query_introspector_function_source(
         project_name, function_signature)
 
     if function_code.strip():
-      logger.info("Function with signature '%s' found and extracted.",
+      logger.info('Function with signature %s found and extracted.',
                   function_signature)
     else:
-      logger.error(
-          "Error: Function with signature '%s' not found in project '%s'.",
-          function_signature, project_name)
+      logger.error('Error: Function with signature %s not found in project %s.',
+                   function_signature, project_name)
 
     return function_code
 
@@ -93,33 +92,32 @@ class FuzzIntrospectorTool(base_tool.BaseTool):
         str: Source code of the function if found, otherwise an empty string.
     """
 
-    logger.info("Retrieving function source for '%s' in project '%s'.",
+    logger.info('Retrieving function source for %s in project %s.',
                 function_name, project_name)
 
     if self.project_functions is None:
       logger.info(
-          "Project functions not initialized. Initializing for project '%s'.",
+          'Project functions not initialized. Initializing for project %s.',
           project_name)
       functions_list = introspector.query_introspector_all_functions(
           project_name)
 
       if functions_list:
-        self.project_functions = {
-            func["debug_summary"]["name"]: func
-            for func in functions_list
-            if "debug_summary" in func and "name" in func["debug_summary"]
-        }
-      else:
-        self.project_functions = None
+        self.project_functions = {}
+        for function in functions_list:
+          function_name = function.get('debug_summary', {}).get('name', '')
+          if function_name:
+            # Store the function by its debug summary name
+            self.project_functions[function_name] = function
 
     if (self.project_functions is None or
         function_name not in self.project_functions):
-      logger.error("Error: Required function not found for project '%s'.",
+      logger.error('Error: Required function not found for project %s.',
                    project_name)
-      return ""
+      return ''
 
     function_signature = self.project_functions[function_name][
-        "function_signature"]
+        'function_signature']
 
     return self.function_source_with_signature(project_name, function_signature)
 

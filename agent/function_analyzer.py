@@ -64,16 +64,16 @@ class FunctionAnalyzer(base_agent.ADKBaseAgent):
   def write_requirements_to_file(self, args, requirements: str) -> str:
     """Write the requirements to a file."""
     if not requirements:
-      logger.warning("No requirements to write to file.", trial=self.trial)
+      logger.warning('No requirements to write to file.', trial=self.trial)
       return ''
 
     requirement_path = os.path.join(args.work_dirs.requirements,
-                                    f"{self.benchmark.id}.txt")
+                                    f'{self.benchmark.id}.txt')
 
     with open(requirement_path, 'w') as f:
       f.write(requirements)
 
-    logger.info("Requirements written to %s",
+    logger.info('Requirements written to %s',
                 requirement_path,
                 trial=self.trial)
 

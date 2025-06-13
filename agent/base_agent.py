@@ -346,7 +346,7 @@ class ADKBaseAgent(BaseAgent):
 
     self.round = 0
 
-    logger.info("ADK Agent %s created.", self.name, trial=self.trial)
+    logger.info('ADK Agent %s created.', self.name, trial=self.trial)
 
   def chat_llm(self, cur_round: int, client: Any, prompt: Prompt,
                trial: int) -> str:
@@ -358,7 +358,7 @@ class ADKBaseAgent(BaseAgent):
 
     async def _call():
       user_id = self.benchmark.id
-      session_id = f"session_{self.trial}"
+      session_id = f'session_{self.trial}'
       content = types.Content(role='user',
                               parts=[types.Part(text=prompt.get())])
 
@@ -375,7 +375,7 @@ class ADKBaseAgent(BaseAgent):
             final_response_text = event.content.parts[0].text
           elif event.actions and event.actions.escalate:
             error_message = event.error_message
-            logger.error("Agent escalated: %s", error_message, trial=self.trial)
+            logger.error('Agent escalated: %s', error_message, trial=self.trial)
 
       self.log_llm_response(final_response_text)
 
