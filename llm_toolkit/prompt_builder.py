@@ -779,7 +779,6 @@ class CrashEnhancerTemplateBuilder(PrototyperTemplateBuilder):
                build_result: BuildResult,
                insight: str = '',
                stacktrace: str = '',
-               coverage_result: Optional[CoverageResult] = None,
                template_dir: str = DEFAULT_TEMPLATE_DIR,
                initial: Any = None):
     super().__init__(model, benchmark, template_dir, initial)
