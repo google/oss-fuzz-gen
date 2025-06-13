@@ -143,13 +143,9 @@ class GenerateReport:
     self.results_dir = results_dir
 
   def read_timings(self):
-    try:
-      with open(os.path.join(self.results_dir, 'report.json'), 'r') as f:
-        timings_dict = json.loads(f.read())
-      return timings_dict
-    except (FileNotFoundError, json.JSONDecodeError) as e:
-      logging.warning('Could not read timings file: %s', e)
-      return {}
+    with open(os.path.join(self.results_dir, 'report.json'), 'r') as f:
+      timings_dict = json.loads(f.read())
+    return timings_dict
 
   def _copy_and_set_coverage_report(self, benchmark, sample):
     """Prepares coverage reports in local runs."""
@@ -487,10 +483,11 @@ class GenerateReport:
     """Get the semantic analyzer log for a sample."""
     log_path = os.path.join(self.results_dir, benchmark_id, 'status', sample_id,
                             'log.txt')
-    if not os.path.exists(log_path):
+
+    if not FileSystem(log_path).exists():
       return {}
 
-    with open(log_path, 'r') as f:
+    with FileSystem(log_path).open('r') as f:
       content = f.read().strip()
       if not content:
         return {}
