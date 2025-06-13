@@ -328,12 +328,21 @@ limitations under the License.
                         {% set _ = projects_with_crashes[bug_sample.benchmark.project][bug_sample.benchmark.id].append(bug_sample) %}
                     {% endfor %}
 
+                    {% set ns_projects_with_crashes = namespace(
+                        sum_total_crashes=0,
+                        sum_total_benchmarks=0,
+                        sum_true_positives=0,
+                        sum_false_positives=0) %}
                     {% for project_name, project_benchmarks in projects_with_crashes.items() %}
                     {% set project_loop = loop %}
                     {% set project_bugs = [] %}
                     {% for benchmark_bugs in project_benchmarks.values() %}
                         {% set _ = project_bugs.extend(benchmark_bugs) %}
                     {% endfor %}
+                    {% set ns_projects_with_crashes.sum_total_crashes = ns_projects_with_crashes.sum_total_crashes + project_bugs|length %}
+                    {% set ns_projects_with_crashes.sum_total_benchmarks = ns_projects_with_crashes.sum_total_benchmarks + project_benchmarks|length %}
+                    {% set ns_projects_with_crashes.sum_true_positives = ns_projects_with_crashes.sum_true_positives + project_bugs|selectattr('sample.result.is_semantic_error', 'equalto', false)|list|length %}
+                    {% set ns_projects_with_crashes.sum_false_positives = ns_projects_with_crashes.sum_false_positives + project_bugs|selectattr('sample.result.is_semantic_error', 'equalto', true)|list|length %}
                     <tr class="project-data-row">
                         <td class="table-index">
                             <button class="w-5 h-5 flex items-center justify-center focus:outline-none" @click="$refs.project_{{ loop.index }}.classList.toggle('hidden')">
@@ -427,6 +436,14 @@ limitations under the License.
                         </td>
                     </tr>
                     {% endfor %}
+                    <tr class="font-bold">
+                        <td></td>
+                        <td>Total</td>
+                        <td>{{ ns_projects_with_crashes.sum_total_crashes }}</td>
+                        <td>{{ ns_projects_with_crashes.sum_total_benchmarks }}</td>
+                        <td>{{ ns_projects_with_crashes.sum_true_positives }}</td>
+                        <td>{{ ns_projects_with_crashes.sum_false_positives }}</td>
+                    </tr>
                 </tbody>
             </table>
         </div>
