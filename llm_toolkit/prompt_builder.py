@@ -817,7 +817,7 @@ class CoverageEnhancerTemplateBuilder(PrototyperTemplateBuilder):
 
 
 class FunctionAnalyzerTemplateBuilder(DefaultTemplateBuilder):
-  """ Builder for function analyzer. """
+  """Builder for function analyzer."""
 
   def __init__(self,
                model: models.LLM,
@@ -833,20 +833,6 @@ class FunctionAnalyzerTemplateBuilder(DefaultTemplateBuilder):
         AGENT_TEMPLATE_DIR, 'context-retriever-instruction.txt')
     self.function_analyzer_prompt_template_file = self._find_template(
         AGENT_TEMPLATE_DIR, 'function-analyzer-priming.txt')
-
-  def build_instruction(self) -> prompts.Prompt:
-    """Constructs a prompt using the templates in |self| and saves it."""
-
-    self._prompt = self._model.prompt_type()(None)
-    if not self.benchmark:
-      return self._prompt
-
-    prompt = self._get_template(
-        self.function_analyzer_instruction_template_file)
-
-    self._prompt.append(prompt)
-
-    return self._prompt
 
   def build_context_retriever_instruction(self) -> prompts.Prompt:
     """Constructs a prompt using the templates in |self| and saves it."""
@@ -897,7 +883,7 @@ class FunctionAnalyzerTemplateBuilder(DefaultTemplateBuilder):
           '<function-references>\n{FUNCTION_REFERENCES}\n</function-references>}',
           '')
     else:
-      references = [f"<reference>\n{xref}\n</reference>" for xref in xrefs]
+      references = [f'<reference>\n{xref}\n</reference>' for xref in xrefs]
       references_str = '\n'.join(references)
       prompt = prompt.replace('{FUNCTION_REFERENCES}', references_str)
 
@@ -916,7 +902,7 @@ class FunctionAnalyzerTemplateBuilder(DefaultTemplateBuilder):
 
     raise NotImplementedError(
         'FunctionAnalyzerTemplateBuilder.build() should not be called. '
-        'Use build_instruction() or build_prompt() instead.')
+        'Use build_prompt() instead.')
 
 
 class CrashAnalyzerTemplateBuilder(DefaultTemplateBuilder):
@@ -1297,8 +1283,8 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     self_source, cross_source = self._format_source_reference(signature)
     problem = problem.replace('{SELF_SOURCE}', self_source)
     problem = problem.replace('{CROSS_SOURCE}', cross_source)
-    problem = problem.replace("{PROJECT_NAME}", self.benchmark.project)
-    problem = problem.replace("{PROJECT_URL}", self.project_url)
+    problem = problem.replace('{PROJECT_NAME}', self.benchmark.project)
+    problem = problem.replace('{PROJECT_URL}', self.project_url)
     problem = problem.replace('{DATA_MAPPING}', self._format_data_filler())
 
     if is_constructor:

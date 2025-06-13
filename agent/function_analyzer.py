@@ -52,7 +52,7 @@ class FunctionAnalyzer(base_agent.BaseAgent):
     # TODO (pamusuo): Provide support for other LLM models
     if not isinstance(llm, models.VertexAIModel):
       raise ValueError(
-          "FunctionAnalyzer agent requires a VertexAIModel instance for llm.")
+          'FunctionAnalyzer agent requires a VertexAIModel instance for llm.')
 
     super().__init__(trial, llm, args, tools, name)
 
@@ -72,7 +72,7 @@ class FunctionAnalyzer(base_agent.BaseAgent):
     # TODO(pamusuo): Create another AdkBaseAgent that extends
     # BaseAgent and initializes an ADK agent as well.
     function_analyzer = agents.LlmAgent(
-        name="FunctionAnalyzer",
+        name='FunctionAnalyzer',
         model=self.vertex_ai_model,
         description="""Extracts a function's requirements
                         from its source implementation.""",
@@ -88,7 +88,7 @@ class FunctionAnalyzer(base_agent.BaseAgent):
     session_service.create_session(
         app_name=self.name,
         user_id=self.benchmark.id,
-        session_id=f"session_{self.trial}",
+        session_id=f'session_{self.trial}',
     )
 
     # Create the runner
@@ -98,7 +98,7 @@ class FunctionAnalyzer(base_agent.BaseAgent):
         session_service=session_service,
     )
 
-    logger.info("Function Analyzer Agent created, with name: %s",
+    logger.info('Function Analyzer Agent created, with name: %s',
                 self.name,
                 trial=self.trial)
 
@@ -125,9 +125,9 @@ class FunctionAnalyzer(base_agent.BaseAgent):
           result_available = True
         elif event.actions and event.actions.escalate:
           error_message = event.error_message
-          logger.error("Agent escalated: %s", error_message, trial=self.trial)
+          logger.error('Agent escalated: %s', error_message, trial=self.trial)
 
-    logger.info("<<< Agent response: %s", final_response_text, trial=self.trial)
+    logger.info('<<< Agent response: %s', final_response_text, trial=self.trial)
 
     if result_available and self._parse_tag(final_response_text, 'response'):
       # Get the requirements from the response
@@ -140,16 +140,16 @@ class FunctionAnalyzer(base_agent.BaseAgent):
   def write_requirements_to_file(self, args, requirements: str) -> str:
     """Write the requirements to a file."""
     if not requirements:
-      logger.warning("No requirements to write to file.", trial=self.trial)
+      logger.warning('No requirements to write to file.', trial=self.trial)
       return ''
 
     requirement_path = os.path.join(args.work_dirs.requirements,
-                                    f"{self.benchmark.id}.txt")
+                                    f'{self.benchmark.id}.txt')
 
     with open(requirement_path, 'w') as f:
       f.write(requirements)
 
-    logger.info("Requirements written to %s",
+    logger.info('Requirements written to %s',
                 requirement_path,
                 trial=self.trial)
 
@@ -175,14 +175,14 @@ class FunctionAnalyzer(base_agent.BaseAgent):
     # Validate query is not empty
     if not query.strip():
       logger.error(
-          "Error occurred while building initial prompt. Cannot call the agent.",
+          'Error occurred while building initial prompt. Cannot call the agent.',
           trial=self.trial)
       return result
 
-    logger.info("Initial prompt created. Calling LLM...", trial=self.trial)
+    logger.info('Initial prompt created. Calling LLM...', trial=self.trial)
 
     user_id = self.benchmark.id
-    session_id = f"session_{self.trial}"
+    session_id = f'session_{self.trial}'
     result_str = asyncio.run(
         self.call_agent(query, self.runner, user_id, session_id))
 

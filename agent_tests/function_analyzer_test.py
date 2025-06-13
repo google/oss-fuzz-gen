@@ -76,7 +76,7 @@ def parse_args() -> argparse.Namespace:
   if benchmark_yaml:
     assert (benchmark_yaml.endswith('.yaml') or
             benchmark_yaml.endswith('yml')), (
-                "--benchmark-yaml needs to take an YAML file.")
+                '--benchmark-yaml needs to take an YAML file.')
 
   bench_yml = bool(benchmark_yaml)
   bench_dir = bool(parsed_args.benchmarks_directory)
@@ -106,14 +106,14 @@ def analyze_benchmark(benchmark: benchmarklib.Benchmark, model: models.LLM,
   try:
     result = analyzer.execute([])
   except Exception as e:
-    logger.error("Error during analysis for benchmark %s: %s",
+    logger.error('Error during analysis for benchmark %s: %s',
                  benchmark.function_name, e)
     return False
 
   return result.function_analysis is not None
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
 
   model = models.LLM.setup(ai_binary='', name='vertex_ai_gemini-2-5-pro-chat')
 
@@ -128,9 +128,9 @@ if __name__ == "__main__":
           args)
 
   if len(benchmarks) == 0:
-    raise ValueError("No benchmarks found in the YAML file.")
+    raise ValueError('No benchmarks found in the YAML file.')
 
-  logger.info("Loaded %d benchmarks from the YAML file %s.", len(benchmarks),
+  logger.info('Loaded %d benchmarks from the YAML file %s.', len(benchmarks),
               args.benchmark_yaml)
 
   # Analyze each benchmark
@@ -138,21 +138,21 @@ if __name__ == "__main__":
 
   if NUM_ANA == 1:
     for benchmark in benchmarks:
-      logger.info("Loaded benchmark (%d/%d) for function: %s",
+      logger.info('Loaded benchmark (%d/%d) for function: %s',
                   benchmarks.index(benchmark) + 1, len(benchmarks),
                   benchmark.function_name)
       if analyze_benchmark(benchmark, model, args):
         success_count += 1
   else:
 
-    logger.info("Running analysis in parallel with %d processes.",
+    logger.info('Running analysis in parallel with %d processes.',
                 args.num_pools)
     with multiprocessing.Pool(args.num_pools, maxtasksperchild=1) as pool:
 
       results = {}
       for benchmark in benchmarks:
         # Pass a new analyzer instance to each process to avoid sharing state
-        logger.info("Submitted benchmark (%d/%d) for function: %s to the pool.",
+        logger.info('Submitted benchmark (%d/%d) for function: %s to the pool.',
                     benchmarks.index(benchmark) + 1, len(benchmarks),
                     benchmark.function_name)
         result = pool.apply_async(analyze_benchmark,
@@ -170,7 +170,7 @@ if __name__ == "__main__":
           if result.get():
             success_count += 1
         except Exception as e:
-          logger.error("Error during analysis for benchmark %s: %s",
+          logger.error('Error during analysis for benchmark %s: %s',
                        benchmark_id, e)
 
   print(
