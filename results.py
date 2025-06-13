@@ -411,7 +411,7 @@ class TrialResult:
     for result in self.result_history[::-1]:
       #TODO(dongge): Refine this logic for coverage
       if (isinstance(result, AnalysisResult) and result.crashes and
-          result.semantic_result and not result.semantic_result.has_err):
+          result.crash_result and result.crash_result.true_bug):
         return result
 
     # 2. Crashed
@@ -582,8 +582,8 @@ class TrialResult:
   def is_semantic_error(self) -> bool:
     """Validates if the best AnalysisResult has semantic error."""
     result = self.best_analysis_result
-    if result and result.semantic_result:
-      return result.semantic_result.has_err
+    if result and result.crash_result:
+      return not result.crash_result.true_bug
     return False
 
   @property
