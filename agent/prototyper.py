@@ -55,13 +55,7 @@ class Prototyper(BaseAgent):
     else:
       context_info = {}
 
-    function_analysis = last_result.function_analysis
-    if function_analysis and os.path.isfile(
-        function_analysis.function_analysis_path):
-      with open(function_analysis.function_analysis_path, 'r') as file:
-        function_requirements = file.read()
-    else:
-      function_requirements = ''
+    function_requirements = self.get_function_requirements()
 
     builder = prompt_builder.PrototyperTemplateBuilder(
         model=self.llm,

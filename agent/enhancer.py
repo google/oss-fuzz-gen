@@ -17,6 +17,7 @@ Use it as a usual module locally, or as script in cloud builds.
 import logger
 from agent.prototyper import Prototyper
 from llm_toolkit.prompt_builder import (CoverageEnhancerTemplateBuilder,
+                                        CrashEnhancerTemplateBuilder,
                                         EnhancerTemplateBuilder,
                                         JvmFixingBuilder)
 from llm_toolkit.prompts import Prompt, TextPrompt
@@ -48,6 +49,8 @@ class Enhancer(Prototyper):
                    trial=self.trial)
       return Prompt()
 
+    function_requirements = self.get_function_requirements()
+
     if benchmark.language == 'jvm':
       # TODO: Do this in a separate agent for JVM coverage.
       builder = JvmFixingBuilder(self.llm, benchmark,
@@ -59,6 +62,12 @@ class Enhancer(Prototyper):
         error_desc, errors = last_result.semantic_result.get_error_info()
         builder = EnhancerTemplateBuilder(self.llm, benchmark,
                                           last_build_result, error_desc, errors)
+      elif last_result.crash_result:
+        crash_result = last_result.crash_result
+        builder = CrashEnhancerTemplateBuilder(self.llm, benchmark,
+                                               last_build_result,
+                                               crash_result.insight,
+                                               crash_result.stacktrace)
       elif last_result.coverage_result:
         builder = CoverageEnhancerTemplateBuilder(
             self.llm,
@@ -77,7 +86,8 @@ class Enhancer(Prototyper):
         return prompt
       prompt = builder.build(example_pair=[],
                              tool_guides=self.inspect_tool.tutorial(),
-                             project_dir=self.inspect_tool.project_dir)
+                             project_dir=self.inspect_tool.project_dir,
+                             function_requirements=function_requirements)
       # TODO: A different file name/dir.
       prompt.save(self.args.work_dirs.prompt)
 
