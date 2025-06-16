@@ -253,7 +253,7 @@ class Prototyper(BaseAgent):
       # binary to expected path, but does not reference function-under-test.
       prompt_text = prompt_text.replace(
           '{BUILD_TEXT}',
-          'Althoug `/src/build.bk.sh` compiles and saves the binary to the '
+          'Although `/src/build.bk.sh` compiles and saves the binary to the '
           'correct path:')
       # NOTE: Unsafe to say the following, because /src/build.sh may miss a
       # library required by the function-under-test, and the fuzz target did not
@@ -274,7 +274,7 @@ class Prototyper(BaseAgent):
       # binary to expected path, but does not reference function-under-test.
       prompt_text = prompt_text.replace(
           '{BUILD_TEXT}',
-          'Althoug `/src/build.bk.sh` compiles and saves the binary to the '
+          'Although `/src/build.bk.sh` compiles and saves the binary to the '
           'correct path:')
       prompt_text += (
           'When you have a solution later, make sure you output the FULL fuzz '
@@ -287,7 +287,7 @@ class Prototyper(BaseAgent):
       # binary to expected path, but does not reference function-under-test.
       prompt_text = prompt_text.replace(
           '{BUILD_TEXT}',
-          'Althoug your build script compiles and saves the binary to the '
+          'Although your build script compiles and saves the binary to the '
           'correct path:\n'
           f'<build script>\n{build_script_source}\n</build script>\n')
       prompt_text += (
