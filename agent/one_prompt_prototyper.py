@@ -133,10 +133,21 @@ class OnePromptPrototyper(BaseAgent):
                                    num_samples=1,
                                    temperature=self.args.temperature)
 
+    # Extract error message from stdout and stderr
     errors = code_fixer.extract_error_from_lines(
         build_result.compile_log.split('\n'),
         os.path.basename(build_result.benchmark.target_path),
         build_result.benchmark.language)
+
+    # Also process stderr separately to avoid truncation in compile_log
+    errors.extend(code_fixer.extract_error_from_lines(
+        build_result.compile_error.split('\n'),
+        os.path.basename(build_result.benchmark.target_path),
+        build_result.benchmark.language))
+
+    # Deduplicate error messages
+    errors = list(set(errors))
+
     build_result.compile_error = '\n'.join(errors)
     if build_result.benchmark.language == 'jvm':
       builder = prompt_builder.JvmFixingBuilder(
