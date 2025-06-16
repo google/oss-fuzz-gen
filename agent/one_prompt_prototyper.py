@@ -140,10 +140,11 @@ class OnePromptPrototyper(BaseAgent):
         build_result.benchmark.language)
 
     # Also process stderr separately to avoid truncation in compile_log
-    errors.extend(code_fixer.extract_error_from_lines(
-        build_result.compile_error.split('\n'),
-        os.path.basename(build_result.benchmark.target_path),
-        build_result.benchmark.language))
+    errors.extend(
+        code_fixer.extract_error_from_lines(
+            build_result.compile_error.split('\n'),
+            os.path.basename(build_result.benchmark.target_path),
+            build_result.benchmark.language))
 
     # Deduplicate error messages
     errors = list(set(errors))
