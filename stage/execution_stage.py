@@ -15,6 +15,7 @@
 crashes of the fuzz targets. This stage will run the fuzz target with OSS-Fuzz
 infra and report its code coverage and crashes."""
 import os
+import traceback
 
 from experiment import builder_runner as builder_runner_lib
 from experiment import evaluator as evaluator_lib
@@ -161,8 +162,14 @@ class ExecutionStage(BaseStage):
         coverage_diff = 0.0
 
       if run_result.log_path and os.path.isfile(run_result.log_path):
-        with open(run_result.log_path, 'r') as f:
-          run_log_lines = f.readlines()
+        with open(run_result.log_path, 'rb') as f:
+          raw_run_log_lines = f.readlines()
+          run_log_lines = []
+          for line in raw_run_log_lines:
+            # Decode bytes to string and strip whitespace.
+            decoded_line = line.decode('utf-8', errors='ignore')
+            if decoded_line:
+              run_log_lines.append(decoded_line)
           if len(run_log_lines) > 30:
             run_log_lines = (run_log_lines[:20] + [
                 f'...({len(run_log_lines) - 30} lines of fuzzing log truncated)'
@@ -209,6 +216,7 @@ class ExecutionStage(BaseStage):
           chat_history={self.name: run_log_content})
     except Exception as e:
       self.logger.error('Exception %s occurred on %s', e, last_result)
+      self.logger.error('Traceback: %s', traceback.format_exc())
       runresult = RunResult(
           benchmark=benchmark,
           trial=self.trial,
