@@ -166,7 +166,6 @@ class ExecutionStage(BaseStage):
           raw_run_log_lines = f.readlines()
           run_log_lines = []
           for line in raw_run_log_lines:
-            # Decode bytes to string and strip whitespace.
             decoded_line = line.decode('utf-8', errors='ignore')
             if decoded_line:
               run_log_lines.append(decoded_line)
