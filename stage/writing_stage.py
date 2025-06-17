@@ -48,7 +48,12 @@ class WritingStage(BaseStage):
     """Executes the writing stage."""
     if result_history and result_history[-1].fuzz_target_source:
       # Execute the Enhancer agent
-      agent = self.get_agent(index=2)
+      # If the agent at index 0 is FunctionAnalyzer we should get agent at index 2,
+      # otherwise index 1.
+      if self.get_agent(index=0).name == 'FunctionAnalyzer':
+        agent = self.get_agent(index=2)
+      else:
+        agent = self.get_agent(index=1)
     else:
       agent = self.get_agent(index=0)
       if agent.name == 'FunctionAnalyzer':
