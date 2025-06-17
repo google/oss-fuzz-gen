@@ -112,9 +112,9 @@ class FuzzIntrospectorTool(base_tool.BaseTool):
         self.project_functions = {
             func["debug_summary"]["name"]: func
             for func in functions_list
-            if isinstance(func.get("debug_summary"), dict)
-            and isinstance(func["debug_summary"].get("name"), str)
-            and func["debug_summary"]["name"].strip()
+            if isinstance(func.get("debug_summary"), dict) and
+            isinstance(func["debug_summary"].get("name"), str) and
+            func["debug_summary"]["name"].strip()
         }
       else:
         self.project_functions = None
