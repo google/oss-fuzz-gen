@@ -167,11 +167,13 @@ class FunctionToolPrototyper(BaseAgent):
 
   def _func_handler_run_get_source_code_of_function(self, tool_call, args):
     """Handles the 'get_source_code_of_function' tool call."""
-    logger.info('Handling get_source_code_of_function: %s', args, trial=-1)
+    logger.info('Handling get_source_code_of_function: %s',
+                args,
+                trial=self.trial)
     function_signature = args['function_signature']
     if not function_signature:
       logger.error('Function signature is empty, cannot get source code.',
-                   trial=-1)
+                   trial=self.trial)
       return False
     # Get the source code of the function.
     source_code = introspector.query_introspector_function_source(
@@ -180,7 +182,7 @@ class FunctionToolPrototyper(BaseAgent):
     logger.info('Source code for function %s: %s',
                 function_signature,
                 source_code,
-                trial=-1)
+                trial=self.trial)
     # Extend messages to prepare for next iteration.
     self.new_llm_messages.append(tool_call)
     self.new_llm_messages.append({
@@ -196,7 +198,7 @@ class FunctionToolPrototyper(BaseAgent):
 
     # Execute the command directly, then return the formatted result
     commands = args['command']
-    logger.info('LLM Requested commands: %s', commands, trial=-1)
+    logger.info('LLM Requested commands: %s', commands, trial=self.trial)
     result = self.inspect_tool.execute(commands)
     prompt_text = self._format_bash_execution_result(result)
 
@@ -211,11 +213,13 @@ class FunctionToolPrototyper(BaseAgent):
 
   def _func_handle_get_all_functions_in_project(self, tool_call, args):
     """Handles getting all functions in the project."""
-    logger.info('Handling list_functions_in_project: %s', args, trial=-1)
+    logger.info('Handling list_functions_in_project: %s',
+                args,
+                trial=self.trial)
 
     functions = introspector.query_introspector_all_signatures(
         self.benchmark.project)
-    logger.info('Functions in project: %s', functions, trial=-1)
+    logger.info('Functions in project: %s', functions, trial=self.trial)
     # Extend messages to prepare for next iteration.
     self.new_llm_messages.append(tool_call)
     self.new_llm_messages.append({
@@ -226,10 +230,11 @@ class FunctionToolPrototyper(BaseAgent):
 
   def _func_handler_run_harness_build(self, tool_call, args):
     """Tests the building of a fuzz harness source code."""
-    logger.info('Handling test_fuzz_harness_build: %s', args, trial=-1)
+    logger.info('Handling test_fuzz_harness_build: %s', args, trial=self.trial)
     fuzzer_source_code = args['fuzzer_source_code']
     if not fuzzer_source_code:
-      logger.error('Fuzzer source code is empty, cannot build.', trial=-1)
+      logger.error('Fuzzer source code is empty, cannot build.',
+                   trial=self.trial)
       return False
 
     # Write the fuzzer source code to the container.
@@ -241,13 +246,13 @@ class FunctionToolPrototyper(BaseAgent):
     compile_log = self._format_bash_execution_result(self.compile_result)
 
     if '<return code>\n0\n</return code>' in compile_log:
-      logger.info('Fuzzer build succeeded', trial=-1)
+      logger.info('Fuzzer build succeeded', trial=self.trial)
       self.fuzzer_build_success = True
       self.fuzzer_source_code = fuzzer_source_code
     else:
-      logger.info('Fuzzer build failed', trial=-1)
+      logger.info('Fuzzer build failed', trial=self.trial)
 
-    logger.info('Compile result: %s', compile_log, trial=-1)
+    logger.info('Compile result: %s', compile_log, trial=self.trial)
 
     # Extend messages to prepare for next iteration.
     self.new_llm_messages.append(tool_call)
@@ -257,22 +262,24 @@ class FunctionToolPrototyper(BaseAgent):
         'output': str(compile_log)
     })
 
-    logger.info('Done compiling', trial=-1)
+    logger.info('Done compiling', trial=self.trial)
     return True
 
   def dispatch_tool_call(self, tool_call) -> int:
     """Dispatches the tool call to the appropriate function."""
-    logger.info('#' * 20 + ' Tool call ' + '#' * 20, trial=-1)
+    logger.info('#' * 20 + ' Tool call ' + '#' * 20, trial=self.trial)
     args = self._load_tool_arguments(tool_call)
-    logger.info('Dispatching tool call: %s', tool_call.name, trial=-1)
-    logger.info('Tool call arguments: %s', args, trial=-1)
-    logger.info('#' * 51, trial=-1)
+    logger.info('Dispatching tool call: %s', tool_call.name, trial=self.trial)
+    #logger.info('Tool call arguments: %s', args, trial=-1)
+    for arg in args:
+      logger.info('Argument %s: %s', arg, args[arg], trial=self.trial)
+    logger.info('#' * 51, trial=self.trial)
     time.sleep(5)
 
     if args is None:
       logger.error('Failed to load tool call arguments: %s',
                    tool_call.arguments,
-                   trial=-1)
+                   trial=self.trial)
       return 0
 
     if tool_call.name == 'list_functions_in_project':
@@ -294,7 +301,9 @@ class FunctionToolPrototyper(BaseAgent):
     try:
       return json.loads(tool_call.arguments)
     except json.JSONDecodeError as e:
-      logger.error('Failed to decode tool call arguments: %s', e, trial=-1)
+      logger.error('Failed to decode tool call arguments: %s',
+                   e,
+                   trial=self.trial)
 
     # Getting here means the arguments were not valid JSON.
     # This happens sometimes, and to overcome this we extract
@@ -363,10 +372,10 @@ class FunctionToolPrototyper(BaseAgent):
         logger.info('THIS ROUND: %02d, prompt: %s',
                     counter,
                     prompt.get(),
-                    trial=-1)
+                    trial=self.trial)
         time.sleep(15)
         if counter > 20:
-          logger.info('Counter is up, will exit', trial=2)
+          logger.info('Counter is up, will exit', trial=self.trial)
           break
         counter += 1
         response = self.chat_llm_with_tools(client, prompt, FUZZ_GEN_TOOLS, 1)
@@ -374,7 +383,7 @@ class FunctionToolPrototyper(BaseAgent):
         logger.info('LLM response for round %d: %s',
                     cur_round,
                     response,
-                    trial=-1)
+                    trial=self.trial)
 
         # Execute all of the tool calls in the response.
         tools_analysed = 0
@@ -389,7 +398,8 @@ class FunctionToolPrototyper(BaseAgent):
 
         # If a correct fuzzing harness was built, we can stop execution.
         if self.fuzzer_build_success and self.compile_result is not None:
-          logger.info('Fuzzer build succeeded, stopping execution.', trial=-1)
+          logger.info('Fuzzer build succeeded, stopping execution.',
+                      trial=self.trial)
           build_result.fuzz_target_source = self.fuzzer_source_code
           self._update_build_result(build_result,
                                     self.compile_result,
@@ -404,22 +414,24 @@ class FunctionToolPrototyper(BaseAgent):
         # 2. If there are no new messages, we tell the LLM we did not understand
         #    the commands.
         if len(self.new_llm_messages) > 0:
-          logger.info('LLM has new messages, will continue execution.', trial=2)
+          logger.info('LLM has new messages, will continue execution.',
+                      trial=self.trial)
           prompt = self.llm.prompt_type()(self.new_llm_messages)
         else:
-          logger.info('No new messages from LLM, stopping execution.', trial=2)
+          logger.info('No new messages from LLM, stopping execution.',
+                      trial=self.trial)
           prompt = self.llm.prompt_type()(None)
           prompt.add_problem(
               'I was unable to interpret your last message. Use tool '
               'calls to direct this process instead of messages.')
 
-        logger.info('Tool calls added: %d', tools_analysed, trial=2)
+        logger.info('Tool calls added: %d', tools_analysed, trial=self.trial)
     finally:
       # Cleanup: stop and remove the container
       logger.debug('Stopping and removing the inspect container %s',
                    self.inspect_tool.container_id,
-                   trial=-1)
+                   trial=self.trial)
       self.inspect_tool.terminate()
 
-    logger.info('Finished done', trial=-1)
+    logger.info('Finished done', trial=self.trial)
     return build_result
