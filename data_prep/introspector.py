@@ -77,6 +77,7 @@ INTROSPECTOR_HARNESS_SOURCE_AND_EXEC = ''
 INTROSPECTOR_LANGUAGE_STATS = ''
 INTROSPECTOR_GET_TARGET_FUNCTION = ''
 INTROSPECTOR_CHECK_MACRO = ''
+INTROSPECTOR_ALL_FUNCTIONS = ''
 
 INTROSPECTOR_HEADERS_FOR_FUNC = ''
 INTROSPECTOR_SAMPLE_XREFS = ''
@@ -116,7 +117,7 @@ def set_introspector_endpoints(endpoint):
       INTROSPECTOR_TEST_SOURCE, INTROSPECTOR_HARNESS_SOURCE_AND_EXEC, \
       INTROSPECTOR_JVM_PUBLIC_CLASSES, INTROSPECTOR_LANGUAGE_STATS, \
       INTROSPECTOR_GET_TARGET_FUNCTION, INTROSPECTOR_ALL_TYPE_DEFINITION, \
-      INTROSPECTOR_CHECK_MACRO
+      INTROSPECTOR_CHECK_MACRO, INTROSPECTOR_ALL_FUNCTIONS
 
   INTROSPECTOR_ENDPOINT = endpoint
 
@@ -159,7 +160,9 @@ def set_introspector_endpoints(endpoint):
       f'{INTROSPECTOR_ENDPOINT}/database-language-stats')
   INTROSPECTOR_GET_TARGET_FUNCTION = (
       f'{INTROSPECTOR_ENDPOINT}/get-target-function')
+  INTROSPECTOR_GET_ALL_FUNCTIONS = f'{INTROSPECTOR_ENDPOINT}/all-functions'
   INTROSPECTOR_CHECK_MACRO = f'{INTROSPECTOR_ENDPOINT}/check_macro'
+  INTROSPECTOR_ALL_FUNCTIONS = f'{INTROSPECTOR_ENDPOINT}/all-functions'
 
 
 def _construct_url(api: str, params: dict) -> str:
@@ -170,6 +173,8 @@ def _construct_url(api: str, params: dict) -> str:
 def _query_introspector(api: str, params: dict) -> Optional[requests.Response]:
   """Queries FuzzIntrospector API and returns the json payload,
   returns an empty dict if unable to get data."""
+
+  logger.info('Querying FuzzIntrospector API: %s\n', api)
   for attempt_num in range(1, MAX_RETRY + 1):
     try:
       resp = requests.get(api, params, timeout=TIMEOUT)
@@ -251,6 +256,23 @@ def query_introspector_for_harness_intrinsics(
       'project': project,
   })
   return _get_data(resp, 'pairs', [])
+
+
+def query_introspector_all_functions(project: str) -> list[dict]:
+  """Queries FuzzIntrospector API for all functions in a project."""
+  resp = _query_introspector(INTROSPECTOR_ALL_FUNCTIONS, {
+      'project': project,
+  })
+  return _get_data(resp, 'functions', [])
+
+
+def query_introspector_all_signatures(project: str) -> list[str]:
+  """Queries FuzzIntrospector API for all functions in a project."""
+  functions: list[dict] = query_introspector_all_functions(project)
+  new_funcs = []
+  for func in functions:
+    new_funcs.append(func['function_signature'])
+  return new_funcs
 
 
 def query_introspector_oracle(project: str, oracle_api: str) -> list[dict]:

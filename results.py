@@ -32,16 +32,19 @@ class Result:
   author: Any
   chat_history: dict
   _repr_exclude = {'_repr_exclude', 'chat_history'}
+  function_analysis: Optional['FunctionAnalysisResult']
 
-  def __init__(self,
-               benchmark: Benchmark,
-               trial: int,
-               work_dirs: WorkDirs,
-               fuzz_target_source: str = '',
-               build_script_source: str = '',
-               author: Any = None,
-               chat_history: Optional[dict] = None,
-               default_success: bool = False) -> None:
+  def __init__(
+      self,
+      benchmark: Benchmark,
+      trial: int,
+      work_dirs: WorkDirs,
+      fuzz_target_source: str = '',
+      build_script_source: str = '',
+      author: Any = None,
+      chat_history: Optional[dict] = None,
+      default_success: bool = False,
+      function_analysis: Optional['FunctionAnalysisResult'] = None) -> None:
     self.benchmark = benchmark
     self.trial = trial
     self.work_dirs = work_dirs
@@ -50,6 +53,7 @@ class Result:
     self.author = author
     self.chat_history = chat_history or {}
     self.default_success = default_success
+    self.function_analysis = function_analysis
 
   def __repr__(self) -> str:
     attributes = [
@@ -644,18 +648,18 @@ class TrialResult:
 
 
 class PreWritingResult(Result):
-  """ The result of the function analyzer."""
+  """ The result of the function analyzer. """
   result_available: bool
-  requirements: list[str]
-  explanation: str
+  result_raw: str = ''
+  requirements: Optional[list[str]]
 
   def __init__(self,
                benchmark: Benchmark,
                trial: int,
                work_dirs: WorkDirs,
                result_available: bool,
+               result_raw: str = '',
                requirements: Optional[list[str]] = None,
-               explanation: str = '',
                fuzz_target_source: str = '',
                build_script_source: str = '',
                author: Any = None,
@@ -666,9 +670,9 @@ class PreWritingResult(Result):
                      build_script_source, author, chat_history, default_success)
 
     self.result_available = result_available
-    if result_available and requirements is not None:
+    if result_available:
       self.requirements = requirements
-      self.explanation = explanation
+      self.result_raw = result_raw
 
 
 class BenchmarkResult:
@@ -736,3 +740,11 @@ class BenchmarkResult:
     for result in self.trial_results:
       all_textcov.merge(result.textcov_diff)
     return all_textcov
+
+
+class FunctionAnalysisResult:
+  """The result of the function analyzer."""
+  function_analysis_path: str
+
+  def __init__(self, function_analysis_path: str):
+    self.function_analysis_path = function_analysis_path

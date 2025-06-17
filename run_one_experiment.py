@@ -27,6 +27,8 @@ import pipeline
 from agent.coverage_analyzer import CoverageAnalyzer
 from agent.crash_analyzer import CrashAnalyzer
 from agent.enhancer import Enhancer
+from agent.function_analyzer import FunctionAnalyzer
+from agent.function_based_prototyper import FunctionToolPrototyper
 from agent.one_prompt_enhancer import OnePromptEnhancer
 from agent.one_prompt_prototyper import OnePromptPrototyper
 from agent.prototyper import Prototyper
@@ -243,11 +245,15 @@ def _fuzzing_pipeline(benchmark: Benchmark, model: models.LLM,
   """Runs the predefined 3-stage pipeline for one trial."""
   trial_logger = logger.get_trial_logger(trial=trial, level=logging.DEBUG)
   trial_logger.info('Trial Starts')
-  if args.agent:
+
+  # Support custom pipeline.
+  if args.custom_pipeline == 'function_based_prototyper':
     p = pipeline.Pipeline(args=args,
                           trial=trial,
                           writing_stage_agents=[
-                              Prototyper(trial=trial, llm=model, args=args),
+                              FunctionToolPrototyper(trial=trial,
+                                                     llm=model,
+                                                     args=args),
                               Enhancer(trial=trial, llm=model, args=args),
                           ],
                           analysis_stage_agents=[
@@ -259,17 +265,47 @@ def _fuzzing_pipeline(benchmark: Benchmark, model: models.LLM,
                                                args=args),
                               CrashAnalyzer(trial=trial, llm=model, args=args),
                           ])
-  else:
+  elif args.agent:
+
+    writer_agents = []
+    if 'gemini' in args.model or 'vertex' in args.model:
+      writer_agents.append(
+          FunctionAnalyzer(trial=trial,
+                           llm=model,
+                           args=args,
+                           benchmark=benchmark))
+    writer_agents += [
+        Prototyper(trial=trial, llm=model, args=args),
+        Enhancer(trial=trial, llm=model, args=args)
+    ]
     p = pipeline.Pipeline(args=args,
                           trial=trial,
-                          writing_stage_agents=[
-                              OnePromptPrototyper(trial=trial,
-                                                  llm=model,
-                                                  args=args),
-                              OnePromptEnhancer(trial=trial,
-                                                llm=model,
-                                                args=args),
-                          ],
+                          writing_stage_agents=writer_agents,
+                          analysis_stage_agents=[
+                              SemanticAnalyzer(trial=trial,
+                                               llm=model,
+                                               args=args),
+                              CoverageAnalyzer(trial=trial,
+                                               llm=model,
+                                               args=args),
+                              CrashAnalyzer(trial=trial, llm=model, args=args),
+                          ])
+  else:
+    writer_agents = []
+    if 'gemini' in args.model or 'vertex' in args.model:
+      writer_agents.append(
+          FunctionAnalyzer(trial=trial,
+                           llm=model,
+                           args=args,
+                           benchmark=benchmark))
+    writer_agents += [
+        OnePromptPrototyper(trial=trial, llm=model, args=args),
+        OnePromptEnhancer(trial=trial, llm=model, args=args)
+    ]
+
+    p = pipeline.Pipeline(args=args,
+                          trial=trial,
+                          writing_stage_agents=writer_agents,
                           analysis_stage_agents=[
                               SemanticAnalyzer(trial=trial,
                                                llm=model,
