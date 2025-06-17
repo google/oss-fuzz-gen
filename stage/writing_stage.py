@@ -50,13 +50,16 @@ class WritingStage(BaseStage):
       # Execute the Enhancer agent
       agent = self.get_agent(index=2)
     else:
-      # First, execute the FunctionAnalyzer agent
       agent = self.get_agent(index=0)
-      agent_result = self._execute_agent(agent, result_history)
-      result_history.append(agent_result)
+      if agent.name == 'FunctionAnalyzer':
+        # If the first agent is FunctionAnalyzer, we execute it first
+        # to generate a new fuzz target and build script.
+        agent_result = self._write_new_fuzz_target(result_history)
+        result_history.append(agent_result)
 
-      # Then, execute the Prototyper agent
-      agent = self.get_agent(index=1)
+        # Then, execute the Prototyper agent to refine the fuzz target.
+        agent = self.get_agent(index=1)
+
     agent_result = self._execute_agent(agent, result_history)
     build_result = cast(BuildResult, agent_result)
 
