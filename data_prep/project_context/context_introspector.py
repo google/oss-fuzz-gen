@@ -25,6 +25,14 @@ from experiment import benchmark as benchmarklib
 logger = logging.getLogger(__name__)
 
 COMPLEX_TYPES = ['const', 'enum', 'struct', 'union', 'volatile']
+PRIMITIVE_TYPES = [
+    "void", "auto", "_Bool", "bool", "byte", "char", "char16_t", "char32_t",
+    "char8_t", "complex128", "complex64", "double", "f32", "f64", "float",
+    "float32", "float64", "i8", "i16", "i32", "i64", "i128", "int", "int8",
+    "int16", "int32", "int64", "isize", "long", "double", "nullptr_t", "rune",
+    "short", "str", "string", "u8", "u16", "u32", "u64", "u128", "uint", "uint8",
+    "uint16", "uint32", "uint64", "usize", "uintptr", "unsafe.Pointer", "wchar_t"
+]
 
 
 class ContextRetriever:
@@ -64,12 +72,13 @@ class ContextRetriever:
       if cleaned_type:
         types.append(cleaned_type)
 
+    # Retrieve full custom definition of the project
+    info_list = introspector.query_introspector_type_definition(
+        self._benchmark.project)
+
     for current_type in types:
-      # Retrieve full custom definition of the project
-      info_list = introspector.query_introspector_type_definition(
-          self._benchmark.project)
-      if not info_list:
-        logging.warning('Could not type info for project.')
+      # Check for primitive types which does not need to include
+      if current_type in PRIMITIVE_TYPES:
         continue
 
       # Retrieve specific type definition
@@ -190,17 +199,25 @@ class ContextRetriever:
 
   def get_type_def(self, type_name: str) -> str:
     """Retrieves the source code definitions for the given |type_name|."""
-    type_names = [self._clean_type(type_name)]
+    type_names = [
+        i for i in self._clean_type(type_name) if i not in PRIMITIVE_TYPES]
     type_def = ''
 
+    # Skip primitive types
+    if not type_names:
+      logging.warning('No non-primitive types.')
+      return type_def
+
+    # Retrieve full custom type definitions
     info_list = introspector.query_introspector_type_definition(
         self._benchmark.project)
     if not info_list:
-      logging.warning('Could not type info for project.')
-      return type_def
+      logging.warning('Could not get full type definition for project: %s',
+                      self._benchmark.project)
 
     info_dict = {info['name']: info for info in info_list}
     for current_type in type_names:
+      # Try retrieve type definition details
       type_info = info_dict.get(current_type)
       if not type_info:
         logging.warning('Could not type info for project: %s type: %s',
