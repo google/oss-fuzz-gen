@@ -52,9 +52,7 @@ class WritingStage(BaseStage):
     else:
       agent = self.get_agent(index=0)
       if agent.name == 'FunctionAnalyzer':
-        # If the first agent is FunctionAnalyzer, we execute it first
-        # to generate a new fuzz target and build script.
-        agent_result = self._write_new_fuzz_target(result_history)
+        agent_result = self._execute_agent(agent, result_history)
         result_history.append(agent_result)
 
         # Then, execute the Prototyper agent to refine the fuzz target.
