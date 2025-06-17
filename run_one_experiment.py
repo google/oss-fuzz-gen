@@ -263,7 +263,6 @@ def _fuzzing_pipeline(benchmark: Benchmark, model: models.LLM,
                               CoverageAnalyzer(trial=trial,
                                                llm=model,
                                                args=args),
-                              CrashAnalyzer(trial=trial, llm=model, args=args),
                           ])
   elif args.agent:
 
