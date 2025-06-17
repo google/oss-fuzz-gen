@@ -907,26 +907,8 @@ class FunctionAnalyzerTemplateBuilder(DefaultTemplateBuilder):
     super().__init__(model, benchmark, template_dir, initial)
 
     # Load templates.
-    self.function_analyzer_instruction_template_file = self._find_template(
-        AGENT_TEMPLATE_DIR, 'function-analyzer-instruction.txt')
-    self.context_retrieve_template_file = self._find_template(
-        AGENT_TEMPLATE_DIR, 'context-retriever-instruction.txt')
     self.function_analyzer_prompt_template_file = self._find_template(
         AGENT_TEMPLATE_DIR, 'function-analyzer-priming.txt')
-
-  def build_context_retriever_instruction(self) -> prompts.Prompt:
-    """Constructs a prompt using the templates in |self| and saves it."""
-
-    self._prompt = self._model.prompt_type()(None)
-
-    if not self.benchmark:
-      return self._prompt
-
-    prompt = self._get_template(self.context_retrieve_template_file)
-
-    self._prompt.append(prompt)
-
-    return self._prompt
 
   def build_prompt(self) -> prompts.Prompt:
     """Constructs a prompt using the templates in |self| and saves it."""
