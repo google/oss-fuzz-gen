@@ -270,7 +270,6 @@ class FunctionToolPrototyper(BaseAgent):
     logger.info('#' * 20 + ' Tool call ' + '#' * 20, trial=self.trial)
     args = self._load_tool_arguments(tool_call)
     logger.info('Dispatching tool call: %s', tool_call.name, trial=self.trial)
-    #logger.info('Tool call arguments: %s', args, trial=-1)
     for arg in args:
       logger.info('Argument %s: %s', arg, args[arg], trial=self.trial)
     logger.info('#' * 51, trial=self.trial)
