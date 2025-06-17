@@ -26,12 +26,13 @@ logger = logging.getLogger(__name__)
 
 COMPLEX_TYPES = ['const', 'enum', 'struct', 'union', 'volatile']
 PRIMITIVE_TYPES = [
-    "void", "auto", "_Bool", "bool", "byte", "char", "char16_t", "char32_t",
-    "char8_t", "complex128", "complex64", "double", "f32", "f64", "float",
-    "float32", "float64", "i8", "i16", "i32", "i64", "i128", "int", "int8",
-    "int16", "int32", "int64", "isize", "long", "double", "nullptr_t", "rune",
-    "short", "str", "string", "u8", "u16", "u32", "u64", "u128", "uint", "uint8",
-    "uint16", "uint32", "uint64", "usize", "uintptr", "unsafe.Pointer", "wchar_t"
+    'void', 'auto', '_Bool', 'bool', 'byte', 'char', 'char16_t', 'char32_t',
+    'char8_t', 'complex128', 'complex64', 'double', 'f32', 'f64', 'float',
+    'float32', 'float64', 'i8', 'i16', 'i32', 'i64', 'i128', 'int', 'int8',
+    'int16', 'int32', 'int64', 'isize', 'long', 'double', 'nullptr_t', 'rune',
+    'short', 'str', 'string', 'u8', 'u16', 'u32', 'u64', 'u128', 'uint',
+    'uint8', 'uint16', 'uint32', 'uint64', 'usize', 'uintptr', 'unsafe.Pointer',
+    'wchar_t'
 ]
 
 
@@ -200,7 +201,8 @@ class ContextRetriever:
   def get_type_def(self, type_name: str) -> str:
     """Retrieves the source code definitions for the given |type_name|."""
     type_names = [
-        i for i in self._clean_type(type_name) if i not in PRIMITIVE_TYPES]
+        i for i in self._clean_type(type_name) if i not in PRIMITIVE_TYPES
+    ]
     type_def = ''
 
     # Skip primitive types
