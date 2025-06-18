@@ -26,22 +26,28 @@ class WorkDirs:
 
   RUN_LOG_NAME_PATTERN = re.compile(r'.*-F(\d+).log')
 
-  def __init__(self, base_dir, keep: bool = False):
+  def __init__(self,
+               base_dir,
+               keep: bool = False,
+               create_children_dirs: bool = True):
     self._base_dir = os.path.realpath(base_dir)
     if os.path.exists(self._base_dir) and not keep:
       # Clear existing directory.
       rmtree(self._base_dir, ignore_errors=True)
 
     os.makedirs(self._base_dir, exist_ok=True)
-    os.makedirs(self.status, exist_ok=True)
-    os.makedirs(self.raw_targets, exist_ok=True)
-    os.makedirs(self.fixed_targets, exist_ok=True)
-    os.makedirs(self.build_logs, exist_ok=True)
-    os.makedirs(self.run_logs, exist_ok=True)
-    os.makedirs(self._corpus_base, exist_ok=True)
-    os.makedirs(self.dills, exist_ok=True)
-    os.makedirs(self.fuzz_targets, exist_ok=True)
-    os.makedirs(self._artifact_base, exist_ok=True)
+
+    if create_children_dirs:
+      os.makedirs(self.status, exist_ok=True)
+      os.makedirs(self.raw_targets, exist_ok=True)
+      os.makedirs(self.fixed_targets, exist_ok=True)
+      os.makedirs(self.build_logs, exist_ok=True)
+      os.makedirs(self.run_logs, exist_ok=True)
+      os.makedirs(self._corpus_base, exist_ok=True)
+      os.makedirs(self.dills, exist_ok=True)
+      os.makedirs(self.fuzz_targets, exist_ok=True)
+      os.makedirs(self._artifact_base, exist_ok=True)
+      os.makedirs(self.requirements, exist_ok=True)
 
   def __repr__(self) -> str:
     return self._base_dir
@@ -111,6 +117,10 @@ class WorkDirs:
   @property
   def run_logs(self) -> str:
     return os.path.join(self._base_dir, 'logs', 'run')
+
+  @property
+  def requirements(self) -> str:
+    return os.path.join(self._base_dir, 'requirements')
 
   def build_logs_target(self, generated_target_name: str, iteration: int,
                         trial: int) -> str:

@@ -316,7 +316,7 @@ class DefaultTemplateBuilder(PromptBuilder):
     """Prepares the code-fixing prompt."""
     priming, priming_weight = self._format_fixer_priming(benchmark)
 
-    if error_desc and errors:
+    if error_desc or errors:
       pass
     elif coverage_result:
       error_desc = coverage_result.insight
@@ -392,6 +392,10 @@ class DefaultTemplateBuilder(PromptBuilder):
       if prompt_size + error_token_num >= self._model.context_window:
         # The estimation is inaccurate, if an example's size equals to
         # the limit, it's safer to not include the example.
+        if not selected_errors:
+          # At least include one error in order for LLM to have something
+          # to fix even if not enough token left.
+          selected_errors.append(error)
         break
       prompt_size += error_token_num
       selected_errors.append(error)
@@ -588,7 +592,8 @@ class PrototyperTemplateBuilder(DefaultTemplateBuilder):
             project_example_content: Optional[list[list[str]]] = None,
             project_context_content: Optional[dict] = None,
             tool_guides: str = '',
-            project_dir: str = '') -> prompts.Prompt:
+            project_dir: str = '',
+            function_requirements: str = '') -> prompts.Prompt:
     """Constructs a prompt using the templates in |self| and saves it."""
     if not self.benchmark:
       return self._prompt
@@ -600,6 +605,9 @@ class PrototyperTemplateBuilder(DefaultTemplateBuilder):
                       f'</code> in your solution!\n')
     if project_context_content:
       final_problem += self.format_context(project_context_content)
+    if function_requirements:
+      final_problem += (f'\nHere are the requirements for the function:\n'
+                        f'{function_requirements}\n')
     self._prepare_prompt(priming, final_problem, example_pair,
                          project_example_content)
     self._prompt.append(tool_guides, True)
@@ -628,7 +636,8 @@ class PrototyperFixerTemplateBuilder(PrototyperTemplateBuilder):
             project_example_content: Optional[list[list[str]]] = None,
             project_context_content: Optional[dict] = None,
             tool_guides: str = '',
-            project_dir: str = '') -> prompts.Prompt:
+            project_dir: str = '',
+            function_requirements: str = '') -> prompts.Prompt:
     """Constructs a prompt using the templates in |self| and saves it."""
     del (example_pair, project_example_content, project_context_content,
          tool_guides)
@@ -674,7 +683,8 @@ class CoverageAnalyzerTemplateBuilder(PrototyperTemplateBuilder):
             project_example_content: Optional[list[list[str]]] = None,
             project_context_content: Optional[dict] = None,
             tool_guides: str = '',
-            project_dir: str = '') -> prompts.Prompt:
+            project_dir: str = '',
+            function_requirements: str = '') -> prompts.Prompt:
     """Constructs a prompt using the templates in |self| and saves it."""
     del (example_pair, project_example_content, project_context_content)
     if not self.benchmark:
@@ -721,7 +731,8 @@ class EnhancerTemplateBuilder(PrototyperTemplateBuilder):
             project_example_content: Optional[list[list[str]]] = None,
             project_context_content: Optional[dict] = None,
             tool_guides: str = '',
-            project_dir: str = '') -> prompts.Prompt:
+            project_dir: str = '',
+            function_requirements: str = '') -> prompts.Prompt:
     """Constructs a prompt using the templates in |self| and saves it."""
     del (example_pair, project_example_content, project_context_content)
     if not self.benchmark:
@@ -780,7 +791,8 @@ class CoverageEnhancerTemplateBuilder(PrototyperTemplateBuilder):
             project_example_content: Optional[list[list[str]]] = None,
             project_context_content: Optional[dict] = None,
             tool_guides: str = '',
-            project_dir: str = '') -> prompts.Prompt:
+            project_dir: str = '',
+            function_requirements: str = '') -> prompts.Prompt:
     """Constructs a prompt using the templates in |self| and saves it."""
     del (example_pair, project_example_content, project_context_content)
     if not self.benchmark:
@@ -809,8 +821,8 @@ class CoverageEnhancerTemplateBuilder(PrototyperTemplateBuilder):
     return self._prompt
 
 
-class FunctionAnalyzerTemplateBuilder(PrototyperTemplateBuilder):
-  """ Builder for function analyzer."""
+class FunctionAnalyzerTemplateBuilder(DefaultTemplateBuilder):
+  """ Builder for function analyzer. """
 
   def __init__(self,
                model: models.LLM,
@@ -821,12 +833,16 @@ class FunctionAnalyzerTemplateBuilder(PrototyperTemplateBuilder):
 
     # Load templates.
     self.function_analyzer_instruction_template_file = self._find_template(
-        self.agent_templare_dir, 'function-analyzer-instruction.txt')
+        AGENT_TEMPLATE_DIR, 'function-analyzer-instruction.txt')
+    self.context_retrieve_template_file = self._find_template(
+        AGENT_TEMPLATE_DIR, 'context-retriever-instruction.txt')
     self.function_analyzer_prompt_template_file = self._find_template(
-        self.agent_templare_dir, 'function-analyzer-priming.txt')
+        AGENT_TEMPLATE_DIR, 'function-analyzer-priming.txt')
 
   def build_instruction(self) -> prompts.Prompt:
     """Constructs a prompt using the templates in |self| and saves it."""
+
+    self._prompt = self._model.prompt_type()(None)
     if not self.benchmark:
       return self._prompt
 
@@ -837,15 +853,58 @@ class FunctionAnalyzerTemplateBuilder(PrototyperTemplateBuilder):
 
     return self._prompt
 
-  def build_prompt(self, project_name, function_signature) -> prompts.Prompt:
+  def build_context_retriever_instruction(self) -> prompts.Prompt:
     """Constructs a prompt using the templates in |self| and saves it."""
+
+    self._prompt = self._model.prompt_type()(None)
+
     if not self.benchmark:
+      return self._prompt
+
+    prompt = self._get_template(self.context_retrieve_template_file)
+
+    self._prompt.append(prompt)
+
+    return self._prompt
+
+  def build_prompt(self) -> prompts.Prompt:
+    """Constructs a prompt using the templates in |self| and saves it."""
+
+    if not self.benchmark:
+      logger.error(
+          'No benchmark provided for function analyzer template builder.')
       return self._prompt
 
     prompt = self._get_template(self.function_analyzer_prompt_template_file)
 
-    prompt = prompt.replace('{PROJECT_NAME}', project_name)
-    prompt = prompt.replace('{FUNCTION_SIGNATURE}', function_signature)
+    prompt = prompt.replace('{PROJECT_NAME}', self.benchmark.project)
+    prompt = prompt.replace('{FUNCTION_SIGNATURE}',
+                            self.benchmark.function_signature)
+
+    # Get the function source
+    func_source = introspector.query_introspector_function_source(
+        self.benchmark.project, self.benchmark.function_signature)
+
+    if not func_source:
+      logger.error('No function source found for project: %s, function: %s',
+                   self.benchmark.project, self.benchmark.function_signature)
+      return prompts.TextPrompt()
+
+    prompt = prompt.replace('{FUNCTION_SOURCE}', func_source)
+
+    # Get the function's references
+    xrefs = introspector.query_introspector_cross_references(
+        self.benchmark.project, self.benchmark.function_signature)
+    if not xrefs:
+      logger.error('No cross references found for project: %s, function: %s',
+                   self.benchmark.project, self.benchmark.function_signature)
+      prompt = prompt.replace(
+          '<function-references>\n{FUNCTION_REFERENCES}\n</function-references>}',
+          '')
+    else:
+      references = [f"<reference>\n{xref}\n</reference>" for xref in xrefs]
+      references_str = '\n'.join(references)
+      prompt = prompt.replace('{FUNCTION_REFERENCES}', references_str)
 
     self._prompt.append(prompt)
 
@@ -859,8 +918,10 @@ class FunctionAnalyzerTemplateBuilder(PrototyperTemplateBuilder):
             project_dir: str = '',
             project_name: str = '',
             function_signature: str = '') -> prompts.Prompt:
-    """Constructs a prompt using the templates in |self| and saves it."""
-    return self.build_prompt(project_name, function_signature)
+
+    raise NotImplementedError(
+        'FunctionAnalyzerTemplateBuilder.build() should not be called. '
+        'Use build_instruction() or build_prompt() instead.')
 
 
 class CrashAnalyzerTemplateBuilder(DefaultTemplateBuilder):

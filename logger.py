@@ -127,7 +127,7 @@ def debug(msg: object,
           trial: int,
           exc_info=None,
           stack_info: bool = False,
-          stacklevel: int = 1,
+          stacklevel: int = 2,
           extra: Mapping[str, object] | None = None,
           **kwargs: object) -> None:
   return get_trial_logger(trial=trial).debug(msg,
@@ -144,7 +144,7 @@ def info(msg: object,
          trial: int,
          exc_info=None,
          stack_info: bool = False,
-         stacklevel: int = 1,
+         stacklevel: int = 2,
          extra: Mapping[str, object] | None = None,
          **kwargs: object) -> None:
   return get_trial_logger(trial=trial).info(msg,
@@ -161,7 +161,7 @@ def warning(msg: object,
             trial: int,
             exc_info=None,
             stack_info: bool = False,
-            stacklevel: int = 1,
+            stacklevel: int = 2,
             extra: Mapping[str, object] | None = None,
             **kwargs: object) -> None:
   return get_trial_logger(trial=trial).warning(msg,
@@ -178,7 +178,7 @@ def error(msg: object,
           trial: int,
           exc_info=None,
           stack_info: bool = False,
-          stacklevel: int = 1,
+          stacklevel: int = 2,
           extra: Mapping[str, object] | None = None,
           **kwargs: object) -> None:
   return get_trial_logger(trial=trial).error(msg,
@@ -198,7 +198,7 @@ def get_trial_logger(name: str = __name__,
   if not logger.handlers:
     formatter = logging.Formatter(
         fmt=('%(asctime)s [Trial ID: %(trial)02d] %(levelname)s '
-             '[%(module)s.%(funcName)s]: %(message)s'),
+             '[%(module)s.%(funcName)s:%(lineno)s]: %(message)s'),
         datefmt='%Y-%m-%d %H:%M:%S')
     handler = logging.StreamHandler()
     handler.setFormatter(formatter)
