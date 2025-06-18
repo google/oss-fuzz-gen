@@ -499,16 +499,15 @@ class Results:
           accumulated_results.total_runs += 1
           accumulated_results.total_line_coverage_diff += (
               sample.result.line_coverage_diff)
-      return accumulated_results
-
-    for benchmark in benchmarks:
-      accumulated_results.compiles += int(
-          benchmark.result.build_success_rate > 0.0)
-      accumulated_results.crashes += int(benchmark.result.found_bug > 0)
-      accumulated_results.total_coverage += benchmark.result.max_coverage
-      accumulated_results.total_runs += 1
-      accumulated_results.total_line_coverage_diff += (
-          benchmark.result.max_line_coverage_diff)
+    else:
+      for benchmark in benchmarks:
+        accumulated_results.compiles += int(
+            benchmark.result.build_success_rate > 0.0)
+        accumulated_results.crashes += int(benchmark.result.found_bug > 0)
+        accumulated_results.total_coverage += benchmark.result.max_coverage
+        accumulated_results.total_runs += 1
+        accumulated_results.total_line_coverage_diff += (
+            benchmark.result.max_line_coverage_diff)
     return accumulated_results
 
   def get_coverage_language_gains(self):
