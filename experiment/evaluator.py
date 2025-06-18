@@ -285,7 +285,8 @@ class Evaluator:
               f'{benchmark.target_path}\n')
 
     if not build_script_path or os.path.getsize(build_script_path) == 0:
-      return name
+      # Return the generated project path to the caller.
+      return generated_project_path
 
     # Copy generated build script to generated_project_path
     shutil.copyfile(
@@ -300,7 +301,8 @@ class Evaluator:
     with open(os.path.join(generated_project_path, 'Dockerfile'), 'a') as f:
       f.write('\nCOPY agent-build.sh /src/build.sh\n')
 
-    return name
+    # Return the generated project path to the caller.
+    return generated_project_path
 
   @staticmethod
   def create_ossfuzz_project_with_gdb(benchmark: Benchmark,
