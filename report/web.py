@@ -222,16 +222,16 @@ class GenerateReport:
         if sample.result.crashes:
           samples_with_bugs.append({'benchmark': benchmark, 'sample': sample})
         sample_targets = self._results.get_targets(benchmark.id, sample.id)
+        semantic_log = self._get_semantic_analyzer_log(benchmark.id, sample.id)
         self._write_benchmark_sample(benchmark, sample, sample_targets,
-                                     time_results)
+                                     time_results, semantic_log)
 
     accumulated_results = self._results.get_macro_insights(benchmarks)
     projects = self._results.get_project_summary(benchmarks)
     coverage_language_gains = self._results.get_coverage_language_gains()
 
-    self._write_index_html(benchmarks, accumulated_results, projects,
-                           samples_with_bugs, coverage_language_gains,
-                           time_results)
+    self._write_index_html(benchmarks, accumulated_results, time_results,
+                           projects, samples_with_bugs, coverage_language_gains)
     self._write_index_json(benchmarks)
     self._write_unified_json(benchmarks, projects)
 
@@ -252,24 +252,18 @@ class GenerateReport:
 
   def _write_index_html(self, benchmarks: List[Benchmark],
                         accumulated_results: AccumulatedResult,
-                        projects: list[Project],
+                        time_results: dict[str, Any], projects: list[Project],
                         samples_with_bugs: list[dict[str, Any]],
-                        coverage_language_gains: dict[str, Any],
-                        time_results: dict[str, Any]):
+                        coverage_language_gains: dict[str, Any]):
     """Generate the report index.html and write to filesystem."""
     index_css_content = self._read_static_file('index/index.css')
     index_js_content = self._read_static_file('index/index.js')
 
-    # Common data that should be available in base.html
-    common_data = {
-        'accumulated_results': accumulated_results,
-        'time_results': time_results,
-    }
-
     rendered = self._jinja.render(
         'index/index.html',
         benchmarks=benchmarks,
-        **common_data,
+        accumulated_results=accumulated_results,
+        time_results=time_results,
         projects=projects,
         samples_with_bugs=samples_with_bugs,
         coverage_language_gains=coverage_language_gains,
@@ -425,7 +419,9 @@ class GenerateReport:
 
   def _write_benchmark_sample(self, benchmark: Benchmark, sample: Sample,
                               sample_targets: List[Target],
-                              time_results: dict[str, Any]):
+                              time_results: dict[str,
+                                                 Any], semantic_log: dict[str,
+                                                                          Any]):
     """Generate the sample page and write to filesystem."""
     try:
       # Ensure all required variables are available
@@ -442,8 +438,6 @@ class GenerateReport:
           'accumulated_results': self._results.get_macro_insights([benchmark]),
           'time_results': time_results,
       }
-
-      semantic_log = self._get_semantic_analyzer_log(benchmark.id, sample.id)
 
       rendered = self._jinja.render('sample/sample.html',
                                     benchmark=benchmark,
