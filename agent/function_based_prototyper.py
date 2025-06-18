@@ -23,7 +23,7 @@ from agent.base_agent import BaseAgent
 from data_prep import introspector
 from experiment.workdir import WorkDirs
 from llm_toolkit.prompts import Prompt
-from results import BuildResult, Result
+from results import AnalysisResult, BuildResult, Result
 from tool.container_tool import ProjectContainerTool
 
 FUZZ_GEN_TOOLS = [
@@ -135,6 +135,51 @@ and generate the fuzz target.
 {PROJECT_LANGUAGE}</project_language>
 '''
 
+FUNCTION_REFINE_PROMPT = '''You are a security engineer looking to improve
+a fuzz target for a specific function in a project. Your task is to refine
+the fuzz target to overcome the issues found from running the fuzz target.
+
+The fuzz target should be written in the
+language of the project and should be able to compile with the provided build
+script. The fuzz target should also be able to run in the provided container
+environment.
+You will be provided with the following information:
+- The function under test, including its name and signature.
+- The project language and file type.
+- Structured information about the errors from the last run of the fuzz target.
+You will also have access to a set of tools that can help you:
+- List all functions in the project.
+- Get the source code of a specific function.
+- Run commands in the container where the fuzz target is to be built.
+- Test the fuzz target build by compiling the provided source code.
+You will interact with the tools to gather information and improve the fuzz
+target. Your goal is to create a better fuzz target that can build and run
+in the container environment, and that can exercise the function under test.
+Make sure to follow the project conventions and best practices for writing
+fuzz targets in the specific language. The fuzz target should be simple but
+valid, and should not require any additional dependencies or libraries.
+
+You are interacting with a fully automated system, so use the tools provided to you.
+Do not ask for human help, but rather use the tools to gather information
+and generate the fuzz target.
+
+<target_function>
+{FUNCTION_SIGNATURE}</target_function>
+
+<project_language>
+{PROJECT_LANGUAGE}</project_language>
+
+
+<existing_fuzzer_source_code>
+{FUZZER_SOURCE_CODE}</existing_fuzzer_source_code>
+
+<structured_information_about_errors_from_previous_run>
+{ERRORS}</structured_information_about_errors_from_previous_run>
+
+The goal is to improve the fuzz target, and we will continue the process
+until the improved fuzz target builds and runs.
+'''
+
 
 class FunctionToolPrototyper(BaseAgent):
   """The Agent to generate a simple but valid fuzz target from scratch."""
@@ -148,6 +193,23 @@ class FunctionToolPrototyper(BaseAgent):
     template_prompt = template_prompt.replace('{PROJECT_LANGUAGE}',
                                               self.benchmark.language)
 
+    prompt = self.llm.prompt_type()(None)
+    prompt.add_priming(template_prompt)
+
+    return prompt
+
+  def _initial_refinement_prompt(self, results: list[Result]) -> Prompt:
+    """Constructs initial prompt of the agent for refinement."""
+    last_result = results[-1]
+    template_prompt = FUNCTION_REFINE_PROMPT
+    template_prompt = template_prompt.replace('{FUNCTION_SIGNATURE}',
+                                              self.benchmark.function_signature)
+    template_prompt = template_prompt.replace('{PROJECT_LANGUAGE}',
+                                              self.benchmark.language)
+    template_prompt = template_prompt.replace(
+        '{ERRORS}', json.dumps(last_result.chat_history))
+    template_prompt = template_prompt.replace('{FUZZER_SOURCE_CODE}',
+                                              last_result.fuzz_target_source)
     prompt = self.llm.prompt_type()(None)
     prompt.add_priming(template_prompt)
 
@@ -353,18 +415,40 @@ class FunctionToolPrototyper(BaseAgent):
     WorkDirs(self.args.work_dirs.base, keep=True)
     last_result = result_history[-1]
     logger.info('Executing %s', self.name, trial=last_result.trial)
-    benchmark = last_result.benchmark
+    logger.info('Length of messages: %d',
+                len(self.llm.messages),
+                trial=last_result.trial)
+
+    # Prepare for analysis
     self.compile_result = None
+    benchmark = result_history[0].benchmark
+    self.benchmark = benchmark
     self.inspect_tool = ProjectContainerTool(benchmark, name='inspect')
     self.inspect_tool.compile(extra_commands=' && rm -rf /out/* > /dev/null')
-    cur_round = 1
     build_result = BuildResult(benchmark=benchmark,
                                trial=last_result.trial,
                                work_dirs=last_result.work_dirs,
                                author=self,
                                chat_history={self.name: ''})
-    self.benchmark = benchmark
-    prompt = self._initial_prompt(result_history)
+    # If we have an analysis result, we should start a new prompt sequence
+    # that refines the target.
+    if isinstance(last_result, AnalysisResult):
+      logger.info('Last result is AnalysisResult, will refine the target.',
+                  trial=self.trial)
+      # We expect this to be a Semantic Analysis result.
+      prompt = self._initial_refinement_prompt(result_history)
+
+      # Reset the LLM, we start from scratch here with a refined prompt.
+      # This helps with context size etc.
+      self.llm.messages = []
+    else:
+      logger.info('Last result is not AnalysisResult, will build a new target.',
+                  trial=self.trial)
+      # Starting from scratch, meaning there are no semantic results we can
+      # use to refine a previously built target.
+      prompt = self._initial_prompt(result_history)
+
+    cur_round = 1
     counter = 0
     try:
       client = self.llm.get_chat_client(model=self.llm.get_model())
