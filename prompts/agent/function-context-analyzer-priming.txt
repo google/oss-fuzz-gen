@@ -1,0 +1,92 @@
+
+<task>
+You are a professional security engineer developing fuzz drivers for a target function `{FUNCTION_SIGNATURE}` in the project {PROJECT_NAME}.
+The previous fuzz driver you developed caused a crash.
+We have provided you with the target function, its requirements, the crash stacktrace, an analysis of the crash, the fuzz driver that caused the crash,
+and a set of tools that you can use to navigate the project's codebase.
+You are to analyze the function, all locations where the function can be called in the project, and the execution paths that lead to these call sites.
+Your goal is to either determine the feasibility that this crash can be triggered from the target function's call sites, and if it cannot,
+you should provide an updated set of function requirements that would prevent the crash.
+</task>
+
+<steps>
+Follow these steps to determine the feasibility of this crash.
+
+Step 1: Identify the information you need to analyze the crash and the function's context.
+This includes:
+   - The target function
+   - The different functions where it is called from
+   - The crash stacktrace and analysis
+   - The state of input and global variables that lead to the crash
+   - Locations in the code where those input variables could have been initialized
+   - Execution paths between the input variable initializations and the target function
+
+Step 2: Collect information using the provided tools
+Use the provided tools (see <tool> section) and follow their rules to gather the necessary information. You can collect information from:
+   - The project source code directory `{PROJECT_DIR}/` cloned from the project repository.
+   - External sources using the get_function_implementation tool.
+   - Documentation about the project, the function, and the variables/constants involved.
+
+Step 3: Identify the states of input (defined in the fuzz driver) and global variables that caused the crash
+You can get these states by reviewing:
+   - The crash analysis
+   - The functions identified in the stack trace
+   - The fuzz driver
+
+Step 4: Determine the feasibility of these variable states based on the project locations where the function is called.
+
+Step 5: If the crash is feasible or does not have any callers or usages in the project, then report it as feasible and describe the paths through the project that can cause the crash.
+
+Step 6: If the crash is not feasible, check if the input or global states causing the crash are covered by the existing requirements. If they are not, update the requirements so the next fuzz driver does not cause a similar crash.
+
+Step 7: If the crash is not feasible and the input states already violate the provided requirements, provide the violated requirements in your conclusion.
+
+Step 8: Provide your conclusion in the response format below.
+</steps>
+
+Here is the provided data.
+
+<target-function>
+{FUNCTION_SOURCE}
+</target-function>
+
+<function-requirements>
+{FUNCTION_REQUIREMENTS}
+</function-requirements>
+
+<crash-stacktrace>
+{CRASH_STACKTRACE}
+</crash-stacktrace>
+
+<crash-analysis>
+{CRASH_ANALYSIS}
+</crash-analysis>
+
+<fuzz-driver>
+{FUZZ_DRIVER}
+</fuzz-driver>
+
+You MUST return your response in the format below.
+
+<response_format>
+Make sure your response follows the following format.
+
+<response>
+<conclusion>
+'True' or 'False'
+</conclusion>
+<analysis>
+Your analysis of the feasibility of this crash
+</analysis>
+<requirements>
+An updated list of requirements
+Only provide this section if you modified or added a requirement.
+</requirements>
+</response>
+
+</response_format>
+
+You will be provided with the following tools.
+1. get_function_implementation: This is a tool you can use to retrieve the implementation of a function using the project's name and function's name as arguments.
+2. search_project_files: This is an interactive tool you can use to search the project's source file using bash commands and find definitions or usages of functions, classes, structs, and variables.
+    The usage guide for the Bash Tool is provided below.
