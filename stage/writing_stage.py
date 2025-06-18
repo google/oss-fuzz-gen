@@ -48,7 +48,7 @@ class WritingStage(BaseStage):
     """Executes the writing stage."""
     last_result = result_history[-1] if result_history else None
 
-    if (last_result is None or last_result.fuzz_target_source is None or
+    if (not last_result or not last_result.fuzz_target_source or
         (isinstance(last_result, AnalysisResult) and last_result.crash_result)):
       # Run the FunctionAnalyzer first if this is the first cycle
       # or last result is a CrashResult.
