@@ -215,11 +215,11 @@ class FunctionAnalyzer(base_agent.ADKBaseAgent):
     function_source = ''
 
     if self.project_functions:
-        function_dict = self.project_functions.get(function_name, {})
-        function_signature = function_dict.get('function_signature', '')
+      function_dict = self.project_functions.get(function_name, {})
+      function_signature = function_dict.get('function_signature', '')
 
-        function_source = introspector.query_introspector_function_source(
-            project_name, function_signature)
+      function_source = introspector.query_introspector_function_source(
+          project_name, function_signature)
 
     if function_source.strip():
       response += f"""
@@ -227,9 +227,10 @@ class FunctionAnalyzer(base_agent.ADKBaseAgent):
         {function_source}
         """
     else:
-      logger.error(
-          'Error: Function with name "%s" not found in project "%s".',
-          function_name, project_name, trial=self.trial)
+      logger.error('Error: Function with name "%s" not found in project "%s".',
+                   function_name,
+                   project_name,
+                   trial=self.trial)
 
     self.log_llm_prompt(response)
 
