@@ -480,12 +480,14 @@ class CloudBuilder:
 
     # Download the new experiment archive.
     with tempfile.TemporaryDirectory() as tmpdirname:
-      temp_dest_path = os.path.join(tmpdirname, os.path.basename(new_experiment_url))
+      temp_dest_path = os.path.join(tmpdirname,
+                                    os.path.basename(new_experiment_url))
       self._download_from_gcs(temp_dest_path)
 
       # Extract the downloaded archive, without replacing any existing files.
       tar_command = [
-          'tar', '--skip-old-files', '-xzf', temp_dest_path, '-C', experiment_path
+          'tar', '--skip-old-files', '-xzf', temp_dest_path, '-C',
+          experiment_path
       ]
       logging.info('Tar command: %s', ' '.join(tar_command))
 
@@ -504,7 +506,7 @@ class CloudBuilder:
         logging.error("stderr:\n%s", e.stderr)
         raise
       logging.info('Updated experiment directory with new files from %s',
-                  new_experiment_url)
+                   new_experiment_url)
 
   def run(self, agent: BaseAgent, result_history: list[Result],
           dill_dir: str) -> Any:
