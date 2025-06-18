@@ -217,7 +217,7 @@ class FunctionAnalyzer(base_agent.ADKBaseAgent):
 
     if self.project_functions is None:
       logger.info(
-          "Project functions not initialized. Initializing for project '%s'.",
+          'Project functions not initialized. Initializing for project "%s".',
           project_name,
           trial=self.trial)
       functions_list = introspector.query_introspector_all_functions(
@@ -225,26 +225,39 @@ class FunctionAnalyzer(base_agent.ADKBaseAgent):
 
       if functions_list:
         self.project_functions = {
-            func["debug_summary"]["name"]: func
+            func['debug_summary']['name']: func
             for func in functions_list
-            if "debug_summary" in func and "name" in func["debug_summary"]
+            if isinstance(func.get('debug_summary'), dict) and
+            isinstance(func['debug_summary'].get('name'), str) and
+            func['debug_summary']['name'].strip()
         }
       else:
         self.project_functions = None
 
-    if (self.project_functions is None or
-        function_name not in self.project_functions):
-      logger.error("Error: Required function not found for project '%s'.",
+    response = f"""
+    Project name: {project_name}
+    Function name: {function_name}
+    """
+    function_source = ''
+
+    if self.project_functions:
+      function_dict = self.project_functions.get(function_name, {})
+      function_signature = function_dict.get('function_signature', '')
+
+      function_source = introspector.query_introspector_function_source(
+          project_name, function_signature)
+
+    if function_source.strip():
+      response += f"""
+        Function source code:
+        {function_source}
+        """
+    else:
+      logger.error('Error: Function with name "%s" not found in project "%s".',
+                   function_name,
                    project_name,
                    trial=self.trial)
-      return ""
 
-    function_signature = self.project_functions[function_name][
-        "function_signature"]
+    self.log_llm_prompt(response)
 
-    function_source = introspector.query_introspector_function_source(
-        project_name, function_signature)
-
-    self.log_llm_prompt(function_source)
-
-    return function_source
+    return response

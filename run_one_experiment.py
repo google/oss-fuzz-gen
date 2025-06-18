@@ -254,16 +254,14 @@ def _fuzzing_pipeline(benchmark: Benchmark, model: models.LLM,
                               FunctionToolPrototyper(trial=trial,
                                                      llm=model,
                                                      args=args),
-                              Enhancer(trial=trial, llm=model, args=args),
+                              FunctionToolPrototyper(trial=trial,
+                                                     llm=model,
+                                                     args=args),
                           ],
                           analysis_stage_agents=[
                               SemanticAnalyzer(trial=trial,
                                                llm=model,
                                                args=args),
-                              CoverageAnalyzer(trial=trial,
-                                               llm=model,
-                                               args=args),
-                              CrashAnalyzer(trial=trial, llm=model, args=args),
                           ])
   elif args.agent:
 
