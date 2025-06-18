@@ -178,6 +178,18 @@ class ContextRetriever:
           'function_signature: %s', project, func_sig)
     return xrefs
 
+  def _get_param_typedef(self) -> list[str]:
+    """Querties FI for param type definitions with type name."""
+    result = []
+    for param in self._benchmark.params:
+      for param_type in param.values():
+        typedef_src = self.get_type_def(param_type)
+        if typedef_src:
+          result.append(typdef_src)
+
+    return [item for item in result if result.strip()]
+
+
   def get_context_info(self) -> dict:
     """Retrieves contextual information and stores them in a dictionary."""
     xrefs = self._get_xrefs_to_function()
@@ -185,6 +197,7 @@ class ContextRetriever:
     files = self._get_files_to_include()
     decl = self._get_embeddable_declaration()
     header = self.get_prefixed_header_file()
+    typedef = self._get_param_typedef()
 
     context_info = {
         'xrefs': xrefs,
@@ -192,6 +205,7 @@ class ContextRetriever:
         'files': files,
         'decl': decl,
         'header': header,
+        'typedef': typedef,
     }
 
     logging.info('Context: %s', context_info)
