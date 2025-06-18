@@ -104,7 +104,7 @@ class FunctionAnalyzer(base_agent.ADKBaseAgent):
         trial=self.trial,
         work_dirs=self.args.work_dirs,
         fuzz_target_source=last_result.fuzz_target_source,
-        build_script_source= last_result.build_script_source,
+        build_script_source=last_result.build_script_source,
     )
 
     # Initialize the ProjectContainerTool for local file search
@@ -130,9 +130,7 @@ class FunctionAnalyzer(base_agent.ADKBaseAgent):
 
     return result
 
-  def _initial_prompt(
-      self,
-      results: list[resultslib.Result]) -> prompts.Prompt:
+  def _initial_prompt(self, results: list[resultslib.Result]) -> prompts.Prompt:
     """Create the initial prompt for the agent."""
 
     last_result = results[-1]
@@ -150,16 +148,17 @@ class FunctionAnalyzer(base_agent.ADKBaseAgent):
       # This is the start of the pipeline. Run default function analysis
       prompt = builder.build_prompt(self.inspect_tool.tutorial(),
                                     self.inspect_tool.project_dir)
-    elif (isinstance(last_result, resultslib.CrashResult)
-        and last_build_result):
+    elif (isinstance(last_result, resultslib.CrashResult) and
+          last_build_result):
       function_requirements = self.get_function_requirements()
       prompt = builder.build_context_analysis_prompt(
-        last_build_result, last_result, function_requirements,
-        self.inspect_tool.tutorial(), self.inspect_tool.project_dir)
+          last_build_result, last_result, function_requirements,
+          self.inspect_tool.tutorial(), self.inspect_tool.project_dir)
     else:
-      logger.error(f'Unexpected result type {type(last_result)} '
-                   'or no last build result found.',
-                   trial=self.trial)
+      logger.error(
+          f'Unexpected result type {type(last_result)} '
+          'or no last build result found.',
+          trial=self.trial)
       prompt = prompts.TextPrompt()
 
     return prompt

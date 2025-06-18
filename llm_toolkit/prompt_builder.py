@@ -913,8 +913,8 @@ class FunctionAnalyzerTemplateBuilder(DefaultTemplateBuilder):
         AGENT_TEMPLATE_DIR, 'function-context-analyzer-priming.txt')
 
   def build_prompt(self,
-                    tool_guides: str = '',
-                    project_dir: str = '') -> prompts.Prompt:
+                   tool_guides: str = '',
+                   project_dir: str = '') -> prompts.Prompt:
     """Constructs a prompt using the templates in |self| and saves it."""
 
     if not self.benchmark:
@@ -993,7 +993,6 @@ class FunctionAnalyzerTemplateBuilder(DefaultTemplateBuilder):
     prompt = prompt.replace('{FUZZ_DRIVER}', builf_result.fuzz_target_source)
     prompt = prompt.replace('{CRASH_ANALYSIS}', crash_result.insight)
     prompt = prompt.replace('{CRASH_STACKTRACE}', crash_result.stacktrace)
-
 
     # Add the function requirements
     prompt = prompt.replace('{FUNCTION_REQUIREMENTS}', function_requirements)
