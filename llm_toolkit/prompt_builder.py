@@ -315,7 +315,7 @@ class DefaultTemplateBuilder(PromptBuilder):
     """Prepares the code-fixing prompt."""
     priming, priming_weight = self._format_fixer_priming(benchmark)
 
-    if error_desc and errors:
+    if error_desc or errors:
       pass
     elif coverage_result:
       error_desc = coverage_result.insight
@@ -397,6 +397,10 @@ class DefaultTemplateBuilder(PromptBuilder):
       if prompt_size + error_token_num >= self._model.context_window:
         # The estimation is inaccurate, if an example's size equals to
         # the limit, it's safer to not include the example.
+        if not selected_errors:
+          # At least include one error in order for LLM to have something
+          # to fix even if not enough token left.
+          selected_errors.append(error)
         break
       prompt_size += error_token_num
       selected_errors.append(error)
