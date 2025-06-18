@@ -264,7 +264,7 @@ def query_introspector_for_tests_xref(
 
   resp = _query_introspector(INTROSPECTOR_ORACLE_ALL_TESTS_XREF, data)
 
-  test_files = _get_data(resp, 'test-files', {})
+  test_files = _get_data(resp, 'test-files-xref', {})
 
   handled = set()
   result_list = []
