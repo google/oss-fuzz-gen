@@ -235,6 +235,12 @@ class ContextRetriever:
       # Try retrieve type definition details
       type_info = info_dict.get(current_type)
       if not type_info:
+        # Try to match function type definition
+        for type_key, info in info_dict.items():
+          if type_key.startswith(current_type):
+            type_info = info
+
+      if not type_info:
         logging.warning('Could not type info for project: %s type: %s',
                         self._benchmark.project, current_type)
         continue
@@ -245,10 +251,17 @@ class ContextRetriever:
       end = type_info['pos']['line_end']
 
       # Retrieve type definition of the current type
-      # Remark: no need to handle nested type as info_list contains
-      # full custom type definition.
       type_def += introspector.query_introspector_source_code(
           self._benchmark.project, source, start, end) + '\n'
+
+      # Recursively get type of fields if exist
+      for field in type_info.get('fields', []):
+        if field.get('type'):
+          type_def += self.get_type_def(field.get('type')) + '\n'
+
+      # Recursively get type of sub elements
+      if type_info.get('type'):
+        type_def += self.get_type_def(type_info.get('type')) + '\n'
 
     return type_def
 
