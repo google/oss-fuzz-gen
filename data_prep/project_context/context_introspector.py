@@ -185,10 +185,9 @@ class ContextRetriever:
       for param_type in param.values():
         typedef_src = self.get_type_def(param_type)
         if typedef_src:
-          result.append(typdef_src)
+          result.append(typedef_src)
 
-    return [item for item in result if result.strip()]
-
+    return [item for item in result if item.strip()]
 
   def get_context_info(self) -> dict:
     """Retrieves contextual information and stores them in a dictionary."""
