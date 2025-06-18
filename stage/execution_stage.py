@@ -15,6 +15,7 @@
 crashes of the fuzz targets. This stage will run the fuzz target with OSS-Fuzz
 infra and report its code coverage and crashes."""
 import os
+import traceback
 
 from experiment import builder_runner as builder_runner_lib
 from experiment import evaluator as evaluator_lib
@@ -30,6 +31,31 @@ class ExecutionStage(BaseStage):
   and outputs code coverage report and run-time crash information for later
   stages to analyze and improve on. It uses OSS-Fuzz infra to perform these
   tasks."""
+
+  def get_source_from_project(self, project: str, filename: str) -> str:
+    """Retrieves the source code of the fuzz target from the generated oss-fuzz
+    project."""
+    target_path = os.path.join(project, filename)
+    if os.path.isfile(target_path):
+      with open(target_path, 'r') as file:
+        return file.read()
+    return ''
+
+  def log_fuzz_target_and_build_script(self, fuzz_target_source: str,
+                                       build_script_source: str) -> None:
+    """Logs the fuzz target and build script source code from the generated
+    oss-fuzz project."""
+
+    if fuzz_target_source:
+      self.logger.info('\nFuzz target source: \n%s\n', fuzz_target_source)
+    else:
+      self.logger.error('Fuzz target source not found')
+
+    if build_script_source:
+      self.logger.info('\nBuild script source: \n%s\n', build_script_source)
+    else:
+      self.logger.warning('Build script source not found. ' \
+                          'Original build script will be used.')
 
   def execute(self, result_history: list[Result]) -> Result:
     """Executes the fuzz target and build script in the latest result."""
@@ -60,12 +86,23 @@ class ExecutionStage(BaseStage):
                                     f'{self.trial:02d}.fuzz_target')
     build_script_path = os.path.join(last_result.work_dirs.fuzz_targets,
                                      f'{self.trial:02d}.build_script')
-    evaluator.create_ossfuzz_project(benchmark, generated_oss_fuzz_project,
-                                     fuzz_target_path, build_script_path)
+    generated_project_path = evaluator.create_ossfuzz_project(
+        benchmark, generated_oss_fuzz_project, fuzz_target_path,
+        build_script_path)
 
     status_path = os.path.join(last_result.work_dirs.status,
                                f'{self.trial:02d}')
     os.makedirs(status_path, exist_ok=True)
+
+    # Get the source code of the fuzz target and build script from the generated oss-fuzz projects.
+    fuzz_target_source = self.get_source_from_project(
+        generated_project_path, f'{self.trial:02d}.fuzz_target')
+
+    build_script_source = self.get_source_from_project(
+        generated_project_path, f'{self.trial:02d}.build_script')
+
+    self.log_fuzz_target_and_build_script(fuzz_target_source,
+                                          build_script_source)
 
     # Try building and running the new target.
 
@@ -125,8 +162,13 @@ class ExecutionStage(BaseStage):
         coverage_diff = 0.0
 
       if run_result.log_path and os.path.isfile(run_result.log_path):
-        with open(run_result.log_path, 'r') as f:
-          run_log_lines = f.readlines()
+        with open(run_result.log_path, 'rb') as f:
+          raw_run_log_lines = f.readlines()
+          run_log_lines = []
+          for line in raw_run_log_lines:
+            decoded_line = line.decode('utf-8', errors='ignore')
+            if decoded_line:
+              run_log_lines.append(decoded_line)
           if len(run_log_lines) > 30:
             run_log_lines = (run_log_lines[:20] + [
                 f'...({len(run_log_lines) - 30} lines of fuzzing log truncated)'
@@ -135,6 +177,11 @@ class ExecutionStage(BaseStage):
           run_log_content = ''.join(run_log_lines)
       else:
         run_log_content = ''
+
+      # Add fuzz_target_source and build_script_source to the report log.
+      run_log_content = (f'Fuzz target source:\n{fuzz_target_source}\n'
+                         f'Build script source:\n{build_script_source}\n'
+                         f'{run_log_content}')
 
       runresult = RunResult(
           benchmark=benchmark,
@@ -168,6 +215,7 @@ class ExecutionStage(BaseStage):
           chat_history={self.name: run_log_content})
     except Exception as e:
       self.logger.error('Exception %s occurred on %s', e, last_result)
+      self.logger.error('Traceback: %s', traceback.format_exc())
       runresult = RunResult(
           benchmark=benchmark,
           trial=self.trial,

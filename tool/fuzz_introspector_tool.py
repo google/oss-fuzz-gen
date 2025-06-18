@@ -107,10 +107,14 @@ class FuzzIntrospectorTool(base_tool.BaseTool):
           project_name)
 
       if functions_list:
+        # func["debug_summary"] and func["debug_summary"]["name"] could be
+        # None or empty but still exists
         self.project_functions = {
             func["debug_summary"]["name"]: func
             for func in functions_list
-            if "debug_summary" in func and "name" in func["debug_summary"]
+            if isinstance(func.get("debug_summary"), dict) and
+            isinstance(func["debug_summary"].get("name"), str) and
+            func["debug_summary"]["name"].strip()
         }
       else:
         self.project_functions = None

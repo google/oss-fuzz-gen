@@ -35,7 +35,10 @@ class AnalysisStage(BaseStage):
     assert isinstance(last_result, RunResult)
 
     if last_result.crashes:
-      agent = self.get_agent(agent_name='CrashAnalyzer')
+      try:
+        agent = self.get_agent(agent_name='CrashAnalyzer')
+      except RuntimeError:
+        agent = self.get_agent(agent_name='SemanticAnalyzer')
     else:
       try:
         agent = self.get_agent(agent_name='CoverageAnalyzer')
