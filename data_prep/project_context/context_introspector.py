@@ -185,7 +185,7 @@ class ContextRetriever:
           'Could not retrieve tests xrefs for project: %s '
           'function_signature: %s', project, func_name)
 
-    return xrefs
+    return [xref for xref in xrefs if xref.strip()]
 
   def get_context_info(self) -> dict:
     """Retrieves contextual information and stores them in a dictionary."""
