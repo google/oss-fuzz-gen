@@ -479,30 +479,32 @@ class CloudBuilder:
       return
 
     # Download the new experiment archive.
-    temp_dest_path = f'/tmp/{os.path.basename(new_experiment_url)}'
-    self._download_from_gcs(temp_dest_path)
+    with tempfile.TemporaryDirectory() as tmpdirname:
+      temp_dest_path = os.path.join(tmpdirname, os.path.basename(new_experiment_url))
+      self._download_from_gcs(temp_dest_path)
 
-    tar_command = [
-        'tar', '--skip-old-files', '-xzf', temp_dest_path, '-C', experiment_path
-    ]
-    logging.info('Tar command: %s', ' '.join(tar_command))
+      # Extract the downloaded archive, without replacing any existing files.
+      tar_command = [
+          'tar', '--skip-old-files', '-xzf', temp_dest_path, '-C', experiment_path
+      ]
+      logging.info('Tar command: %s', ' '.join(tar_command))
 
-    # Extract the archive into the experiment directory.
-    try:
-      result = subprocess.run(tar_command,
-                              check=True,
-                              stdout=subprocess.PIPE,
-                              stderr=subprocess.PIPE,
-                              text=True)
-      logging.error("subprocess stdout:\n%s", result.stdout)
-      logging.error("subprocess stderr:\n%s", result.stderr)
-    except subprocess.CalledProcessError as e:
-      logging.error("Tar command failed with return code %d", e.returncode)
-      logging.error("stdout:\n%s", e.stdout)
-      logging.error("stderr:\n%s", e.stderr)
-      raise
-    logging.info('Updated experiment directory with new files from %s',
-                 new_experiment_url)
+      # Extract the archive into the experiment directory.
+      try:
+        result = subprocess.run(tar_command,
+                                check=True,
+                                stdout=subprocess.PIPE,
+                                stderr=subprocess.PIPE,
+                                text=True)
+        logging.error("subprocess stdout:\n%s", result.stdout)
+        logging.error("subprocess stderr:\n%s", result.stderr)
+      except subprocess.CalledProcessError as e:
+        logging.error("Tar command failed with return code %d", e.returncode)
+        logging.error("stdout:\n%s", e.stdout)
+        logging.error("stderr:\n%s", e.stderr)
+        raise
+      logging.info('Updated experiment directory with new files from %s',
+                  new_experiment_url)
 
   def run(self, agent: BaseAgent, result_history: list[Result],
           dill_dir: str) -> Any:
