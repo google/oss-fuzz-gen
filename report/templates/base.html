@@ -367,6 +367,7 @@ tbody tr:nth-child(odd) {
                         return `${hours}h ${minutes}m ${seconds}s`;
                     }
                  }">
+                 {% if time_results %}
                 <p class="text-center md:text-left font-bold text-nowrap">
                     {% if time_results.start_time %}
                         <span x-text="formatDate('{{ time_results.start_time }}')"></span>
@@ -375,6 +376,7 @@ tbody tr:nth-child(odd) {
                     {% endif %}
                     (<span x-text="formatTotalRunTime('{{ time_results.total_run_time }}')"></span>)
                 </p>
+                {% endif %}
                 <p class="text-lg md:text-2xl">Build success rate: <strong>{{ accumulated_results.build_rate|percent }}%</strong></p>
             </div>
         {% endif %}

@@ -15,7 +15,6 @@
 """Report generation tool to create HTML reports for experiment result."""
 
 import argparse
-import ast
 import json
 import logging
 import os
@@ -203,7 +202,6 @@ class GenerateReport:
     """Generate and write every report file."""
     benchmarks = []
     samples_with_bugs = []
-    time_results = self.read_timings()
     for benchmark_id in self._results.list_benchmark_ids():
       results, targets = self._results.get_results(benchmark_id)
       benchmark = self._results.match_benchmark(benchmark_id, results, targets)
@@ -215,20 +213,20 @@ class GenerateReport:
         # If this is a local run then we need to set up coverage reports.
         self._copy_and_set_coverage_report(benchmark, sample)
 
-      self._write_benchmark_index(benchmark, samples, prompt, time_results)
+      self._write_benchmark_index(benchmark, samples, prompt)
       self._write_benchmark_crash(benchmark, samples)
 
       for sample in samples:
         if sample.result.crashes:
           samples_with_bugs.append({'benchmark': benchmark, 'sample': sample})
         sample_targets = self._results.get_targets(benchmark.id, sample.id)
-        semantic_log = self._get_semantic_analyzer_log(benchmark.id, sample.id)
-        self._write_benchmark_sample(benchmark, sample, sample_targets,
-                                     time_results, semantic_log)
+        self._write_benchmark_sample(benchmark, sample, sample_targets)
 
     accumulated_results = self._results.get_macro_insights(benchmarks)
     projects = self._results.get_project_summary(benchmarks)
     coverage_language_gains = self._results.get_coverage_language_gains()
+
+    time_results = self.read_timings()
 
     self._write_index_html(benchmarks, accumulated_results, time_results,
                            projects, samples_with_bugs, coverage_language_gains)
@@ -383,15 +381,13 @@ class GenerateReport:
     self._write('unified_data.json', json.dumps(unified_data, indent=2))
 
   def _write_benchmark_index(self, benchmark: Benchmark, samples: List[Sample],
-                             prompt: Optional[str], time_results: dict[str,
-                                                                       Any]):
+                             prompt: Optional[str]):
     """Generate the benchmark index.html and write to filesystem."""
     benchmark_css_content = self._read_static_file('benchmark/benchmark.css')
     benchmark_js_content = self._read_static_file('benchmark/benchmark.js')
 
     common_data = {
         'accumulated_results': self._results.get_macro_insights([benchmark]),
-        'time_results': time_results,
     }
 
     rendered = self._jinja.render('benchmark/benchmark.html',
@@ -418,10 +414,7 @@ class GenerateReport:
                     benchmark.id, e)
 
   def _write_benchmark_sample(self, benchmark: Benchmark, sample: Sample,
-                              sample_targets: List[Target],
-                              time_results: dict[str,
-                                                 Any], semantic_log: dict[str,
-                                                                          Any]):
+                              sample_targets: List[Target]):
     """Generate the sample page and write to filesystem."""
     try:
       # Ensure all required variables are available
@@ -436,7 +429,6 @@ class GenerateReport:
       sample_js_content = self._read_static_file('sample/sample.js')
       common_data = {
           'accumulated_results': self._results.get_macro_insights([benchmark]),
-          'time_results': time_results,
       }
 
       rendered = self._jinja.render('sample/sample.html',
@@ -446,7 +438,6 @@ class GenerateReport:
                                     run_logs=run_logs,
                                     triage=triage,
                                     targets=sample_targets,
-                                    semantic_log=semantic_log,
                                     sample_css_content=sample_css_content,
                                     sample_js_content=sample_js_content,
                                     **common_data)
@@ -471,48 +462,6 @@ class GenerateReport:
         self._write(f'sample/{benchmark.id}/{sample.id}.html', error_html)
       except Exception:
         pass  # Ignore errors in error handling
-
-  def _get_semantic_analyzer_log(self, benchmark_id: str,
-                                 sample_id: str) -> dict:
-    """Get the semantic analyzer log for a sample."""
-    log_path = os.path.join(self.results_dir, benchmark_id, 'status', sample_id,
-                            'log.txt')
-
-    if not FileSystem(log_path).exists():
-      return {}
-
-    with FileSystem(log_path).open('r') as f:
-      content = f.read().strip()
-      if not content:
-        return {}
-
-      lines = content.split('\n')
-      for i, line in enumerate(lines):
-        if line.startswith('SemanticAnalyzer'):
-          try:
-            data = ast.literal_eval(lines[i + 1])
-            if not data.get('crash_symptom'):
-              return data
-
-            error_msg = data['crash_symptom']
-            if 'AddressSanitizer:' not in error_msg:
-              return data
-
-            data['sanitizer'] = 'AddressSanitizer'
-            after_asan = error_msg.split('AddressSanitizer:')[1].strip()
-
-            if 'on address' in after_asan:
-              data['error_type'] = after_asan.split('on address')[0].strip()
-              data['crash_address'] = after_asan.split('on address')[1].split(
-                  'at pc')[0].strip()
-            else:
-              data['error_type'] = after_asan.split()[0].strip()
-              data['crash_address'] = ''
-            return data
-          except Exception as e:
-            logging.error("Error parsing semantic analyzer log: %s", e)
-            return {}
-      return {}
 
 
 def generate_report(args: argparse.Namespace) -> None:
