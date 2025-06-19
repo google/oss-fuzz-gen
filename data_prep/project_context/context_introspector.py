@@ -57,7 +57,7 @@ class ContextRetriever:
       logging.warning('Unsupported decl - Lang: %s Project: %s', lang,
                       self._benchmark.project)
 
-    return sig
+    return sig.strip()
 
   def _get_files_to_include(self) -> list[str]:
     """Retrieves files to include.
@@ -123,7 +123,7 @@ class ContextRetriever:
       # (e.g. based on existing fuzz targets).
       files.add(include_file)
 
-    return list(files)
+    return [file for file in files if file.strip()]
 
   def _clean_type(self, type_name: str) -> str:
     """Cleans a type so that it can be fetched from FI."""
@@ -165,7 +165,7 @@ class ContextRetriever:
           'Could not retrieve function source for project: %s '
           'function_signature: %s', project, func_sig)
 
-    return function_source
+    return function_source.strip()
 
   def _get_xrefs_to_function(self) -> list[str]:
     """Queries FI for function being fuzzed."""
@@ -177,7 +177,20 @@ class ContextRetriever:
       logging.warning(
           'Could not retrieve xrefs for project: %s '
           'function_signature: %s', project, func_sig)
-    return xrefs
+    return [xref for xref in xrefs if xref.strip()]
+
+  def _get_test_xrefs_to_function(self) -> list[str]:
+    """Queries FI for test source calling the function being fuzzed."""
+    project = self._benchmark.project
+    func_name = self._benchmark.function_name
+    xrefs = introspector.query_introspector_for_tests_xref(project, [func_name])
+
+    if not xrefs:
+      logging.warning(
+          'Could not retrieve tests xrefs for project: %s '
+          'function_signature: %s', project, func_name)
+
+    return [xref for xref in xrefs if xref.strip()]
 
   def _get_param_typedef(self) -> list[str]:
     """Querties FI for param type definitions with type name."""
@@ -193,6 +206,7 @@ class ContextRetriever:
   def get_context_info(self) -> dict:
     """Retrieves contextual information and stores them in a dictionary."""
     xrefs = self._get_xrefs_to_function()
+    tests_xrefs = self._get_test_xrefs_to_function()
     func_source = self._get_function_implementation()
     files = self._get_files_to_include()
     decl = self._get_embeddable_declaration()
@@ -206,6 +220,7 @@ class ContextRetriever:
         'decl': decl,
         'header': header,
         'typedef': typedef,
+        'tests_xrefs': tests_xrefs,
     }
 
     logging.info('Context: %s', context_info)

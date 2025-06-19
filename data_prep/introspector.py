@@ -64,6 +64,7 @@ INTROSPECTOR_ORACLE_EASY_PARAMS = ''
 INTROSPECTOR_ORACLE_ALL_PUBLIC_CANDIDATES = ''
 INTROSPECTOR_ORACLE_OPTIMAL = ''
 INTROSPECTOR_ORACLE_ALL_TESTS = ''
+INTROSPECTOR_ORACLE_ALL_TESTS_XREF = ''
 INTROSPECTOR_FUNCTION_SOURCE = ''
 INTROSPECTOR_PROJECT_SOURCE = ''
 INTROSPECTOR_XREF = ''
@@ -117,7 +118,8 @@ def set_introspector_endpoints(endpoint):
       INTROSPECTOR_TEST_SOURCE, INTROSPECTOR_HARNESS_SOURCE_AND_EXEC, \
       INTROSPECTOR_JVM_PUBLIC_CLASSES, INTROSPECTOR_LANGUAGE_STATS, \
       INTROSPECTOR_GET_TARGET_FUNCTION, INTROSPECTOR_ALL_TYPE_DEFINITION, \
-      INTROSPECTOR_CHECK_MACRO, INTROSPECTOR_ALL_FUNCTIONS
+      INTROSPECTOR_CHECK_MACRO, INTROSPECTOR_ORACLE_ALL_TESTS_XREF, \
+      INTROSPECTOR_ALL_FUNCTIONS
 
   INTROSPECTOR_ENDPOINT = endpoint
 
@@ -151,6 +153,8 @@ def set_introspector_endpoints(endpoint):
   INTROSPECTOR_FUNCTION_WITH_MATCHING_RETURN_TYPE = (
       f'{INTROSPECTOR_ENDPOINT}/function-with-matching-return-type')
   INTROSPECTOR_ORACLE_ALL_TESTS = f'{INTROSPECTOR_ENDPOINT}/project-tests'
+  INTROSPECTOR_ORACLE_ALL_TESTS_XREF = (
+      f'{INTROSPECTOR_ENDPOINT}/project-tests-for-functions')
   INTROSPECTOR_JVM_PROPERTIES = f'{INTROSPECTOR_ENDPOINT}/jvm-method-properties'
   INTROSPECTOR_HARNESS_SOURCE_AND_EXEC = (
       f'{INTROSPECTOR_ENDPOINT}/harness-source-and-executable')
@@ -247,6 +251,61 @@ def query_introspector_for_tests(project: str) -> list[str]:
       'project': project,
   })
   return _get_data(resp, 'test-file-list', [])
+
+
+def query_introspector_for_tests_xref(
+    project: str, functions: Optional[list[str]]) -> list[str]:
+  """Gets the list of functions and xref test files in the target project."""
+  data = {'project': project}
+  if functions:
+    demangled = [demangle(function).split('(')[0] for function in functions]
+    data['functions'] = ','.join(demangled)
+
+  resp = _query_introspector(INTROSPECTOR_ORACLE_ALL_TESTS_XREF, data)
+
+  test_files = _get_data(resp, 'test-files-xref', {})
+
+  handled = set()
+  result_list = []
+  key_list = test_files.keys()
+  for test_paths in test_files.values():
+    for test_path in test_paths:
+      # Allow limited number of result lines
+      if len(result_list) > 100:
+        break
+
+      if test_path in handled:
+        continue
+
+      handled.add(test_path)
+      source_code = query_introspector_test_source(project, test_path)
+
+      # Retrieve needed line range in the source file
+      lines = source_code.splitlines()
+      target_lines = list()
+      for idx, line in enumerate(lines):
+        if any(func.split('::')[-1] in line for func in key_list):
+          target_lines.append((max(0, idx - 20), min(len(lines), idx + 20)))
+
+      # Fail safe
+      if not target_lines:
+        continue
+
+      # Merging line range
+      ranges = [target_lines[0]]
+      for start, end in target_lines[1:]:
+        last_start, last_end = ranges[-1]
+        if start <= last_end + 1:
+          # Merge range
+          ranges[-1] = (last_start, max(last_end, end))
+        else:
+          ranges.append((start, end))
+
+      # Extract source code lines in needed range
+      for start, end in ranges:
+        result_list.extend(lines[start:end])
+
+  return result_list
 
 
 def query_introspector_for_harness_intrinsics(
