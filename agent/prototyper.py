@@ -17,6 +17,7 @@ Use it as a usual module locally, or as script in cloud builds.
 import copy
 import os
 import subprocess as sp
+import sys
 import time
 from datetime import timedelta
 from typing import Optional
@@ -237,8 +238,55 @@ class Prototyper(BaseAgent):
                   cur_round,
                   trial=build_result.trial)
       return build_result_ori, None
+    
+    # case 2: Arbitrary manual prompt, desregarding any build result
+    manual_prompt = getattr(self.args, 'interactive_debug', False)
+    compile_log = self.llm.truncate_prompt(build_result.compile_log,
+                                           extra_text=prompt.get()).strip()
+    if manual_prompt:
+        # We trigger interactive debug mode when:
+        #   (1) --interactive_debug is enabled
+        #   (2) The LLM's latest response fails to produce a valid fuzz target
+        #   (3) We're past the first round (LLM has had at least one try)
+        manual_text = ''
+        if (not (build_result.compiles and build_result.binary_exists and build_result.is_function_referenced)
+                and cur_round >= 1):
 
-    # Case 2: Binary exits, meaning not referencing function-under-test.
+            logger.info("INTERACTIVE DEBUG MODE: Prompting user after failed build",
+                        trial=build_result.trial)
+
+            print("\n=== Interactive Debug Prompt Mode ===", flush=True)
+            print(f"Project: {build_result.benchmark.project}", flush=True)
+            print(f"Function: {build_result.benchmark.function_signature}", flush=True)
+            print("--- STDERR from last compilation ---", flush=True)
+            print(build_result.compile_error or "(no stderr)", flush=True)
+            print("------------------------------------", flush=True)
+            print("You may now enter a custom prompt for the LLM.", flush=True)
+            print("When finished:", flush=True)
+            print("  - Press Enter, then Ctrl+D (Linux/macOS)", flush=True)
+            print("  - Or press Ctrl+Z then Enter (Windows)", flush=True)
+            print("======================================\n", flush=True)
+
+            manual_lines = []
+            try:
+                manual_lines = sys.stdin.read().splitlines()
+            except EOFError:
+                manual_lines = []
+
+            manual_text = "\n".join(manual_lines).strip()
+            builder = prompt_builder.PrototyperManualFixerTemplateBuilder(
+                model=self.llm,
+                benchmark=build_result.benchmark,
+                build_result=build_result,
+                compile_log=compile_log,
+                initial=prompt.get(),
+                manual_text = manual_text)
+            prompt = builder.build(example_pair=[],
+                                  project_dir=self.inspect_tool.project_dir)
+            logger.info("====== Custom Prompt Entered by User ======", trial=build_result.trial)
+            return build_result, prompt
+
+    # Case 3: Binary exits, meaning not referencing function-under-test.
     function_signature = build_result.benchmark.function_signature
     fuzz_target_source = build_result.fuzz_target_source
     build_script_source = build_result.build_script_source
