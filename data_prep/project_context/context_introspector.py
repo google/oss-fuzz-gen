@@ -47,7 +47,7 @@ class ContextRetriever:
       logging.warning('Unsupported decl - Lang: %s Project: %s', lang,
                       self._benchmark.project)
 
-    return sig
+    return sig.strip()
 
   def _get_nested_item(self, element: dict, *path: str) -> Any:
     """Safely retrieve a nested item from a dictionary without
@@ -118,7 +118,7 @@ class ContextRetriever:
 
         files.add(include_file)
 
-    return list(files)
+    return [file for file in files if file.strip()]
 
   def _clean_type(self, type_name: str) -> str:
     """Cleans a type so that it can be fetched from FI."""
@@ -160,7 +160,7 @@ class ContextRetriever:
           'Could not retrieve function source for project: %s '
           'function_signature: %s', project, func_sig)
 
-    return function_source
+    return function_source.strip()
 
   def _get_xrefs_to_function(self) -> list[str]:
     """Queries FI for function being fuzzed."""
@@ -172,7 +172,7 @@ class ContextRetriever:
       logging.warning(
           'Could not retrieve xrefs for project: %s '
           'function_signature: %s', project, func_sig)
-    return xrefs
+    return [xref for xref in xrefs if xref.strip()]
 
   def get_context_info(self) -> dict:
     """Retrieves contextual information and stores them in a dictionary."""
