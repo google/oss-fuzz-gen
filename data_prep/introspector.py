@@ -289,6 +289,10 @@ def query_introspector_for_tests_xref(
         if any(func.split('::')[-1] in line for func in key_list):
           target_lines.append((max(0, idx - 20), min(len(lines), idx + 20)))
 
+      # Fail safe
+      if not target_lines:
+        continue
+
       # Merging line range
       ranges = [target_lines[0]]
       for start, end in target_lines[1:]:
