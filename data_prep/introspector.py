@@ -274,7 +274,29 @@ def query_introspector_for_tests_xref(
         continue
 
       handled.add(test_path)
-      result_list.append(query_introspector_test_source(project, test_path))
+      source_code = query_introspector_test_source(project, test_path)
+
+      # Retrieve needed line range in the source file
+      lines = source_code.splitlines()
+      target_lines = list()
+      for idx, line in enumerate(lines):
+          if any(func in line for func in functions):
+              target_lines.append(
+                  (max(0, idx - 10), min(len(lines), idx + 10)))
+
+      # Merging line range
+      range = [target_lines[0]]
+      for start, end in target_lines[1:]:
+          last_start, last_end = range[-1]
+          if start <= last_end + 1:
+              # Merge range
+              range[-1] = (last_start, max(last_end, end))
+          else:
+              range.append((start, end))
+
+      # Extract source code lines in needed range
+      for start, end in range:
+        result_list.extend(lines[start:end])
 
   return result_list
 
