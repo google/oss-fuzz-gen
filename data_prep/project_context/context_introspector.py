@@ -16,6 +16,7 @@ better prompt generation."""
 
 import logging
 import os
+import re
 from difflib import SequenceMatcher
 from typing import Optional
 
@@ -213,15 +214,15 @@ class ContextRetriever:
 
   def get_type_def(self, type_name: str) -> str:
     """Retrieves the source code definitions for the given |type_name|."""
-    type_names = [
-        i for i in self._clean_type(type_name) if i not in PRIMITIVE_TYPES
-    ]
+    type_name = self._clean_type(type_name)
+    # Skip primitive types
+    if type_name in PRIMITIVE_TYPES:
+      logging.warning('No non-primitive types.')
+      return ''
+
+    type_names = [type_name]
     type_def = ''
 
-    # Skip primitive types
-    if not type_names:
-      logging.warning('No non-primitive types.')
-      return type_def
 
     # Retrieve full custom type definitions
     info_list = introspector.query_introspector_type_definition(
@@ -252,7 +253,7 @@ class ContextRetriever:
 
       # Retrieve type definition of the current type
       type_def += introspector.query_introspector_source_code(
-          self._benchmark.project, source, start, end) + '\n'
+          self._benchmark.project, source, start + 1, end + 1) + '\n'
 
       # Recursively get type of fields if exist
       for field in type_info.get('fields', []):
@@ -263,7 +264,8 @@ class ContextRetriever:
       if type_info.get('type'):
         type_def += self.get_type_def(type_info.get('type')) + '\n'
 
-    return type_def
+    # Return and strip multiple \n in result
+    return re.sub(r'\n+', '\n', type_def)
 
   def get_same_header_file_paths(self, wrong_file: str) -> list[str]:
     """Retrieves path of header files with the same name as |wrong_name|."""

@@ -201,7 +201,7 @@ class DefaultTemplateBuilder(PromptBuilder):
     return context.render(
         headers='\n'.join(context_info['files']),
         must_insert=context_info['decl'],
-        typedef=context_info['typedef'],
+        typedef='\n'.join(context_info['typedef']),
         func_source=context_info['func_source'],
         xrefs='\n'.join(context_info['xrefs']),
         include_statement=context_info['header'],
