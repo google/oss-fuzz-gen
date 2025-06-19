@@ -371,6 +371,12 @@ class DefaultTemplateBuilder(PromptBuilder):
       instruction = instruction_template.replace('{INSTRUCTION}', instruction)
     problem = problem.replace('{INSTRUCTION}', instruction)
 
+    # If errors list is empty, return the formatted prompt
+    if not errors:
+      return problem.replace('<error>\n', '')\
+                    .replace('{ERROR_MESSAGES}\n', '')\
+                    .replace('</error>\n', '')
+
     problem_prompt = self._prompt.create_prompt_piece(problem, 'user')
     template_piece = self._prompt.create_prompt_piece('{ERROR_MESSAGES}',
                                                       'user')
@@ -761,6 +767,68 @@ class EnhancerTemplateBuilder(PrototyperTemplateBuilder):
     else:
       error_desc = ''
       errors = []
+    problem = self._format_fixer_problem(self.build_result.fuzz_target_source,
+                                         error_desc, errors, priming_weight, '',
+                                         '')
+
+    self._prepare_prompt(priming, problem)
+    return self._prompt
+
+
+class CrashEnhancerTemplateBuilder(PrototyperTemplateBuilder):
+  """Builder specifically targeted C (and excluding C++)."""
+
+  def __init__(self,
+               model: models.LLM,
+               benchmark: Benchmark,
+               build_result: BuildResult,
+               insight: str = '',
+               stacktrace: str = '',
+               template_dir: str = DEFAULT_TEMPLATE_DIR,
+               initial: Any = None):
+    super().__init__(model, benchmark, template_dir, initial)
+    # Load templates.
+    self.priming_template_file = self._find_template(self.agent_templare_dir,
+                                                     'enhancer-priming.txt')
+    self.build_result = build_result
+    self.insight = insight
+    self.stacktrace = stacktrace
+
+  def build(self,
+            example_pair: list[list[str]],
+            project_example_content: Optional[list[list[str]]] = None,
+            project_context_content: Optional[dict] = None,
+            tool_guides: str = '',
+            project_dir: str = '',
+            function_requirements: str = '') -> prompts.Prompt:
+    """Constructs a prompt using the templates in |self| and saves it."""
+    del (example_pair, project_example_content, project_context_content)
+    if not self.benchmark:
+      return self._prompt
+
+    priming = self._get_template(self.priming_template_file)
+    priming = priming.replace('{LANGUAGE}', self.benchmark.file_type.value)
+    priming = priming.replace('{FUNCTION_SIGNATURE}',
+                              self.benchmark.function_signature)
+    priming = priming.replace('{PROJECT_DIR}', project_dir)
+    priming = priming.replace('{TOOL_GUIDES}', tool_guides)
+    if self.build_result.build_script_source:
+      build_text = (f'<build script>\n{self.build_result.build_script_source}\n'
+                    '</build script>')
+    else:
+      build_text = 'Build script reuses `/src/build.bk.sh`.'
+    priming = priming.replace('{BUILD_TEXT}', build_text)
+    priming_weight = self._model.estimate_token_num(priming)
+    # TODO(dongge): Refine this logic.
+
+    error_desc = f"""
+    Here is the insight from the crash analyzer:
+    {self.insight}
+
+    Below is crash report:
+    {self.stacktrace}
+    """
+    errors = []
     problem = self._format_fixer_problem(self.build_result.fuzz_target_source,
                                          error_desc, errors, priming_weight, '',
                                          '')
