@@ -260,7 +260,8 @@ def query_introspector_for_tests_xref(
   """Gets the list of functions and xref test files in the target project."""
   data = {'project': project}
   if functions:
-    data['functions'] = ','.join(functions)
+    demangled = [demangle(function).split('(')[0] for function in functions]
+    data['functions'] = ','.join(demangled)
 
   resp = _query_introspector(INTROSPECTOR_ORACLE_ALL_TESTS_XREF, data)
 
@@ -271,6 +272,10 @@ def query_introspector_for_tests_xref(
   key_list = test_files.keys()
   for test_paths in test_files.values():
     for test_path in test_paths:
+      # Allow limited number of result lines
+      if len(result_list) > 100:
+        break
+
       if test_path in handled:
         continue
 
@@ -282,7 +287,7 @@ def query_introspector_for_tests_xref(
       target_lines = list()
       for idx, line in enumerate(lines):
         if any(func.split('::')[-1] in line for func in key_list):
-          target_lines.append((max(0, idx - 10), min(len(lines), idx + 10)))
+          target_lines.append((max(0, idx - 20), min(len(lines), idx + 20)))
 
       # Merging line range
       ranges = [target_lines[0]]
