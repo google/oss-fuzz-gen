@@ -268,6 +268,7 @@ def query_introspector_for_tests_xref(
 
   handled = set()
   result_list = []
+  key_list = test_files.keys()
   for test_paths in test_files.values():
     for test_path in test_paths:
       if test_path in handled:
@@ -280,21 +281,21 @@ def query_introspector_for_tests_xref(
       lines = source_code.splitlines()
       target_lines = list()
       for idx, line in enumerate(lines):
-        if any(func.split('::')[-1] in line for func in functions):
+        if any(func.split('::')[-1] in line for func in key_list):
           target_lines.append((max(0, idx - 10), min(len(lines), idx + 10)))
 
       # Merging line range
-      range = [target_lines[0]]
+      ranges = [target_lines[0]]
       for start, end in target_lines[1:]:
-        last_start, last_end = range[-1]
+        last_start, last_end = ranges[-1]
         if start <= last_end + 1:
           # Merge range
-          range[-1] = (last_start, max(last_end, end))
+          ranges[-1] = (last_start, max(last_end, end))
         else:
-          range.append((start, end))
+          ranges.append((start, end))
 
       # Extract source code lines in needed range
-      for start, end in range:
+      for start, end in ranges:
         result_list.extend(lines[start:end])
 
   return result_list
