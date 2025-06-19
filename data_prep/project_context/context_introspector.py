@@ -223,7 +223,6 @@ class ContextRetriever:
     type_names = [type_name]
     type_def = ''
 
-
     # Retrieve full custom type definitions
     info_list = introspector.query_introspector_type_definition(
         self._benchmark.project)
@@ -258,11 +257,11 @@ class ContextRetriever:
       # Recursively get type of fields if exist
       for field in type_info.get('fields', []):
         if field.get('type'):
-          type_def += self.get_type_def(field.get('type')) + '\n'
+          type_def += self.get_type_def(field.get('type', '')) + '\n'
 
       # Recursively get type of sub elements
       if type_info.get('type'):
-        type_def += self.get_type_def(type_info.get('type')) + '\n'
+        type_def += self.get_type_def(type_info.get('type', '')) + '\n'
 
     # Return and strip multiple \n in result
     return re.sub(r'\n+', '\n', type_def)
