@@ -162,6 +162,31 @@ class ContextRetriever:
 
     return function_source.strip()
 
+  def _get_macro_block(self) -> list[str]:
+    """Queries FI to check macro block around this function."""
+    project = self._benchmark.project
+    if not self._benchmark.function_dict:
+      return []
+
+    source = self._benchmark.function_dict.get('function_filename', '')
+    start = self._benchmark.function_dict.get('source_line_begin', 0)
+    end = self._benchmark.function_dict.get('source_end_begin', 99999)
+    macro_block = introspector.query_introspector_macro_block(
+        project, source, start, end)
+
+    results = set()
+    for macro in macro_block:
+      conditions = macro.get('conditions', [])
+      for condition in conditions:
+        cond_type = condition.get('type')
+        cond_detail = condition.get('condition')
+        if not cond_type or not cond_detail:
+          continue
+
+        results.add(f'#{cond_type} {cond_detail}')
+
+    return list(results)
+
   def _get_xrefs_to_function(self) -> list[str]:
     """Queries FI for function being fuzzed."""
     project = self._benchmark.project
@@ -177,6 +202,7 @@ class ContextRetriever:
   def get_context_info(self) -> dict:
     """Retrieves contextual information and stores them in a dictionary."""
     xrefs = self._get_xrefs_to_function()
+    macro = self._get_macro_block()
     func_source = self._get_function_implementation()
     files = self._get_files_to_include()
     decl = self._get_embeddable_declaration()
@@ -184,6 +210,7 @@ class ContextRetriever:
 
     context_info = {
         'xrefs': xrefs,
+        'macro_block': macro,
         'func_source': func_source,
         'files': files,
         'decl': decl,
