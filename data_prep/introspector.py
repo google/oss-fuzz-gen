@@ -68,7 +68,6 @@ INTROSPECTOR_ORACLE_ALL_TESTS_XREF = ''
 INTROSPECTOR_FUNCTION_SOURCE = ''
 INTROSPECTOR_PROJECT_SOURCE = ''
 INTROSPECTOR_XREF = ''
-INTROSPECTOR_TYPE = ''
 INTROSPECTOR_FUNC_SIG = ''
 INTROSPECTOR_ADDR_TYPE = ''
 INTROSPECTOR_ALL_HEADER_FILES = ''
@@ -107,7 +106,7 @@ def set_introspector_endpoints(endpoint):
   """Sets URLs for Fuzz Introspector endpoints to local or remote endpoints."""
   global INTROSPECTOR_ENDPOINT, INTROSPECTOR_CFG, INTROSPECTOR_FUNC_SIG, \
       INTROSPECTOR_FUNCTION_SOURCE, INTROSPECTOR_PROJECT_SOURCE, \
-      INTROSPECTOR_XREF, INTROSPECTOR_TYPE, INTROSPECTOR_ORACLE_FAR_REACH, \
+      INTROSPECTOR_XREF, INTROSPECTOR_ORACLE_FAR_REACH, \
       INTROSPECTOR_ORACLE_KEYWORD, INTROSPECTOR_ADDR_TYPE, \
       INTROSPECTOR_ALL_HEADER_FILES, INTROSPECTOR_ALL_FUNC_TYPES, \
       INTROSPECTOR_SAMPLE_XREFS, INTROSPECTOR_ORACLE_EASY_PARAMS, \
@@ -138,7 +137,6 @@ def set_introspector_endpoints(endpoint):
   INTROSPECTOR_PROJECT_SOURCE = f'{INTROSPECTOR_ENDPOINT}/project-source-code'
   INTROSPECTOR_TEST_SOURCE = f'{INTROSPECTOR_ENDPOINT}/project-test-code'
   INTROSPECTOR_XREF = f'{INTROSPECTOR_ENDPOINT}/all-cross-references'
-  INTROSPECTOR_TYPE = f'{INTROSPECTOR_ENDPOINT}/type-info'
   INTROSPECTOR_FUNC_SIG = f'{INTROSPECTOR_ENDPOINT}/function-signature'
   INTROSPECTOR_ADDR_TYPE = (
       f'{INTROSPECTOR_ENDPOINT}/addr-to-recursive-dwarf-info')
@@ -588,15 +586,6 @@ def query_introspector_language_stats() -> dict:
 
   resp = _query_introspector(INTROSPECTOR_LANGUAGE_STATS, {})
   return _get_data(resp, 'stats', {})
-
-
-def query_introspector_type_info(project: str, type_name: str) -> list[dict]:
-  """Queries FuzzIntrospector API for information of |type_name|."""
-  resp = _query_introspector(INTROSPECTOR_TYPE, {
-      'project': project,
-      'type_name': type_name
-  })
-  return _get_data(resp, 'type_data', [])
 
 
 def query_introspector_function_signature(project: str,
