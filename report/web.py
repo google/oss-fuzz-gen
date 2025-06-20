@@ -279,23 +279,8 @@ class GenerateReport:
     benchmark_css_content = self._read_static_file('benchmark/benchmark.css')
     benchmark_js_content = self._read_static_file('benchmark/benchmark.js')
 
-    # Temporarily calculate accumulated results for the benchmark without get_macro_insights
-    accumulated_results = AccumulatedResult()
-    results, targets = self._results.get_results(benchmark.id)
-    samples = self._results.get_samples(results, targets)
-
-    for sample in samples:
-      if sample.result and sample.result.finished:
-        accumulated_results.compiles += int(sample.result.compiles)
-        accumulated_results.crashes += int(sample.result.crashes)
-        accumulated_results.crash_cases += int(sample.result.crashes)
-        accumulated_results.total_coverage += sample.result.coverage
-        accumulated_results.total_runs += 1
-        accumulated_results.total_line_coverage_diff += (
-            sample.result.line_coverage_diff)
-
     common_data = {
-        "accumulated_results": accumulated_results,
+        "accumulated_results": self._results.get_macro_insights([benchmark])
     }
 
     rendered = self._jinja.render('benchmark/benchmark.html',
@@ -334,25 +319,10 @@ class GenerateReport:
       }
 
       sample_css_content = self._read_static_file('sample/sample.css')
-      sample_js_content = self._read_static_file('sample/sample.js')\
-
-      # Temporarily calculate accumulated results for the sample without get_macro_insights
-      accumulated_results = AccumulatedResult()
-      results, targets = self._results.get_results(benchmark.id)
-      samples = self._results.get_samples(results, targets)
-
-      for sample in samples:
-        if sample.result and sample.result.finished:
-          accumulated_results.compiles += int(sample.result.compiles)
-          accumulated_results.crashes += int(sample.result.crashes)
-          accumulated_results.crash_cases += int(sample.result.crashes)
-          accumulated_results.total_coverage += sample.result.coverage
-          accumulated_results.total_runs += 1
-          accumulated_results.total_line_coverage_diff += (
-              sample.result.line_coverage_diff)
+      sample_js_content = self._read_static_file('sample/sample.js')
 
       common_data = {
-          'accumulated_results': accumulated_results,
+          "accumulated_results": self._results.get_macro_insights([benchmark])
       }
 
       rendered = self._jinja.render('sample/sample.html',
