@@ -371,13 +371,16 @@ tbody tr:nth-child(odd) {
                 <p class="text-center md:text-left font-bold text-nowrap">
                     {% if time_results.start_time %}
                         <span x-text="formatDate('{{ time_results.start_time }}')"></span>
+                    {% endif %}
+                    {% if time_results.completion_time %}
                         →
                         <span x-text="formatDate('{{ time_results.completion_time }}')"></span>
                     {% endif %}
-                    (<span x-text="formatTotalRunTime('{{ time_results.total_run_time }}')"></span>)
+                    {% if time_results.total_run_time %}
+                        (<span x-text="formatTotalRunTime('{{ time_results.total_run_time }}')"></span>)
+                    {% endif %}
                 </p>
                 {% endif %}
-                <p>{{ accumulated_results.total_runs }}</p>
                 {% if accumulated_results.total_runs > 0 %}
                     <p class="text-lg md:text-2xl">Build success rate: <strong>{{ accumulated_results.build_rate|percent }}%</strong></p>
                 {% endif %}
@@ -440,7 +443,7 @@ tbody tr:nth-child(odd) {
             <svg class="h-4 w-4" :class="darkMode ? 'text-gray-500' : 'text-gray-400'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
             </svg>
-            <a href="/" class="hover:text-gray-600 transition-colors" :class="darkMode ? 'text-gray-300 hover:text-gray-400' : 'text-gray-600'">
+            <a href="{% if sample %}../../../{% elif benchmark %}../../{% endif %}index.html" class="hover:text-gray-600 transition-colors" :class="darkMode ? 'text-gray-300 hover:text-gray-400' : 'text-gray-600'">
                 Main Index
             </a>
         </li>
