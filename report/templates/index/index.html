@@ -30,13 +30,69 @@ limitations under the License.
 {% endif %}
 
 <div x-data="{
+    benchmarkOpen: true,
     projectOpen: true,
     languageOpen: true,
     crashesFoundOpen: true,
     ofgMetricsOpen: true,
 }" class="space-y-2">
 
-    <div class="border rounded-lg">
+    <div class="border rounded-lg toc-section">
+        <button @click="benchmarkOpen = !benchmarkOpen"
+                class="w-full p-4 flex justify-between items-center">
+            <span class="text-lg font-bold">
+                Benchmark summary
+            </span>
+            <svg class="w-5 h-5 transform transition-transform duration-200"
+                 :class="{'rotate-180': projectOpen}"
+                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+        </button>
+
+        <div x-show="benchmarkOpen"
+            class="p-4 border-t">
+            <div class="overflow-x-auto">
+                <table class="sortable-table min-w-full" id="benchmark-summary-table">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th data-sorted="asc">Benchmark</th>
+                            <th>Status</th>
+                            <th data-sort-number>Build Rate</th>
+                            <th data-sort-number>Crash Rate</th>
+                            <th data-sort-number>Bugs</th>
+                            <th data-sort-number>Program Counter Coverage</th>
+                            <th data-sort-number>Line Coverage Diff</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for benchmark in benchmarks %}
+                        <tr>
+                            <td class="table-index">{{ loop.index }}</td>
+                            <td data-sort-value="{{ benchmark.id }}">
+                                <div class="project">{{ benchmark.project }}</div>
+                                <pre class="signature">
+                                    <a class="prettify-benchmark-name" href="benchmark/{{ benchmark.id|urlencode }}/index.html">{{ benchmark.signature }}</a>
+                                </pre>
+                            </td>
+                            <td data-sort-value="{{ benchmark.status }}">{{ benchmark.status }}</td>
+                            <td data-sort-value="{{ benchmark.result.build_success_rate|percent }}">{{ benchmark.result.build_success_rate|percent}}</td>
+                            <td data-sort-value="{{ benchmark.result.crash_rate|percent }}"><a href="benchmark/{{ benchmark.id|urlencode }}/crash.json"> {{ benchmark.result.crash_rate|percent }} </a></td>
+                            <td data-sort-value="{{ benchmark.result.found_bug }}">{{ benchmark.result.found_bug }}</td>
+                            <td data-sort-value="{{ benchmark.result.max_coverage |percent }}">{{ benchmark.result.max_coverage |percent }}</td>
+                            <td data-sort-value="{{ benchmark.result.max_line_coverage_diff|percent }}"><a href="{{ benchmark.result.max_coverage_diff_report | cov_report_link }}">{{ benchmark.result.max_line_coverage_diff|percent }}</a></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+
+    </div>
+
+    <div class="border rounded-lg toc-section">
         <button @click="projectOpen = !projectOpen"
                 class="w-full p-4 flex justify-between items-center">
             <span class="text-lg font-bold">
@@ -53,17 +109,17 @@ limitations under the License.
 
             <div class="flex justify-between">
                 <div class="controls flex gap-2">
-                    <button id="summary-expand-all" class="border rounded-lg p-5">
+                    <button id="project-summary-expand-all" class="border rounded-lg p-5">
                         Expand All
                     </button>
-                    <button id="summary-collapse-all" class="border rounded-lg p-5">
+                    <button id="project-summary-collapse-all" class="border rounded-lg p-5">
                         Collapse All
                     </button>
                 </div>
             </div>
 
             <div class="overflow-x-auto">
-                <table class="sortable-table min-w-full" id="summary-table">
+                <table class="sortable-table min-w-full" id="project-summary-table">
                     <thead>
                         <tr>
                             <th></th>
@@ -79,7 +135,23 @@ limitations under the License.
                         </tr>
                     </thead>
                     <tbody>
+                        <!-- TODO: Revisit coverage and relative gains in the future, currently they're sums of percentages -->
+                        {% set ns_projects = namespace(
+                            sum_successful_benchmarks=0,
+                            sum_total_coverage_gain=0,
+                            sum_total_relative_gain=0,
+                            sum_ofg_total_covered_lines=0,
+                            sum_ofg_new_covered_lines=0,
+                            sum_existing_covered_lines=0,
+                            sum_total_project_lines=0) %}
+
                         {% for project in projects %}
+
+                        {% set ns_projects.sum_successful_benchmarks = ns_projects.sum_successful_benchmarks + project.count %}
+                        {% set ns_projects.sum_ofg_total_covered_lines = ns_projects.sum_ofg_total_covered_lines + project.coverage_ofg_total_covered_lines %}
+                        {% set ns_projects.sum_ofg_new_covered_lines = ns_projects.sum_ofg_new_covered_lines + project.coverage_ofg_total_new_covered_lines %}
+                        {% set ns_projects.sum_existing_covered_lines = ns_projects.sum_existing_covered_lines + project.coverage_existing_total_covered_lines %}
+                        {% set ns_projects.sum_total_project_lines = ns_projects.sum_total_project_lines + project.coverage_existing_total_lines %}
                         <tr class="project-data-row">
                             <td class="table-index">
                                 <button class="w-5 h-5 flex items-center justify-center focus:outline-none" @click="$refs.benchmarks_{{ loop.index }}.classList.toggle('hidden')">
@@ -88,9 +160,8 @@ limitations under the License.
                                     </svg>
                                 </button>
                             </td>
-                            {% set ns = namespace(bug_found=false) %}
                             <td data-sort-value="{{ project.name }}" class="w-full">
-                                <button @click="$refs.benchmarks_{{ loop.index }}.classList.toggle('hidden')" class="text-left font-medium hover:text-blue-600 focus:outline-none">
+                                <button @click="$refs.benchmarks_{{ loop.index }}.classList.toggle('hidden')" class="text-left hover:text-blue-600 focus:outline-none toc-subsection">
                                     {{ project.name }}
                                     {% set ns = namespace(
                                         bug_found=false,
@@ -119,10 +190,10 @@ limitations under the License.
                             <td data-sort-value="{{ project.success }}">{{ project.success }}</td>
                             <td data-sort-value="{{ project.coverage_gain|percent }}">{{ project.coverage_gain|percent }}%</td>
                             <td data-sort-value="{{ project.coverage_relative_gain|percent}}">{{ project.coverage_relative_gain | percent }}%</td>
-                            <td data-sort-value="{{ project.coverage_ofg_total_covered_lines}}">{{project.coverage_ofg_total_covered_lines}}</td>
-                            <td data-sort-value="{{ project.coverage_ofg_total_new_covered_lines}}">{{ project.coverage_ofg_total_new_covered_lines}}</td>
-                            <td data-sort-value="{{ project.coverage_existing_total_covered_lines}}">{{ project.coverage_existing_total_covered_lines}}</td>
-                            <td data-sort-value="{{ project.coverage_existing_total_lines}}">{{ project.coverage_existing_total_lines}}</td>
+                            <td data-sort-value="{{ project.coverage_ofg_total_covered_lines}}">{{project.coverage_ofg_total_covered_lines }}</td>
+                            <td data-sort-value="{{ project.coverage_ofg_total_new_covered_lines}}">{{ project.coverage_ofg_total_new_covered_lines }}</td>
+                            <td data-sort-value="{{ project.coverage_existing_total_covered_lines}}">{{ project.coverage_existing_total_covered_lines }}</td>
+                            <td data-sort-value="{{ project.coverage_existing_total_lines}}">{{ project.coverage_existing_total_lines }}</td>
                         </tr>
                         <tr class="project-benchmarks-container-row">
                             <td colspan="10" class="">
@@ -150,7 +221,7 @@ limitations under the License.
                                                     {{ bench_ns.index }}
                                                 </td>
                                                 <td data-sort-value="{{ benchmark.id }}">
-                                                    <pre class="signature">
+                                                    <pre class="signature toc-item">
                                                         <a href="benchmark/{{ benchmark.id|urlencode }}/index.html" class="prettify-benchmark-name">{{ benchmark.signature }}</a>
                                                     </pre>
                                                 </td>
@@ -179,13 +250,36 @@ limitations under the License.
                             </td>
                         </tr>
                         {% endfor %}
+                        {% if ns_projects.sum_total_project_lines > 0 %}
+                            {% set ns_projects.sum_total_coverage_gain = ns_projects.sum_ofg_new_covered_lines / ns_projects.sum_total_project_lines %}
+                        {% else %}
+                            {% set ns_projects.sum_total_coverage_gain = 0 %}
+                        {% endif %}
+
+                        {% if ns_projects.sum_existing_covered_lines > 0 %}
+                            {% set ns_projects.sum_total_relative_gain = ns_projects.sum_ofg_new_covered_lines / ns_projects.sum_existing_covered_lines %}
+                        {% else %}
+                             {% set ns_projects.sum_total_relative_gain = 0 %}
+                        {% endif %}
+                        <tr class="font-bold">
+                            <td></td>
+                            <td>Total</td>
+                            <td>{{ accumulated_results.total_runs }}</td>
+                            <td>{{ ns_projects.sum_successful_benchmarks }}</td>
+                            <td>{{ ns_projects.sum_total_coverage_gain|percent }}%</td>
+                            <td>{{ ns_projects.sum_total_relative_gain|percent }}%</td>
+                            <td>{{ ns_projects.sum_ofg_total_covered_lines }}</td>
+                            <td>{{ ns_projects.sum_ofg_new_covered_lines }}</td>
+                            <td>{{ ns_projects.sum_existing_covered_lines }}</td>
+                            <td>{{ ns_projects.sum_total_project_lines }}</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
 
-    <div class="border rounded-lg">
+    <div class="border rounded-lg toc-section">
         <button @click="crashesFoundOpen = !crashesFoundOpen"
                 class="w-full p-4 flex justify-between items-center">
             <span class="text-lg font-bold">
@@ -234,12 +328,21 @@ limitations under the License.
                         {% set _ = projects_with_crashes[bug_sample.benchmark.project][bug_sample.benchmark.id].append(bug_sample) %}
                     {% endfor %}
 
+                    {% set ns_projects_with_crashes = namespace(
+                        sum_total_crashes=0,
+                        sum_total_benchmarks=0,
+                        sum_true_positives=0,
+                        sum_false_positives=0) %}
                     {% for project_name, project_benchmarks in projects_with_crashes.items() %}
                     {% set project_loop = loop %}
                     {% set project_bugs = [] %}
                     {% for benchmark_bugs in project_benchmarks.values() %}
                         {% set _ = project_bugs.extend(benchmark_bugs) %}
                     {% endfor %}
+                    {% set ns_projects_with_crashes.sum_total_crashes = ns_projects_with_crashes.sum_total_crashes + project_bugs|length %}
+                    {% set ns_projects_with_crashes.sum_total_benchmarks = ns_projects_with_crashes.sum_total_benchmarks + project_benchmarks|length %}
+                    {% set ns_projects_with_crashes.sum_true_positives = ns_projects_with_crashes.sum_true_positives + project_bugs|selectattr('sample.result.is_semantic_error', 'equalto', false)|list|length %}
+                    {% set ns_projects_with_crashes.sum_false_positives = ns_projects_with_crashes.sum_false_positives + project_bugs|selectattr('sample.result.is_semantic_error', 'equalto', true)|list|length %}
                     <tr class="project-data-row">
                         <td class="table-index">
                             <button class="w-5 h-5 flex items-center justify-center focus:outline-none" @click="$refs.project_{{ loop.index }}.classList.toggle('hidden')">
@@ -249,7 +352,7 @@ limitations under the License.
                             </button>
                         </td>
                         <td data-sort-value="{{ project_name }}">
-                            <button @click="$refs.project_{{ loop.index }}.classList.toggle('hidden')" class="text-left font-medium hover:text-blue-600 focus:outline-none">
+                            <button @click="$refs.project_{{ loop.index }}.classList.toggle('hidden')" class="text-left font-medium hover:text-blue-600 focus:outline-none toc-subsection">
                                 {{ project_name }}
                             </button>
                         </td>
@@ -296,7 +399,7 @@ limitations under the License.
                                                 </button>
                                             </td>
                                             <td data-sort-value="{{ benchmark_id }}">
-                                                <button @click="$refs.samples_{{ loop.index }}_{{ project_loop.index }}.classList.toggle('hidden')" class="text-left font-medium hover:text-blue-600 focus:outline-none">
+                                                <button @click="$refs.samples_{{ loop.index }}_{{ project_loop.index }}.classList.toggle('hidden')" class="text-left hover:text-blue-600 focus:outline-none toc-item">
                                                     <pre class="signature">
                                                         <a href="benchmark/{{ benchmark_id|urlencode }}/index.html" class="prettify-benchmark-name">{{ benchmark_id }}</a>
                                                     </pre>
@@ -318,7 +421,7 @@ limitations under the License.
                                                         <pre class="signature">
                                                             <a href="sample/{{ bug.benchmark.id|urlencode }}/{{ bug.sample.id }}.html">Sample {{ bug.sample.id }}</a>
                                                         </pre>
-                                                        <span class="p-2 rounded-lg {{ 'bg-red-300' if bug.sample.result.crashes and not bug.sample.result.is_semantic_error else 'bg-green-300' }}">
+                                                        <span class="p-2 rounded-lg {{ 'bg-red-300 text-black' if bug.sample.result.crashes and not bug.sample.result.is_semantic_error else 'bg-green-300 text-black' }}">
                                                             {{ 'False positive' if bug.sample.result.is_semantic_error else 'True positive' }}
                                                         </span>
                                                     </div>
@@ -333,12 +436,20 @@ limitations under the License.
                         </td>
                     </tr>
                     {% endfor %}
+                    <tr class="font-bold">
+                        <td></td>
+                        <td>Total</td>
+                        <td>{{ ns_projects_with_crashes.sum_total_crashes }}</td>
+                        <td>{{ ns_projects_with_crashes.sum_total_benchmarks }}</td>
+                        <td>{{ ns_projects_with_crashes.sum_true_positives }}</td>
+                        <td>{{ ns_projects_with_crashes.sum_false_positives }}</td>
+                    </tr>
                 </tbody>
             </table>
         </div>
     </div>
 
-    <div class="border rounded-lg">
+    <div class="border rounded-lg toc-section">
         <button @click="languageOpen = !languageOpen"
                 class="w-full p-4 flex justify-between items-center">
             <span class="text-lg font-bold">
@@ -378,60 +489,22 @@ limitations under the License.
         </div>
     </div>
 
-    <div class="border rounded-lg">
-        <button class="w-full p-4 flex justify-between items-center">
-            <span class="text-lg font-bold">
-                Accumulated results
-            </span>
-        </button>
-        <div class="p-4 border-t">
-            <table class="sortable-table min-w-full">
-                <thead>
-                <th>Metric</th>
-                <th>Value</th>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>Total sample benchmarks</td>
-                    <td>{{ accumulated_results.total_runs }}</td>
-                </tr>
-                <tr>
-                    <td>Successful Builds</td>
-                    <td>{{ accumulated_results.compiles }}</td>
-                </tr>
-                <tr>
-                    <td>Build rate</td>
-                    <td>{{ accumulated_results.build_rate |percent }}%</td>
-                </tr>
-                <tr>
-                    <td>Average coverage</td>
-                    <td>{{ accumulated_results.average_coverage |percent }}%</td>
-                </tr>
-                <tr>
-                    <td>Average line coverage diff</td>
-                    <td>{{ accumulated_results.average_line_coverage_diff |percent }}%</td>
-                </tr>
-                <tr>
-                    <td>Benchmarks with crashes</td>
-                    <td>{{ accumulated_results.crashes }}</td>
-                </tr>
-                <tr>
-                    <td>Experiment start time</td>
-                    <td>{{time_results.start_time}}</td>
-                </tr>
-                <tr>
-                    <td>Experiment end time</td>
-                    <td>{{time_results.completion_time}}</td>
-                </tr>
-                <tr>
-                    <td>Experiment total run time</td>
-                    <td>{{time_results.total_run_time}}</td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
 </div>
 
+<button class="toc-toggle" id="tocToggle">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">Add commentMore actions
+        <line x1="3" y1="12" x2="21" y2="12"></line>
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+</button>
+
+
+<div id="toc" class="toc">
+    <div class="toc-header">
+        <h3 class="text-lg font-semibold">Table of Contents</h3>
+    </div>
+    <ul class="toc-tree" id="toc-tree"></ul>
+</div>
 
 {% endblock %}
