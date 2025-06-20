@@ -497,7 +497,7 @@ def _get_next_data_dst_dir():
 
 
 def _run_build_generation(workdir, out_folder, args):
-  """ Build script generation. """
+  """Build script generation."""
   oss_fuzz_dir = os.path.join(workdir, 'oss-fuzz-1')
   target_repositories = runner.extract_target_repositories(args.input)
   if args.build_generation_mode == 'agent':
