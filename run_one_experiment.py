@@ -254,28 +254,31 @@ def _fuzzing_pipeline(benchmark: Benchmark, model: models.LLM,
                               FunctionToolPrototyper(trial=trial,
                                                      llm=model,
                                                      args=args),
-                              Enhancer(trial=trial, llm=model, args=args),
+                              FunctionToolPrototyper(trial=trial,
+                                                     llm=model,
+                                                     args=args),
                           ],
                           analysis_stage_agents=[
                               SemanticAnalyzer(trial=trial,
                                                llm=model,
                                                args=args),
-                              CoverageAnalyzer(trial=trial,
-                                               llm=model,
-                                               args=args),
-                              CrashAnalyzer(trial=trial, llm=model, args=args),
                           ])
   elif args.agent:
+
+    writer_agents = []
+    if 'gemini' in args.model or 'vertex' in args.model:
+      writer_agents.append(
+          FunctionAnalyzer(trial=trial,
+                           llm=model,
+                           args=args,
+                           benchmark=benchmark))
+    writer_agents += [
+        Prototyper(trial=trial, llm=model, args=args),
+        Enhancer(trial=trial, llm=model, args=args)
+    ]
     p = pipeline.Pipeline(args=args,
                           trial=trial,
-                          writing_stage_agents=[
-                              FunctionAnalyzer(trial=trial,
-                                               llm=model,
-                                               args=args,
-                                               benchmark=benchmark),
-                              Prototyper(trial=trial, llm=model, args=args),
-                              Enhancer(trial=trial, llm=model, args=args),
-                          ],
+                          writing_stage_agents=writer_agents,
                           analysis_stage_agents=[
                               SemanticAnalyzer(trial=trial,
                                                llm=model,
@@ -286,20 +289,21 @@ def _fuzzing_pipeline(benchmark: Benchmark, model: models.LLM,
                               CrashAnalyzer(trial=trial, llm=model, args=args),
                           ])
   else:
+    writer_agents = []
+    if 'gemini' in args.model or 'vertex' in args.model:
+      writer_agents.append(
+          FunctionAnalyzer(trial=trial,
+                           llm=model,
+                           args=args,
+                           benchmark=benchmark))
+    writer_agents += [
+        OnePromptPrototyper(trial=trial, llm=model, args=args),
+        OnePromptEnhancer(trial=trial, llm=model, args=args)
+    ]
+
     p = pipeline.Pipeline(args=args,
                           trial=trial,
-                          writing_stage_agents=[
-                              FunctionAnalyzer(trial=trial,
-                                               llm=model,
-                                               args=args,
-                                               benchmark=benchmark),
-                              OnePromptPrototyper(trial=trial,
-                                                  llm=model,
-                                                  args=args),
-                              OnePromptEnhancer(trial=trial,
-                                                llm=model,
-                                                args=args),
-                          ],
+                          writing_stage_agents=writer_agents,
                           analysis_stage_agents=[
                               SemanticAnalyzer(trial=trial,
                                                llm=model,

@@ -315,7 +315,7 @@ class DefaultTemplateBuilder(PromptBuilder):
     """Prepares the code-fixing prompt."""
     priming, priming_weight = self._format_fixer_priming(benchmark)
 
-    if error_desc and errors:
+    if error_desc or errors:
       pass
     elif coverage_result:
       error_desc = coverage_result.insight
@@ -397,6 +397,10 @@ class DefaultTemplateBuilder(PromptBuilder):
       if prompt_size + error_token_num >= self._model.context_window:
         # The estimation is inaccurate, if an example's size equals to
         # the limit, it's safer to not include the example.
+        if not selected_errors:
+          # At least include one error in order for LLM to have something
+          # to fix even if not enough token left.
+          selected_errors.append(error)
         break
       prompt_size += error_token_num
       selected_errors.append(error)
@@ -907,26 +911,8 @@ class FunctionAnalyzerTemplateBuilder(DefaultTemplateBuilder):
     super().__init__(model, benchmark, template_dir, initial)
 
     # Load templates.
-    self.function_analyzer_instruction_template_file = self._find_template(
-        AGENT_TEMPLATE_DIR, 'function-analyzer-instruction.txt')
-    self.context_retrieve_template_file = self._find_template(
-        AGENT_TEMPLATE_DIR, 'context-retriever-instruction.txt')
     self.function_analyzer_prompt_template_file = self._find_template(
         AGENT_TEMPLATE_DIR, 'function-analyzer-priming.txt')
-
-  def build_context_retriever_instruction(self) -> prompts.Prompt:
-    """Constructs a prompt using the templates in |self| and saves it."""
-
-    self._prompt = self._model.prompt_type()(None)
-
-    if not self.benchmark:
-      return self._prompt
-
-    prompt = self._get_template(self.context_retrieve_template_file)
-
-    self._prompt.append(prompt)
-
-    return self._prompt
 
   def build_prompt(self) -> prompts.Prompt:
     """Constructs a prompt using the templates in |self| and saves it."""

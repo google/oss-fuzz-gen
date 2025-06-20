@@ -103,12 +103,17 @@ class FuzzIntrospectorTool(base_tool.BaseTool):
           project_name)
 
       if functions_list:
-        self.project_functions = {}
-        for function in functions_list:
-          function_name = function.get('debug_summary', {}).get('name', '')
-          if function_name:
-            # Store the function by its debug summary name
-            self.project_functions[function_name] = function
+        # func["debug_summary"] and func["debug_summary"]["name"] could be
+        # None or empty but still exists
+        self.project_functions = {
+            func["debug_summary"]["name"]: func
+            for func in functions_list
+            if isinstance(func.get("debug_summary"), dict) and
+            isinstance(func["debug_summary"].get("name"), str) and
+            func["debug_summary"]["name"].strip()
+        }
+      else:
+        self.project_functions = None
 
     if (self.project_functions is None or
         function_name not in self.project_functions):

@@ -339,7 +339,7 @@ class ADKBaseAgent(BaseAgent):
     session_service.create_session(
         app_name=self.name,
         user_id=benchmark.id,
-        session_id=f"session_{self.trial}",
+        session_id=f'session_{self.trial}',
     )
 
     # Create the runner
