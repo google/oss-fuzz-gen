@@ -260,7 +260,7 @@ def parse_args() -> argparse.Namespace:
   parser.add_argument(
     '--interactive_debug',
     action='store_true',
-    help='Pause after build failure for manual prompt input (requires LLM_NUM_EXP=1).')
+    help='Pause after build failure for manual prompt input (works best with LLM_NUM_EXP=1).')
 
   args = parser.parse_args()
   if args.num_samples:
