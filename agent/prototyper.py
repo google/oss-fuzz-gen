@@ -239,7 +239,7 @@ class Prototyper(BaseAgent):
                   trial=build_result.trial)
       return build_result_ori, None
     
-    # case 2: Arbitrary manual prompt, desregarding any build result
+    # case 2: Arbitrary manual prompt, disregarding any build result
     manual_prompt = getattr(self.args, 'interactive_debug', False)
     compile_log = self.llm.truncate_prompt(build_result.compile_log,
                                            extra_text=prompt.get()).strip()
@@ -247,7 +247,7 @@ class Prototyper(BaseAgent):
         # We trigger interactive debug mode when:
         #   (1) --interactive_debug is enabled
         #   (2) The LLM's latest response fails to produce a valid fuzz target
-        #   (3) We're past the first round (LLM has had at least one try)
+        #   (3) After the initial prompt from Prototyper
         manual_text = ''
         if (not (build_result.compiles and build_result.binary_exists and build_result.is_function_referenced)
                 and cur_round >= 1):
@@ -351,7 +351,7 @@ class Prototyper(BaseAgent):
       prompt.append(prompt_text)
       return build_result_ori, prompt
 
-    # Case 3: Compiles, meaning the binary is not saved.
+    # Case 4: Compiles, meaning the binary is not saved.
     binary_path = os.path.join('/out', build_result.benchmark.target_name)
     if (build_result_ori and build_result_ori.compiles and
         build_result_ori.build_script_source):
