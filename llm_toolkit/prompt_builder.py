@@ -915,8 +915,7 @@ class FunctionAnalyzerTemplateBuilder(DefaultTemplateBuilder):
     if not self.benchmark:
       return self._prompt
 
-    prompt = self._get_template(
-        self.function_analyzer_instruction_file)
+    prompt = self._get_template(self.function_analyzer_instruction_file)
 
     self._prompt.append(prompt)
 
@@ -929,8 +928,7 @@ class FunctionAnalyzerTemplateBuilder(DefaultTemplateBuilder):
     if not self.benchmark:
       return self._prompt
 
-    prompt = self._get_template(
-        self.function_analyzer_description_file)
+    prompt = self._get_template(self.function_analyzer_description_file)
 
     self._prompt.append(prompt)
 
