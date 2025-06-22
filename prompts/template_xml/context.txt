@@ -4,11 +4,17 @@ You must add the following #include statement in the fuzz target, its header fil
 {{ include_statement }}
 </code>
 {% endif %}
-
 {% if must_insert %}
+
 You must insert code in the below code block before the function being tested:
 <code>
 {{ must_insert }}
+</code>
+{% endif %}
+{% if typedef %}
+Here is the source code reference of necessary type definitions that are needed for creating the parameters for the function:
+<code>
+{{ typedef }}
 </code>
 {% endif %}
 {% if func_source %}
@@ -23,5 +29,12 @@ Here is the source code of the function being tested:
 Here is the source code for functions which reference the function being tested:
 <code>
 {{ xrefs }}
+</code>
+{% endif %}
+{% if tests_xrefs %}
+
+Here is the source code snippet for the tests/examples that reference the function being tested:
+<code>
+{{ tests_xrefs }}
 </code>
 {% endif %}
