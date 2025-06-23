@@ -541,8 +541,8 @@ def query_introspector_type_definition(project: str) -> List[dict]:
   resp = _query_introspector(INTROSPECTOR_ALL_TYPE_DEFINITION, {
       'project': project,
   })
-  result = _get_data(resp, 'project', {})
-  return result.get('typedef_list', [])
+
+  return resp.json()
 
 
 def query_introspector_macro_block(project: str,
