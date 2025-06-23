@@ -44,15 +44,12 @@ class FunctionAnalyzer(base_agent.ADKBaseAgent):
                benchmark: benchmarklib.Benchmark,\
                name: str = ''):
 
-    description = """
-    Extracts a function's requirements
-    from its source implementation.
-    """
-    instruction = """
-    You are a security engineer tasked with analyzing a function
-    and extracting its input requirements,
-    necessary for it to execute correctly.
-    """
+    builder = prompt_builder.FunctionAnalyzerTemplateBuilder(
+        self.llm, self.benchmark)
+
+    description = builder.get_description().get()
+
+    instruction = builder.get_instruction().get()
 
     tools = [self.get_function_implementation, self.search_project_files]
 
