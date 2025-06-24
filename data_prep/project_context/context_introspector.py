@@ -187,10 +187,26 @@ class ContextRetriever:
 
     if not xrefs:
       logging.warning(
-          'Could not retrieve tests xrefs for project: %s '
-          'function_signature: %s', project, func_name)
+          'Could not retrieve xrefs for project: %s '
+          'function_signature: %s', project, func_sig)
 
-    return [xref for xref in xrefs if xref.strip()]
+    source_list = xrefs.get('source')
+    detail_list = xrefs.get('details')
+
+    if source_list:
+      source_list.insert(0, '<code>')
+      source_list.append('</code>')
+      return [src for src in source_list if src.strip()]
+
+    result = ['<codeblock>']
+
+    for detail in detail_list:
+      result.append('<code>')
+      result.extend(detail)
+      result.append('</code>')
+
+    result.append('</codeblock>')
+    return result
 
   def _get_param_typedef(self) -> list[str]:
     """Querties FI for param type definitions with type name."""
