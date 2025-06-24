@@ -288,7 +288,9 @@ def _fuzzing_pipeline(benchmark: Benchmark, model: models.LLM,
                                                llm=model,
                                                args=args),
                               CrashAnalyzer(trial=trial, llm=model, args=args),
-                              ContextAnalyzer(trial=trial, llm=model, args=args,
+                              ContextAnalyzer(trial=trial,
+                                              llm=model,
+                                              args=args,
                                               benchmark=benchmark)
                           ])
   else:

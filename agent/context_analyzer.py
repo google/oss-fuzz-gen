@@ -101,14 +101,14 @@ class ContextAnalyzer(base_agent.ADKBaseAgent):
 
     last_result = result_history[-1]
 
-    if not isinstance(last_result, resultslib.AnalysisResult) or not last_result.crash_result:
+    if not isinstance(
+        last_result, resultslib.AnalysisResult) or not last_result.crash_result:
       logger.error(
           f'Expected last result to be AnalysisResult, got {type(last_result)}.',
           trial=self.trial)
-      return resultslib.Result(
-          benchmark=self.benchmark,
-          trial=self.trial,
-          work_dirs=self.args.work_dirs)
+      return resultslib.Result(benchmark=self.benchmark,
+                               trial=self.trial,
+                               work_dirs=self.args.work_dirs)
 
     feasibility_result = resultslib.CrashFeasibilityResult()
 
@@ -122,10 +122,9 @@ class ContextAnalyzer(base_agent.ADKBaseAgent):
     if not prompt or not prompt.get():
       logger.error('Failed to build initial prompt for FunctionAnalyzer.',
                    trial=self.trial)
-      return resultslib.Result(
-          benchmark=self.benchmark,
-          trial=self.trial,
-          work_dirs=self.args.work_dirs)
+      return resultslib.Result(benchmark=self.benchmark,
+                               trial=self.trial,
+                               work_dirs=self.args.work_dirs)
 
     final_response_text = self.chat_llm(self.round,
                                         client=None,
@@ -145,9 +144,7 @@ class ContextAnalyzer(base_agent.ADKBaseAgent):
 
     return analysis_result
 
-  def _initial_prompt(
-      self,
-      results: list[resultslib.Result]) -> prompts.Prompt:
+  def _initial_prompt(self, results: list[resultslib.Result]) -> prompts.Prompt:
     """Create the initial prompt for the agent."""
 
     last_result = results[-1]
@@ -156,11 +153,12 @@ class ContextAnalyzer(base_agent.ADKBaseAgent):
     builder = prompt_builder.ContextAnalyzerTemplateBuilder(
         self.llm, self.benchmark)
 
-    if isinstance(last_result, resultslib.AnalysisResult) and last_result.crash_result:
+    if isinstance(last_result,
+                  resultslib.AnalysisResult) and last_result.crash_result:
       function_requirements = self.get_function_requirements()
       prompt = builder.build_context_analysis_prompt(
-          last_result, function_requirements,
-          self.inspect_tool.tutorial(), self.inspect_tool.project_dir)
+          last_result, function_requirements, self.inspect_tool.tutorial(),
+          self.inspect_tool.project_dir)
     else:
       logger.error(
           f'Unexpected result type {type(last_result)} '
