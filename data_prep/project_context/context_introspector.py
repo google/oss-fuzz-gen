@@ -193,13 +193,13 @@ class ContextRetriever:
     source_list = xrefs.get('source')
     detail_list = xrefs.get('details')
 
-    if not source_list and not detail_list:
-        return []
-
     if source_list:
       source_list.insert(0, '<code>')
       source_list.append('</code>')
       return [src for src in source_list if src.strip()]
+
+    if not detail_list:
+      return []
 
     result = ['<codeblock>']
 
@@ -209,6 +209,7 @@ class ContextRetriever:
       result.append('</code>')
 
     result.append('</codeblock>')
+
     return result
 
   def _get_param_typedef(self) -> list[str]:
