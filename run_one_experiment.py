@@ -24,6 +24,7 @@ from typing import List, Optional
 
 import logger
 import pipeline
+from agent.context_analyzer import ContextAnalyzer
 from agent.coverage_analyzer import CoverageAnalyzer
 from agent.crash_analyzer import CrashAnalyzer
 from agent.enhancer import Enhancer
@@ -287,6 +288,8 @@ def _fuzzing_pipeline(benchmark: Benchmark, model: models.LLM,
                                                llm=model,
                                                args=args),
                               CrashAnalyzer(trial=trial, llm=model, args=args),
+                              ContextAnalyzer(trial=trial, llm=model, args=args,
+                                              benchmark=benchmark)
                           ])
   else:
     writer_agents = []

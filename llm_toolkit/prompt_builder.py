@@ -28,7 +28,7 @@ from experiment import oss_fuzz_checkout
 from experiment.benchmark import Benchmark, FileType
 from experiment.fuzz_target_error import SemanticCheckResult
 from llm_toolkit import models, prompts
-from results import BuildResult, CoverageResult, RunResult
+from results import AnalysisResult, BuildResult, CoverageResult, RunResult
 
 logger = logging.getLogger(__name__)
 
@@ -981,6 +981,114 @@ class FunctionAnalyzerTemplateBuilder(DefaultTemplateBuilder):
       prompt = prompt.replace('{FUNCTION_REFERENCES}', references_str)
 
     self._prompt.append(prompt)
+
+    return self._prompt
+
+  def build(self,
+            example_pair: Optional[list[list[str]]] = None,
+            project_example_content: Optional[list[list[str]]] = None,
+            project_context_content: Optional[dict] = None,
+            tool_guides: str = '',
+            project_dir: str = '',
+            project_name: str = '',
+            function_signature: str = '') -> prompts.Prompt:
+
+    raise NotImplementedError(
+        'FunctionAnalyzerTemplateBuilder.build() should not be called. '
+        'Use build_prompt() instead.')
+
+
+class ContextAnalyzerTemplateBuilder(DefaultTemplateBuilder):
+  """Builder for function analyzer."""
+
+  def __init__(self,
+               model: models.LLM,
+               benchmark: Benchmark,
+               template_dir: str = DEFAULT_TEMPLATE_DIR,
+               initial: Any = None):
+    super().__init__(model, benchmark, template_dir, initial)
+
+    # Load templates.
+    self.context_analyzer_instruction_file = self._find_template(
+        AGENT_TEMPLATE_DIR, 'context-analyzer-instruction.txt')
+    self.context_analyzer_description_file = self._find_template(
+        AGENT_TEMPLATE_DIR, 'context-analyzer-description.txt')
+    self.context_analyzer_prompt_template_file = self._find_template(
+        AGENT_TEMPLATE_DIR, 'context-analyzer-priming.txt')
+
+  def get_instruction(self) -> prompts.Prompt:
+    """Constructs a prompt using the templates in |self| and saves it."""
+
+    self._prompt = self._model.prompt_type()(None)
+    if not self.benchmark:
+      return self._prompt
+
+    prompt = self._get_template(self.context_analyzer_instruction_file)
+
+    self._prompt.append(prompt)
+
+    return self._prompt
+
+  def get_description(self) -> prompts.Prompt:
+    """Constructs a prompt using the templates in |self| and saves it."""
+
+    self._prompt = self._model.prompt_type()(None)
+    if not self.benchmark:
+      return self._prompt
+
+    prompt = self._get_template(self.context_analyzer_description_file)
+
+    self._prompt.append(prompt)
+
+    return self._prompt
+
+  def build_context_analysis_prompt(self,
+                                    last_result: AnalysisResult,
+                                    function_requirements: str,
+                                    tool_guides: str = '',
+                                    project_dir: str = '') -> prompts.Prompt:
+    """Constructs a prompt using the templates in |self| and saves it."""
+
+    if not self.benchmark:
+      logger.error(
+          'No benchmark provided for function analyzer template builder.')
+      return self._prompt
+
+    prompt = self._get_template(self.context_analyzer_prompt_template_file)
+
+    prompt = prompt.replace('{PROJECT_NAME}', self.benchmark.project)
+    prompt = prompt.replace('{FUNCTION_SIGNATURE}',
+                            self.benchmark.function_signature)
+    prompt = prompt.replace('{PROJECT_DIR}', project_dir)
+
+    # Add the function source
+    func_source = introspector.query_introspector_function_source(
+        self.benchmark.project, self.benchmark.function_signature)
+
+    if not func_source:
+      logger.error('No function source found for project: %s, function: %s',
+                   self.benchmark.project, self.benchmark.function_signature)
+
+    crash_result = last_result.crash_result
+    run_result = last_result.run_result
+
+    if not crash_result or not run_result:
+      logger.error('No crash or run result found for project: %s, function: %s',
+                   self.benchmark.project, self.benchmark.function_signature)
+      return self._prompt
+
+    prompt = prompt.replace('{FUNCTION_SOURCE}', func_source)
+
+    # Add the fuzz driver and crash results
+    prompt = prompt.replace('{FUZZ_DRIVER}', run_result.fuzz_target_source)
+    prompt = prompt.replace('{CRASH_ANALYSIS}', crash_result.insight)
+    prompt = prompt.replace('{CRASH_STACKTRACE}', crash_result.stacktrace)
+
+    # Add the function requirements
+    prompt = prompt.replace('{FUNCTION_REQUIREMENTS}', function_requirements)
+
+    self._prompt.append(prompt)
+    self._prompt.append(tool_guides)
 
     return self._prompt
 

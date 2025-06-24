@@ -306,6 +306,22 @@ class CoverageResult():
     return f'{self.__class__.__name__}({", ".join(attributes)})'
 
 
+class CrashFeasibilityResult():
+  """The fuzzing run-time result with crash feasibility info."""
+  feasible: bool
+  reason: str
+
+  def __init__(self, feasible: bool = False, reason: str = ''):
+    self.feasible = feasible
+    self.reason = reason
+
+  def to_dict(self) -> dict:
+    return {
+        'feasible': self.feasible,
+        'reason': self.reason,
+    }
+
+
 # TODO: Make this class an attribute of Result, avoid too many attributes in one
 # class.
 class AnalysisResult(Result):
@@ -313,6 +329,7 @@ class AnalysisResult(Result):
   run_result: RunResult
   semantic_result: Optional[SemanticCheckResult]
   crash_result: Optional[CrashResult]
+  feasibility_result: Optional[CrashFeasibilityResult]
   coverage_result: Optional[CoverageResult]
 
   def __init__(self,
@@ -320,6 +337,7 @@ class AnalysisResult(Result):
                run_result: RunResult,
                semantic_result: Optional[SemanticCheckResult] = None,
                crash_result: Optional[CrashResult] = None,
+               feasibility_result: Optional[CrashFeasibilityResult] = None,
                coverage_result: Optional[CoverageResult] = None,
                chat_history: Optional[dict] = None,
                default_success: bool = False) -> None:
@@ -330,6 +348,7 @@ class AnalysisResult(Result):
     self.run_result = run_result
     self.semantic_result = semantic_result
     self.crash_result = crash_result
+    self.feasibility_result = feasibility_result
     self.coverage_result = coverage_result
 
   def to_dict(self) -> dict:
@@ -338,6 +357,9 @@ class AnalysisResult(Result):
             self.semantic_result.to_dict() if self.semantic_result else {},
         'crash_result':
             self.crash_result.to_dict() if self.crash_result else {},
+        'feasibility_result':
+            self.feasibility_result.to_dict()
+            if self.feasibility_result else {},
         'coverage_result':
             self.coverage_result.to_dict() if self.coverage_result else {},
     }
