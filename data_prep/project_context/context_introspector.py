@@ -193,6 +193,9 @@ class ContextRetriever:
     source_list = xrefs.get('source')
     detail_list = xrefs.get('details')
 
+    if not source_list and not detail_list:
+        return []
+
     if source_list:
       source_list.insert(0, '<code>')
       source_list.append('</code>')
