@@ -837,6 +837,11 @@ class CrashEnhancerTemplateBuilder(PrototyperTemplateBuilder):
                                          error_desc, errors, priming_weight, '',
                                          '')
 
+    # TODO(pamusuo): Refactor this logic before merging
+    if function_requirements:
+      requirements = (f'\nHere are the requirements for the function.\n'
+                      f'{function_requirements}\n')
+
     self._prepare_prompt(priming, problem)
     return self._prompt
 
