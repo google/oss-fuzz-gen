@@ -44,8 +44,7 @@ class FunctionAnalyzer(base_agent.ADKBaseAgent):
                benchmark: benchmarklib.Benchmark,\
                name: str = ''):
 
-    builder = prompt_builder.FunctionAnalyzerTemplateBuilder(
-        llm, benchmark)
+    builder = prompt_builder.FunctionAnalyzerTemplateBuilder(llm, benchmark)
 
     description = builder.get_description().get()
 
