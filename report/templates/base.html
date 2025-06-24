@@ -372,15 +372,24 @@ tbody tr:nth-child(odd) {
                         return `${hours}h ${minutes}m ${seconds}s`;
                     }
                  }">
+                {% if time_results %}
                 <p class="text-center md:text-left font-bold text-nowrap">
                     {% if time_results.start_time %}
                         <span x-text="formatDate('{{ time_results.start_time }}')"></span>
+                    {% endif %}
+                    {% if time_results.completion_time %}
                         →
                         <span x-text="formatDate('{{ time_results.completion_time }}')"></span>
                     {% endif %}
+                    {% if time_results.total_run_time %}
+                        (<span x-text="formatTotalRunTime('{{ time_results.total_run_time }}')"></span>)
+                    {% endif %}
                     (<span x-text="formatTotalRunTime('{{ time_results.total_run_time }}')"></span>)
                 </p>
-                <p class="text-lg md:text-2xl">Build success rate: <strong>{{ accumulated_results.build_rate|percent }}%</strong></p>
+                {% endif %}
+                {% if accumulated_results.total_runs > 0 %}
+                    <p class="text-lg md:text-2xl">Build success rate: <strong>{{ accumulated_results.build_rate|percent }}%</strong></p>
+                {% endif %}
             </div>
         {% endif %}
     </div>
@@ -419,10 +428,14 @@ tbody tr:nth-child(odd) {
                     {{accumulated_results.total_runs}}
                 </p>
                 <p><span class="font-medium">Successful Builds:</span> {{accumulated_results.compiles}}</p>
-                <p><span class="font-medium">Average Coverage:</span> {{accumulated_results.average_coverage |percent }}%</p>
+                {% if accumulated_results.total_runs > 0 %}
+                    <p><span class="font-medium">Average Coverage:</span> {{accumulated_results.total_coverage |percent }}%</p>
+                {% endif %}
             </div>
             <div class="space-y-2">
-                <p><span class="font-medium">Average Line Coverage Diff:</span> {{accumulated_results.average_line_coverage_diff |percent }}%</p>
+                {% if accumulated_results.total_runs > 0 %}
+                    <p><span class="font-medium">Average Line Coverage Diff:</span> {{accumulated_results.average_line_coverage_diff |percent }}%</p>
+                {% endif %}
                 <p><span class="font-medium">Crashes:</span> {{accumulated_results.crashes}}</p>
                 <p><span class="font-medium">Model:</span> <strong>{{model}}</strong></p>
             </div>
