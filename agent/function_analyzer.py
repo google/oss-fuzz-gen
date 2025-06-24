@@ -45,7 +45,7 @@ class FunctionAnalyzer(base_agent.ADKBaseAgent):
                name: str = ''):
 
     builder = prompt_builder.FunctionAnalyzerTemplateBuilder(
-        self.llm, self.benchmark)
+        llm, benchmark)
 
     description = builder.get_description().get()
 
