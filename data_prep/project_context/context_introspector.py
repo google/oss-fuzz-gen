@@ -187,8 +187,8 @@ class ContextRetriever:
 
     if not xrefs:
       logging.warning(
-          'Could not retrieve xrefs for project: %s '
-          'function_signature: %s', project, func_sig)
+          'Could not retrieve tests xrefs for project: %s '
+          'function_signature: %s', project, func_name)
 
     source_list = xrefs.get('source')
     detail_list = xrefs.get('details')
