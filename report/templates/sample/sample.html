@@ -87,8 +87,8 @@ limitations under the License.
           {% endif %}
 
           {% if crash_info.crash_details %}
-          <div x-data="{ 
-            detailsOpen: false, 
+          <div x-data="{
+            detailsOpen: false,
             ansiProcessed: false,
             toggleDetails() {
               this.detailsOpen = !this.detailsOpen;
@@ -101,7 +101,7 @@ limitations under the License.
                     const htmlContent = ansi_up.ansi_to_html(textContent);
                     element.innerHTML = htmlContent;
                     this.ansiProcessed = true;
-                  } 
+                  }
                 });
               }
             }

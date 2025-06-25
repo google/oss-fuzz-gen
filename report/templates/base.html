@@ -585,8 +585,8 @@ function renderSearchResults(results) {
     searchResultsCount.textContent = `${results.length} sample${results.length !== 1 ? 's' : ''} found`;
 
     searchResultsBody.innerHTML = results.map(result => {
-        const sampleUrl = `sample/${encodeURIComponent(result.benchmarkId)}/${encodeURIComponent(result.sampleId)}.html`;
-        const benchmarkUrl = `benchmark/${encodeURIComponent(result.benchmarkId)}/index.html`;
+        const sampleUrl = `{% if sample %}../../{% elif benchmark %}../../{% else %}../{% endif %}sample/${encodeURIComponent(result.benchmarkId)}/${encodeURIComponent(result.sampleId)}.html`;
+        const benchmarkUrl = `{% if sample %}../../{% elif benchmark %}../../{% else %}../{% endif %}benchmark/${encodeURIComponent(result.benchmarkId)}/index.html`;
 
         let additionalInfo = [];
 
@@ -594,12 +594,8 @@ function renderSearchResults(results) {
             additionalInfo.push(`<span class="font-medium">Crash:</span> ${result.sample.crash_reason}`);
         }
 
-        if (result.sample.sanitizer) {
-            additionalInfo.push(`<span class="font-medium">Sanitizer:</span> ${result.sample.sanitizer}`);
-        }
-
-        if (result.sample.bug_type) {
-            additionalInfo.push(`<span class="font-medium">Bug Type:</span> ${result.sample.bug_type}`);
+        if (result.sample.crash_symptom) {
+            additionalInfo.push(`<span class="font-medium">Crash Symptom:</span> ${result.sample.crash_symptom}`);
         }
 
         if (result.sample.triage) {

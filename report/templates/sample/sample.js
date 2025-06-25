@@ -63,24 +63,24 @@ class AnsiUp {
         this.ansi_colors =
             [
                 [
-                    { rgb: [0, 0, 0], class_name: "ansi-black" },
-                    { rgb: [187, 0, 0], class_name: "ansi-red" },
-                    { rgb: [0, 187, 0], class_name: "ansi-green" },
-                    { rgb: [187, 187, 0], class_name: "ansi-yellow" },
-                    { rgb: [0, 0, 187], class_name: "ansi-blue" },
-                    { rgb: [187, 0, 187], class_name: "ansi-magenta" },
-                    { rgb: [0, 187, 187], class_name: "ansi-cyan" },
-                    { rgb: [255, 255, 255], class_name: "ansi-white" }
+                    { rgb: [80, 80, 80], class_name: "ansi-black" },
+                    { rgb: [214, 95, 95], class_name: "ansi-red" },
+                    { rgb: [146, 214, 146], class_name: "ansi-green" },
+                    { rgb: [231, 204, 102], class_name: "ansi-yellow" },
+                    { rgb: [146, 163, 231], class_name: "ansi-blue" },
+                    { rgb: [214, 146, 214], class_name: "ansi-magenta" },
+                    { rgb: [146, 214, 214], class_name: "ansi-cyan" },
+                    { rgb: [220, 220, 220], class_name: "ansi-white" }
                 ],
                 [
-                    { rgb: [85, 85, 85], class_name: "ansi-bright-black" },
-                    { rgb: [255, 85, 85], class_name: "ansi-bright-red" },
-                    { rgb: [0, 255, 0], class_name: "ansi-bright-green" },
-                    { rgb: [255, 255, 85], class_name: "ansi-bright-yellow" },
-                    { rgb: [85, 85, 255], class_name: "ansi-bright-blue" },
-                    { rgb: [255, 85, 255], class_name: "ansi-bright-magenta" },
-                    { rgb: [85, 255, 255], class_name: "ansi-bright-cyan" },
-                    { rgb: [255, 255, 255], class_name: "ansi-bright-white" }
+                    { rgb: [136, 136, 136], class_name: "ansi-bright-black" },
+                    { rgb: [248, 146, 146], class_name: "ansi-bright-red" },
+                    { rgb: [180, 248, 180], class_name: "ansi-bright-green" },
+                    { rgb: [248, 224, 163], class_name: "ansi-bright-yellow" },
+                    { rgb: [180, 197, 248], class_name: "ansi-bright-blue" },
+                    { rgb: [248, 180, 248], class_name: "ansi-bright-magenta" },
+                    { rgb: [180, 248, 248], class_name: "ansi-bright-cyan" },
+                    { rgb: [245, 245, 245], class_name: "ansi-bright-white" }
                 ]
             ];
         this.palette_256 = [];

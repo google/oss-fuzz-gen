@@ -15,7 +15,6 @@
 """Report generation tool to create HTML reports for experiment result."""
 
 import argparse
-import ast
 import json
 import logging
 import os
@@ -520,16 +519,15 @@ class GenerateReport:
               project_name] / benchmark_count
 
     return unified_data
-  
-  def _get_crash_info_from_run_logs(self, benchmark_id: str, sample_id: str) -> dict: 
+
+  def _get_crash_info_from_run_logs(self, benchmark_id: str,
+                                    sample_id: str) -> dict:
     run_logs = self._results.get_run_logs(benchmark_id, sample_id) or ""
     parser = RunLogsParser(run_logs)
     crash_details = parser.get_crash_details()
     crash_symptom = parser.get_crash_symptom()
-    return {
-        "crash_details": crash_details,
-        "crash_symptom": crash_symptom
-    }
+    return {"crash_details": crash_details, "crash_symptom": crash_symptom}
+
 
 def generate_report(args: argparse.Namespace) -> None:
   """Generates static web server files."""
