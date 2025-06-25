@@ -15,6 +15,7 @@ limitations under the License.
 
 #}{% extends 'base.html' %}
 
+{% block content %}
 
 {% if sample_css_content %}
 <style type="text/css">
@@ -27,8 +28,6 @@ limitations under the License.
 {{ sample_js_content | safe }}
 </script>
 {% endif %}
-
-{% block content %}
 
 <div class="space-y-6">
   <div class="border rounded-lg p-6">
