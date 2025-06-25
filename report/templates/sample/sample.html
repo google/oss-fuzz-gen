@@ -66,34 +66,42 @@ limitations under the License.
 
         {% if sample.result.semantic_error or (crash_info is defined and crash_info) %}
         <div class="border rounded-lg p-6 shadow-sm">
-
-          {% if sample.result.semantic_error %}
-          <div class="mb-5 p-4 bg-amber-50 border-l-4 border-amber-500 rounded-md">
-            <p class="flex items-center gap-2">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-amber-600" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
-              </svg>
-              <span class="font-medium text-amber-800">Diagnosis:</span>
-              <span class="text-amber-900">{{ sample.result.semantic_error }}</span>
-            </p>
+          {% if crash_info is defined and crash_info.crash_symptom %}
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+            <div class="p-4 rounded-lg">
+              <p class="text-sm uppercase tracking-wide">Diagnosis</p>
+              <p class="font-medium mt-1">{{ sample.result.semantic_error }}</p>
+            </div>
+            <div class="p-4 rounded-lg">
+              <p class="text-sm uppercase tracking-wide">Sanitizer</p>
+              <p class="font-medium mt-1">{{ crash_info.crash_symptom.split(": ")[1] }}</p>
+            </div>
+            <div class="p-4 rounded-lg">
+              <p class="text-sm uppercase tracking-wide">Bug Type</p>
+              <p class="font-medium mt-1">{{ crash_info.crash_symptom.split(" ")[2] }}</p>
+            </div>
+            <div class="p-4 rounded-lg">
+              <p class="text-sm uppercase tracking-wide">Crash Address</p>
+              <p class="font-medium mt-1 font-mono">{{ crash_info.crash_symptom.split("address ")[1] }}</p>
+            </div>
           </div>
           {% endif %}
 
-          {% if crash_info is defined and crash_info.crash_symptom %}
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-            <div class="p-4 rounded-lg">
-              <p class="text-sm uppercase tracking-wide">Crash Symptom</p>
-              <p class="font-medium mt-1">{{ crash_info.crash_symptom }}</p>
+          {% if crash_info.crash_details %}
+          <div x-data="{ detailsOpen: false }" class="border rounded-lg">
+            <button @click="detailsOpen = !detailsOpen"
+                    class="w-full p-4 flex justify-between items-center text-left">
+                <span class="font-medium text-gray-700">Crash Details</span>
+                <svg class="w-4 h-4 transform transition-transform duration-200"
+                     :class="{'rotate-180': detailsOpen}"
+                     fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                </svg>
+            </button>
+            <div x-show="detailsOpen" class="p-4 border-t">
+              <pre class="bg-gray-900 text-gray-100 p-4 rounded-md overflow-x-auto text-sm font-mono whitespace-pre-wrap"><code>{{ crash_info.crash_details }}</code></pre>
             </div>
-            
           </div>
-
-            {% if crash_info.crash_details %}
-            <div class="p-4 rounded-lg">
-              <p class="text-sm uppercase tracking-wide">Crash Details</p>
-              <pre class="bg-gray-50 dark:bg-gray-800 p-4 rounded-md overflow-x-auto">{{ crash_info.crash_details }}</pre>
-            </div>
-            {% endif %}
           {% endif %}
         </div>
         {% endif %}
