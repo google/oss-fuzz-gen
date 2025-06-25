@@ -532,24 +532,14 @@ function searchSamples(searchTerm, unifiedData) {
                 if (benchmark.samples) {
                     benchmark.samples.forEach(sample => {
                         const sampleId = sample.sample || '';
-                        const crashReason = sample.crash_reason || '';
                         const triage = sample.triage || '';
                         const triagerPrompt = sample.triager_prompt || '';
-                        const sourceCode = sample.source_code || '';
-                        const sanitizer = sample.sanitizer || '';
-                        const bugType = sample.bug_type || '';
-                        const crashAddress = sample.crash_address || '';
                         const crashSymptom = sample.crash_symptom || '';
 
                         const searchableText = [
                             sampleId,
-                            crashReason,
                             triage,
                             triagerPrompt,
-                            sourceCode,
-                            sanitizer,
-                            bugType,
-                            crashAddress,
                             crashSymptom,
                             projectName,
                             benchmarkId
@@ -585,14 +575,10 @@ function renderSearchResults(results) {
     searchResultsCount.textContent = `${results.length} sample${results.length !== 1 ? 's' : ''} found`;
 
     searchResultsBody.innerHTML = results.map(result => {
-        const sampleUrl = `{% if sample %}../../{% elif benchmark %}../../{% else %}../{% endif %}sample/${encodeURIComponent(result.benchmarkId)}/${encodeURIComponent(result.sampleId)}.html`;
-        const benchmarkUrl = `{% if sample %}../../{% elif benchmark %}../../{% else %}../{% endif %}benchmark/${encodeURIComponent(result.benchmarkId)}/index.html`;
+        const sampleUrl = `{% if sample %}../../{% elif benchmark %}../../{% endif %}sample/${encodeURIComponent(result.benchmarkId)}/${encodeURIComponent(result.sampleId)}.html`;
+        const benchmarkUrl = `{% if sample %}../../{% elif benchmark %}../../{% endif %}benchmark/${encodeURIComponent(result.benchmarkId)}/index.html`;
 
         let additionalInfo = [];
-
-        if (result.sample.crash_reason) {
-            additionalInfo.push(`<span class="font-medium">Crash:</span> ${result.sample.crash_reason}`);
-        }
 
         if (result.sample.crash_symptom) {
             additionalInfo.push(`<span class="font-medium">Crash Symptom:</span> ${result.sample.crash_symptom}`);

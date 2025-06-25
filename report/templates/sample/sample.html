@@ -66,11 +66,7 @@ limitations under the License.
         {% if sample.result.semantic_error or (crash_info is defined and crash_info) %}
         <div class="border rounded-lg p-6 shadow-sm">
           {% if crash_info is defined and crash_info.crash_symptom %}
-          <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-            <div class="p-4 rounded-lg">
-              <p class="text-sm uppercase tracking-wide">Diagnosis</p>
-              <p class="font-medium mt-1">{{ sample.result.semantic_error }}</p>
-            </div>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
             <div class="p-4 rounded-lg">
               <p class="text-sm uppercase tracking-wide">Sanitizer</p>
               <p class="font-medium mt-1">{{ crash_info.crash_symptom.split(": ")[1] }}</p>

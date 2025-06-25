@@ -434,18 +434,6 @@ class GenerateReport:
 
         sample_targets = self._results.get_targets(benchmark.id, sample.id)
 
-        # Allow searching for code in source code from targets
-        source_code = ""
-        if sample_targets:
-          source_code_parts = []
-          for target in sample_targets:
-            if hasattr(target, 'code') and target.code:
-              source_code_parts.append(target.code)
-            if hasattr(target,
-                       'build_script_code') and target.build_script_code:
-              source_code_parts.append(target.build_script_code)
-          source_code = "\n\n".join(source_code_parts)
-
         sample_data = {
             "sample": sample.id,
             "status": sample.result.finished,
@@ -456,7 +444,6 @@ class GenerateReport:
             "crash_reason": getattr(sample.result, 'semantic_error', '') or '',
             "triage": triage.result,
             "triager_prompt": triage.triager_prompt,
-            "source_code": source_code,
             # Give the full crash details for template rendering
             "crash_details": crash_info["crash_details"],
             "crash_symptom": crash_info["crash_symptom"]
