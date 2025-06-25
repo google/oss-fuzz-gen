@@ -100,11 +100,11 @@ class TestOSSFuzzManagerClone(unittest.TestCase):
     mock_run.return_value = Mock(returncode=0)
 
     with patch.object(self.manager.logger, 'info') as mock_log:
-      result = self.manager.clone(version="v1.0.0")
+      result = self.manager.clone()
 
       self.assertTrue(result)
       expected_cmd = [
-          "git", "clone", "--branch", "v1.0.0",
+          "git", "clone", "--branch", "master",
           "https://github.com/google/oss-fuzz.git",
           str(self.manager.checkout_path)
       ]

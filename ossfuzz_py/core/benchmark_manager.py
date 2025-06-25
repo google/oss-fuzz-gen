@@ -71,16 +71,17 @@ class Benchmark:
   params: List[Dict[str, str]] = field(
       default_factory=list,
       metadata={"description": "List of {name, type} parameter dicts"})
-  target_name: Optional[str] = field(
+  target_name_: Optional[str] = field(
       default=None,
-      metadata={"description": "Preferred target name (optional)"})
+      metadata={
+          "description":
+              "The binary name is set by the the build script in OSS-Fuzz"
+      })
   use_project_examples: bool = field(
       default=True, metadata={"description": "Whether to use project examples"})
   use_context: bool = field(
       default=False,
       metadata={"description": "Whether to use context information"})
-  cppify_headers: bool = field(
-      default=False, metadata={"description": "Whether to cppify headers"})
   commit: Optional[str] = field(
       default=None, metadata={"description": "OSS-Fuzz project commit hash"})
   test_file_path: str = field(
@@ -95,12 +96,7 @@ class Benchmark:
     return hash(self.id)
 
   @property
-  def benchmark_id(self) -> str:
-    """Alias for id field for backward compatibility."""
-    return self.id
-
-  @property
-  def effective_target_name(self) -> str:
+  def target_name(self) -> str:
     """
     Returns target_name if defined, otherwise basename of target_path.
 
@@ -108,16 +104,18 @@ class Benchmark:
         >>> b = Benchmark(id="test", project="test", language="c++",
                           function_signature="", function_name="",
                           return_type="",
-                          target_path="/src/test.cc", target_name="custom")
-        >>> b.effective_target_name
-        'custom'
+                          target_path="/src/libraw_fuzzer.cc",
+                          target_name="libraw_fuzzer")
+        >>> b.target_name
+        'libraw_fuzzer'
         >>> b2 = Benchmark(id="test2", project="test", language="c++",
                            function_signature="", function_name="",
-                           return_type="", target_path="/src/test.cc")
-        >>> b2.effective_target_name
-        'test'
+                           return_type="",
+                           target_path="/src/libraw_fuzzer.cc")
+        >>> b2.target_name
+        '/src/libraw_fuzzer.cc'
     """
-    return (self.target_name or
+    return (self.target_name_ or
             os.path.splitext(os.path.basename(self.target_path))[0])
 
   @property
@@ -422,10 +420,9 @@ class BenchmarkManager:
                      return_type=benchmark.return_type,
                      params=benchmark.params,
                      target_path=benchmark.target_path,
-                     target_name=benchmark.target_name,
+                     target_name_=benchmark.target_name_,
                      use_project_examples=benchmark.use_project_examples,
                      use_context=benchmark.use_context,
-                     cppify_headers=benchmark.cppify_headers,
                      commit=benchmark.commit,
                      test_file_path=benchmark.test_file_path,
                      function_dict=benchmark.function_dict)
@@ -452,7 +449,6 @@ class BenchmarkManager:
     commit = data.get('commit')
     use_context = data.get('use_context', False)
     use_project_examples = data.get('use_project_examples', True)
-    cppify_headers = data.get('cppify_headers', False)
 
     # Handle test files
     test_files = data.get('test_files', [])
@@ -474,10 +470,9 @@ class BenchmarkManager:
                       return_type='',
                       params=[],
                       target_path=target_path,
-                      target_name=target_name,
+                      target_name_=target_name,
                       use_project_examples=use_project_examples,
                       use_context=use_context,
-                      cppify_headers=cppify_headers,
                       commit=commit,
                       test_file_path=test_file_path))
 
@@ -501,10 +496,9 @@ class BenchmarkManager:
                       return_type=function.get('return_type', ''),
                       params=function.get('params', []),
                       target_path=target_path,
-                      target_name=target_name,
+                      target_name_=target_name,
                       use_project_examples=use_project_examples,
                       use_context=use_context,
-                      cppify_headers=cppify_headers,
                       commit=commit,
                       function_dict=function))
 
