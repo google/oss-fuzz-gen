@@ -32,6 +32,7 @@ import jinja2
 
 from report.common import (AccumulatedResult, Benchmark, FileSystem, Project,
                            Results, Sample, Target)
+from report.parse_run_log import RunLogsParser
 
 LOCAL_HOST = '127.0.0.1'
 
@@ -242,9 +243,9 @@ class GenerateReport:
 
       for sample in samples:
         sample_targets = self._results.get_targets(benchmark.id, sample.id)
-        semantic_log = self._get_semantic_analyzer_log(benchmark.id, sample.id)
+        crash_details = self._get_crash_details_from_run_logs(benchmark.id, sample.id)
         self._write_benchmark_sample(benchmark, sample, sample_targets,
-                                     semantic_log, time_results, unified_data)
+                                     crash_details, time_results, unified_data)
 
     self._write_index_json(benchmarks)
     self._write_unified_json(unified_data)
@@ -329,7 +330,7 @@ class GenerateReport:
                     benchmark.id, e)
 
   def _write_benchmark_sample(self, benchmark: Benchmark, sample: Sample,
-                              sample_targets: List[Target], semantic_log: dict,
+                              sample_targets: List[Target], crash_details: str,
                               time_results: dict[str, Any], unified_data: dict):
     """Generate the sample page and write to filesystem."""
     try:
@@ -359,7 +360,7 @@ class GenerateReport:
                                     targets=sample_targets,
                                     sample_css_content=sample_css_content,
                                     sample_js_content=sample_js_content,
-                                    semantic_log=semantic_log,
+                                    crash_details=crash_details,
                                     **common_data)
 
       self._write(f'sample/{benchmark.id}/{sample.id}.html', rendered)
@@ -426,7 +427,7 @@ class GenerateReport:
       }
 
       for sample in samples:
-        semantic_log = self._get_semantic_analyzer_log(benchmark.id, sample.id)
+        crash_details = self._get_crash_details_from_run_logs(benchmark.id, sample.id)
         triage = self._results.get_triage(benchmark.id, sample.id) or {
             "result": "",
             "triager_prompt": ""
@@ -457,10 +458,12 @@ class GenerateReport:
             "triage": triage.result,
             "triager_prompt": triage.triager_prompt,
             "source_code": source_code,
-            "sanitizer": semantic_log.get("sanitizer", ""),
-            "bug_type": semantic_log.get("error_type", ""),
-            "crash_address": semantic_log.get("crash_address", ""),
-            "crash_symptom": semantic_log.get("crash_symptom", "")
+            "sanitizer": crash_details.get("sanitizer", ""),
+            "bug_type": crash_details.get("error_type", ""),
+            "crash_address": crash_details.get("crash_address", ""),
+            "crash_symptom": crash_details.get("crash_symptom", ""),
+            # Give the full crash details for template rendering
+            "crash_details": crash_details
         }
         samples_data.append(sample_data)
         benchmark_metrics["total_coverage"] += int(sample.result.coverage)
@@ -520,49 +523,11 @@ class GenerateReport:
               project_name] / benchmark_count
 
     return unified_data
-
-  def _get_semantic_analyzer_log(self, benchmark_id: str,
-                                 sample_id: str) -> dict:
-    """Get the semantic analyzer log for a sample."""
-    log_path = os.path.join(self.results_dir, benchmark_id, 'status', sample_id,
-                            'log.txt')
-
-    if not FileSystem(log_path).exists():
-      return {}
-
-    with FileSystem(log_path).open('r') as f:
-      content = f.read().strip()
-      if not content:
-        return {}
-
-      lines = content.split('\n')
-      for i, line in enumerate(lines):
-        if line.startswith('SemanticAnalyzer'):
-          try:
-            data = ast.literal_eval(lines[i + 1])
-            if not data.get('crash_symptom'):
-              return data
-
-            error_msg = data['crash_symptom']
-            if 'AddressSanitizer:' not in error_msg:
-              return data
-
-            data['sanitizer'] = 'AddressSanitizer'
-            after_asan = error_msg.split('AddressSanitizer:')[1].strip()
-
-            if 'on address' in after_asan:
-              data['error_type'] = after_asan.split('on address')[0].strip()
-              data['crash_address'] = after_asan.split('on address')[1].split(
-                  'at pc')[0].strip()
-            else:
-              data['error_type'] = after_asan.split()[0].strip()
-              data['crash_address'] = ''
-            return data
-          except Exception as e:
-            logging.error("Error parsing semantic analyzer log: %s", e)
-            return {}
-      return {}
-
+  
+  def _get_crash_details_from_run_logs(self, benchmark_id: str, sample_id: str) -> dict: 
+    run_logs = self._results.get_run_logs(benchmark_id, sample_id) or ""
+    parser = RunLogsParser(run_logs)
+    return parser.get_crash_details()
 
 def generate_report(args: argparse.Namespace) -> None:
   """Generates static web server files."""
