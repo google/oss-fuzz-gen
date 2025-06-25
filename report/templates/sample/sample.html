@@ -17,13 +17,13 @@ limitations under the License.
 
 
 {% if sample_css_content %}
-<style>
+<style type="text/css">
 {{ sample_css_content | safe }}
 </style>
 {% endif %}
 
 {% if sample_js_content %}
-<script>
+<script type="text/javascript">
 {{ sample_js_content | safe }}
 </script>
 {% endif %}
@@ -88,10 +88,28 @@ limitations under the License.
           {% endif %}
 
           {% if crash_info.crash_details %}
-          <div x-data="{ detailsOpen: false }" class="border rounded-lg">
-            <button @click="detailsOpen = !detailsOpen"
+          <div x-data="{ 
+            detailsOpen: false, 
+            ansiProcessed: false,
+            toggleDetails() {
+              this.detailsOpen = !this.detailsOpen;
+              if (this.detailsOpen && !this.ansiProcessed) {
+                this.$nextTick(() => {
+                  const element = document.getElementById('crashDetailsPreview');
+                  if (element && window.AnsiUp) {
+                    const ansi_up = new window.AnsiUp();
+                    const textContent = element.textContent || element.innerText;
+                    const htmlContent = ansi_up.ansi_to_html(textContent);
+                    element.innerHTML = htmlContent;
+                    this.ansiProcessed = true;
+                  } 
+                });
+              }
+            }
+          }" class="border rounded-lg">
+            <button @click="toggleDetails()"
                     class="w-full p-4 flex justify-between items-center text-left">
-                <span class="font-medium text-gray-700">Crash Details</span>
+                <span class="font-medium">Crash Details</span>
                 <svg class="w-4 h-4 transform transition-transform duration-200"
                      :class="{'rotate-180': detailsOpen}"
                      fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -99,7 +117,7 @@ limitations under the License.
                 </svg>
             </button>
             <div x-show="detailsOpen" class="p-4 border-t">
-              <pre class="bg-gray-900 text-gray-100 p-4 rounded-md overflow-x-auto text-sm font-mono whitespace-pre-wrap"><code>{{ crash_info.crash_details }}</code></pre>
+              <pre id="crashDetailsPreview" class="p-4 rounded-md overflow-x-auto font-mono whitespace-pre-wrap">{{ crash_info.crash_details }}</pre>
             </div>
           </div>
           {% endif %}

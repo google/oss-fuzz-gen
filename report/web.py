@@ -428,7 +428,6 @@ class GenerateReport:
 
       for sample in samples:
         crash_info = self._get_crash_info_from_run_logs(benchmark.id, sample.id)
-        logging.info(crash_info)
         triage = self._results.get_triage(benchmark.id, sample.id) or {
             "result": "",
             "triager_prompt": ""
