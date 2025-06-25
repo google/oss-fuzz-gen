@@ -32,9 +32,15 @@ class RunLogsParser:
         """Get the crash symptom from the run log."""
         crash_symptom = ""
 
+        pattern = re.compile(
+            r"(?:^\s*\x1b\[[0-9;]*m)*==\d+==\s*(ERROR:.*)", 
+            re.DOTALL
+        )
+
         for line in self._lines:
-            if re.match(r"^==\d+==ERROR:.*", line):
-                crash_symptom = line
+            match = pattern.search(line)
+            if match:
+                crash_symptom = match.group(1) 
                 break
 
         return crash_symptom

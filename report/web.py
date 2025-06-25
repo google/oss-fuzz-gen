@@ -243,9 +243,9 @@ class GenerateReport:
 
       for sample in samples:
         sample_targets = self._results.get_targets(benchmark.id, sample.id)
-        crash_details = self._get_crash_details_from_run_logs(benchmark.id, sample.id)
+        crash_info = self._get_crash_info_from_run_logs(benchmark.id, sample.id)
         self._write_benchmark_sample(benchmark, sample, sample_targets,
-                                     crash_details, time_results, unified_data)
+                                     crash_info, time_results, unified_data)
 
     self._write_index_json(benchmarks)
     self._write_unified_json(unified_data)
@@ -330,7 +330,7 @@ class GenerateReport:
                     benchmark.id, e)
 
   def _write_benchmark_sample(self, benchmark: Benchmark, sample: Sample,
-                              sample_targets: List[Target], crash_details: str,
+                              sample_targets: List[Target], crash_info: dict,
                               time_results: dict[str, Any], unified_data: dict):
     """Generate the sample page and write to filesystem."""
     try:
@@ -360,7 +360,7 @@ class GenerateReport:
                                     targets=sample_targets,
                                     sample_css_content=sample_css_content,
                                     sample_js_content=sample_js_content,
-                                    crash_details=crash_details,
+                                    crash_info=crash_info,
                                     **common_data)
 
       self._write(f'sample/{benchmark.id}/{sample.id}.html', rendered)
@@ -427,7 +427,8 @@ class GenerateReport:
       }
 
       for sample in samples:
-        crash_details = self._get_crash_details_from_run_logs(benchmark.id, sample.id)
+        crash_info = self._get_crash_info_from_run_logs(benchmark.id, sample.id)
+        logging.info(crash_info)
         triage = self._results.get_triage(benchmark.id, sample.id) or {
             "result": "",
             "triager_prompt": ""
@@ -458,12 +459,9 @@ class GenerateReport:
             "triage": triage.result,
             "triager_prompt": triage.triager_prompt,
             "source_code": source_code,
-            "sanitizer": crash_details.get("sanitizer", ""),
-            "bug_type": crash_details.get("error_type", ""),
-            "crash_address": crash_details.get("crash_address", ""),
-            "crash_symptom": crash_details.get("crash_symptom", ""),
             # Give the full crash details for template rendering
-            "crash_details": crash_details
+            "crash_details": crash_info["crash_details"],
+            "crash_symptom": crash_info["crash_symptom"]
         }
         samples_data.append(sample_data)
         benchmark_metrics["total_coverage"] += int(sample.result.coverage)
@@ -524,10 +522,15 @@ class GenerateReport:
 
     return unified_data
   
-  def _get_crash_details_from_run_logs(self, benchmark_id: str, sample_id: str) -> dict: 
+  def _get_crash_info_from_run_logs(self, benchmark_id: str, sample_id: str) -> dict: 
     run_logs = self._results.get_run_logs(benchmark_id, sample_id) or ""
     parser = RunLogsParser(run_logs)
-    return parser.get_crash_details()
+    crash_details = parser.get_crash_details()
+    crash_symptom = parser.get_crash_symptom()
+    return {
+        "crash_details": crash_details,
+        "crash_symptom": crash_symptom
+    }
 
 def generate_report(args: argparse.Namespace) -> None:
   """Generates static web server files."""
