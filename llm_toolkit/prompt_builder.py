@@ -771,6 +771,9 @@ class EnhancerTemplateBuilder(PrototyperTemplateBuilder):
     problem = self._format_fixer_problem(self.build_result.fuzz_target_source,
                                          error_desc, errors, priming_weight, '',
                                          '')
+    if function_requirements:
+      problem += (f'\nHere are the requirements for the function.\n'
+                  f'{function_requirements}\n')
 
     self._prepare_prompt(priming, problem)
     return self._prompt
@@ -834,6 +837,11 @@ class CrashEnhancerTemplateBuilder(PrototyperTemplateBuilder):
                                          error_desc, errors, priming_weight, '',
                                          '')
 
+    # TODO(pamusuo): Refactor this logic before merging
+    if function_requirements:
+      requirements = (f'\nHere are the requirements for the function.\n'
+                      f'{function_requirements}\n')
+
     self._prepare_prompt(priming, problem)
     return self._prompt
 
@@ -887,11 +895,16 @@ class CoverageEnhancerTemplateBuilder(PrototyperTemplateBuilder):
     prompt = prompt.replace('{INSIGHTS}', self.coverage_result.insight)
     prompt = prompt.replace('{SUGGESTIONS}', self.coverage_result.suggestions)
     self._prompt.append(prompt)
+
+    if function_requirements:
+      requirements = (f'\nHere are the requirements for the function.\n'
+                      f'{function_requirements}\n')
+      self._prompt.append(requirements)
     return self._prompt
 
 
 class FunctionAnalyzerTemplateBuilder(DefaultTemplateBuilder):
-  """ Builder for function analyzer. """
+  """Builder for function analyzer."""
 
   def __init__(self,
                model: models.LLM,
@@ -968,7 +981,7 @@ class FunctionAnalyzerTemplateBuilder(DefaultTemplateBuilder):
                       .replace('{FUNCTION_REFERENCES}', '')\
                         .replace('</function-references>', '')
     else:
-      references = [f"<reference>\n{xref}\n</reference>" for xref in xrefs]
+      references = [f'<reference>\n{xref}\n</reference>' for xref in xrefs]
       references_str = '\n'.join(references)
       prompt = prompt.replace('{FUNCTION_REFERENCES}', references_str)
 
@@ -987,7 +1000,7 @@ class FunctionAnalyzerTemplateBuilder(DefaultTemplateBuilder):
 
     raise NotImplementedError(
         'FunctionAnalyzerTemplateBuilder.build() should not be called. '
-        'Use build_instruction() or build_prompt() instead.')
+        'Use build_prompt() instead.')
 
 
 class CrashAnalyzerTemplateBuilder(DefaultTemplateBuilder):
@@ -1368,8 +1381,8 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     self_source, cross_source = self._format_source_reference(signature)
     problem = problem.replace('{SELF_SOURCE}', self_source)
     problem = problem.replace('{CROSS_SOURCE}', cross_source)
-    problem = problem.replace("{PROJECT_NAME}", self.benchmark.project)
-    problem = problem.replace("{PROJECT_URL}", self.project_url)
+    problem = problem.replace('{PROJECT_NAME}', self.benchmark.project)
+    problem = problem.replace('{PROJECT_URL}', self.project_url)
     problem = problem.replace('{DATA_MAPPING}', self._format_data_filler())
 
     if is_constructor:
