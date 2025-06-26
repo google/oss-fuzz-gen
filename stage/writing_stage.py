@@ -58,6 +58,7 @@ class WritingStage(BaseStage):
       agent = self.get_agent(index=0)
       if agent.name == 'FunctionAnalyzer':
         agent_result = self._execute_agent(agent, result_history)
+        self.logger.write_chat_history(agent_result)
         result_history.append(agent_result)
 
         # Then, execute the Prototyper agent to refine the fuzz target.
