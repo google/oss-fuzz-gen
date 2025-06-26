@@ -20,6 +20,7 @@ metadata:
     customLabel: "myCustomValue"
 spec:
   template:
+     activeDeadlineSeconds: 43200  # 12 hours. We don't want large experiments to run indefinitely and eat up resources.
     spec:
       nodeSelector:
         cloud.google.com/gke-nodepool: ofg-pr-exp
