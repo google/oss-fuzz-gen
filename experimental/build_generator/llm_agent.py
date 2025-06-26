@@ -243,8 +243,9 @@ class BuildScriptAgent(BaseAgent):
         return None
 
     if not response or not prompt or not prompt.get():
-      prompt = self._container_handle_invalid_tool_usage(
-          [self.inspect_tool], cur_round, response, prompt)
+      prompt = self._container_handle_invalid_tool_usage([self.inspect_tool],
+                                                         cur_round, response,
+                                                         prompt)
 
     return prompt
 
@@ -457,8 +458,8 @@ class AutoDiscoveryBuildScriptAgent(BuildScriptAgent):
 
     return prompt
 
-  def _container_handle_invalid_tool_usage(self, tools: list[BaseTool], cur_round: int,
-                                           response: str,
+  def _container_handle_invalid_tool_usage(self, tools: list[BaseTool],
+                                           cur_round: int, response: str,
                                            prompt: Prompt) -> Prompt:
     """Formats a prompt to re-teach LLM how to use the |tool|."""
     # pylint: disable=unused-argument
@@ -494,8 +495,9 @@ class AutoDiscoveryBuildScriptAgent(BuildScriptAgent):
           return None
 
     if not response or not prompt.get() or self.invalid:
-      prompt = self._container_handle_invalid_tool_usage(
-          [self.inspect_tool], cur_round, response, prompt)
+      prompt = self._container_handle_invalid_tool_usage([self.inspect_tool],
+                                                         cur_round, response,
+                                                         prompt)
 
     return prompt
 
