@@ -93,7 +93,7 @@ class CoverageAnalyzer(BaseAgent):
     # Finally check invalid responses.
     if not response or not prompt.get():
       prompt = self._container_handle_invalid_tool_usage(
-          self.inspect_tool, cur_round, response, prompt)
+          [self.inspect_tool], cur_round, response, prompt)
       with open(INVALID_PRMOT_PATH, 'r') as prompt_file:
         prompt.append(prompt_file.read())
 

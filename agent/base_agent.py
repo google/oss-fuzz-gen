@@ -167,7 +167,8 @@ class BaseAgent(ABC):
       prompt.append(prompt_text)
     return prompt
 
-  def _container_handle_invalid_tool_usage(self, tool: BaseTool, cur_round: int,
+  def _container_handle_invalid_tool_usage(self, tools: list[BaseTool],
+                                           cur_round: int,
                                            response: str,
                                            prompt: Prompt) -> Prompt:
     """Formats a prompt to re-teach LLM how to use the |tool|."""
@@ -175,8 +176,10 @@ class BaseAgent(ABC):
                    cur_round,
                    response,
                    trial=self.trial)
-    prompt_text = (f'No valid instruction received, Please follow the '
-                   f'interaction protocols:\n{tool.tutorial()}')
+    prompt_text = ('No valid instruction received, Please follow the'
+                  'interaction protocols for available tools:\n\n')
+    for tool in tools:
+      prompt_text += f'{tool.tutorial()}\n\n'
     prompt.append(prompt_text)
     return prompt
 

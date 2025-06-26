@@ -155,7 +155,7 @@ class FunctionAnalyzer(base_agent.ADKBaseAgent):
     # Finally check invalid request.
     if not request or not prompt.get():
       prompt = self._container_handle_invalid_tool_usage(
-          self.inspect_tool, 0, request, prompt)
+          [self.inspect_tool], 0, request, prompt)
 
     tool_response = prompt.get()
 
