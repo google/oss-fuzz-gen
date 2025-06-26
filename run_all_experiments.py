@@ -257,6 +257,10 @@ def parse_args() -> argparse.Namespace:
                       type=int,
                       default=100,
                       help='Max trial round for agents.')
+  parser.add_argument(
+    '--interactive_debug',
+    action='store_true',
+    help='Pause after build failure for manual prompt input (works best with LLM_NUM_EXP=1).')
 
   args = parser.parse_args()
   if args.num_samples:
