@@ -5,8 +5,10 @@ The previous fuzz driver you developed caused a crash in the function.
 We have provided you with the target function, its requirements, the crash stacktrace, an analysis of the crash, the fuzz driver that caused the crash,
 and a set of tools that you can use to navigate the project's codebase.
 You are to analyze the function, the locations where the function can be called in the project, and the execution paths that lead to these call sites.
-Your goal is to determine whether the crash is feasible when the function is called from the project, and if it cannot,
-you should provide an updated set of function requirements that would prevent the crash.
+The crash we have provided you is a false and infeasible crash.
+Your goal is to analyze the project and provide a counter-proof that the crash is feasible from a non-test entry point in the program.
+If the crash is indeed not feasible,
+you should provide an updated list of function requirements that would prevent the crash.
 </task>
 
 <steps>
@@ -33,14 +35,13 @@ You can get these states by reviewing:
    - The functions identified in the stack trace
    - The fuzz driver
 
-Step 4: Determine the feasibility of this crash if the target function is directly called from its call sites within the project.
-         To determine feasibility, you should identify an execution trace from a public endpoint in the project to the corresponding crashing location that can cause the crash.
+Step 4: Analyze the project and provide proof of crash feasibility.
+   - This proof should contain an execution trace from a public non-test endpoint in the project to the corresponding program location with the crash.
+   - If a function is public and does not have any non-test callers, then crashes from that function are feasible.
 
-Step 5: If you identify an execution trace, then report it as feasible and describe the paths through the project that can cause the crash.
-
-Step 6: If the crash is not feasible, compare the input conditions that caused the crash with the existing function requirements. If the input conditions are not covered by the requirements, update the requirements so the next fuzz driver does not cause a similar crash.
-
-Step 7: If the crash is not feasible and the input states already violate the provided requirements, provide the violated requirements in your conclusion.
+Step 5: Identify any violated function requirement and provide a list of updated requirements.
+   - If the crash is not feasible, identify if an input requirement was violated or if the list of requirements should be updated.
+   - Make any added requirement to be very precise.
 
 Step 8: Provide your conclusion in the response format below.
 </steps>
@@ -73,15 +74,16 @@ You MUST return your response in the format below.
 Make sure your response follows the following format.
 
 <response>
-<conclusion>
+<feasible>
 'True' or 'False'
-</conclusion>
+</feasible>
 <analysis>
 Your analysis of the feasibility of this crash
 </analysis>
 <requirements>
 An updated list of requirements
 Only provide this section if you modified or added a requirement.
+Provide the full list of requirements, and not just the added requirement.
 </requirements>
 </response>
 

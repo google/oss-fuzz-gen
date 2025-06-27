@@ -29,6 +29,7 @@ from experiment.benchmark import Benchmark, FileType
 from experiment.fuzz_target_error import SemanticCheckResult
 from llm_toolkit import models, prompts
 from results import AnalysisResult, BuildResult, CoverageResult, RunResult
+from tool.base_tool import BaseTool
 
 logger = logging.getLogger(__name__)
 
@@ -947,7 +948,7 @@ class FunctionAnalyzerTemplateBuilder(DefaultTemplateBuilder):
 
     return self._prompt
 
-  def build_prompt(self) -> prompts.Prompt:
+  def build_prompt(self, project_dir: str) -> prompts.Prompt:
     """Constructs a prompt using the templates in |self| and saves it."""
 
     if not self.benchmark:
@@ -960,6 +961,7 @@ class FunctionAnalyzerTemplateBuilder(DefaultTemplateBuilder):
     prompt = prompt.replace('{PROJECT_NAME}', self.benchmark.project)
     prompt = prompt.replace('{FUNCTION_SIGNATURE}',
                             self.benchmark.function_signature)
+    prompt = prompt.replace('{PROJECT_DIR}', project_dir)
 
     # Get the function source
     func_source = introspector.query_introspector_function_source(

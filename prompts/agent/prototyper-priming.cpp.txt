@@ -45,11 +45,16 @@ For each input parameter, understand:
     * Invalid or edge-case values (e.g., zero, NULL, predefined constants, maximum values).
     * Special values that trigger different code paths.
 
+Step 6: Identify and analyze requirements of other functions you will call in the Fuzz Target.
+    * This includes functions you will call to setup state or create input variables.
+    * Look for usages of these functions in the program and how their inputs are created.
+    * Look at the implementations of these functions to understand implicit assumptions the function makes.
+
 Step 6: Plan Fuzz Target Implementation.
 Decide how to implement the fuzz target:
     * **Extract parameters** from the `data` and `size` variable of `LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)`.
     * Handle fixed-size versus variable-size data.
-    * **Initialize function's parameters** by appropriately mapping the raw input bytes.
+    * **Initialize function's parameters** by appropriately mapping the raw input bytes and following the function's requirements.
     * Ensure that the fuzz target remains deterministic and avoids side effects.
     * Avoid `goto` statements.
 
@@ -121,10 +126,17 @@ Step 9: Providing Your Conclusion:
         * Recognizing any special initialization or environmental requirements.
 1. Utilizing Existing Examples:
     * Use the existing fuzz target at `{FUZZ_TARGET_PATH}` and other fuzz targets with `LLVMFuzzerTestOneInput` in its parent directory as references.
+    * Also use the existing callers of the target function as references.
     * Pay special attention to:
         * How header files are included.
         * The structure and content of the `LLVMFuzzerTestOneInput` function.
     * Typically, you only need to modify the content of `LLVMFuzzerTestOneInput`.
+2. Avoid the following programming errors when creating the fuzz target:
+    * Before reading bytes from the input data, confirm it has enough data for your needs.
+    * Ensure all allocated resources and memory are freed in all execution paths in the fuzz target.
+    * Do NOT assume the values of ENUMS or CONSTANTS. ALWAYS use the specific ENUM or CONSTANT instead of its raw values.
+    * Do NOT directly modify the input arguments to `LLVMFuzzerTestOneInput`. Always use the FuzzDataProvider APIs to get data you need.
+    * Do NOT redefine classes or structs in the fuzz target. Look for and include the appropriate header files.
 2. Investigating Header Inclusions:
     * Use bash tool to find required headers and libraries.
     * Examine library files built by `/src/build.bk.sh` to understand available functions and symbols.
@@ -140,4 +152,6 @@ Step 9: Providing Your Conclusion:
 6. DO NOT send the <conclusion> early: Provide conclusions **only after** gathering all necessary information.
 7. Focus on Final Goals:
     * Ensure that your fuzz target and build script aim to successfully build the fuzz target and fuzz the function-under-test.
+8. Make the generated fuzz target as concise as possible:
+    * Do not test more than one function in the fuzz target.
 </instructions>
