@@ -15,6 +15,7 @@
 import argparse
 import logging
 import os
+import random
 import re
 import subprocess
 import tempfile
@@ -214,6 +215,10 @@ class CloudBuilder:
     if data_dir_url:
       target_data_dir = '/workspace/data-dir'
 
+    vertex_ai_locations = os.getenv('VERTEX_AI_LOCATIONS',
+                                    'us-central1').split(',')
+    location = random.sample(vertex_ai_locations, 1)[0]
+
     cloud_build_config = {
         'steps': [
             # Step 1: Download the dill, artifact and experiment files from GCS bucket.
@@ -346,7 +351,7 @@ class CloudBuilder:
                     os.getenv("GOOGLE_CLOUD_PROJECT", "oss-fuzz"),
                     '-e',
                     'GOOGLE_CLOUD_LOCATION=' +
-                    os.getenv("GOOGLE_CLOUD_LOCATION", "global"),
+                    location,
                     '--network=cloudbuild',
                     # Built from this repo's `Dockerfile.cloudbuild-agent`.
                     ('us-central1-docker.pkg.dev/oss-fuzz/oss-fuzz-gen/'
