@@ -487,7 +487,13 @@ class CloudBuilder:
     with tempfile.TemporaryDirectory() as tmpdirname:
       temp_dest_path = os.path.join(tmpdirname,
                                     os.path.basename(new_experiment_url))
-      self._download_from_gcs(temp_dest_path)
+
+      try:
+        self._download_from_gcs(temp_dest_path)
+      except NotFound as e:
+        logging.error('Failed to download new experiment archive from %s: %s',
+                      new_experiment_url, e)
+        return
 
       # Extract the downloaded archive, without replacing any existing files.
       tar_command = [
