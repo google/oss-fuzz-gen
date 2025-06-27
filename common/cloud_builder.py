@@ -350,8 +350,7 @@ class CloudBuilder:
                     'GOOGLE_CLOUD_PROJECT=' +
                     os.getenv("GOOGLE_CLOUD_PROJECT", "oss-fuzz"),
                     '-e',
-                    'GOOGLE_CLOUD_LOCATION=' +
-                    location,
+                    'GOOGLE_CLOUD_LOCATION=' + location,
                     '--network=cloudbuild',
                     # Built from this repo's `Dockerfile.cloudbuild-agent`.
                     ('us-central1-docker.pkg.dev/oss-fuzz/oss-fuzz-gen/'
