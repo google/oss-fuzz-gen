@@ -254,7 +254,7 @@ def query_introspector_for_tests(project: str) -> list[str]:
 
 
 def query_introspector_for_tests_xref(
-    project: str, functions: Optional[list[str]]) -> list[str]:
+    project: str, functions: Optional[list[str]]) -> dict[str, list[Any]]:
   """Gets the list of functions and xref test files in the target project."""
   data = {'project': project}
   if functions:
@@ -263,14 +263,60 @@ def query_introspector_for_tests_xref(
 
   resp = _query_introspector(INTROSPECTOR_ORACLE_ALL_TESTS_XREF, data)
 
+  details = _get_data(resp, 'details', False)
   test_files = _get_data(resp, 'test-files-xref', {})
 
   handled = set()
   result_list = []
+  detail_list = []
   key_list = test_files.keys()
   for test_paths in test_files.values():
+    # Only dump the details from the test source files
+    # which are related to the target function calls
+    if details and isinstance(test_paths, dict):
+      for test_path, calls in test_paths.items():
+        source_code = query_introspector_test_source(project, test_path)
+        lines = source_code.splitlines()
+
+        # Include details of function calls in test files
+        for call in calls:
+          result_lines = []
+          start = call.get('call_start', -1)
+          end = call.get('call_end', -1)
+          params = call.get('params')
+
+          # Skip invalid data
+          if start <= 0 or end <= 0 or params is None:
+            continue
+
+          call_lines = lines[start - 1:end]
+
+          param_list = []
+          for param in params:
+            param_dict = {}
+
+            decl = param.get('decl_line', -1)
+            start = param.get('init_start', -1)
+            end = param.get('init_end', -1)
+            func = param.get('init_func')
+
+            # Skip invalid data
+            if decl <= 0 or decl >= len(lines):
+              continue
+
+            result_lines.append(lines[decl - 1])
+            if func and start > 0 and end > 0:
+              result_lines.extend(lines[start - 1:end])
+
+          result_lines.extend(call_lines)
+
+          detail_list.append(result_lines)
+
+      continue
+
+    # Plain dump of test source files with limited number
+    # of result lines if details not found
     for test_path in test_paths:
-      # Allow limited number of result lines
       if len(result_list) > 100:
         break
 
@@ -279,9 +325,9 @@ def query_introspector_for_tests_xref(
 
       handled.add(test_path)
       source_code = query_introspector_test_source(project, test_path)
+      lines = source_code.splitlines()
 
       # Retrieve needed line range in the source file
-      lines = source_code.splitlines()
       target_lines = list()
       for idx, line in enumerate(lines):
         if any(func.split('::')[-1] in line for func in key_list):
@@ -305,7 +351,10 @@ def query_introspector_for_tests_xref(
       for start, end in ranges:
         result_list.extend(lines[start:end])
 
-  return result_list
+  result_dict = {}
+  result_dict['source'] = result_list
+  result_dict['details'] = detail_list
+  return result_dict
 
 
 def query_introspector_for_harness_intrinsics(
