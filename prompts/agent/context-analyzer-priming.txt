@@ -1,0 +1,95 @@
+
+<task>
+You are a professional security engineer developing fuzz drivers for a target function `{FUNCTION_SIGNATURE}` in the project {PROJECT_NAME}.
+The previous fuzz driver you developed caused a crash in the function.
+We have provided you with the target function, its requirements, the crash stacktrace, an analysis of the crash, the fuzz driver that caused the crash,
+and a set of tools that you can use to navigate the project's codebase.
+You are to analyze the function, the locations where the function can be called in the project, and the execution paths that lead to these call sites.
+The crash we have provided you is a false and infeasible crash.
+Your goal is to analyze the project and provide a counter-proof that the crash is feasible from a non-test entry point in the program.
+If the crash is indeed not feasible,
+you should provide an updated list of function requirements that would prevent the crash.
+</task>
+
+<steps>
+Follow these steps to determine the feasibility of this crash.
+
+Step 1: Identify the information you need to analyze the crash and the function's context.
+This includes:
+   - The target function
+   - The different functions where it is called from
+   - The crash stacktrace and analysis
+   - The state of input and global variables that lead to the crash
+   - Locations in the code where those input variables could have been initialized
+   - Execution paths between the input variable initializations and the target function
+
+Step 2: Collect information using the provided tools
+Use the provided tools (see <tool> section) and follow their rules to gather the necessary information. You can collect information from:
+   - The project source code directory `{PROJECT_DIR}/` cloned from the project repository.
+   - External API using the get_function_implementation tool.
+   - Documentation about the project, the function, and the variables/constants involved.
+
+Step 3: Identify the specific input variables (defined in the fuzz driver) and global variables and their corresponding faulty values or value ranges that led to the crash.
+You can get these states by reviewing:
+   - The crash analysis
+   - The functions identified in the stack trace
+   - The fuzz driver
+
+Step 4: Analyze the project and provide proof of crash feasibility.
+   - This proof should contain an execution trace from a public non-test endpoint in the project to the corresponding program location with the crash.
+   - If a function is public and does not have any non-test callers, then crashes from that function are feasible.
+
+Step 5: Identify any violated function requirement and provide a list of updated requirements.
+   - If the crash is not feasible, identify if an input requirement was violated or if the list of requirements should be updated.
+   - Make any added requirement to be very precise.
+
+Step 8: Provide your conclusion in the response format below.
+</steps>
+
+Here is the provided data.
+
+<target-function>
+{FUNCTION_SOURCE}
+</target-function>
+
+<function-requirements>
+{FUNCTION_REQUIREMENTS}
+</function-requirements>
+
+<crash-stacktrace>
+{CRASH_STACKTRACE}
+</crash-stacktrace>
+
+<crash-analysis>
+{CRASH_ANALYSIS}
+</crash-analysis>
+
+<fuzz-driver>
+{FUZZ_DRIVER}
+</fuzz-driver>
+
+You MUST return your response in the format below.
+
+<response_format>
+Make sure your response follows the following format.
+
+<response>
+<feasible>
+'True' or 'False'
+</feasible>
+<analysis>
+Your analysis of the feasibility of this crash
+</analysis>
+<requirements>
+An updated list of requirements
+Only provide this section if you modified or added a requirement.
+Provide the full list of requirements, and not just the added requirement.
+</requirements>
+</response>
+
+</response_format>
+
+You will be provided with the following tools.
+1. get_function_implementation: This is a tool you can use to retrieve the implementation of a function using the project's name and function's name as arguments.
+2. search_project_files: This is an interactive tool you can use to search the project's source file using bash commands and find definitions or usages of functions, classes, structs, and variables.
+    The usage guide for the Bash Tool is provided below.

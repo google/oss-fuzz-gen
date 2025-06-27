@@ -31,20 +31,18 @@ from llm_toolkit import models, prompt_builder, prompts
 from tool import container_tool
 
 
-class FunctionAnalyzer(base_agent.ADKBaseAgent):
-  """An LLM agent to analyze a function and identify its implicit requirements.
-  The results of this analysis will be used by the writer agents to
-  generate correct fuzz target for the function.
+class ContextAnalyzer(base_agent.ADKBaseAgent):
+  """An LLM agent to analyze the feasibility of crashes.
   """
 
   def __init__(self,
                trial: int,
                llm: models.LLM,
                args: argparse.Namespace,
-               benchmark: benchmarklib.Benchmark,\
+               benchmark: benchmarklib.Benchmark,
                name: str = ''):
 
-    builder = prompt_builder.FunctionAnalyzerTemplateBuilder(llm, benchmark)
+    builder = prompt_builder.ContextAnalyzerTemplateBuilder(llm, benchmark)
 
     description = builder.get_description().get()
 
@@ -75,16 +73,23 @@ class FunctionAnalyzer(base_agent.ADKBaseAgent):
     return requirement_path
 
   def handle_llm_response(self, final_response_text: str,
-                          result: resultslib.Result) -> None:
+                          result: resultslib.CrashFeasibilityResult) -> None:
     """Handle the LLM response and update the result."""
 
     result_str = self._parse_tag(final_response_text, 'response')
+    conclusion = self._parse_tag(final_response_text, 'conclusion')
+    if conclusion == 'False':
+      result.feasible = False
+    elif conclusion == 'True':
+      result.feasible = True
+
+    analysis = self._parse_tag(result_str, 'analysis')
+    result.reason = analysis
+
     requirements = self._parse_tag(result_str, 'requirements')
     if requirements:
       # Write the requirements to a file
-      requirement_path = self.write_requirements_to_file(self.args, result_str)
-      function_analysis = resultslib.FunctionAnalysisResult(requirement_path)
-      result.function_analysis = function_analysis
+      self.write_requirements_to_file(self.args, result_str)
 
   def execute(self,
               result_history: list[resultslib.Result]) -> resultslib.Result:
@@ -93,11 +98,18 @@ class FunctionAnalyzer(base_agent.ADKBaseAgent):
     WorkDirs(self.args.work_dirs.base, keep=True)
     logger.info('Executing %s', self.name, trial=self.trial)
 
-    result = resultslib.Result(
-        benchmark=self.benchmark,
-        trial=self.trial,
-        work_dirs=self.args.work_dirs,
-    )
+    last_result = result_history[-1]
+
+    if not isinstance(
+        last_result, resultslib.AnalysisResult) or not last_result.crash_result:
+      logger.error(
+          f'Expected last result to be AnalysisResult, got {type(last_result)}.',
+          trial=self.trial)
+      return resultslib.Result(benchmark=self.benchmark,
+                               trial=self.trial,
+                               work_dirs=self.args.work_dirs)
+
+    feasibility_result = resultslib.CrashFeasibilityResult()
 
     # Initialize the ProjectContainerTool for local file search
     self.inspect_tool = container_tool.ProjectContainerTool(self.benchmark)
@@ -106,31 +118,52 @@ class FunctionAnalyzer(base_agent.ADKBaseAgent):
     # Call the agent asynchronously and return the result
     prompt = self._initial_prompt(result_history)
 
+    if not prompt or not prompt.get():
+      logger.error('Failed to build initial prompt for FunctionAnalyzer.',
+                   trial=self.trial)
+      return resultslib.Result(benchmark=self.benchmark,
+                               trial=self.trial,
+                               work_dirs=self.args.work_dirs)
+
     final_response_text = self.chat_llm(self.round,
                                         client=None,
                                         prompt=prompt,
                                         trial=result_history[-1].trial)
 
-    self.handle_llm_response(final_response_text, result)
+    self.handle_llm_response(final_response_text, feasibility_result)
 
     self.inspect_tool.terminate()
 
-    return result
+    analysis_result = resultslib.AnalysisResult(
+        author=self,
+        run_result=last_result.run_result,
+        crash_result=last_result.crash_result,
+        feasibility_result=feasibility_result,
+        chat_history={self.name: last_result.crash_result.to_dict()})
 
-  def _initial_prompt(
-      self,
-      results: Optional[list[resultslib.Result]] = None) -> prompts.Prompt:
+    return analysis_result
+
+  def _initial_prompt(self, results: list[resultslib.Result]) -> prompts.Prompt:
     """Create the initial prompt for the agent."""
 
+    last_result = results[-1]
+
     # Initialize the prompt builder
-    builder = prompt_builder.FunctionAnalyzerTemplateBuilder(
+    builder = prompt_builder.ContextAnalyzerTemplateBuilder(
         self.llm, self.benchmark)
 
-    prompt = builder.build_prompt(self.inspect_tool.project_dir)
-
-    prompt.append(self.inspect_tool.tutorial())
-
-    prompt.append(self.inspect_tool.tutorial())
+    if isinstance(last_result,
+                  resultslib.AnalysisResult) and last_result.crash_result:
+      function_requirements = self.get_function_requirements()
+      prompt = builder.build_context_analysis_prompt(
+          last_result, function_requirements, self.inspect_tool.tutorial(),
+          self.inspect_tool.project_dir)
+    else:
+      logger.error(
+          f'Unexpected result type {type(last_result)} '
+          'or no last build result found.',
+          trial=self.trial)
+      prompt = prompts.TextPrompt()
 
     return prompt
 

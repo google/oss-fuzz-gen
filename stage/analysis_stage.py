@@ -37,6 +37,12 @@ class AnalysisStage(BaseStage):
     if last_result.crashes:
       try:
         agent = self.get_agent(agent_name='CrashAnalyzer')
+        agent_result = self._execute_agent(agent, result_history)
+        self.logger.write_chat_history(agent_result)
+        result_history.append(agent_result)
+
+        # Then, execute the Prototyper agent to refine the fuzz target.
+        agent = self.get_agent(agent_name='ContextAnalyzer')
       except RuntimeError:
         agent = self.get_agent(agent_name='SemanticAnalyzer')
     else:

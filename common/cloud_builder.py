@@ -15,6 +15,7 @@
 import argparse
 import logging
 import os
+import random
 import re
 import subprocess
 import tempfile
@@ -214,6 +215,10 @@ class CloudBuilder:
     if data_dir_url:
       target_data_dir = '/workspace/data-dir'
 
+    vertex_ai_locations = os.getenv('VERTEX_AI_LOCATIONS',
+                                    'us-central1').split(',')
+    location = random.sample(vertex_ai_locations, 1)[0]
+
     cloud_build_config = {
         'steps': [
             # Step 1: Download the dill, artifact and experiment files from GCS bucket.
@@ -345,8 +350,7 @@ class CloudBuilder:
                     'GOOGLE_CLOUD_PROJECT=' +
                     os.getenv("GOOGLE_CLOUD_PROJECT", "oss-fuzz"),
                     '-e',
-                    'GOOGLE_CLOUD_LOCATION=' +
-                    os.getenv("GOOGLE_CLOUD_LOCATION", "global"),
+                    'GOOGLE_CLOUD_LOCATION=' + location,
                     '--network=cloudbuild',
                     # Built from this repo's `Dockerfile.cloudbuild-agent`.
                     ('us-central1-docker.pkg.dev/oss-fuzz/oss-fuzz-gen/'
@@ -482,7 +486,13 @@ class CloudBuilder:
     with tempfile.TemporaryDirectory() as tmpdirname:
       temp_dest_path = os.path.join(tmpdirname,
                                     os.path.basename(new_experiment_url))
-      self._download_from_gcs(temp_dest_path)
+
+      try:
+        self._download_from_gcs(temp_dest_path)
+      except NotFound as e:
+        logging.error('Failed to download new experiment archive from %s: %s',
+                      new_experiment_url, e)
+        return
 
       # Extract the downloaded archive, without replacing any existing files.
       tar_command = [

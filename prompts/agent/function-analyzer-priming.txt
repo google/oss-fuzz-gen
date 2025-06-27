@@ -26,6 +26,48 @@ Your goal is to analyze the provided function, its children functions, and its u
 Keep each requirement concise. Each requirement should contain two sentences. The first is the requirement. The second is a brief reason why it is important.
 </expectations>
 
+<steps>
+Step 1: Collect the information you need to analyze the input requirements of a function.
+The project source code directory is `{PROJECT_DIR}/` and was cloned from the project repository.
+This includes:
+   - The implementation of the target function
+   - The call sites of the target function
+   - The implementations of the target function's callers
+
+Step 2: Identify the list of input parameters for the target function
+
+Step 3: Analyze how each input parameter is generated in the function's callers.
+   - is an input parameter always carefully constructed?
+   - Can an input parameter be user-controlled or contain invalid values?
+   - is an input parameter always created or initialized using a specific function?
+   - Are there clear relationships between the input arguments passed to the function?
+
+Step 4: Identify how each input parameter is used in the target function.
+   - can an input parameter cause a segmentation fault, null pointer dereferencing or assertion failure?
+   - is a parameter used as a string or passed to string handling functions (eg strcpy)?
+   - Does the way an input parameter is used or processed inform how it should be generated?
+   - Is a parameter used as a function pointer or callback?
+
+Step 5: Based on your analysis, identify how each input parameter should be initialized.
+This includes the following:
+   - Initialized using a specific function (eg fopen)
+   - Initialized from a specific static array in the program
+   - Initialized to a fixed set of values
+   - Initialized using fuzz inputs
+
+Step 6: Identify any functions that is typically called before the target function.
+This involves
+   - Functions that sets the correct state of the target function
+   - Functions that allocates or frees necessary resources
+
+Step 7: Compile your results into a list of requirements for the function.
+   - Each requirement should be short and precise.
+   - If a requirement contains a constant, you should check the codebase and include the value of the constant as well.
+   - If an input parameter is a struct or struct pointer, mention if the struct should be created as a whole or how each member should be initialized.
+   - Identify a concise reason for including each requirement.
+
+</steps>
+
 Here is the provided data.
 
 <target-function>
@@ -84,7 +126,10 @@ The sam_index_build function is used to build a sam index. It uses the input arg
 
 <requirements>
 <requirement>
-The index_open function should be called before sam_index_build. This is because it creates the index that is built in the latter function.
+The index_open function should be called before sam_index_build. This is because it creates the global index that is built in the target function.
+</requirement>
+<requirement>
+The first argument should be a value returned by the function get_index_handler. This is how the callers create it.
 </requirement>
 <requirement>
 The second argument should be a valid, null-terminated string. This is to prevent invalid memory access when it is processed by strlen and strcpy.
