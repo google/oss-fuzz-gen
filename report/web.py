@@ -15,6 +15,7 @@
 """Report generation tool to create HTML reports for experiment result."""
 
 import argparse
+import dataclasses
 import json
 import logging
 import os
@@ -350,17 +351,18 @@ class GenerateReport:
           "unified_data": unified_data
       }
 
-      rendered = self._jinja.render('sample/sample.html',
-                                    benchmark=benchmark,
-                                    sample=sample,
-                                    logs=logs,
-                                    run_logs=run_logs,
-                                    triage=triage,
-                                    targets=sample_targets,
-                                    sample_css_content=sample_css_content,
-                                    sample_js_content=sample_js_content,
-                                    crash_info=crash_info,
-                                    **common_data)
+      rendered = self._jinja.render(
+          'sample/sample.html',
+          benchmark=benchmark,
+          sample=sample,
+          logs=[dataclasses.asdict(log) for log in logs],
+          run_logs=run_logs,
+          triage=triage,
+          targets=sample_targets,
+          sample_css_content=sample_css_content,
+          sample_js_content=sample_js_content,
+          crash_info=crash_info,
+          **common_data)
 
       self._write(f'sample/{benchmark.id}/{sample.id}.html', rendered)
     except Exception as e:
@@ -432,7 +434,7 @@ class GenerateReport:
             "triager_prompt": ""
         }
 
-        sample_targets = self._results.get_targets(benchmark.id, sample.id)
+        logs = self._results.get_logs(benchmark.id, sample.id) or []
 
         sample_data = {
             "sample": sample.id,
@@ -446,7 +448,9 @@ class GenerateReport:
             "triager_prompt": triage.triager_prompt,
             # Give the full crash details for template rendering
             "crash_details": crash_info["crash_details"],
-            "crash_symptom": crash_info["crash_symptom"]
+            "crash_symptom": crash_info["crash_symptom"],
+            # Give the full logs for searching
+            "logs": [dataclasses.asdict(log) for log in logs]
         }
         samples_data.append(sample_data)
         benchmark_metrics["total_coverage"] += int(sample.result.coverage)

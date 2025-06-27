@@ -188,7 +188,7 @@ limitations under the License.
           <div x-show="logsOpen"
                class="p-4 border-t">
               {% for part in logs %}
-              <pre class="{% if part.chat_prompt %}chat_prompt bg-gray-50{% elif part.chat_response %}chat_response bg-gray-100{% endif %} p-4 rounded-md mb-4 overflow-x-auto">{{ part.content }}</pre>
+              <pre id="logs" class="{% if part.chat_prompt %}chat_prompt bg-gray-50{% elif part.chat_response %}chat_response bg-gray-100{% endif %} p-4 rounded-md mb-4 overflow-x-auto">{{ part.content }}</pre>
               {% endfor %}
           </div>
       </div>
