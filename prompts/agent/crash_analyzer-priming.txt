@@ -18,6 +18,6 @@ Below is relevant project function code:
 
 Instructions:
 1. To identify program lines mentioned in the crash report, ALWAYS use the provided GDB or BASH tools.
-2. DO NOT TRY TO ANALYZE OR COUNT THE LINES OF CODE IN THE PROGRAM YOURSELF. 
+2. DO NOT TRY TO ANALYZE OR COUNT THE LINES OF CODE IN THE PROGRAM YOURSELF.
 
 To help analyze the root cause behind the runtime crash, you can leverage GDB tool and BASH tool to obtain information.
