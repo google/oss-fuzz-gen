@@ -140,7 +140,9 @@ class CrashAnalyzer(BaseAgent):
     if self._parse_tag(response, 'bash'):
       return self._container_handle_bash_command(response, self.bash_tool,
                                                  prompt)
-    return None
+    # Finally handle invalid responses.
+    return self._container_handle_invalid_tool_usage(
+        [self.gdb_tool, self.bash_tool], cur_round, response, prompt)
 
   def execute(self, result_history: list[Result]) -> AnalysisResult:
     """Executes the agent based on previous run result."""
