@@ -324,8 +324,8 @@ class DefaultTemplateBuilder(PromptBuilder):
       error_desc = coverage_result.insight
       errors = coverage_result.suggestions.splitlines()
     else:
-      error_desc = ''
-      errors = []
+      error_desc = error_desc or ''
+      errors = errors or []
     problem = self._format_fixer_problem(raw_code, error_desc, errors,
                                          priming_weight, context, instruction)
 

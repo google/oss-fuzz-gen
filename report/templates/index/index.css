@@ -256,7 +256,10 @@ td .signature {
 
 .filter-tag button {
     color: #6b7280;
-    hover:color: #374151;
+}
+
+.project:hover {
+    color: #374151;
 }
 
 .benchmark-row-hidden {

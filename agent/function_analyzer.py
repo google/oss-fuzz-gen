@@ -130,6 +130,8 @@ class FunctionAnalyzer(base_agent.ADKBaseAgent):
 
     prompt.append(self.inspect_tool.tutorial())
 
+    prompt.append(self.inspect_tool.tutorial())
+
     return prompt
 
   def search_project_files(self, request: str) -> str:
