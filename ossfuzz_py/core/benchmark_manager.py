@@ -23,6 +23,7 @@ benchmark metadata. The BenchmarkManager handles all I/O, validation, and CRUD
 operations for benchmarks.
 """
 
+import hashlib
 import json
 import logging
 import os
@@ -56,7 +57,6 @@ class Benchmark:
   """
 
   # Core identification fields (required)
-  id: str = field(metadata={"description": "Unique benchmark identifier"})
   project: str = field(metadata={"description": "OSS-Fuzz project name"})
   language: str = field(
       metadata={"description": "Primary language (C/C++/Rust/   )"})
@@ -66,6 +66,14 @@ class Benchmark:
   return_type: str = field(metadata={"description": "Function return type"})
   target_path: str = field(
       metadata={"description": "Path to header/source file"})
+
+  # Auto-computed unique identifier (computed from project + signature)
+  id: str = field(
+      default='',
+      metadata={
+          "description": "Unique benchmark identifier (auto-computed) "
+                         "and will be overwritten if manually set"
+      })
 
   # Optional fields with defaults
   params: List[Dict[str, str]] = field(
@@ -90,6 +98,38 @@ class Benchmark:
   function_dict: Optional[Dict[str, Any]] = field(
       default=None,
       metadata={"description": "Original function dictionary from YAML"})
+
+  def __post_init__(self):
+    """Compute unique ID based on the project name and function signature."""
+    # Create hash input from the project and signature
+    hash_input = f"{self.project}-{self.function_signature}"
+    # Use SHA256 hash and convert to 16 characters
+    hash_digest = self._hash_sha256(hash_input)
+
+    # Use object.__setattr__ since this is a frozen dataclass
+    object.__setattr__(self, 'id', hash_digest)
+
+  def _hash_sha256(self, input_string: str) -> str:
+    """Generate exactly 16 alphanumeric characters using SHA256 → Base36."""
+    # Get SHA256 hash (256 bits)
+    hash_bytes = hashlib.sha256(input_string.encode('utf-8')).digest()
+
+    # Take 11 bytes (88 bits) - just enough for 16 base36 chars
+    # We need 82.7 bits minimum, 88 bits gives us perfect coverage
+    # Thanks to cryptographic hash properties:
+    # taking the first 88 bits out of 256 bits
+    # does NOT affect collision probability
+    hash_int = int.from_bytes(hash_bytes[:11], byteorder='big')
+
+    # Convert to base36 (0-9, a-z)
+    base36_chars = "0123456789abcdefghijklmnopqrstuvwxyz"
+    result = ""
+
+    for _ in range(16):
+      result = base36_chars[hash_int % 36] + result
+      hash_int //= 36
+
+    return result
 
   def __hash__(self) -> int:
     """Hash based on benchmark id for use in sets and as dict keys."""
@@ -249,11 +289,8 @@ class BenchmarkManager:
       self.logger.warning("Benchmark already exists: %s", benchmark.id)
       return False
 
-    # Apply language-specific ID processing
-    processed_benchmark = self._process_benchmark_id(benchmark)
-
-    self._benchmarks[processed_benchmark.id] = processed_benchmark
-    self.logger.info("Added benchmark: %s", processed_benchmark.id)
+    self._benchmarks[benchmark.id] = benchmark
+    self.logger.info("Added benchmark: %s", benchmark.id)
     return True
 
   def import_benchmarks(self, path: str) -> List[Benchmark]:
@@ -305,49 +342,139 @@ class BenchmarkManager:
     except Exception as e:
       raise BenchmarkError(f"Failed to import benchmarks: {str(e)}")
 
-  def export_benchmarks(self, benchmarks: List[Benchmark], path: str) -> bool:
+  def export_benchmarks(self,
+                        benchmarks: List[Benchmark],
+                        path: str,
+                        file_format: str = "yaml") -> bool:
     """
-    Export benchmarks to YAML or JSON file.
+    Export benchmarks to directory, grouped by project.
 
-    Maintains compatibility with oss-fuzz-gen/benchmark-sets format.
-    Supports round-trip export (import → export → re-import ≡ original).
+    Groups benchmarks by (project, language, target_path, target_name)
+    and exports each project to a separate file named {project}.{format}
+    in the specified directory.
 
     Args:
         benchmarks: List of benchmarks to export
-        path: Output file path (extension determines format)
+        path: Output directory path (must be a directory)
+        file_format: Export format, either "yaml" or "json"
 
     Returns:
-        True if export successful
+        True if export is successful
 
     Raises:
-        BenchmarkError: If export fails
+        BenchmarkError: If export fails, path is not a directory,
+        or format is invalid
 
     Example:
         >>> manager = BenchmarkManager()
         >>> benchmarks = [benchmark1, benchmark2]
-        >>> success = manager.export_benchmarks(benchmarks, "output.yaml")
+        >>> success = manager.export_benchmarks(benchmarks,
+            "/output/dir", "yaml")
         >>> success
         True
     """
     if not benchmarks:
       raise BenchmarkError("No benchmarks to export")
 
-    file_path = Path(path)
-    extension = file_path.suffix.lower()
+    # Validate file format
+    if file_format not in ["yaml", "json"]:
+      raise BenchmarkError(
+          f"Unsupported file format: {file_format}. Must be 'yaml' or 'json'")
+
+    # Validate and create directory
+    dir_path = Path(path)
+    if dir_path.exists() and not dir_path.is_dir():
+      raise BenchmarkError(f"Path exists but is not a directory: {path}")
 
     try:
-      if extension in ['.yaml', '.yml']:
-        self._export_to_yaml(benchmarks, file_path)
-      elif extension == '.json':
-        self._export_to_json(benchmarks, file_path)
-      else:
-        raise BenchmarkError(f"Unsupported export format: {extension}")
+      dir_path.mkdir(parents=True, exist_ok=True)
+    except Exception as e:
+      raise BenchmarkError(f"Failed to create directory {path}: {str(e)}")
 
-      self.logger.info("Exported %d benchmarks to %s", len(benchmarks), path)
+    try:
+      # Group benchmarks by project
+      project_groups = self._group_benchmarks_by_project(benchmarks)
+
+      exported_files = 0
+      total_exported = 0
+
+      for project_name, project_benchmarks in project_groups.items():
+        # Create safe filename
+        safe_filename = self._make_safe_filename(project_name)
+        file_path = dir_path / f"{safe_filename}.{file_format}"
+
+        # Export based on format
+        if file_format == "yaml":
+          self._export_to_yaml(project_benchmarks, file_path)
+        else:  # json
+          self._export_to_json(project_benchmarks, file_path)
+
+        exported_files += 1
+        total_exported += len(project_benchmarks)
+        self.logger.debug("Exported %d benchmarks for project '%s' to %s",
+                          len(project_benchmarks), project_name, file_path)
+
+      self.logger.info("Exported %d benchmarks across %d files to directory %s",
+                       total_exported, exported_files, path)
       return True
 
     except Exception as e:
       raise BenchmarkError(f"Failed to export benchmarks: {str(e)}")
+
+  def _group_benchmarks_by_project(
+      self, benchmarks: List[Benchmark]) -> Dict[str, List[Benchmark]]:
+    """
+    Group benchmarks by project name.
+
+    All benchmarks with the same project name will be grouped together,
+    regardless of their language, target_path, or target_name differences.
+
+    Args:
+        benchmarks: List of benchmarks to group
+
+    Returns:
+        Dictionary mapping project names to lists of benchmarks
+    """
+    project_groups: Dict[str, List[Benchmark]] = {}
+
+    for benchmark in benchmarks:
+      project_name = benchmark.project
+      if project_name not in project_groups:
+        project_groups[project_name] = []
+      project_groups[project_name].append(benchmark)
+
+    return project_groups
+
+  def _make_safe_filename(self, filename: str) -> str:
+    """
+    Make a filename safe for filesystem use.
+
+    Replaces illegal characters with underscores and handles edge cases.
+
+    Args:
+        filename: Original filename
+
+    Returns:
+        Safe filename for filesystem use
+    """
+    import re
+
+    # Replace illegal characters with underscores
+    # Illegal chars: / \ : * ? " < > | and whitespace
+    safe_name = re.sub(r'[/\\:*?"<>|\s]+', '_', filename)
+
+    # Remove leading/trailing underscores and dots
+    safe_name = safe_name.strip('_.')
+
+    # Ensure it's not empty
+    if not safe_name:
+      safe_name = "unnamed_project"
+
+    # Limit length to reasonable filesystem limits
+    if len(safe_name) > 100:
+      safe_name = safe_name[:100]
+
+    return safe_name
 
   def _validate_benchmark(self, benchmark: Benchmark) -> None:
     """
@@ -367,65 +494,6 @@ class BenchmarkManager:
       raise BenchmarkValidationError("Language is required")
     if not benchmark.target_path:
       raise BenchmarkValidationError("Target path is required")
-
-  def _process_benchmark_id(self, benchmark: Benchmark) -> Benchmark:
-    """
-    Apply language-specific ID processing from original benchmark.py.
-
-    Args:
-        benchmark: Original benchmark
-
-    Returns:
-        Benchmark with processed ID
-    """
-    processed_id = benchmark.id
-
-    # Apply language-specific processing
-    if benchmark.language == 'jvm':
-      # For java projects, remove special characters from function signature
-      processed_id = processed_id.replace('<', '').replace('>', '')
-      processed_id = processed_id.replace('[', '').replace(']', '')
-      processed_id = processed_id.replace('(',
-                                          '_').replace(')',
-                                                       '').replace(',', '_')
-    elif benchmark.language == 'python':
-      # Handle underscore patterns that cause OSS-Fuzz build failures
-      processed_id = processed_id.replace('._', '.')
-    elif benchmark.language == 'rust':
-      # Replace double colon with dash
-      processed_id = processed_id.replace('::', '-')
-
-    # Return new benchmark with processed ID if changed
-    if processed_id != benchmark.id:
-      return self._create_benchmark_with_id(benchmark, processed_id)
-    return benchmark
-
-  def _create_benchmark_with_id(self, benchmark: Benchmark,
-                                new_id: str) -> Benchmark:
-    """
-    Create a new benchmark with a different ID.
-
-    Args:
-        benchmark: Original benchmark
-        new_id: New ID to use
-
-    Returns:
-        New benchmark instance with updated ID
-    """
-    return Benchmark(id=new_id,
-                     project=benchmark.project,
-                     language=benchmark.language,
-                     function_signature=benchmark.function_signature,
-                     function_name=benchmark.function_name,
-                     return_type=benchmark.return_type,
-                     params=benchmark.params,
-                     target_path=benchmark.target_path,
-                     target_name_=benchmark.target_name_,
-                     use_project_examples=benchmark.use_project_examples,
-                     use_context=benchmark.use_context,
-                     commit=benchmark.commit,
-                     test_file_path=benchmark.test_file_path,
-                     function_dict=benchmark.function_dict)
 
   def _import_from_yaml(self, file_path: Path) -> List[Benchmark]:
     """
@@ -455,17 +523,15 @@ class BenchmarkManager:
     if test_files:
       for test_file in test_files:
         test_file_path = test_file.get('test_file_path', '')
-        # Create benchmark ID from test file path
-        max_len = os.pathconf('/', 'PC_NAME_MAX') - len('output-')
+        # For test files, use the test file path as the signature for ID
+        # generation
         normalized_test_path = (test_file_path.replace('/', '_').replace(
             '.', '_').replace('-', '_'))
-        truncated_id = f'{project_name}-{normalized_test_path}'[:max_len]
 
         benchmarks.append(
-            Benchmark(id=truncated_id.lower(),
-                      project=project_name,
+            Benchmark(project=project_name,
                       language=language,
-                      function_signature='',
+                      function_signature=normalized_test_path,
                       function_name='',
                       return_type='',
                       params=[],
@@ -480,16 +546,9 @@ class BenchmarkManager:
     functions = data.get('functions', [])
     if functions:
       for function in functions:
-        # Create benchmark ID from function name
-        max_len = os.pathconf('/', 'PC_NAME_MAX') - len('output-')
-        docker_name_len = 127 - len('-03-experiment')
-        max_len = min(max_len, docker_name_len)
-        function_name = function.get("name", "")
-        truncated_id = f'{project_name}-{function_name}'[:max_len]
-
+        # ID will be auto-computed from project and function signature
         benchmarks.append(
-            Benchmark(id=truncated_id.lower(),
-                      project=project_name,
+            Benchmark(project=project_name,
                       language=language,
                       function_signature=function.get('signature', ''),
                       function_name=function.get('name', ''),
@@ -573,6 +632,7 @@ class BenchmarkManager:
         test_files.append({'test_file_path': benchmark.test_file_path})
       else:
         functions.append({
+            'id': benchmark.id,
             'signature': benchmark.function_signature,
             'name': benchmark.function_name,
             'return_type': benchmark.return_type,
@@ -623,6 +683,7 @@ class BenchmarkManager:
         test_files.append({'test_file_path': benchmark.test_file_path})
       else:
         functions.append({
+            'id': benchmark.id,
             'signature': benchmark.function_signature,
             'name': benchmark.function_name,
             'return_type': benchmark.return_type,
