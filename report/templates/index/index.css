@@ -13,12 +13,6 @@ td .signature {
     cursor: pointer;
 }
 
-.signature a {
-    text-decoration: none;
-    color: #5389ff;
-    font-size: 15px;
-}
-
 .dark-mode .sortable-table th:after {
     color: #a0aec0;
 }

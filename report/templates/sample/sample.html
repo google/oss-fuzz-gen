@@ -15,20 +15,19 @@ limitations under the License.
 
 #}{% extends 'base.html' %}
 
+{% block content %}
 
 {% if sample_css_content %}
-<style>
+<style type="text/css">
 {{ sample_css_content | safe }}
 </style>
 {% endif %}
 
 {% if sample_js_content %}
-<script>
+<script type="text/javascript">
 {{ sample_js_content | safe }}
 </script>
 {% endif %}
-
-{% block content %}
 
 <div class="space-y-6">
   <div class="border rounded-lg p-6">
@@ -64,99 +63,58 @@ limitations under the License.
       </div>
       <div class="flex flex-col gap-2 mt-8">
 
-        {% if sample.result.semantic_error or (semantic_log is defined and semantic_log) %}
+        {% if sample.result.semantic_error or (crash_info is defined and crash_info) %}
         <div class="border rounded-lg p-6 shadow-sm">
-
-          {% if sample.result.semantic_error %}
-          <div class="mb-5 p-4 bg-amber-50 border-l-4 border-amber-500 rounded-md">
-            <p class="flex items-center gap-2">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-amber-600" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
-              </svg>
-              <span class="font-medium text-amber-800">Diagnosis:</span>
-              <span class="text-amber-900">{{ sample.result.semantic_error }}</span>
-            </p>
-          </div>
-          {% endif %}
-
-          {% if semantic_log is defined and semantic_log %}
+          {% if crash_info is defined and crash_info.crash_symptom %}
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
             <div class="p-4 rounded-lg">
               <p class="text-sm uppercase tracking-wide">Sanitizer</p>
-              <p class="font-medium mt-1">{{ semantic_log.sanitizer }}</p>
+              <p class="font-medium mt-1">{{ crash_info.crash_symptom.split(": ")[1] }}</p>
             </div>
             <div class="p-4 rounded-lg">
               <p class="text-sm uppercase tracking-wide">Bug Type</p>
-              <p class="font-medium mt-1">{{ semantic_log.error_type }}</p>
+              <p class="font-medium mt-1">{{ crash_info.crash_symptom.split(" ")[2] }}</p>
             </div>
             <div class="p-4 rounded-lg">
               <p class="text-sm uppercase tracking-wide">Crash Address</p>
-              <p class="font-medium mt-1 font-mono">{{ semantic_log.crash_address }}</p>
-            </div>
-          </div>
-
-          {% if semantic_log.crash_stacks or semantic_log.crash_func %}
-          <div class="mb-6" x-data="{ crashDetailsOpen: false }">
-            <button @click="crashDetailsOpen = !crashDetailsOpen"
-                    class="w-full p-4 flex justify-between items-center border rounded-lg">
-              <span class="font-semibold text-lg">Crash Details</span>
-              <svg class="w-5 h-5 transform transition-transform duration-200"
-                   :class="{'rotate-180': crashDetailsOpen}"
-                   fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-              </svg>
-            </button>
-            <div x-show="crashDetailsOpen"
-                 class="border-t p-4 space-y-6">
-
-              {% if semantic_log.crash_stacks %}
-              <div>
-                <h3 class="font-semibold text-lg mb-3">Stack Traces</h3>
-                <div class="space-y-3">
-                  {% for stack in semantic_log.crash_stacks %}
-                    <details class="rounded-lg shadow-sm border">
-                      <summary class="font-medium cursor-pointer p-4 flex justify-between items-center">
-                        <div class="flex items-center gap-2">
-                          <span>Stack Trace #{{ loop.index }}</span>
-                        </div>
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                        </svg>
-                      </summary>
-                      <div class="border-t">
-                        <pre class="p-4 whitespace-pre-wrap text-sm font-mono break-words">{% for line in stack %}{{ line }}
-
-{% endfor %}</pre>
-                      </div>
-                    </details>
-                  {% endfor %}
-                </div>
-              </div>
-              {% endif %}
-
-              {% if semantic_log.crash_func %}
-              <div>
-                <h3 class="font-semibold text-lg mb-3">Crash Functions</h3>
-                <div class="space-y-1">
-                  {% for func, lines in semantic_log.crash_func.items() %}
-                    <div class="rounded-lg p-4">
-                      <div class="flex items-center gap-2 mb-1">
-                        <code class="text-red-500 font-semibold font-mono px-2 py-1 rounded">{{ func }}</code>
-                        <span>at line{% if lines|length > 1 %}s{% endif %}:</span>
-                      </div>
-                      <div class="flex flex-wrap gap-2 mt-2">
-                        {% for line in lines %}
-                          <code class="px-3 py-1 rounded-md font-mono border">{{ line }}</code>
-                        {% endfor %}
-                      </div>
-                    </div>
-                  {% endfor %}
-                </div>
-              </div>
-              {% endif %}
+              <p class="font-medium mt-1 font-mono">{{ crash_info.crash_symptom.split("address ")[1] }}</p>
             </div>
           </div>
           {% endif %}
+
+          {% if crash_info.crash_details %}
+          <div x-data="{
+            detailsOpen: false,
+            ansiProcessed: false,
+            toggleDetails() {
+              this.detailsOpen = !this.detailsOpen;
+              if (this.detailsOpen && !this.ansiProcessed) {
+                this.$nextTick(() => {
+                  const element = document.getElementById('crashDetailsPreview');
+                  if (element && window.AnsiUp) {
+                    const ansi_up = new window.AnsiUp();
+                    const textContent = element.textContent || element.innerText;
+                    const htmlContent = ansi_up.ansi_to_html(textContent);
+                    element.innerHTML = htmlContent;
+                    this.ansiProcessed = true;
+                  }
+                });
+              }
+            }
+          }" class="border rounded-lg">
+            <button @click="toggleDetails()"
+                    class="w-full p-4 flex justify-between items-center text-left">
+                <span class="font-medium">Crash Details</span>
+                <svg class="w-4 h-4 transform transition-transform duration-200"
+                     :class="{'rotate-180': detailsOpen}"
+                     fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                </svg>
+            </button>
+            <div x-show="detailsOpen" class="p-4 border-t">
+              <pre id="crashDetailsPreview" class="p-4 rounded-md overflow-x-auto font-mono whitespace-pre-wrap">{{ crash_info.crash_details }}</pre>
+            </div>
+          </div>
           {% endif %}
         </div>
         {% endif %}
@@ -230,7 +188,7 @@ limitations under the License.
           <div x-show="logsOpen"
                class="p-4 border-t">
               {% for part in logs %}
-              <pre class="{% if part.chat_prompt %}chat_prompt bg-gray-50{% elif part.chat_response %}chat_response bg-gray-100{% endif %} p-4 rounded-md mb-4 overflow-x-auto">{{ part.content }}</pre>
+              <pre id="logs" class="{% if part.chat_prompt %}chat_prompt bg-gray-50{% elif part.chat_response %}chat_response bg-gray-100{% endif %} p-4 rounded-md mb-4 overflow-x-auto">{{ part.content }}</pre>
               {% endfor %}
           </div>
       </div>
