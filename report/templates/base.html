@@ -540,18 +540,16 @@ function searchSamples(searchTerm, unifiedData) {
                         const sampleId = sample.sample || '';
                         const triage = sample.triage || '';
                         const triagerPrompt = sample.triager_prompt || '';
-                        const crashSymptom = sample.crash_symptom || '';
-                        const logs = sample.logs.map(log => log.content).join(' ') || '';
+                        const crashDetails = sample.crash_details || '';
 
                         // Calculate match score based on field importance and match quality
                         // Weightings here are a bit arbitrary for now
                         let score = 0;
                         const fields = [
                             { text: sampleId, weight: 10, name: 'Sample ID' },
-                            { text: crashSymptom, weight: 8, name: 'Crash Symptom' },
+                            { text: crashDetails, weight: 8, name: 'Crash Details' },
                             { text: benchmarkId, weight: 5, name: 'Benchmark ID' },
                             { text: projectName, weight: 3, name: 'Project Name' },
-                            { text: logs, weight: 2, name: 'Logs' },
                             { text: triage, weight: 1, name: 'Triage' },
                             { text: triagerPrompt, weight: 1, name: 'Triager Prompt' }
                         ];
