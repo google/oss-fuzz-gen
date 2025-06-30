@@ -29,19 +29,19 @@ Use the provided tools (see <tool> section) and follow their rules to gather the
    - External API using the get_function_implementation tool.
    - Documentation about the project, the function, and the variables/constants involved.
 
-Step 3: Identify the specific input variables (defined in the fuzz driver) and global variables and their corresponding faulty values or value ranges that led to the crash.
+Step 3: Identify the specific input condition that leads to the crash.
 You can get these states by reviewing:
    - The crash analysis
    - The functions identified in the stack trace
    - The fuzz driver
 
-Step 4: Analyze the project and provide proof of crash feasibility.
-   - This proof should contain an execution trace from a public non-test endpoint in the project to the corresponding program location with the crash.
+Step 4: Analyze the project and provide proof that the crash can be triggered from a non-test public function.
+   - This proof should contain an execution trace, containing functions called and variable states, from a public non-test endpoint in the project to the corresponding program location with the crash.
    - If a function is public and does not have any non-test callers, then crashes from that function are feasible.
 
 Step 5: Identify any violated function requirement and provide a list of updated requirements.
    - If the crash is not feasible, identify if an input requirement was violated or if the list of requirements should be updated.
-   - Make any added requirement to be very precise.
+   - If the requirements should be updated, return the original list of requirements, and any modified or added requirements.
 
 Step 8: Provide your conclusion in the response format below.
 </steps>
@@ -73,19 +73,24 @@ You MUST return your response in the format below.
 <response_format>
 Make sure your response follows the following format.
 
-<response>
-<feasible>
-'True' or 'False'
-</feasible>
+<conclusion>
+'True' or 'False', depending on if the crash can be triggered from a non-test public function
+</conclusion>
 <analysis>
 Your analysis of the feasibility of this crash
 </analysis>
 <requirements>
-An updated list of requirements
-Only provide this section if you modified or added a requirement.
-Provide the full list of requirements, and not just the added requirement.
+<requirement>
+First requirement
+</requirement>
+<requirement>
+Second requirement
+</requirement>
+...
+<requirement>
+nth requirement
+</requirement>
 </requirements>
-</response>
 
 </response_format>
 

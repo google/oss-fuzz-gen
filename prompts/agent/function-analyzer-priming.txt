@@ -37,25 +37,26 @@ This includes:
 Step 2: Identify the list of input parameters for the target function
 
 Step 3: Analyze how each input parameter is generated in the function's callers.
-   - is an input parameter always carefully constructed?
-   - Can an input parameter be user-controlled or contain invalid values?
-   - is an input parameter always created or initialized using a specific function?
+   - is the input parameter always created or initialized using a specific function?
+   - can the input parameter be user-controlled or contain invalid values?
    - Are there clear relationships between the input arguments passed to the function?
 
-Step 4: Identify how each input parameter is used in the target function.
-   - can an input parameter cause a segmentation fault, null pointer dereferencing or assertion failure?
-   - is a parameter used as a string or passed to string handling functions (eg strcpy)?
-   - Does the way an input parameter is used or processed inform how it should be generated?
+Step 4: Identify the implicit requirements of the parameters in the target functions.
+   - Is the input pointer parameter dereferenced without a null check?
+   - Is the input parameter used in an assertion statement?
+   - Is the input parameter or array/struct member used to index an array?
+   - is the parameter processed by a string handling functions (eg strcpy)?
    - Is a parameter used as a function pointer or callback?
 
-Step 5: Based on your analysis, identify how each input parameter should be initialized.
-This includes the following:
+Step 5: Based on your analysis, specify how each input parameter should be initialized in the requirements.
+Options include the following:
    - Initialized using a specific function (eg fopen)
-   - Initialized from a specific static array in the program
-   - Initialized to a fixed set of values
+   - Initialized using values from an array in the program
+   - Initialized and constrained to a valid set of values, based on possible values the callers can provide
+   - Initialized and constrained based on the target function's implicit requirements
    - Initialized using fuzz inputs
 
-Step 6: Identify any functions that is typically called before the target function.
+Step 6: Specify any functions that should be called before the target function.
 This involves
    - Functions that sets the correct state of the target function
    - Functions that allocates or frees necessary resources

@@ -76,20 +76,26 @@ class ContextAnalyzer(base_agent.ADKBaseAgent):
                           result: resultslib.CrashFeasibilityResult) -> None:
     """Handle the LLM response and update the result."""
 
-    result_str = self._parse_tag(final_response_text, 'response')
     conclusion = self._parse_tag(final_response_text, 'conclusion')
     if conclusion == 'False':
       result.feasible = False
     elif conclusion == 'True':
       result.feasible = True
+    else:
+      logger.error(
+          f'Unexpected conclusion "{conclusion}" from LLM response.',
+          trial=self.trial)
 
-    analysis = self._parse_tag(result_str, 'analysis')
-    result.reason = analysis
+    analysis = self._parse_tag(final_response_text, 'analysis')
+    if analysis:
+      result.reason = analysis
+    else:
+      logger.error('No analysis provided in LLM response.', trial=self.trial)
 
-    requirements = self._parse_tag(result_str, 'requirements')
+    requirements = self._parse_tag(final_response_text, 'requirements')
     if requirements:
       # Write the requirements to a file
-      self.write_requirements_to_file(self.args, result_str)
+      self.write_requirements_to_file(self.args, requirements)
 
   def execute(self,
               result_history: list[resultslib.Result]) -> resultslib.Result:
