@@ -346,10 +346,8 @@ RUN compile
     """
     self.logger.info('Building %s locally.', benchmark_target_name)
 
-    # Fixme ONLY FOR TEST!!
     # Generate unique project name
-    # generated_project = f'{self.build_config.project_name}-{uuid.uuid4().hex}'
-    generated_project = f'{self.build_config.project_name}-{9999}'
+    generated_project = f'{self.build_config.project_name}-{uuid.uuid4().hex}'
     generated_project = FileUtils.rectify_docker_tag(generated_project)
 
     # Create OSS-Fuzz project

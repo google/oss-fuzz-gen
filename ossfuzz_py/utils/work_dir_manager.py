@@ -321,8 +321,8 @@ class WorkDirManager:
             self._temp_dirs.remove(temp_dir)
           self.logger.debug("Temporary directory cleaned up: %s", temp_dir)
         except Exception as e:
-          self.logger.warning(
-              "Failed to cleanup temporary directory %s: %s", temp_dir, str(e))
+          self.logger.warning("Failed to cleanup temporary directory %s: %s",
+                              temp_dir, str(e))
 
   def cleanup_dir(self, path: Union[str, Path], force: bool = False) -> bool:
     """
@@ -351,8 +351,8 @@ class WorkDirManager:
         self.logger.debug("Directory cleaned up: %s", normalized_path)
       return True
     except Exception as e:
-      self.logger.error(
-          "Failed to cleanup directory %s: %s", normalized_path, str(e))
+      self.logger.error("Failed to cleanup directory %s: %s", normalized_path,
+                        str(e))
       return False
 
   def cleanup_all(self, include_base: bool = False) -> None:
@@ -376,8 +376,8 @@ class WorkDirManager:
         shutil.rmtree(self.base_dir)
         self.logger.info("Base directory cleaned up: %s", self.base_dir)
       except Exception as e:
-        self.logger.error(
-            "Failed to cleanup base directory %s: %s", self.base_dir, str(e))
+        self.logger.error("Failed to cleanup base directory %s: %s",
+                          self.base_dir, str(e))
 
   def _sanitize_name(self, name: str) -> str:
     """

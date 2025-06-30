@@ -422,8 +422,8 @@ class DockerManager:
     return f'gcr.io.oss-fuzz.{project}_cache'
 
   def _get_project_cache_image_name(self, project: str, sanitizer: str) -> str:
-    """Gets name of cached Docker image for a project and 
-        a respective sanitizer."""
+    """Gets name of cached Docker image for a project and
+       the respective sanitizer."""
     return ('us-central1-docker.pkg.dev/oss-fuzz/oss-fuzz-gen/'
             f'{project}-ofg-cached-{sanitizer}')
 

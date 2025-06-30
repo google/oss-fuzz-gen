@@ -15,12 +15,13 @@
 #
 ################################################################################
 """
-Unittest runner for Python modules in the same style as OSS-Fuzz.
+Unittest runner for Python modules using the built-in unittest framework.
 """
 
 from __future__ import annotations
 
 import argparse
+import importlib.util
 import sys
 import unittest
 from pathlib import Path
@@ -44,6 +45,10 @@ def bool_to_return_code(success: bool) -> int:  # noqa: D401
   """Map *success* to a shell‑friendly exit code (0 OK, 1 fail)."""
   return 0 if success else 1
 
+
+# --------------------------------------------------------------------------- #
+# Helper utilities                                                            #
+# --------------------------------------------------------------------------- #
 
 # --------------------------------------------------------------------------- #
 # Test discovery helpers                                                      #
@@ -117,6 +122,59 @@ def discover_and_run_tests(test_directory: Path) -> bool:
   return run_test_suite(suite)
 
 
+def run_specific_test_files(test_files: List[Path]) -> bool:
+  """Run specific test files using unittest framework.
+
+  Args:
+    test_files: List of specific test file paths to run
+
+  Returns:
+    True if all tests passed, False otherwise
+  """
+  if not test_files:
+    return True
+
+  for test_file in test_files:
+    if not test_file.exists():
+      print(f"❌ Test file does not exist: {test_file}")
+      return False
+    if not test_file.is_file():
+      print(f"❌ Test path is not a file: {test_file}")
+      return False
+
+  print(f"Running {len(test_files)} specific test file(s)")
+
+  overall_success = True
+
+  # Run unittest files individually
+  print("\n📋 Running unittest files...")
+  project_root = get_repo_root()
+  if str(project_root) not in sys.path:
+    sys.path.insert(0, str(project_root))
+
+  for test_file in test_files:
+    print(f"\n  Running {test_file.name}...")
+    # Load and run individual unittest file
+    loader = _build_loader()
+    try:
+      module_name = test_file.stem
+      spec = importlib.util.spec_from_file_location(module_name, test_file)
+      if spec and spec.loader:
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        suite = loader.loadTestsFromModule(module)
+        if not run_test_suite(suite):
+          overall_success = False
+      else:
+        print(f"❌ Could not load module from {test_file}")
+        overall_success = False
+    except Exception as e:
+      print(f"❌ Error loading {test_file}: {e}")
+      overall_success = False
+
+  return overall_success
+
+
 def validate_test_directory(test_directory: Path) -> bool:
   """Quick sanity‑check that *test_directory* is a valid test root."""
   return test_directory.is_dir() and any(test_directory.glob(TEST_FILE_PATTERN))
@@ -128,41 +186,66 @@ def validate_test_directory(test_directory: Path) -> bool:
 
 
 def main() -> int:  # noqa: D401 – imperative is fine
-  parser = argparse.ArgumentParser(description="Run Python unittests.")
+  parser = argparse.ArgumentParser(
+      description="Run Python tests using the unittest framework.")
   parser.add_argument(
-      "test_directories",
+      "test_paths",
       nargs="*",
       default=["ossfuzz_py/unittests"],
-      help="Directories (relative to repo root) containing tests.",
+      help="Test directories or specific test files (relative to repo root).",
   )
   parser.add_argument("--verbose",
                       "-v",
                       action="store_true",
                       help="Verbose output")
+  parser.add_argument("--files",
+                      "-f",
+                      action="store_true",
+                      help="Treat test_paths as specific files instead of "
+                      "directories")
 
   args = parser.parse_args()
   if args.verbose:
-    print(f"CLI test directories: {args.test_directories}")
+    print(f"CLI test paths: {args.test_paths}")
+    print(f"Files mode: {args.files}")
 
   repo_root = get_repo_root()
   overall_success = True
 
-  for raw_dir in args.test_directories:
-    test_dir = Path(raw_dir)
-    if not test_dir.is_absolute():
-      test_dir = repo_root / test_dir
-    test_dir = test_dir.resolve()
+  if args.files:
+    # Run specific test files
+    test_files = []
+    for raw_path in args.test_paths:
+      test_path = Path(raw_path)
+      if not test_path.is_absolute():
+        test_path = repo_root / test_path
+      test_path = test_path.resolve()
+      test_files.append(test_path)
 
     print("\n" + "=" * 60)
-    print(f"Running tests in: {test_dir}")
+    print(f"Running specific test files: {[f.name for f in test_files]}")
     print("=" * 60)
 
-    if not validate_test_directory(test_dir):
-      print(f"Skipping invalid test directory: {test_dir}")
-      continue
-
-    if not discover_and_run_tests(test_dir):
+    if not run_specific_test_files(test_files):
       overall_success = False
+  else:
+    # Run test directories (original behavior)
+    for raw_dir in args.test_paths:
+      test_dir = Path(raw_dir)
+      if not test_dir.is_absolute():
+        test_dir = repo_root / test_dir
+      test_dir = test_dir.resolve()
+
+      print("\n" + "=" * 60)
+      print(f"Running tests in: {test_dir}")
+      print("=" * 60)
+
+      if not validate_test_directory(test_dir):
+        print(f"Skipping invalid test directory: {test_dir}")
+        continue
+
+      if not discover_and_run_tests(test_dir):
+        overall_success = False
 
   return bool_to_return_code(overall_success)
 

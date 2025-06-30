@@ -139,7 +139,7 @@ class CloudBuildManager:
         logging.info("GOOGLE APPLICATION CREDENTIALS set: %s.", google_creds)
         self._run_command([
             'gcloud', 'auth', 'activate-service-account',
-            '803802421675-compute@developer.gserviceaccount.com', '--key-file',
+            'LLM-EVAL@oss-fuzz.iam.gserviceaccount.com', '--key-file',
             google_creds
         ])
       else:

@@ -37,6 +37,7 @@ class EnvVars(str, Enum):
   OSS_FUZZ_DIR = "OSS_FUZZ_DIR"
   VENV_DIR = "VENV_DIR"
   WORK_DIR = "WORK_DIR"
+  GOOGLE_CLOUD_PROJECT = "GOOGLE_CLOUD_PROJECT"
 
   # OSS-Fuzz Generator (OFG) specific settings
   OFG_USE_CACHING = "OFG_USE_CACHING"
