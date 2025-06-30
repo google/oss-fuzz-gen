@@ -83,7 +83,8 @@ class ContextAnalyzer(base_agent.ADKBaseAgent):
       result.feasible = True
     else:
       logger.error('Unexpected conclusion from LLM response: %s.',
-                   conclusion, trial=self.trial)
+                   conclusion,
+                   trial=self.trial)
 
     analysis = self._parse_tag(final_response_text, 'analysis')
     if analysis:
