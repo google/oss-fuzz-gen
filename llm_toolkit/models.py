@@ -145,6 +145,11 @@ class LLM:
     return ''
 
   @abstractmethod
+  def chat_llm_with_tools(self, client: Any, prompt: Optional[prompts.Prompt],
+                          tools) -> Any:
+    """Queries the LLM in the given chat session with tools."""
+
+  @abstractmethod
   def chat_llm(self, client: Any, prompt: prompts.Prompt) -> str:
     """Queries the LLM in the given chat session and returns the response."""
 
@@ -229,7 +234,6 @@ class GPT(LLM):
   """OpenAI's GPT model encapsulator."""
 
   name = 'gpt-3.5-turbo'
-  MAX_INPUT_TOKEN = 100000
 
   def get_model(self) -> Any:
     """Returns the underlying model instance."""
@@ -314,7 +318,7 @@ class GPT(LLM):
     return prompts.OpenAIPrompt
 
   def chat_llm(self, client: Any, prompt: prompts.Prompt) -> str:
-    """Queries LLM a single prompt and returns its response."""
+    """Queries LLM in a chat session and returns its response."""
     if self.ai_binary:
       raise ValueError(f'OpenAI does not use local AI binary: {self.ai_binary}')
     if self.temperature_list:
@@ -334,6 +338,24 @@ class GPT(LLM):
     self.messages.append({'role': 'assistant', 'content': llm_response})
 
     return llm_response
+
+  def chat_llm_with_tools(self, client: Any, prompt: Optional[prompts.Prompt],
+                          tools) -> Any:
+    """Queries LLM in a chat session with tools."""
+    if self.ai_binary:
+      raise ValueError(f'OpenAI does not use local AI binary: {self.ai_binary}')
+    if self.temperature_list:
+      logger.info('OpenAI does not allow temperature list: %s',
+                  self.temperature_list)
+
+    if prompt:
+      self.messages.extend(prompt.get())
+
+    result = self.with_retry_on_error(
+        lambda: client.responses.create(
+            model=self.name, input=self.messages, tools=tools),
+        [openai.OpenAIError])
+    return result
 
   def ask_llm(self, prompt: prompts.Prompt) -> str:
     """Queries LLM a single prompt and returns its response."""
@@ -381,10 +403,32 @@ class GPT4(GPT):
   name = 'gpt-4'
 
 
+class GPT41(GPT):
+  """OpenAI's GPT-4.1 model."""
+
+  name = 'gpt-4.1'
+
+
+class GPT41Mini(GPT):
+  """OpenAI's GPT-4.1-Mini model."""
+
+  name = 'gpt-4.1-mini'
+
+
 class GPT4o(GPT):
   """OpenAI's GPT-4o model."""
 
   name = 'gpt-4o'
+  MAX_INPUT_TOKEN = 128000
+  _gpt_ai_model = 'gpt-4o'
+
+
+class ChatGPT4oLatest(GPT):
+  """OpenAI's chatgpt-4o-latest model."""
+
+  name = 'chatgpt-4o-latest'
+  MAX_INPUT_TOKEN = 128000
+  _gpt_ai_model = 'gpt-4o'
 
 
 class GPT4oMini(GPT):
@@ -397,6 +441,75 @@ class GPT4Turbo(GPT):
   """OpenAI's GPT-4 Turbo model."""
 
   name = 'gpt-4-turbo'
+
+
+class ChatGPT(GPT):
+  """OpenAI's GPT model with chat session."""
+
+  name = 'chatgpt-3.5-turbo'
+
+  def __init__(
+      self,
+      ai_binary: str,
+      max_tokens: int = MAX_TOKENS,
+      num_samples: int = NUM_SAMPLES,
+      temperature: float = TEMPERATURE,
+      temperature_list: Optional[list[float]] = None,
+  ):
+    super().__init__(ai_binary, max_tokens, num_samples, temperature,
+                     temperature_list)
+    self.conversation_history = []
+
+  def chat_llm(self, client: Any, prompt: prompts.Prompt) -> str:
+    """Queries the LLM in the given chat session and returns the response."""
+    if self.ai_binary:
+      raise ValueError(f'OpenAI does not use local AI binary: {self.ai_binary}')
+    if self.temperature_list:
+      logger.info('OpenAI does not allow temperature list: %s',
+                  self.temperature_list)
+
+    self.conversation_history.extend(prompt.get())
+
+    completion = self.with_retry_on_error(
+        lambda: client.chat.completions.create(
+            messages=self.conversation_history,
+            model=self.name,
+            n=self.num_samples,
+            temperature=self.temperature), [openai.OpenAIError])
+
+    # Choose the longest response
+    longest_response = max(
+        (choice.message.content for choice in completion.choices), key=len)
+    self.conversation_history.append({
+        'role': 'assistant',
+        'content': longest_response
+    })
+
+    return longest_response
+
+
+class ChatGPT4(ChatGPT):
+  """OpenAI's GPT4 model with chat session."""
+
+  name = 'chatgpt-4'
+
+
+class ChatGPT4o(ChatGPT):
+  """OpenAI's GPT-4o model with chat session."""
+
+  name = 'chatgpt-4o'
+
+
+class ChatGPT4oMini(ChatGPT):
+  """OpenAI's GPT-4o-mini model with chat session."""
+
+  name = 'chatgpt-4o-mini'
+
+
+class ChatGPT4Turbo(ChatGPT):
+  """OpenAI's GPT-4 Turbo model with chat session."""
+
+  name = 'chatgpt-4-turbo'
 
 
 class AzureGPT(GPT):
@@ -483,6 +596,12 @@ class Claude(LLM):
     """Queries the LLM in the given chat session and returns the response."""
     del client, prompt
     # Placeholder: To Be Implemented.
+
+  def chat_llm_with_tools(self, client: Any, prompt: Optional[prompts.Prompt],
+                          tools) -> Any:
+    """Queries the LLM in the given chat session with tools."""
+    # Placeholder: To Be Implemented.
+    return
 
 
 class ClaudeHaikuV3(Claude):
@@ -592,6 +711,12 @@ class GoogleModel(LLM):
     """Queries the LLM in the given chat session and returns the response."""
     del client, prompt
     raise NotImplementedError
+
+  def chat_llm_with_tools(self, client: Any, prompt: Optional[prompts.Prompt],
+                          tools) -> Any:
+    """Queries the LLM in the given chat session with tools."""
+    # Placeholder: To Be Implemented.
+    return
 
 
 class VertexAIModel(GoogleModel):
@@ -761,6 +886,22 @@ class GeminiV2Think(GeminiV1D5):
   _vertex_ai_model = 'gemini-2.0-flash-thinking-exp-01-21'
 
 
+class GeminiV2D5Flash(GeminiModel):
+  """Gemini 2.5 flash."""
+  _max_output_tokens = 65535
+  context_window = 1048576
+  name = 'vertex_ai_gemini-2-5-flash'
+  _vertex_ai_model = 'gemini-2.5-flash-preview-04-17'
+
+
+class GeminiV2D5Pro(GeminiModel):
+  """Gemini 2.5 pro."""
+  _max_output_tokens = 65535
+  context_window = 1048576
+  name = 'vertex_ai_gemini-2-5-pro'
+  _vertex_ai_model = 'gemini-2.5-pro-preview-05-06'
+
+
 class GeminiV1D5Chat(GeminiV1D5):
   """Gemini 1.5 for chat session."""
   name = 'vertex_ai_gemini-1-5-chat'
@@ -856,6 +997,12 @@ class GeminiV1D5Chat(GeminiV1D5):
     response = self._do_generate(client, prompt.get(), parameters_list) or ''
     return response
 
+  def chat_llm_with_tools(self, client: Any, prompt: Optional[prompts.Prompt],
+                          tools) -> Any:
+    """Queries the LLM in the given chat session with tools."""
+    # Placeholder: To Be Implemented.
+    return
+
 
 class GeminiV2FlashChat(GeminiV1D5Chat):
   """Gemini 2 Flash for chat session."""
@@ -873,6 +1020,22 @@ class GeminiV2ThinkChat(GeminiV1D5Chat):
   """Gemini 2 for chat session."""
   name = 'vertex_ai_gemini-2-think-chat'
   _vertex_ai_model = 'gemini-2.0-flash-thinking-exp-01-21'
+
+
+class GeminiV2D5FlashChat(GeminiV1D5Chat):
+  """Gemini 2.5 flash for chat session."""
+  _max_output_tokens = 65535
+  context_window = 1048576
+  name = 'vertex_ai_gemini-2-5-flash-chat'
+  _vertex_ai_model = 'gemini-2.5-flash-preview-04-17'
+
+
+class GeminiV2D5ProChat(GeminiV1D5Chat):
+  """Gemini 2.5 pro for chat session."""
+  _max_output_tokens = 65535
+  context_window = 1048576
+  name = 'vertex_ai_gemini-2-5-pro-chat'
+  _vertex_ai_model = 'gemini-2.5-pro-preview-05-06'
 
 
 class AIBinaryModel(GoogleModel):
@@ -897,6 +1060,12 @@ class AIBinaryModel(GoogleModel):
     """Queries the LLM in the given chat session and returns the response."""
     del client, prompt
     # Placeholder: To Be Implemented.
+
+  def chat_llm_with_tools(self, client: Any, prompt: Optional[prompts.Prompt],
+                          tools) -> Any:
+    """Queries the LLM in the given chat session with tools."""
+    # Placeholder: To Be Implemented.
+    return
 
 
 DefaultModel = GeminiV1D5

@@ -28,9 +28,9 @@ class Pipeline():
     1. Writing stage generates or refines the fuzz target and its associated
        build script to improve code coverage and enhance bug-finding
        capabilities for the function under test.
-    2. Evaluation stage assesses the fuzz target's performance by measuring
+    2. Execution stage assesses the fuzz target's performance by measuring
        code coverage and detecting runtime crashes.
-    3. Analysis stage examines the results from the evaluation stage, extracting
+    3. Analysis stage examines the results from the execution stage, extracting
        insights from the coverage and crash data to suggest improvements for the
        writing stage in the next iteration.
     """
@@ -51,36 +51,45 @@ class Pipeline():
         args, trial, execution_stage_agents)
     self.analysis_stage: AnalysisStage = AnalysisStage(args, trial,
                                                        analysis_stage_agents)
+    self.max_cycle_count = 5
 
   def _terminate(self, result_history: list[Result], cycle_count: int) -> bool:
     """Validates if the termination conditions have been satisfied."""
     if not cycle_count:
       return False
 
-    if cycle_count > 5:
-      self.logger.info('[Cycle %d] Terminate after 5 cycles: %s', cycle_count,
-                       result_history)
+    if cycle_count > self.max_cycle_count:
+      self.logger.info('[Cycle %d] Terminate after %d cycles: %s', cycle_count,
+                       self.max_cycle_count, result_history)
       return True
 
     last_result = result_history[-1]
+
+    # If this is a result from the build stage that shows it failed, then
+    # we should terminate as we don't know how to progress.
     if isinstance(last_result, BuildResult) and not last_result.success:
       self.logger.debug('[Cycle %d] Last result is failed BuildResult: %s',
                         cycle_count, last_result)
       return True
 
-    if isinstance(last_result, AnalysisResult) and last_result.success:
+    # If the latest result is not from the analysis stage, then we should
+    # terminate, as it indicates an error from the execution stage.
+    if not isinstance(last_result, AnalysisResult):
+      self.logger.warning('[Cycle %d] Last result is not AnalysisResult: %s',
+                          cycle_count, result_history)
+      return True
+
+    # If the analysis stage succeeded, our work is done and we terminate.
+    if last_result.success:
       self.logger.info('[Cycle %d] Generation succeeds: %s', cycle_count,
                        result_history)
       return True
-
-    if isinstance(last_result, AnalysisResult) and not last_result.success:
+    else:
+      # If the analysis stage failed then we should not terminate but rather
+      # continue trying to generate a new fuzz harness/build set up.
       self.logger.info('[Cycle %d] Generation continues: %s', cycle_count,
                        result_history)
       return False
-
-    self.logger.warning('[Cycle %d] Last result is unexpected: %s', cycle_count,
-                        last_result)
-    return True
 
   def _update_status(self,
                      result_history: list[Result],
@@ -99,7 +108,9 @@ class Pipeline():
     """Executes the stages once."""
     self.logger.info('[Cycle %d] Initial result is %s', cycle_count,
                      result_history[-1])
-    # Writing stage.
+    # Writing stage: We expect a build result that succeeds from this stage,
+    # and if it fails then we will return from this cycle and terminate
+    # the pipeline.
     result_history.append(
         self.writing_stage.execute(result_history=result_history))
     self._update_status(result_history=result_history)
@@ -109,7 +120,9 @@ class Pipeline():
                           cycle_count)
       return
 
-    # Execution stage.
+    # Execution stage: We expect a run result that has a log path from this stage,
+    # and if it fails then we will return from this cycle and terminate
+    # the pipeline.
     result_history.append(
         self.execution_stage.execute(result_history=result_history))
     self._update_status(result_history=result_history)
@@ -119,9 +132,17 @@ class Pipeline():
                           cycle_count)
       return
 
-    # Analysis stage.
+    # Analysis stage: We expect an analysis result from this stage. If the
+    # analysis result from this stage fails, then we will continue the
+    # pipeline and retry making a harness. If the analysis stage is successful,
+    # then we will terminate the pipeline.
     result_history.append(
         self.analysis_stage.execute(result_history=result_history))
+    # TODO(maoyi): add the indicator for the success of analysis stage
+    if not isinstance(result_history[-1], AnalysisResult):
+      self.logger.warning(
+          '[Cycle %d] Analysis failure, skipping the rest steps', cycle_count)
+      return
     self._update_status(result_history=result_history)
     self.logger.info('[Cycle %d] Analysis result %s: %s', cycle_count,
                      result_history[-1].success, result_history[-1])
@@ -131,8 +152,8 @@ class Pipeline():
     Runs the fuzzing pipeline iteratively to assess and refine the fuzz target.
     1. Writing Stage refines the fuzz target and its build script using insights
     from the previous cycle.
-    2. Evaluation Stage measures the performance of the revised fuzz target.
-    3. Analysis Stage examines the evaluation results to guide the next cycle's
+    2. Execution Stage measures the performance of the revised fuzz target.
+    3. Analysis Stage examines the execution results to guide the next cycle's
     improvements.
     The process repeats until the termination conditions are met.
     """

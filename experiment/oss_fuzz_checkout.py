@@ -440,7 +440,6 @@ def prepare_project_image(benchmark: benchmarklib.Benchmark) -> str:
   """Prepares original image of the |project|'s fuzz target build container."""
   project = benchmark.project
   image_name = f'gcr.io/oss-fuzz/{project}'
-  logger.info('We should use cached instance.')
   generated_oss_fuzz_project = f'{benchmark.id}-{uuid.uuid4().hex}'
   generated_oss_fuzz_project = rectify_docker_tag(generated_oss_fuzz_project)
   create_ossfuzz_project(benchmark, generated_oss_fuzz_project)
@@ -448,6 +447,47 @@ def prepare_project_image(benchmark: benchmarklib.Benchmark) -> str:
   if not ENABLE_CACHING:
     logger.warning('Disabled caching when building image for %s', project)
   elif is_image_cached(project, 'address'):
+    logger.info('Will use cached instance.')
+    # Rewrite for caching.
+    rewrite_project_to_cached_project(project, generated_oss_fuzz_project,
+                                      'address')
+    # Prepare build
+    prepare_build(project, 'address', generated_oss_fuzz_project)
+    # Build the image
+    logger.info('Using cached project image for %s: %s',
+                generated_oss_fuzz_project, image_name)
+  else:
+    logger.warning('Unable to find cached project image for %s', project)
+  return _build_image(generated_oss_fuzz_project)
+
+
+def create_ossfuzz_project_by_name(original_name: str,
+                                   generated_oss_fuzz_project: str) -> str:
+  """Creates an OSS-Fuzz project by replicating an existing project."""
+  generated_project_path = os.path.join(OSS_FUZZ_DIR, 'projects',
+                                        generated_oss_fuzz_project)
+  if os.path.exists(generated_project_path):
+    logger.info('Project %s already exists.', generated_project_path)
+    return generated_project_path
+
+  oss_fuzz_project_path = os.path.join(OSS_FUZZ_DIR, 'projects', original_name)
+  shutil.copytree(oss_fuzz_project_path, generated_project_path)
+  return generated_project_path
+
+
+def prepare_project_image_by_name(project_name: str) -> str:
+  """Prepares original image of the |project_name|'s fuzz target build
+  container."""
+  project = project_name
+  image_name = f'gcr.io/oss-fuzz/{project}'
+  generated_oss_fuzz_project = f'{project_name}-{uuid.uuid4().hex}'
+  generated_oss_fuzz_project = rectify_docker_tag(generated_oss_fuzz_project)
+  create_ossfuzz_project_by_name(project, generated_oss_fuzz_project)
+
+  if not ENABLE_CACHING:
+    logger.warning('Disabled caching when building image for %s', project)
+  elif is_image_cached(project, 'address'):
+    logger.info('Will use cached instance.')
     # Rewrite for caching.
     rewrite_project_to_cached_project(project, generated_oss_fuzz_project,
                                       'address')

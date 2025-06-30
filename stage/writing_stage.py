@@ -47,9 +47,23 @@ class WritingStage(BaseStage):
   def execute(self, result_history: list[Result]) -> Result:
     """Executes the writing stage."""
     if result_history and result_history[-1].fuzz_target_source:
-      agent = self.get_agent(index=1)
+      # Execute the Enhancer agent
+      # If the agent at index 0 is FunctionAnalyzer we should get agent at index 2,
+      # otherwise index 1.
+      if self.get_agent(index=0).name == 'FunctionAnalyzer':
+        agent = self.get_agent(index=2)
+      else:
+        agent = self.get_agent(index=1)
     else:
-      agent = self.get_agent()
+      agent = self.get_agent(index=0)
+      if agent.name == 'FunctionAnalyzer':
+        agent_result = self._execute_agent(agent, result_history)
+        self.logger.write_chat_history(agent_result)
+        result_history.append(agent_result)
+
+        # Then, execute the Prototyper agent to refine the fuzz target.
+        agent = self.get_agent(index=1)
+
     agent_result = self._execute_agent(agent, result_history)
     build_result = cast(BuildResult, agent_result)
 
@@ -57,6 +71,5 @@ class WritingStage(BaseStage):
     self.logger.write_fuzz_target(build_result)
     self.logger.write_build_script(build_result)
     self.logger.write_chat_history(build_result)
-    self.logger.debug('Writing stage completed with with result:\n%s',
-                      build_result)
+    self.logger.debug('Writing stage completed with result:\n%s', build_result)
     return build_result

@@ -7,15 +7,102 @@ with fuzzing harnesses.
 
 ## Usage
 
+To run OSS-Fuzz project generation a CLI tool is exposed from
+installing OSS-Fuzz-gen in a Python virtual environment. This is installed
+using the following command:
+
 ```sh
-git clone https://github.com/google/oss-fuzz-gen
-cd oss-fuzz-gen
+# Set up virtual environment
 python3.11 -m virtualenv .venv
 . .venv/bin/activate
 
-echo "https://github.com/kgabis/parson" > input.txt
+# Clone and install OSS-Fuzz-gen
+git clone https://github.com/google/oss-fuzz-gen
+cd oss-fuzz-gen
+python3 -m pip install .
+```
 
-python3 -m experimental.end_to_end.cli --input=input.txt --model=${MODEL}
+Upon installation of OSS-Fuzz-gen in the Python environment,
+a CLI tool `oss-fuzz-generator` is made available that has
+the following `help`:
+
+```sh
+$ oss-fuzz-generator --help
+usage: oss-fuzz-generator [-h] {generate-builds,generate-fuzz-introspector-database,generate-harnesses,generate-full} ...
+
+positional arguments:
+  {generate-builds,generate-fuzz-introspector-database,generate-harnesses,generate-full}
+    generate-builds     Generate OSS-Fuzz projects with build scripts but empty fuzzers.
+    generate-fuzz-introspector-database
+                        Generates a fuzz introspector database from auto build projects.
+    generate-harnesses  Harness generation of OSS-Fuzz projects.
+    generate-full       Generate OSS-Fuzz integration from git URLs.
+
+options:
+  -h, --help            show this help message and exit
+
+```
+
+`oss-fuzz-generator` makes several commands available, and the following
+will iterate over these tools:
+
+
+### End to end generation
+
+**Generating OSS-Fuzz projects for a single repository**
+The following example shows how to run the complete process of an 
+OSS-Fuzz project generation.
+
+```sh
+# Use installed binary oss-fuzz-generator to create OSS-Fuzz project
+oss-fuzz-generator generate-full -m ${MODEL} -i "https://github.com/kgabis/parson
+...
+$ ls final-oss-fuzz-projects/parson-agent/
+build.sh  Dockerfile  empty-fuzzer.0.c  empty-fuzzer.1.c  empty-fuzzer.2.c  empty-fuzzer.3.c  empty-fuzzer.4.c  project.yaml
+```
+
+**Generating OSS-Fuzz projects for multiple repositories**
+
+OSS-Fuzz generation can also be applied to a list of repositories by
+using a file with a list of URLs to the repositories:
+
+```sh
+$ cat input.txt 
+https://github.com/zserge/jsmn
+https://github.com/rafagafe/tiny-json
+$ oss-fuzz-generator generate-full -m ${MODEL} -i input.txt
+$ tree final-oss-fuzz-projects/
+final-oss-fuzz-projects/
+├── jsmn-agent
+│   ├── build.sh
+│   ├── Dockerfile
+│   ├── empty-fuzzer.0.c
+│   ├── empty-fuzzer.1.c
+│   ├── empty-fuzzer.2.c
+│   ├── empty-fuzzer.3.c
+│   ├── empty-fuzzer.4.c
+│   ├── empty-fuzzer.5.c
+│   ├── empty-fuzzer.6.c
+│   ├── empty-fuzzer.7.c
+│   └── project.yaml
+└── tiny-json-agent
+    ├── build.sh
+    ├── Dockerfile
+    ├── empty-fuzzer.0.c
+    ├── empty-fuzzer.10.c
+    ├── empty-fuzzer.11.c
+    ├── empty-fuzzer.1.c
+    ├── empty-fuzzer.2.c
+    ├── empty-fuzzer.3.c
+    ├── empty-fuzzer.4.c
+    ├── empty-fuzzer.5.c
+    ├── empty-fuzzer.6.c
+    ├── empty-fuzzer.7.c
+    ├── empty-fuzzer.8.c
+    ├── empty-fuzzer.9.c
+    └── project.yaml
+
+2 directories, 26 files
 ```
 
 

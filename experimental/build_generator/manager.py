@@ -23,13 +23,13 @@ import subprocess
 from typing import List, Tuple
 
 import build_script_generator
+import constants
 import file_utils as utils
 import templates
 import yaml
 
-INTROSPECTOR_OSS_FUZZ_DIR = '/src/inspector'
-
-INTROSPECTOR_ALL_FUNCTIONS_FILE = 'all-fuzz-introspector-functions.json'
+INTROSPECTOR_OSS_FUZZ_DIR = constants.INTROSPECTOR_OSS_FUZZ_DIR
+INTROSPECTOR_ALL_FUNCTIONS_FILE = constants.INTROSPECTOR_OSS_FUZZ_DIR
 
 LLM_MODEL = ''
 

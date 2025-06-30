@@ -16,8 +16,9 @@ better prompt generation."""
 
 import logging
 import os
+import re
 from difflib import SequenceMatcher
-from typing import Any, Optional
+from typing import Optional
 
 from data_prep import introspector
 from experiment import benchmark as benchmarklib
@@ -25,6 +26,15 @@ from experiment import benchmark as benchmarklib
 logger = logging.getLogger(__name__)
 
 COMPLEX_TYPES = ['const', 'enum', 'struct', 'union', 'volatile']
+PRIMITIVE_TYPES = [
+    'void', 'auto', '_Bool', 'bool', 'byte', 'char', 'char16_t', 'char32_t',
+    'char8_t', 'complex128', 'complex64', 'double', 'f32', 'f64', 'float',
+    'float32', 'float64', 'i8', 'i16', 'i32', 'i64', 'i128', 'int', 'int8',
+    'int16', 'int32', 'int64', 'isize', 'long', 'double', 'nullptr_t', 'rune',
+    'short', 'str', 'string', 'u8', 'u16', 'u32', 'u64', 'u128', 'uint',
+    'uint8', 'uint16', 'uint32', 'uint64', 'usize', 'uintptr', 'unsafe.Pointer',
+    'wchar_t'
+]
 
 
 class ContextRetriever:
@@ -47,27 +57,7 @@ class ContextRetriever:
       logging.warning('Unsupported decl - Lang: %s Project: %s', lang,
                       self._benchmark.project)
 
-    return sig
-
-  def _get_nested_item(self, element: dict, *path: str) -> Any:
-    """Safely retrieve a nested item from a dictionary without
-    throwing an error. Logs whenever an item can not be found
-    with a given key."""
-    nested_item = element
-
-    for key in path:
-      next_nested_item = nested_item.get(key, '')
-      if not next_nested_item:
-        logging.warning('Missing item "%s" in object: %s', key, nested_item)
-      nested_item = next_nested_item
-
-    return nested_item
-
-  def _get_source_line(self, item: dict) -> int:
-    return int(self._get_nested_item(item, 'source', 'source_line'))
-
-  def _get_source_file(self, item: dict) -> str:
-    return self._get_nested_item(item, 'source', 'source_file')
+    return sig.strip()
 
   def _get_files_to_include(self) -> list[str]:
     """Retrieves files to include.
@@ -84,41 +74,56 @@ class ContextRetriever:
       if cleaned_type:
         types.append(cleaned_type)
 
+    # Retrieve full custom definition of the project
+    info_list = introspector.query_introspector_type_definition(
+        self._benchmark.project)
+
     for current_type in types:
-      info_list = introspector.query_introspector_type_info(
-          self._benchmark.project, current_type)
-      if not info_list:
-        logging.warning('Could not retrieve info for project: %s type: %s',
+      # Check for primitive types which does not need to include
+      if current_type in PRIMITIVE_TYPES:
+        continue
+
+      # Retrieve specific type definition
+      info_dict = {info['name']: info for info in info_list}
+      type_info = info_dict.get(current_type)
+      if not type_info:
+        logging.warning('Could not type info for project: %s type: %s',
                         self._benchmark.project, current_type)
         continue
 
-      for info in info_list:
-        include_file = self._get_source_file(info)
-        include_file = os.path.normpath(include_file)
-        include_base = os.path.basename(include_file)
+      # Retrieve possible file candidates
+      include_file = type_info.get('pos', {}).get('source_file')
+      if not include_file:
+        logging.warning('Failed to obtain the source file information.')
+        continue
 
-        # Ensure include_file is a file.
-        if not include_base or '.' not in include_base:
-          logging.warning('File %s found as a source path for project: %s',
-                          include_file, self._benchmark.project)
-          continue
-        # Ensure it is a header file (suffix starting with .h).
-        if include_base.endswith(('.h', '.hxx', '.hpp')):
-          logging.warning(
-              'File found with unexpected suffix %s for project: %s',
-              include_file, self._benchmark.project)
-          continue
-        # Remove "system" header files.
-        # Assuming header files under /usr/ are irrelevant.
-        if include_file.startswith('/usr/'):
-          logging.debug('Header file removed: %s', include_file)
-          continue
-        # TODO: Dynamically adjust path prefixes
-        # (e.g. based on existing fuzz targets).
+      # Retrieve file details from the source file path
+      include_file = os.path.normpath(include_file)
+      include_base = os.path.basename(include_file)
 
-        files.add(include_file)
+      # Ensure include_file is a file.
+      if not include_base or '.' not in include_base:
+        logging.warning('File %s found as a source path for project: %s',
+                        include_file, self._benchmark.project)
+        continue
 
-    return list(files)
+      # Ensure it is a header file (suffix starting with .h).
+      if include_base.endswith(('.h', '.hxx', '.hpp')):
+        logging.warning('File found with unexpected suffix %s for project: %s',
+                        include_file, self._benchmark.project)
+        continue
+
+      # Remove "system" header files.
+      # Assuming header files under /usr/ are irrelevant.
+      if include_file.startswith('/usr/'):
+        logging.debug('Header file removed: %s', include_file)
+        continue
+
+      # TODO: Dynamically adjust path prefixes
+      # (e.g. based on existing fuzz targets).
+      files.add(include_file)
+
+    return [file for file in files if file.strip()]
 
   def _clean_type(self, type_name: str) -> str:
     """Cleans a type so that it can be fetched from FI."""
@@ -160,7 +165,7 @@ class ContextRetriever:
           'Could not retrieve function source for project: %s '
           'function_signature: %s', project, func_sig)
 
-    return function_source
+    return function_source.strip()
 
   def _get_xrefs_to_function(self) -> list[str]:
     """Queries FI for function being fuzzed."""
@@ -172,15 +177,61 @@ class ContextRetriever:
       logging.warning(
           'Could not retrieve xrefs for project: %s '
           'function_signature: %s', project, func_sig)
-    return xrefs
+    return [xref for xref in xrefs if xref.strip()]
+
+  def _get_test_xrefs_to_function(self) -> list[str]:
+    """Queries FI for test source calling the function being fuzzed."""
+    project = self._benchmark.project
+    func_name = self._benchmark.function_name
+    xrefs = introspector.query_introspector_for_tests_xref(project, [func_name])
+
+    if not xrefs:
+      logging.warning(
+          'Could not retrieve tests xrefs for project: %s '
+          'function_signature: %s', project, func_name)
+
+    source_list = xrefs.get('source')
+    detail_list = xrefs.get('details')
+
+    if source_list:
+      source_list.insert(0, '<code>')
+      source_list.append('</code>')
+      return [src for src in source_list if src.strip()]
+
+    if not detail_list:
+      return []
+
+    result = ['<codeblock>']
+
+    for detail in detail_list:
+      result.append('<code>')
+      result.extend(detail)
+      result.append('</code>')
+
+    result.append('</codeblock>')
+
+    return result
+
+  def _get_param_typedef(self) -> list[str]:
+    """Querties FI for param type definitions with type name."""
+    result = []
+    for param in self._benchmark.params:
+      for param_type in param.values():
+        typedef_src = self.get_type_def(param_type)
+        if typedef_src:
+          result.append(typedef_src)
+
+    return [item for item in result if item.strip()]
 
   def get_context_info(self) -> dict:
     """Retrieves contextual information and stores them in a dictionary."""
     xrefs = self._get_xrefs_to_function()
+    tests_xrefs = self._get_test_xrefs_to_function()
     func_source = self._get_function_implementation()
     files = self._get_files_to_include()
     decl = self._get_embeddable_declaration()
     header = self.get_prefixed_header_file()
+    typedef = self._get_param_typedef()
 
     context_info = {
         'xrefs': xrefs,
@@ -188,53 +239,67 @@ class ContextRetriever:
         'files': files,
         'decl': decl,
         'header': header,
+        'typedef': typedef,
+        'tests_xrefs': tests_xrefs,
     }
 
     logging.info('Context: %s', context_info)
 
     return context_info
 
-  def _concat_info_lines(self, info: dict) -> str:
-    """Concatenates source code lines based on |info|."""
-    include_file = self._get_source_file(info)
-    include_lines = sorted([self._get_source_line(info)] + [
-        self._get_source_line(element) for element in info.get('elements', [])
-    ])
-
-    # Add the next line after the last element.
-    return introspector.query_introspector_source_code(self._benchmark.project,
-                                                       include_file,
-                                                       include_lines[0],
-                                                       include_lines[-1] + 1)
-
   def get_type_def(self, type_name: str) -> str:
     """Retrieves the source code definitions for the given |type_name|."""
-    type_names = [self._clean_type(type_name)]
-    considered_types = []
+    type_name = self._clean_type(type_name)
+    # Skip primitive types
+    if type_name in PRIMITIVE_TYPES:
+      logging.warning('No non-primitive types.')
+      return ''
+
+    type_names = [type_name]
     type_def = ''
 
-    while type_names:
-      # Breath-first is more suitable for prompting.
-      current_type = type_names.pop(0)
-      info_list = introspector.query_introspector_type_info(
-          self._benchmark.project, current_type)
-      if not info_list:
+    # Retrieve full custom type definitions
+    info_list = introspector.query_introspector_type_definition(
+        self._benchmark.project)
+    if not info_list:
+      logging.warning('Could not get full type definition for project: %s',
+                      self._benchmark.project)
+
+    info_dict = {info['name']: info for info in info_list}
+    for current_type in type_names:
+      # Try retrieve type definition details
+      type_info = info_dict.get(current_type)
+      if not type_info:
+        # Try to match function type definition
+        for type_key, info in info_dict.items():
+          if type_key.startswith(current_type):
+            type_info = info
+
+      if not type_info:
         logging.warning('Could not type info for project: %s type: %s',
                         self._benchmark.project, current_type)
         continue
 
-      for info in info_list:
-        type_def += self._concat_info_lines(info) + '\n'
-        considered_types.append(current_type)
+      # Retrieve position information of the custom type definition
+      source = type_info['pos']['source_file']
+      start = type_info['pos']['line_start']
+      end = type_info['pos']['line_end']
 
-        # Retrieve nested unseen types.
-        new_type_type = info.get('type')
-        new_type_name = info.get('name')
-        if (new_type_type and new_type_type in COMPLEX_TYPES and
-            new_type_name and new_type_name not in considered_types):
-          type_names.append(new_type_name)
+      # Retrieve type definition of the current type
+      type_def += introspector.query_introspector_source_code(
+          self._benchmark.project, source, start + 1, end + 1) + '\n'
 
-    return type_def
+      # Recursively get type of fields if exist
+      for field in type_info.get('fields', []):
+        if field.get('type'):
+          type_def += self.get_type_def(field.get('type', '')) + '\n'
+
+      # Recursively get type of sub elements
+      if type_info.get('type'):
+        type_def += self.get_type_def(type_info.get('type', '')) + '\n'
+
+    # Return and strip multiple \n in result
+    return re.sub(r'\n+', '\n', type_def)
 
   def get_same_header_file_paths(self, wrong_file: str) -> list[str]:
     """Retrieves path of header files with the same name as |wrong_name|."""

@@ -295,7 +295,7 @@ def copy_result_to_out(project_generated,
     if not os.path.isdir(build_dir):
       return
 
-    dst_project = f'{project_name}-agent'
+    dst_project = f'{project_name.lower()}-agent'
     dst_dir = os.path.join(oss_fuzz_projects, dst_project)
     shutil.copytree(build_dir, dst_dir, dirs_exist_ok=True)
   else:
@@ -307,7 +307,7 @@ def copy_result_to_out(project_generated,
     with open(report_txt, 'r') as f:
       for line in f:
         if 'Analysing' in line:
-          project_name = line.split('/')[-1].replace('\n', '')
+          project_name = line.split('/')[-1].replace('\n', '').lower()
     if not project_name:
       return
 
@@ -371,7 +371,11 @@ def run_parallels(oss_fuzz_base,
     worker_project_name = get_next_worker_project(oss_fuzz_base)
     logger.info('Worker project name: %s', worker_project_name)
     projects_generated.append(worker_project_name)
-    setup_worker_project(oss_fuzz_base, worker_project_name, llm_model)
+    try:
+      setup_worker_project(oss_fuzz_base, worker_project_name, llm_model)
+    except subprocess.CalledProcessError:
+      logger.info('Project setup issue for %s', worker_project_name)
+      continue
     proc = threading.Thread(target=run_on_targets,
                             args=(target, oss_fuzz_base, worker_project_name,
                                   idx, llm_model, semaphore, build_heuristics,
@@ -395,9 +399,6 @@ def run_agent(target_repositories: List[str], args: argparse.Namespace):
   oss_fuzz_checkout.OSS_FUZZ_DIR = oss_fuzz_base
   work_dirs = WorkDirs(args.work_dirs, keep=True)
 
-  # Prepare environment
-  worker_project_name = get_next_worker_project(oss_fuzz_base)
-
   # All agents
   llm_agents = [
       llm_agent.AutoDiscoveryBuildScriptAgent,
@@ -406,9 +407,15 @@ def run_agent(target_repositories: List[str], args: argparse.Namespace):
 
   for target_repository in target_repositories:
     logger.info('Target repository: %s', target_repository)
-    language = setup_worker_project(oss_fuzz_base, worker_project_name,
-                                    args.model, target_repository, True,
-                                    os.path.abspath(args.work_dirs))
+    # Prepare environment
+    worker_project_name = get_next_worker_project(oss_fuzz_base)
+    try:
+      language = setup_worker_project(oss_fuzz_base, worker_project_name,
+                                      args.model, target_repository, True,
+                                      os.path.abspath(args.work_dirs))
+    except subprocess.CalledProcessError:
+      logger.info('Issues setting up %s', target_repository)
+      continue
     benchmark = Benchmark(worker_project_name, worker_project_name, '', '', '',
                           '', [], '')
 
@@ -442,6 +449,9 @@ def run_agent(target_repositories: List[str], args: argparse.Namespace):
       except OpenAIError:
         logger.info(('Round 1 build script generation failed for project %s'
                      ' with openai errors'), target_repository)
+        break
+      except subprocess.CalledProcessError:
+        logger.info('Issue running agent, %s', target_repository)
         break
 
       if build_result.compiles:
@@ -524,12 +534,23 @@ def setup_logging():
 
 
 def extract_target_repositories(target_input) -> list[str]:
+  if not target_input:
+    return []
+
   if os.path.isfile(target_input):
     target_repositories = read_targets_file(target_input)
   else:
     target_repositories = [target_input]
-  logger.info(target_repositories)
-  return target_repositories
+
+  refined_targets = []
+  for repo in target_repositories:
+    # Remove trailing /
+    while repo.endswith('/'):
+      repo = repo[:-1]
+    refined_targets.append(repo)
+  logger.info(refined_targets)
+
+  return refined_targets
 
 
 def main():

@@ -201,9 +201,11 @@ class DefaultTemplateBuilder(PromptBuilder):
     return context.render(
         headers='\n'.join(context_info['files']),
         must_insert=context_info['decl'],
+        typedef='\n'.join(context_info['typedef']),
         func_source=context_info['func_source'],
         xrefs='\n'.join(context_info['xrefs']),
         include_statement=context_info['header'],
+        tests_xrefs='\n'.join(context_info['tests_xrefs']),
     )
 
   def _select_examples(self, examples: list[list],
@@ -315,14 +317,14 @@ class DefaultTemplateBuilder(PromptBuilder):
     """Prepares the code-fixing prompt."""
     priming, priming_weight = self._format_fixer_priming(benchmark)
 
-    if error_desc and errors:
+    if error_desc or errors:
       pass
     elif coverage_result:
       error_desc = coverage_result.insight
       errors = coverage_result.suggestions.splitlines()
     else:
-      error_desc = ''
-      errors = []
+      error_desc = error_desc or ''
+      errors = errors or []
     problem = self._format_fixer_problem(raw_code, error_desc, errors,
                                          priming_weight, context, instruction)
 
@@ -370,6 +372,12 @@ class DefaultTemplateBuilder(PromptBuilder):
       instruction = instruction_template.replace('{INSTRUCTION}', instruction)
     problem = problem.replace('{INSTRUCTION}', instruction)
 
+    # If errors list is empty, return the formatted prompt
+    if not errors:
+      return problem.replace('<error>\n', '')\
+                    .replace('{ERROR_MESSAGES}\n', '')\
+                    .replace('</error>\n', '')
+
     problem_prompt = self._prompt.create_prompt_piece(problem, 'user')
     template_piece = self._prompt.create_prompt_piece('{ERROR_MESSAGES}',
                                                       'user')
@@ -391,6 +399,10 @@ class DefaultTemplateBuilder(PromptBuilder):
       if prompt_size + error_token_num >= self._model.context_window:
         # The estimation is inaccurate, if an example's size equals to
         # the limit, it's safer to not include the example.
+        if not selected_errors:
+          # At least include one error in order for LLM to have something
+          # to fix even if not enough token left.
+          selected_errors.append(error)
         break
       prompt_size += error_token_num
       selected_errors.append(error)
@@ -587,7 +599,8 @@ class PrototyperTemplateBuilder(DefaultTemplateBuilder):
             project_example_content: Optional[list[list[str]]] = None,
             project_context_content: Optional[dict] = None,
             tool_guides: str = '',
-            project_dir: str = '') -> prompts.Prompt:
+            project_dir: str = '',
+            function_requirements: str = '') -> prompts.Prompt:
     """Constructs a prompt using the templates in |self| and saves it."""
     if not self.benchmark:
       return self._prompt
@@ -599,6 +612,9 @@ class PrototyperTemplateBuilder(DefaultTemplateBuilder):
                       f'</code> in your solution!\n')
     if project_context_content:
       final_problem += self.format_context(project_context_content)
+    if function_requirements:
+      final_problem += (f'\nHere are the requirements for the function:\n'
+                        f'{function_requirements}\n')
     self._prepare_prompt(priming, final_problem, example_pair,
                          project_example_content)
     self._prompt.append(tool_guides, True)
@@ -627,7 +643,8 @@ class PrototyperFixerTemplateBuilder(PrototyperTemplateBuilder):
             project_example_content: Optional[list[list[str]]] = None,
             project_context_content: Optional[dict] = None,
             tool_guides: str = '',
-            project_dir: str = '') -> prompts.Prompt:
+            project_dir: str = '',
+            function_requirements: str = '') -> prompts.Prompt:
     """Constructs a prompt using the templates in |self| and saves it."""
     del (example_pair, project_example_content, project_context_content,
          tool_guides)
@@ -673,7 +690,8 @@ class CoverageAnalyzerTemplateBuilder(PrototyperTemplateBuilder):
             project_example_content: Optional[list[list[str]]] = None,
             project_context_content: Optional[dict] = None,
             tool_guides: str = '',
-            project_dir: str = '') -> prompts.Prompt:
+            project_dir: str = '',
+            function_requirements: str = '') -> prompts.Prompt:
     """Constructs a prompt using the templates in |self| and saves it."""
     del (example_pair, project_example_content, project_context_content)
     if not self.benchmark:
@@ -720,7 +738,8 @@ class EnhancerTemplateBuilder(PrototyperTemplateBuilder):
             project_example_content: Optional[list[list[str]]] = None,
             project_context_content: Optional[dict] = None,
             tool_guides: str = '',
-            project_dir: str = '') -> prompts.Prompt:
+            project_dir: str = '',
+            function_requirements: str = '') -> prompts.Prompt:
     """Constructs a prompt using the templates in |self| and saves it."""
     del (example_pair, project_example_content, project_context_content)
     if not self.benchmark:
@@ -752,6 +771,76 @@ class EnhancerTemplateBuilder(PrototyperTemplateBuilder):
     problem = self._format_fixer_problem(self.build_result.fuzz_target_source,
                                          error_desc, errors, priming_weight, '',
                                          '')
+    if function_requirements:
+      problem += (f'\nHere are the requirements for the function.\n'
+                  f'{function_requirements}\n')
+
+    self._prepare_prompt(priming, problem)
+    return self._prompt
+
+
+class CrashEnhancerTemplateBuilder(PrototyperTemplateBuilder):
+  """Builder specifically targeted C (and excluding C++)."""
+
+  def __init__(self,
+               model: models.LLM,
+               benchmark: Benchmark,
+               build_result: BuildResult,
+               insight: str = '',
+               stacktrace: str = '',
+               template_dir: str = DEFAULT_TEMPLATE_DIR,
+               initial: Any = None):
+    super().__init__(model, benchmark, template_dir, initial)
+    # Load templates.
+    self.priming_template_file = self._find_template(self.agent_templare_dir,
+                                                     'enhancer-priming.txt')
+    self.build_result = build_result
+    self.insight = insight
+    self.stacktrace = stacktrace
+
+  def build(self,
+            example_pair: list[list[str]],
+            project_example_content: Optional[list[list[str]]] = None,
+            project_context_content: Optional[dict] = None,
+            tool_guides: str = '',
+            project_dir: str = '',
+            function_requirements: str = '') -> prompts.Prompt:
+    """Constructs a prompt using the templates in |self| and saves it."""
+    del (example_pair, project_example_content, project_context_content)
+    if not self.benchmark:
+      return self._prompt
+
+    priming = self._get_template(self.priming_template_file)
+    priming = priming.replace('{LANGUAGE}', self.benchmark.file_type.value)
+    priming = priming.replace('{FUNCTION_SIGNATURE}',
+                              self.benchmark.function_signature)
+    priming = priming.replace('{PROJECT_DIR}', project_dir)
+    priming = priming.replace('{TOOL_GUIDES}', tool_guides)
+    if self.build_result.build_script_source:
+      build_text = (f'<build script>\n{self.build_result.build_script_source}\n'
+                    '</build script>')
+    else:
+      build_text = 'Build script reuses `/src/build.bk.sh`.'
+    priming = priming.replace('{BUILD_TEXT}', build_text)
+    priming_weight = self._model.estimate_token_num(priming)
+    # TODO(dongge): Refine this logic.
+
+    error_desc = f"""
+    Here is the insight from the crash analyzer:
+    {self.insight}
+
+    Below is crash report:
+    {self.stacktrace}
+    """
+    errors = []
+    problem = self._format_fixer_problem(self.build_result.fuzz_target_source,
+                                         error_desc, errors, priming_weight, '',
+                                         '')
+
+    # TODO(pamusuo): Refactor this logic before merging
+    if function_requirements:
+      requirements = (f'\nHere are the requirements for the function.\n'
+                      f'{function_requirements}\n')
 
     self._prepare_prompt(priming, problem)
     return self._prompt
@@ -779,7 +868,8 @@ class CoverageEnhancerTemplateBuilder(PrototyperTemplateBuilder):
             project_example_content: Optional[list[list[str]]] = None,
             project_context_content: Optional[dict] = None,
             tool_guides: str = '',
-            project_dir: str = '') -> prompts.Prompt:
+            project_dir: str = '',
+            function_requirements: str = '') -> prompts.Prompt:
     """Constructs a prompt using the templates in |self| and saves it."""
     del (example_pair, project_example_content, project_context_content)
     if not self.benchmark:
@@ -805,6 +895,192 @@ class CoverageEnhancerTemplateBuilder(PrototyperTemplateBuilder):
     prompt = prompt.replace('{INSIGHTS}', self.coverage_result.insight)
     prompt = prompt.replace('{SUGGESTIONS}', self.coverage_result.suggestions)
     self._prompt.append(prompt)
+
+    if function_requirements:
+      requirements = (f'\nHere are the requirements for the function.\n'
+                      f'{function_requirements}\n')
+      self._prompt.append(requirements)
+    return self._prompt
+
+
+class FunctionAnalyzerTemplateBuilder(DefaultTemplateBuilder):
+  """Builder for function analyzer."""
+
+  def __init__(self,
+               model: models.LLM,
+               benchmark: Benchmark,
+               template_dir: str = DEFAULT_TEMPLATE_DIR,
+               initial: Any = None):
+    super().__init__(model, benchmark, template_dir, initial)
+
+    # Load templates.
+    self.function_analyzer_instruction_file = self._find_template(
+        AGENT_TEMPLATE_DIR, 'function-analyzer-instruction.txt')
+    self.function_analyzer_description_file = self._find_template(
+        AGENT_TEMPLATE_DIR, 'function-analyzer-description.txt')
+    self.function_analyzer_prompt_template_file = self._find_template(
+        AGENT_TEMPLATE_DIR, 'function-analyzer-priming.txt')
+
+  def get_instruction(self) -> prompts.Prompt:
+    """Constructs a prompt using the templates in |self| and saves it."""
+
+    self._prompt = self._model.prompt_type()(None)
+    if not self.benchmark:
+      return self._prompt
+
+    prompt = self._get_template(self.function_analyzer_instruction_file)
+
+    self._prompt.append(prompt)
+
+    return self._prompt
+
+  def get_description(self) -> prompts.Prompt:
+    """Constructs a prompt using the templates in |self| and saves it."""
+
+    self._prompt = self._model.prompt_type()(None)
+    if not self.benchmark:
+      return self._prompt
+
+    prompt = self._get_template(self.function_analyzer_description_file)
+
+    self._prompt.append(prompt)
+
+    return self._prompt
+
+  def build_prompt(self) -> prompts.Prompt:
+    """Constructs a prompt using the templates in |self| and saves it."""
+
+    if not self.benchmark:
+      logger.error(
+          'No benchmark provided for function analyzer template builder.')
+      return self._prompt
+
+    prompt = self._get_template(self.function_analyzer_prompt_template_file)
+
+    prompt = prompt.replace('{PROJECT_NAME}', self.benchmark.project)
+    prompt = prompt.replace('{FUNCTION_SIGNATURE}',
+                            self.benchmark.function_signature)
+
+    # Get the function source
+    func_source = introspector.query_introspector_function_source(
+        self.benchmark.project, self.benchmark.function_signature)
+
+    if not func_source:
+      logger.error('No function source found for project: %s, function: %s',
+                   self.benchmark.project, self.benchmark.function_signature)
+
+    prompt = prompt.replace('{FUNCTION_SOURCE}', func_source)
+
+    # Get the function's references
+    xrefs = introspector.query_introspector_cross_references(
+        self.benchmark.project, self.benchmark.function_signature)
+    if not xrefs:
+      logger.error('No cross references found for project: %s, function: %s',
+                   self.benchmark.project, self.benchmark.function_signature)
+      prompt = prompt.replace('<function-references>', '')\
+                      .replace('{FUNCTION_REFERENCES}', '')\
+                        .replace('</function-references>', '')
+    else:
+      references = [f'<reference>\n{xref}\n</reference>' for xref in xrefs]
+      references_str = '\n'.join(references)
+      prompt = prompt.replace('{FUNCTION_REFERENCES}', references_str)
+
+    self._prompt.append(prompt)
+
+    return self._prompt
+
+  def build(self,
+            example_pair: Optional[list[list[str]]] = None,
+            project_example_content: Optional[list[list[str]]] = None,
+            project_context_content: Optional[dict] = None,
+            tool_guides: str = '',
+            project_dir: str = '',
+            project_name: str = '',
+            function_signature: str = '') -> prompts.Prompt:
+
+    raise NotImplementedError(
+        'FunctionAnalyzerTemplateBuilder.build() should not be called. '
+        'Use build_prompt() instead.')
+
+
+class CrashAnalyzerTemplateBuilder(DefaultTemplateBuilder):
+  """Builder for C/C++."""
+
+  def __init__(self,
+               model: models.LLM,
+               benchmark: Optional[Benchmark] = None,
+               template_dir: str = DEFAULT_TEMPLATE_DIR,
+               initial: Any = None):
+    super().__init__(model, benchmark, template_dir, initial)
+    self.agent_templare_dir = AGENT_TEMPLATE_DIR
+
+    self.crash_analyzer_priming_template_file = self._find_template(
+        self.agent_templare_dir, 'crash_analyzer-priming.txt')
+
+  def _prepare_prompt(
+      self,
+      priming: str,
+      final_problem: str,
+      example_pair: Optional[list[list[str]]] = None,
+      project_example_content: Optional[list[list[str]]] = None):
+    """Constructs a prompt using the parameters and saves it."""
+    self._prompt.add_priming(priming)
+
+  def build_crash_analyzer_prompt(self, benchmark: Benchmark, driver_code: str,
+                                  crash_info: str,
+                                  crash_func: dict) -> prompts.Prompt:
+    """Prepares the crash analyzer prompt."""
+    all_func_code = []
+    for func_name, line_number in crash_func.items():
+      if func_name == 'LLVMFuzzerTestOneInput':
+        driver_code = self._slice_driver_code(benchmark.project, driver_code,
+                                              line_number)
+      else:
+        func_code = self._slice_func_code(benchmark.project, func_name,
+                                          line_number)
+        all_func_code.append(func_code)
+
+    with open(self.crash_analyzer_priming_template_file) as f:
+      priming = f.read().strip()
+    priming = priming.replace('{CRASH_REPORT}', crash_info.strip())\
+                     .replace('{DRIVER_CODE}', driver_code.strip())
+
+    priming_prompt = self._prompt.create_prompt_piece(priming, 'user')
+    template_piece = self._prompt.create_prompt_piece('{PROJECT_FUNCTION_CODE}',
+                                                      'user')
+
+    priming_weight = self._model.estimate_token_num(priming_prompt)
+    template_weight = self._model.estimate_token_num(template_piece)
+
+    prompt_size = priming_weight - template_weight
+    # Add extra 20-tokens redundancy
+    prompt_size += 20
+
+    # Add function code one by one until we reach the maximum prompt size
+    selected_func_code = []
+    for func_code in all_func_code:
+      func_code_prompt = self._prompt.create_prompt_piece(func_code, 'user')
+      func_code_token_num = self._model.estimate_token_num(func_code_prompt)
+      if prompt_size + func_code_token_num >= self._model.context_window:
+        # The estimation is inaccurate, if an example's size equals to
+        # the limit, it's safer to not include the example.
+        logger.warning('Breaking because adding this function code \
+              would exceed context window')
+        break
+      prompt_size += func_code_token_num
+      selected_func_code.append(func_code)
+
+    project_function_code = '\n'.join(selected_func_code)
+    if project_function_code.strip():
+      priming.replace('{PROJECT_FUNCTION_CODE}', project_function_code.strip())
+    else:
+      logger.warning(
+          'Empty project function code in triage prompt for project: %s, \
+          function name: %s', benchmark.project, benchmark.function_name)
+      priming.replace('{PROJECT_FUNCTION_CODE}', \
+                           'No relevant project function code')
+
+    self._prepare_prompt(priming, '')
     return self._prompt
 
 
@@ -1105,8 +1381,8 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
     self_source, cross_source = self._format_source_reference(signature)
     problem = problem.replace('{SELF_SOURCE}', self_source)
     problem = problem.replace('{CROSS_SOURCE}', cross_source)
-    problem = problem.replace("{PROJECT_NAME}", self.benchmark.project)
-    problem = problem.replace("{PROJECT_URL}", self.project_url)
+    problem = problem.replace('{PROJECT_NAME}', self.benchmark.project)
+    problem = problem.replace('{PROJECT_URL}', self.project_url)
     problem = problem.replace('{DATA_MAPPING}', self._format_data_filler())
 
     if is_constructor:

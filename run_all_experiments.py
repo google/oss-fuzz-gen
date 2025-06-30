@@ -49,10 +49,7 @@ NUM_SAMPLES: int = run_one_experiment.NUM_SAMPLES
 RUN_TIMEOUT: int = run_one_experiment.RUN_TIMEOUT
 TEMPERATURE: float = run_one_experiment.TEMPERATURE
 
-BENCHMARK_ROOT: str = './benchmark-sets'
-BENCHMARK_DIR: str = f'{BENCHMARK_ROOT}/comparison'
 RESULTS_DIR: str = run_one_experiment.RESULTS_DIR
-GENERATED_BENCHMARK: str = 'generated-benchmark-'
 JSON_REPORT = 'report.json'
 TIME_STAMP_FMT = '%Y-%m-%d %H:%M:%S'
 
@@ -72,28 +69,10 @@ class Result:
     self.result = result
 
 
-def get_next_generated_benchmarks_dir() -> str:
-  """Retuns the next folder to be used for generated benchmarks."""
-  max_idx = -1
-  # When generating benchmarks dynamically sometimes we may not have a
-  # benchmark folder, as the command will be run from an arbitrary directory.
-  # Create the benchmark folder if this is the case.
-  if not os.path.isdir(BENCHMARK_ROOT):
-    os.makedirs(BENCHMARK_ROOT)
-  for benchmark_folder in os.listdir(BENCHMARK_ROOT):
-    try:
-      max_idx = max(max_idx,
-                    int(benchmark_folder.replace(GENERATED_BENCHMARK, '')))
-    except (ValueError, TypeError) as _:
-      pass
-  max_idx += 1
-  return os.path.join(BENCHMARK_ROOT, f'{GENERATED_BENCHMARK}{max_idx}')
-
-
 def generate_benchmarks(args: argparse.Namespace) -> None:
   """Generates benchmarks, write to filesystem and set args benchmark dir."""
   logger.info('Generating benchmarks.')
-  benchmark_dir = get_next_generated_benchmarks_dir()
+  benchmark_dir = introspector.get_next_generated_benchmarks_dir()
   logger.info('Setting benchmark directory to %s.', benchmark_dir)
   os.makedirs(benchmark_dir)
   args.benchmarks_directory = benchmark_dir
@@ -272,6 +251,7 @@ def parse_args() -> argparse.Namespace:
                       action='store_true',
                       default=False,
                       help='Enables agent enhancement.')
+  parser.add_argument('--custom-pipeline', type=str, default='')
   parser.add_argument('-mr',
                       '--max-round',
                       type=int,

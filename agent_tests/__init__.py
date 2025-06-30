@@ -11,9 +11,3 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""A tool for LLM agents to interact within a LLDB."""
-from tool.base_tool import BaseTool
-
-
-class LLDBTool(BaseTool):
-  pass

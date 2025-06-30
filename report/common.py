@@ -485,14 +485,29 @@ class Results:
                          benchmarks: list[Benchmark]) -> AccumulatedResult:
     """Returns macro insights from the aggregated benchmark results."""
     accumulated_results = AccumulatedResult()
-    for benchmark in benchmarks:
-      accumulated_results.compiles += int(
-          benchmark.result.build_success_rate > 0.0)
-      accumulated_results.crashes += int(benchmark.result.found_bug > 0)
-      accumulated_results.total_coverage += benchmark.result.max_coverage
-      accumulated_results.total_runs += 1
-      accumulated_results.total_line_coverage_diff += (
-          benchmark.result.max_line_coverage_diff)
+    if len(benchmarks) == 1:
+      benchmark = benchmarks[0]
+      results, targets = self.get_results(benchmark.id)
+      samples = self.get_samples(results, targets)
+
+      for sample in samples:
+        if sample.result and sample.result.finished:
+          accumulated_results.compiles += int(sample.result.compiles)
+          accumulated_results.crashes += int(sample.result.crashes)
+          accumulated_results.crash_cases += int(sample.result.crashes)
+          accumulated_results.total_coverage += sample.result.coverage
+          accumulated_results.total_runs += 1
+          accumulated_results.total_line_coverage_diff += (
+              sample.result.line_coverage_diff)
+    else:
+      for benchmark in benchmarks:
+        accumulated_results.compiles += int(
+            benchmark.result.build_success_rate > 0.0)
+        accumulated_results.crashes += int(benchmark.result.found_bug > 0)
+        accumulated_results.total_coverage += benchmark.result.max_coverage
+        accumulated_results.total_runs += 1
+        accumulated_results.total_line_coverage_diff += (
+            benchmark.result.max_line_coverage_diff)
     return accumulated_results
 
   def get_coverage_language_gains(self):
@@ -533,17 +548,18 @@ class Results:
     if coverage_dict:
       for project in project_summary_list:
         if project.name in coverage_dict:
-          project.coverage_gain = coverage_dict[project.name]['coverage_diff']
-          project.coverage_relative_gain = coverage_dict[
-              project.name]['coverage_relative_gain']
+          project.coverage_gain = coverage_dict[project.name].get(
+              'coverage_diff', 0.0)
+          project.coverage_relative_gain = coverage_dict[project.name].get(
+              'coverage_relative_gain', 0.0)
           project.coverage_ofg_total_new_covered_lines = coverage_dict[
-              project.name]['coverage_ofg_total_new_covered_lines']
+              project.name].get('coverage_ofg_total_new_covered_lines', 0)
           project.coverage_existing_total_covered_lines = coverage_dict[
-              project.name]['coverage_existing_total_covered_lines']
+              project.name].get('coverage_existing_total_covered_lines', 0)
           project.coverage_existing_total_lines = coverage_dict[
-              project.name]['coverage_existing_total_lines']
+              project.name].get('coverage_existing_total_lines', 0)
           project.coverage_ofg_total_covered_lines = coverage_dict[
-              project.name]['coverage_ofg_total_covered_lines']
+              project.name].get('coverage_ofg_total_covered_lines', 0)
 
     return project_summary_list
 
@@ -645,7 +661,7 @@ class Results:
     function = benchmark_id.split('-')[-1]
     signature = self._find_benchmark_signature(project,
                                                function) or benchmark_id
-    language = self._find_benchmark_language(project, function)
+    language = self._find_benchmark_language(project)
     return Benchmark(benchmark_id, status, result, signature, project, function,
                      language)
 
@@ -679,7 +695,7 @@ class Results:
 
     return matched_prefix_signature
 
-  def _find_benchmark_language(self, project: str, target_function: str) -> str:
+  def _find_benchmark_language(self, project: str) -> str:
     """Finds the programming language of the benchmark."""
     if not self._benchmark_dir:
       return ''

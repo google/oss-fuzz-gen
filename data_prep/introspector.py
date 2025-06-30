@@ -40,6 +40,10 @@ T = TypeVar('T', str, list, dict, int)  # Generic type.
 TIMEOUT = 45
 MAX_RETRY = 5
 
+BENCHMARK_ROOT: str = './benchmark-sets'
+BENCHMARK_DIR: str = f'{BENCHMARK_ROOT}/comparison'
+GENERATED_BENCHMARK: str = 'generated-benchmark-'
+
 USE_FI_TO_GET_TARGETS = bool(int(os.getenv('OSS_FI_TO_GET_TARGETS', '1')))
 
 # By default exclude static functions when identifying fuzz target candidates
@@ -60,17 +64,21 @@ INTROSPECTOR_ORACLE_EASY_PARAMS = ''
 INTROSPECTOR_ORACLE_ALL_PUBLIC_CANDIDATES = ''
 INTROSPECTOR_ORACLE_OPTIMAL = ''
 INTROSPECTOR_ORACLE_ALL_TESTS = ''
+INTROSPECTOR_ORACLE_ALL_TESTS_XREF = ''
 INTROSPECTOR_FUNCTION_SOURCE = ''
 INTROSPECTOR_PROJECT_SOURCE = ''
 INTROSPECTOR_XREF = ''
-INTROSPECTOR_TYPE = ''
 INTROSPECTOR_FUNC_SIG = ''
 INTROSPECTOR_ADDR_TYPE = ''
 INTROSPECTOR_ALL_HEADER_FILES = ''
 INTROSPECTOR_ALL_FUNC_TYPES = ''
+INTROSPECTOR_ALL_TYPE_DEFINITION = ''
 INTROSPECTOR_TEST_SOURCE = ''
 INTROSPECTOR_HARNESS_SOURCE_AND_EXEC = ''
 INTROSPECTOR_LANGUAGE_STATS = ''
+INTROSPECTOR_GET_TARGET_FUNCTION = ''
+INTROSPECTOR_CHECK_MACRO = ''
+INTROSPECTOR_ALL_FUNCTIONS = ''
 
 INTROSPECTOR_HEADERS_FOR_FUNC = ''
 INTROSPECTOR_SAMPLE_XREFS = ''
@@ -84,7 +92,7 @@ def get_oracle_dict() -> Dict[str, Any]:
   """Returns the oracles available to identify targets."""
   # Do this in a function to allow for forward-declaration of functions below.
   oracle_dict = {
-      'far-reach-low-coverage': get_unreached_functions,
+      'far-reach-low-coverage': query_introspector_for_far_reach_low_cov,
       'low-cov-with-fuzz-keyword': query_introspector_for_keyword_targets,
       'easy-params-far-reach': query_introspector_for_easy_param_targets,
       'optimal-targets': query_introspector_for_optimal_targets,
@@ -98,7 +106,7 @@ def set_introspector_endpoints(endpoint):
   """Sets URLs for Fuzz Introspector endpoints to local or remote endpoints."""
   global INTROSPECTOR_ENDPOINT, INTROSPECTOR_CFG, INTROSPECTOR_FUNC_SIG, \
       INTROSPECTOR_FUNCTION_SOURCE, INTROSPECTOR_PROJECT_SOURCE, \
-      INTROSPECTOR_XREF, INTROSPECTOR_TYPE, INTROSPECTOR_ORACLE_FAR_REACH, \
+      INTROSPECTOR_XREF, INTROSPECTOR_ORACLE_FAR_REACH, \
       INTROSPECTOR_ORACLE_KEYWORD, INTROSPECTOR_ADDR_TYPE, \
       INTROSPECTOR_ALL_HEADER_FILES, INTROSPECTOR_ALL_FUNC_TYPES, \
       INTROSPECTOR_SAMPLE_XREFS, INTROSPECTOR_ORACLE_EASY_PARAMS, \
@@ -108,7 +116,10 @@ def set_introspector_endpoints(endpoint):
       INTROSPECTOR_FUNCTION_WITH_MATCHING_RETURN_TYPE, \
       INTROSPECTOR_ORACLE_ALL_TESTS, INTROSPECTOR_JVM_PROPERTIES, \
       INTROSPECTOR_TEST_SOURCE, INTROSPECTOR_HARNESS_SOURCE_AND_EXEC, \
-      INTROSPECTOR_JVM_PUBLIC_CLASSES, INTROSPECTOR_LANGUAGE_STATS
+      INTROSPECTOR_JVM_PUBLIC_CLASSES, INTROSPECTOR_LANGUAGE_STATS, \
+      INTROSPECTOR_GET_TARGET_FUNCTION, INTROSPECTOR_ALL_TYPE_DEFINITION, \
+      INTROSPECTOR_CHECK_MACRO, INTROSPECTOR_ORACLE_ALL_TESTS_XREF, \
+      INTROSPECTOR_ALL_FUNCTIONS
 
   INTROSPECTOR_ENDPOINT = endpoint
 
@@ -126,12 +137,13 @@ def set_introspector_endpoints(endpoint):
   INTROSPECTOR_PROJECT_SOURCE = f'{INTROSPECTOR_ENDPOINT}/project-source-code'
   INTROSPECTOR_TEST_SOURCE = f'{INTROSPECTOR_ENDPOINT}/project-test-code'
   INTROSPECTOR_XREF = f'{INTROSPECTOR_ENDPOINT}/all-cross-references'
-  INTROSPECTOR_TYPE = f'{INTROSPECTOR_ENDPOINT}/type-info'
   INTROSPECTOR_FUNC_SIG = f'{INTROSPECTOR_ENDPOINT}/function-signature'
   INTROSPECTOR_ADDR_TYPE = (
       f'{INTROSPECTOR_ENDPOINT}/addr-to-recursive-dwarf-info')
   INTROSPECTOR_ALL_HEADER_FILES = f'{INTROSPECTOR_ENDPOINT}/all-header-files'
   INTROSPECTOR_ALL_FUNC_TYPES = f'{INTROSPECTOR_ENDPOINT}/func-debug-types'
+  INTROSPECTOR_ALL_TYPE_DEFINITION = (
+      f'{INTROSPECTOR_ENDPOINT}/full-type-definition')
   INTROSPECTOR_HEADERS_FOR_FUNC = (
       f'{INTROSPECTOR_ENDPOINT}/get-header-files-needed-for-function')
   INTROSPECTOR_SAMPLE_XREFS = (
@@ -141,6 +153,8 @@ def set_introspector_endpoints(endpoint):
   INTROSPECTOR_FUNCTION_WITH_MATCHING_RETURN_TYPE = (
       f'{INTROSPECTOR_ENDPOINT}/function-with-matching-return-type')
   INTROSPECTOR_ORACLE_ALL_TESTS = f'{INTROSPECTOR_ENDPOINT}/project-tests'
+  INTROSPECTOR_ORACLE_ALL_TESTS_XREF = (
+      f'{INTROSPECTOR_ENDPOINT}/project-tests-for-functions')
   INTROSPECTOR_JVM_PROPERTIES = f'{INTROSPECTOR_ENDPOINT}/jvm-method-properties'
   INTROSPECTOR_HARNESS_SOURCE_AND_EXEC = (
       f'{INTROSPECTOR_ENDPOINT}/harness-source-and-executable')
@@ -148,6 +162,11 @@ def set_introspector_endpoints(endpoint):
       f'{INTROSPECTOR_ENDPOINT}/all-public-classes')
   INTROSPECTOR_LANGUAGE_STATS = (
       f'{INTROSPECTOR_ENDPOINT}/database-language-stats')
+  INTROSPECTOR_GET_TARGET_FUNCTION = (
+      f'{INTROSPECTOR_ENDPOINT}/get-target-function')
+  INTROSPECTOR_GET_ALL_FUNCTIONS = f'{INTROSPECTOR_ENDPOINT}/all-functions'
+  INTROSPECTOR_CHECK_MACRO = f'{INTROSPECTOR_ENDPOINT}/check_macro'
+  INTROSPECTOR_ALL_FUNCTIONS = f'{INTROSPECTOR_ENDPOINT}/all-functions'
 
 
 def _construct_url(api: str, params: dict) -> str:
@@ -158,6 +177,8 @@ def _construct_url(api: str, params: dict) -> str:
 def _query_introspector(api: str, params: dict) -> Optional[requests.Response]:
   """Queries FuzzIntrospector API and returns the json payload,
   returns an empty dict if unable to get data."""
+
+  logger.info('Querying FuzzIntrospector API: %s\n', api)
   for attempt_num in range(1, MAX_RETRY + 1):
     try:
       resp = requests.get(api, params, timeout=TIMEOUT)
@@ -232,6 +253,110 @@ def query_introspector_for_tests(project: str) -> list[str]:
   return _get_data(resp, 'test-file-list', [])
 
 
+def query_introspector_for_tests_xref(
+    project: str, functions: Optional[list[str]]) -> dict[str, list[Any]]:
+  """Gets the list of functions and xref test files in the target project."""
+  data = {'project': project}
+  if functions:
+    demangled = [demangle(function).split('(')[0] for function in functions]
+    data['functions'] = ','.join(demangled)
+
+  resp = _query_introspector(INTROSPECTOR_ORACLE_ALL_TESTS_XREF, data)
+
+  details = _get_data(resp, 'details', False)
+  test_files = _get_data(resp, 'test-files-xref', {})
+
+  handled = set()
+  result_list = []
+  detail_list = []
+  key_list = test_files.keys()
+  for test_paths in test_files.values():
+    # Only dump the details from the test source files
+    # which are related to the target function calls
+    if details and isinstance(test_paths, dict):
+      for test_path, calls in test_paths.items():
+        source_code = query_introspector_test_source(project, test_path)
+        lines = source_code.splitlines()
+
+        # Include details of function calls in test files
+        for call in calls:
+          result_lines = []
+          start = call.get('call_start', -1)
+          end = call.get('call_end', -1)
+          params = call.get('params')
+
+          # Skip invalid data
+          if start <= 0 or end <= 0 or params is None:
+            continue
+
+          call_lines = lines[start - 1:end]
+
+          param_list = []
+          for param in params:
+            param_dict = {}
+
+            decl = param.get('decl_line', -1)
+            start = param.get('init_start', -1)
+            end = param.get('init_end', -1)
+            func = param.get('init_func')
+
+            # Skip invalid data
+            if decl <= 0 or decl >= len(lines):
+              continue
+
+            result_lines.append(lines[decl - 1])
+            if func and start > 0 and end > 0:
+              result_lines.extend(lines[start - 1:end])
+
+          result_lines.extend(call_lines)
+
+          detail_list.append(result_lines)
+
+      continue
+
+    # Plain dump of test source files with limited number
+    # of result lines if details not found
+    for test_path in test_paths:
+      if len(result_list) > 100:
+        break
+
+      if test_path in handled:
+        continue
+
+      handled.add(test_path)
+      source_code = query_introspector_test_source(project, test_path)
+      lines = source_code.splitlines()
+
+      # Retrieve needed line range in the source file
+      target_lines = list()
+      for idx, line in enumerate(lines):
+        if any(func.split('::')[-1] in line for func in key_list):
+          target_lines.append((max(0, idx - 20), min(len(lines), idx + 20)))
+
+      # Fail safe
+      if not target_lines:
+        continue
+
+      # Merging line range
+      ranges = [target_lines[0]]
+      for start, end in target_lines[1:]:
+        last_start, last_end = ranges[-1]
+        if start <= last_end + 1:
+          # Merge range
+          ranges[-1] = (last_start, max(last_end, end))
+        else:
+          ranges.append((start, end))
+
+      # Extract source code lines in needed range
+      for start, end in ranges:
+        result_list.extend(lines[start:end])
+
+  result_dict = {}
+  result_dict['source'] = result_list
+  result_dict['details'] = detail_list
+  return result_dict
+
+
 def query_introspector_for_harness_intrinsics(
     project: str) -> list[dict[str, str]]:
   """Gets the list of test files in the target project."""
@@ -239,6 +364,23 @@ def query_introspector_for_harness_intrinsics(
       'project': project,
   })
   return _get_data(resp, 'pairs', [])
+
+
+def query_introspector_all_functions(project: str) -> list[dict]:
+  """Queries FuzzIntrospector API for all functions in a project."""
+  resp = _query_introspector(INTROSPECTOR_ALL_FUNCTIONS, {
+      'project': project,
+  })
+  return _get_data(resp, 'functions', [])
+
+
+def query_introspector_all_signatures(project: str) -> list[str]:
+  """Queries FuzzIntrospector API for all functions in a project."""
+  functions: list[dict] = query_introspector_all_functions(project)
+  new_funcs = []
+  for func in functions:
+    new_funcs.append(func['function_signature'])
+  return new_funcs
 
 
 def query_introspector_oracle(project: str, oracle_api: str) -> list[dict]:
@@ -442,6 +584,33 @@ def query_introspector_function_debug_arg_types(project: str,
   return arg_types
 
 
+def query_introspector_type_definition(project: str) -> List[dict]:
+  """Queries FuzzIntrospector for a full list of custom type definition
+  including, union, struct, typedef, enum and macro definition."""
+  resp = _query_introspector(INTROSPECTOR_ALL_TYPE_DEFINITION, {
+      'project': project,
+  })
+  result = _get_data(resp, 'project', {})
+  return result.get('typedef_list', [])
+
+
+def query_introspector_macro_block(project: str,
+                                   source_path: str,
+                                   line_start: int = 0,
+                                   line_end: int = 99999) -> List[dict]:
+  """Queries FuzzIntrospector for a full list of custom type definition
+  including, union, struct, typedef, enum and macro definition."""
+  resp = _query_introspector(
+      INTROSPECTOR_CHECK_MACRO, {
+          'project': project,
+          'source': source_path,
+          'start': line_start,
+          'end': line_end
+      })
+  result = _get_data(resp, 'project', {})
+  return result.get('macro_block_info', [])
+
+
 def query_introspector_cross_references(project: str,
                                         func_sig: str) -> list[str]:
   """Queries FuzzIntrospector API for source code of functions
@@ -468,15 +637,6 @@ def query_introspector_language_stats() -> dict:
   return _get_data(resp, 'stats', {})
 
 
-def query_introspector_type_info(project: str, type_name: str) -> list[dict]:
-  """Queries FuzzIntrospector API for information of |type_name|."""
-  resp = _query_introspector(INTROSPECTOR_TYPE, {
-      'project': project,
-      'type_name': type_name
-  })
-  return _get_data(resp, 'type_data', [])
-
-
 def query_introspector_function_signature(project: str,
                                           function_name: str) -> str:
   """Queries FuzzIntrospector API for signature of |function_name|."""
@@ -498,9 +658,35 @@ def query_introspector_addr_type_info(project: str, addr: str) -> str:
   return _get_data(resp, 'dwarf-map', '')
 
 
-def get_unreached_functions(project):
+def get_next_generated_benchmarks_dir() -> str:
+  """Retuns the next folder to be used for generated benchmarks."""
+  max_idx = -1
+  # When generating benchmarks dynamically sometimes we may not have a
+  # benchmark folder, as the command will be run from an arbitrary directory.
+  # Create the benchmark folder if this is the case.
+  if not os.path.isdir(BENCHMARK_ROOT):
+    os.makedirs(BENCHMARK_ROOT)
+  for benchmark_folder in os.listdir(BENCHMARK_ROOT):
+    try:
+      max_idx = max(max_idx,
+                    int(benchmark_folder.replace(GENERATED_BENCHMARK, '')))
+    except (ValueError, TypeError) as _:
+      pass
+  max_idx += 1
+  return os.path.join(BENCHMARK_ROOT, f'{GENERATED_BENCHMARK}{max_idx}')
+
+
+def query_introspector_target_function(project: str, function: str) -> dict:
+  resp = _query_introspector(INTROSPECTOR_GET_TARGET_FUNCTION, {
+      'project': project,
+      'function': function
+  })
+
+  return _get_data(resp, 'function', {})
+
+
+def query_introspector_for_far_reach_low_cov(project):
   functions = query_introspector_oracle(project, INTROSPECTOR_ORACLE_FAR_REACH)
-  functions = [f for f in functions if not f['reached_by_fuzzers']]
   return functions
 
 
@@ -796,6 +982,37 @@ def populate_benchmarks_using_test_migration(
                                preferred_target_name=target_name,
                                test_file_path=test_file))
   return potential_benchmarks[:limit]
+
+
+def generate_benchmark_for_targeted_function(project: str, function_name: str):
+  """generates a benchmark for a single function."""
+  function_dict = query_introspector_target_function(project, function_name)
+  project_lang = oss_fuzz_checkout.get_project_language(project)
+
+  harness, target_name, _ = _get_harness_intrinsics(project, [], project_lang)
+  if not harness:
+    return ''
+  target_benchmarks = [
+      benchmarklib.Benchmark(
+          benchmark_id='cli',
+          project=project,
+          language=project_lang,
+          function_signature=function_dict.get('function_signature', ''),
+          function_name=get_raw_function_name(function_dict, project),
+          return_type=_get_clean_return_type(function_dict, project),
+          params=_group_function_params(
+              _get_clean_arg_types(function_dict, project),
+              _get_arg_names(function_dict, project, project_lang),
+              project_lang),
+          target_path=harness,
+          preferred_target_name=target_name,
+          function_dict=function_dict)
+  ]
+
+  benchmark_dir = get_next_generated_benchmarks_dir()
+  os.makedirs(benchmark_dir)
+  benchmarklib.Benchmark.to_yaml(target_benchmarks, outdir=benchmark_dir)
+  return benchmark_dir
 
 
 def populate_benchmarks_using_introspector(project: str, language: str,
