@@ -15,16 +15,27 @@
 import csv
 import logging
 import os
+from abc import abstractmethod
 
 from report.common import Results
 
-
-class CSVReport:
-  """Export a report to CSV."""
+class BaseExporter:
+  """Base class for exporters."""
 
   def __init__(self, results: Results, output_dir: str):
     self._results = results
     self._output_dir = output_dir
+
+  @abstractmethod
+  def generate(self):
+    """Generate a report."""
+    pass
+
+class CSVExporter(BaseExporter):
+  """Export a report to CSV."""
+
+  def __init__(self, results: Results, output_dir: str):
+    super().__init__(results, output_dir)
 
   def generate(self):
     """Generate a CSV file with the results."""
@@ -32,7 +43,7 @@ class CSVReport:
     os.makedirs(os.path.dirname(csv_path), exist_ok=True)
 
     with open(csv_path, 'w', newline='') as csvfile:
-      fieldnames = ["Benchmark", "Sample", "Status", "Compiles", "Crashes"]
+      fieldnames = ["Project", "Benchmark", "Sample", "Status", "Compiles", "Crashes"]
 
       writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
       writer.writeheader()
@@ -44,9 +55,11 @@ class CSVReport:
                                                   targets)
         benchmarks.append(benchmark)
         samples = self._results.get_samples(results, targets)
+        project = benchmark_id.split("-")[1]
 
         for sample in samples:
           writer.writerow({
+              "Project": project,
               "Benchmark": benchmark_id,
               "Sample": sample.id,
               "Status": sample.status,
@@ -62,12 +75,11 @@ class CSVReport:
     return os.path.join(self._output_dir, 'crashes.csv')
 
 
-class GoogleSheetsReporter:
+class GoogleSheetsExporter(BaseExporter):
   """Export a report to Google Sheets."""
 
   def __init__(self, results: Results, output_dir: str):
-    self._results = results
-    self._output_dir = output_dir
+    super().__init__(results, output_dir)
 
 
 #   def generate(self):
