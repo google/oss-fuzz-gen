@@ -31,7 +31,7 @@ import jinja2
 
 from report.common import (AccumulatedResult, Benchmark, FileSystem, Project,
                            Results, Sample, Target)
-from report.export import CSVReport
+from report.export import CSVExporter, determine_base_url
 from report.parse_run_log import RunLogsParser
 
 LOCAL_HOST = '127.0.0.1'
@@ -527,7 +527,10 @@ def generate_report(args: argparse.Namespace) -> None:
   }
   # WIP: writing to a CSV file
   if args.with_csv:
-    csv_reporter = CSVReport(results=results, output_dir=args.output_dir)
+    base_url = determine_base_url(args.results_dir, getattr(args, 'port', 8012))
+    csv_reporter = CSVExporter(results=results,
+                               output_dir=args.output_dir,
+                               base_url=base_url)
     csv_reporter.generate()
     # Temporarily commented out because locally this is just a relative path
     # template_globals['csv_url_path'] = csv_reporter.get_url_path()
