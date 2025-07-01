@@ -20,6 +20,15 @@ from abc import abstractmethod
 from report.common import Results
 from report.parse_run_log import RunLogsParser
 
+
+def determine_base_url(results_dir: str, port: int = 8012) -> str:
+  """Determine the base URL based on the environment."""
+  if 'gcb-experiment' in results_dir:
+    path = results_dir.removeprefix('gs://oss-fuzz-gcb-experiment-run-logs/')
+    return f'https://llm-exp.oss-fuzz.com/{path}'
+  return f'http://127.0.0.1:{port}'
+
+
 class BaseExporter:
   """Base class for exporters."""
 
@@ -49,9 +58,6 @@ class BaseExporter:
 class CSVExporter(BaseExporter):
   """Export a report to CSV."""
 
-  def __init__(self, results: Results, output_dir: str):
-    super().__init__(results, output_dir)
-
   def generate(self):
     """Generate a CSV file with the results."""
     csv_path = os.path.join(self._output_dir, 'crashes.csv')
@@ -68,7 +74,8 @@ class CSVExporter(BaseExporter):
                                                   targets)
         benchmarks.append(benchmark)
         samples = self._results.get_samples(results, targets)
-        project = benchmark_id.split("-")[1]
+
+        project_name = benchmark_id.split("-")[1]
 
         project_name = benchmark_id.split("-")[1]
 
