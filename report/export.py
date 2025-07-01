@@ -20,7 +20,6 @@ from abc import abstractmethod
 from report.common import Results
 from report.parse_run_log import RunLogsParser
 
-
 class BaseExporter:
   """Base class for exporters."""
 
@@ -47,9 +46,11 @@ class BaseExporter:
     """Get the URL path to the CSV file."""
     return os.path.join(self._output_dir, 'crashes.csv')
 
-
 class CSVExporter(BaseExporter):
   """Export a report to CSV."""
+
+  def __init__(self, results: Results, output_dir: str):
+    super().__init__(results, output_dir)
 
   def generate(self):
     """Generate a CSV file with the results."""
@@ -67,6 +68,7 @@ class CSVExporter(BaseExporter):
                                                   targets)
         benchmarks.append(benchmark)
         samples = self._results.get_samples(results, targets)
+        project = benchmark_id.split("-")[1]
 
         project_name = benchmark_id.split("-")[1]
 
