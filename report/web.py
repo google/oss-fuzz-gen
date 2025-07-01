@@ -31,11 +31,7 @@ import jinja2
 
 from report.common import (AccumulatedResult, Benchmark, FileSystem, Project,
                            Results, Sample, Target)
-<<<<<<< HEAD
 from report.export import CSVExporter
-=======
-from report.export import CSVExporter, determine_base_url
->>>>>>> 2be682a (Expand the header columns)
 from report.parse_run_log import RunLogsParser
 
 LOCAL_HOST = '127.0.0.1'
@@ -517,10 +513,12 @@ class GenerateReport:
     crash_details = parser.get_crash_details()
     crash_symptom = parser.get_crash_symptom()
     stack_traces = parser.get_formatted_stack_traces()
+    execution_stats = parser.get_execution_stats()
     return {
         "crash_details": crash_details,
         "crash_symptom": crash_symptom,
-        "stack_traces": stack_traces
+        "stack_traces": stack_traces,
+        "execution_stats": execution_stats
     }
 
 
@@ -536,11 +534,7 @@ def generate_report(args: argparse.Namespace) -> None:
   }
   # WIP: writing to a CSV file
   if args.with_csv:
-<<<<<<< HEAD
     base_url = args.base_url if args.base_url else "http://127.0.0.1:8012"
-=======
-    base_url = determine_base_url(args.results_dir, getattr(args, 'port', 8012))
->>>>>>> 2be682a (Expand the header columns)
     csv_reporter = CSVExporter(results=results,
                                output_dir=args.output_dir,
                                base_url=base_url)
