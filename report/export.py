@@ -19,7 +19,6 @@ from abc import abstractmethod
 
 from report.common import Results
 
-
 class BaseExporter:
   """Base class for exporters."""
 
@@ -46,6 +45,17 @@ class BaseExporter:
 class CSVExporter(BaseExporter):
   """Export a report to CSV."""
 
+  @abstractmethod
+  def generate(self):
+    """Generate a report."""
+    pass
+
+class CSVExporter(BaseExporter):
+  """Export a report to CSV."""
+
+  def __init__(self, results: Results, output_dir: str):
+    super().__init__(results, output_dir)
+
   def generate(self):
     """Generate a CSV file with the results."""
     csv_path = os.path.join(self._output_dir, 'crashes.csv')
@@ -62,6 +72,7 @@ class CSVExporter(BaseExporter):
                                                   targets)
         benchmarks.append(benchmark)
         samples = self._results.get_samples(results, targets)
+        project = benchmark_id.split("-")[1]
 
         project_name = benchmark_id.split("-")[1]
 
