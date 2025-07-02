@@ -20,14 +20,6 @@ from abc import abstractmethod
 from report.common import Results
 
 
-def determine_base_url(results_dir: str, port: int = 8012) -> str:
-  """Determine the base URL based on the environment."""
-  if 'gcb-experiment' in results_dir:
-    path = results_dir.removeprefix('gs://oss-fuzz-gcb-experiment-run-logs/')
-    return f'https://llm-exp.oss-fuzz.com/{path}'
-  return f'http://127.0.0.1:{port}'
-
-
 class BaseExporter:
   """Base class for exporters."""
 

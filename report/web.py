@@ -31,7 +31,7 @@ import jinja2
 
 from report.common import (AccumulatedResult, Benchmark, FileSystem, Project,
                            Results, Sample, Target)
-from report.export import CSVExporter, determine_base_url
+from report.export import CSVExporter
 from report.parse_run_log import RunLogsParser
 
 LOCAL_HOST = '127.0.0.1'
@@ -527,7 +527,7 @@ def generate_report(args: argparse.Namespace) -> None:
   }
   # WIP: writing to a CSV file
   if args.with_csv:
-    base_url = determine_base_url(args.results_dir, getattr(args, 'port', 8012))
+    base_url = args.base_url if args.base_url else "http://127.0.0.1:8012"
     csv_reporter = CSVExporter(results=results,
                                output_dir=args.output_dir,
                                base_url=base_url)
@@ -597,6 +597,10 @@ def _parse_arguments() -> argparse.Namespace:
                       '-gs',
                       help='Will write to Google Sheets.',
                       action='store_true')
+  parser.add_argument(
+      '--base-url',
+      help='Base URL for the report (used in cloud environments).',
+      default='')
 
   return parser.parse_args()
 
