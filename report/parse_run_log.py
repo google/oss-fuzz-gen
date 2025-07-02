@@ -38,11 +38,19 @@ def get_source_url(coverage_file_path: str) -> str:
 
   project_name = extract_project_from_coverage_path(coverage_file_path)
   if not project_name:
-    return ""
+    # Hardcoding llvm-project paths due to OSS Fuzz not being able to find its project YAML
+    # However, the path to the GitHub repo is still correct, so we can use it
+    if "llvm-project" in coverage_file_path:
+      project_name = "llvm-project"
+    else:
+      return "" 
 
   repo_url = oss_fuzz_checkout.get_project_repository(project_name)
   if not repo_url:
-    return ""
+    if "llvm-project" in coverage_file_path:
+      repo_url = "https://github.com/llvm/llvm-project"
+    else:
+      return ""
   
   relative_path = coverage_file_path.removeprefix(f'/src/{project_name}/')
 
@@ -93,8 +101,6 @@ class RunLogsParser:
         crash_symptom = match.group(1)
         break
 
-    print(self.get_formatted_stack_traces())
-
     return crash_symptom
   
   def get_formatted_stack_traces(self) -> dict[str, dict[str, str]]:
@@ -113,7 +119,6 @@ class RunLogsParser:
         memory_addr = parts[1]
         remaining = parts[2]
         
-        # Extract function name and file path
         in_match = re.search(r'in (.+?) (/[^\s]+)', remaining)
         if not in_match:
           continue
@@ -121,6 +126,9 @@ class RunLogsParser:
         function_name = in_match.group(1)
         path = in_match.group(2)
         if '/src/' in path:
-          stack_traces[frame_num] = {"url": get_source_url(path), "function": function_name, "memory_address": memory_addr}
+          url = get_source_url(path)
+          if url == '':
+            url = path
+          stack_traces[frame_num] = {"url": url, "path": path, "function": function_name, "memory_address": memory_addr}
 
     return stack_traces
