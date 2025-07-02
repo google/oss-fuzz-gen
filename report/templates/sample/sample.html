@@ -83,6 +83,49 @@ limitations under the License.
           {% endif %}
 
           {% if crash_info.crash_details %}
+          {% if crash_info.stack_traces %}
+          <script type="application/json" id="stackTracesData" style="display: none;">{{ crash_info.stack_traces | tojson }}</script>
+          {% endif %}
+          <script>
+            function processStackTraces() {
+              const element = document.getElementById('crashDetailsPreview');
+              if (element && window.AnsiUp) {
+                const ansi_up = new window.AnsiUp();
+                const textContent = element.textContent || element.innerText;
+                let htmlContent = ansi_up.ansi_to_html(textContent);
+                
+                const stackTracesElement = document.getElementById('stackTracesData');
+                
+                htmlContent = htmlContent.replace(/(    )(#\d+)(\s+)(0x[a-fA-F0-9]+)(\s+in\s+)([^\/\s]+)(\s+)(\/[^\s]+)/g, function(match, indent, frameNum, space1, memAddr, inText, funcName, space2, filePath) {
+                  let formattedPath = filePath;
+                  
+                  if (stackTracesElement) {
+                    const stackTraces = JSON.parse(stackTracesElement.textContent);
+                    for (const frameId in stackTraces) {
+                      const frameData = stackTraces[frameId];
+                      if (match.includes(frameData.memory_address) && match.includes(frameData.function) && match.includes(frameData.path)) {
+                        if (frameData.url && frameData.url.includes('/blob/master/')) {
+                          formattedPath = '<a href="' + frameData.url + '" target="_blank" class="text-blue-500 hover:text-blue-700 underline">' + frameData.path + '</a>';
+                        }
+                        break;
+                      }
+                    }
+                  }
+                  
+                  return indent + 
+                         '<span class="text-blue-600 font-semibold">' + frameNum + '</span>' + 
+                         space1 + 
+                         '<span class="text-gray-600 font-semibold">' + memAddr + '</span>' + 
+                         inText + 
+                         '<span class="text-indigo-600">' + funcName + '</span>' + 
+                         space2 + 
+                         formattedPath;
+                });
+                
+                element.innerHTML = htmlContent;
+              }
+            }
+          </script>
           <div x-data="{
             detailsOpen: false,
             ansiProcessed: false,
@@ -90,20 +133,14 @@ limitations under the License.
               this.detailsOpen = !this.detailsOpen;
               if (this.detailsOpen && !this.ansiProcessed) {
                 this.$nextTick(() => {
-                  const element = document.getElementById('crashDetailsPreview');
-                  if (element && window.AnsiUp) {
-                    const ansi_up = new window.AnsiUp();
-                    const textContent = element.textContent || element.innerText;
-                    const htmlContent = ansi_up.ansi_to_html(textContent);
-                    element.innerHTML = htmlContent;
-                    this.ansiProcessed = true;
-                  }
+                  processStackTraces();
+                  this.ansiProcessed = true;
                 });
               }
             }
           }" class="border rounded-lg">
             <button @click="toggleDetails()"
-                    class="w-full p-4 flex justify-between items-center text-left">
+                    class="w-full p-4 flex justify-between items-center">
                 <span class="font-medium">Crash Details</span>
                 <svg class="w-4 h-4 transform transition-transform duration-200"
                      :class="{'rotate-180': detailsOpen}"
@@ -116,6 +153,8 @@ limitations under the License.
             </div>
           </div>
           {% endif %}
+
+          
         </div>
         {% endif %}
 
