@@ -87,43 +87,71 @@ limitations under the License.
           <script type="application/json" id="stackTracesData" style="display: none;">{{ crash_info.stack_traces | tojson }}</script>
           {% endif %}
           <script>
-            function processStackTraces() {
-              const element = document.getElementById('crashDetailsPreview');
+            function processStackTracesForElement(elementId) {
+              const element = document.getElementById(elementId);
               if (element && window.AnsiUp) {
                 const ansi_up = new window.AnsiUp();
                 const textContent = element.textContent || element.innerText;
                 let htmlContent = ansi_up.ansi_to_html(textContent);
-                
+
                 const stackTracesElement = document.getElementById('stackTracesData');
-                
-                htmlContent = htmlContent.replace(/(    )(#\d+)(\s+)(0x[a-fA-F0-9]+)(\s+in\s+)([^\/\s]+)(\s+)(\/[^\s]+)/g, function(match, indent, frameNum, space1, memAddr, inText, funcName, space2, filePath) {
+
+                htmlContent = htmlContent.replace(/(    )(#\d+)(\s+)(0x[a-fA-F0-9]+)(\s+in\s+)(.+?)(\s+)(\/[^\s]+)/g, function(match, indent, frameNum, space1, memAddr, inText, funcName, space2, filePath) {
                   let formattedPath = filePath;
-                  
+
                   if (stackTracesElement) {
                     const stackTraces = JSON.parse(stackTracesElement.textContent);
                     for (const frameId in stackTraces) {
                       const frameData = stackTraces[frameId];
-                      if (match.includes(frameData.memory_address) && match.includes(frameData.function) && match.includes(frameData.path)) {
+
+                      // First try to match by memory address
+                      if (match.includes(frameData.memory_address)) {
                         if (frameData.url && frameData.url.includes('/blob/master/')) {
-                          formattedPath = '<a href="' + frameData.url + '" target="_blank" class="text-blue-500 hover:text-blue-700 underline">' + frameData.path + '</a>';
+                          formattedPath = '<a href="' + frameData.url + '" target="_blank" class="text-blue-500 hover:text-blue-700 underline">' + filePath + '</a>';
+                          break;
                         }
-                        break;
+                      }
+
+                      // Then as fallback, match by function name and similar file path (without line:column)
+                      const filePathBase = filePath.split(':')[0]; // Remove :line:column
+                      const framePathBase = frameData.path.split(':')[0]; // Remove :line:column
+                      if (match.includes(frameData.function) && filePathBase === framePathBase) {
+                        if (frameData.url && frameData.url.includes('/blob/master/')) {
+                          formattedPath = '<a href="' + frameData.url + '" target="_blank" class="text-blue-500 hover:text-blue-700 underline">' + filePath + '</a>';
+                          break;
+                        }
+                      }
+
+                      // As final fallback, match by frame number and function name
+                      if (frameId === frameNum && match.includes(frameData.function)) {
+                        if (frameData.url && frameData.url.includes('/blob/master/')) {
+                          formattedPath = '<a href="' + frameData.url + '" target="_blank" class="text-blue-500 hover:text-blue-700 underline">' + filePath + '</a>';
+                          break;
+                        }
                       }
                     }
                   }
-                  
-                  return indent + 
-                         '<span class="text-blue-600 font-semibold">' + frameNum + '</span>' + 
-                         space1 + 
-                         '<span class="text-gray-600 font-semibold">' + memAddr + '</span>' + 
-                         inText + 
-                         '<span class="text-indigo-600">' + funcName + '</span>' + 
-                         space2 + 
+
+                  return indent +
+                         '<span class="text-blue-600 font-semibold">' + frameNum + '</span>' +
+                         space1 +
+                         '<span class="text-gray-600 font-semibold">' + memAddr + '</span>' +
+                         inText +
+                         '<span class="text-indigo-600">' + funcName + '</span>' +
+                         space2 +
                          formattedPath;
                 });
-                
+
                 element.innerHTML = htmlContent;
               }
+            }
+
+            function processStackTraces() {
+              processStackTracesForElement('crashDetailsPreview');
+            }
+
+            function processRunLogsStackTraces() {
+              processStackTracesForElement('runLogsPreview');
             }
           </script>
           <div x-data="{
@@ -154,7 +182,7 @@ limitations under the License.
           </div>
           {% endif %}
 
-          
+
         </div>
         {% endif %}
 
@@ -178,6 +206,7 @@ limitations under the License.
       codeOpen: true,
       logsOpen: false,
       runlogsOpen: false,
+      runlogsProcessed: false,
       coverageOpen: false
   }" class="space-y-2">
       <div class="border rounded-lg">
@@ -233,7 +262,7 @@ limitations under the License.
       </div>
 
       <div class="border rounded-lg">
-          <button @click="runlogsOpen = !runlogsOpen"
+          <button @click="runlogsOpen = !runlogsOpen; if (runlogsOpen && !runlogsProcessed) { $nextTick(() => { processRunLogsStackTraces(); runlogsProcessed = true; }); }"
                   class="w-full p-4 flex justify-between items-center">
               <span class="text-lg font-bold">Run Logs</span>
               <svg class="w-5 h-5 transform transition-transform duration-200"
@@ -244,7 +273,7 @@ limitations under the License.
           </button>
           <div x-show="runlogsOpen"
                class="p-4 border-t">
-              <pre class="bg-gray-50 dark:bg-gray-800 p-4 rounded-md overflow-x-auto">{{ run_logs }}</pre>
+              <pre id="runLogsPreview" class="bg-gray-50 dark:bg-gray-800 p-4 rounded-md overflow-x-auto">{{ run_logs }}</pre>
           </div>
       </div>
 

@@ -16,7 +16,9 @@ information such as the crash details, crash symptoms,
 stack traces, etc. to be rendered in the report."""
 
 import re
+
 from experiment import oss_fuzz_checkout
+
 
 def extract_project_from_coverage_path(file_path: str) -> str:
   """Extract the project name from coverage file paths."""
@@ -25,6 +27,7 @@ def extract_project_from_coverage_path(file_path: str) -> str:
     if path_parts:
       return path_parts[0]
   return ""
+
 
 def get_source_url(coverage_file_path: str) -> str:
   """Get the GitHub source URL for the given coverage file path."""
@@ -43,7 +46,7 @@ def get_source_url(coverage_file_path: str) -> str:
     if "llvm-project" in coverage_file_path:
       project_name = "llvm-project"
     else:
-      return "" 
+      return ""
 
   repo_url = oss_fuzz_checkout.get_project_repository(project_name)
   if not repo_url:
@@ -51,15 +54,16 @@ def get_source_url(coverage_file_path: str) -> str:
       repo_url = "https://github.com/llvm/llvm-project"
     else:
       return ""
-  
+
   relative_path = coverage_file_path.removeprefix(f'/src/{project_name}/')
 
   if repo_url.endswith('.git'):
     repo_url = repo_url[:-4]
-  
+
   if code_line_number:
     return f"{repo_url}/blob/master/{relative_path}#L{code_line_number}"
   return f"{repo_url}/blob/master/{relative_path}"
+
 
 class RunLogsParser:
   """Parse the run log."""
@@ -102,7 +106,7 @@ class RunLogsParser:
         break
 
     return crash_symptom
-  
+
   def get_formatted_stack_traces(self) -> dict[str, dict[str, str]]:
     """Get the formatted stack traces from the run log."""
     pattern = re.compile(r'^ {4}#\d+\s+.*$')
@@ -114,21 +118,26 @@ class RunLogsParser:
         parts = line.strip().split(' ', 2)
         if len(parts) < 3:
           continue
-        
+
         frame_num = parts[0]
         memory_addr = parts[1]
         remaining = parts[2]
-        
+
         in_match = re.search(r'in (.+?) (/[^\s]+)', remaining)
         if not in_match:
           continue
-          
+
         function_name = in_match.group(1)
         path = in_match.group(2)
         if '/src/' in path:
           url = get_source_url(path)
           if url == '':
             url = path
-          stack_traces[frame_num] = {"url": url, "path": path, "function": function_name, "memory_address": memory_addr}
+          stack_traces[frame_num] = {
+              "url": url,
+              "path": path,
+              "function": function_name,
+              "memory_address": memory_addr
+          }
 
     return stack_traces
