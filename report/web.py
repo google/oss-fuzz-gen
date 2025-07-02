@@ -512,7 +512,8 @@ class GenerateReport:
     parser = RunLogsParser(run_logs)
     crash_details = parser.get_crash_details()
     crash_symptom = parser.get_crash_symptom()
-    return {"crash_details": crash_details, "crash_symptom": crash_symptom}
+    stack_traces = parser.get_formatted_stack_traces()
+    return {"crash_details": crash_details, "crash_symptom": crash_symptom, "stack_traces": stack_traces}
 
 
 def generate_report(args: argparse.Namespace) -> None:
