@@ -19,6 +19,15 @@ from abc import abstractmethod
 
 from report.common import Results
 
+
+def determine_base_url(results_dir: str, port: int = 8012) -> str:
+  """Determine the base URL based on the environment."""
+  if 'gcb-experiment' in results_dir:
+    path = results_dir.removeprefix('gs://oss-fuzz-gcb-experiment-run-logs/')
+    return f'https://llm-exp.oss-fuzz.com/{path}'
+  return f'http://127.0.0.1:{port}'
+
+
 class BaseExporter:
   """Base class for exporters."""
 
@@ -30,6 +39,7 @@ class BaseExporter:
         "Project", "Function Signature", "Sample", "Crash Type", "Compiles",
         "Crashes", "Coverage", "Line Coverage Diff", "Reproducer Path"
     ]
+<<<<<<< HEAD
 
   @abstractmethod
   def generate(self) -> str:
@@ -44,17 +54,22 @@ class BaseExporter:
 
 class CSVExporter(BaseExporter):
   """Export a report to CSV."""
+=======
+>>>>>>> 2be682a (Expand the header columns)
 
   @abstractmethod
-  def generate(self):
+  def generate(self) -> str:
     """Generate a report."""
-    pass
+
+  def _get_full_url(self, relative_path: str) -> str:
+    """Convert relative path to full URL."""
+    if not self._base_url:
+      return relative_path
+    return f"{self._base_url}/{relative_path}"
+
 
 class CSVExporter(BaseExporter):
   """Export a report to CSV."""
-
-  def __init__(self, results: Results, output_dir: str):
-    super().__init__(results, output_dir)
 
   def generate(self):
     """Generate a CSV file with the results."""
@@ -72,7 +87,8 @@ class CSVExporter(BaseExporter):
                                                   targets)
         benchmarks.append(benchmark)
         samples = self._results.get_samples(results, targets)
-        project = benchmark_id.split("-")[1]
+
+        project_name = benchmark_id.split("-")[1]
 
         project_name = benchmark_id.split("-")[1]
 
