@@ -23,8 +23,8 @@ You can issue GDB commands one at a time and I’ll return each command’s outp
     Standard error (if any).
     </stderr>
 5. The ultimate goal is to determine the root cause of the crash based on the fuzz driver and project under test:
-    a) Is the crash caused by a **bug in the project**? → Output **‘True’**  
-    b) Or is it caused by a **bug in the fuzz driver**? → Output **‘False’**  
+    a) Is the crash caused by a **bug in the project**? → Output **‘True’**
+    b) Or is it caused by a **bug in the fuzz driver**? → Output **‘False’**
     c) In either case, provide a brief analysis and suggestions for fixing the issue.
 6. Once you reach a conclusion, reply using this format:
    <conclusion>
