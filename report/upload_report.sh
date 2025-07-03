@@ -20,6 +20,7 @@
 ##   results_dir is the local directory with the experiment results.
 ##   gcs_dir is the name of the directory for the report in gs://oss-fuzz-gcb-experiment-run-logs/Result-reports/.
 ##     Defaults to '$(whoami)-%YY-%MM-%DD'.
+##   additional_args are passed through to report.web (e.g., --with-csv)
 
 # TODO(dongge): Re-write this script in Python as it gets more complex.
 
@@ -27,6 +28,9 @@ RESULTS_DIR=$1
 GCS_DIR=$2
 BENCHMARK_SET=$3
 MODEL=$4
+# All remaining arguments are additional args for report.web
+shift 4
+REPORT_ADDITIONAL_ARGS="$@"
 DATE=$(date '+%Y-%m-%d')
 
 # Sleep 5 minutes for the experiment to start.
@@ -55,7 +59,12 @@ mkdir results-report
 
 update_report() {
   # Generate the report
-  $PYTHON -m report.web -r "${RESULTS_DIR:?}" -b "${BENCHMARK_SET:?}" -m "$MODEL" -o results-report
+  if [[ $GCS_DIR != '' ]]; then
+    CLOUD_BASE_URL="https://llm-exp.oss-fuzz.com/Result-reports/${GCS_DIR}"
+    $PYTHON -m report.web -r "${RESULTS_DIR:?}" -b "${BENCHMARK_SET:?}" -m "$MODEL" -o results-report --base-url "$CLOUD_BASE_URL" $REPORT_ADDITIONAL_ARGS
+  else
+    $PYTHON -m report.web -r "${RESULTS_DIR:?}" -b "${BENCHMARK_SET:?}" -m "$MODEL" -o results-report $REPORT_ADDITIONAL_ARGS
+  fi
 
   cd results-report || exit 1
 
