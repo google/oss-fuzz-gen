@@ -177,7 +177,8 @@ def main(cmd=None):
   """Main entrypoint"""
   if os.path.isfile('/experiment/data-dir.zip'):
     subprocess.check_call(
-        'apt-get install -y zip && zip -s0 data-dir.zip --out newd.zip && unzip newd.zip && rm ./data-dir.z*',
+        'apt-get install -y zip && zip -s0 data-dir.zip --out newd.zip && '
+        'unzip newd.zip && rm ./data-dir.z*',
         shell=True,
         cwd='/experiment')
   if os.path.isdir(DATA_DIR):

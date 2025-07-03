@@ -41,8 +41,9 @@ def get_source_url(coverage_file_path: str) -> str:
 
   project_name = extract_project_from_coverage_path(coverage_file_path)
   if not project_name:
-    # Hardcoding llvm-project paths due to OSS Fuzz not being able to find its project YAML
-    # However, the path to the GitHub repo is still correct, so we can use it
+    # Hardcoding llvm-project paths due to OSS Fuzz not being able to
+    # find its project YAML. However, the path to the GitHub repo is still
+    # correct, so we can use it.
     if "llvm-project" in coverage_file_path:
       project_name = "llvm-project"
     else:
@@ -141,3 +142,14 @@ class RunLogsParser:
           }
 
     return stack_traces
+
+  def get_crash_reproduction_path(self) -> str:
+    """Get the crash reproduction path from the run log."""
+    for line in self._lines:
+      if "Test unit written to" in line:
+        crash_match = re.search(r'Test unit written to (.+)', line)
+        if crash_match:
+          full_path = crash_match.group(1).strip()
+          filename = full_path.split('/')[-1]
+          return filename
+    return ""
