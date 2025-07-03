@@ -15,7 +15,6 @@
 """Report generation tool to create HTML reports for experiment result."""
 
 import argparse
-import dataclasses
 import json
 import logging
 import os
@@ -32,6 +31,7 @@ import jinja2
 
 from report.common import (AccumulatedResult, Benchmark, FileSystem, Project,
                            Results, Sample, Target)
+from report.export import CSVExporter
 from report.parse_run_log import RunLogsParser
 
 LOCAL_HOST = '127.0.0.1'
@@ -433,8 +433,6 @@ class GenerateReport:
             "triager_prompt": ""
         }
 
-        logs = self._results.get_logs(benchmark.id, sample.id) or []
-
         sample_data = {
             "sample": sample.id,
             "status": sample.result.finished,
@@ -522,7 +520,27 @@ def generate_report(args: argparse.Namespace) -> None:
   logging.info('Generating web page files in %s', args.output_dir)
   results = Results(results_dir=args.results_dir,
                     benchmark_set=args.benchmark_set)
-  jinja_env = JinjaEnv(template_globals={'model': args.model})
+
+  template_globals = {
+      'model': args.model,
+      'json_url_path': 'unified_data.json',
+  }
+  # WIP: writing to a CSV file
+  if args.with_csv:
+    base_url = args.base_url if args.base_url else "http://127.0.0.1:8012"
+    csv_reporter = CSVExporter(results=results,
+                               output_dir=args.output_dir,
+                               base_url=base_url)
+    csv_reporter.generate()
+    # Temporarily commented out because locally this is just a relative path
+    # template_globals['csv_url_path'] = csv_reporter.get_url_path()
+    template_globals['csv_url_path'] = 'crashes.csv'
+
+  # WIP: writing to Google Sheets
+  if args.with_google_sheets:
+    pass
+
+  jinja_env = JinjaEnv(template_globals=template_globals)
   gr = GenerateReport(results=results,
                       jinja_env=jinja_env,
                       results_dir=args.results_dir,
@@ -571,6 +589,18 @@ def _parse_arguments() -> argparse.Namespace:
                       help='Port to launch webserver on.',
                       type=int,
                       default=8012)
+  parser.add_argument('--with-csv',
+                      '-csv',
+                      help='Will write a CSV file with the results.',
+                      action='store_true')
+  parser.add_argument('--with-google-sheets',
+                      '-gs',
+                      help='Will write to Google Sheets.',
+                      action='store_true')
+  parser.add_argument(
+      '--base-url',
+      help='Base URL for the report (used in cloud environments).',
+      default='')
 
   return parser.parse_args()
 

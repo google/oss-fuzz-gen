@@ -225,7 +225,7 @@ def run_on_data_from_scratch(cmd=None):
   report_process = subprocess.Popen([
       "bash", "report/upload_report.sh", local_results_dir, gcs_report_dir,
       args.benchmark_set, args.model
-  ])
+  ] + args.additional_args)
 
   # Launch run_all_experiments.py
   # some notes:
@@ -381,7 +381,7 @@ def run_standard(cmd=None):
   report_process = subprocess.Popen([
       "bash", "report/upload_report.sh", local_results_dir, gcs_report_dir,
       args.benchmark_set, args.model
-  ])
+  ] + args.additional_args)
 
   # Prepare the command to run experiments
   run_cmd = [
