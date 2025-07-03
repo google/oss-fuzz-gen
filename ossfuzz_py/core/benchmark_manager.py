@@ -15,8 +15,7 @@
 Benchmark Management System for the OSS-Fuzz SDK.
 
 This module provides the Benchmark and BenchmarkManager classes for managing
-benchmark metadata and CRUD operations. It supports YAML/JSON import/export
-and integrates with the FunctionExtractor for parsing function signatures.
+benchmark metadata and CRUD operations. It supports YAML/JSON import/export.
 
 The Benchmark class is a pure data holder (frozen dataclass) containing all
 benchmark metadata. The BenchmarkManager handles all I/O, validation, and CRUD

@@ -16,9 +16,15 @@ File Utility Functions.
 """
 
 import logging
+import os
 import re
+import shutil
 
 from ossfuzz_py.core.data_models import FileType
+from ossfuzz_py.utils.env_utils import EnvUtils
+
+# Configure module logger
+logger = logging.getLogger('ossfuzz_sdk.file_utils')
 
 
 class FileUtils:
@@ -119,3 +125,20 @@ class FileUtils:
     # Docker fails with tags containing -_ or _-.
     valid_docker_tag = re.sub(r'[-_]{2,}', '-', valid_docker_tag)
     return valid_docker_tag
+
+  @classmethod
+  def create_ossfuzz_project(cls, benchmark_project: str,
+                             generated_oss_fuzz_project: str) -> str:
+    """Creates an OSS-Fuzz project by replicating an existing project."""
+    oss_fuzz_dir = EnvUtils.get_oss_fuzz_dir()
+
+    generated_project_path = os.path.join(oss_fuzz_dir, 'projects',
+                                          generated_oss_fuzz_project)
+    if os.path.exists(generated_project_path):
+      logger.info('Project %s already exists.', generated_project_path)
+      return generated_project_path
+
+    oss_fuzz_project_path = os.path.join(oss_fuzz_dir, 'projects',
+                                         benchmark_project)
+    shutil.copytree(oss_fuzz_project_path, generated_project_path)
+    return generated_project_path

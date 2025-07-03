@@ -100,6 +100,7 @@ __all__ = [
     'BuildIntegrationError',
     'BuildMonitorError',
     'BuilderError',
+    'CloudBuildError',
     'BuildConfigurationError',
     'BuildExecutionError',
     'BuildArtifactError',
@@ -166,6 +167,7 @@ __all__ = [
 
     # General/legacy errors
     'SDKError',
+    'EnvironmentParametersError',
 
     # Utility functions
     'handle_error',

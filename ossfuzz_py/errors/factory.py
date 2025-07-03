@@ -192,6 +192,8 @@ BuildMonitorError = make_error("BuildMonitorError",
                                ErrorCode.BUILD_MONITOR_ERROR, ErrorDomain.BUILD)
 BuilderError = make_error("BuilderError", ErrorCode.BUILD_FAILED,
                           ErrorDomain.BUILD)
+CloudBuildError = make_error("CloudBuildError", ErrorCode.CLOUD_BUILD_FAILED,
+                             ErrorDomain.BUILD)
 BuildConfigurationError = make_error("BuildConfigurationError",
                                      ErrorCode.BUILD_CONFIG_ERROR,
                                      ErrorDomain.BUILD)
@@ -226,6 +228,9 @@ ResultComparisonError = make_error("ResultComparisonError",
                                    ErrorCode.RESULT_COMPARISON_ERROR,
                                    ErrorDomain.DATA)
 QueryError = make_error("QueryError", ErrorCode.QUERY_ERROR, ErrorDomain.DATA)
+EnvironmentParametersError = make_error("EnvironmentParametersError",
+                                        ErrorCode.ENVIRONMENT_PARAMETERS_ERROR,
+                                        ErrorDomain.VALIDATION)
 
 # Analysis errors
 ChangeTrackingError = make_error("ChangeTrackingError",

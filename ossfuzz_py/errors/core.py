@@ -86,6 +86,7 @@ class ErrorCode(str, Enum):
 
   # Build errors
   BUILD_FAILED = "BUILD_FAILED"
+  CLOUD_BUILD_FAILED = "CLOUD_BUILD_FAILED"
   BUILD_CONFIG_ERROR = "BUILD_CONFIG_ERROR"
   BUILD_EXECUTION_ERROR = "BUILD_EXECUTION_ERROR"
   BUILD_ARTIFACT_ERROR = "BUILD_ARTIFACT_ERROR"
@@ -169,6 +170,9 @@ class ErrorCode(str, Enum):
 
   # Query errors
   QUERY_ERROR = "QUERY_ERROR"
+
+  # Environment parameters errors
+  ENVIRONMENT_PARAMETERS_ERROR = "ENVIRONMENT_PARAMETERS_ERROR"
 
 
 class ErrorDetails(TypedDict, total=False):
