@@ -59,3 +59,14 @@ class RunLogsParser:
         break
 
     return crash_symptom
+
+  def get_crash_reproduction_path(self) -> str:
+    """Get the crash reproduction path from the run log."""
+    for line in self._lines:
+      if "Test unit written to" in line:
+        crash_match = re.search(r'Test unit written to (.+)', line)
+        if crash_match:
+          full_path = crash_match.group(1).strip()
+          filename = full_path.split('/')[-1]
+          return filename
+    return ""
