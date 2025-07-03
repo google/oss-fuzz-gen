@@ -41,7 +41,7 @@ You can issue GDB commands one at a time and I’ll return each command’s outp
 <general rules>
 1. Do **NOT** run `gdb /out/{TARGET_NAME}` again or issue any shell commands.
 2. Do **NOT** compile or run code outside of GDB.
-3. Do **NOT** use `run < /artifact/testcase` or `run -- /artifact/testcase`. Instead, use `run -runs=1 /artifact/testcase` to execute the crash input exactly once.
+3. Do **NOT** use `run < {AFTIFACT_PATH}` or `run -- {AFTIFACT_PATH}`. Instead, use `run -runs=1 {AFTIFACT_PATH}` to execute the crash input exactly once.
 4. No Markdown code fences (```), only the XML tags defined above.
 </general rules>
 </tool>
