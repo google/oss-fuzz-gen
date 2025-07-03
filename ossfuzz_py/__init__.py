@@ -21,7 +21,8 @@ historical fuzzing results, and execute customized fuzzing experiments.
 
 from .core.benchmark_manager import Benchmark, BenchmarkManager
 # Data models and enums
-from .core.data_models import FuzzingEngine, Sanitizer, Severity
+from .core.data_models import (CrashData, FuzzingEngine, ProjectConfig,
+                               Sanitizer, Severity)
 # Core SDK - Main SDK class and modules
 from .core.ossfuzz_manager import OSSFuzzManager
 # Error handling
@@ -87,6 +88,7 @@ __all__ = [
     'BuildIntegrationError',
     'BuildMonitorError',
     'BuilderError',
+    'CloudBuildError',
     'BuildConfigurationError',
     'BuildExecutionError',
     'BuildArtifactError',
@@ -143,6 +145,7 @@ __all__ = [
     'OSSFuzzManagerError',
     # General/legacy errors
     'SDKError',
+    'EnvironmentParametersError',
     # Utility functions
     'handle_error',
     'format_error',
