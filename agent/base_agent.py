@@ -167,9 +167,12 @@ class BaseAgent(ABC):
       prompt.append(prompt_text)
     return prompt
 
-  def _container_handle_invalid_tool_usage(self, tools: list[BaseTool],
-                                           cur_round: int, response: str,
-                                           prompt: Prompt, extra: str = '') -> Prompt:
+  def _container_handle_invalid_tool_usage(self,
+                                           tools: list[BaseTool],
+                                           cur_round: int,
+                                           response: str,
+                                           prompt: Prompt,
+                                           extra: str = '') -> Prompt:
     """Formats a prompt to re-teach LLM how to use the |tool|."""
     logger.warning('ROUND %02d Invalid response from LLM: %s',
                    cur_round,

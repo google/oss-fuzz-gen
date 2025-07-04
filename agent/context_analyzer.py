@@ -72,8 +72,9 @@ class ContextAnalyzer(base_agent.ADKBaseAgent):
 
     return requirement_path
 
-  def handle_llm_response(self, final_response_text: str,
-                          result: resultslib.CrashFeasibilityResult) -> prompts.Prompt:
+  def handle_llm_response(
+      self, final_response_text: str,
+      result: resultslib.CrashFeasibilityResult) -> prompts.Prompt:
     """Handle the LLM response and update the result."""
 
     conclusion = self._parse_tag(final_response_text, 'conclusion')
@@ -82,7 +83,8 @@ class ContextAnalyzer(base_agent.ADKBaseAgent):
     template_builder = prompt_builder.ContextAnalyzerTemplateBuilder(
         self.llm, self.benchmark)
 
-    if not conclusion or conclusion.strip() not in ['False', 'True'] or not analysis:
+    if not conclusion or conclusion.strip() not in ['False', 'True'
+                                                   ] or not analysis:
 
       return self._container_handle_invalid_tool_usage(
           [self.inspect_tool], self.round, final_response_text,
@@ -203,8 +205,8 @@ class ContextAnalyzer(base_agent.ADKBaseAgent):
 
     # Finally check invalid request.
     if not request or not prompt.get():
-      prompt = self._container_handle_invalid_tool_usage(
-          [self.inspect_tool], 0, request, prompt)
+      prompt = self._container_handle_invalid_tool_usage([self.inspect_tool], 0,
+                                                         request, prompt)
 
     tool_response = prompt.get()
 
