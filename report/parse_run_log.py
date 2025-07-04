@@ -17,6 +17,54 @@ stack traces, etc. to be rendered in the report."""
 
 import re
 
+from experiment import oss_fuzz_checkout
+
+
+def extract_project_from_coverage_path(file_path: str) -> str:
+  """Extract the project name from coverage file paths."""
+  if file_path.startswith('/src/'):
+    path_parts = file_path.removeprefix('/src/').split('/')
+    if path_parts:
+      return path_parts[0]
+  return ""
+
+
+def get_source_url(coverage_file_path: str) -> str:
+  """Get the GitHub source URL for the given coverage file path."""
+  code_line_number = ""
+  if ":" in coverage_file_path:
+    parts = coverage_file_path.split(":")
+    if len(parts) < 2:
+      return ""
+    coverage_file_path = parts[0]
+    code_line_number = parts[1]
+
+  project_name = extract_project_from_coverage_path(coverage_file_path)
+  if not project_name:
+    # Hardcoding llvm-project paths due to OSS Fuzz not being able to
+    # find its project YAML. However, the path to the GitHub repo is still
+    # correct, so we can use it.
+    if "llvm-project" in coverage_file_path:
+      project_name = "llvm-project"
+    else:
+      return ""
+
+  repo_url = oss_fuzz_checkout.get_project_repository(project_name)
+  if not repo_url:
+    if "llvm-project" in coverage_file_path:
+      repo_url = "https://github.com/llvm/llvm-project"
+    else:
+      return ""
+
+  relative_path = coverage_file_path.removeprefix(f'/src/{project_name}/')
+
+  if repo_url.endswith('.git'):
+    repo_url = repo_url[:-4]
+
+  if code_line_number:
+    return f"{repo_url}/blob/master/{relative_path}#L{code_line_number}"
+  return f"{repo_url}/blob/master/{relative_path}"
+
 
 class RunLogsParser:
   """Parse the run log."""
@@ -59,3 +107,49 @@ class RunLogsParser:
         break
 
     return crash_symptom
+
+  def get_formatted_stack_traces(self) -> dict[str, dict[str, str]]:
+    """Get the formatted stack traces from the run log."""
+    pattern = re.compile(r'^ {4}#\d+\s+.*$')
+    stack_traces = {}
+
+    for line in self._lines:
+      match = pattern.search(line)
+      if match:
+        parts = line.strip().split(' ', 2)
+        if len(parts) < 3:
+          continue
+
+        frame_num = parts[0]
+        memory_addr = parts[1]
+        remaining = parts[2]
+
+        in_match = re.search(r'in (.+?) (/[^\s]+)', remaining)
+        if not in_match:
+          continue
+
+        function_name = in_match.group(1)
+        path = in_match.group(2)
+        if '/src/' in path:
+          url = get_source_url(path)
+          if url == '':
+            url = path
+          stack_traces[frame_num] = {
+              "url": url,
+              "path": path,
+              "function": function_name,
+              "memory_address": memory_addr
+          }
+
+    return stack_traces
+
+  def get_crash_reproduction_path(self) -> str:
+    """Get the crash reproduction path from the run log."""
+    for line in self._lines:
+      if "Test unit written to" in line:
+        crash_match = re.search(r'Test unit written to (.+)', line)
+        if crash_match:
+          full_path = crash_match.group(1).strip()
+          filename = full_path.split('/')[-1]
+          return filename
+    return ""
