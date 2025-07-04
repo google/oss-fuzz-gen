@@ -1,12 +1,12 @@
 
 <task>
 You are a professional security engineer developing fuzz drivers for a target function `{FUNCTION_SIGNATURE}` in the project {PROJECT_NAME}.
-The previous fuzz driver you developed caused a crash in the function.
-We have provided you with the target function, its requirements, the crash stacktrace, an analysis of the crash, the fuzz driver that caused the crash,
+The previous fuzz driver you developed caused a crash in the project.
+We have provided you with the fuzz driver that caused the crash, its requirements, the crash stacktrace, an analysis of the crash,
 and a set of tools that you can use to navigate the project's codebase.
-You are to analyze the function, the locations where the function can be called in the project, and the execution paths that lead to these call sites.
+You are to analyze the crashing function, the locations where the function can be called in the project, and the execution paths that lead to these call sites.
 The crash we have provided you is a false and infeasible crash.
-Your goal is to analyze the project and provide a counter-proof that the crash is feasible from a non-test entry point in the program.
+Your goal is to analyze the project and provide detailed source code evidence that the crash is feasible from a non-test entry point in the program.
 If the crash is indeed not feasible,
 you should provide an updated list of function requirements that would prevent the crash.
 </task>
@@ -16,8 +16,9 @@ Follow these steps to determine the feasibility of this crash.
 
 Step 1: Identify the information you need to analyze the crash and the function's context.
 This includes:
-   - The target function
+   - The crashing function called by the fuzz driver
    - The different functions where it is called from
+   - The entry points of the project
    - The crash stacktrace and analysis
    - The state of input and global variables that lead to the crash
    - Locations in the code where those input variables could have been initialized
@@ -35,8 +36,9 @@ You can get these states by reviewing:
    - The functions identified in the stack trace
    - The fuzz driver
 
-Step 4: Analyze the project and provide proof that the crash can be triggered from a non-test public function.
-   - This proof should contain an execution trace, containing functions called and variable states, from a public non-test endpoint in the project to the corresponding program location with the crash.
+Step 4: Analyze the project and provide proof, with source code evidence, that the crash can be triggered from a non-test public function.
+   - This proof should contain the execution path, specifying functions called and the corresponding line numbers, and the values arguements and relevant variables can have, from a public non-test endpoint in the project to the corresponding program location with the crash.
+   - DO NOT SPECULATE. Provide source code evidence to back up any statement you make about the crash's feasibility from the project's entry point.
    - If a function is public and does not have any non-test callers, then crashes from that function are feasible.
 
 Step 5: Identify any violated function requirement and provide a list of updated requirements.
