@@ -73,10 +73,21 @@ class ContextAnalyzer(base_agent.ADKBaseAgent):
     return requirement_path
 
   def handle_llm_response(self, final_response_text: str,
-                          result: resultslib.CrashFeasibilityResult) -> None:
+                          result: resultslib.CrashFeasibilityResult) -> prompts.Prompt:
     """Handle the LLM response and update the result."""
 
     conclusion = self._parse_tag(final_response_text, 'conclusion')
+    analysis = self._parse_tag(final_response_text, 'analysis')
+
+    template_builder = prompt_builder.ContextAnalyzerTemplateBuilder(
+        self.llm, self.benchmark)
+
+    if not conclusion or conclusion.strip() not in ['False', 'True'] or not analysis:
+
+      return self._container_handle_invalid_tool_usage(
+          [self.inspect_tool], self.round, final_response_text,
+          template_builder.build(), template_builder.get_response_format())
+
     if conclusion == 'False':
       result.feasible = False
     elif conclusion == 'True':
@@ -86,16 +97,14 @@ class ContextAnalyzer(base_agent.ADKBaseAgent):
                    conclusion,
                    trial=self.trial)
 
-    analysis = self._parse_tag(final_response_text, 'analysis')
-    if analysis:
-      result.reason = analysis
-    else:
-      logger.error('No analysis provided in LLM response.', trial=self.trial)
+    result.reason = analysis
 
     requirements = self._parse_tag(final_response_text, 'requirements')
     if requirements:
       # Write the requirements to a file
       self.write_requirements_to_file(self.args, requirements)
+
+    return template_builder.build()
 
   def execute(self,
               result_history: list[resultslib.Result]) -> resultslib.Result:
@@ -111,9 +120,7 @@ class ContextAnalyzer(base_agent.ADKBaseAgent):
       logger.error(
           f'Expected last result to be AnalysisResult, got {type(last_result)}.',
           trial=self.trial)
-      return resultslib.Result(benchmark=self.benchmark,
-                               trial=self.trial,
-                               work_dirs=self.args.work_dirs)
+      return last_result
 
     feasibility_result = resultslib.CrashFeasibilityResult()
 
@@ -127,16 +134,16 @@ class ContextAnalyzer(base_agent.ADKBaseAgent):
     if not prompt or not prompt.get():
       logger.error('Failed to build initial prompt for FunctionAnalyzer.',
                    trial=self.trial)
-      return resultslib.Result(benchmark=self.benchmark,
-                               trial=self.trial,
-                               work_dirs=self.args.work_dirs)
+      return last_result
 
-    final_response_text = self.chat_llm(self.round,
-                                        client=None,
-                                        prompt=prompt,
-                                        trial=result_history[-1].trial)
+    while self.round < self.max_round and prompt.get():
 
-    self.handle_llm_response(final_response_text, feasibility_result)
+      final_response_text = self.chat_llm(self.round,
+                                          client=None,
+                                          prompt=prompt,
+                                          trial=result_history[-1].trial)
+
+      prompt = self.handle_llm_response(final_response_text, feasibility_result)
 
     self.inspect_tool.terminate()
 
@@ -145,7 +152,8 @@ class ContextAnalyzer(base_agent.ADKBaseAgent):
         run_result=last_result.run_result,
         crash_result=last_result.crash_result,
         feasibility_result=feasibility_result,
-        chat_history={self.name: last_result.crash_result.to_dict()})
+        chat_history={self.name: last_result.crash_result.to_dict()},
+        default_success=feasibility_result.feasible)
 
     return analysis_result
 
@@ -196,7 +204,7 @@ class ContextAnalyzer(base_agent.ADKBaseAgent):
     # Finally check invalid request.
     if not request or not prompt.get():
       prompt = self._container_handle_invalid_tool_usage(
-          self.inspect_tool, 0, request, prompt)
+          [self.inspect_tool], 0, request, prompt)
 
     tool_response = prompt.get()
 

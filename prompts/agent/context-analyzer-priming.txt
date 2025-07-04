@@ -1,6 +1,6 @@
 
 <task>
-You are a professional security engineer developing fuzz drivers for a target function `{FUNCTION_SIGNATURE}` in the project {PROJECT_NAME}.
+You are a professional security engineer developing fuzz drivers for the project {PROJECT_NAME}.
 The previous fuzz driver you developed caused a crash in the project.
 We have provided you with the fuzz driver that caused the crash, its requirements, the crash stacktrace, an analysis of the crash,
 and a set of tools that you can use to navigate the project's codebase.
@@ -22,7 +22,7 @@ This includes:
    - The crash stacktrace and analysis
    - The state of input and global variables that lead to the crash
    - Locations in the code where those input variables could have been initialized
-   - Execution paths between the input variable initializations and the target function
+   - Execution paths between the input variable initializations and the crashing function
 
 Step 2: Collect information using the provided tools
 Use the provided tools (see <tool> section) and follow their rules to gather the necessary information. You can collect information from:
@@ -50,9 +50,9 @@ Step 8: Provide your conclusion in the response format below.
 
 Here is the provided data.
 
-<target-function>
-{FUNCTION_SOURCE}
-</target-function>
+<fuzz-driver>
+{FUZZ_DRIVER}
+</fuzz-driver>
 
 <function-requirements>
 {FUNCTION_REQUIREMENTS}
@@ -66,35 +66,7 @@ Here is the provided data.
 {CRASH_ANALYSIS}
 </crash-analysis>
 
-<fuzz-driver>
-{FUZZ_DRIVER}
-</fuzz-driver>
-
-You MUST return your response in the format below.
-
-<response_format>
-Make sure your response follows the following format.
-
-<conclusion>
-'True' or 'False', depending on if the crash can be triggered from a non-test public function
-</conclusion>
-<analysis>
-Your analysis of the feasibility of this crash
-</analysis>
-<requirements>
-<requirement>
-First requirement
-</requirement>
-<requirement>
-Second requirement
-</requirement>
-...
-<requirement>
-nth requirement
-</requirement>
-</requirements>
-
-</response_format>
+{RESPONSE_FORMAT}
 
 You will be provided with the following tools.
 1. get_function_implementation: This is a tool you can use to retrieve the implementation of a function using the project's name and function's name as arguments.

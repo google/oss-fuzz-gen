@@ -1010,7 +1010,7 @@ class ContextAnalyzerTemplateBuilder(DefaultTemplateBuilder):
 
   def __init__(self,
                model: models.LLM,
-               benchmark: Benchmark,
+               benchmark: Optional[Benchmark] = None,
                template_dir: str = DEFAULT_TEMPLATE_DIR,
                initial: Any = None):
     super().__init__(model, benchmark, template_dir, initial)
@@ -1022,6 +1022,8 @@ class ContextAnalyzerTemplateBuilder(DefaultTemplateBuilder):
         AGENT_TEMPLATE_DIR, 'context-analyzer-description.txt')
     self.context_analyzer_prompt_template_file = self._find_template(
         AGENT_TEMPLATE_DIR, 'context-analyzer-priming.txt')
+    self.context_analyzer_response_file = self._find_template(
+        AGENT_TEMPLATE_DIR, 'context-analyzer-response.txt')
 
   def get_instruction(self) -> prompts.Prompt:
     """Constructs a prompt using the templates in |self| and saves it."""
@@ -1064,8 +1066,6 @@ class ContextAnalyzerTemplateBuilder(DefaultTemplateBuilder):
     prompt = self._get_template(self.context_analyzer_prompt_template_file)
 
     prompt = prompt.replace('{PROJECT_NAME}', self.benchmark.project)
-    prompt = prompt.replace('{FUNCTION_SIGNATURE}',
-                            self.benchmark.function_signature)
     prompt = prompt.replace('{PROJECT_DIR}', project_dir)
 
     # Add the function source
@@ -1084,8 +1084,6 @@ class ContextAnalyzerTemplateBuilder(DefaultTemplateBuilder):
                    self.benchmark.project, self.benchmark.function_signature)
       return self._prompt
 
-    prompt = prompt.replace('{FUNCTION_SOURCE}', func_source)
-
     # Add the fuzz driver and crash results
     prompt = prompt.replace('{FUZZ_DRIVER}', run_result.fuzz_target_source)
     prompt = prompt.replace('{CRASH_ANALYSIS}', crash_result.insight)
@@ -1094,10 +1092,19 @@ class ContextAnalyzerTemplateBuilder(DefaultTemplateBuilder):
     # Add the function requirements
     prompt = prompt.replace('{FUNCTION_REQUIREMENTS}', function_requirements)
 
+    response_format = self._get_template(self.context_analyzer_response_file)
+
+    if response_format:
+      prompt = prompt.replace('{RESPONSE_FORMAT}', response_format)
+
     self._prompt.append(prompt)
     self._prompt.append(tool_guides)
 
     return self._prompt
+
+  def get_response_format(self) -> str:
+    """Returns the response format for the context analyzer."""
+    return self._get_template(self.context_analyzer_response_file)
 
   def build(self,
             example_pair: Optional[list[list[str]]] = None,
@@ -1108,9 +1115,7 @@ class ContextAnalyzerTemplateBuilder(DefaultTemplateBuilder):
             project_name: str = '',
             function_signature: str = '') -> prompts.Prompt:
 
-    raise NotImplementedError(
-        'FunctionAnalyzerTemplateBuilder.build() should not be called. '
-        'Use build_prompt() instead.')
+    return self._prompt
 
 
 class CrashAnalyzerTemplateBuilder(DefaultTemplateBuilder):
