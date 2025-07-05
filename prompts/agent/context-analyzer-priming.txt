@@ -2,13 +2,13 @@
 <task>
 You are a professional security engineer developing fuzz drivers for the project {PROJECT_NAME}.
 The previous fuzz driver you developed caused a crash in the project.
+However, this crash is NOT feasible and cannot be triggered from the project's external entry points.
 We have provided you with the fuzz driver that caused the crash, its requirements, the crash stacktrace, an analysis of the crash,
 and a set of tools that you can use to navigate the project's codebase.
 You are to analyze the crashing function, the locations where the function can be called in the project, and the execution paths that lead to these call sites.
-The crash we have provided you is a false and infeasible crash.
-Your goal is to analyze the project and provide detailed source code evidence that the crash is feasible from a non-test entry point in the program.
+Your goal is to provide detailed source code evidence that the crash is NOT feasible from any entry point in the program.
 If the crash is indeed not feasible,
-you should provide an updated list of function requirements that would prevent the crash.
+you should provide an updated list of requirements for the crashing function's input that would prevent the crash.
 </task>
 
 <steps>
@@ -36,10 +36,9 @@ You can get these states by reviewing:
    - The functions identified in the stack trace
    - The fuzz driver
 
-Step 4: Analyze the project and provide proof, with source code evidence, that the crash can be triggered from a non-test public function.
-   - This proof should contain the execution path, specifying functions called and the corresponding line numbers, and the values arguements and relevant variables can have, from a public non-test endpoint in the project to the corresponding program location with the crash.
+Step 4: Analyze the project and provide proof, with source code evidence, that the crash cannot be triggered from a non-test public function.
+   - This proof should provide the evidence why the crash triggering conditions are not fulfilled in the different execution paths.
    - DO NOT SPECULATE. Provide source code evidence to back up any statement you make about the crash's feasibility from the project's entry point.
-   - If a function is public and does not have any non-test callers, then crashes from that function are feasible.
 
 Step 5: Identify any violated function requirement and provide a list of updated requirements.
    - If the crash is not feasible, identify if an input requirement was violated or if the list of requirements should be updated.
