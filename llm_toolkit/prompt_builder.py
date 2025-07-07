@@ -29,7 +29,6 @@ from experiment.benchmark import Benchmark, FileType
 from experiment.fuzz_target_error import SemanticCheckResult
 from llm_toolkit import models, prompts
 from results import AnalysisResult, BuildResult, CoverageResult, RunResult
-from tool.base_tool import BaseTool
 
 logger = logging.getLogger(__name__)
 
@@ -842,6 +841,7 @@ class CrashEnhancerTemplateBuilder(PrototyperTemplateBuilder):
     if function_requirements:
       requirements = (f'\nHere are the requirements for the function.\n'
                       f'{function_requirements}\n')
+      problem += requirements
 
     self._prepare_prompt(priming, problem)
     return self._prompt
@@ -1113,8 +1113,12 @@ class ContextAnalyzerTemplateBuilder(DefaultTemplateBuilder):
             project_dir: str = '',
             project_name: str = '',
             function_signature: str = '') -> prompts.Prompt:
+    """Returns an empty prompt."""
+
+    del (example_pair, project_example_content, project_context_content)
 
     return self._prompt
+
 
 class CrashAnalyzerTemplateBuilder(DefaultTemplateBuilder):
   """Builder for C/C++."""

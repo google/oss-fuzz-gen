@@ -91,8 +91,9 @@ class ContextAnalyzer(base_agent.ADKBaseAgent):
       return False
 
     if feasible.strip() == 'False' and not recommendations:
-      logger.error('LLM response does not provide any recommendation for a non-feasible crash.',
-                   trial=self.trial)
+      logger.error(
+          'LLM response does not provide any recommendation for a non-feasible crash.',
+          trial=self.trial)
       return False
 
     return True

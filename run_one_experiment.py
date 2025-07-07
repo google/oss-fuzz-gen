@@ -22,9 +22,9 @@ import shutil
 from multiprocessing import pool
 from typing import List, Optional
 
-from agent.context_analyzer import ContextAnalyzer
 import logger
 import pipeline
+from agent.context_analyzer import ContextAnalyzer
 from agent.coverage_analyzer import CoverageAnalyzer
 from agent.crash_analyzer import CrashAnalyzer
 from agent.enhancer import Enhancer

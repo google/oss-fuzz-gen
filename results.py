@@ -312,7 +312,10 @@ class CrashContextResult():
   analysis: str
   recommendations: str
 
-  def __init__(self, feasible: bool = False, analysis: str = '', recommendations: str = ''):
+  def __init__(self,
+               feasible: bool = False,
+               analysis: str = '',
+               recommendations: str = ''):
     self.feasible = feasible
     self.analysis = analysis
     self.recommendations = recommendations
@@ -323,6 +326,7 @@ class CrashContextResult():
         'analysis': self.analysis,
         'recommendations': self.recommendations,
     }
+
 
 # TODO: Make this class an attribute of Result, avoid too many attributes in one
 # class.
@@ -360,7 +364,8 @@ class AnalysisResult(Result):
         'crash_result':
             self.crash_result.to_dict() if self.crash_result else {},
         'crash_context_result':
-            self.crash_context_result.to_dict() if self.crash_context_result else {},
+            self.crash_context_result.to_dict()
+            if self.crash_context_result else {},
         'coverage_result':
             self.coverage_result.to_dict() if self.coverage_result else {},
     }
@@ -446,7 +451,7 @@ class TrialResult:
       if (isinstance(result, AnalysisResult) and result.crashes):
         if result.crash_context_result and result.crash_context_result.feasible:
           return result
-        elif result.crash_result and result.crash_result.true_bug:
+        if result.crash_result and result.crash_result.true_bug:
           return result
 
     # 2. Crashed
@@ -620,7 +625,7 @@ class TrialResult:
     if result:
       if result.crash_context_result:
         return not result.crash_context_result.feasible
-      elif result.crash_result:
+      if result.crash_result:
         return not result.crash_result.true_bug
     return False
 
