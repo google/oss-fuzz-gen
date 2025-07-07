@@ -306,6 +306,24 @@ class CoverageResult():
     return f'{self.__class__.__name__}({", ".join(attributes)})'
 
 
+class CrashContextResult():
+  """Analysis result of the context of the crashing function."""
+  feasible: bool
+  analysis: str
+  recommendations: str
+
+  def __init__(self, feasible: bool = False, analysis: str = '', recommendations: str = ''):
+    self.feasible = feasible
+    self.analysis = analysis
+    self.recommendations = recommendations
+
+  def to_dict(self) -> dict:
+    return {
+        'feasible': self.feasible,
+        'analysis': self.analysis,
+        'recommendations': self.recommendations,
+    }
+
 # TODO: Make this class an attribute of Result, avoid too many attributes in one
 # class.
 class AnalysisResult(Result):
@@ -313,6 +331,7 @@ class AnalysisResult(Result):
   run_result: RunResult
   semantic_result: Optional[SemanticCheckResult]
   crash_result: Optional[CrashResult]
+  crash_context_result: Optional[CrashContextResult]
   coverage_result: Optional[CoverageResult]
 
   def __init__(self,
@@ -320,6 +339,7 @@ class AnalysisResult(Result):
                run_result: RunResult,
                semantic_result: Optional[SemanticCheckResult] = None,
                crash_result: Optional[CrashResult] = None,
+               crash_context_result: Optional[CrashContextResult] = None,
                coverage_result: Optional[CoverageResult] = None,
                chat_history: Optional[dict] = None,
                default_success: bool = False) -> None:
@@ -330,6 +350,7 @@ class AnalysisResult(Result):
     self.run_result = run_result
     self.semantic_result = semantic_result
     self.crash_result = crash_result
+    self.crash_context_result = crash_context_result
     self.coverage_result = coverage_result
 
   def to_dict(self) -> dict:
@@ -338,6 +359,8 @@ class AnalysisResult(Result):
             self.semantic_result.to_dict() if self.semantic_result else {},
         'crash_result':
             self.crash_result.to_dict() if self.crash_result else {},
+        'crash_context_result':
+            self.crash_context_result.to_dict() if self.crash_context_result else {},
         'coverage_result':
             self.coverage_result.to_dict() if self.coverage_result else {},
     }
@@ -350,6 +373,10 @@ class AnalysisResult(Result):
       return not self.semantic_result.has_err
     if self.coverage_result:
       return not self.coverage_result.improve_required
+    if self.crash_result:
+      return self.crash_result.true_bug
+    if self.crash_context_result:
+      return self.crash_context_result.feasible
     return False
 
   @property
@@ -416,9 +443,11 @@ class TrialResult:
     # 1. Crashed for a non-semantic error
     for result in self.result_history[::-1]:
       #TODO(dongge): Refine this logic for coverage
-      if (isinstance(result, AnalysisResult) and result.crashes and
-          result.crash_result and result.crash_result.true_bug):
-        return result
+      if (isinstance(result, AnalysisResult) and result.crashes):
+        if result.crash_context_result and result.crash_context_result.feasible:
+          return result
+        elif result.crash_result and result.crash_result.true_bug:
+          return result
 
     # 2. Crashed
     for result in self.result_history[::-1]:
@@ -588,8 +617,11 @@ class TrialResult:
   def is_semantic_error(self) -> bool:
     """Validates if the best AnalysisResult has semantic error."""
     result = self.best_analysis_result
-    if result and result.crash_result:
-      return not result.crash_result.true_bug
+    if result:
+      if result.crash_context_result:
+        return not result.crash_context_result.feasible
+      elif result.crash_result:
+        return not result.crash_result.true_bug
     return False
 
   @property

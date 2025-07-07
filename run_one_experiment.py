@@ -22,6 +22,7 @@ import shutil
 from multiprocessing import pool
 from typing import List, Optional
 
+from agent.context_analyzer import ContextAnalyzer
 import logger
 import pipeline
 from agent.coverage_analyzer import CoverageAnalyzer
@@ -287,6 +288,10 @@ def _fuzzing_pipeline(benchmark: Benchmark, model: models.LLM,
                                                llm=model,
                                                args=args),
                               CrashAnalyzer(trial=trial, llm=model, args=args),
+                              ContextAnalyzer(trial=trial,
+                                              llm=model,
+                                              args=args,
+                                              benchmark=benchmark),
                           ])
   else:
     writer_agents = []
