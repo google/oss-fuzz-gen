@@ -25,8 +25,10 @@ from agent import base_agent
 from data_prep import introspector
 from experiment import benchmark as benchmarklib
 from experiment.workdir import WorkDirs
+from google.adk.tools import ToolContext
 from llm_toolkit import models, prompt_builder, prompts
 from tool import container_tool
+from typing import Any
 
 
 class ContextAnalyzer(base_agent.ADKBaseAgent):
@@ -43,7 +45,7 @@ class ContextAnalyzer(base_agent.ADKBaseAgent):
     builder = prompt_builder.ContextAnalyzerTemplateBuilder(llm, benchmark)
     description = builder.get_description().get()
     instruction = builder.get_instruction().get()
-    tools = [self.get_function_implementation, self.search_project_files]
+    tools = [self.get_function_implementation, self.search_project_files, self.report_final_result]
     super().__init__(trial, llm, args, benchmark, description, instruction,
                      tools, name)
     self.project_functions = None
@@ -91,38 +93,17 @@ class ContextAnalyzer(base_agent.ADKBaseAgent):
 
     return True
 
-  def handle_llm_response(
-      self, final_response_text: str,
-      result: resultslib.CrashContextResult) -> prompts.Prompt:
+  def handle_invalid_llm_response(
+      self, final_response_text: str) -> prompts.Prompt:
     """Handle the LLM response and update the result."""
-
-    feasible = self._parse_tag(final_response_text, 'feasible')
-    analysis = self._parse_tag(final_response_text, 'analysis')
 
     template_builder = prompt_builder.ContextAnalyzerTemplateBuilder(
         self.llm, self.benchmark)
 
-    if not self.validate_llm_response(final_response_text):
-      return self._container_handle_invalid_tool_usage(
-          [self.inspect_tool], self.round, final_response_text,
-          template_builder.build(), template_builder.get_response_format())
+    return self._container_handle_invalid_tool_usage(
+        [self.inspect_tool], self.round, final_response_text,
+        template_builder.build(), template_builder.get_response_format())
 
-    if feasible == 'False':
-      result.feasible = False
-    elif feasible == 'True':
-      result.feasible = True
-    else:
-      logger.error('Unexpected conclusion from LLM response: %s.',
-                   feasible,
-                   trial=self.trial)
-
-    result.analysis = analysis
-
-    recommendations = self._parse_tag(final_response_text, 'recommendations')
-    if recommendations:
-      result.recommendations = recommendations.strip()
-
-    return template_builder.build()
 
   def execute(self,
               result_history: list[resultslib.Result]) -> resultslib.Result:
@@ -140,7 +121,7 @@ class ContextAnalyzer(base_agent.ADKBaseAgent):
           trial=self.trial)
       return last_result
 
-    context_result = resultslib.CrashContextResult()
+    context_result = None
 
     # Initialize the ProjectContainerTool for local file search
     self.inspect_tool = container_tool.ProjectContainerTool(self.benchmark)
@@ -152,12 +133,19 @@ class ContextAnalyzer(base_agent.ADKBaseAgent):
                    trial=self.trial)
       return last_result
     # Chat with the LLM asynchronously and return the result
-    while self.round < self.max_round and prompt.get():
-      final_response_text = self.chat_llm(self.round,
+    while self.round < self.max_round:
+      final_response = self.chat_llm(self.round,
                                           client=None,
                                           prompt=prompt,
                                           trial=result_history[-1].trial)
-      prompt = self.handle_llm_response(final_response_text, context_result)
+      context_result = resultslib.CrashContextResult.from_dict(final_response)
+      if context_result:
+        break
+      logger.error('Failed to parse LLM response into CrashContextResult.',
+                    trial=self.trial)
+      prompt = self.handle_invalid_llm_response(final_response)
+
+
     # Terminate the inspect tool after the analysis is done
     self.inspect_tool.terminate()
     analysis_result = resultslib.AnalysisResult(
@@ -165,7 +153,7 @@ class ContextAnalyzer(base_agent.ADKBaseAgent):
         run_result=last_result.run_result,
         crash_result=last_result.crash_result,
         crash_context_result=context_result,
-        chat_history={self.name: last_result.crash_result.to_dict()})
+        chat_history={})
 
     return analysis_result
 
@@ -291,3 +279,34 @@ class ContextAnalyzer(base_agent.ADKBaseAgent):
     self.log_llm_prompt(response)
 
     return response
+
+  def report_final_result(self, feasible: bool, analysis: str, recommendations: str, tool_context: ToolContext) -> dict:
+    """
+    Provide final result, including the crash feasibility, detailed analysis, and any recommendations.
+
+    Args:
+        feasible (bool): True if the crash is feasible, False otherwise.
+        analysis (str): Detailed analysis and source code evidence showing why the crash is or is not feasible.
+        recommendations (str): Recommendations for modifying the fuzz target to prevent the crash. If the crash is feasible, this should be empty.
+
+    Returns:
+        This function will not return anything to the LLM.
+    """
+    response = f"""
+    <response>
+      <feasible>\n{feasible}\n</feasible>
+      <analysis>\n{analysis}\n</analysis>
+      <recommendations>\n{recommendations}\n</recommendations>
+    </response>
+    """
+    self.log_llm_response(response)
+    crash_context_result = resultslib.CrashContextResult(
+        feasible=feasible,
+        analysis=analysis,
+        recommendations=recommendations
+    )
+
+    # We have received final result. Instruct the agent to terminate execution.
+    # tool_context._invocation_context.end_invocation = True
+    tool_context.actions.skip_summarization = True
+    return crash_context_result.to_dict()

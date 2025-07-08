@@ -43,7 +43,11 @@ Step 4: Analyze the project and provide proof, with source code evidence, that t
 Step 5: If the crash is not feasible, recommend necessary and minimal modifications to the fuzz target to prevent the crash.
    - The modifications should mirror how the crashing function is called in different project locations.
 
-Step 8: MAKE SURE YOU PROVIDE YOUR RESPONSE IN THE REQUIRED FORMAT BELOW.
+Step 8: MAKE SURE YOU PROVIDE YOUR RESPONSE USING THE report_final_result TOOL.
+   - The tool takes three arguments - feasible, analysis and recommendations.
+   - feasible should be True if the crash is feasible, or False otherwise.
+   - analysis should contain source code evidence of the crash's feasibility.
+   - recommendations should only be provided for non-feasible crashes, and should recommend fuzz target modifications to prevent this crash.
 </steps>
 
 Here is the provided data.
@@ -64,9 +68,8 @@ Here is the provided data.
 {CRASH_ANALYSIS}
 </crash-analysis>
 
-{RESPONSE_FORMAT}
-
 You will be provided with the following tools.
 1. get_function_implementation: This is a tool you can use to retrieve the implementation of a function using the project's name and function's name as arguments.
 2. search_project_files: This is an interactive tool you can use to search the project's source file using bash commands and find definitions or usages of functions, classes, structs, and variables.
     The usage guide for the Bash Tool is provided below.
+3. report_final_result: This is a tool you must use to report your final result. Once this tool is called, no further instructions will be provided to you.

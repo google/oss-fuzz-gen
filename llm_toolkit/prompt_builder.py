@@ -1090,12 +1090,6 @@ class ContextAnalyzerTemplateBuilder(DefaultTemplateBuilder):
 
     # Add the function requirements
     prompt = prompt.replace('{FUNCTION_REQUIREMENTS}', function_requirements)
-
-    response_format = self._get_template(self.context_analyzer_response_file)
-
-    if response_format:
-      prompt = prompt.replace('{RESPONSE_FORMAT}', response_format)
-
     self._prompt.append(prompt)
     self._prompt.append(tool_guides)
 
