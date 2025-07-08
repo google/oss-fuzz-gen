@@ -1109,7 +1109,8 @@ class ContextAnalyzerTemplateBuilder(DefaultTemplateBuilder):
             function_signature: str = '') -> prompts.Prompt:
     """Returns an empty prompt."""
 
-    del (example_pair, project_example_content, project_context_content)
+    del (example_pair, project_example_content, project_context_content,
+         tool_guides, project_dir, project_name, function_signature)
 
     return self._prompt
 

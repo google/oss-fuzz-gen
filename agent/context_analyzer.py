@@ -19,16 +19,16 @@ generate correct fuzz target for the function.
 
 import argparse
 
+from google.adk.tools import ToolContext
+
 import logger
 import results as resultslib
 from agent import base_agent
 from data_prep import introspector
 from experiment import benchmark as benchmarklib
 from experiment.workdir import WorkDirs
-from google.adk.tools import ToolContext
 from llm_toolkit import models, prompt_builder, prompts
 from tool import container_tool
-from typing import Any
 
 
 class ContextAnalyzer(base_agent.ADKBaseAgent):
@@ -45,7 +45,10 @@ class ContextAnalyzer(base_agent.ADKBaseAgent):
     builder = prompt_builder.ContextAnalyzerTemplateBuilder(llm, benchmark)
     description = builder.get_description().get()
     instruction = builder.get_instruction().get()
-    tools = [self.get_function_implementation, self.search_project_files, self.report_final_result]
+    tools = [
+        self.get_function_implementation, self.search_project_files,
+        self.report_final_result
+    ]
     super().__init__(trial, llm, args, benchmark, description, instruction,
                      tools, name)
     self.project_functions = None
@@ -65,36 +68,8 @@ class ContextAnalyzer(base_agent.ADKBaseAgent):
 
     return requirement_path
 
-  def validate_llm_response(self, response: str) -> bool:
-    """Validate the LLM response for the required tags."""
-    if not response:
-      logger.error('LLM response is empty.', trial=self.trial)
-      return False
-
-    feasible = self._parse_tag(response, 'feasible')
-    analysis = self._parse_tag(response, 'analysis')
-    recommendations = self._parse_tag(response, 'recommendations')
-
-    if not feasible or feasible.strip() not in ['False', 'True']:
-      logger.error('LLM response does not contain a valid "feasible" tag.',
-                   trial=self.trial)
-      return False
-
-    if not analysis:
-      logger.error('LLM response does not contain an "analysis" tag.',
-                   trial=self.trial)
-      return False
-
-    if feasible.strip() == 'False' and not recommendations:
-      logger.error(
-          'LLM response does not provide any recommendation for a non-feasible crash.',
-          trial=self.trial)
-      return False
-
-    return True
-
-  def handle_invalid_llm_response(
-      self, final_response_text: str) -> prompts.Prompt:
+  def handle_invalid_llm_response(self,
+                                  final_response_text: str) -> prompts.Prompt:
     """Handle the LLM response and update the result."""
 
     template_builder = prompt_builder.ContextAnalyzerTemplateBuilder(
@@ -103,7 +78,6 @@ class ContextAnalyzer(base_agent.ADKBaseAgent):
     return self._container_handle_invalid_tool_usage(
         [self.inspect_tool], self.round, final_response_text,
         template_builder.build(), template_builder.get_response_format())
-
 
   def execute(self,
               result_history: list[resultslib.Result]) -> resultslib.Result:
@@ -116,9 +90,9 @@ class ContextAnalyzer(base_agent.ADKBaseAgent):
 
     if not isinstance(
         last_result, resultslib.AnalysisResult) or not last_result.crash_result:
-      logger.error(
-          f'Expected last result to be AnalysisResult, got {type(last_result)}.',
-          trial=self.trial)
+      logger.error(f'Expected last result to be AnalysisResult, got %s.',
+                   type(last_result),
+                   trial=self.trial)
       return last_result
 
     context_result = None
@@ -135,16 +109,15 @@ class ContextAnalyzer(base_agent.ADKBaseAgent):
     # Chat with the LLM asynchronously and return the result
     while self.round < self.max_round:
       final_response = self.chat_llm(self.round,
-                                          client=None,
-                                          prompt=prompt,
-                                          trial=result_history[-1].trial)
+                                     client=None,
+                                     prompt=prompt,
+                                     trial=result_history[-1].trial)
       context_result = resultslib.CrashContextResult.from_dict(final_response)
       if context_result:
         break
       logger.error('Failed to parse LLM response into CrashContextResult.',
-                    trial=self.trial)
+                   trial=self.trial)
       prompt = self.handle_invalid_llm_response(final_response)
-
 
     # Terminate the inspect tool after the analysis is done
     self.inspect_tool.terminate()
@@ -280,33 +253,34 @@ class ContextAnalyzer(base_agent.ADKBaseAgent):
 
     return response
 
-  def report_final_result(self, feasible: bool, analysis: str, recommendations: str, tool_context: ToolContext) -> dict:
+  def report_final_result(self, feasible: bool, analysis: str,
+                          recommendations: str,
+                          tool_context: ToolContext) -> dict:
     """
-    Provide final result, including the crash feasibility, detailed analysis, and any recommendations.
+    Provide final result, including the crash feasibility,
+        detailed analysis, and any recommendations.
 
     Args:
         feasible (bool): True if the crash is feasible, False otherwise.
-        analysis (str): Detailed analysis and source code evidence showing why the crash is or is not feasible.
-        recommendations (str): Recommendations for modifying the fuzz target to prevent the crash. If the crash is feasible, this should be empty.
+        analysis (str): Detailed analysis and source code evidence showing
+                        why the crash is or is not feasible.
+        recommendations (str): Recommendations for modifying the fuzz target to
+                        prevent the crash. If the crash is feasible,
+                        this should be empty.
 
     Returns:
         This function will not return anything to the LLM.
     """
     response = f"""
-    <response>
       <feasible>\n{feasible}\n</feasible>
       <analysis>\n{analysis}\n</analysis>
       <recommendations>\n{recommendations}\n</recommendations>
-    </response>
     """
     self.log_llm_response(response)
     crash_context_result = resultslib.CrashContextResult(
-        feasible=feasible,
-        analysis=analysis,
-        recommendations=recommendations
-    )
+        feasible=feasible, analysis=analysis, recommendations=recommendations)
 
     # We have received final result. Instruct the agent to terminate execution.
     # tool_context._invocation_context.end_invocation = True
-    tool_context.actions.skip_summarization = True
+    self.end_llm_chat(tool_context)
     return crash_context_result.to_dict()

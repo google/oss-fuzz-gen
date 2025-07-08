@@ -25,6 +25,7 @@ from typing import Any, Optional
 
 import requests
 from google.adk import agents, runners, sessions
+from google.adk.tools import ToolContext
 from google.genai import errors, types
 
 import logger
@@ -173,7 +174,8 @@ class BaseAgent(ABC):
                                            response: str,
                                            prompt: Prompt,
                                            extra: str = '') -> Prompt:
-    """Formats a prompt to re-teach LLM how to use the |tools|, appended with |extra| information"""
+    """Formats a prompt to re-teach LLM how to use the |tools|,
+        appended with |extra| information"""
     logger.warning('ROUND %02d Invalid response from LLM: %s',
                    cur_round,
                    response,
@@ -419,6 +421,10 @@ class ADKBaseAgent(BaseAgent):
                 response,
                 self.round,
                 trial=self.trial)
+
+  def end_llm_chat(self, tool_context: ToolContext) -> None:
+    """Ends the LLM chat session."""
+    tool_context.actions.skip_summarization = True
 
 
 if __name__ == "__main__":

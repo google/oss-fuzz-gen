@@ -331,13 +331,13 @@ class CrashContextResult():
   def from_dict(data: Any) -> Optional['CrashContextResult']:
     """Creates a CrashContextResult from a dictionary."""
 
-    if not isinstance(data, dict) or 'feasible' not in data or 'analysis' not in data:
+    if not isinstance(data,
+                      dict) or 'feasible' not in data or 'analysis' not in data:
       return None
 
-    return CrashContextResult(
-        feasible=data.get('feasible', False),
-        analysis=data.get('analysis', ''),
-        recommendations=data.get('recommendations', ''))
+    return CrashContextResult(feasible=data.get('feasible', False),
+                              analysis=data.get('analysis', ''),
+                              recommendations=data.get('recommendations', ''))
 
 
 # TODO: Make this class an attribute of Result, avoid too many attributes in one
