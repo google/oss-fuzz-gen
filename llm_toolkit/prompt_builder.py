@@ -28,7 +28,8 @@ from experiment import oss_fuzz_checkout
 from experiment.benchmark import Benchmark, FileType
 from experiment.fuzz_target_error import SemanticCheckResult
 from llm_toolkit import models, prompts
-from results import AnalysisResult, BuildResult, CoverageResult, CrashContextResult, CrashResult, RunResult
+from results import (AnalysisResult, BuildResult, CoverageResult,
+                     CrashContextResult, CrashResult, RunResult)
 
 logger = logging.getLogger(__name__)
 
@@ -793,8 +794,8 @@ class CrashEnhancerTemplateBuilder(PrototyperTemplateBuilder):
                initial: Any = None):
     super().__init__(model, benchmark, template_dir, initial)
     # Load templates.
-    self.priming_template_file = self._find_template(self.agent_templare_dir,
-                                                     'enhancer-crash-priming.txt')
+    self.priming_template_file = self._find_template(
+        self.agent_templare_dir, 'enhancer-crash-priming.txt')
     self.build_result = build_result
     self.crash_result = crash_result
     self.context_result = context_result
@@ -820,7 +821,8 @@ class CrashEnhancerTemplateBuilder(PrototyperTemplateBuilder):
 
     priming = priming.replace('{FUZZ_TARGET_SOURCE}',
                               self.build_result.fuzz_target_source)
-    priming = priming.replace('{CRASH_STACKTRACE}', self.crash_result.stacktrace)
+    priming = priming.replace('{CRASH_STACKTRACE}',
+                              self.crash_result.stacktrace)
     priming = priming.replace('{CRASH_ANALYZER_INSIGHT}',
                               self.crash_result.insight)
 
@@ -828,8 +830,7 @@ class CrashEnhancerTemplateBuilder(PrototyperTemplateBuilder):
       priming = priming.replace('CONTEXT_ANALYZER_INSIGHT',
                                 self.context_result.analysis)
       fix_recommendations = FIX_RECOMMENDATION_HEADER + self.context_result.recommendations
-      priming = priming.replace('FIX_RECOMMENDATION',
-                                fix_recommendations)
+      priming = priming.replace('FIX_RECOMMENDATION', fix_recommendations)
 
     if function_requirements:
       priming = priming.replace('{FUNCTION_REQUIREMENTS}',

@@ -66,8 +66,8 @@ class Enhancer(Prototyper):
         crash_result = last_result.crash_result
         context_result = last_result.crash_context_result
         builder = CrashEnhancerTemplateBuilder(self.llm, benchmark,
-                                               last_build_result,
-                                               crash_result, context_result)
+                                               last_build_result, crash_result,
+                                               context_result)
       elif last_result.coverage_result:
         builder = CoverageEnhancerTemplateBuilder(
             self.llm,
