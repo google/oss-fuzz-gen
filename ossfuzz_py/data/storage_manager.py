@@ -180,6 +180,62 @@ class StorageManager:
       pickle.dump(data, f)
     return str(file_path.with_suffix('.pkl'))
 
+  def store_history(self, category: str, name: str, data: Any) -> str:
+    """
+    Store historical data for a specific category and name.
+
+    Args:
+        category: History category
+        (e.g., 'build', 'crash', 'corpus', 'coverage')
+        name: Specific name/identifier within the category
+        data: Data to store in history
+
+    Returns:
+        str: Storage path or identifier where data was stored
+
+    Raises:
+        StorageManagerError: If storage operation fails
+    """
+    try:
+      self.logger.debug("Storing history data for %s/%s", category, name)
+      return self.adapter.append_history(category, name, data)
+    except Exception as e:
+      error_msg = f"Failed to store history for {category}/{name}: {str(e)}"
+      self.logger.error(error_msg)
+      raise StorageManagerError(error_msg)
+
+  def get_history(self,
+                  category: str,
+                  name: str,
+                  start_date: Optional[str] = None,
+                  end_date: Optional[str] = None,
+                  limit: Optional[int] = None) -> List[Any]:
+    """
+    Retrieve historical data for a specific category and name.
+
+    Args:
+        category: History category
+        (e.g., 'build', 'crash', 'corpus', 'coverage')
+        name: Specific name/identifier within the category
+        start_date: Optional start date filter (ISO format)
+        end_date: Optional end date filter (ISO format)
+        limit: Optional limit on number of results
+
+    Returns:
+        List of historical data entries
+
+    Raises:
+        StorageManagerError: If retrieval fails
+    """
+    try:
+      self.logger.debug("Retrieving history data for %s/%s", category, name)
+      return self.adapter.get_history(category, name, start_date, end_date,
+                                      limit)
+    except Exception as e:
+      error_msg = f"Failed to get history for {category}/{name}: {str(e)}"
+      self.logger.error(error_msg)
+      raise StorageManagerError(error_msg)
+
   def retrieve(self, key: str) -> Any:  # pylint: disable=inconsistent-return-statements
     """
     Retrieve data with the given key.
