@@ -53,21 +53,6 @@ class ContextAnalyzer(base_agent.ADKBaseAgent):
                      tools, name)
     self.project_functions = None
 
-  def write_requirements_to_file(self, args, requirements: str) -> str:
-    """Writes the requirements to a file."""
-    if not requirements:
-      logger.warning('No requirements to write to file.', trial=self.trial)
-      return ''
-
-    requirement_path = args.work_dirs.requirements_file_path(self.trial)
-    with open(requirement_path, 'w') as f:
-      f.write(requirements)
-    logger.info('Requirements written to %s',
-                requirement_path,
-                trial=self.trial)
-
-    return requirement_path
-
   def handle_invalid_llm_response(self,
                                   final_response_text: str) -> prompts.Prompt:
     """Handle the LLM response and update the result."""
