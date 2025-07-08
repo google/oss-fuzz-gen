@@ -1083,8 +1083,8 @@ class ContextAnalyzerTemplateBuilder(DefaultTemplateBuilder):
                    self.benchmark.project, self.benchmark.function_signature)
       return self._prompt
 
-    # Add the fuzz driver and crash results
-    prompt = prompt.replace('{FUZZ_DRIVER}', run_result.fuzz_target_source)
+    # Add the fuzz target and crash results
+    prompt = prompt.replace('{FUZZ_TARGET}', run_result.fuzz_target_source)
     prompt = prompt.replace('{CRASH_ANALYSIS}', crash_result.insight)
     prompt = prompt.replace('{CRASH_STACKTRACE}', crash_result.stacktrace)
 

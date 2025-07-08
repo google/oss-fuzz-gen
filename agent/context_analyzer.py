@@ -41,29 +41,22 @@ class ContextAnalyzer(base_agent.ADKBaseAgent):
                name: str = ''):
 
     builder = prompt_builder.ContextAnalyzerTemplateBuilder(llm, benchmark)
-
     description = builder.get_description().get()
-
     instruction = builder.get_instruction().get()
-
     tools = [self.get_function_implementation, self.search_project_files]
-
     super().__init__(trial, llm, args, benchmark, description, instruction,
                      tools, name)
-
     self.project_functions = None
 
   def write_requirements_to_file(self, args, requirements: str) -> str:
-    """Write the requirements to a file."""
+    """Writes the requirements to a file."""
     if not requirements:
       logger.warning('No requirements to write to file.', trial=self.trial)
       return ''
 
     requirement_path = args.work_dirs.requirements_file_path(self.trial)
-
     with open(requirement_path, 'w') as f:
       f.write(requirements)
-
     logger.info('Requirements written to %s',
                 requirement_path,
                 trial=self.trial)
@@ -152,26 +145,21 @@ class ContextAnalyzer(base_agent.ADKBaseAgent):
     # Initialize the ProjectContainerTool for local file search
     self.inspect_tool = container_tool.ProjectContainerTool(self.benchmark)
     self.inspect_tool.compile(extra_commands=' && rm -rf /out/* > /dev/null')
-
-    # Call the agent asynchronously and return the result
+    # Prepare initial prompt for the agent
     prompt = self._initial_prompt(result_history)
-
     if not prompt or not prompt.get():
       logger.error('Failed to build initial prompt for FunctionAnalyzer.',
                    trial=self.trial)
       return last_result
-
+    # Chat with the LLM asynchronously and return the result
     while self.round < self.max_round and prompt.get():
-
       final_response_text = self.chat_llm(self.round,
                                           client=None,
                                           prompt=prompt,
                                           trial=result_history[-1].trial)
-
       prompt = self.handle_llm_response(final_response_text, context_result)
-
+    # Terminate the inspect tool after the analysis is done
     self.inspect_tool.terminate()
-
     analysis_result = resultslib.AnalysisResult(
         author=self,
         run_result=last_result.run_result,

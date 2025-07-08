@@ -173,7 +173,7 @@ class BaseAgent(ABC):
                                            response: str,
                                            prompt: Prompt,
                                            extra: str = '') -> Prompt:
-    """Formats a prompt to re-teach LLM how to use the |tool|."""
+    """Formats a prompt to re-teach LLM how to use the |tools|, appended with |extra| information"""
     logger.warning('ROUND %02d Invalid response from LLM: %s',
                    cur_round,
                    response,

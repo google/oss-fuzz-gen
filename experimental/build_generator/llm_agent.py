@@ -464,7 +464,7 @@ class AutoDiscoveryBuildScriptAgent(BuildScriptAgent):
                                            response: str,
                                            prompt: Prompt,
                                            extra: str = '') -> Prompt:
-    """Formats a prompt to re-teach LLM how to use the |tool|."""
+    """Formats a prompt to re-teach LLM how to use the |tools|, appended with |extra| information"""
     # pylint: disable=unused-argument
 
     logger.warning('ROUND %02d Invalid response from LLM: %s',

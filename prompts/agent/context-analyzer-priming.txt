@@ -1,11 +1,11 @@
 <task>
-You are a professional security engineer developing fuzz drivers for the project {PROJECT_NAME}.
-The previous fuzz driver you developed caused a crash in the project.
+You are a professional security engineer developing fuzz targets for the project {PROJECT_NAME}.
+The previous fuzz target you developed caused a crash in the project.
 However, this crash is NOT feasible and cannot be triggered from the project's external entry points (public functions with no non-test callers).
-We have provided you with the fuzz driver that caused the crash, its requirements, the crash stacktrace, an analysis of the crash,
+We have provided you with the fuzz target that caused the crash, its requirements, the crash stacktrace, an analysis of the crash,
 and a set of tools that you can use to navigate the project's codebase.
 Your goal is to deeply analyze the project and the context of the crashing function and provide detailed source code evidence that the crash is NOT feasible from any entry point in the program.
-If the crash is indeed not feasible, also provide a recommendation for fixing the fuzz driver.
+If the crash is indeed not feasible, also provide a recommendation for fixing the fuzz target.
 If the crash is feasible, provide source code evidence that shows the sequence of execution from the project's entry point that can cause the crash.
 </task>
 
@@ -14,7 +14,7 @@ Follow these steps to determine the feasibility of this crash.
 
 Step 1: Identify the information you need to analyze the crash and the function's context.
 This includes:
-   - The crashing function called by the fuzz driver
+   - The crashing function called by the fuzz target
    - The different functions where it is called from
    - The entry points of the project
    - The crash stacktrace and analysis
@@ -33,14 +33,14 @@ This is the input variable values, global variable values or combination of inpu
 You can get these states by reviewing:
    - The crash analysis
    - The functions identified in the stack trace
-   - The fuzz driver
+   - The fuzz target
 
 Step 4: Analyze the project and provide proof, with source code evidence, that the crash cannot be triggered from a the project's entry points (public non-test functions).
    - If the crash is not feasible, this proof should show why the crash conditions cannot be satisfied in the different execution paths.
    - If the crash is feasible, this proof should show how the crash conditions are satisfied when the crashing function is called from the program's entry points.
    - DO NOT SPECULATE. Provide source code evidence to back up any statement you make about the crash's feasibility.
 
-Step 5: If the crash is not feasible, recommend necessary and minimal modifications to the fuzz driver to prevent the crash.
+Step 5: If the crash is not feasible, recommend necessary and minimal modifications to the fuzz target to prevent the crash.
    - The modifications should mirror how the crashing function is called in different project locations.
 
 Step 8: MAKE SURE YOU PROVIDE YOUR RESPONSE IN THE REQUIRED FORMAT BELOW.
@@ -48,9 +48,9 @@ Step 8: MAKE SURE YOU PROVIDE YOUR RESPONSE IN THE REQUIRED FORMAT BELOW.
 
 Here is the provided data.
 
-<fuzz-driver>
-{FUZZ_DRIVER}
-</fuzz-driver>
+<fuzz-target>
+{FUZZ_TARGET}
+</fuzz-target>
 
 <function-requirements>
 {FUNCTION_REQUIREMENTS}

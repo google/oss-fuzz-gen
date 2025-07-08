@@ -10,7 +10,7 @@ Make sure your response follows the following format.
 Your analysis of the feasibility of this crash
 </analysis>
 <recommendations>
-Recommendations for modifying the fuzz driver to prevent the crash if the crash is not feasible
+Recommendations for modifying the fuzz target to prevent the crash if the crash is not feasible
 </recommendations>
 
 </response_format>
