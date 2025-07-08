@@ -15,21 +15,20 @@
 
 import argparse
 import json
-from data_prep import introspector
-import logger
 import os
+import traceback
+from datetime import datetime
 from typing import List
 
-from results import AnalysisResult, CrashResult, RunResult
+import logger
 import run_all_experiments
+import run_one_experiment
 from agent import context_analyzer
+from data_prep import introspector
 from experiment import benchmark as benchmarklib
 from experiment import workdir
 from llm_toolkit import models
-from datetime import datetime
-import traceback
-
-import run_one_experiment
+from results import AnalysisResult, CrashResult, RunResult
 
 RESULTS_DIR = f'./results-{datetime.now().strftime("%Y-%m-%d-%H-%M")}'
 
@@ -70,7 +69,6 @@ def parse_args() -> argparse.Namespace:
                       type=str,
                       default=introspector.DEFAULT_INTROSPECTOR_ENDPOINT)
 
-
   parser.add_argument(
       '-of',
       '--oss-fuzz-dir',
@@ -83,7 +81,9 @@ def parse_args() -> argparse.Namespace:
 
   return parsed_args
 
-def get_mock_last_result(args, benchmark: benchmarklib.Benchmark) -> AnalysisResult:
+
+def get_mock_last_result(args,
+                         benchmark: benchmarklib.Benchmark) -> AnalysisResult:
 
   stacktrace = """
 AddressSanitizer: SEGV on unknown address 0x000000000000 (pc 0x557d26695151 bp 0x7ffe468518b0 sp 0x7ffe46851860 T0)
@@ -157,7 +157,6 @@ A more robust fix would be to ensure that if `content` is NULL, the `<a>` tag is
 
 The bug is in the project code, not the fuzzer driver. The fuzzer correctly identified a valid crash.
   """
-
 
   fuzz_target_source = """
 #include <errno.h>
@@ -249,31 +248,29 @@ return 0;
 }
   """
 
-  run_result = RunResult(
+  run_result = RunResult(benchmark=benchmark,
+                         trial=1,
+                         work_dirs=args.work_dirs,
+                         author=None,
+                         chat_history={},
+                         crashes=True,
+                         fuzz_target_source=fuzz_target_source)
+
+  crash_result = CrashResult(
       benchmark=benchmark,
       trial=1,
       work_dirs=args.work_dirs,
       author=None,
       chat_history={},
-      crashes=True,
-      fuzz_target_source=fuzz_target_source
+      stacktrace=stacktrace,
+      true_bug=True,
+      insight=insight,
   )
 
-
-  crash_result = CrashResult(benchmark=benchmark,
-                               trial=1,
-                               work_dirs=args.work_dirs,
-                               author=None,
-                               chat_history={},
-                               stacktrace=stacktrace,
-                               true_bug=True,
-                               insight=insight,)
-
-  analysis_result = AnalysisResult(
-      author=None,
-      run_result=run_result,
-      crash_result=crash_result,
-      chat_history={})
+  analysis_result = AnalysisResult(author=None,
+                                   run_result=run_result,
+                                   crash_result=crash_result,
+                                   chat_history={})
 
   return analysis_result
 
@@ -301,15 +298,17 @@ if __name__ == '__main__':
   if len(benchmarks) == 0:
     raise ValueError('No benchmarks found in the YAML file.')
 
-  logger.info('Loaded %d benchmarks from the YAML file %s.', len(benchmarks),
-              args.benchmark_yaml, trial=1)
+  logger.info('Loaded %d benchmarks from the YAML file %s.',
+              len(benchmarks),
+              args.benchmark_yaml,
+              trial=1)
 
   benchmark = benchmarks[0]  # For testing, we only analyze the first benchmark
 
   analyzer = context_analyzer.ContextAnalyzer(trial=1,
-                                                llm=model,
-                                                args=args,
-                                                benchmark=benchmark)
+                                              llm=model,
+                                              args=args,
+                                              benchmark=benchmark)
 
   last_result = get_mock_last_result(args, benchmark)
 
@@ -318,11 +317,14 @@ if __name__ == '__main__':
     result = analyzer.execute([last_result])
 
     # Write result to new file in work directory
-    result_file = os.path.join(args.work_dirs.base,
-                               f'{benchmark.function_name}_context_analysis_result.json')
+    result_file = os.path.join(
+        args.work_dirs.base,
+        f'{benchmark.function_name}_context_analysis_result.json')
     with open(result_file, 'w') as file:
       json.dump(result.to_dict(), file, indent=2)
   except Exception as e:
     logger.error('Error during analysis for benchmark %s: %s\n%s',
-           benchmark.function_name, e, traceback.format_exc(), trial=1)
-
+                 benchmark.function_name,
+                 e,
+                 traceback.format_exc(),
+                 trial=1)
