@@ -390,10 +390,10 @@ class AnalysisResult(Result):
       return not self.semantic_result.has_err
     if self.coverage_result:
       return not self.coverage_result.improve_required
-    if self.crash_result:
-      return self.crash_result.true_bug
     if self.crash_context_result:
       return self.crash_context_result.feasible
+    if self.crash_result:
+      return self.crash_result.true_bug
     return False
 
   @property
