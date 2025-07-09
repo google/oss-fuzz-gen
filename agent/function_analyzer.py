@@ -126,7 +126,7 @@ class FunctionAnalyzer(base_agent.ADKBaseAgent):
     builder = prompt_builder.FunctionAnalyzerTemplateBuilder(
         self.llm, self.benchmark)
 
-    prompt = builder.build_prompt()
+    prompt = builder.build_prompt(self.inspect_tool.project_dir)
 
     prompt.append(self.inspect_tool.tutorial())
 

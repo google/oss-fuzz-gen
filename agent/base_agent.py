@@ -395,12 +395,16 @@ class ADKBaseAgent(BaseAgent):
           if (event.content and event.content.parts):
             if event.content.parts[0].text:
               final_response = event.content.parts[0].text
-              self.log_llm_response(final_response)
             elif event.content.parts[0].function_response:
               final_response = event.content.parts[0].function_response.response
           elif event.actions and event.actions.escalate:
             error_message = event.error_message
             logger.error('Agent escalated: %s', error_message, trial=self.trial)
+
+      if final_response:
+        self.log_llm_response(str(final_response))
+      else:
+        self.log_llm_response('No valid response from LLM.')
 
       return final_response
 

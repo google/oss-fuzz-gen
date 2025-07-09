@@ -73,11 +73,15 @@ class ContextAnalyzer(base_agent.ADKBaseAgent):
 
     last_result = result_history[-1]
 
-    if not isinstance(
-        last_result, resultslib.AnalysisResult) or not last_result.crash_result:
-      logger.error(f'Expected last result to be AnalysisResult, got %s.',
-                   type(last_result),
-                   trial=self.trial)
+    # Validate that the last result is an AnalysisResult and has a valid crash_result
+    if not isinstance(last_result, resultslib.AnalysisResult):
+      logger.error('Expected last result to be AnalysisResult, got %s.',
+            type(last_result), trial=self.trial)
+      return last_result
+
+    if not last_result.crash_result:
+      logger.error('Missing crash_result in the AnalysisResult.',
+            trial=self.trial)
       return last_result
 
     context_result = None
@@ -256,12 +260,6 @@ class ContextAnalyzer(base_agent.ADKBaseAgent):
     Returns:
         This function will not return anything to the LLM.
     """
-    response = f"""
-      <feasible>\n{feasible}\n</feasible>
-      <analysis>\n{analysis}\n</analysis>
-      <recommendations>\n{recommendations}\n</recommendations>
-    """
-    self.log_llm_response(response)
     crash_context_result = resultslib.CrashContextResult(
         feasible=feasible, analysis=analysis, recommendations=recommendations)
 
