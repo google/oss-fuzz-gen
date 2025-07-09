@@ -76,12 +76,13 @@ class ContextAnalyzer(base_agent.ADKBaseAgent):
     # Validate that the last result is an AnalysisResult and has a valid crash_result
     if not isinstance(last_result, resultslib.AnalysisResult):
       logger.error('Expected last result to be AnalysisResult, got %s.',
-            type(last_result), trial=self.trial)
+                   type(last_result),
+                   trial=self.trial)
       return last_result
 
     if not last_result.crash_result:
       logger.error('Missing crash_result in the AnalysisResult.',
-            trial=self.trial)
+                   trial=self.trial)
       return last_result
 
     context_result = None
