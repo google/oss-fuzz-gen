@@ -294,7 +294,7 @@ class BaseAgent(ABC):
     else:
       function_requirements = ''
 
-    return function_requirements
+    return ''
 
   @classmethod
   def cloud_main(cls) -> None:
