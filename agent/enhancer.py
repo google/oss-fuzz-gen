@@ -64,10 +64,10 @@ class Enhancer(Prototyper):
                                           last_build_result, error_desc, errors)
       elif last_result.crash_result:
         crash_result = last_result.crash_result
+        context_result = last_result.crash_context_result
         builder = CrashEnhancerTemplateBuilder(self.llm, benchmark,
-                                               last_build_result,
-                                               crash_result.insight,
-                                               crash_result.stacktrace)
+                                               last_build_result, crash_result,
+                                               context_result)
       elif last_result.coverage_result:
         builder = CoverageEnhancerTemplateBuilder(
             self.llm,

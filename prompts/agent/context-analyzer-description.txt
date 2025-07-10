@@ -1,0 +1,1 @@
+An agent to analyze the context of a crashing function in a project and determine the feasibility of a crash.
