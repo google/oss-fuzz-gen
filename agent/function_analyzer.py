@@ -108,20 +108,20 @@ class FunctionAnalyzer(base_agent.ADKBaseAgent):
 
     while self.round < self.max_round:
       final_response_text = self.chat_llm(self.round,
-                                     client=None,
-                                     prompt=prompt,
-                                     trial=result_history[-1].trial)
+                                          client=None,
+                                          prompt=prompt,
+                                          trial=result_history[-1].trial)
       if final_response_text:
         self.handle_llm_response(final_response_text, result)
         break
 
       # Handle invalid LLM response
       template_builder = prompt_builder.FunctionAnalyzerTemplateBuilder(
-        self.llm, self.benchmark)
+          self.llm, self.benchmark)
 
       prompt = self._container_handle_invalid_tool_usage(
-        [self.inspect_tool], self.round, final_response_text,
-        template_builder.build(), template_builder.get_response_format())
+          [self.inspect_tool], self.round, final_response_text,
+          template_builder.build(), template_builder.get_response_format())
 
     self.inspect_tool.terminate()
     return result

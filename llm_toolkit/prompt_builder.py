@@ -983,8 +983,7 @@ class FunctionAnalyzerTemplateBuilder(DefaultTemplateBuilder):
       references_str = '\n'.join(references)
       prompt = prompt.replace('{FUNCTION_REFERENCES}', references_str)
 
-    prompt = prompt.replace('{RESPONSE_FORMAT}',
-                            self.get_response_format())
+    prompt = prompt.replace('{RESPONSE_FORMAT}', self.get_response_format())
 
     self._prompt.append(prompt)
 
