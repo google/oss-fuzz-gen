@@ -25,6 +25,7 @@ from typing import Any, Optional
 
 import requests
 from google.adk import agents, runners, sessions
+from google.adk.tools import ToolContext
 from google.genai import errors, types
 
 import logger
@@ -167,10 +168,14 @@ class BaseAgent(ABC):
       prompt.append(prompt_text)
     return prompt
 
-  def _container_handle_invalid_tool_usage(self, tools: list[BaseTool],
-                                           cur_round: int, response: str,
-                                           prompt: Prompt) -> Prompt:
-    """Formats a prompt to re-teach LLM how to use the |tool|."""
+  def _container_handle_invalid_tool_usage(self,
+                                           tools: list[BaseTool],
+                                           cur_round: int,
+                                           response: str,
+                                           prompt: Prompt,
+                                           extra: str = '') -> Prompt:
+    """Formats a prompt to re-teach LLM how to use the |tools|,
+        appended with |extra| information"""
     logger.warning('ROUND %02d Invalid response from LLM: %s',
                    cur_round,
                    response,
@@ -180,6 +185,9 @@ class BaseAgent(ABC):
     for tool in tools:
       prompt_text += f'{tool.tutorial()}\n\n'
     prompt.append(prompt_text)
+    # We add any additional information to the prompt.
+    if extra:
+      prompt.append(extra)
     return prompt
 
   def _container_handle_bash_commands(self, response: str, tool: BaseTool,
@@ -363,7 +371,7 @@ class ADKBaseAgent(BaseAgent):
     logger.info('ADK Agent %s created.', self.name, trial=self.trial)
 
   def chat_llm(self, cur_round: int, client: Any, prompt: Prompt,
-               trial: int) -> str:
+               trial: int) -> Any:
     """Call the agent with the given prompt, running async code in sync."""
 
     self.round = cur_round
@@ -376,7 +384,7 @@ class ADKBaseAgent(BaseAgent):
       content = types.Content(role='user',
                               parts=[types.Part(text=prompt.get())])
 
-      final_response_text = ''
+      final_response = None
 
       async for event in self.runner.run_async(
           user_id=user_id,
@@ -384,16 +392,17 @@ class ADKBaseAgent(BaseAgent):
           new_message=content,
       ):
         if event.is_final_response():
-          if (event.content and event.content.parts and
-              event.content.parts[0].text):
-            final_response_text = event.content.parts[0].text
+          if (event.content and event.content.parts):
+            if event.content.parts[0].text:
+              final_response = event.content.parts[0].text
+              self.log_llm_response(final_response)
+            elif event.content.parts[0].function_response:
+              final_response = event.content.parts[0].function_response.response
           elif event.actions and event.actions.escalate:
             error_message = event.error_message
             logger.error('Agent escalated: %s', error_message, trial=self.trial)
 
-      self.log_llm_response(final_response_text)
-
-      return final_response_text
+      return final_response
 
     return self.llm.with_retry_on_error(lambda: asyncio.run(_call()),
                                         [errors.ClientError])
@@ -412,6 +421,10 @@ class ADKBaseAgent(BaseAgent):
                 response,
                 self.round,
                 trial=self.trial)
+
+  def end_llm_chat(self, tool_context: ToolContext) -> None:
+    """Ends the LLM chat session."""
+    tool_context.actions.skip_summarization = True
 
 
 if __name__ == "__main__":

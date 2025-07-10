@@ -458,10 +458,13 @@ class AutoDiscoveryBuildScriptAgent(BuildScriptAgent):
 
     return prompt
 
-  def _container_handle_invalid_tool_usage(self, tools: list[BaseTool],
-                                           cur_round: int, response: str,
-                                           prompt: Prompt) -> Prompt:
-    """Formats a prompt to re-teach LLM how to use the |tool|."""
+  def _container_handle_invalid_tool_usage(self,
+                                           tools: list[BaseTool],
+                                           cur_round: int,
+                                           response: str,
+                                           prompt: Prompt,
+                                           extra: str = '') -> Prompt:
+    """Formats a prompt to re-teach LLM how to use the |tools|, appended with |extra| information"""
     # pylint: disable=unused-argument
 
     logger.warning('ROUND %02d Invalid response from LLM: %s',

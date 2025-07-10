@@ -28,7 +28,8 @@ from experiment import oss_fuzz_checkout
 from experiment.benchmark import Benchmark, FileType
 from experiment.fuzz_target_error import SemanticCheckResult
 from llm_toolkit import models, prompts
-from results import BuildResult, CoverageResult, RunResult
+from results import (AnalysisResult, BuildResult, CoverageResult,
+                     CrashContextResult, CrashResult, RunResult)
 
 logger = logging.getLogger(__name__)
 
@@ -75,6 +76,7 @@ EXAMPLES = {
 
 BUILD_ERROR_SUMMARY = 'The code has the following build issues:'
 FUZZ_ERROR_SUMMARY = 'The code can build successfully but has a runtime issue: '
+FIX_RECOMMENDATION_HEADER = 'Here are some fix suggestions you can apply.\n'
 
 C_PROMPT_HEADERS_TO_ALWAYS_INCLUDES = ['stdio.h', 'stdlib.h', 'stdint.h']
 
@@ -786,17 +788,17 @@ class CrashEnhancerTemplateBuilder(PrototyperTemplateBuilder):
                model: models.LLM,
                benchmark: Benchmark,
                build_result: BuildResult,
-               insight: str = '',
-               stacktrace: str = '',
+               crash_result: CrashResult,
+               context_result: Optional[CrashContextResult],
                template_dir: str = DEFAULT_TEMPLATE_DIR,
                initial: Any = None):
     super().__init__(model, benchmark, template_dir, initial)
     # Load templates.
-    self.priming_template_file = self._find_template(self.agent_templare_dir,
-                                                     'enhancer-priming.txt')
+    self.priming_template_file = self._find_template(
+        self.agent_templare_dir, 'enhancer-crash-priming.txt')
     self.build_result = build_result
-    self.insight = insight
-    self.stacktrace = stacktrace
+    self.crash_result = crash_result
+    self.context_result = context_result
 
   def build(self,
             example_pair: list[list[str]],
@@ -816,33 +818,26 @@ class CrashEnhancerTemplateBuilder(PrototyperTemplateBuilder):
                               self.benchmark.function_signature)
     priming = priming.replace('{PROJECT_DIR}', project_dir)
     priming = priming.replace('{TOOL_GUIDES}', tool_guides)
-    if self.build_result.build_script_source:
-      build_text = (f'<build script>\n{self.build_result.build_script_source}\n'
-                    '</build script>')
-    else:
-      build_text = 'Build script reuses `/src/build.bk.sh`.'
-    priming = priming.replace('{BUILD_TEXT}', build_text)
-    priming_weight = self._model.estimate_token_num(priming)
-    # TODO(dongge): Refine this logic.
 
-    error_desc = f"""
-    Here is the insight from the crash analyzer:
-    {self.insight}
+    priming = priming.replace('{FUZZ_TARGET_SOURCE}',
+                              self.build_result.fuzz_target_source)
+    priming = priming.replace('{CRASH_STACKTRACE}',
+                              self.crash_result.stacktrace)
+    priming = priming.replace('{CRASH_ANALYZER_INSIGHT}',
+                              self.crash_result.insight)
 
-    Below is crash report:
-    {self.stacktrace}
-    """
-    errors = []
-    problem = self._format_fixer_problem(self.build_result.fuzz_target_source,
-                                         error_desc, errors, priming_weight, '',
-                                         '')
+    if self.context_result:
+      priming = priming.replace('CONTEXT_ANALYZER_INSIGHT',
+                                self.context_result.analysis)
+      fix_recommendations = FIX_RECOMMENDATION_HEADER + self.context_result.recommendations
+      priming = priming.replace('FIX_RECOMMENDATION', fix_recommendations)
 
-    # TODO(pamusuo): Refactor this logic before merging
     if function_requirements:
-      requirements = (f'\nHere are the requirements for the function.\n'
-                      f'{function_requirements}\n')
+      priming = priming.replace('{FUNCTION_REQUIREMENTS}',
+                                function_requirements)
 
-    self._prepare_prompt(priming, problem)
+    self._prompt.append(priming)
+
     return self._prompt
 
 
@@ -1001,6 +996,117 @@ class FunctionAnalyzerTemplateBuilder(DefaultTemplateBuilder):
     raise NotImplementedError(
         'FunctionAnalyzerTemplateBuilder.build() should not be called. '
         'Use build_prompt() instead.')
+
+
+class ContextAnalyzerTemplateBuilder(DefaultTemplateBuilder):
+  """Builder for function analyzer."""
+
+  def __init__(self,
+               model: models.LLM,
+               benchmark: Optional[Benchmark] = None,
+               template_dir: str = DEFAULT_TEMPLATE_DIR,
+               initial: Any = None):
+    super().__init__(model, benchmark, template_dir, initial)
+
+    # Load templates.
+    self.context_analyzer_instruction_file = self._find_template(
+        AGENT_TEMPLATE_DIR, 'context-analyzer-instruction.txt')
+    self.context_analyzer_description_file = self._find_template(
+        AGENT_TEMPLATE_DIR, 'context-analyzer-description.txt')
+    self.context_analyzer_prompt_template_file = self._find_template(
+        AGENT_TEMPLATE_DIR, 'context-analyzer-priming.txt')
+    self.context_analyzer_response_file = self._find_template(
+        DEFAULT_TEMPLATE_DIR, 'context-analyzer-response.txt')
+
+  def get_instruction(self) -> prompts.Prompt:
+    """Constructs a prompt using the templates in |self| and saves it."""
+
+    self._prompt = self._model.prompt_type()(None)
+    if not self.benchmark:
+      return self._prompt
+
+    prompt = self._get_template(self.context_analyzer_instruction_file)
+
+    self._prompt.append(prompt)
+
+    return self._prompt
+
+  def get_description(self) -> prompts.Prompt:
+    """Constructs a prompt using the templates in |self| and saves it."""
+
+    self._prompt = self._model.prompt_type()(None)
+    if not self.benchmark:
+      return self._prompt
+
+    prompt = self._get_template(self.context_analyzer_description_file)
+
+    self._prompt.append(prompt)
+
+    return self._prompt
+
+  def build_context_analysis_prompt(self,
+                                    last_result: AnalysisResult,
+                                    function_requirements: str,
+                                    tool_guides: str = '',
+                                    project_dir: str = '') -> prompts.Prompt:
+    """Constructs a prompt using the templates in |self| and saves it."""
+
+    if not self.benchmark:
+      logger.error(
+          'No benchmark provided for function analyzer template builder.')
+      return self._prompt
+
+    prompt = self._get_template(self.context_analyzer_prompt_template_file)
+
+    prompt = prompt.replace('{PROJECT_NAME}', self.benchmark.project)
+    prompt = prompt.replace('{PROJECT_DIR}', project_dir)
+
+    # Add the function source
+    func_source = introspector.query_introspector_function_source(
+        self.benchmark.project, self.benchmark.function_signature)
+
+    if not func_source:
+      logger.error('No function source found for project: %s, function: %s',
+                   self.benchmark.project, self.benchmark.function_signature)
+
+    crash_result = last_result.crash_result
+    run_result = last_result.run_result
+
+    if not crash_result or not run_result:
+      logger.error('No crash or run result found for project: %s, function: %s',
+                   self.benchmark.project, self.benchmark.function_signature)
+      return self._prompt
+
+    # Add the fuzz target and crash results
+    prompt = prompt.replace('{FUZZ_TARGET}', run_result.fuzz_target_source)
+    prompt = prompt.replace('{CRASH_ANALYSIS}', crash_result.insight)
+    prompt = prompt.replace('{CRASH_STACKTRACE}', crash_result.stacktrace)
+
+    # Add the function requirements
+    prompt = prompt.replace('{FUNCTION_REQUIREMENTS}', function_requirements)
+    self._prompt.append(prompt)
+    self._prompt.append(tool_guides)
+
+    return self._prompt
+
+  def get_response_format(self) -> str:
+    """Returns the response format for the context analyzer."""
+    return self._get_template(self.context_analyzer_response_file)
+
+  def build(self,
+            example_pair: Optional[list[list[str]]] = None,
+            project_example_content: Optional[list[list[str]]] = None,
+            project_context_content: Optional[dict] = None,
+            tool_guides: str = '',
+            project_dir: str = '',
+            project_name: str = '',
+            function_signature: str = '') -> prompts.Prompt:
+    """Returns an empty prompt."""
+
+    del (example_pair, project_example_content, project_context_content,
+         tool_guides, project_dir, project_name, function_signature)
+
+    return self._prompt
 
 
 class CrashAnalyzerTemplateBuilder(DefaultTemplateBuilder):
