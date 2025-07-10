@@ -653,7 +653,6 @@ class TrialResult:
       return 1 if result.crash_result.true_bug else 2
     return 0
 
-
   @property
   def is_semantic_error(self) -> bool:
     """Validates if the best AnalysisResult has semantic error."""
