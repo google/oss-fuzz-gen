@@ -109,6 +109,11 @@ class ContextAnalyzer(base_agent.ADKBaseAgent):
                    trial=self.trial)
       prompt = self.handle_invalid_llm_response(final_response)
 
+    if context_result:
+      logger.info('Is context analyzer result consistent: %s',
+          str(context_result.feasible == last_result.crash_result.true_bug),
+          trial=self.trial)
+
     # Terminate the inspect tool after the analysis is done
     self.inspect_tool.terminate()
     analysis_result = resultslib.AnalysisResult(

@@ -455,6 +455,14 @@ class TrialResult:
     return self.benchmark.language
 
   @property
+  def last_analysis_result(self) -> Optional[AnalysisResult]:
+    """Last AnalysisResult in trial."""
+    for result in self.result_history[::-1]:
+      if isinstance(result, AnalysisResult):
+        return result
+    return None
+
+  @property
   def best_analysis_result(self) -> Optional[AnalysisResult]:
     """Last AnalysisResult in trial, prefer crashed and a non-semantic error."""
     # 1. Crashed for a non-semantic error
@@ -631,6 +639,22 @@ class TrialResult:
     return ''
 
   @property
+  def crash_status(self) -> int:
+    """Crashing status of the last analysis result."""
+    """0: Unknown, 1: True Positive, 2: False Positive, 3: No crash."""
+    result = self.last_analysis_result
+    if not result:
+      return 0
+    if not result.crashes:
+      return 3
+    if result.crash_context_result:
+      return 1 if result.crash_context_result.feasible else 2
+    if result.crash_result:
+      return 1 if result.crash_result.true_bug else 2
+    return 0
+
+
+  @property
   def is_semantic_error(self) -> bool:
     """Validates if the best AnalysisResult has semantic error."""
     result = self.best_analysis_result
@@ -695,6 +719,8 @@ class TrialResult:
             self.is_semantic_error,
         'semantic_error':
             self.semantic_error,
+        'crash_status':
+            self.crash_status,
     }
 
 

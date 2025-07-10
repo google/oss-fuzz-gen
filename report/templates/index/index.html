@@ -422,7 +422,7 @@ limitations under the License.
                                                             <a href="sample/{{ bug.benchmark.id|urlencode }}/{{ bug.sample.id }}.html">Sample {{ bug.sample.id }}</a>
                                                         </pre>
                                                         <span class="p-2 rounded-lg {{ 'bg-red-300 text-black' if bug.sample.result.crashes and not bug.sample.result.is_semantic_error else 'bg-green-300 text-black' }}">
-                                                            {{ 'False positive' if bug.sample.result.is_semantic_error else 'True positive' }}
+                                                            {{ 'True Positive' if bug.sample.result.crash_status == 1 else 'False Positive' if bug.sample.result.crash_status == 2 else 'Resolved' if bug.sample.result.crash_status == 3 else  'Unknown' }}
                                                         </span>
                                                     </div>
                                                     {% endfor %}

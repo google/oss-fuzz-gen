@@ -63,6 +63,7 @@ class Result:
   driver_fuzz_err: str = dataclasses.field(kw_only=True, default='')
   compile_error: str = ''
   compile_log: str = ''
+  crash_status: int = 0
 
   def __post_init__(self, *args, **kwargs):  # pylint: disable=unused-argument
     if self.is_driver_fuzz_err:
