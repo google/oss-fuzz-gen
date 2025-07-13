@@ -47,6 +47,7 @@ class BaseExporter:
     """Get the URL path to the CSV file."""
     return os.path.join(self._output_dir, 'crashes.csv')
 
+
 class CSVExporter(BaseExporter):
   """Export a report to CSV."""
 

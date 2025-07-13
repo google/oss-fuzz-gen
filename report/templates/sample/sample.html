@@ -82,6 +82,17 @@ limitations under the License.
           </div>
           {% endif %}
 
+          {% if crash_info.execution_stats %}
+          <div class="mb-6 text-sm">
+              <span class="font-mono">
+                  {% for key, value in crash_info.execution_stats.items() %}
+                      <span class="text-gray-600">{{ key }}:</span>
+                      <span class="font-semibold">{{ value }}</span>{% if not loop.last %}<span class="text-gray-300 mx-2">|</span>{% endif %}
+                  {% endfor %}
+              </span>
+          </div>
+          {% endif %}
+
           {% if crash_info.crash_details %}
           {% if crash_info.stack_traces %}
           <script type="application/json" id="stackTracesData" style="display: none;">{{ crash_info.stack_traces | tojson }}</script>

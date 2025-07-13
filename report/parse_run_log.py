@@ -41,8 +41,9 @@ def get_source_url(coverage_file_path: str) -> str:
 
   project_name = extract_project_from_coverage_path(coverage_file_path)
   if not project_name:
-    # Hardcoding llvm-project paths due to OSS Fuzz not being able to find its project YAML
-    # However, the path to the GitHub repo is still correct, so we can use it
+    # Hardcoding llvm-project paths due to OSS Fuzz not being
+    # able to find its project YAML. However, the path to the
+    # GitHub repo is still correct, so we can use it
     if "llvm-project" in coverage_file_path:
       project_name = "llvm-project"
     else:
@@ -141,7 +142,7 @@ class RunLogsParser:
           }
 
     return stack_traces
-  
+
   def get_crash_reproduction_path(self) -> str:
     """Get the crash reproduction path from the run log."""
     for line in self._lines:
@@ -152,3 +153,28 @@ class RunLogsParser:
           filename = full_path.split('/')[-1]
           return filename
     return ""
+
+  def get_execution_stats(self) -> dict[str, str]:
+    """Get the execution stats from the run log."""
+    execution_stats = {}
+    patterns = {
+        'Executed units': r'stat::number_of_executed_units:\s*(\S+)',
+        'Executions per sec': r'stat::average_exec_per_sec:\s*(\S+)',
+        'Memory': r'stat::peak_rss_mb:\s*(\S+)',
+        'New units added': r'stat::new_units_added:\s*(\S+)',
+        'Slowest unit per time sec': r'stat::slowest_unit_time_sec:\s*(\S+)',
+        'Edge coverage': r'Final cov:\s*(.*)',
+        'Features': r'Final ft:\s*(.*)',
+        'Engine': r'FUZZING_ENGINE=([a-zA-Z0-9_-]+)',
+        'Corpus': r'INFO: seed corpus:\s*(.*)'
+    }
+    for line in self._lines:
+      for key, pattern in patterns.items():
+        if key in execution_stats:
+          continue
+        match = re.search(pattern, line)
+        if match:
+          execution_stats[key] = match.group(1).strip()
+          break
+
+    return execution_stats
