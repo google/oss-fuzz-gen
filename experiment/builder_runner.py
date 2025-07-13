@@ -1037,7 +1037,7 @@ class CloudBuilderRunner(BuilderRunner):
                            reproducer_path=reproducer_path,
                            log_path=run_log_path)
 
-    coverage_report_blobs = bucket.list_blobs(f'{coverage_path}/report/linux/')
+    coverage_report_blobs = bucket.list_blobs(f'{coverage_name}/report/linux/')
     if coverage_report_blobs:
       for blob in coverage_report_blobs:
         # Download all files in the coverage report directory to our workdir.
@@ -1046,7 +1046,7 @@ class CloudBuilderRunner(BuilderRunner):
             'report/linux/')
         os.makedirs(cov_folder, exist_ok=True)
 
-        if blob.name == 'summary.json':
+        if blob.name.endswith('summary.json'):
           coverage_summary_file = os.path.join(cov_folder, 'summary.json')
           with open(coverage_summary_file, 'wb') as f:
             blob.download_to_file(f)
@@ -1055,7 +1055,8 @@ class CloudBuilderRunner(BuilderRunner):
           with open(coverage_summary_file, 'r') as f:
             run_result.coverage_summary = json.load(f)
         else:
-          with open(os.path.join(cov_folder, blob.name), 'wb') as f:
+          with open(os.path.join(cov_folder, os.path.basename(blob.name)),
+                    'wb') as f:
             blob.download_to_file(f)
 
     # blob = bucket.blob(f'{coverage_name}/report/linux/summary.json')
