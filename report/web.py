@@ -359,6 +359,7 @@ class GenerateReport:
                                     sample=sample,
                                     agent_sections=agent_sections,
                                     agent_rounds=agent_rounds,
+                                    logs=logs,
                                     run_logs=run_logs,
                                     triage=triage,
                                     targets=sample_targets,
