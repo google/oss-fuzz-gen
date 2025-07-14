@@ -15,7 +15,7 @@
 stage is responsible for categorizing run-time crashes and detecting untested
 code blocks."""
 
-from results import Result, RunResult
+from results import AnalysisResult, Result, RunResult
 from stage.base_stage import BaseStage
 
 
@@ -39,10 +39,16 @@ class AnalysisStage(BaseStage):
         agent = self.get_agent(agent_name='CrashAnalyzer')
         agent_result = self._execute_agent(agent, result_history)
         self.logger.write_chat_history(agent_result)
-        result_history.append(agent_result)
+        # If it's true bug, save result and execute the ContextAnalyzer
+        if (isinstance(agent_result, AnalysisResult) and agent_result.crash_result and agent_result.crash_result.true_bug):
+          result_history.append(agent_result)
+          # Then, execute the ContextAnalyzer agent to analyze the crash.
+          agent = self.get_agent(agent_name='ContextAnalyzer')
+        else:
+          self.logger.debug('Analysis stage completed with with result:\n%s',
+                      agent_result)
+          return agent_result
 
-        # Then, execute the Prototyper agent to refine the fuzz target.
-        agent = self.get_agent(agent_name='ContextAnalyzer')
       except RuntimeError:
         agent = self.get_agent(agent_name='SemanticAnalyzer')
     else:

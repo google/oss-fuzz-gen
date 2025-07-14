@@ -371,6 +371,20 @@ class ADKBaseAgent(BaseAgent):
 
     logger.info('ADK Agent %s created.', self.name, trial=self.trial)
 
+  def get_xml_representation(self, response: Optional[dict]) -> str:
+    """Returns the XML representation of the response."""
+    if not response:
+      return ''
+    # If the response is not a dict, return it as string
+    if not isinstance(response, dict):
+      return str(response)
+    # Now, we wrap items in a dict with xml tags.
+    xml_rep = []
+    for key, value in response.items():
+      xml_obj = f'<{key}>\n{value}\n</{key}>'
+      xml_rep.append(xml_obj)
+    return '\n'.join(xml_rep)
+
   def chat_llm(self, cur_round: int, client: Any, prompt: Prompt,
                trial: int) -> Any:
     """Call the agent with the given prompt, running async code in sync."""
@@ -399,7 +413,7 @@ class ADKBaseAgent(BaseAgent):
               self.log_llm_response(final_response)
             elif event.content.parts[0].function_response:
               final_response = event.content.parts[0].function_response.response
-              self.log_llm_response(json.dumps(final_response))
+              self.log_llm_response(self.get_xml_representation(final_response))
           elif event.actions and event.actions.escalate:
             error_message = event.error_message
             logger.error('Agent escalated: %s', error_message, trial=self.trial)
