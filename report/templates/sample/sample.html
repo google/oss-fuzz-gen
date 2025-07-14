@@ -313,7 +313,7 @@ limitations under the License.
                       Round {{ loop.index - 1 }}
                     </div>
                     {% for agent_name, agent_logs in round_data.items() %}
-                      <div x-data="{ open: false }" class="border rounded-lg mb-4 agent-section bg-white">
+                      <div x-data="{ open: false }" class="border rounded-lg mb-4 agent-section">
                         <button @click="open = !open" class="w-full p-4 flex justify-between items-center text-left rounded-t-lg">
                           <span class="font-medium">{{ agent_name }}</span>
                           <svg class="w-4 h-4" :class="{'rotate-180': open}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
