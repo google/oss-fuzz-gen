@@ -33,12 +33,12 @@ class ContextAnalyzerAgentTest(BaseAgentTest):
       self.write_requirements_to_file(self.args, function_requirement)
 
     run_result = RunResult(benchmark=benchmark,
-                         trial=self.trial,
-                         work_dirs=self.args.work_dirs,
-                         author=None,
-                         chat_history={},
-                         crashes=True,
-                         fuzz_target_source=fuzz_target_source)
+                           trial=self.trial,
+                           work_dirs=self.args.work_dirs,
+                           author=None,
+                           chat_history={},
+                           crashes=True,
+                           fuzz_target_source=fuzz_target_source)
 
     crash_result = CrashResult(
         benchmark=benchmark,
@@ -52,10 +52,8 @@ class ContextAnalyzerAgentTest(BaseAgentTest):
     )
 
     analysis_result = AnalysisResult(author=None,
-                                   run_result=run_result,
-                                   crash_result=crash_result,
-                                   chat_history={})
+                                     run_result=run_result,
+                                     crash_result=crash_result,
+                                     chat_history={})
 
     return [run_result, analysis_result]
-
-

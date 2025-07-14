@@ -50,4 +50,5 @@ class BaseAgentTest:
     """Sets up the initial result list for the agent test."""
     # Load the benchmark and prompt file
     raise NotImplementedError(
-        "This method should be implemented in subclasses to set up the initial result list.")
+        "This method should be implemented in subclasses to set up the initial result list."
+    )

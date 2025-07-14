@@ -35,7 +35,8 @@ RESULTS_DIR = f'./results-{datetime.now().strftime("%Y-%m-%d-%H-%M")}'
 NUM_ANA = int(os.getenv('LLM_NUM_ANA', '2'))
 
 agents = {
-    'ContextAnalyzer': (context_analyzer.ContextAnalyzer, context_analyzer_test.ContextAnalyzerAgentTest),
+    'ContextAnalyzer': (context_analyzer.ContextAnalyzer,
+                        context_analyzer_test.ContextAnalyzerAgentTest),
 }
 
 
@@ -62,12 +63,13 @@ def parse_args() -> argparse.Namespace:
                       required=True,
                       help='Comma-separated list of agent names for testing.')
 
-  parser.add_argument('-pf',
-                      '--prompt-file',
-                      type=str,
-                      required=True,
-                      default='',
-                      help='A file containing the prompt to reconstruct for initial agent.')
+  parser.add_argument(
+      '-pf',
+      '--prompt-file',
+      type=str,
+      required=True,
+      default='',
+      help='A file containing the prompt to reconstruct for initial agent.')
 
   parser.add_argument('-mr',
                       '--max-round',
@@ -90,7 +92,8 @@ def parse_args() -> argparse.Namespace:
 
   parsed_args = parser.parse_args()
 
-  if not parsed_args.benchmark_yaml.endswith('.yaml') or not os.path.isfile(parsed_args.benchmark_yaml):
+  if not parsed_args.benchmark_yaml.endswith('.yaml') or not os.path.isfile(
+      parsed_args.benchmark_yaml):
     raise ValueError('Benchmark YAML file must be a valid .yaml file.')
 
   if not os.path.isfile(parsed_args.prompt_file):
@@ -103,32 +106,41 @@ def parse_args() -> argparse.Namespace:
 
   return parsed_args
 
-def get_test_pipeline(agents_text: str) -> List[Tuple[Type[base_agent.BaseAgent], Type[base_agent_test.BaseAgentTest]]]:
+
+def get_test_pipeline(
+    agents_text: str
+) -> List[Tuple[Type[base_agent.BaseAgent],
+                Type[base_agent_test.BaseAgentTest]]]:
   """Returns a pipeline of agents for testing."""
 
   agent_list = agents_text.strip().split(',')
   pipeline = []
   for agent_name in agent_list:
     if agent_name not in agents:
-      raise ValueError(f'Agent {agent_name} is not defined in the agents dictionary.')
+      raise ValueError(
+          f'Agent {agent_name} is not defined in the agents dictionary.')
     pipeline.append(agents[agent_name])
   if not pipeline:
-    raise ValueError('No agents found in the pipeline. Please provide a valid agent list.')
+    raise ValueError(
+        'No agents found in the pipeline. Please provide a valid agent list.')
   return pipeline
 
-def get_result_list_for_agent(
-    agent_class: Tuple[Type[base_agent.BaseAgent], Type[base_agent_test.BaseAgentTest]],
-    benchmark: benchmarklib.Benchmark,
-    prompt: str) -> List[Result]:
+
+def get_result_list_for_agent(agent_class: Tuple[
+    Type[base_agent.BaseAgent], Type[base_agent_test.BaseAgentTest]],
+                              benchmark: benchmarklib.Benchmark,
+                              prompt: str) -> List[Result]:
   """Returns the initial result list for the agent."""
 
   agent_test_class = agent_class[1]
   # Ensure agent_test_class is a subclass of BaseAgentTest
   if not issubclass(agent_test_class, base_agent_test.BaseAgentTest):
-    raise TypeError(f"{agent_test_class.__name__} is not a subclass of BaseAgentTest")
+    raise TypeError(
+        f"{agent_test_class.__name__} is not a subclass of BaseAgentTest")
 
   agent_test_instance = agent_test_class(args, trial=1)
   return agent_test_instance.setup_initial_result_list(benchmark, prompt)
+
 
 def write_result(args: argparse.Namespace, trial: int, result: Result) -> None:
   """Writes the result to a file in the work directory."""
@@ -138,6 +150,7 @@ def write_result(args: argparse.Namespace, trial: int, result: Result) -> None:
     json.dump(result.to_dict(), file, indent=2)
 
   logger.info('Result written to %s', result_file, trial=trial)
+
 
 if __name__ == '__main__':
 
@@ -152,8 +165,10 @@ if __name__ == '__main__':
   # Initialize test benchmark
   benchmarks = benchmarklib.Benchmark.from_yaml(args.benchmark_yaml)
 
-  test_benchmark = [benchmark for benchmark in benchmarks
-                    if benchmark.function_name == args.function_name]
+  test_benchmark = [
+      benchmark for benchmark in benchmarks
+      if benchmark.function_name == args.function_name
+  ]
 
   if not test_benchmark:
     raise ValueError(f'No benchmark found for function {args.function_name}.')
@@ -161,7 +176,8 @@ if __name__ == '__main__':
   benchmark = test_benchmark[0]
 
   # Initialize the working directory
-  args.work_dirs = workdir.WorkDirs(os.path.join(args.work_dir, f'output-{benchmark.id}'))
+  args.work_dirs = workdir.WorkDirs(
+      os.path.join(args.work_dir, f'output-{benchmark.id}'))
 
   pipeline = get_test_pipeline(args.pipeline)
 
@@ -187,5 +203,7 @@ if __name__ == '__main__':
       write_result(args, trial, result)
 
   except Exception as e:
-    logger.error('An error occurred during the agent execution: %s', str(e), trial=trial)
+    logger.error('An error occurred during the agent execution: %s',
+                 str(e),
+                 trial=trial)
     logger.error('Traceback: %s', traceback.format_exc(), trial=trial)
