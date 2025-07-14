@@ -1,16 +1,5 @@
-You MUST return your final response in the format below.
-
-<response_format>
-Make sure your response follows the following format.
-
-<feasible>
-'True' if the crash can be triggered from a project's external entry points, 'False' otherwise
-</feasible>
-<analysis>
-Your analysis of the feasibility of this crash
-</analysis>
-<recommendations>
-Recommendations for modifying the fuzz target to prevent the crash if the crash is not feasible
-</recommendations>
-
-</response_format>
+YOU MUST PROVIDE YOUR FINAL RESPONSE USING THE report_final_result TOOL.
+   - The tool takes three arguments - feasible, analysis and recommendations.
+   - feasible should be True if the crash is feasible, or False otherwise.
+   - analysis should contain source code evidence of the crash's feasibility.
+   - recommendations should only be provided for non-feasible crashes, and should recommend fuzz target modifications to prevent this crash.
