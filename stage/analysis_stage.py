@@ -40,13 +40,14 @@ class AnalysisStage(BaseStage):
         agent_result = self._execute_agent(agent, result_history)
         self.logger.write_chat_history(agent_result)
         # If it's true bug, save result and execute the ContextAnalyzer
-        if (isinstance(agent_result, AnalysisResult) and agent_result.crash_result and agent_result.crash_result.true_bug):
+        if (isinstance(agent_result, AnalysisResult) and
+            agent_result.crash_result and agent_result.crash_result.true_bug):
           result_history.append(agent_result)
           # Then, execute the ContextAnalyzer agent to analyze the crash.
           agent = self.get_agent(agent_name='ContextAnalyzer')
         else:
           self.logger.debug('Analysis stage completed with with result:\n%s',
-                      agent_result)
+                            agent_result)
           return agent_result
 
       except RuntimeError:
