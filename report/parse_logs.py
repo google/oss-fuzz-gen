@@ -18,6 +18,7 @@ stack traces, etc. to be rendered in the report."""
 import re
 
 from experiment import oss_fuzz_checkout
+from report.common import LogPart
 
 
 def extract_project_from_coverage_path(file_path: str) -> str:
@@ -64,6 +65,93 @@ def get_source_url(coverage_file_path: str) -> str:
   if code_line_number:
     return f"{repo_url}/blob/master/{relative_path}#L{code_line_number}"
   return f"{repo_url}/blob/master/{relative_path}"
+
+
+class LogsParser:
+  """Parse the logs"""
+
+  def __init__(self, logs: list[LogPart]):
+    self._logs = logs
+
+  def get_agent_sections(self) -> dict[str, list[LogPart]]:
+    """Get the agent sections from the logs."""
+
+    pattern = re.compile(r"\*{5,}(.+?)\*{5,}")
+    agent_sections = {}
+    current_agent = None
+    agent_counters = {}
+
+    for log_part in self._logs:
+      lines = log_part.content.split('\n')
+      agent_headers = []
+
+      for i, line in enumerate(lines):
+        match = re.search(pattern, line)
+        if match:
+          agent_name = match.group(1)
+          # Handle repeated agents by creating unique keys
+          if agent_name in agent_counters:
+            agent_counters[agent_name] += 1
+            unique_agent_name = f"{agent_name} ({agent_counters[agent_name]})"
+          else:
+            agent_counters[agent_name] = 1
+            unique_agent_name = agent_name
+
+          agent_headers.append((i, unique_agent_name))
+          agent_sections[unique_agent_name] = []
+          current_agent = unique_agent_name
+
+      # If this LogPart has agent headers, split it up
+      if agent_headers:
+        for j, (line_idx, agent_name) in enumerate(agent_headers):
+          next_line_idx = agent_headers[j + 1][0] if j + 1 < len(
+              agent_headers) else len(lines)
+
+          agent_content_lines = lines[line_idx + 1:next_line_idx]
+          if agent_content_lines:
+            content = '\n'.join(agent_content_lines)
+            if content.strip():
+              new_log_part = LogPart(content=content,
+                                     chat_prompt=log_part.chat_prompt,
+                                     chat_response=log_part.chat_response)
+              agent_sections[agent_name].append(new_log_part)
+      else:
+        # This LogPart doesn't have agent headers, add it to current agent
+        if current_agent and current_agent in agent_sections:
+          agent_sections[current_agent].append(log_part)
+
+    return agent_sections
+
+  def get_agent_rounds(self) -> list[dict]:
+    """Group agent sections into rounds based on repeating patterns."""
+    agent_sections = self.get_agent_sections()
+
+    rounds = []
+    current_round = {}
+    round_agents = ['ExecutionStage', 'SemanticAnalyzer', 'Enhancer']
+
+    for agent_name, agent_logs in agent_sections.items():
+      base_name = agent_name.split(' (')[0]
+
+      if base_name in round_agents:
+        if base_name == 'ExecutionStage' and current_round:
+          # New round starting, save the previous one
+          rounds.append(current_round)
+          current_round = {}
+
+        current_round[agent_name] = agent_logs
+      else:
+        # This is a standalone agent (like Prototyper)
+        if current_round:
+          rounds.append(current_round)
+          current_round = {}
+
+        rounds.append({'standalone': {agent_name: agent_logs}})
+
+    if current_round:
+      rounds.append(current_round)
+
+    return rounds
 
 
 class RunLogsParser:

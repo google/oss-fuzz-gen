@@ -32,7 +32,7 @@ import jinja2
 from report.common import (AccumulatedResult, Benchmark, FileSystem, Project,
                            Results, Sample, Target)
 from report.export import CSVExporter
-from report.parse_run_log import RunLogsParser
+from report.parse_logs import LogsParser, RunLogsParser
 
 LOCAL_HOST = '127.0.0.1'
 
@@ -350,11 +350,15 @@ class GenerateReport:
           "time_results": time_results,
           "unified_data": unified_data
       }
+      logs_parser = LogsParser(logs)
+      agent_sections = logs_parser.get_agent_sections()
+      agent_rounds = logs_parser.get_agent_rounds()
 
       rendered = self._jinja.render('sample/sample.html',
                                     benchmark=benchmark,
                                     sample=sample,
-                                    logs=logs,
+                                    agent_sections=agent_sections,
+                                    agent_rounds=agent_rounds,
                                     run_logs=run_logs,
                                     triage=triage,
                                     targets=sample_targets,

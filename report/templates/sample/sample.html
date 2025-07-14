@@ -266,8 +266,69 @@ limitations under the License.
           </button>
           <div x-show="logsOpen"
                class="p-4 border-t">
-              {% for part in logs %}
-              <pre id="logs" class="{% if part.chat_prompt %}chat_prompt bg-gray-50{% elif part.chat_response %}chat_response bg-gray-100{% endif %} p-4 rounded-md mb-4 overflow-x-auto">{{ part.content }}</pre>
+
+              <div class="flex justify-between mb-4">
+                <div class="controls flex gap-2">
+                    <button id="agent-sections-expand-all" class="border rounded-lg p-3">
+                        Expand All
+                    </button>
+                    <button id="agent-sections-collapse-all" class="border rounded-lg p-3">
+                        Collapse All
+                    </button>
+                </div>
+              </div>
+
+              {% for round_data in agent_rounds %}
+                {% if 'standalone' in round_data %}
+                  <!-- Standalone agents -->
+                  {% for agent_name, agent_logs in round_data.standalone.items() %}
+                    <div x-data="{ open: false }" class="border rounded-lg mb-4 agent-section">
+                      <button @click="open = !open" class="w-full p-4 flex justify-between items-center text-left rounded-t-lg">
+                        <span class="font-medium">{{ agent_name }}</span>
+                        <svg class="w-4 h-4" :class="{'rotate-180': open}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                      </button>
+                      <div x-show="open" class="border-t">
+                        {% for log_part in agent_logs %}
+                          <pre class="{% if log_part.chat_prompt %}chat_prompt {% elif log_part.chat_response %}chat_response {% endif %} p-4 rounded-md mb-4 whitespace-pre-wrap break-words">{{ log_part.content }}</pre>
+                        {% endfor %}
+                      </div>
+                    </div>
+                  {% endfor %}
+                {% else %}
+                  <!-- Round with multiple agents -->
+                  {% set color_classes = [
+                    'border-blue-300',
+                    'border-green-300',
+                    'border-purple-300',
+                    'border-red-300',
+                    'border-indigo-300',
+                    'border-pink-300',
+                    'border-teal-300'
+                  ] %}
+                  {% set color_index = (loop.index - 1) % color_classes|length %}
+                  <div class="border-l-4 border-l-solid rounded-lg mb-6 p-4 {{ color_classes[color_index] }}">
+                    <div class="mb-2 font-medium">
+                      Round {{ loop.index - 1 }}
+                    </div>
+                    {% for agent_name, agent_logs in round_data.items() %}
+                      <div x-data="{ open: false }" class="border rounded-lg mb-4 agent-section bg-white">
+                        <button @click="open = !open" class="w-full p-4 flex justify-between items-center text-left rounded-t-lg">
+                          <span class="font-medium">{{ agent_name }}</span>
+                          <svg class="w-4 h-4" :class="{'rotate-180': open}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                          </svg>
+                        </button>
+                        <div x-show="open" class="border-t">
+                          {% for log_part in agent_logs %}
+                            <pre class="{% if log_part.chat_prompt %}chat_prompt {% elif log_part.chat_response %}chat_response {% endif %} p-4 rounded-md mb-4 whitespace-pre-wrap break-words">{{ log_part.content }}</pre>
+                          {% endfor %}
+                        </div>
+                      </div>
+                    {% endfor %}
+                  </div>
+                {% endif %}
               {% endfor %}
           </div>
       </div>
@@ -334,5 +395,34 @@ limitations under the License.
       {% endif %}
   </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Agent sections expand/collapse buttons
+    const agentSectionsExpandAllButton = document.getElementById('agent-sections-expand-all');
+    if (agentSectionsExpandAllButton) {
+        agentSectionsExpandAllButton.addEventListener('click', () => {
+            document.querySelectorAll('.agent-section').forEach(section => {
+                const alpineData = Alpine.$data(section);
+                if (alpineData) {
+                    alpineData.open = true;
+                }
+            });
+        });
+    }
+
+    const agentSectionsCollapseAllButton = document.getElementById('agent-sections-collapse-all');
+    if (agentSectionsCollapseAllButton) {
+        agentSectionsCollapseAllButton.addEventListener('click', () => {
+            document.querySelectorAll('.agent-section').forEach(section => {
+                const alpineData = Alpine.$data(section);
+                if (alpineData) {
+                    alpineData.open = false;
+                }
+            });
+        });
+    }
+});
+</script>
 
 {% endblock %}

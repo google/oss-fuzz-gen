@@ -18,7 +18,7 @@ import os
 from abc import abstractmethod
 
 from report.common import Results
-from report.parse_run_log import RunLogsParser
+from report.parse_logs import RunLogsParser
 
 
 class BaseExporter:
