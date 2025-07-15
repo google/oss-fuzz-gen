@@ -22,8 +22,8 @@ from typing import List, Tuple, Type
 
 import logger
 import run_one_experiment
-from agent import base_agent, context_analyzer
-from agent_tests import base_agent_test, context_analyzer_test
+from agent import base_agent, context_analyzer, crash_analyzer
+from agent_tests import base_agent_test, context_analyzer_test, crash_analyzer_test
 from data_prep import introspector
 from experiment import benchmark as benchmarklib
 from experiment import workdir
@@ -37,6 +37,8 @@ NUM_ANA = int(os.getenv('LLM_NUM_ANA', '2'))
 agents = {
     'ContextAnalyzer': (context_analyzer.ContextAnalyzer,
                         context_analyzer_test.ContextAnalyzerAgentTest),
+    'CrashAnalyzer': (crash_analyzer.CrashAnalyzer,
+                     crash_analyzer_test.CrashAnalyzerAgentTest),
 }
 
 
