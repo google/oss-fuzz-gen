@@ -51,7 +51,7 @@ class Pipeline():
         args, trial, execution_stage_agents)
     self.analysis_stage: AnalysisStage = AnalysisStage(args, trial,
                                                        analysis_stage_agents)
-    self.max_cycle_count = 5
+    self.max_cycle_count = 2
 
   def _terminate(self, result_history: list[Result], cycle_count: int) -> bool:
     """Validates if the termination conditions have been satisfied."""
@@ -158,7 +158,7 @@ class Pipeline():
     The process repeats until the termination conditions are met.
     """
     self.logger.debug('Pipeline starts')
-    cycle_count = 0
+    cycle_count = 1
     self._update_status(result_history=result_history)
     while not self._terminate(result_history=result_history,
                               cycle_count=cycle_count):

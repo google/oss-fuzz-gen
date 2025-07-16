@@ -827,8 +827,14 @@ class CrashEnhancerTemplateBuilder(PrototyperTemplateBuilder):
                               self.crash_result.insight)
 
     if self.context_result:
+      context_analyzer_insight = f"""
+      {self.context_result.analysis}
+
+      Here is the source code evidence for this insight.
+      {self.context_result.source_code_evidence}
+      """
       priming = priming.replace('CONTEXT_ANALYZER_INSIGHT',
-                                self.context_result.analysis)
+                                context_analyzer_insight)
       fix_recommendations = FIX_RECOMMENDATION_HEADER + self.context_result.recommendations
       priming = priming.replace('FIX_RECOMMENDATION', fix_recommendations)
 
