@@ -55,7 +55,7 @@ class Pipeline():
 
   def _terminate(self, result_history: list[Result], cycle_count: int) -> bool:
     """Validates if the termination conditions have been satisfied."""
-    if not cycle_count:
+    if cycle_count == 1:
       return False
 
     if cycle_count > self.max_cycle_count:
