@@ -105,9 +105,9 @@ class ContextAnalyzer(base_agent.ADKBaseAgent):
       context_result = resultslib.CrashContextResult.from_dict(final_response)
       if context_result:
         logger.info(
-          'Is context analyzer result consistent: %s',
-          str(context_result.feasible == last_result.crash_result.true_bug),
-          trial=self.trial)
+            'Is context analyzer result consistent: %s',
+            str(context_result.feasible == last_result.crash_result.true_bug),
+            trial=self.trial)
         break
       logger.error('Failed to parse LLM response into CrashContextResult.',
                    trial=self.trial)
@@ -248,8 +248,7 @@ class ContextAnalyzer(base_agent.ADKBaseAgent):
     return response
 
   def report_final_result(self, feasible: bool, analysis: str,
-                          source_code_evidence: str,
-                          recommendations: str,
+                          source_code_evidence: str, recommendations: str,
                           tool_context: ToolContext) -> dict:
     """
     Provide final result, including the crash feasibility,
@@ -269,7 +268,10 @@ class ContextAnalyzer(base_agent.ADKBaseAgent):
         This function will not return anything to the LLM.
     """
     crash_context_result = resultslib.CrashContextResult(
-        feasible=feasible, analysis=analysis, source_code_evidence=source_code_evidence, recommendations=recommendations)
+        feasible=feasible,
+        analysis=analysis,
+        source_code_evidence=source_code_evidence,
+        recommendations=recommendations)
 
     # We have received final result. Instruct the agent to terminate execution.
     # tool_context._invocation_context.end_invocation = True
