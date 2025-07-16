@@ -117,3 +117,8 @@ You will be provided with the following tools.
 1. get_function_implementation: This is a tool you can use to retrieve the implementation of a function using the project's name and function's name as arguments.
 2. search_project_files: This is an interactive tool you can use to search the project's source file using bash commands and find definitions or usages of functions, classes, structs, and variables.
     The usage guide for the Bash Tool is provided below.
+
+<instructions>
+1. If the target function takes in a callback or function pointer as argument, provide instructions for creating this callback correctly based on how similar callbacks are created in the project.
+   This should include what the callback should do, and what memory resources it should create or free.
+</instructions>
