@@ -160,20 +160,36 @@ class GenerateReport:
       if l.split('.')[0] == sample.id:
         coverage_report = os.path.join(coverage_path, l)
 
-    # On cloud runs there are two folders in code coverage reports, (report,
-    # textcov). If we have three files/dirs (linux, style.cssand textcov), then
-    # it's a local run. In that case copy over the code coverage reports so
-    # they are visible in the HTML page.
-    if coverage_report and os.path.isdir(coverage_report) and len(
-        os.listdir(coverage_report)) > 2:
-      # Copy coverage to reports out
+    if not coverage_report or not os.path.isdir(coverage_report):
+      return
+
+    coverage_contents = os.listdir(coverage_report)
+
+    # Check for local run structure (>2 items with linux, style.css, textcov)
+    # For local runs: copy entire coverage_report directory
+    is_local_run = len(coverage_contents) > 2
+
+    # Check for cloud run structure (report/linux subdirectory exists)
+    # For cloud run: copy from report/linux subdirectory
+    cloud_report_path = os.path.join(coverage_report, 'report', 'linux')
+    is_cloud_run = len(coverage_contents) == 2 and os.path.isdir(
+        cloud_report_path)
+
+    if is_local_run or is_cloud_run:
       dst = os.path.join(self._output_dir, 'sample', benchmark.id, 'coverage')
       os.makedirs(dst, exist_ok=True)
       dst = os.path.join(dst, sample.id)
 
-      shutil.copytree(coverage_report, dst, dirs_exist_ok=True)
-      sample.result.coverage_report_path = \
-        f'/sample/{benchmark.id}/coverage/{sample.id}/linux/'
+      if is_local_run:
+        shutil.copytree(coverage_report, dst, dirs_exist_ok=True)
+        sample.result.coverage_report_path = \
+          f'/sample/{benchmark.id}/coverage/{sample.id}/linux/'
+      else:
+        shutil.copytree(cloud_report_path,
+                        os.path.join(dst, 'linux'),
+                        dirs_exist_ok=True)
+        sample.result.coverage_report_path = \
+          f'/sample/{benchmark.id}/coverage/{sample.id}/linux/'
 
   def _read_static_file(self, file_path_in_templates_subdir: str) -> str:
     """Reads a static file from the templates directory."""
