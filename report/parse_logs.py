@@ -76,7 +76,7 @@ class LogsParser:
   def get_agent_sections(self) -> dict[str, list[LogPart]]:
     """Get the agent sections from the logs."""
 
-    pattern = re.compile(r"\*{5,}(.+?)\*{5,}")
+    pattern = re.compile(r"\*{8,}(.+?)\*{8,}")
     agent_sections = {}
     current_agent = None
     agent_counters = {}
@@ -128,7 +128,10 @@ class LogsParser:
 
     rounds = []
     current_round = {}
-    round_agents = ['ExecutionStage', 'SemanticAnalyzer', 'Enhancer']
+    round_agents = [
+        'ExecutionStage', 'SemanticAnalyzer', 'CrashAnalyzer',
+        'ContextAnalyzer', 'Enhancer'
+    ]
 
     for agent_name, agent_logs in agent_sections.items():
       base_name = agent_name.split(' (')[0]
