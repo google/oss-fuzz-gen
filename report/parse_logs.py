@@ -84,39 +84,25 @@ class LogsParser:
 
     return agent_sections
 
-  def get_agent_rounds(self) -> list[dict]:
-    """Group agent sections into rounds based on repeating patterns."""
+  def get_agent_cycles(self) -> list[dict]:
+    """Group agent sections into cycles based on cycle numbers."""
     agent_sections = self.get_agent_sections()
 
-    rounds = []
-    current_round = {}
-    round_agents = [
-        'ExecutionStage', 'SemanticAnalyzer', 'CrashAnalyzer',
-        'ContextAnalyzer', 'Enhancer'
-    ]
+    cycles_dict = {}
 
     for agent_name, agent_logs in agent_sections.items():
-      base_name = agent_name.split(' (')[0]
-
-      if base_name in round_agents:
-        if base_name == 'ExecutionStage' and current_round:
-          # New round starting, save the previous one
-          rounds.append(current_round)
-          current_round = {}
-
-        current_round[agent_name] = agent_logs
+      cycle_match = re.search(r'\(Cycle (\d+)\)', agent_name)
+      if cycle_match:
+        cycle_number = int(cycle_match.group(1))
+        if cycle_number not in cycles_dict:
+          cycles_dict[cycle_number] = {}
+        cycles_dict[cycle_number][agent_name] = agent_logs
       else:
-        # This is a standalone agent (like Prototyper)
-        if current_round:
-          rounds.append(current_round)
-          current_round = {}
+        if 0 not in cycles_dict:
+          cycles_dict[0] = {}
+        cycles_dict[0][agent_name] = agent_logs
 
-        rounds.append({'standalone': {agent_name: agent_logs}})
-
-    if current_round:
-      rounds.append(current_round)
-
-    return rounds
+    return [cycles_dict[cycle] for cycle in sorted(cycles_dict.keys())]
 
 
 class RunLogsParser:

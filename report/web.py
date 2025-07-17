@@ -345,7 +345,6 @@ class GenerateReport:
     try:
       # Ensure all required variables are available
       logs = self._results.get_logs(benchmark.id, sample.id) or []
-      run_logs = self._results.get_run_logs(benchmark.id, sample.id) or ""
       triage = self._results.get_triage(benchmark.id, sample.id) or {
           "result": "",
           "triager_prompt": ""
@@ -361,15 +360,14 @@ class GenerateReport:
       }
       logs_parser = LogsParser(logs)
       agent_sections = logs_parser.get_agent_sections()
-      agent_rounds = logs_parser.get_agent_rounds()
+      agent_cycles = logs_parser.get_agent_cycles()
 
       rendered = self._jinja.render('sample/sample.html',
                                     benchmark=benchmark,
                                     sample=sample,
                                     agent_sections=agent_sections,
-                                    agent_rounds=agent_rounds,
+                                    agent_cycles=agent_cycles,
                                     logs=logs,
-                                    run_logs=run_logs,
                                     triage=triage,
                                     targets=sample_targets,
                                     sample_css_content=sample_css_content,

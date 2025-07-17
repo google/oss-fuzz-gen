@@ -265,7 +265,7 @@ limitations under the License.
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
               </svg>
           </button>
-          {% if agent_rounds %}
+          {% if agent_cycles %}
             <div x-show="agentsOpen"
                 class="p-4 border-t">
 
@@ -280,10 +280,10 @@ limitations under the License.
                   </div>
                 </div>
 
-                {% for round_data in agent_rounds %}
-                  {% if 'standalone' in round_data %}
+                {% for cycle_data in agent_cycles %}
+                  {% if 'standalone' in cycle_data %}
                     <!-- Standalone agents -->
-                    {% for agent_name, agent_logs in round_data.standalone.items() %}
+                    {% for agent_name, agent_logs in cycle_data.standalone.items() %}
                       <div x-data="{ open: false }" class="border rounded-lg mb-4 agent-section">
                         <button @click="open = !open" class="w-full p-4 flex justify-between items-center text-left rounded-t-lg">
                           <span class="font-medium">{{ agent_name }}</span>
@@ -299,7 +299,7 @@ limitations under the License.
                       </div>
                     {% endfor %}
                   {% else %}
-                    <!-- Round with multiple agents -->
+                    <!-- Cycle with multiple agents -->
                     {% set color_classes = [
                       'border-blue-300',
                       'border-green-300',
@@ -312,9 +312,9 @@ limitations under the License.
                     {% set color_index = (loop.index - 1) % color_classes|length %}
                     <div class="border-l-4 border-l-solid rounded-lg mb-6 p-4 {{ color_classes[color_index] }}">
                       <div class="mb-2 font-medium">
-                        Round {{ loop.index - 1 }}
+                        Cycle {{ loop.index - 1 }}
                       </div>
-                      {% for agent_name, agent_logs in round_data.items() %}
+                      {% for agent_name, agent_logs in cycle_data.items() %}
                         <div x-data="{ open: false }" class="border rounded-lg mb-4 agent-section">
                           <button @click="open = !open" class="w-full p-4 flex justify-between items-center text-left rounded-t-lg">
                             <span class="font-medium">{{ agent_name }}</span>
@@ -352,22 +352,6 @@ limitations under the License.
                 <pre id="logs" class="{% if part.chat_prompt %}chat_prompt bg-gray-50{% elif part.chat_response %}chat_response bg-gray-100{% endif %} p-4 rounded-md mb-4 overflow-x-auto">{{ part.content }}</pre>
               {% endfor %}
         </div>
-      </div>
-
-      <div class="border rounded-lg">
-          <button @click="runlogsOpen = !runlogsOpen; if (runlogsOpen && !runlogsProcessed) { $nextTick(() => { processRunLogsStackTraces(); runlogsProcessed = true; }); }"
-                  class="w-full p-4 flex justify-between items-center">
-              <span class="text-lg font-bold">Run Logs</span>
-              <svg class="w-5 h-5 transform transition-transform duration-200"
-                   :class="{'rotate-180': runlogsOpen}"
-                   fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-              </svg>
-          </button>
-          <div x-show="runlogsOpen"
-               class="p-4 border-t">
-              <pre id="runLogsPreview" class="bg-gray-50 dark:bg-gray-800 p-4 rounded-md overflow-x-auto">{{ run_logs }}</pre>
-          </div>
       </div>
 
       {% if sample.result.coverage_report_path %}
