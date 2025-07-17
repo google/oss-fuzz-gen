@@ -15,10 +15,8 @@
 information such as the crash details, crash symptoms,
 stack traces, etc. to be rendered in the report."""
 
-import logging
 import re
 
-from experiment import oss_fuzz_checkout
 from report.common import LogPart
 
 
@@ -202,9 +200,13 @@ class RunLogsParser:
           # If coverage_report_path is set, it's a local run
           # Otherwise it's cloud
           if self._coverage_report_path:
-            url = f'{self._coverage_report_path}{relative_path}.html#L{line_number}' if line_number else f'{self._coverage_report_path}{relative_path}.html'
+            base_url = f'{self._coverage_report_path}{relative_path}.html'
+            url = f'{base_url}#L{line_number}' if line_number else base_url
           else:
-            url = f'/results/{self._benchmark_id}/code-coverage-reports/{self._sample_id}.fuzz_target/report/linux/{relative_path}.html#L{line_number}' if line_number else f'/results/{self._benchmark_id}/code-coverage-reports/{self._sample_id}.fuzz_target/report/linux/{relative_path}.html'
+            base_url = (f'/results/{self._benchmark_id}/code-coverage-reports/'
+                        f'{self._sample_id}.fuzz_target/report/linux/'
+                        f'{relative_path}.html')
+            url = f'{base_url}#L{line_number}' if line_number else base_url
           stack_traces[frame_num] = {
               "url": url,
               "path": path,
