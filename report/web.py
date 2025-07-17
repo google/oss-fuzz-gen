@@ -244,6 +244,7 @@ class GenerateReport:
       for sample in samples:
         sample_targets = self._results.get_targets(benchmark.id, sample.id)
         crash_info = self._get_crash_info_from_run_logs(benchmark.id, sample.id)
+        self._copy_and_set_coverage_report(benchmark, sample)
         self._write_benchmark_sample(benchmark, sample, sample_targets,
                                      crash_info, time_results, unified_data)
 
