@@ -41,7 +41,18 @@ class CrashAnalyzerAgentTest(BaseAgentTest):
   def setup_initial_result_list(self, benchmark, prompt):
     """Sets up the initial result list for the CrashAnalyzer agent test."""
 
-    fuzz_target_source = self._parse_tag(prompt, 'code')
+    fuzz_target_path = 'agent_tests/run_result_files/Result-reports_ofg-pr_2025-07-11-1144-pamusuo-analyzer-tests-1_results_output-libsndfile-sf_open_fuzz_targets_01.fuzz_target'
+    build_script_path = 'agent_tests/run_result_files/Result-reports_ofg-pr_2025-07-11-1144-pamusuo-analyzer-tests-1_results_output-libsndfile-sf_open_fuzz_targets_01.build_script'
+
+    if not os.path.exists(fuzz_target_path) or os.path.getsize(fuzz_target_path) == 0:
+      raise FileNotFoundError(f"Fuzz target file not found: {fuzz_target_path}")
+    with open(fuzz_target_path, 'r') as file:
+      fuzz_target_source = file.read()
+    if os.path.exists(build_script_path) and os.path.getsize(build_script_path) > 0:
+      with open(build_script_path, 'r') as file:
+          build_script_source = file.read()
+    else:
+      build_script_source = ''
     num_lines = fuzz_target_source.count('\n') + 1
     run_error = self._parse_tag(prompt, 'log')
     crash_func = {'LLVMFuzzerTestOneInput': set([num_lines])}
@@ -55,6 +66,7 @@ class CrashAnalyzerAgentTest(BaseAgentTest):
                            chat_history={},
                            crashes=True,
                            fuzz_target_source=fuzz_target_source,
+                           build_script_source=build_script_source,
                            run_error=run_error,
                            crash_func=crash_func,
                            artifact_path=artifact_path)
