@@ -44,7 +44,7 @@ class WritingStage(BaseStage):
       return self._execute_agent_cloud(agent, result_history)
     return agent.execute(result_history)
 
-  def execute(self, result_history: list[Result]) -> Result:
+  def execute(self, result_history: list[Result], cycle_count: int) -> Result:
     """Executes the writing stage."""
     if result_history and result_history[-1].fuzz_target_source:
       # Execute the Enhancer agent
@@ -58,7 +58,7 @@ class WritingStage(BaseStage):
       agent = self.get_agent(index=0)
       if agent.name == 'FunctionAnalyzer':
         agent_result = self._execute_agent(agent, result_history)
-        self.logger.write_chat_history(agent_result)
+        self.logger.write_chat_history(agent_result, cycle_count)
         result_history.append(agent_result)
 
         # Then, execute the Prototyper agent to refine the fuzz target.
@@ -70,6 +70,6 @@ class WritingStage(BaseStage):
     # TODO(dongge): Save logs and more info into workdir.
     self.logger.write_fuzz_target(build_result)
     self.logger.write_build_script(build_result)
-    self.logger.write_chat_history(build_result)
+    self.logger.write_chat_history(build_result, cycle_count)
     self.logger.debug('Writing stage completed with result:\n%s', build_result)
     return build_result
