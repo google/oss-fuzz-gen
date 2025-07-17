@@ -156,40 +156,32 @@ class GenerateReport:
       return
 
     coverage_report = ''
-    for l in os.listdir(coverage_path):
+    coverage_files = os.listdir(coverage_path)
+    for l in coverage_files:
       if l.split('.')[0] == sample.id:
         coverage_report = os.path.join(coverage_path, l)
 
-    if not coverage_report or not os.path.isdir(coverage_report):
+    if not coverage_report:
+      return
+
+    if not os.path.isdir(coverage_report):
       return
 
     coverage_contents = os.listdir(coverage_report)
 
-    # Check for local run structure (>2 items with linux, style.css, textcov)
-    # For local runs: copy entire coverage_report directory
-    is_local_run = len(coverage_contents) > 2
-
-    # Check for cloud run structure (report/linux subdirectory exists)
-    # For cloud run: copy from report/linux subdirectory
-    cloud_report_path = os.path.join(coverage_report, 'report', 'linux')
-    is_cloud_run = len(coverage_contents) == 2 and os.path.isdir(
-        cloud_report_path)
-
-    if is_local_run or is_cloud_run:
+    # On cloud runs there are two folders in code coverage reports, (report,
+    # textcov). If we have three files/dirs (linux, style.cssand textcov), then
+    # it's a local run. In that case copy over the code coverage reports so
+    # they are visible in the HTML page.
+    if len(coverage_contents) > 2:
+      # Copy coverage to reports out
       dst = os.path.join(self._output_dir, 'sample', benchmark.id, 'coverage')
       os.makedirs(dst, exist_ok=True)
       dst = os.path.join(dst, sample.id)
 
-      if is_local_run:
-        shutil.copytree(coverage_report, dst, dirs_exist_ok=True)
-        sample.result.coverage_report_path = \
-          f'/sample/{benchmark.id}/coverage/{sample.id}/linux/'
-      else:
-        shutil.copytree(cloud_report_path,
-                        os.path.join(dst, 'linux'),
-                        dirs_exist_ok=True)
-        sample.result.coverage_report_path = \
-          f'/sample/{benchmark.id}/coverage/{sample.id}/linux/'
+      shutil.copytree(coverage_report, dst, dirs_exist_ok=True)
+      sample.result.coverage_report_path = \
+        f'/sample/{benchmark.id}/coverage/{sample.id}/linux/'
 
   def _read_static_file(self, file_path_in_templates_subdir: str) -> str:
     """Reads a static file from the templates directory."""
@@ -259,8 +251,8 @@ class GenerateReport:
 
       for sample in samples:
         sample_targets = self._results.get_targets(benchmark.id, sample.id)
-        crash_info = self._get_crash_info_from_run_logs(benchmark.id, sample.id)
         self._copy_and_set_coverage_report(benchmark, sample)
+        crash_info = self._get_crash_info_from_run_logs(benchmark.id, sample)
         self._write_benchmark_sample(benchmark, sample, sample_targets,
                                      crash_info, time_results, unified_data)
 
@@ -449,7 +441,7 @@ class GenerateReport:
       }
 
       for sample in samples:
-        crash_info = self._get_crash_info_from_run_logs(benchmark.id, sample.id)
+        crash_info = self._get_crash_info_from_run_logs(benchmark.id, sample)
         triage = self._results.get_triage(benchmark.id, sample.id) or {
             "result": "",
             "triager_prompt": ""
@@ -529,9 +521,14 @@ class GenerateReport:
     return unified_data
 
   def _get_crash_info_from_run_logs(self, benchmark_id: str,
-                                    sample_id: str) -> dict:
-    run_logs = self._results.get_run_logs(benchmark_id, sample_id) or ""
-    parser = RunLogsParser(run_logs)
+                                    sample: Sample) -> dict:
+    """Get the crash info from the run logs."""
+    run_logs = self._results.get_run_logs(benchmark_id, sample.id) or ""
+
+    coverage_report_path = sample.result.coverage_report_path if sample else ""
+
+    parser = RunLogsParser(run_logs, benchmark_id, sample.id,
+                           coverage_report_path)
     crash_details = parser.get_crash_details()
     crash_symptom = parser.get_crash_symptom()
     stack_traces = parser.get_formatted_stack_traces()

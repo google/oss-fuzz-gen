@@ -15,6 +15,7 @@
 information such as the crash details, crash symptoms,
 stack traces, etc. to be rendered in the report."""
 
+import logging
 import re
 
 from experiment import oss_fuzz_checkout
@@ -28,43 +29,6 @@ def extract_project_from_coverage_path(file_path: str) -> str:
     if path_parts:
       return path_parts[0]
   return ""
-
-
-def get_source_url(coverage_file_path: str) -> str:
-  """Get the GitHub source URL for the given coverage file path."""
-  code_line_number = ""
-  if ":" in coverage_file_path:
-    parts = coverage_file_path.split(":")
-    if len(parts) < 2:
-      return ""
-    coverage_file_path = parts[0]
-    code_line_number = parts[1]
-
-  project_name = extract_project_from_coverage_path(coverage_file_path)
-  if not project_name:
-    # Hardcoding llvm-project paths due to OSS Fuzz not being
-    # able to find its project YAML. However, the path to the
-    # GitHub repo is still correct, so we can use it
-    if "llvm-project" in coverage_file_path:
-      project_name = "llvm-project"
-    else:
-      return ""
-
-  repo_url = oss_fuzz_checkout.get_project_repository(project_name)
-  if not repo_url:
-    if "llvm-project" in coverage_file_path:
-      repo_url = "https://github.com/llvm/llvm-project"
-    else:
-      return ""
-
-  relative_path = coverage_file_path.removeprefix(f'/src/{project_name}/')
-
-  if repo_url.endswith('.git'):
-    repo_url = repo_url[:-4]
-
-  if code_line_number:
-    return f"{repo_url}/blob/master/{relative_path}#L{code_line_number}"
-  return f"{repo_url}/blob/master/{relative_path}"
 
 
 class LogsParser:
@@ -160,9 +124,16 @@ class LogsParser:
 class RunLogsParser:
   """Parse the run log."""
 
-  def __init__(self, run_logs: str):
+  def __init__(self,
+               run_logs: str,
+               benchmark_id: str,
+               sample_id: str,
+               coverage_report_path: str = ""):
     self._run_logs = run_logs
     self._lines = run_logs.split('\n')
+    self._benchmark_id = benchmark_id
+    self._sample_id = sample_id
+    self._coverage_report_path = coverage_report_path
 
   def get_crash_details(self) -> str:
     """Get the raw crash details for the given sample."""
@@ -221,10 +192,19 @@ class RunLogsParser:
 
         function_name = in_match.group(1)
         path = in_match.group(2)
-        if '/src/' in path:
-          url = get_source_url(path)
-          if url == '':
-            url = path
+        if '/src/' in path and self._benchmark_id and self._sample_id:
+          path_parts = path.split(':')
+          file_path = path_parts[0]  # Just the file path without line numbers
+          line_number = path_parts[1] if len(path_parts) > 1 else None
+
+          relative_path = file_path.lstrip('/')
+
+          # If coverage_report_path is set, it's a local run
+          # Otherwise it's cloud
+          if self._coverage_report_path:
+            url = f'{self._coverage_report_path}{relative_path}.html#L{line_number}' if line_number else f'{self._coverage_report_path}{relative_path}.html'
+          else:
+            url = f'/results/{self._benchmark_id}/code-coverage-reports/{self._sample_id}.fuzz_target/report/linux/{relative_path}.html#L{line_number}' if line_number else f'/results/{self._benchmark_id}/code-coverage-reports/{self._sample_id}.fuzz_target/report/linux/{relative_path}.html'
           stack_traces[frame_num] = {
               "url": url,
               "path": path,

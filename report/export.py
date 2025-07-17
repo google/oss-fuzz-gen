@@ -74,7 +74,7 @@ class CSVExporter(BaseExporter):
 
         for sample in samples:
           run_logs = self._results.get_run_logs(benchmark_id, sample.id) or ""
-          parser = RunLogsParser(run_logs)
+          parser = RunLogsParser(run_logs, benchmark_id, sample.id)
           crash_reproduction_path = parser.get_crash_reproduction_path()
 
           report_url = self._get_full_url(

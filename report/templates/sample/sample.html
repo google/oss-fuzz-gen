@@ -117,7 +117,7 @@ limitations under the License.
 
                       // First try to match by memory address
                       if (match.includes(frameData.memory_address)) {
-                        if (frameData.url && frameData.url.includes('/blob/master/')) {
+                        if (frameData.url) {
                           formattedPath = '<a href="' + frameData.url + '" target="_blank" class="text-blue-500 hover:text-blue-700 underline">' + filePath + '</a>';
                           break;
                         }
@@ -127,7 +127,7 @@ limitations under the License.
                       const filePathBase = filePath.split(':')[0]; // Remove :line:column
                       const framePathBase = frameData.path.split(':')[0]; // Remove :line:column
                       if (match.includes(frameData.function) && filePathBase === framePathBase) {
-                        if (frameData.url && frameData.url.includes('/blob/master/')) {
+                        if (frameData.url) {
                           formattedPath = '<a href="' + frameData.url + '" target="_blank" class="text-blue-500 hover:text-blue-700 underline">' + filePath + '</a>';
                           break;
                         }
@@ -135,7 +135,7 @@ limitations under the License.
 
                       // As final fallback, match by frame number and function name
                       if (frameId === frameNum && match.includes(frameData.function)) {
-                        if (frameData.url && frameData.url.includes('/blob/master/')) {
+                        if (frameData.url) {
                           formattedPath = '<a href="' + frameData.url + '" target="_blank" class="text-blue-500 hover:text-blue-700 underline">' + filePath + '</a>';
                           break;
                         }
