@@ -312,7 +312,7 @@ limitations under the License.
                     {% set color_index = (loop.index - 1) % color_classes|length %}
                     <div class="border-l-4 border-l-solid rounded-lg mb-6 p-4 {{ color_classes[color_index] }}">
                       <div class="mb-2 font-medium">
-                        Cycle {{ loop.index - 1 }}
+                        Cycle {{ loop.index }}
                       </div>
                       {% for agent_name, agent_logs in cycle_data.items() %}
                         <div x-data="{ open: false }" class="border rounded-lg mb-4 agent-section">
@@ -339,7 +339,7 @@ limitations under the License.
       <div class="border rounded-lg">
         <button @click="logsOpen = !logsOpen"
                 class="w-full p-4 flex justify-between items-center">
-            <span class="text-lg font-bold">Logs</span>
+            <span class="text-lg font-bold">Raw Logs</span>
             <svg class="w-5 h-5 transform transition-transform duration-200"
                 :class="{'rotate-180': logsOpen}"
                 fill="none" stroke="currentColor" viewBox="0 0 24 24">

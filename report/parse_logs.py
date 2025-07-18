@@ -38,7 +38,7 @@ class LogsParser:
   def get_agent_sections(self) -> dict[str, list[LogPart]]:
     """Get the agent sections from the logs."""
 
-    pattern = re.compile(r"\*{8,}(.+?)\*{8,}")
+    pattern = re.compile(r"\*{24}(.+?)\*{24}")
     agent_sections = {}
     current_agent = None
     agent_counters = {}
@@ -178,7 +178,7 @@ class RunLogsParser:
 
         function_name = in_match.group(1)
         path = in_match.group(2)
-        if '/src/' in path and self._benchmark_id and self._sample_id:
+        if '/src/' in path and 'llvm-project' not in path and self._benchmark_id and self._sample_id:
           path_parts = path.split(':')
           file_path = path_parts[0]  # Just the file path without line numbers
           line_number = path_parts[1] if len(path_parts) > 1 else None
