@@ -137,11 +137,14 @@ class GenerateReport:
                results: Results,
                jinja_env: JinjaEnv,
                results_dir: str,
-               output_dir: str = 'results-report'):
+               output_dir: str = 'results-report',
+               base_url: str = ''):
     self._results = results
     self._output_dir = output_dir
     self._jinja = jinja_env
     self.results_dir = results_dir
+    # If cloud, this will be `llm-exp.oss-fuzz.com/Result-reports/ofg-pr/experiment-name`
+    self._base_url = base_url
 
   def read_timings(self):
     with open(os.path.join(self.results_dir, 'report.json'), 'r') as f:
@@ -522,14 +525,13 @@ class GenerateReport:
                                     sample: Sample) -> dict:
     """Get the crash info from the run logs."""
     run_logs = self._results.get_run_logs(benchmark_id, sample.id) or ""
-
     coverage_report_path = sample.result.coverage_report_path if sample else ""
 
     parser = RunLogsParser(run_logs, benchmark_id, sample.id,
                            coverage_report_path)
     crash_details = parser.get_crash_details()
     crash_symptom = parser.get_crash_symptom()
-    stack_traces = parser.get_formatted_stack_traces()
+    stack_traces = parser.get_formatted_stack_traces(self._base_url)
     execution_stats = parser.get_execution_stats()
     return {
         "crash_details": crash_details,
@@ -549,9 +551,9 @@ def generate_report(args: argparse.Namespace) -> None:
       'model': args.model,
       'json_url_path': 'unified_data.json',
   }
-  # WIP: writing to a CSV file
+  base_url = args.base_url if args.base_url else "http://127.0.0.1:8012"
+
   if args.with_csv:
-    base_url = args.base_url if args.base_url else "http://127.0.0.1:8012"
     csv_reporter = CSVExporter(results=results,
                                output_dir=args.output_dir,
                                base_url=base_url)
@@ -568,7 +570,8 @@ def generate_report(args: argparse.Namespace) -> None:
   gr = GenerateReport(results=results,
                       jinja_env=jinja_env,
                       results_dir=args.results_dir,
-                      output_dir=args.output_dir)
+                      output_dir=args.output_dir,
+                      base_url=base_url)
   gr.generate()
 
 

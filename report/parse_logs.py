@@ -154,10 +154,12 @@ class RunLogsParser:
 
     return crash_symptom
 
-  def get_formatted_stack_traces(self) -> dict[str, dict[str, str]]:
+  def get_formatted_stack_traces(self,
+                                 base_url: str) -> dict[str, dict[str, str]]:
     """Get the formatted stack traces from the run log."""
     pattern = re.compile(r'^ {4}#\d+\s+.*$')
     stack_traces = {}
+    base_url = base_url.rstrip('/')
 
     for line in self._lines:
       match = pattern.search(line)
@@ -186,15 +188,16 @@ class RunLogsParser:
           # If coverage_report_path is set, it's a local run
           # Otherwise it's cloud
           if self._coverage_report_path:
-            base_url = f'{self._coverage_report_path}{relative_path}.html'
-            url = f'{base_url}#L{line_number}' if line_number else base_url
+            url = f'{self._coverage_report_path}{relative_path}.html'
+            url_with_line_number = f'{url}#L{line_number}' if line_number else url
           else:
-            base_url = (f'/results/{self._benchmark_id}/code-coverage-reports/'
-                        f'{self._sample_id}.fuzz_target/report/linux/'
-                        f'{relative_path}.html')
-            url = f'{base_url}#L{line_number}' if line_number else base_url
+            url = (
+                f'{base_url}/results/{self._benchmark_id}/code-coverage-reports/'
+                f'{self._sample_id}.fuzz_target/report/linux/'
+                f'{relative_path}.html')
+            url_with_line_number = f'{url}#L{line_number}' if line_number else url
           stack_traces[frame_num] = {
-              "url": url,
+              "url": url_with_line_number,
               "path": path,
               "function": function_name,
               "memory_address": memory_addr
