@@ -1064,7 +1064,7 @@ class GCSStorageAdapter(StorageAdapter):
                   name: str,
                   start_date: Optional[str] = None,
                   end_date: Optional[str] = None,
-                  limit: Optional[int] = None) -> list[Any]:
+                  limit: Optional[int] = None) -> List[Any]:
     """Retrieve historical data for a specific category and name."""
     if self._bucket:
       try:
