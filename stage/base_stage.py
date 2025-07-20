@@ -69,5 +69,5 @@ class BaseStage(ABC):
     return agent.execute(result_history)
 
   @abstractmethod
-  def execute(self, result_history: list[Result]) -> Result:
+  def execute(self, result_history: list[Result], cycle_count: int) -> Result:
     """Executes the stage-specific actions using agents."""

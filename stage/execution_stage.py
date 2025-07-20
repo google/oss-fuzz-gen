@@ -57,7 +57,7 @@ class ExecutionStage(BaseStage):
       self.logger.warning('Build script source not found. ' \
                           'Original build script will be used.')
 
-  def execute(self, result_history: list[Result]) -> Result:
+  def execute(self, result_history: list[Result], cycle_count: int) -> Result:
     """Executes the fuzz target and build script in the latest result."""
     last_result = result_history[-1]
     benchmark = last_result.benchmark
@@ -230,5 +230,5 @@ class ExecutionStage(BaseStage):
           binary_exists=last_result.binary_exists,
           is_function_referenced=last_result.is_function_referenced)
 
-    self.logger.write_chat_history(runresult)
+    self.logger.write_chat_history(runresult, cycle_count)
     return runresult

@@ -1032,23 +1032,50 @@ class CloudBuilderRunner(BuilderRunner):
       if blob.exists():
         blob.download_to_file(f)
 
+    code_coverage_report_dir = self.work_dirs.code_coverage_report(
+        generated_target_name)
+    report_prefix = f'{coverage_name}/report/linux/'
+    blobs = bucket.list_blobs(prefix=report_prefix)
+
+    for blob in blobs:
+      if blob.name.endswith('/'):
+        continue
+
+      # Get the relative path within report/linux/
+      relative_path = blob.name[len(report_prefix):]
+      local_path = os.path.join(code_coverage_report_dir, 'report', 'linux',
+                                relative_path)
+      os.makedirs(os.path.dirname(local_path), exist_ok=True)
+
+      blob.download_to_filename(local_path)
+
     run_result = RunResult(corpus_path=corpus_path,
                            coverage_report_path=coverage_path,
                            reproducer_path=reproducer_path,
                            log_path=run_log_path)
 
-    blob = bucket.blob(f'{coverage_name}/report/linux/summary.json')
-    if blob.exists():
-      # Download summary.json to our workdir.
-      cov_summary_folder = os.path.join(
-          self.work_dirs.code_coverage_report(generated_target_name),
-          'report/linux/')
-      os.makedirs(cov_summary_folder, exist_ok=True)
-      coverage_summary_file = os.path.join(cov_summary_folder, 'summary.json')
-      with open(coverage_summary_file, 'wb') as f:
-        blob.download_to_file(f)
+    #     blob = bucket.blob(f'{coverage_name}/report/linux/summary.json')
+    # if blob.exists():
+    #   # Download summary.json to our workdir.
+    #   cov_summary_folder = os.path.join(
+    #       self.work_dirs.code_coverage_report(generated_target_name),
+    #       'report/linux/')
+    #   os.makedirs(cov_summary_folder, exist_ok=True)
+    #   coverage_summary_file = os.path.join(cov_summary_folder, 'summary.json')
+    #   with open(coverage_summary_file, 'wb') as f:
+    #     blob.download_to_file(f)
 
-      # Load the coverage summary
+    # # Load the coverage summary
+    # with open(coverage_summary_file, 'r') as f:
+    #   run_result.coverage_summary = json.load(f)
+
+    # summary.json is already downloaded as part of the bulk download above
+    coverage_summary_file = os.path.join(
+        self.work_dirs.code_coverage_report(generated_target_name),
+        'report/linux/summary.json')
+
+    # Load the coverage summary if it exists
+    if os.path.exists(coverage_summary_file):
       with open(coverage_summary_file, 'r') as f:
         run_result.coverage_summary = json.load(f)
 
