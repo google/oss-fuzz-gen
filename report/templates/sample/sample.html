@@ -82,7 +82,89 @@ limitations under the License.
           </div>
           {% endif %}
 
+          {% if crash_info.execution_stats %}
+          <div class="mb-6 text-sm">
+              <span class="font-mono">
+                  {% for key, value in crash_info.execution_stats.items() %}
+                      <span class="text-gray-600">{{ key }}:</span>
+                      <span class="font-semibold">{{ value }}</span>{% if not loop.last %}<span class="text-gray-300 mx-2">|</span>{% endif %}
+                  {% endfor %}
+              </span>
+          </div>
+          {% endif %}
+
           {% if crash_info.crash_details %}
+          {% if crash_info.stack_traces %}
+          <script type="application/json" id="stackTracesData" style="display: none;">{{ crash_info.stack_traces | tojson }}</script>
+          {% endif %}
+          <script>
+            function processStackTracesForElement(elementId) {
+              const element = document.getElementById(elementId);
+              if (element && window.AnsiUp) {
+                const ansi_up = new window.AnsiUp();
+                const textContent = element.textContent || element.innerText;
+                let htmlContent = ansi_up.ansi_to_html(textContent);
+
+                const stackTracesElement = document.getElementById('stackTracesData');
+
+                htmlContent = htmlContent.replace(/(    )(#\d+)(\s+)(0x[a-fA-F0-9]+)(\s+in\s+)(.+?)(\s+)(\/[^\s]+)/g, function(match, indent, frameNum, space1, memAddr, inText, funcName, space2, filePath) {
+                  let formattedPath = filePath;
+
+                  if (stackTracesElement) {
+                    const stackTraces = JSON.parse(stackTracesElement.textContent);
+                    for (const frameId in stackTraces) {
+                      const frameData = stackTraces[frameId];
+
+                      // First try to match by memory address
+                      if (match.includes(frameData.memory_address)) {
+                        if (frameData.url) {
+                          formattedPath = '<a href="' + frameData.url + '" target="_blank" class="text-blue-500 hover:text-blue-700 underline">' + filePath + '</a>';
+                          break;
+                        }
+                      }
+
+                      // Then as fallback, match by function name and similar file path (without line:column)
+                      const filePathBase = filePath.split(':')[0]; // Remove :line:column
+                      const framePathBase = frameData.path.split(':')[0]; // Remove :line:column
+                      if (match.includes(frameData.function) && filePathBase === framePathBase) {
+                        if (frameData.url) {
+                          formattedPath = '<a href="' + frameData.url + '" target="_blank" class="text-blue-500 hover:text-blue-700 underline">' + filePath + '</a>';
+                          break;
+                        }
+                      }
+
+                      // As final fallback, match by frame number and function name
+                      if (frameId === frameNum && match.includes(frameData.function)) {
+                        if (frameData.url) {
+                          formattedPath = '<a href="' + frameData.url + '" target="_blank" class="text-blue-500 hover:text-blue-700 underline">' + filePath + '</a>';
+                          break;
+                        }
+                      }
+                    }
+                  }
+
+                  return indent +
+                         '<span class="text-blue-600 font-semibold">' + frameNum + '</span>' +
+                         space1 +
+                         '<span class="text-gray-600 font-semibold">' + memAddr + '</span>' +
+                         inText +
+                         '<span class="text-indigo-600">' + funcName + '</span>' +
+                         space2 +
+                         formattedPath;
+                });
+
+                element.innerHTML = htmlContent;
+              }
+            }
+
+            function processStackTraces() {
+              processStackTracesForElement('crashDetailsPreview');
+            }
+
+            function processRunLogsStackTraces() {
+              processStackTracesForElement('runLogsPreview');
+            }
+          </script>
           <div x-data="{
             detailsOpen: false,
             ansiProcessed: false,
@@ -90,20 +172,14 @@ limitations under the License.
               this.detailsOpen = !this.detailsOpen;
               if (this.detailsOpen && !this.ansiProcessed) {
                 this.$nextTick(() => {
-                  const element = document.getElementById('crashDetailsPreview');
-                  if (element && window.AnsiUp) {
-                    const ansi_up = new window.AnsiUp();
-                    const textContent = element.textContent || element.innerText;
-                    const htmlContent = ansi_up.ansi_to_html(textContent);
-                    element.innerHTML = htmlContent;
-                    this.ansiProcessed = true;
-                  }
+                  processStackTraces();
+                  this.ansiProcessed = true;
                 });
               }
             }
           }" class="border rounded-lg">
             <button @click="toggleDetails()"
-                    class="w-full p-4 flex justify-between items-center text-left">
+                    class="w-full p-4 flex justify-between items-center">
                 <span class="font-medium">Crash Details</span>
                 <svg class="w-4 h-4 transform transition-transform duration-200"
                      :class="{'rotate-180': detailsOpen}"
@@ -116,6 +192,8 @@ limitations under the License.
             </div>
           </div>
           {% endif %}
+
+
         </div>
         {% endif %}
 
@@ -137,8 +215,10 @@ limitations under the License.
 
   <div x-data="{
       codeOpen: true,
+      agentsOpen: true,
       logsOpen: false,
       runlogsOpen: false,
+      runlogsProcessed: false,
       coverageOpen: false
   }" class="space-y-2">
       <div class="border rounded-lg">
@@ -176,37 +256,102 @@ limitations under the License.
       </div>
 
       <div class="border rounded-lg">
-          <button @click="logsOpen = !logsOpen"
+          <button @click="agentsOpen = !agentsOpen"
                   class="w-full p-4 flex justify-between items-center">
-              <span class="text-lg font-bold">Logs</span>
+              <span class="text-lg font-bold">Agents</span>
               <svg class="w-5 h-5 transform transition-transform duration-200"
-                   :class="{'rotate-180': logsOpen}"
+                   :class="{'rotate-180': agentsOpen}"
                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
               </svg>
           </button>
-          <div x-show="logsOpen"
-               class="p-4 border-t">
-              {% for part in logs %}
-              <pre id="logs" class="{% if part.chat_prompt %}chat_prompt bg-gray-50{% elif part.chat_response %}chat_response bg-gray-100{% endif %} p-4 rounded-md mb-4 overflow-x-auto">{{ part.content }}</pre>
-              {% endfor %}
-          </div>
+          {% if agent_cycles %}
+            <div x-show="agentsOpen"
+                class="p-4 border-t">
+
+                <div class="flex justify-between mb-4">
+                  <div class="controls flex gap-2">
+                      <button id="agent-sections-expand-all" class="border rounded-lg p-3">
+                          Expand All
+                      </button>
+                      <button id="agent-sections-collapse-all" class="border rounded-lg p-3">
+                          Collapse All
+                      </button>
+                  </div>
+                </div>
+
+                {% for cycle_data in agent_cycles %}
+                  {% if 'standalone' in cycle_data %}
+                    <!-- Standalone agents -->
+                    {% for agent_name, agent_logs in cycle_data.standalone.items() %}
+                      <div x-data="{ open: false }" class="border rounded-lg mb-4 agent-section">
+                        <button @click="open = !open" class="w-full p-4 flex justify-between items-center text-left rounded-t-lg">
+                          <span class="font-medium">{{ agent_name }}</span>
+                          <svg class="w-4 h-4" :class="{'rotate-180': open}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                          </svg>
+                        </button>
+                        <div x-show="open" class="border-t">
+                          {% for log_part in agent_logs %}
+                            <pre class="{% if log_part.chat_prompt %}chat_prompt {% elif log_part.chat_response %}chat_response {% endif %} p-4 rounded-md mb-4 whitespace-pre-wrap break-words">{{ log_part.content }}</pre>
+                          {% endfor %}
+                        </div>
+                      </div>
+                    {% endfor %}
+                  {% else %}
+                    <!-- Cycle with multiple agents -->
+                    {% set color_classes = [
+                      'border-blue-300',
+                      'border-green-300',
+                      'border-purple-300',
+                      'border-red-300',
+                      'border-indigo-300',
+                      'border-pink-300',
+                      'border-teal-300'
+                    ] %}
+                    {% set color_index = (loop.index - 1) % color_classes|length %}
+                    <div class="border-l-4 border-l-solid rounded-lg mb-6 p-4 {{ color_classes[color_index] }}">
+                      <div class="mb-2 font-medium">
+                        Cycle {{ loop.index }}
+                      </div>
+                      {% for agent_name, agent_logs in cycle_data.items() %}
+                        <div x-data="{ open: false }" class="border rounded-lg mb-4 agent-section">
+                          <button @click="open = !open" class="w-full p-4 flex justify-between items-center text-left rounded-t-lg">
+                            <span class="font-medium">{{ agent_name }}</span>
+                            <svg class="w-4 h-4" :class="{'rotate-180': open}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                          </button>
+                          <div x-show="open" class="border-t">
+                            {% for log_part in agent_logs %}
+                              <pre class="{% if log_part.chat_prompt %}chat_prompt {% elif log_part.chat_response %}chat_response {% endif %} p-4 rounded-md mb-4 whitespace-pre-wrap break-words">{{ log_part.content }}</pre>
+                            {% endfor %}
+                          </div>
+                        </div>
+                      {% endfor %}
+                    </div>
+                  {% endif %}
+                {% endfor %}
+            </div>
+          {% endif %}
       </div>
 
       <div class="border rounded-lg">
-          <button @click="runlogsOpen = !runlogsOpen"
-                  class="w-full p-4 flex justify-between items-center">
-              <span class="text-lg font-bold">Run Logs</span>
-              <svg class="w-5 h-5 transform transition-transform duration-200"
-                   :class="{'rotate-180': runlogsOpen}"
-                   fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-              </svg>
-          </button>
-          <div x-show="runlogsOpen"
-               class="p-4 border-t">
-              <pre class="bg-gray-50 dark:bg-gray-800 p-4 rounded-md overflow-x-auto">{{ run_logs }}</pre>
-          </div>
+        <button @click="logsOpen = !logsOpen"
+                class="w-full p-4 flex justify-between items-center">
+            <span class="text-lg font-bold">Raw Logs</span>
+            <svg class="w-5 h-5 transform transition-transform duration-200"
+                :class="{'rotate-180': logsOpen}"
+                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+        </button>
+        <div x-show="logsOpen"
+             class="p-4 border-t">
+              {% for part in logs %}
+                <pre id="logs" class="{% if part.chat_prompt %}chat_prompt bg-gray-50{% elif part.chat_response %}chat_response bg-gray-100{% endif %} p-4 rounded-md mb-4 overflow-x-auto">{{ part.content }}</pre>
+              {% endfor %}
+        </div>
       </div>
 
       {% if sample.result.coverage_report_path %}
@@ -255,5 +400,34 @@ limitations under the License.
       {% endif %}
   </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Agent sections expand/collapse buttons
+    const agentSectionsExpandAllButton = document.getElementById('agent-sections-expand-all');
+    if (agentSectionsExpandAllButton) {
+        agentSectionsExpandAllButton.addEventListener('click', () => {
+            document.querySelectorAll('.agent-section').forEach(section => {
+                const alpineData = Alpine.$data(section);
+                if (alpineData) {
+                    alpineData.open = true;
+                }
+            });
+        });
+    }
+
+    const agentSectionsCollapseAllButton = document.getElementById('agent-sections-collapse-all');
+    if (agentSectionsCollapseAllButton) {
+        agentSectionsCollapseAllButton.addEventListener('click', () => {
+            document.querySelectorAll('.agent-section').forEach(section => {
+                const alpineData = Alpine.$data(section);
+                if (alpineData) {
+                    alpineData.open = false;
+                }
+            });
+        });
+    }
+});
+</script>
 
 {% endblock %}

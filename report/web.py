@@ -32,7 +32,7 @@ import jinja2
 from report.common import (AccumulatedResult, Benchmark, FileSystem, Project,
                            Results, Sample, Target)
 from report.export import CSVExporter
-from report.parse_run_log import RunLogsParser
+from report.parse_logs import LogsParser, RunLogsParser
 
 LOCAL_HOST = '127.0.0.1'
 
@@ -137,11 +137,14 @@ class GenerateReport:
                results: Results,
                jinja_env: JinjaEnv,
                results_dir: str,
-               output_dir: str = 'results-report'):
+               output_dir: str = 'results-report',
+               base_url: str = ''):
     self._results = results
     self._output_dir = output_dir
     self._jinja = jinja_env
     self.results_dir = results_dir
+    # If cloud, this will be `llm-exp.oss-fuzz.com/Result-reports/ofg-pr/experiment-name`
+    self._base_url = base_url
 
   def read_timings(self):
     with open(os.path.join(self.results_dir, 'report.json'), 'r') as f:
@@ -156,16 +159,24 @@ class GenerateReport:
       return
 
     coverage_report = ''
-    for l in os.listdir(coverage_path):
+    coverage_files = os.listdir(coverage_path)
+    for l in coverage_files:
       if l.split('.')[0] == sample.id:
         coverage_report = os.path.join(coverage_path, l)
+
+    if not coverage_report:
+      return
+
+    if not os.path.isdir(coverage_report):
+      return
+
+    coverage_contents = os.listdir(coverage_report)
 
     # On cloud runs there are two folders in code coverage reports, (report,
     # textcov). If we have three files/dirs (linux, style.cssand textcov), then
     # it's a local run. In that case copy over the code coverage reports so
     # they are visible in the HTML page.
-    if coverage_report and os.path.isdir(coverage_report) and len(
-        os.listdir(coverage_report)) > 2:
+    if len(coverage_contents) > 2:
       # Copy coverage to reports out
       dst = os.path.join(self._output_dir, 'sample', benchmark.id, 'coverage')
       os.makedirs(dst, exist_ok=True)
@@ -243,7 +254,8 @@ class GenerateReport:
 
       for sample in samples:
         sample_targets = self._results.get_targets(benchmark.id, sample.id)
-        crash_info = self._get_crash_info_from_run_logs(benchmark.id, sample.id)
+        self._copy_and_set_coverage_report(benchmark, sample)
+        crash_info = self._get_crash_info_from_run_logs(benchmark.id, sample)
         self._write_benchmark_sample(benchmark, sample, sample_targets,
                                      crash_info, time_results, unified_data)
 
@@ -336,7 +348,6 @@ class GenerateReport:
     try:
       # Ensure all required variables are available
       logs = self._results.get_logs(benchmark.id, sample.id) or []
-      run_logs = self._results.get_run_logs(benchmark.id, sample.id) or ""
       triage = self._results.get_triage(benchmark.id, sample.id) or {
           "result": "",
           "triager_prompt": ""
@@ -350,12 +361,16 @@ class GenerateReport:
           "time_results": time_results,
           "unified_data": unified_data
       }
+      logs_parser = LogsParser(logs)
+      agent_sections = logs_parser.get_agent_sections()
+      agent_cycles = logs_parser.get_agent_cycles()
 
       rendered = self._jinja.render('sample/sample.html',
                                     benchmark=benchmark,
                                     sample=sample,
+                                    agent_sections=agent_sections,
+                                    agent_cycles=agent_cycles,
                                     logs=logs,
-                                    run_logs=run_logs,
                                     triage=triage,
                                     targets=sample_targets,
                                     sample_css_content=sample_css_content,
@@ -427,7 +442,7 @@ class GenerateReport:
       }
 
       for sample in samples:
-        crash_info = self._get_crash_info_from_run_logs(benchmark.id, sample.id)
+        crash_info = self._get_crash_info_from_run_logs(benchmark.id, sample)
         triage = self._results.get_triage(benchmark.id, sample.id) or {
             "result": "",
             "triager_prompt": ""
@@ -507,12 +522,23 @@ class GenerateReport:
     return unified_data
 
   def _get_crash_info_from_run_logs(self, benchmark_id: str,
-                                    sample_id: str) -> dict:
-    run_logs = self._results.get_run_logs(benchmark_id, sample_id) or ""
-    parser = RunLogsParser(run_logs)
+                                    sample: Sample) -> dict:
+    """Get the crash info from the run logs."""
+    run_logs = self._results.get_run_logs(benchmark_id, sample.id) or ""
+    coverage_report_path = sample.result.coverage_report_path if sample else ""
+
+    parser = RunLogsParser(run_logs, benchmark_id, sample.id,
+                           coverage_report_path)
     crash_details = parser.get_crash_details()
     crash_symptom = parser.get_crash_symptom()
-    return {"crash_details": crash_details, "crash_symptom": crash_symptom}
+    stack_traces = parser.get_formatted_stack_traces(self._base_url)
+    execution_stats = parser.get_execution_stats()
+    return {
+        "crash_details": crash_details,
+        "crash_symptom": crash_symptom,
+        "stack_traces": stack_traces,
+        "execution_stats": execution_stats
+    }
 
 
 def generate_report(args: argparse.Namespace) -> None:
@@ -525,9 +551,9 @@ def generate_report(args: argparse.Namespace) -> None:
       'model': args.model,
       'json_url_path': 'unified_data.json',
   }
-  # WIP: writing to a CSV file
+  base_url = args.base_url if args.base_url else "http://127.0.0.1:8012"
+
   if args.with_csv:
-    base_url = args.base_url if args.base_url else "http://127.0.0.1:8012"
     csv_reporter = CSVExporter(results=results,
                                output_dir=args.output_dir,
                                base_url=base_url)
@@ -544,7 +570,8 @@ def generate_report(args: argparse.Namespace) -> None:
   gr = GenerateReport(results=results,
                       jinja_env=jinja_env,
                       results_dir=args.results_dir,
-                      output_dir=args.output_dir)
+                      output_dir=args.output_dir,
+                      base_url=base_url)
   gr.generate()
 
 

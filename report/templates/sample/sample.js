@@ -1,5 +1,32 @@
 "use strict";
 
+document.addEventListener('DOMContentLoaded', function() {
+    // Agent sections expand/collapse buttons
+    const agentSectionsExpandAllButton = document.getElementById('agent-sections-expand-all');
+    if (agentSectionsExpandAllButton) {
+        agentSectionsExpandAllButton.addEventListener('click', () => {
+            document.querySelectorAll('.agent-section').forEach(section => {
+                const alpineData = Alpine.$data(section);
+                if (alpineData) {
+                    alpineData.open = true;
+                }
+            });
+        });
+    }
+
+    const agentSectionsCollapseAllButton = document.getElementById('agent-sections-collapse-all');
+    if (agentSectionsCollapseAllButton) {
+        agentSectionsCollapseAllButton.addEventListener('click', () => {
+            document.querySelectorAll('.agent-section').forEach(section => {
+                const alpineData = Alpine.$data(section);
+                if (alpineData) {
+                    alpineData.open = false;
+                }
+            });
+        });
+    }
+});
+
 var __makeTemplateObject = (this && this.__makeTemplateObject) || function (cooked, raw) {
     if (Object.defineProperty) { Object.defineProperty(cooked, "raw", { value: raw }); } else { cooked.raw = raw; }
     return cooked;
