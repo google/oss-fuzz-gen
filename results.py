@@ -310,24 +310,20 @@ class CrashContextResult():
   """Analysis result of the context of the crashing function."""
   feasible: bool
   analysis: str
-  source_code_evidence: str
   recommendations: str
 
   def __init__(self,
                feasible: bool = False,
                analysis: str = '',
-               source_code_evidence: str = '',
                recommendations: str = ''):
     self.feasible = feasible
     self.analysis = analysis
-    self.source_code_evidence = source_code_evidence
     self.recommendations = recommendations
 
   def to_dict(self) -> dict:
     return {
         'feasible': self.feasible,
         'analysis': self.analysis,
-        'source_code_evidence': self.source_code_evidence,
         'recommendations': self.recommendations,
     }
 
@@ -341,8 +337,6 @@ class CrashContextResult():
 
     return CrashContextResult(feasible=data.get('feasible', False),
                               analysis=data.get('analysis', ''),
-                              source_code_evidence=data.get(
-                                  'source_code_evidence', ''),
                               recommendations=data.get('recommendations', ''))
 
 

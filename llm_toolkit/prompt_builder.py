@@ -827,14 +827,8 @@ class CrashEnhancerTemplateBuilder(PrototyperTemplateBuilder):
                               self.crash_result.insight)
 
     if self.context_result:
-      context_analyzer_insight = f"""
-      {self.context_result.analysis}
-
-      Here is the source code evidence for this insight.
-      {self.context_result.source_code_evidence}
-      """
       priming = priming.replace('CONTEXT_ANALYZER_INSIGHT',
-                                context_analyzer_insight)
+                                self.context_result.analysis)
       fix_recommendations = FIX_RECOMMENDATION_HEADER + self.context_result.recommendations
       priming = priming.replace('FIX_RECOMMENDATION', fix_recommendations)
 
@@ -921,8 +915,6 @@ class FunctionAnalyzerTemplateBuilder(DefaultTemplateBuilder):
         AGENT_TEMPLATE_DIR, 'function-analyzer-description.txt')
     self.function_analyzer_prompt_template_file = self._find_template(
         AGENT_TEMPLATE_DIR, 'function-analyzer-priming.txt')
-    self.function_analyzer_response_file = self._find_template(
-        DEFAULT_TEMPLATE_DIR, 'function-analyzer-response.txt')
 
   def get_instruction(self) -> prompts.Prompt:
     """Constructs a prompt using the templates in |self| and saves it."""
@@ -950,7 +942,7 @@ class FunctionAnalyzerTemplateBuilder(DefaultTemplateBuilder):
 
     return self._prompt
 
-  def build_prompt(self, project_dir: str) -> prompts.Prompt:
+  def build_prompt(self) -> prompts.Prompt:
     """Constructs a prompt using the templates in |self| and saves it."""
 
     if not self.benchmark:
@@ -963,7 +955,6 @@ class FunctionAnalyzerTemplateBuilder(DefaultTemplateBuilder):
     prompt = prompt.replace('{PROJECT_NAME}', self.benchmark.project)
     prompt = prompt.replace('{FUNCTION_SIGNATURE}',
                             self.benchmark.function_signature)
-    prompt = prompt.replace('{PROJECT_DIR}', project_dir)
 
     # Get the function source
     func_source = introspector.query_introspector_function_source(
@@ -989,15 +980,9 @@ class FunctionAnalyzerTemplateBuilder(DefaultTemplateBuilder):
       references_str = '\n'.join(references)
       prompt = prompt.replace('{FUNCTION_REFERENCES}', references_str)
 
-    prompt = prompt.replace('{RESPONSE_FORMAT}', self.get_response_format())
-
     self._prompt.append(prompt)
 
     return self._prompt
-
-  def get_response_format(self) -> str:
-    """Returns the response format for the function analyzer."""
-    return self._get_template(self.function_analyzer_response_file)
 
   def build(self,
             example_pair: Optional[list[list[str]]] = None,
@@ -1008,10 +993,9 @@ class FunctionAnalyzerTemplateBuilder(DefaultTemplateBuilder):
             project_name: str = '',
             function_signature: str = '') -> prompts.Prompt:
 
-    del (example_pair, project_example_content, project_context_content,
-         tool_guides, project_dir, project_name, function_signature)
-
-    return self._prompt
+    raise NotImplementedError(
+        'FunctionAnalyzerTemplateBuilder.build() should not be called. '
+        'Use build_prompt() instead.')
 
 
 class ContextAnalyzerTemplateBuilder(DefaultTemplateBuilder):

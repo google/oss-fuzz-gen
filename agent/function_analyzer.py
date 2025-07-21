@@ -106,24 +106,15 @@ class FunctionAnalyzer(base_agent.ADKBaseAgent):
     # Call the agent asynchronously and return the result
     prompt = self._initial_prompt(result_history)
 
-    while self.round < self.max_round:
-      final_response_text = self.chat_llm(self.round,
-                                          client=None,
-                                          prompt=prompt,
-                                          trial=result_history[-1].trial)
-      if final_response_text:
-        self.handle_llm_response(final_response_text, result)
-        break
+    final_response_text = self.chat_llm(self.round,
+                                        client=None,
+                                        prompt=prompt,
+                                        trial=result_history[-1].trial)
 
-      # Handle invalid LLM response
-      template_builder = prompt_builder.FunctionAnalyzerTemplateBuilder(
-          self.llm, self.benchmark)
-
-      prompt = self._container_handle_invalid_tool_usage(
-          [self.inspect_tool], self.round, final_response_text,
-          template_builder.build(), template_builder.get_response_format())
+    self.handle_llm_response(final_response_text, result)
 
     self.inspect_tool.terminate()
+
     return result
 
   def _initial_prompt(
@@ -135,7 +126,7 @@ class FunctionAnalyzer(base_agent.ADKBaseAgent):
     builder = prompt_builder.FunctionAnalyzerTemplateBuilder(
         self.llm, self.benchmark)
 
-    prompt = builder.build_prompt(self.inspect_tool.project_dir)
+    prompt = builder.build_prompt()
 
     prompt.append(self.inspect_tool.tutorial())
 

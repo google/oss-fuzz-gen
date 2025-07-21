@@ -2,5 +2,4 @@ YOU MUST PROVIDE YOUR FINAL RESPONSE USING THE report_final_result TOOL.
    - The tool takes three arguments - feasible, analysis and recommendations.
    - feasible should be True if the crash is feasible, or False otherwise.
    - analysis should contain source code evidence of the crash's feasibility.
-   - source_code_evidence should contain the detailed source code evidence to back your analysis.
    - recommendations should only be provided for non-feasible crashes, and should recommend fuzz target modifications to prevent this crash.
