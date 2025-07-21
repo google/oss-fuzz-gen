@@ -76,3 +76,8 @@ To test a new agent directly, you should follow the following steps:
 5. Add the agent and the corresponding `BaseAgentTest` to the list of supported agents in `agent_test.py`.
 
 The necessary BaseAgentTest subclasses have been developed for FunctionAnalyzer, CrashAnalyzer, ContextAnalyzer and ExecutionStage.
+
+## Extending this framework for Integration Tests
+Currently, this framework is designed to be run using its command line interface.
+However, it can be extended so that other test files can call it using specific input configurations and automatically validate that the returned results possess desired characteristics.
+For example, a test file can be developed that tests the Context Analyzer using known false positive crashes and validates that the analyzer correctly reports these crashes as false positives.
