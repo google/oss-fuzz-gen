@@ -15,6 +15,7 @@
 from agent_tests.base_agent_test import BaseAgentTest
 from results import AnalysisResult, CrashResult, Result, RunResult
 
+
 class FunctionAnalyzerAgentTest(BaseAgentTest):
   """Test for the FunctionAnalyzer agent."""
 
