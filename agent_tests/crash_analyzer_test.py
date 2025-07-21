@@ -38,14 +38,61 @@ class CrashAnalyzerAgentTest(BaseAgentTest):
     raise ValueError(
         "Artifact path not found in the prompt: {}".format(prompt))
 
+  def get_fuzz_target_and_build_script_paths(self, additional_files_path: str) -> tuple[str, str]:
+    """Gets the file paths ending with .fuzz_target and .build_script from additional files path.
+
+    Args:
+        additional_files_path: Directory path containing the files
+
+    Returns:
+        tuple: (fuzz_target_path, build_script_path)
+
+    Raises:
+        FileNotFoundError: If fuzz_target file is not found
+        ValueError: If multiple files with same extension are found
+    """
+    if not os.path.exists(additional_files_path):
+        raise FileNotFoundError(f"Additional files path does not exist: {additional_files_path}")
+
+    fuzz_target_files = []
+    build_script_files = []
+
+    # Walk through the directory to find files with specified extensions
+    for root, dirs, files in os.walk(additional_files_path):
+        for file in files:
+            file_path = os.path.join(root, file)
+            if file.endswith('.fuzz_target'):
+                fuzz_target_files.append(file_path)
+            elif file.endswith('.build_script'):
+                build_script_files.append(file_path)
+
+    # Check for fuzz_target file
+    if not fuzz_target_files:
+        raise FileNotFoundError(f"No .fuzz_target file found in {additional_files_path}")
+    elif len(fuzz_target_files) > 1:
+        raise ValueError(f"Multiple .fuzz_target files found: {fuzz_target_files}")
+
+    fuzz_target_path = fuzz_target_files[0]
+
+    # Build script is optional, so we don't raise error if not found
+    build_script_path = build_script_files[0] if build_script_files else ''
+
+    if len(build_script_files) > 1:
+        raise ValueError(f"Multiple .build_script files found: {build_script_files}")
+
+    return fuzz_target_path, build_script_path
+
   def setup_initial_result_list(self, benchmark, prompt):
     """Sets up the initial result list for the CrashAnalyzer agent test."""
 
-    fuzz_target_path = 'agent_tests/run_result_files/Result-reports_ofg-pr_2025-07-11-1144-pamusuo-analyzer-tests-1_results_output-libsndfile-sf_open_fuzz_targets_01.fuzz_target'
-    build_script_path = 'agent_tests/run_result_files/Result-reports_ofg-pr_2025-07-11-1144-pamusuo-analyzer-tests-1_results_output-libsndfile-sf_open_fuzz_targets_01.build_script'
+    # Extract the fuzz target and build script from the self.args.additional_files_path
+    if not self.args.additional_files_path:
+      raise ValueError("Additional files path is not provided.")
 
-    if not os.path.exists(fuzz_target_path) or os.path.getsize(fuzz_target_path) == 0:
-      raise FileNotFoundError(f"Fuzz target file not found: {fuzz_target_path}")
+    # Get the file ending with .fuzz_target and .build_script from
+    fuzz_target_path, build_script_path = self.get_fuzz_target_and_build_script_paths(
+        self.args.additional_files_path)
+
     with open(fuzz_target_path, 'r') as file:
       fuzz_target_source = file.read()
     if os.path.exists(build_script_path) and os.path.getsize(build_script_path) > 0:
