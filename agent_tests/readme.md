@@ -3,8 +3,8 @@
 This is a test framework designed to enable developers test individual agents or a sequence of agents in OSS-Fuzz-Gen without the need for running full experiments.
 
 ## Why this framework?
-This will enable OSS-Fuzz-Gen developers to make small changes in an agent's design or prompt and quickly evaluate if the change had the desired effect.
-For example, a developer can modify the Coverage Analyzer to use previous coverage report and evaluate this change without running a full experiment.
+This will enable OSS-Fuzz-Gen developers to make small changes to an agent's design or prompt and quickly evaluate if the change had the desired effect.
+For example, a developer can modify the Coverage Analyzer to use the coverage report from a previous experiment and quickly evaluate if this improves the Coverage Analyzer's output without running a full experiment.
 
 Without this framework, evaluating this change would have required running an experiment involving several cycles of the Function Analyzer, Prototyper and Execution Stage until no crash occurs and the Coverage Analyzer is invoked.
 This framework allows the developer to skip these steps, thereby saving time and associated LLM API expenses.
@@ -40,6 +40,8 @@ In addition, testing some agents involve additional arguments.
 | -pf | The path to a file containing a previous prompt for the first agent in the pipeline. This path should be copied from the report of a previous OSS-Fuzz-Gen experiment. Details from this file are used to reconstruct the result list for specific agents. |
 | -npf | This flag should be passed if testing an agent that does not require a prompt file. |
 | -afp | A path to a directory containing additional files needed by any agent under test. These files can be retrieved from the experiment directory of a previous experiment. |
+
+Other CLI arguments are the same as those used when calling run_all_experiments.py.
 
 Example CLI commands:
 1. This command tests the Function Analyzer, Prototyper and Execution Stage in sequence.

@@ -31,7 +31,7 @@ class CrashAnalyzerAgentTest(BaseAgentTest):
       # Extract the filename from the path
       filename = artifact_path.split('/')[-1]
       # Create the relative path
-      relative_path = f"agent_tests/artifacts/{filename}"
+      relative_path = os.path.join(self.args.additional_files_path, filename)
       # Check if the file exists
       if os.path.exists(relative_path):
         return os.path.abspath(relative_path)
