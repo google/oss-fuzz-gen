@@ -22,8 +22,10 @@ from typing import List, Tuple, Type
 
 import logger
 import run_one_experiment
-from agent import base_agent, context_analyzer, crash_analyzer, function_analyzer, prototyper
-from agent_tests import base_agent_test, context_analyzer_test, crash_analyzer_test, function_analyzer_test
+from agent import (base_agent, context_analyzer, crash_analyzer,
+                   function_analyzer, prototyper)
+from agent_tests import (base_agent_test, context_analyzer_test,
+                         crash_analyzer_test, function_analyzer_test)
 from data_prep import introspector
 from experiment import benchmark as benchmarklib
 from experiment import workdir
@@ -36,17 +38,23 @@ RESULTS_DIR = f'./results-{datetime.now().strftime("%Y-%m-%d-%H-%M")}'
 NUM_ANA = int(os.getenv('LLM_NUM_ANA', '2'))
 RUN_TIMEOUT: int = 300
 
-agents: dict[str, Tuple[Type[base_agent.BaseAgent|base_stage.BaseStage],
-                        Type[base_agent_test.BaseAgentTest]]] = {
-    'ContextAnalyzer': (context_analyzer.ContextAnalyzer,
-                        context_analyzer_test.ContextAnalyzerAgentTest),
-    'CrashAnalyzer': (crash_analyzer.CrashAnalyzer,
-                     crash_analyzer_test.CrashAnalyzerAgentTest),
-    'FunctionAnalyzer': (function_analyzer.FunctionAnalyzer,
-                         function_analyzer_test.FunctionAnalyzerAgentTest),
-    'Prototyper': (prototyper.Prototyper, base_agent_test.BaseAgentTest),
-    'ExecutionStage': (execution_stage.ExecutionStage, base_agent_test.BaseAgentTest)
-}
+agents: dict[str,
+             Tuple[Type[base_agent.BaseAgent | base_stage.BaseStage],
+                   Type[base_agent_test.BaseAgentTest]]] = {
+                       'ContextAnalyzer':
+                           (context_analyzer.ContextAnalyzer,
+                            context_analyzer_test.ContextAnalyzerAgentTest),
+                       'CrashAnalyzer':
+                           (crash_analyzer.CrashAnalyzer,
+                            crash_analyzer_test.CrashAnalyzerAgentTest),
+                       'FunctionAnalyzer':
+                           (function_analyzer.FunctionAnalyzer,
+                            function_analyzer_test.FunctionAnalyzerAgentTest),
+                       'Prototyper': (prototyper.Prototyper,
+                                      base_agent_test.BaseAgentTest),
+                       'ExecutionStage': (execution_stage.ExecutionStage,
+                                          base_agent_test.BaseAgentTest)
+                   }
 
 
 def parse_args() -> argparse.Namespace:
@@ -79,18 +87,19 @@ def parse_args() -> argparse.Namespace:
       default='',
       help='A file containing the prompt to reconstruct for initial agent.')
 
-  parser.add_argument(
-      '-npf',
-      '--no-prompt-file',
-      action='store_true',
-      help='Skip using prompt file even if provided.')
+  parser.add_argument('-npf',
+                      '--no-prompt-file',
+                      action='store_true',
+                      help='Skip using prompt file even if provided.')
 
   parser.add_argument(
       '-afp',
       '--additional-files-path',
       type=str,
       default='',
-      help='The path to a directory containing any additional files needed by the agents under test.')
+      help=
+      'The path to a directory containing any additional files needed by the agents under test.'
+  )
 
   parser.add_argument('-mr',
                       '--max-round',
@@ -149,7 +158,7 @@ def parse_args() -> argparse.Namespace:
 
 def get_test_pipeline(
     agents_text: str
-) -> List[Tuple[Type[base_agent.BaseAgent|base_stage.BaseStage],
+) -> List[Tuple[Type[base_agent.BaseAgent | base_stage.BaseStage],
                 Type[base_agent_test.BaseAgentTest]]]:
   """Returns a pipeline of agents for testing."""
 
@@ -166,9 +175,11 @@ def get_test_pipeline(
   return pipeline
 
 
-def get_result_list_for_agent(args: argparse.Namespace, agent_class: Tuple[
-    Type[base_agent.BaseAgent|base_stage.BaseStage], Type[base_agent_test.BaseAgentTest]],
-                              benchmark: benchmarklib.Benchmark) -> List[Result]:
+def get_result_list_for_agent(
+    args: argparse.Namespace,
+    agent_class: Tuple[Type[base_agent.BaseAgent | base_stage.BaseStage],
+                       Type[base_agent_test.BaseAgentTest]],
+    benchmark: benchmarklib.Benchmark) -> List[Result]:
   """Returns the initial result list for the agent."""
 
   agent_test_class = agent_class[1]
@@ -181,7 +192,8 @@ def get_result_list_for_agent(args: argparse.Namespace, agent_class: Tuple[
   return agent_test_instance.setup_initial_result_list(benchmark, args.prompt)
 
 
-def write_result(args: argparse.Namespace, trial: int, result: List[Result]) -> None:
+def write_result(args: argparse.Namespace, trial: int,
+                 result: List[Result]) -> None:
   """Writes the result to a file in the work directory."""
 
   result_file = os.path.join(args.work_dirs.base, f'{trial}_result.json')
@@ -230,11 +242,12 @@ if __name__ == '__main__':
 
     for agent_class in pipeline:
       if issubclass(agent_class[0], base_agent.BaseAgent):
-          agent_instance = agent_class[0](args.trial, model, args, benchmark)
+        agent_instance = agent_class[0](args.trial, model, args, benchmark)
       elif issubclass(agent_class[0], base_stage.BaseStage):
-          agent_instance = agent_class[0](args, args.trial)
+        agent_instance = agent_class[0](args, args.trial)
       else:
-          raise TypeError(f"Unexpected agent class type: {agent_class[0].__name__}")
+        raise TypeError(
+            f"Unexpected agent class type: {agent_class[0].__name__}")
 
       # Execute the agent with the initial results
       result = agent_instance.execute(result_list)

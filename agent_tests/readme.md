@@ -72,3 +72,5 @@ To test a new agent directly, you should follow the following steps:
 3. In `setup_initial_result_list`, create any necessary files and initialize result objects with the necessary fields.
 4. If additional files are needed, update `parse_args` function in `agent_test.py` with new arguments that will point to these files.
 5. Add the agent and the corresponding `BaseAgentTest` to the list of supported agents in `agent_test.py`.
+
+The necessary BaseAgentTest subclasses have been developed for FunctionAnalyzer, CrashAnalyzer, ContextAnalyzer and ExecutionStage.

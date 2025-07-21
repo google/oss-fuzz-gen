@@ -23,5 +23,7 @@ class FunctionAnalyzerAgentTest(BaseAgentTest):
     """Sets up the initial result list for the FunctionAnalyzer agent test."""
 
     return [
-      Result(benchmark=benchmark, trial=self.args.trial, work_dirs=self.args.work_dirs)
-  ]
+        Result(benchmark=benchmark,
+               trial=self.args.trial,
+               work_dirs=self.args.work_dirs)
+    ]
