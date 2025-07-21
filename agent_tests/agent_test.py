@@ -243,14 +243,14 @@ if __name__ == '__main__':
     for agent_class in pipeline:
       if issubclass(agent_class[0], base_agent.BaseAgent):
         agent_instance = agent_class[0](args.trial, model, args, benchmark)
+        result = agent_instance.execute(result_list)
       elif issubclass(agent_class[0], base_stage.BaseStage):
         agent_instance = agent_class[0](args, args.trial)
+        result = agent_instance.execute(result_list, 0)
       else:
         raise TypeError(
             f"Unexpected agent class type: {agent_class[0].__name__}")
 
-      # Execute the agent with the initial results
-      result = agent_instance.execute(result_list)
 
       # Prepare for the next agent in the pipeline
       result_list.append(result)
