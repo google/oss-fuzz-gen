@@ -251,7 +251,6 @@ if __name__ == '__main__':
         raise TypeError(
             f"Unexpected agent class type: {agent_class[0].__name__}")
 
-
       # Prepare for the next agent in the pipeline
       result_list.append(result)
 
