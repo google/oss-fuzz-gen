@@ -1,4 +1,4 @@
-# An Evaluation Framework for OSS-Fuzz-Gen Agents
+# An Framework for Running OSS-Fuzz-Gen Agents Independently
 
 This is a framework designed to enable developers run or experiment with individual agents or a sequence of agents in OSS-Fuzz-Gen without running full experiments.
 
@@ -19,7 +19,7 @@ This involves the following steps:
 3. The framework interatively calls the agents in the list using the created result list and appends their result after execution to the result list.
 4. Finally, after all agents execute, the framework writes the list of results to an output file.
 
-## How to test an agent
+## How to run an agent
 Agents can be tested using the command:
 `python3 -m agent_tests.agent_test [args]`
 
