@@ -41,7 +41,7 @@ class FunctionAnalyzer(base_agent.ADKBaseAgent):
                trial: int,
                llm: models.LLM,
                args: argparse.Namespace,
-               benchmark: benchmarklib.Benchmark,\
+               benchmark: benchmarklib.Benchmark,
                name: str = ''):
 
     builder = prompt_builder.FunctionAnalyzerTemplateBuilder(llm, benchmark)
