@@ -1,17 +1,18 @@
-# A Test Framework for OSS-Fuzz-Gen Agents
+# An Evaluation Framework for OSS-Fuzz-Gen Agents
 
-This is a test framework designed to enable developers test individual agents or a sequence of agents in OSS-Fuzz-Gen without the need for running full experiments.
+This is a framework designed to enable developers run or experiment with individual agents or a sequence of agents in OSS-Fuzz-Gen without running full experiments.
 
 ## Why this framework?
-This will enable OSS-Fuzz-Gen developers to make small changes to an agent's design or prompt and quickly evaluate if the change had the desired effect.
-For example, a developer can modify the Coverage Analyzer to use the coverage report from a previous experiment and quickly evaluate if this improves the Coverage Analyzer's output without running a full experiment.
+This will enable OSS-Fuzz-Gen developers to modify an agent's design or prompt and quickly evaluate if the change had the desired effect.
+For example, if a developer introduces new features or tools to the Coverage Analyzer (such as the ability to use coverage reports from a previous experiment cycle), They can quickly evaluate if this modification improves or harms the Coverage Analyzer's output without running a full experiment.
 
 Without this framework, evaluating this change would have required running an experiment involving several cycles of the Function Analyzer, Prototyper and Execution Stage until no crash occurs and the Coverage Analyzer is invoked.
 This framework allows the developer to skip these steps, thereby saving time and associated LLM API expenses.
 
-## How it works
+## How this framework works
 OSS-Fuzz-Gen uses a pipeline design where, agents are stacked in a pipeline and executed using the results obtained from previously executed agents.
-This framework is based on this pipeline design, but allows the developer to specify the list of agents in the pipeline, and a mock list of results from any previously "executed" agents.
+This framework builds on this pipeline design but allows developers to start an experiment from an arbitrary position in the pipeline.
+To do this, the developer will specify the list of agents in the pipeline, and a mock list of results from any previously "executed" agents.
 This involves the following steps:
 1. The developer provides a list of agents to be tested and any necessary files for initializing the test environment.
 2. The framework retrieves the AgentTest class for the first agent in the list and uses this to initialize the state and create the result list.
@@ -75,9 +76,9 @@ To test a new agent directly, you should follow the following steps:
 4. If additional files are needed, update `parse_args` function in `agent_test.py` with new arguments that will point to these files.
 5. Add the agent and the corresponding `BaseAgentTest` to the list of supported agents in `agent_test.py`.
 
-The necessary BaseAgentTest subclasses have been developed for FunctionAnalyzer, CrashAnalyzer, ContextAnalyzer and ExecutionStage.
+The necessary BaseAgentTest subclasses have been developed for `FunctionAnalyzer`, `CrashAnalyzer`, `ContextAnalyzer` and `ExecutionStage`.
 
 ## Extending this framework for Integration Tests
 Currently, this framework is designed to be run using its command line interface.
-However, it can be extended so that other test files can call it using specific input configurations and automatically validate that the returned results possess desired characteristics.
+However, it can be extended so that agents can be executed by pre-written test files (using specific input configurations) and the results automatically validated by the test files to ensure they possess desired characteristics.
 For example, a test file can be developed that tests the Context Analyzer using known false positive crashes and validates that the analyzer correctly reports these crashes as false positives.
