@@ -896,8 +896,7 @@ class CoverageEnhancerTemplateBuilder(PrototyperTemplateBuilder):
     prompt = prompt.replace('{INSIGHTS}', self.coverage_result.insight)
     prompt = prompt.replace('{SUGGESTIONS}', self.coverage_result.suggestions)
     if function_requirements:
-      prompt = prompt.replace('{FUNCTION_REQUIREMENTS}',
-                              function_requirements)
+      prompt = prompt.replace('{FUNCTION_REQUIREMENTS}', function_requirements)
     self._prompt.append(prompt)
 
     return self._prompt

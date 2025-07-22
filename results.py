@@ -779,7 +779,8 @@ class FunctionAnalysisResult:
   requirements: str
   function_analysis_path: str
 
-  def __init__(self, description: str,
+  def __init__(self,
+               description: str,
                requirements: str,
                function_signature: str,
                project_name: str,
@@ -802,7 +803,9 @@ class FunctionAnalysisResult:
   @staticmethod
   def from_dict(data: Any) -> Optional['FunctionAnalysisResult']:
     """Creates a FunctionAnalysisResult from a dictionary."""
-    if not isinstance(data, dict) or 'function_signature' not in data or 'project_name' not in data or 'description' not in data or 'requirements' not in data:
+    if not isinstance(
+        data, dict
+    ) or 'function_signature' not in data or 'project_name' not in data or 'description' not in data or 'requirements' not in data:
       return None
 
     return FunctionAnalysisResult(
@@ -810,5 +813,4 @@ class FunctionAnalysisResult:
         function_signature=data.get('function_signature', ''),
         project_name=data.get('project_name', ''),
         requirements=data.get('requirements', ''),
-        function_analysis_path=data.get('function_analysis_path', '')
-    )
+        function_analysis_path=data.get('function_analysis_path', ''))

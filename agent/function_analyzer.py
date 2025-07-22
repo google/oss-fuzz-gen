@@ -19,6 +19,7 @@ generate correct fuzz target for the function.
 
 import argparse
 from typing import Optional
+
 from google.adk.tools import ToolContext
 
 import logger
@@ -50,7 +51,10 @@ class FunctionAnalyzer(base_agent.ADKBaseAgent):
 
     instruction = builder.get_instruction().get()
 
-    tools = [self.get_function_implementation, self.search_project_files, self.return_final_result]
+    tools = [
+        self.get_function_implementation, self.search_project_files,
+        self.return_final_result
+    ]
 
     super().__init__(trial, llm, args, benchmark, description, instruction,
                      tools, name)
@@ -74,8 +78,9 @@ class FunctionAnalyzer(base_agent.ADKBaseAgent):
 
     return requirement_path
 
-  def handle_llm_response(self, function_analysis_result: resultslib.FunctionAnalysisResult,
-                          result: resultslib.Result) -> None:
+  def handle_llm_response(
+      self, function_analysis_result: resultslib.FunctionAnalysisResult,
+      result: resultslib.Result) -> None:
     """Handle the LLM response and update the result."""
 
     function_requirements = f"""
@@ -93,7 +98,8 @@ class FunctionAnalyzer(base_agent.ADKBaseAgent):
     </requirements>
     """
     # Write the requirements to a file
-    requirement_path = self.write_requirements_to_file(self.args, function_requirements)
+    requirement_path = self.write_requirements_to_file(self.args,
+                                                       function_requirements)
     function_analysis_result.function_analysis_path = requirement_path
     result.function_analysis = function_analysis_result
 
@@ -119,11 +125,12 @@ class FunctionAnalyzer(base_agent.ADKBaseAgent):
 
     while self.round < self.max_round:
       final_response = self.chat_llm(self.round,
-                                          client=None,
-                                          prompt=prompt,
-                                          trial=result_history[-1].trial)
+                                     client=None,
+                                     prompt=prompt,
+                                     trial=result_history[-1].trial)
 
-      function_analyzer_result = resultslib.FunctionAnalysisResult.from_dict(final_response)
+      function_analyzer_result = resultslib.FunctionAnalysisResult.from_dict(
+          final_response)
       if function_analyzer_result:
         self.handle_llm_response(function_analyzer_result, result)
         break
@@ -253,8 +260,7 @@ class FunctionAnalyzer(base_agent.ADKBaseAgent):
 
     return response
 
-  def return_final_result(self, project_name: str,
-                          function_signature: str,
+  def return_final_result(self, project_name: str, function_signature: str,
                           description: str, requirements: str,
                           tool_context: ToolContext) -> dict:
     """
@@ -281,4 +287,3 @@ class FunctionAnalyzer(base_agent.ADKBaseAgent):
     # tool_context._invocation_context.end_invocation = True
     self.end_llm_chat(tool_context)
     return function_analysis.to_dict()
-
