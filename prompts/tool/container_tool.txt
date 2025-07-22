@@ -55,6 +55,8 @@ Use the bash tool to investigate files in the fuzz target's build environment. T
 6. Avoid using `pkg-config`:
     * Use bash commands to manually identify the correct file paths
     * Explore the project's directory hierarchy (`/src/<project-name>`) to learn headerfiles locations, library's naming conventions, and build system.
+7. Do not attempt to request for an entire file as the file may be very large and get truncated.
+    * Use commands that allow you request for specific lines or line ranges from the file.
 </tool guidelines>
 
 <example usages>

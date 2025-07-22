@@ -1,26 +1,39 @@
-You MUST return your response in the format below.
+YOU MUST PROVIDE YOUR FINAL RESPONSE USING THE report_final_result TOOL.
+   - The tool takes four arguments - project_name, function_signature, description and requirements.
+   - project_name is the name of the project you were provided.
+   - function_signature is the signature of the function you were asked to analyze.
+   - description is the detailed description of what the function does and how it is used by callers. Make your description as detailed as possible.
+   - requirements is the list of requirements, each wrapped in a <requirement> tag, that describes the expected requirements on the function's input and state.
 
+<examples>
+
+Here is an example response. Individial fields are provided using xml tags.
 <response>
-<input>
-project name: the name of the project provided
-function signature: The function's signature
-</input>
+<project_name>
+htslib
+</project_name>
+
+<function_signature>
+function signature: int sam_index_build(int, const char *, int)
+</function_signature>
 
 <description>
-A summary of what the function does.
+The sam_index_build function is used to build a sam index. It uses the input arguments to identify and retrieve the index to build. It returns 1 if the build succeeds and 0 if the build fails.
 </description>
 
 <requirements>
 <requirement>
-First requirement
+The index_open function should be called before sam_index_build. This is because it creates the index that is built in the latter function.
 </requirement>
 <requirement>
-Second requirement
+The second argument should be a valid, null-terminated string. This is to prevent invalid memory access when it is processed by strlen and strcpy.
 </requirement>
-...
 <requirement>
-nth requirement
+The third argument should be greater than zero. This is to prevent an assertion violation in the program.
+</requirement>
+<requirement>
+The third argument should be less than 16. This is to prevent an out-of-bound array access when the argument is used to index the fixed-size array `stores`.
 </requirement>
 </requirements>
 
-</response>
+</examples>

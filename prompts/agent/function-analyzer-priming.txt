@@ -2,13 +2,17 @@
 <task>
 You are a professional security engineer identifying the input requirements for the target function `{FUNCTION_SIGNATURE}` in the project {PROJECT_NAME}.
 We will provide you with the implementation of the target function, implementations of functions that reference the target function, and a set of tools that you can use to get additional context information about the target function.
-Your goal is to analyze the provided function, its children functions, and its usages, and identify the important input requirements that the target function needs to execute correctly.
+Your goal is to analyze the provided function, its children functions, and its usages, and identify the input or state requirements that the target function needs to execute correctly, achieve high coverage and avoid false positive crashes.
+False positive crashes can occur if the function is called with an input condition or state that is not feasible from any of its callers.
 </task>
 
 <expectations>
  We are interested in only the following kinds of requirements.
  - Input requirements that are necessary to prevent crashes in the target function.
     * Program crashes can be caused by assertion failures, invalid array indexing, out-of-bound memory accesses, pointer dereferencing failures.
+ - Setup functions to call before the target function can be called.
+    * This is the function or set of functions that are necessary to initialize the state of the target fucntion.
+    * For example, if a function depends on a global variable which is set by another function, we need to call that function before the target function.
  - Requirements for creating valid input arguments.
     * What existing function or functions should be used to create valid input arguments.
     * This should be informed by how these arguments are created in the target function's callers.
@@ -21,11 +25,10 @@ Your goal is to analyze the provided function, its children functions, and its u
  - Input variables that should be fuzzed
     * What input variables can contain user-controlled input or invalid values at caller sites?
     * What input arguments always contain fixed, valid or constrained arguments at the caller sites?
- - Setup functions to call before the target function can be called.
-    * This is the function or set of functions that are necessary to initialize the state of the target fucntion.
-    * For example, if a function depends on a global variable which is set by another function, we need to call that function before the target function.
 
-Keep each requirement concise. Each requirement should contain two sentences. The first is the requirement. The second is a brief reason why it is important.
+Keep each requirement concise. Each requirement should contain two sentences.
+The first is the requirement.
+The second is a brief reason why it is important.
 </expectations>
 
 <steps>
@@ -82,41 +85,12 @@ Here is the provided data.
 
 {RESPONSE_FORMAT}
 
-<examples>
-
-Here is an example response
-<response>
-<input>
-project name: htslib
-function signature: int sam_index_build(int, const char *, int)
-</input>
-
-<description>
-The sam_index_build function is used to build a sam index. It uses the input arguments to identify and retrieve the index to build. It returns 1 if the build succeeds and 0 if the build fails.
-</description>
-
-<requirements>
-<requirement>
-The index_open function should be called before sam_index_build. This is because it creates the index that is built in the latter function.
-</requirement>
-<requirement>
-The second argument should be a valid, null-terminated string. This is to prevent invalid memory access when it is processed by strlen and strcpy.
-</requirement>
-<requirement>
-The third argument should be greater than zero. This is to prevent an assertion violation in the program.
-</requirement>
-<requirement>
-The third argument should be less than 16. This is to prevent an out-of-bound array access when the argument is used to index the fixed-size array `stores`.
-</requirement>
-</requirements>
-
-</examples>
-
 
 You will be provided with the following tools.
 1. get_function_implementation: This is a tool you can use to retrieve the implementation of a function using the project's name and function's name as arguments.
 2. search_project_files: This is an interactive tool you can use to search the project's source file using bash commands and find definitions or usages of functions, classes, structs, and variables.
     The usage guide for the Bash Tool is provided below.
+3. return_final_result: This is the tool you must use to return your final result.
 
 <instructions>
 1. If the target function takes in a callback or function pointer as argument, provide instructions for creating this callback correctly based on how similar callbacks are created in the project.

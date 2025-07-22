@@ -709,6 +709,7 @@ class CoverageAnalyzerTemplateBuilder(PrototyperTemplateBuilder):
     prompt = prompt.replace('{FUZZ_TARGET}', self.run_result.fuzz_target_source)
     prompt = prompt.replace('{TOOL_GUIDES}', tool_guides)
     prompt = prompt.replace('{FUZZING_LOG}', self.run_result.run_log)
+    prompt = prompt.replace('{FUNCTION_REQUIREMENTS}', function_requirements)
 
     self._prompt.append(prompt)
     return self._prompt
@@ -759,6 +760,9 @@ class EnhancerTemplateBuilder(PrototyperTemplateBuilder):
     else:
       build_text = 'Build script reuses `/src/build.bk.sh`.'
     priming = priming.replace('{BUILD_TEXT}', build_text)
+    if function_requirements:
+      priming = priming.replace('{FUNCTION_REQUIREMENTS}',
+                                function_requirements)
     priming_weight = self._model.estimate_token_num(priming)
     # TODO(dongge): Refine this logic.
     if self.error_desc and self.errors:
@@ -773,10 +777,6 @@ class EnhancerTemplateBuilder(PrototyperTemplateBuilder):
     problem = self._format_fixer_problem(self.build_result.fuzz_target_source,
                                          error_desc, errors, priming_weight, '',
                                          '')
-    if function_requirements:
-      problem += (f'\nHere are the requirements for the function.\n'
-                  f'{function_requirements}\n')
-
     self._prepare_prompt(priming, problem)
     return self._prompt
 
@@ -895,12 +895,11 @@ class CoverageEnhancerTemplateBuilder(PrototyperTemplateBuilder):
     prompt = prompt.replace('{BUILD_TEXT}', build_text)
     prompt = prompt.replace('{INSIGHTS}', self.coverage_result.insight)
     prompt = prompt.replace('{SUGGESTIONS}', self.coverage_result.suggestions)
+    if function_requirements:
+      prompt = prompt.replace('{FUNCTION_REQUIREMENTS}',
+                              function_requirements)
     self._prompt.append(prompt)
 
-    if function_requirements:
-      requirements = (f'\nHere are the requirements for the function.\n'
-                      f'{function_requirements}\n')
-      self._prompt.append(requirements)
     return self._prompt
 
 
