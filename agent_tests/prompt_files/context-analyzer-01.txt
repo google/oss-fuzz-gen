@@ -1,0 +1,646 @@
+<task>
+You are a professional security engineer developing fuzz targets for the project astc-encoder.
+The previous fuzz target you developed caused a crash in the project.
+However, this crash is NOT feasible and cannot be triggered from the project's external entry points (public functions with no non-test callers).
+We have provided you with the fuzz target that caused the crash, its requirements, the crash stacktrace, an analysis of the crash,
+and a set of tools that you can use to navigate the project's codebase.
+Your goal is to deeply analyze the project and the context of the crashing function and provide detailed source code evidence that the crash is NOT feasible from any entry point in the program.
+If the crash is indeed not feasible, also provide a recommendation for fixing the fuzz target.
+If the crash is feasible, provide source code evidence that shows the sequence of execution from the project's entry point that can cause the crash.
+</task>
+
+<steps>
+Follow these steps to determine the feasibility of this crash.
+
+Step 1: Identify the information you need to analyze the crash and the function's context.
+This includes:
+- The crashing function called by the fuzz target
+- The different functions where it is called from
+- The entry points of the project
+- The crash stacktrace and analysis
+- The state of input and global variables that lead to the crash
+- Locations in the code where those input variables could have been initialized
+- Execution paths between the input variable initializations and the crashing function
+
+Step 2: Collect information using the provided tools
+Use the provided tools (see <tool> section) and follow their rules to gather the necessary information. You can collect information from:
+- The project source code directory `/src/astc-encoder/Source/` cloned from the project repository.
+- External API using the get_function_implementation tool.
+- Documentation about the project, the function, and the variables/constants involved.
+
+Step 3: Identify the specific input conditions that leads to the crash.
+- This is the combination of input variable values and global variable values that directly caused the crash.
+- In your analysis, you must show how these combination of values was necessary for the crash to occur.
+
+Step 4: Analyze the project and provide proof, with source code evidence, that the crash cannot be triggered from a the project's entry points (public non-test functions).
+- To obtain proof, identify all the path constraints from the entry points to the target function and show how the input condition violated these constraints.
+- If the crash is feasible, you should show a step-by-step execution path from the entry point and the corresponding path constraints that enable the crash.
+- DO NOT SPECULATE. Provide source code evidence to back up any statement you make about the crash's feasibility.
+
+Step 5: If the crash is not feasible, recommend necessary and minimal modifications to the fuzz target to prevent the crash.
+- Your recommendations should show what constraints should be added to the fuzz target to prevent the crash.
+- The recommended modifications should mirror how the crashing function is called in different project locations.
+
+Step 8: MAKE SURE YOU PROVIDE YOUR RESPONSE USING THE report_final_result TOOL.
+- The tool takes three arguments - feasible, analysis and recommendations.
+- feasible should be True if the crash is feasible, or False otherwise.
+- analysis should contain source code evidence of the crash's feasibility.
+- recommendations should only be provided for non-feasible crashes, and should recommend fuzz target modifications to prevent this crash.
+</steps>
+
+Here is the provided data.
+
+<fuzz-target>
+// SPDX-License-Identifier: Apache-2.0
+// ----------------------------------------------------------------------------
+// Copyright 2020-2021 Arm Limited
+//
+// Licensed under the Apache License, Version 2.0 (the "License"); you may not
+// use this file except in compliance with the License. You may obtain a copy
+// of the License at:
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+// WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+// License for the specific language governing permissions and limitations
+// under the License.
+// ----------------------------------------------------------------------------
+
+/**
+* @brief Fuzz target for symbolic_to_physical().
+*
+* This function is the final entrypoint for compressing a symbolic block of
+* ASTC data into a 16 byte physical block.
+*/
+
+#include "/src/astc-encoder/Source/astcenc_internal.h"
+
+#include <fuzzer/FuzzedDataProvider.h>
+#include <array>
+#include <vector>
+
+// Re-use the BSD initialization logic from the other fuzzer
+struct BlockSizes
+{
+int x;
+int y;
+int z;
+};
+
+// Use a set of known-valid block sizes to avoid corner cases where a
+// block size has no valid modes, which can cause downstream failures.
+std::array<BlockSizes, 3> testSz {{
+{ 5,  5, 1}, // Common 2D block size
+{ 8,  8, 1}, // Common 2D block size
+{ 4,  4, 4}  // Common 3D block size
+}};
+
+std::array<block_size_descriptor, 3> testBSD;
+
+bool bsd_initializer()
+{
+for (size_t i = 0; i < testSz.size(); i++)
+{
+init_block_size_descriptor(
+testSz[i].x,
+testSz[i].y,
+testSz[i].z,
+false,
+4,
+1.0f,
+testBSD[i]);
+}
+return true;
+}
+
+extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
+{
+// Preinitialize the block size descriptors we need
+static bool init = bsd_initializer();
+
+// Need some data to work with
+if (size < 32)
+{
+return 0;
+}
+
+FuzzedDataProvider stream(data, size);
+
+// Select a block size descriptor to test with
+int bsd_idx = stream.ConsumeIntegralInRange<int>(0, testSz.size() - 1);
+const block_size_descriptor& bsd = testBSD[bsd_idx];
+
+// Create and populate the symbolic block
+symbolic_compressed_block scb{};
+
+// Requirement: scb.block_type != SYM_BTYPE_ERROR
+scb.block_type = stream.PickValueInArray<uint8_t>({
+SYM_BTYPE_CONST_F16,
+SYM_BTYPE_CONST_U16,
+SYM_BTYPE_NONCONST
+});
+
+if (scb.block_type == SYM_BTYPE_NONCONST)
+{
+// Requirement: scb.partition_count is 1..4
+scb.partition_count = stream.ConsumeIntegralInRange<uint8_t>(1, 4);
+
+// Requirement: scb.block_mode is a valid index
+if (bsd.block_mode_count_all == 0)
+{
+return 0;
+}
+
+// Create a list of valid raw block mode indices for the current bsd
+std::vector<uint16_t> valid_modes;
+for (uint16_t i = 0; i < WEIGHTS_MAX_BLOCK_MODES; i++)
+{
+if (bsd.block_mode_packed_index[i] != BLOCK_BAD_BLOCK_MODE)
+{
+valid_modes.push_back(i);
+}
+}
+
+// This should not be empty if block_mode_count_all > 0
+if (valid_modes.empty())
+{
+return 0;
+}
+
+// Pick a valid raw mode from the list
+size_t mode_idx = stream.ConsumeIntegralInRange<size_t>(0, valid_modes.size() - 1);
+scb.block_mode = valid_modes[mode_idx];
+
+// Requirement: scb.quant_mode is QUANT_6..QUANT_32
+scb.quant_mode = static_cast<quant_method>(stream.ConsumeIntegralInRange<uint8_t>(QUANT_6, QUANT_32));
+
+scb.color_formats_matched = stream.ConsumeBool();
+scb.plane2_component = stream.ConsumeIntegralInRange<int8_t>(-1, 3);
+scb.partition_index = stream.ConsumeIntegral<uint16_t>();
+
+for (unsigned int i = 0; i < scb.partition_count; i++)
+{
+// The upper bits of color_formats define the endpoint class (0-3).
+// The lower 2 bits are other flags. Constrain the class to be valid.
+uint8_t color_class = stream.ConsumeIntegralInRange<uint8_t>(0, 3);
+uint8_t other_flags = stream.ConsumeIntegralInRange<uint8_t>(0, 3);
+scb.color_formats[i] = (color_class << 2) | other_flags;
+for (int j = 0; j < 8; j++)
+{
+scb.color_values[i][j] = stream.ConsumeIntegral<uint8_t>();
+}
+}
+}
+else // SYM_BTYPE_CONST_F16 or SYM_BTYPE_CONST_U16
+{
+// For const blocks, only initialize the constant color.
+// Other fields are not used by symbolic_to_physical for constant blocks.
+for (int i = 0; i < BLOCK_MAX_COMPONENTS; i++)
+{
+scb.constant_color[i] = stream.ConsumeIntegral<int>();
+}
+}
+
+// Populate weights array with any remaining data
+std::vector<uint8_t> weights = stream.ConsumeRemainingBytes<uint8_t>();
+if (!weights.empty())
+{
+std::memcpy(scb.weights, weights.data(), std::min(sizeof(scb.weights), weights.size()));
+}
+
+
+// Requirement: pcb must be a writable buffer of at least 16 bytes.
+uint8_t pcb[16];
+
+// Call the function under test
+symbolic_to_physical(bsd, scb, pcb);
+
+return 0;
+}
+</fuzz-target>
+
+<function-requirements>
+<input>
+project name: astc-encoder
+function signature: void symbolic_to_physical(const struct block_size_descriptor &, const struct symbolic_compressed_block &, uint8_t *)
+</input>
+
+<description>
+The symbolic_to_physical function converts a symbolic representation of a compressed block (`symbolic_compressed_block`) into a physical hardware-readable format (`physical_compressed_block`, which is a 16-byte array). It handles different block types, including constant color blocks and regular blocks with partitions, weights, and color endpoint data. The function encodes this symbolic information into a 128-bit physical block according to the ASTC specification.
+</description>
+
+<requirements>
+<requirement>
+The `scb.block_type` member must not be equal to `SYM_BTYPE_ERROR`. The function asserts this condition at the beginning, and a failure will lead to a program crash.
+</requirement>
+<requirement>
+The `pcb` argument must be a writable buffer of at least 16 bytes. The function writes up to 16 bytes into this buffer, and a smaller buffer will result in an out-of-bounds write.
+</requirement>
+<requirement>
+The `bsd` argument should be initialized by calling `astcenc_context_alloc` and obtaining the `bsd` member from the resulting context. This ensures that the block size descriptor contains valid data for the subsequent encoding operations.
+</requirement>
+<requirement>
+The `scb.partition_count` member must be between 1 and 4, inclusive, if the block type is not constant. The function uses this value to access arrays and control loops, and an invalid value can lead to out-of-bounds access.
+</requirement>
+<requirement>
+The `scb.block_mode` member must be a valid index into the `block_modes` array within the `block_size_descriptor`. The function uses this to fetch block mode details, and an invalid index will cause an out-of-bounds read.
+</requirement>
+<requirement>
+The `scb.quant_mode` member must be a value between `QUANT_6` and `QUANT_32`. This value is used as an index into the `color_uquant_to_scrambled_pquant_tables` array, so an invalid value will cause an out-of-bounds read.
+</requirement>
+</requirements>
+</function-requirements>
+
+<crash-stacktrace>
+AddressSanitizer: stack-buffer-overflow on address 0x7f35e2f8ed60 at pc 0x560a26c8da07 bp 0x7fffe123ba80 sp 0x7fffe123ba78
+READ of size 1 at 0x7f35e2f8ed60 thread T0
+SCARINESS: 27 (1-byte-read-stack-buffer-overflow)
+#0 0x560a26c8da06 in write_bits(unsigned int, unsigned int, unsigned int, unsigned char*) /src/astc-encoder/Source/./astcenc_integer_sequence.cpp:462:9
+#1 0x560a26c8d82e in encode_ise(quant_method, unsigned int, unsigned char const*, unsigned char*, unsigned int) /src/astc-encoder/Source/./astcenc_integer_sequence.cpp:644:4
+#2 0x560a26c951b7 in symbolic_to_physical(block_size_descriptor const&, symbolic_compressed_block const&, unsigned char*) /src/astc-encoder/Source/./astcenc_symbolic_physical.cpp:284:2
+#3 0x560a26c7e9e5 in LLVMFuzzerTestOneInput /src/astc-encoder/Source/./Fuzzers/fuzz_astc_physical_to_symbolic.cpp:165:2
+#4 0x560a26b32580 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerLoop.cpp:614:13
+#5 0x560a26b31da5 in fuzzer::Fuzzer::RunOne(unsigned char const*, unsigned long, bool, fuzzer::InputInfo*, bool, bool*) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerLoop.cpp:516:7
+#6 0x560a26b33585 in fuzzer::Fuzzer::MutateAndTestOne() /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerLoop.cpp:760:19
+#7 0x560a26b34315 in fuzzer::Fuzzer::Loop(std::__Fuzzer::vector<fuzzer::SizedFile, std::__Fuzzer::allocator<fuzzer::SizedFile>>&) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerLoop.cpp:905:5
+#8 0x560a26b2315b in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:914:6
+#9 0x560a26b4e532 in main /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerMain.cpp:20:10
+#10 0x7f35e3710082 in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x24082) (BuildId: 5792732f783158c66fb4f3756458ca24e46e827d)
+#11 0x560a26b159dd in _start (out/libfuzzer-address-x86_64/fuzz_astc_physical_to_symbolic+0x4b9dd)
+
+DEDUP_TOKEN: write_bits(unsigned int, unsigned int, unsigned int, unsigned char*)--encode_ise(quant_method, unsigned int, unsigned char const*, unsigned char*, unsigned int)--symbolic_to_physical(block_size_descriptor const&, symbolic_compressed_block const&, unsigned char*)
+Address 0x7f35e2f8ed60 is located in stack of thread T0 at offset 352 in frame
+#0 0x560a26c7db3f in LLVMFuzzerTestOneInput /src/astc-encoder/Source/./Fuzzers/fuzz_astc_physical_to_symbolic.cpp:66
+
+DEDUP_TOKEN: LLVMFuzzerTestOneInput
+This frame has 5 object(s):
+[32, 148) 'scb' (line 83)
+[192, 195) 'ref.tmp' (line 86)
+[208, 232) 'valid_modes' (line 104)
+[272, 296) 'weights' (line 154)
+[336, 352) 'pcb' (line 162) <== Memory access at offset 352 overflows this variable
+HINT: this may be a false positive if your program uses some custom stack unwind mechanism, swapcontext or vfork
+(longjmp and C++ exceptions *are* supported)
+
+</crash-stacktrace>
+
+<crash-analysis>
+**Analysis:**
+
+The crash is a stack-buffer-overflow read of 1 byte, occurring in the `write_bits` function. The overflow happens on the `pcb` buffer, which is allocated on the stack in `LLVMFuzzerTestOneInput` with a size of 16 bytes, the correct size for a physical ASTC block.
+
+The root cause is in the implementation of the `write_bits` function in `astcenc_integer_sequence.cpp`. This function is designed to perform a fast, potentially unaligned, 16-bit write operation. It does this by reading and writing to `ptr[0]` and `ptr[1]` separately to avoid strict-aliasing issues.
+
+The bug is triggered when `write_bits` is called with parameters that cause it to write to the very last byte of the 16-byte destination buffer. Specifically, if the `bitoffset` parameter is in the range [120, 127], the calculated byte offset (`bitoffset >> 3`) becomes 15. The function then advances its pointer to `pcb + 15`. While the subsequent access to `ptr[0]` (i.e., `pcb[15]`) is valid, the access to `ptr[1]` attempts to read from `pcb[16]`, which is one byte beyond the buffer's allocated memory, causing the overflow.
+
+The fuzzer is operating correctly. It supplies a valid 16-byte buffer and explores input parameters that lead `encode_ise` to call `write_bits` with an edge-case `bitoffset` value, successfully exposing this latent bug in the project's code.
+
+**Suggestion:**
+
+The `write_bits` function should be patched to prevent it from reading past the end of the destination buffer. A simple guard can be added to ensure the access to the second byte (`ptr[1]`) only occurs when the write operation is not on the last byte of the buffer.
+
+A suggested patch for `astcenc_integer_sequence.cpp` around line 460 would be:
+
+```cpp
+// Original code:
+ptr[0] &= mask;
+ptr[0] |= value;
+ptr[1] &= mask >> 8;
+ptr[1] |= value >> 8;
+
+// Patched code:
+unsigned int byte_offset = bitoffset >> 3;
+// ... (code to advance ptr)
+
+ptr[0] &= (mask & 0xFF);
+ptr[0] |= (value & 0xFF);
+
+// Only touch the second byte if we are not on the last byte of the 16-byte block
+if (byte_offset < 15)
+{
+ptr[1] &= ((mask >> 8) & 0xFF);
+ptr[1] |= ((value >> 8) & 0xFF);
+}
+```
+This change ensures that when writing to the final byte of the buffer, the function does not attempt to read or write the non-existent subsequent byte.
+</crash-analysis>
+
+You will be provided with the following tools.
+1. get_function_implementation: This is a tool you can use to retrieve the implementation of a function using the project's name and function's name as arguments.
+2. search_project_files: This is an interactive tool you can use to search the project's source file using bash commands and find definitions or usages of functions, classes, structs, and variables.
+The usage guide for the Bash Tool is provided below.
+3. report_final_result: This is a tool you must use to report your final result. Once this tool is called, no further instructions will be provided to you.<tool>
+**Bash tool Guide**
+Use the bash tool to investigate files in the fuzz target's build environment. This will help you understand the project source code, the function under test, its dependencies, and any compilation requirements.
+
+<interaction protocols>
+1. STRICTLY Only One Bash Command per message:
+* **DO NOT** send multiple bash commands in each message.
+2. Execute Bash Command Message Structure:
+* Reason for the Command:
+* Explain the reason for running the command.
+* Wrap this explanation within <reason> and </reason> tags.
+* Bash Command:
+* Provide the bash command to execute.
+* Wrap the command with <bash> and </bash> tags.
+* Format Example:
+<reason>
+I want to locate the source file containing the definition of the function-under-test to examine its implementation.
+</reason>
+<bash>
+grep -rn 'function_name(' /src/project-name/
+</bash>
+3. Receiving Bash Command Output Message Structure:
+* Bash execution outputs will be returned in the following format:
+<bash>
+[The command you executed.]
+</bash>
+<stdout>
+[Standard output of the command.]
+</stdout>
+<stderr>
+[Standard error of the command.]
+</stderr>
+<interaction protocols>
+
+<general rules>
+1 .File Access and Modification Restrictions:
+* Allowed Actions:
+* View any files and environment variables in the build environment.
+* Prohibited Actions:
+* Do not modify, rename, or create new files.
+* All modifications will not be preserved when building the fuzz target.
+</general rules>
+
+<tool guidelines>
+1 .Purposeful Commands:
+* Each bash command should have a clear purpose related to your investigation toward the final goals.
+2. Careful Interpretation:
+* Analyze the output of each command thoroughly to inform your next steps.
+* Keep notes of important findings that will help in modifying the fuzz target and build script.
+4. Clarity and Compliance:
+* Adhere strictly to the interaction protocols and formatting requirements.
+* Ensure your messages are clear and properly formatted.
+5. No Unauthorized Actions:
+* Do not modify files.
+6. Avoid using `pkg-config`:
+* Use bash commands to manually identify the correct file paths
+* Explore the project's directory hierarchy (`/src/<project-name>`) to learn headerfiles locations, library's naming conventions, and build system.
+</tool guidelines>
+
+<example usages>
+Command 1. Start by locating the function's definition and understand its parameters, e.g.:
+<reason>
+To find the definition of `my_function` in the project directory and understand its implementation details.
+</reason>
+<bash>
+grep -rn 'my_function(' /src/project/
+</bash>
+Command 2. Identify Required Headers:
+<reason>
+To identify the header files in the project directory that declare `my_function`.
+</reason>
+<bash>
+grep -rn 'my_function' /src/project/ --include=*.h
+</bash>
+Command 3. Locate Custom Type Definitions:
+<reason>
+To find the definition of the custom type `CustomType` used by `my_function`.
+</reason>
+<bash>
+grep -rn 'typedef.*CustomType' /src/project/
+</bash>
+Command 4. Examine Existing Fuzz Targets:
+<reason>
+To see how existing fuzz targets include headers and initialize variables in the `LLVMFuzzerTestOneInput` function.
+</reason>
+<bash>
+cat /src/astc-encoder/Source/Fuzzers/fuzz_astc_physical_to_symbolic.cpp
+</bash>
+* Remember you can use the same command on other example fuzz targets under the same parent directory as `/src/astc-encoder/Source/Fuzzers/fuzz_astc_physical_to_symbolic.cpp`.
+Command 5. Check Build Script for Compilation Flags and Libraries:
+<reason>
+To check which compiler flags and libraries are used in the build script.
+</reason>
+<bash>
+cat /src/build.bk.sh
+</bash>
+Command 6. Verify Available Libraries:
+<reason>
+To list the built libraries to verify that the necessary libraries are available.
+</reason>
+<bash>
+ls /src/project/build/libs/
+</bash>
+Command 7. Understand Environment Variables:
+<reason>
+To check if any environment variables related to the project are set.
+</reason>
+<bash>
+printenv | grep 'PROJECT_VARIABLE'
+</bash>
+</example usages>
+
+<final reminder>
+1. Do Not Compile or Run Code:
+* Your investigation is limited to reading and interpreting information using bash commands.
+</final reminder>
+</tool>
+WARNING:google_genai.types:Warning: there are non-text parts in the response: ['function_call'], returning concatenated text result from text parts. Check the full candidates.content.parts accessor to get the full model response.
+2025-07-10 19:16:17 [Trial ID: 02] INFO [base_agent.log_llm_response:424]:
+Requesting implementation for the function:
+Function name: symbolic_to_physical
+Project name: astc-encoder
+2025-07-10 19:16:17 [Trial ID: 02] INFO [context_analyzer.get_function_implementation:200]: Project functions not initialized. Initializing for project "astc-encoder".
+2025-07-10 19:16:18 [Trial ID: 02] INFO [base_agent.log_llm_prompt:417]:
+Project name: astc-encoder
+Function name: symbolic_to_physical
+
+Function source code:
+void symbolic_to_physical(
+const block_size_descriptor& bsd,
+const symbolic_compressed_block& scb,
+uint8_t pcb[16]
+) {
+assert(scb.block_type != SYM_BTYPE_ERROR);
+
+// Constant color block using UNORM16 colors
+if (scb.block_type == SYM_BTYPE_CONST_U16)
+{
+// There is currently no attempt to coalesce larger void-extents
+static const uint8_t cbytes[8] { 0xFC, 0xFD, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
+for (unsigned int i = 0; i < 8; i++)
+{
+pcb[i] = cbytes[i];
+}
+
+for (unsigned int i = 0; i < BLOCK_MAX_COMPONENTS; i++)
+{
+pcb[2 * i + 8] = scb.constant_color[i] & 0xFF;
+pcb[2 * i + 9] = (scb.constant_color[i] >> 8) & 0xFF;
+}
+
+return;
+}
+
+// Constant color block using FP16 colors
+if (scb.block_type == SYM_BTYPE_CONST_F16)
+{
+// There is currently no attempt to coalesce larger void-extents
+static const uint8_t cbytes[8]  { 0xFC, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
+for (unsigned int i = 0; i < 8; i++)
+{
+pcb[i] = cbytes[i];
+}
+
+for (unsigned int i = 0; i < BLOCK_MAX_COMPONENTS; i++)
+{
+pcb[2 * i + 8] = scb.constant_color[i] & 0xFF;
+pcb[2 * i + 9] = (scb.constant_color[i] >> 8) & 0xFF;
+}
+
+return;
+}
+
+unsigned int partition_count = scb.partition_count;
+
+// Compress the weights.
+// They are encoded as an ordinary integer-sequence, then bit-reversed
+uint8_t weightbuf[16] { 0 };
+
+const auto& bm = bsd.get_block_mode(scb.block_mode);
+const auto& di = bsd.get_decimation_info(bm.decimation_mode);
+int weight_count = di.weight_count;
+quant_method weight_quant_method = bm.get_weight_quant_mode();
+float weight_quant_levels = static_cast<float>(get_quant_level(weight_quant_method));
+int is_dual_plane = bm.is_dual_plane;
+
+const auto& qat = quant_and_xfer_tables[weight_quant_method];
+
+int real_weight_count = is_dual_plane ? 2 * weight_count : weight_count;
+
+int bits_for_weights = get_ise_sequence_bitcount(real_weight_count, weight_quant_method);
+
+uint8_t weights[64];
+if (is_dual_plane)
+{
+for (int i = 0; i < weight_count; i++)
+{
+float uqw = static_cast<float>(scb.weights[i]);
+float qw = (uqw / 64.0f) * (weight_quant_levels - 1.0f);
+int qwi = static_cast<int>(qw + 0.5f);
+weights[2 * i] = qat.scramble_map[qwi];
+
+uqw = static_cast<float>(scb.weights[i + WEIGHTS_PLANE2_OFFSET]);
+qw = (uqw / 64.0f) * (weight_quant_levels - 1.0f);
+qwi = static_cast<int>(qw + 0.5f);
+weights[2 * i + 1] = qat.scramble_map[qwi];
+}
+}
+else
+{
+for (int i = 0; i < weight_count; i++)
+{
+float uqw = static_cast<float>(scb.weights[i]);
+float qw = (uqw / 64.0f) * (weight_quant_levels - 1.0f);
+int qwi = static_cast<int>(qw + 0.5f);
+weights[i] = qat.scramble_map[qwi];
+}
+}
+
+encode_ise(weight_quant_method, real_weight_count, weights, weightbuf, 0);
+
+for (int i = 0; i < 16; i++)
+{
+pcb[i] = static_cast<uint8_t>(bitrev8(weightbuf[15 - i]));
+}
+
+write_bits(scb.block_mode, 11, 0, pcb);
+write_bits(partition_count - 1, 2, 11, pcb);
+
+int below_weights_pos = 128 - bits_for_weights;
+
+// Encode partition index and color endpoint types for blocks with 2+ partitions
+if (partition_count > 1)
+{
+write_bits(scb.partition_index, 6, 13, pcb);
+write_bits(scb.partition_index >> 6, PARTITION_INDEX_BITS - 6, 19, pcb);
+
+if (scb.color_formats_matched)
+{
+write_bits(scb.color_formats[0] << 2, 6, 13 + PARTITION_INDEX_BITS, pcb);
+}
+else
+{
+// Check endpoint types for each partition to determine the lowest class present
+int low_class = 4;
+
+for (unsigned int i = 0; i < partition_count; i++)
+{
+int class_of_format = scb.color_formats[i] >> 2;
+low_class = astc::min(class_of_format, low_class);
+}
+
+if (low_class == 3)
+{
+low_class = 2;
+}
+
+int encoded_type = low_class + 1;
+int bitpos = 2;
+
+for (unsigned int i = 0; i < partition_count; i++)
+{
+int classbit_of_format = (scb.color_formats[i] >> 2) - low_class;
+encoded_type |= classbit_of_format << bitpos;
+bitpos++;
+}
+
+for (unsigned int i = 0; i < partition_count; i++)
+{
+int lowbits_of_format = scb.color_formats[i] & 3;
+encoded_type |= lowbits_of_format << bitpos;
+bitpos += 2;
+}
+
+int encoded_type_lowpart = encoded_type & 0x3F;
+int encoded_type_highpart = encoded_type >> 6;
+int encoded_type_highpart_size = (3 * partition_count) - 4;
+int encoded_type_highpart_pos = 128 - bits_for_weights - encoded_type_highpart_size;
+write_bits(encoded_type_lowpart, 6, 13 + PARTITION_INDEX_BITS, pcb);
+write_bits(encoded_type_highpart, encoded_type_highpart_size, encoded_type_highpart_pos, pcb);
+below_weights_pos -= encoded_type_highpart_size;
+}
+}
+else
+{
+write_bits(scb.color_formats[0], 4, 13, pcb);
+}
+
+// In dual-plane mode, encode the color component of the second plane of weights
+if (is_dual_plane)
+{
+write_bits(scb.plane2_component, 2, below_weights_pos - 2, pcb);
+}
+
+// Encode the color components
+uint8_t values_to_encode[32];
+int valuecount_to_encode = 0;
+
+const uint8_t* pack_table = color_uquant_to_scrambled_pquant_tables[scb.quant_mode - QUANT_6];
+for (unsigned int i = 0; i < scb.partition_count; i++)
+{
+int vals = 2 * (scb.color_formats[i] >> 2) + 2;
+assert(vals <= 8);
+for (int j = 0; j < vals; j++)
+{
+values_to_encode[j + valuecount_to_encode] = pack_table[scb.color_values[i][j]];
+}
+valuecount_to_encode += vals;
+}
+
+encode_ise(scb.get_color_quant_mode(), valuecount_to_encode, values_to_encode, pcb,
+scb.partition_count == 1 ? 17 : 19 + PARTITION_INDEX_BITS);
+}
