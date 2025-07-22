@@ -161,7 +161,7 @@ class Pipeline():
     The process repeats until the termination conditions are met.
     """
     self.logger.debug('Pipeline starts')
-    cycle_count = 1
+    cycle_count = 0
     self._update_status(result_history=result_history)
     while not self._terminate(result_history=result_history,
                               cycle_count=cycle_count):
