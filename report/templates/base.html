@@ -346,6 +346,7 @@ tbody tr:nth-child(odd) {
                 {% if benchmark %}
                     <span>Benchmark:</span>
                     <span class="prettify-benchmark-name">{{ benchmark.id }}</span>
+                    <p class="text-2xl text-gray-500">Project: {{ benchmark.project }}</p>
                 {% else %}
                     Experiment Report
                 {% endif %}

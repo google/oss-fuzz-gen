@@ -28,7 +28,7 @@ class AnalysisStage(BaseStage):
   crashes due to a bug in the project under test or if all major code paths have
   been sufficiently covered."""
 
-  def execute(self, result_history: list[Result]) -> Result:
+  def execute(self, result_history: list[Result], cycle_count: int) -> Result:
     """Selects agent based on run result and executes it."""
     self.logger.info('Analysis Stage')
     last_result = result_history[-1]
@@ -38,7 +38,7 @@ class AnalysisStage(BaseStage):
       try:
         agent = self.get_agent(agent_name='CrashAnalyzer')
         agent_result = self._execute_agent(agent, result_history)
-        self.logger.write_chat_history(agent_result)
+        self.logger.write_chat_history(agent_result, cycle_count)
         # If it's true bug, save result and execute the ContextAnalyzer
         if (isinstance(agent_result, AnalysisResult) and
             agent_result.crash_result and agent_result.crash_result.true_bug):
@@ -60,7 +60,7 @@ class AnalysisStage(BaseStage):
     analysis_result = self._execute_agent(agent, result_history)
 
     # TODO(dongge): Save logs and more info into workdir.
-    self.logger.write_chat_history(analysis_result)
+    self.logger.write_chat_history(analysis_result, cycle_count)
     self.logger.debug('Analysis stage completed with with result:\n%s',
                       analysis_result)
 

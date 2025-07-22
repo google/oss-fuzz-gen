@@ -112,7 +112,8 @@ class Pipeline():
     # and if it fails then we will return from this cycle and terminate
     # the pipeline.
     result_history.append(
-        self.writing_stage.execute(result_history=result_history))
+        self.writing_stage.execute(result_history=result_history,
+                                   cycle_count=cycle_count))
     self._update_status(result_history=result_history)
     if (not isinstance(result_history[-1], BuildResult) or
         not result_history[-1].success):
@@ -124,7 +125,8 @@ class Pipeline():
     # and if it fails then we will return from this cycle and terminate
     # the pipeline.
     result_history.append(
-        self.execution_stage.execute(result_history=result_history))
+        self.execution_stage.execute(result_history=result_history,
+                                     cycle_count=cycle_count))
     self._update_status(result_history=result_history)
     if (not isinstance(result_history[-1], RunResult) or
         not result_history[-1].log_path):
@@ -137,7 +139,8 @@ class Pipeline():
     # pipeline and retry making a harness. If the analysis stage is successful,
     # then we will terminate the pipeline.
     result_history.append(
-        self.analysis_stage.execute(result_history=result_history))
+        self.analysis_stage.execute(result_history=result_history,
+                                    cycle_count=cycle_count))
     # TODO(maoyi): add the indicator for the success of analysis stage
     if not isinstance(result_history[-1], AnalysisResult):
       self.logger.warning(

@@ -67,7 +67,7 @@ class CustomLoggerAdapter(logging.LoggerAdapter):
     with open(os.path.join(trial_result_dir, FINAL_RESULT_JSON), 'w') as f:
       json.dump(result.to_dict() | {'finished': finished}, f)
 
-  def write_chat_history(self, result: Result) -> None:
+  def write_chat_history(self, result: Result, cycle_count: int) -> None:
     """Writes chat history."""
     # TODO(dongge): Find a proper way to write this.
     trial_result_dir = os.path.join(result.work_dirs.status,
@@ -75,7 +75,7 @@ class CustomLoggerAdapter(logging.LoggerAdapter):
     os.makedirs(trial_result_dir, exist_ok=True)
     chat_history_path = os.path.join(trial_result_dir, 'log.txt')
     chat_history = '\n'.join(
-        f'\n\n\n************************{agent_name}************************\n'
+        f'\n\n\n************************{agent_name} (Cycle {cycle_count})************************\n'
         f'{chat_history}\n'
         for agent_name, chat_history in result.chat_history.items())
     self.write_to_file(chat_history_path, chat_history)
