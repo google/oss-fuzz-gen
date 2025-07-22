@@ -43,15 +43,15 @@ Note that these reports are not public as they may contain undisclosed vulnerabi
 
 Check our detailed [usage guide](./USAGE.md) for instructions on how to run this framework and generate reports based on the results.
 
+## Independent Agent Execution and Evaluation
+You can also execute or evaluate individual agents without running full experiments, using the integrated agent execution framework.
+See the [framework's documentation](./agent_tests/readme.md) for detailed instructions on how to run individual agents or sequence of agents.
+
 ## Collaborations
 Interested in research or open-source community collaborations?
 Please feel free to create an issue or email us: oss-fuzz-team@google.com.
 
 <img src="images/Collaboration.png" width="200" height="200">
-
-## Independent Agent Execution and Evaluation
-You can also execute or evaluate individual agents using the integrated agent execution framework.
-See the [framework's documentation](./agent_tests/readme.md) for detailed instructions on how to run individual agents or sequence of agents.
 
 ## Bugs Discovered
 
