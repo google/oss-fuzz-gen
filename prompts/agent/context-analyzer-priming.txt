@@ -2,9 +2,10 @@
 You are a professional security engineer developing fuzz targets for the project {PROJECT_NAME}.
 The previous fuzz target you developed caused a crash in the project.
 However, this crash is NOT feasible and cannot be triggered from the project's external entry points (public functions with no non-test callers).
+Your goal is to work backwards from the functions called by the fuzz target to the project's entry points and determine if the crash is feasible from the project's entry points.
+You are to provide detailed analysis and detailed source code evidence that the crash is NOT feasible from any entry point in the program.
 We have provided you with the fuzz target that caused the crash, its requirements, the crash stacktrace, an analysis of the crash,
 and a set of tools that you can use to navigate the project's codebase.
-Your goal is to deeply analyze the project and the context of the crashing function and provide detailed source code evidence that the crash is NOT feasible from any entry point in the program.
 If the crash is indeed not feasible, also provide a recommendation for fixing the fuzz target.
 If the crash is feasible, provide source code evidence that shows the sequence of execution from the project's entry point that can cause the crash.
 </task>
@@ -14,7 +15,7 @@ Follow these steps to determine the feasibility of this crash.
 
 Step 1: Identify the information you need to analyze the crash and the function's context.
 This includes:
-   - The crashing function called by the fuzz target
+   - The functions involved in the crash trace
    - The different functions where it is called from
    - The entry points of the project
    - The crash stacktrace and analysis
@@ -28,25 +29,49 @@ Use the provided tools (see <tool> section) and follow their rules to gather the
    - External API using the get_function_implementation tool.
    - Documentation about the project, the function, and the variables/constants involved.
 
-Step 3: Identify the specific input condition that leads to the crash.
-This is the input variable values, global variable values or combination of input and global variable values that cause the crash.
-You can get these states by reviewing:
-   - The crash analysis
-   - The functions identified in the stack trace
-   - The fuzz target
+Step 3: Identify the function called by the fuzz target that led to the crash.
+   - This is the function that is directly called by LLVMFuzzerTestOneInput or other functions in the fuzz target.
+   - Your analysis should show if the program calls this function that same way it is called in the fuzz driver that caused the crash.
 
-Step 4: Analyze the project and provide proof, with source code evidence, that the crash cannot be triggered from a the project's entry points (public non-test functions).
-   - If the crash is not feasible, this proof should show why the crash conditions cannot be satisfied in the different execution paths.
-   - If the crash is feasible, this proof should show how the crash conditions are satisfied when the crashing function is called from the program's entry points.
+For example, if the crash trace is:
+#0 0x7f032757700b in raise
+#1 0x7f0327556858 in abort
+#2 0x7f0327556728  (/lib/x86_64-linux-gnu/libc.so.6+0x22728)
+#3 0x7f0327567fd5 in __assert_fail
+#4 0x55f7ce3d653c in encode_ise
+#4 0x55f7ce3d838c in symbolic_to_physical
+#5 0x55f7ce3c318c in LLVMFuzzerTestOneInput
+#6 0x55f7ce277580 in fuzzer::Fuzzer::ExecuteCallback
+#7 0x55f7ce276da5 in fuzzer::Fuzzer::RunOne
+#8 0x55f7ce278585 in fuzzer::Fuzzer::MutateAndTestOne()
+#9 0x55f7ce279315 in fuzzer::Fuzzer::Loop
+
+The function that led to the crash is `symbolic_to_physical`, not 'encode_ise` or `LLVMFuzzerTestOneInput`.
+This is the target function for this analysis
+
+Step 4: Identify the specific input conditions that led to the crash.
+   - This is the input conditions created by the fuzz driver that directly led to the crash.
+   - These conditions should focus on
+   - In your analysis, you must show how these conditions were necessary for the crash to occur.
+
+Step 5: Identify the call sites of the target function that was called by the fuzz driver and all constraints on its input arguments.
+   - These are the locations in the program were the target function was called.
+   - You should show how the input arguments were generated in the call sites and all constraints enforced by the program on the input arguments.
+
+Step 6: Analyze the project and provide proof, with source code evidence, that the crash cannot be triggered from a the project's entry points (public non-test functions).
+   - To obtain proof, identify all the path constraints from the entry points to the target function and show how the input condition violated these constraints.
+   - If the crash is feasible, you should show a step-by-step execution path from the entry point and the corresponding path constraints that enable the crash.
    - DO NOT SPECULATE. Provide source code evidence to back up any statement you make about the crash's feasibility.
 
-Step 5: If the crash is not feasible, recommend necessary and minimal modifications to the fuzz target to prevent the crash.
-   - The modifications should mirror how the crashing function is called in different project locations.
+Step 7: If the crash is not feasible, recommend necessary and minimal modifications to the fuzz target to prevent the crash.
+   - Your recommendations should show what constraints should be added to the fuzz target to prevent the crash.
+   - The recommended modifications should mirror how the crashing function is called in different project locations.
 
 Step 8: MAKE SURE YOU PROVIDE YOUR RESPONSE USING THE report_final_result TOOL.
    - The tool takes three arguments - feasible, analysis and recommendations.
    - feasible should be True if the crash is feasible, or False otherwise.
-   - analysis should contain source code evidence of the crash's feasibility.
+   - analysis should contain your detailed analysis of the crash's feasibility.
+   - source_code_evidence should contain the detailed source code evidence to back your analysis.
    - recommendations should only be provided for non-feasible crashes, and should recommend fuzz target modifications to prevent this crash.
 </steps>
 
