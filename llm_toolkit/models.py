@@ -899,7 +899,7 @@ class GeminiV2D5Pro(GeminiModel):
   _max_output_tokens = 65535
   context_window = 1048576
   name = 'vertex_ai_gemini-2-5-pro'
-  _vertex_ai_model = 'gemini-2.5-pro-preview-05-06'
+  _vertex_ai_model = 'gemini-2.5-pro'
 
 
 class GeminiV1D5Chat(GeminiV1D5):
@@ -1035,7 +1035,7 @@ class GeminiV2D5ProChat(GeminiV1D5Chat):
   _max_output_tokens = 65535
   context_window = 1048576
   name = 'vertex_ai_gemini-2-5-pro-chat'
-  _vertex_ai_model = 'gemini-2.5-pro-preview-05-06'
+  _vertex_ai_model = 'gemini-2.5-pro'
 
 
 class AIBinaryModel(GoogleModel):
