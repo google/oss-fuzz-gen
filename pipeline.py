@@ -51,7 +51,7 @@ class Pipeline():
         args, trial, execution_stage_agents)
     self.analysis_stage: AnalysisStage = AnalysisStage(args, trial,
                                                        analysis_stage_agents)
-    self.max_cycle_count = 2
+    self.max_cycle_count = 5
 
   def _terminate(self, result_history: list[Result], cycle_count: int) -> bool:
     """Validates if the termination conditions have been satisfied."""
