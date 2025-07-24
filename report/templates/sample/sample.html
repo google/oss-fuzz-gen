@@ -283,7 +283,7 @@ limitations under the License.
                 {% for cycle_data in agent_cycles %}
                   {% if 'standalone' in cycle_data %}
                     <!-- Standalone agents -->
-                    {% for agent_name, agent_logs in cycle_data.standalone.items() %}
+                    {% for agent_name, agent_data in cycle_data.standalone.items() %}
                       <div x-data="{ open: false }" class="border rounded-lg mb-4 agent-section">
                         <button @click="open = !open" class="w-full p-4 flex justify-between items-center text-left rounded-t-lg">
                           <span class="font-medium">{{ agent_name }}</span>
@@ -292,9 +292,28 @@ limitations under the License.
                           </svg>
                         </button>
                         <div x-show="open" class="border-t">
-                          {% for log_part in agent_logs %}
-                            <pre class="{% if log_part.chat_prompt %}chat_prompt {% elif log_part.chat_response %}chat_response {% endif %} p-4 rounded-md mb-4 whitespace-pre-wrap break-words">{{ log_part.content }}</pre>
-                          {% endfor %}
+                          {% if agent_data.steps %}
+                            {% for step in agent_data.steps %}
+                              <div x-data="{ stepOpen: false }" class="border-b last:border-b-0">
+                                <button @click="stepOpen = !stepOpen" class="w-full p-3 flex justify-between items-center text-left">
+                                  <span class="font-medium">
+                                    {% if step.number %}Step {{ step.number }}{% else %}Content{% endif %}
+                                    <span class="text-gray-500 ml-2">({{ step.type }})</span>
+                                  </span>
+                                  <svg class="w-3 h-3" :class="{'rotate-180': stepOpen}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                  </svg>
+                                </button>
+                                <div x-show="stepOpen" class="px-3 pb-3">
+                                  <pre class="{% if step.chat_prompt %}chat_prompt {% elif step.chat_response %}chat_response {% endif %} p-3 rounded-md  whitespace-pre-wrap break-words">{{ step.content }}</pre>
+                                </div>
+                              </div>
+                            {% endfor %}
+                          {% else %}
+                            {% for log_part in agent_data.logs %}
+                              <pre class="{% if log_part.chat_prompt %}chat_prompt {% elif log_part.chat_response %}chat_response {% endif %} p-4 rounded-md mb-4 whitespace-pre-wrap break-words">{{ log_part.content }}</pre>
+                            {% endfor %}
+                          {% endif %}
                         </div>
                       </div>
                     {% endfor %}
@@ -314,7 +333,7 @@ limitations under the License.
                       <div class="mb-2 font-medium">
                         Cycle {{ loop.index }}
                       </div>
-                      {% for agent_name, agent_logs in cycle_data.items() %}
+                      {% for agent_name, agent_data in cycle_data.items() %}
                         <div x-data="{ open: false }" class="border rounded-lg mb-4 agent-section">
                           <button @click="open = !open" class="w-full p-4 flex justify-between items-center text-left rounded-t-lg">
                             <span class="font-medium">{{ agent_name }}</span>
@@ -323,9 +342,113 @@ limitations under the License.
                             </svg>
                           </button>
                           <div x-show="open" class="border-t">
-                            {% for log_part in agent_logs %}
-                              <pre class="{% if log_part.chat_prompt %}chat_prompt {% elif log_part.chat_response %}chat_response {% endif %} p-4 rounded-md mb-4 whitespace-pre-wrap break-words">{{ log_part.content }}</pre>
-                            {% endfor %}
+                            {% if agent_data.steps %}
+                              {% if agent_data.steps|length == 1 %}
+                                <!-- Single step - show raw content -->
+                                {% set step = agent_data.steps[0] %}
+                                {% if step.number and step.name %}
+                                  <div class="p-3 border-b mt-3">
+                                    <div class="font-medium mb-2">Step {{ step.number }} - {{ step.name }}</div>
+                                    {% if step.log_parts %}
+                                      {% for log_part in step.log_parts %}
+                                        <div x-data="{ chatOpen: false }" class="border rounded-lg mb-2">
+                                          <button @click="chatOpen = !chatOpen" class="w-full p-2 flex justify-between items-center text-left outline-none focus:outline-none ring-0">
+                                            <div class="flex-1">
+                                              <span class=" font-medium">
+                                                {% if log_part.chat_prompt %}Chat Prompt{% elif log_part.chat_response %}Chat Response{% else %}Log{% endif %}
+                                              </span>
+                                              <div x-show="!chatOpen" class="text-sm text-gray-500 mt-1 line-clamp-2">
+                                                {% set words = log_part.content.split() %}
+                                                {% if words|length > 50 %}
+                                                  {{ words[:50]|join(' ') }}...
+                                                {% else %}
+                                                  {{ log_part.content }}
+                                                {% endif %}
+                                              </div>
+                                            </div>
+                                            <svg class="w-3 h-3 flex-shrink-0 ml-2" :class="{'rotate-180': chatOpen}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                            </svg>
+                                          </button>
+                                          <div x-show="chatOpen" class="px-2 pb-2 border-t">
+                                            <pre class="{% if log_part.chat_prompt %}chat_prompt {% elif log_part.chat_response %}chat_response {% endif %} p-2 rounded-md  whitespace-pre-wrap break-words">{{ log_part.content }}</pre>
+                                          </div>
+                                        </div>
+                                      {% endfor %}
+                                    {% else %}
+                                      <pre class="p-3 rounded-md  whitespace-pre-wrap break-words">{{ step.content }}</pre>
+                                    {% endif %}
+                                  </div>
+                                {% else %}
+                                  {% if step.log_parts %}
+                                    {% for log_part in step.log_parts %}
+                                      <pre class="{% if log_part.chat_prompt %}chat_prompt {% elif log_part.chat_response %}chat_response {% endif %} p-4 rounded-md mb-4 whitespace-pre-wrap break-words">{{ log_part.content }}</pre>
+                                    {% endfor %}
+                                  {% else %}
+                                    <pre class="p-4 rounded-md mb-4 whitespace-pre-wrap break-words">{{ step.content }}</pre>
+                                  {% endif %}
+                                {% endif %}
+                              {% else %}
+                                <!-- Multiple steps - show collapsible -->
+                                {% for step in agent_data.steps %}
+                                  <div x-data="{ stepOpen: false }" class="ml-5 border-b last:border-b-0">
+                                    <button @click="stepOpen = !stepOpen" class="w-full p-3 flex justify-between items-center text-left">
+                                      <span class="font-medium">
+                                        {% if step.number %}
+                                          {% if step.name %}
+                                            Step {{ step.number }} - {{ step.name }}
+                                          {% else %}
+                                            Step {{ step.number }}
+                                          {% endif %}
+                                        {% elif step.name %}
+                                          {{ step.name }}
+                                        {% else %}
+                                          Content
+                                        {% endif %}
+                                      </span>
+                                      <svg class="w-3 h-3" :class="{'rotate-180': stepOpen}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                      </svg>
+                                    </button>
+                                    <div x-show="stepOpen" class="ml-5 px-3 pb-3 mt-3">
+                                      {% if step.log_parts %}
+                                        {% for log_part in step.log_parts %}
+                                          <div x-data="{ chatOpen: false }" class="border rounded-lg mb-2 last:mb-0">
+                                            <button @click="chatOpen = !chatOpen" class="w-full p-2 flex justify-between items-center text-left outline-none focus:outline-none ring-0">
+                                              <div class="flex-1 space-y-2">
+                                                <span class=" font-medium">
+                                                  {% if log_part.chat_prompt %}Chat Prompt{% elif log_part.chat_response %}Chat Response{% else %}Log{% endif %}
+                                                </span>
+                                                <div x-show="!chatOpen" class="text-gray-500 mt-1 line-clamp-2">
+                                                  {% set words = log_part.content.split() %}
+                                                  {% if words|length > 50 %}
+                                                    {{ words[:50]|join(' ') }}...
+                                                  {% else %}
+                                                    {{ log_part.content }}
+                                                  {% endif %}
+                                                </div>
+                                              </div>
+                                              <svg class="w-3 h-3 flex-shrink-0 ml-2" :class="{'rotate-180': chatOpen}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                              </svg>
+                                            </button>
+                                            <div x-show="chatOpen" class="px-2 pb-2 border-t">
+                                              <pre class="{% if log_part.chat_prompt %}chat_prompt {% elif log_part.chat_response %}chat_response {% endif %} p-2 rounded-md  whitespace-pre-wrap break-words">{{ log_part.content }}</pre>
+                                            </div>
+                                          </div>
+                                        {% endfor %}
+                                      {% else %}
+                                        <pre class="p-3 rounded-md  whitespace-pre-wrap break-words">{{ step.content }}</pre>
+                                      {% endif %}
+                                    </div>
+                                  </div>
+                                {% endfor %}
+                              {% endif %}
+                            {% else %}
+                              {% for log_part in agent_data.logs %}
+                                <pre class="{% if log_part.chat_prompt %}chat_prompt {% elif log_part.chat_response %}chat_response {% endif %} p-4 rounded-md mb-4 whitespace-pre-wrap break-words">{{ log_part.content }}</pre>
+                              {% endfor %}
+                            {% endif %}
                           </div>
                         </div>
                       {% endfor %}

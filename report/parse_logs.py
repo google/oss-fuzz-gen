@@ -35,6 +35,64 @@ class LogsParser:
   def __init__(self, logs: list[LogPart]):
     self._logs = logs
 
+  def _parse_steps_from_logs(self, agent_logs: list[LogPart]) -> list[dict]:
+    """Parse steps from agent logs, grouping by step number."""
+    step_pattern = re.compile(r"Step #(\d+) - \"(.+?)\":")
+    simple_step_pattern = re.compile(r"Step #(\d+)")
+
+    steps_dict = {}
+    current_step_number = None
+    current_step_name = None
+
+    for log_part in agent_logs:
+      content = log_part.content.strip()
+      if not content:
+        continue
+
+      lines = content.split('\n')
+
+      step_header_found = False
+      for line in lines:
+        step_match = step_pattern.search(line)
+        if not step_match:
+          simple_match = simple_step_pattern.search(line)
+          if simple_match:
+            step_match = simple_match
+
+        if step_match:
+          step_header_found = True
+          current_step_number = step_match.group(1)
+          if len(step_match.groups()) > 1:
+            current_step_name = step_match.group(2).strip()
+          else:
+            current_step_name = "agent-step"
+
+          if current_step_number not in steps_dict:
+            steps_dict[current_step_number] = {
+                'number': current_step_number,
+                'name': current_step_name,
+                'type': 'Step',
+                'log_parts': []
+            }
+          break
+
+      if not step_header_found and current_step_number:
+        steps_dict[current_step_number]['log_parts'].append(log_part)
+      elif not step_header_found and not current_step_number and not steps_dict:
+        steps_dict['0'] = {
+            'number': None,
+            'name': None,
+            'type': 'Content',
+            'log_parts': [log_part]
+        }
+
+    steps = []
+    for step_num in sorted(steps_dict.keys(),
+                           key=lambda x: int(x) if x.isdigit() else 999):
+      steps.append(steps_dict[step_num])
+
+    return steps
+
   def get_agent_sections(self) -> dict[str, list[LogPart]]:
     """Get the agent sections from the logs."""
 
@@ -91,16 +149,22 @@ class LogsParser:
     cycles_dict = {}
 
     for agent_name, agent_logs in agent_sections.items():
+      # Parse steps for this agent
+      steps = self._parse_steps_from_logs(agent_logs)
+
       cycle_match = re.search(r'\(Cycle (\d+)\)', agent_name)
       if cycle_match:
         cycle_number = int(cycle_match.group(1))
         if cycle_number not in cycles_dict:
           cycles_dict[cycle_number] = {}
-        cycles_dict[cycle_number][agent_name] = agent_logs
+        cycles_dict[cycle_number][agent_name] = {
+            'logs': agent_logs,
+            'steps': steps
+        }
       else:
         if 0 not in cycles_dict:
           cycles_dict[0] = {}
-        cycles_dict[0][agent_name] = agent_logs
+        cycles_dict[0][agent_name] = {'logs': agent_logs, 'steps': steps}
 
     return [cycles_dict[cycle] for cycle in sorted(cycles_dict.keys())]
 
@@ -178,30 +242,30 @@ class RunLogsParser:
 
         function_name = in_match.group(1)
         path = in_match.group(2)
-        if '/src/' in path and 'llvm-project' not in path and self._benchmark_id and self._sample_id:
-          path_parts = path.split(':')
-          file_path = path_parts[0]  # Just the file path without line numbers
-          line_number = path_parts[1] if len(path_parts) > 1 else None
+        if '/src/' in path and 'llvm-project' not in path:
+          if self._benchmark_id and self._sample_id:
+            path_parts = path.split(':')
+            file_path = path_parts[0]
+            line_number = path_parts[1] if len(path_parts) > 1 else None
 
-          relative_path = file_path.lstrip('/')
+            relative_path = file_path.lstrip('/')
 
-          # If coverage_report_path is set, it's a local run
-          # Otherwise it's cloud
-          if self._coverage_report_path:
-            url = f'{self._coverage_report_path}{relative_path}.html'
-            url_with_line_number = f'{url}#L{line_number}' if line_number else url
-          else:
-            url = (
-                f'{base_url}/results/{self._benchmark_id}/code-coverage-reports/'
-                f'{self._sample_id}.fuzz_target/report/linux/'
-                f'{relative_path}.html')
-            url_with_line_number = f'{url}#L{line_number}' if line_number else url
-          stack_traces[frame_num] = {
-              "url": url_with_line_number,
-              "path": path,
-              "function": function_name,
-              "memory_address": memory_addr
-          }
+            # If coverage_report_path is set, it's a local run
+            # Otherwise it's cloud
+            if self._coverage_report_path:
+              url = f'{self._coverage_report_path}{relative_path}.html'
+              url_line_number = f'{url}#L{line_number}' if line_number else url
+            else:
+              url = (f'{base_url}/results/{self._benchmark_id}/'
+                     f'code-coverage-reports/{self._sample_id}.fuzz_target/'
+                     f'report/linux/{relative_path}.html')
+              url_line_number = f'{url}#L{line_number}' if line_number else url
+            stack_traces[frame_num] = {
+                "url": url_line_number,
+                "path": path,
+                "function": function_name,
+                "memory_address": memory_addr
+            }
 
     return stack_traces
 
