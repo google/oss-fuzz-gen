@@ -17,3 +17,7 @@ Below is relevant project function code:
 </code>
 
 To help analyze the root cause behind the runtime crash, you can leverage GDB tool and BASH tool to obtain information.
+
+Instructions
+1. You MUST use the GDB tool to identify the variables that caused the crash and the specific input conditions that led to the crash.
+2. DO NOT hallucinate the output of the provided tools. You must use the tools and use only results provided by the tools.
