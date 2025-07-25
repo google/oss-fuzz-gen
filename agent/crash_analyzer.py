@@ -130,13 +130,24 @@ class CrashAnalyzer(BaseAgent):
   def _container_tool_reaction(self, cur_round: int, response: str,
                                crash_result: CrashResult) -> Optional[Prompt]:
     """Validates LLM conclusion or executes its command."""
-    if self._parse_tag(response, 'conclusion'):
-      return self._container_handle_conclusion(cur_round, response,
-                                               crash_result)
+    extra_note = ''
+    # If there's a conclusion tag and a tool usage tag, then there's an error
     prompt = prompt_builder.CrashAnalyzerTemplateBuilder(self.llm,
                                                          None).build([])
-    if self._parse_tag(response,
-                       'gdb') and not self._parse_tag(response, 'gdb output'):
+    if self._parse_tag(response, 'conclusion') and (self._parse_tag(response, 'gdb') or self._parse_tag(response, 'bash')):
+      extra_note = 'NOTE: You cannot provide both tool commands and conclusion in the same response.'
+      return self._container_handle_invalid_tool_usage(
+        [self.gdb_tool, self.bash_tool], cur_round, response, prompt, extra_note)
+
+    if self._parse_tag(response, 'conclusion'):
+      if not self.gdb_tool_used:
+        extra_note = 'NOTE: You MUST use the provided GDB tool to analyze the crash before providing a conclusion.'
+        return self._container_handle_invalid_tool_usage(
+          [self.gdb_tool, self.bash_tool], cur_round, response, prompt, extra_note)
+      return self._container_handle_conclusion(cur_round, response,
+                                               crash_result)
+    if self._parse_tag(response, 'gdb'):
+      self.gdb_tool_used = True
       return self._container_handle_gdb_command(response, self.gdb_tool, prompt)
     if self._parse_tag(response, 'bash'):
       return self._container_handle_bash_command(response, self.bash_tool,
@@ -202,6 +213,8 @@ class CrashAnalyzer(BaseAgent):
     self.gdb_tool.execute(f'screen -dmS gdb_session -L '
                           f'-Logfile /tmp/gdb_log.txt '
                           f'gdb /out/{last_result.benchmark.target_name}')
+    # Define variable to keep track of gdb tool usage
+    self.gdb_tool_used = False
     self.bash_tool = ProjectContainerTool(
         benchmark, name='check', project_name=generated_oss_fuzz_project)
     self.bash_tool.compile(extra_commands=' && rm -rf /out/* > /dev/null')
