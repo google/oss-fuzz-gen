@@ -45,10 +45,13 @@ class CoverageAnalyzer(BaseAgent):
                    trial=self.trial)
       return Prompt()
 
+    function_requirements = self.get_function_requirements()
+
     builder = CoverageAnalyzerTemplateBuilder(self.llm, benchmark, last_result)
     prompt = builder.build(example_pair=[],
                            tool_guides=self.inspect_tool.tutorial(),
-                           project_dir=self.inspect_tool.project_dir)
+                           project_dir=self.inspect_tool.project_dir,
+                           function_requirements=function_requirements)
     # TODO: A different file name/dir.
     prompt.save(self.args.work_dirs.prompt)
 

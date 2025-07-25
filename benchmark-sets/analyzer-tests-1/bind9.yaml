@@ -1,0 +1,17 @@
+"functions":
+- "name": "dns_zt_asyncload"
+  "params":
+  - "name": "zt"
+    "type": "bool "
+  - "name": "newonly"
+    "type": "bool"
+  - "name": "loaddone"
+    "type": "bool "
+  - "name": "arg"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "isc_result_t dns_zt_asyncload(dns_zt_t *, bool, dns_zt_callback_t *, void *)"
+"language": "c"
+"project": "bind9"
+"target_name": "isc_lex_gettoken_fuzzer"
+"target_path": "/src/bind9/fuzz/isc_lex_gettoken.c"

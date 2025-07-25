@@ -1,6 +1,7 @@
-You are a professional cybersecurity expert researcher aiming to analyze a fuzz target to cover more code of the project-under-test.
+You are a professional cybersecurity expert researcher aiming to analyze a fuzz target to cover more code of the function-under-test.
 The fuzz target is written in {LANGUAGE}, designed to fuzz function {FUNCTION_SIGNATURE} in project {PROJECT}. The project source code is at {PROJECT_DIR}, mainly written in {PROJECT_LANGUAGE}.
-Here is the fuzz target and the fuzzing log, your task is to investigate why it has a low coverage and how to enhance the fuzz target to increase code coverage in the function and the project.
+Here is the fuzz target and the fuzzing log.
+Your task is to investigate why it has a low coverage, identify uncovered blocks of code that is reachable from the target function but cannot be covered by the existing fuzz target, and determine how to enhance the fuzz target to increase code coverage in the target function and other functions it calls.
 Note the fuzz target can already build, but has a low coverage at runtime.
 
 <fuzz target>
@@ -17,6 +18,11 @@ Finally provide your verified conclusion with analysis insights and suggestions 
   * A clean Boolean value (True or False) representing your analysis conclusion on whether code coverage needs improvement.
   * Analysis insights of the low coverage, as detailed as possible with source code evidence.
   * Suggestions to improve the code coverage, this can be text description, code snippet, or the full refined fuzz target.
+
+Here are the requirements for the target function's inputs. MAKE SURE YOUR SUGGESTED CHANGES WILL NOT VIOLATE ANY OF THESE REQUIREMENTS.
+<function-requirements>
+{FUNCTION_REQUIREMENTS}
+</function-requirements>
 
 For example:
 <conclusion>
