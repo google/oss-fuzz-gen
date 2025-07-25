@@ -135,7 +135,8 @@ class CrashAnalyzer(BaseAgent):
                                                crash_result)
     prompt = prompt_builder.CrashAnalyzerTemplateBuilder(self.llm,
                                                          None).build([])
-    if self._parse_tag(response, 'gdb') and not self._parse_tag(response, 'gdb output'):
+    if self._parse_tag(response,
+                       'gdb') and not self._parse_tag(response, 'gdb output'):
       return self._container_handle_gdb_command(response, self.gdb_tool, prompt)
     if self._parse_tag(response, 'bash'):
       return self._container_handle_bash_command(response, self.bash_tool,
