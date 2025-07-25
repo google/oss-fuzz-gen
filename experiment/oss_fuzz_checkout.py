@@ -32,7 +32,7 @@ logger.setLevel(logging.DEBUG)
 
 BUILD_DIR: str = 'build'
 GLOBAL_TEMP_DIR: str = ''
-ENABLE_CACHING = bool(int(os.getenv('OFG_USE_CACHING', '1')))
+ENABLE_CACHING = bool(int(os.getenv('OFG_USE_CACHING', '0')))
 # Assume OSS-Fuzz is at repo root dir by default.
 # This will change if temp_dir is used.
 OSS_FUZZ_DIR: str = os.path.join(
@@ -436,12 +436,12 @@ def create_ossfuzz_project(benchmark: benchmarklib.Benchmark,
   return generated_project_path
 
 
-def prepare_project_image(benchmark: benchmarklib.Benchmark) -> str:
+def prepare_project_image(benchmark: benchmarklib.Benchmark, project_name:str = '') -> str:
   """Prepares original image of the |project|'s fuzz target build container."""
   project = benchmark.project
-  image_name = f'gcr.io/oss-fuzz/{project}'
-  generated_oss_fuzz_project = f'{benchmark.id}-{uuid.uuid4().hex}'
+  generated_oss_fuzz_project = project_name or f'{benchmark.id}-{uuid.uuid4().hex}'
   generated_oss_fuzz_project = rectify_docker_tag(generated_oss_fuzz_project)
+  image_name = f'gcr.io/oss-fuzz/{generated_oss_fuzz_project}'
   create_ossfuzz_project(benchmark, generated_oss_fuzz_project)
 
   if not ENABLE_CACHING:

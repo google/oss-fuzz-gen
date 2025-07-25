@@ -135,7 +135,7 @@ class CrashAnalyzer(BaseAgent):
                                                crash_result)
     prompt = prompt_builder.CrashAnalyzerTemplateBuilder(self.llm,
                                                          None).build([])
-    if self._parse_tag(response, 'gdb'):
+    if self._parse_tag(response, 'gdb') and not self._parse_tag(response, 'gdb output'):
       return self._container_handle_gdb_command(response, self.gdb_tool, prompt)
     if self._parse_tag(response, 'bash'):
       return self._container_handle_bash_command(response, self.bash_tool,
@@ -227,10 +227,12 @@ class CrashAnalyzer(BaseAgent):
         self._sleep_random_duration(trial=self.trial)
     finally:
       # Cleanup: stop the container
-      logger.debug('Stopping the crash analyze container %s',
+      logger.debug('Stopping the crash analyze containers: %s, %s',
                    self.gdb_tool.container_id,
+                   self.bash_tool.container_id,
                    trial=self.trial)
       self.gdb_tool.terminate()
+      self.bash_tool.terminate()
 
     analysis_result = AnalysisResult(
         author=self,

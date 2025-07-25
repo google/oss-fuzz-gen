@@ -191,6 +191,11 @@ def get_result_list_for_agent(
   agent_test_instance = agent_test_class(args, trial=1)
   return agent_test_instance.setup_initial_result_list(benchmark, args.prompt)
 
+def json_set_converter(obj):
+  """Converts a set to a list for JSON serialization."""
+  if isinstance(obj, set):
+    return list(obj)
+  raise TypeError(f"Object of type {obj.__class__.__name__} is not JSON serializable")
 
 def write_result(args: argparse.Namespace, trial: int,
                  result: List[Result]) -> None:
@@ -198,7 +203,7 @@ def write_result(args: argparse.Namespace, trial: int,
 
   result_file = os.path.join(args.work_dirs.base, f'{trial}_result.json')
   with open(result_file, 'w') as file:
-    json.dump([r.to_dict() for r in result], file, indent=2)
+    json.dump([r.to_dict() for r in result], file, indent=2, default=json_set_converter)
 
   logger.info('Result written to %s', result_file, trial=trial)
 
