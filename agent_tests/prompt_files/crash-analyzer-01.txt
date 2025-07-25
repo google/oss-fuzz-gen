@@ -1,0 +1,231 @@
+Given the following crash report, fuzz driver code and relevant project function code, analyze the cause of the crash using GDB tool step by step.
+First, make a conclusion, ONLY ANSWER "False" if the crash is caused by bug in fuzz driver OR ONLY ANSWER "True" if the crash is caused by bug in project. Second, offer succinct and to-the-point analyses and suggestions.
+
+Below is crash report:
+<log>
+AddressSanitizer: FPE on unknown address 0x559a14ff8f63 (pc 0x559a14ff8f63 bp 0x7ffceec96d30 sp 0x7ffceec96cf0 T0)
+SCARINESS: 10 (signal)
+#0 0x559a14ff8f63 in htk_write_header /src/libsndfile/src/htk.c:124:27
+#1 0x559a14ff8aa2 in htk_open /src/libsndfile/src/htk.c:71:7
+#2 0x559a14fd1fc1 in psf_open_file /src/libsndfile/src/sndfile.c:3246:13
+#3 0x559a14fcedae in LLVMFuzzerTestOneInput /src/libsndfile/ossfuzz/sndfile_fuzzer.cc:37:22
+#4 0x559a14e83400 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerLoop.cpp:614:13
+#5 0x559a14e82c25 in fuzzer::Fuzzer::RunOne(unsigned char const*, unsigned long, bool, fuzzer::InputInfo*, bool, bool*) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerLoop.cpp:516:7
+#6 0x559a14e84405 in fuzzer::Fuzzer::MutateAndTestOne() /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerLoop.cpp:760:19
+#7 0x559a14e85195 in fuzzer::Fuzzer::Loop(std::__Fuzzer::vector<fuzzer::SizedFile, std::__Fuzzer::allocator<fuzzer::SizedFile>>&) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerLoop.cpp:905:5
+#8 0x559a14e73fdb in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerDriver.cpp:914:6
+#9 0x559a14e9f3b2 in main /src/llvm-project/compiler-rt/lib/fuzzer/FuzzerMain.cpp:20:10
+#10 0x7f948decd082 in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x24082) (BuildId: 5792732f783158c66fb4f3756458ca24e46e827d)
+#11 0x559a14e6685d in _start (out/libfuzzer-address-x86_64/sndfile_fuzzer+0xab85d)
+
+DEDUP_TOKEN: htk_write_header--htk_open--psf_open_file
+AddressSanitizer can not provide additional info.
+</log>
+
+Below is driver code:
+<code>
+Line 1 - 37:
+#include <fuzzer/FuzzedDataProvider.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+extern "C" {
+#include "/src/libsndfile/include/sndfile.h"
+}
+
+extern "C" SNDFILE * sf_open(const char *, int, SF_INFO *);
+
+extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
+FuzzedDataProvider provider(data, size);
+
+SF_INFO sfinfo;
+memset(&sfinfo, 0, sizeof(sfinfo));
+
+// When writing, sf_open needs a valid format, channels, and samplerate.
+// When reading, these are ignored and populated from the file.
+sfinfo.format = provider.ConsumeIntegral<int>();
+sfinfo.channels = provider.ConsumeIntegralInRange<int>(1, 4);
+sfinfo.samplerate = provider.ConsumeIntegralInRange<int>(8000, 48000);
+
+const int mode = provider.PickValueInArray({SFM_READ, SFM_WRITE, SFM_RDWR});
+
+const char *filename = "/tmp/fuzz.wav";
+
+// Create a file with the fuzzed data.
+std::vector<uint8_t> file_data = provider.ConsumeRemainingBytes<uint8_t>();
+FILE *f = fopen(filename, "wb");
+if (!f) {
+return 0;
+}
+fwrite(file_data.data(), 1, file_data.size(), f);
+fclose(f);
+
+SNDFILE *sndfile = sf_open(filename, mode, &sfinfo);
+</code>
+
+Below is relevant project function code:
+<code>
+{PROJECT_FUNCTION_CODE}
+</code>
+
+To help analyze the root cause behind the runtime crash, you can leverage GDB tool and BASH tool to obtain information.
+<tool>
+**GDB tool Guide**
+You can leverage GDB by iteractively sending me a GDB command, and I will provide you with the output of the command. The path of fuzz driver binary is '/out/sndfile_fuzzer'. The testcase that triggers runtime crash is stored at '/experiment/results/output-libsndfile-sf_open/artifacts/01.fuzz_target-F0-01/crash-90c36da3e90c95946c805b2c7210f363fc5b38e4'.
+
+<interaction protocols>
+1. I have executed 'gdb /out/sndfile_fuzzer'. You are now in GDB session, NOT in shell session. DO NOT run 'gdb /out/sndfile_fuzzer' again! DO NOT run shell commands!
+2. Strictly ONE GDB command at a time!
+3. Each message you send should first explain the reason why you want to run the command wrapped by <reason></reason>, then provide the command to run wrapped in <gdb></gdb> in this format:
+<reason>
+Reasons here.
+</reason>
+<gdb>
+One gdb command here.
+</gdb>
+4. Each reponse I send will repeat the command you sent wrapped in <gdb command></gdb command> for you to double-check, followed by the command standard output wrapped in <gdb output></gdb output> and stderr wrapped in <stderr></stderr> in this format:
+<gdb command>
+The command I executed, copied from the command you sent.
+</gdb command>
+<gdb output>
+The standard output of the command.
+</gdb output>
+<stderr>
+The standard error of the command.
+</stderr>
+5. The final goal is to answer questions about runtime crash, executed fuzz driver and project under test: a) ‘False’(if the crash is caused by bug in fuzz driver) or ‘True'(if the crash is caused by bug in project)? b) If the crash is caused by bug in fuzz driver, provide analyses, and are there any suggestions for modifying the fuzz driver? c) If the crash is caused by bug in project, provide analyses, and are there any suggestions for patching the project?
+6. If you have a conclusion on above questions, output the conclusion wrapped by <conclusion></conclusion> followed by the analysis and suggestion wrapped in <analysis and suggestion></analysis and suggestion>:
+<conclusion>
+‘False’ or ‘True’
+</conclusion>
+<analysis and suggestion>
+Analysis and suggestion
+</analysis and suggestion>
+</interaction protocols>
+
+<general rules>
+1. DO NOT wrap code snippets with ```, using the XML-style tags above will suffice.
+2. DO NOT Compile or Run Code!
+3. Strictly ONE GDB command at a time!
+4. DO NOT run 'gdb /out/sndfile_fuzzer' again!
+5. DO NOT run shell commands!
+</general rules>
+</tool>
+<tool>
+**Bash tool Guide**
+Use the bash tool to investigate files in the fuzz target's build environment. This will help you understand the project source code, the function under test, its dependencies, and any compilation requirements.
+
+<interaction protocols>
+1. STRICTLY Only One Bash Command per message:
+* **DO NOT** send multiple bash commands in each message.
+2. Execute Bash Command Message Structure:
+* Reason for the Command:
+* Explain the reason for running the command.
+* Wrap this explanation within <reason> and </reason> tags.
+* Bash Command:
+* Provide the bash command to execute.
+* Wrap the command with <bash> and </bash> tags.
+* Format Example:
+<reason>
+I want to locate the source file containing the definition of the function-under-test to examine its implementation.
+</reason>
+<bash>
+grep -rn 'function_name(' /src/project-name/
+</bash>
+3. Receiving Bash Command Output Message Structure:
+* Bash execution outputs will be returned in the following format:
+<bash>
+[The command you executed.]
+</bash>
+<stdout>
+[Standard output of the command.]
+</stdout>
+<stderr>
+[Standard error of the command.]
+</stderr>
+<interaction protocols>
+
+<general rules>
+1 .File Access and Modification Restrictions:
+* Allowed Actions:
+* View any files and environment variables in the build environment.
+* Prohibited Actions:
+* Do not modify, rename, or create new files.
+* All modifications will not be preserved when building the fuzz target.
+</general rules>
+
+<tool guidelines>
+1 .Purposeful Commands:
+* Each bash command should have a clear purpose related to your investigation toward the final goals.
+2. Careful Interpretation:
+* Analyze the output of each command thoroughly to inform your next steps.
+* Keep notes of important findings that will help in modifying the fuzz target and build script.
+4. Clarity and Compliance:
+* Adhere strictly to the interaction protocols and formatting requirements.
+* Ensure your messages are clear and properly formatted.
+5. No Unauthorized Actions:
+* Do not modify files.
+6. Avoid using `pkg-config`:
+* Use bash commands to manually identify the correct file paths
+* Explore the project's directory hierarchy (`/src/<project-name>`) to learn headerfiles locations, library's naming conventions, and build system.
+</tool guidelines>
+
+<example usages>
+Command 1. Start by locating the function's definition and understand its parameters, e.g.:
+<reason>
+To find the definition of `my_function` in the project directory and understand its implementation details.
+</reason>
+<bash>
+grep -rn 'my_function(' /src/project/
+</bash>
+Command 2. Identify Required Headers:
+<reason>
+To identify the header files in the project directory that declare `my_function`.
+</reason>
+<bash>
+grep -rn 'my_function' /src/project/ --include=*.h
+</bash>
+Command 3. Locate Custom Type Definitions:
+<reason>
+To find the definition of the custom type `CustomType` used by `my_function`.
+</reason>
+<bash>
+grep -rn 'typedef.*CustomType' /src/project/
+</bash>
+Command 4. Examine Existing Fuzz Targets:
+<reason>
+To see how existing fuzz targets include headers and initialize variables in the `LLVMFuzzerTestOneInput` function.
+</reason>
+<bash>
+cat /src/libsndfile/ossfuzz/sndfile_fuzzer.cc
+</bash>
+* Remember you can use the same command on other example fuzz targets under the same parent directory as `/src/libsndfile/ossfuzz/sndfile_fuzzer.cc`.
+Command 5. Check Build Script for Compilation Flags and Libraries:
+<reason>
+To check which compiler flags and libraries are used in the build script.
+</reason>
+<bash>
+cat /src/build.bk.sh
+</bash>
+Command 6. Verify Available Libraries:
+<reason>
+To list the built libraries to verify that the necessary libraries are available.
+</reason>
+<bash>
+ls /src/project/build/libs/
+</bash>
+Command 7. Understand Environment Variables:
+<reason>
+To check if any environment variables related to the project are set.
+</reason>
+<bash>
+printenv | grep 'PROJECT_VARIABLE'
+</bash>
+</example usages>
+
+<final reminder>
+1. Do Not Compile or Run Code:
+* Your investigation is limited to reading and interpreting information using bash commands.
+</final reminder>
+</tool>
