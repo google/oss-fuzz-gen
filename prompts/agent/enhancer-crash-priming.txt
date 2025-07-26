@@ -117,6 +117,7 @@ Here is a detailed analysis about the crash
 </fix-recommendation>
 
 Here are the requirements for the target function.
+MAKE SURE THAT THE GENERATED FUZZ DRIVER DO NOT VIOLATE ANY OF THESE REQUIREMENTS.
 <function-requirements>
 {FUNCTION_REQUIREMENTS}
 </function-requirements>

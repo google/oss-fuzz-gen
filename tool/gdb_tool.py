@@ -13,6 +13,7 @@
 # limitations under the License.
 """A tool for LLM agents to interact within a GDB."""
 import logging
+import os
 import subprocess as sp
 import time
 
@@ -37,7 +38,7 @@ class GDBTool(ProjectContainerTool):
   def tutorial(self) -> str:
     """Constructs a tool guide tutorial for LLM agents."""
     return self._get_tutorial_file_content('gdb_tool.txt')\
-      .replace('{AFTIFACT_PATH}', self.result.artifact_path)\
+      .replace('{AFTIFACT_PATH}', f'/artifact/{os.path.basename(self.result.artifact_path)}')\
       .replace('{TARGET_NAME}', self.benchmark.target_name)
 
   def execute_in_screen(self, gdb_command: str) -> sp.CompletedProcess:

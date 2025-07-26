@@ -107,4 +107,10 @@ Here are the insights and suggestions to refine the fuzz target.
 {SUGGESTIONS}
 </suggestions>
 
+Here are the requirements for the target function.
+MAKE SURE THAT THE GENERATED FUZZ DRIVER DO NOT VIOLATE ANY OF THESE REQUIREMENTS.
+<function-requirements>
+{FUNCTION_REQUIREMENTS}
+</function-requirements>
+
 IMPORTANT: It's important to show the complete code, not only the fixed line.
