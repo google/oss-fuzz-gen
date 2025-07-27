@@ -742,10 +742,11 @@ class BuilderRunner:
         target_basename = os.path.basename(self.benchmark.target_path)
         new_textcov = textcov.Textcov.from_file(
             f,
-            ignore_function_patterns=[
-                # Don't include other functions defined in the target code.
-                re.compile(r'^' + re.escape(target_basename) + ':')
-            ])
+            # ignore_function_patterns=[
+            #     # Don't include other functions defined in the target code.
+            #     re.compile(r'^' + re.escape(target_basename) + ':')
+            # ]
+            )
       return new_textcov
 
   def get_coverage_local(
@@ -1111,10 +1112,11 @@ class CloudBuilderRunner(BuilderRunner):
         with blob.open('rb') as f:
           run_result.coverage = textcov.Textcov.from_file(
               f,
-              ignore_function_patterns=[
-                  # Don't include other functions defined in the target code.
-                  re.compile(r'^' + re.escape(target_basename) + ':')
-              ])
+              # ignore_function_patterns=[
+              #     # Don't include other functions defined in the target code.
+              #     re.compile(r'^' + re.escape(target_basename) + ':')
+              # ]
+              )
         self._copy_textcov_to_workdir(bucket, textcov_blob_path,
                                       generated_target_name)
 

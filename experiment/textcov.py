@@ -513,14 +513,14 @@ class Textcov:
     return sum(len(f.lines) for f in self.functions.values())
 
   def get_function_coverage(self, function_name: str) -> Optional[Function]:
-    if function_name in self.functions:
-      return self.functions[function_name]
+    function = self.functions.get(function_name)
+    if function:
+      return function
 
     # Check if any entry in functions ends with function_name: and return that.
-    for func in self.functions.values():
-      if func.name.endswith(f'{function_name}:'):
+    for name, func in self.functions.items():
+      if re.search(rf'^(?:.+:)?{re.escape(function_name)}$', func.name):
         return func
-
     return None
 
   def is_fuzzer_class(self, class_item) -> bool:

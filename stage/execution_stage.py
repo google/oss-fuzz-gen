@@ -21,6 +21,7 @@ from typing import Optional
 from experiment import builder_runner as builder_runner_lib
 from experiment import evaluator as evaluator_lib
 from experiment import oss_fuzz_checkout
+from experiment import textcov
 from experiment.evaluator import Evaluator
 from experiment.textcov import Function, Textcov
 from results import BuildResult, Result, RunResult
@@ -157,7 +158,10 @@ class ExecutionStage(BaseStage):
       session_coverage = session_covered_lines/session_total_lines if session_total_lines != 0 else 0
       self.logger.info('session coverage == %.2f in %s.', session_coverage,
                        generated_oss_fuzz_project)
-      target_function: Optional[Function] = run_result.coverage.get_function_coverage(benchmark.function_name)
+      demangled_function_name = textcov.demangle(benchmark.function_name)
+      target_function: Optional[
+          Function] = run_result.coverage.get_function_coverage(
+              demangled_function_name)
       if target_function != None:
         target_function_covered_line = target_function.covered_lines
         target_function_total_line = target_function.total_lines
