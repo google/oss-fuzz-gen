@@ -20,8 +20,7 @@ from typing import Optional
 
 from experiment import builder_runner as builder_runner_lib
 from experiment import evaluator as evaluator_lib
-from experiment import oss_fuzz_checkout
-from experiment import textcov
+from experiment import oss_fuzz_checkout, textcov
 from experiment.evaluator import Evaluator
 from experiment.textcov import Function, Textcov
 from results import BuildResult, Result, RunResult
@@ -160,9 +159,7 @@ class ExecutionStage(BaseStage):
                        generated_oss_fuzz_project)
       demangled_function_name = textcov.demangle(benchmark.function_name)
       target_function: Optional[
-
           Function] = run_result.coverage.get_function_coverage(
-
               demangled_function_name)
       if target_function != None:
         target_function_covered_line = target_function.covered_lines
