@@ -20,8 +20,7 @@ from typing import Optional
 
 from experiment import builder_runner as builder_runner_lib
 from experiment import evaluator as evaluator_lib
-from experiment import oss_fuzz_checkout
-from experiment import textcov
+from experiment import oss_fuzz_checkout, textcov
 from experiment.evaluator import Evaluator
 from experiment.textcov import Function, Textcov
 from results import BuildResult, Result, RunResult
@@ -155,7 +154,7 @@ class ExecutionStage(BaseStage):
       # Get coverage of target function and total coverage
       session_covered_lines = run_result.coverage.covered_lines
       session_total_lines = run_result.coverage.total_lines
-      session_coverage = session_covered_lines/session_total_lines if session_total_lines != 0 else 0
+      session_coverage = session_covered_lines / session_total_lines if session_total_lines != 0 else 0
       self.logger.info('session coverage == %.2f in %s.', session_coverage,
                        generated_oss_fuzz_project)
       demangled_function_name = textcov.demangle(benchmark.function_name)
@@ -165,16 +164,16 @@ class ExecutionStage(BaseStage):
       if target_function != None:
         target_function_covered_line = target_function.covered_lines
         target_function_total_line = target_function.total_lines
-        target_function_coverage = (target_function_covered_line/target_function_total_line
+        target_function_coverage = (target_function_covered_line /
+                                    target_function_total_line
                                     if target_function_total_line != 0 else 0)
-        self.logger.info('Target function %s coverage == %.2f in %s.', benchmark.function_name,
-                         target_function_coverage,
+        self.logger.info('Target function %s coverage == %.2f in %s.',
+                         benchmark.function_name, target_function_coverage,
                          generated_oss_fuzz_project)
       else:
         target_function_coverage = 0.0
-        self.logger.info('Target function %s coverage not found in %s.', benchmark.function_name,
-                         generated_oss_fuzz_project)
-
+        self.logger.info('Target function %s coverage not found in %s.',
+                         benchmark.function_name, generated_oss_fuzz_project)
 
       existing_textcov = evaluator.load_existing_textcov()
       run_result.coverage.subtract_covered_lines(existing_textcov)
@@ -206,11 +205,12 @@ class ExecutionStage(BaseStage):
         run_log_content = ''
 
       # Add fuzz_target_source and build_script_source to the report log.
-      run_log_content = (f'Fuzz target source:\n{fuzz_target_source}\n'
-                         f'Build script source:\n{build_script_source}\n'
-                         f'{run_log_content}\n'
-                         f'Session coverage: {session_coverage}\n'
-                         f'Target function coverage: {target_function_coverage}\n')
+      run_log_content = (
+          f'Fuzz target source:\n{fuzz_target_source}\n'
+          f'Build script source:\n{build_script_source}\n'
+          f'{run_log_content}\n'
+          f'Session coverage: {session_coverage}\n'
+          f'Target function coverage: {target_function_coverage}\n')
 
       runresult = RunResult(
           benchmark=benchmark,

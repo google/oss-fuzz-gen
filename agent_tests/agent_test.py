@@ -25,7 +25,8 @@ import run_one_experiment
 from agent import (base_agent, context_analyzer, crash_analyzer,
                    function_analyzer, prototyper)
 from agent_tests import (base_agent_test, context_analyzer_test,
-                         crash_analyzer_test, execution_stage_test, function_analyzer_test)
+                         crash_analyzer_test, execution_stage_test,
+                         function_analyzer_test)
 from data_prep import introspector
 from experiment import benchmark as benchmarklib
 from experiment import workdir
@@ -52,8 +53,9 @@ agents: dict[str,
                             function_analyzer_test.FunctionAnalyzerAgentTest),
                        'Prototyper': (prototyper.Prototyper,
                                       base_agent_test.BaseAgentTest),
-                       'ExecutionStage': (execution_stage.ExecutionStage,
-                                          execution_stage_test.ExecutionStageTest)
+                       'ExecutionStage':
+                           (execution_stage.ExecutionStage,
+                            execution_stage_test.ExecutionStageTest)
                    }
 
 

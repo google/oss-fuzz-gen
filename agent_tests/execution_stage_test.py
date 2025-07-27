@@ -13,8 +13,8 @@
 # limitations under the License.
 
 import os
-import logger
 
+import logger
 from agent_tests.base_agent_test import BaseAgentTest
 from results import AnalysisResult, BuildResult, CrashResult, RunResult
 
@@ -96,19 +96,21 @@ class ExecutionStageTest(BaseAgentTest):
     with open(fuzz_target_path, 'w') as file:
       file.write(fuzz_target_source)
     build_script_path = os.path.join(self.args.work_dirs.fuzz_targets,
-                                    f'{self.trial:02d}.build_script')
+                                     f'{self.trial:02d}.build_script')
     with open(build_script_path, 'w') as file:
       file.write(build_script_source)
 
-    build_result = BuildResult(benchmark=benchmark,
-                           trial=self.trial,
-                           work_dirs=self.args.work_dirs,
-                           author=None,
-                           chat_history={},
-                           compiles=True,
-                           binary_exists=True,
-                           is_function_referenced=True,
-                           fuzz_target_source=fuzz_target_source,
-                           build_script_source=build_script_source,)
+    build_result = BuildResult(
+        benchmark=benchmark,
+        trial=self.trial,
+        work_dirs=self.args.work_dirs,
+        author=None,
+        chat_history={},
+        compiles=True,
+        binary_exists=True,
+        is_function_referenced=True,
+        fuzz_target_source=fuzz_target_source,
+        build_script_source=build_script_source,
+    )
 
     return [build_result]

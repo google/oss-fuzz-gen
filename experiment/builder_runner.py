@@ -746,7 +746,7 @@ class BuilderRunner:
             #     # Don't include other functions defined in the target code.
             #     re.compile(r'^' + re.escape(target_basename) + ':')
             # ]
-            )
+        )
       return new_textcov
 
   def get_coverage_local(
@@ -1116,7 +1116,7 @@ class CloudBuilderRunner(BuilderRunner):
               #     # Don't include other functions defined in the target code.
               #     re.compile(r'^' + re.escape(target_basename) + ':')
               # ]
-              )
+          )
         self._copy_textcov_to_workdir(bucket, textcov_blob_path,
                                       generated_target_name)
 
