@@ -125,6 +125,10 @@ class Function:
   def covered_lines(self):
     return sum(1 for l in self.lines.values() if l.hit_count > 0)
 
+  @property
+  def total_lines(self):
+    return len(self.lines)
+
   def subtract_covered_lines(self, other: Function, language: str = 'c++'):
     """Subtract covered lines."""
 
@@ -507,6 +511,17 @@ class Textcov:
       return sum(len(f.lines) for f in self.files.values())
 
     return sum(len(f.lines) for f in self.functions.values())
+
+  def get_function_coverage(self, function_name: str) -> Optional[Function]:
+    function = self.functions.get(function_name)
+    if function:
+      return function
+
+    # Check if any entry in functions ends with function_name: and return that.
+    for name, func in self.functions.items():
+      if re.search(rf'^(?:.+:)?{re.escape(function_name)}$', func.name):
+        return func
+    return None
 
   def is_fuzzer_class(self, class_item) -> bool:
     """Determine if the class_item is a fuzzer class."""

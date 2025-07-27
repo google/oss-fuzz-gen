@@ -37,11 +37,15 @@ The experiment included [1300+ benchmarks](./benchmark-sets/all) from 297 open-s
 Overall, this framework manages to successfully leverage LLMs to generate valid fuzz targets (which generate non-zero coverage increase)
 for 160 C/C++ projects. The maximum line coverage increase is 29% from the existing human-written targets.
 
-Note that these reports are not public as they may contain undisclosed vulnerabilities. 
+Note that these reports are not public as they may contain undisclosed vulnerabilities.
 
 ## Usage
 
 Check our detailed [usage guide](./USAGE.md) for instructions on how to run this framework and generate reports based on the results.
+
+## Independent Agent Execution and Evaluation
+You can also execute or evaluate individual agents without running full experiments, using the integrated agent execution framework.
+See the [framework's documentation](./agent_tests/readme.md) for detailed instructions on how to run individual agents or sequence of agents.
 
 ## Collaborations
 Interested in research or open-source community collaborations?
@@ -114,7 +118,7 @@ These bugs could only have been discovered with newly generated targets. They we
 | libunwind | 30.58% | 83.25% | 2899 | 1342 | 1612 | 4388 |
 | openh264 | 30.07% | 50.14% | 6607 | 5751 | 11470 | 19123 |
 
-\* "Total project lines" measures the source code of the project-under-test compiled and linked by the preexisting human-written fuzz targets from OSS-Fuzz. 
+\* "Total project lines" measures the source code of the project-under-test compiled and linked by the preexisting human-written fuzz targets from OSS-Fuzz.
 
 \* "Total coverage gain" is calculated using a denominator of the "Total project lines". "Total relative gain" is the increase in coverage compared to the old number of covered lines.
 
