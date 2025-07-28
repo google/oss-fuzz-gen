@@ -36,7 +36,8 @@ from google.api_core.exceptions import (GoogleAPICallError, InternalServerError,
                                         InvalidArgument, ResourceExhausted,
                                         ServiceUnavailable, TooManyRequests)
 from vertexai import generative_models
-from vertexai.preview.generative_models import ChatSession, GenerativeModel, GenerationResponse
+from vertexai.preview.generative_models import (ChatSession, GenerationResponse,
+                                                GenerativeModel)
 from vertexai.preview.language_models import CodeGenerationModel
 
 from llm_toolkit import prompts
@@ -808,16 +809,12 @@ class GeminiModel(VertexAIModel):
   def do_generate(self, model: Any, prompt: str, config: dict[str, Any]) -> Any:
     # Loosen inapplicable restrictions just in case.
     logger.info('%s generating response with config: %s', self.name, config)
-    response: GenerationResponse = model.generate_content(prompt,
-                                  generation_config=config,
-                                  safety_settings=self.safety_config)
+    response: GenerationResponse = model.generate_content(
+        prompt, generation_config=config, safety_settings=self.safety_config)
     # Handle case where LLM response has multiple content.parts
     if len(response.candidates) > 1:
       return '\n'.join(candidate.text for candidate in response.candidates)
     return response.text
-
-
-
 
 
 class VertexAICodeBisonModel(VertexAIModel):
