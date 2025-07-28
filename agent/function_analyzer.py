@@ -83,11 +83,12 @@ class FunctionAnalyzer(base_agent.ADKBaseAgent):
       result: resultslib.Result) -> None:
     """Handle the LLM response and update the result."""
 
-    function_requirements_text = self.get_xml_representation(function_analysis_result.to_dict())
+    function_requirements_text = self.get_xml_representation(
+        function_analysis_result.to_dict())
 
     # Write the requirements to a file
-    requirement_path = self.write_requirements_to_file(self.args,
-                                                       function_requirements_text)
+    requirement_path = self.write_requirements_to_file(
+        self.args, function_requirements_text)
     function_analysis_result.function_analysis_path = requirement_path
     result.function_analysis = function_analysis_result
 
