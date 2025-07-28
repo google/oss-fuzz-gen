@@ -436,7 +436,8 @@ def create_ossfuzz_project(benchmark: benchmarklib.Benchmark,
   return generated_project_path
 
 
-def prepare_project_image(benchmark: benchmarklib.Benchmark, project_name:str = '') -> str:
+def prepare_project_image(benchmark: benchmarklib.Benchmark,
+                          project_name: str = '') -> str:
   """Prepares original image of the |project|'s fuzz target build container."""
   project = benchmark.project
   generated_oss_fuzz_project = project_name or f'{benchmark.id}-{uuid.uuid4().hex}'

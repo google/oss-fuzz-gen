@@ -134,16 +134,19 @@ class CrashAnalyzer(BaseAgent):
     # If there's a conclusion tag and a tool usage tag, then there's an error
     prompt = prompt_builder.CrashAnalyzerTemplateBuilder(self.llm,
                                                          None).build([])
-    if self._parse_tag(response, 'conclusion') and (self._parse_tag(response, 'gdb') or self._parse_tag(response, 'bash')):
+    if self._parse_tag(response, 'conclusion') and (self._parse_tag(
+        response, 'gdb') or self._parse_tag(response, 'bash')):
       extra_note = 'NOTE: You cannot provide both tool commands and conclusion in the same response.'
       return self._container_handle_invalid_tool_usage(
-        [self.gdb_tool, self.bash_tool], cur_round, response, prompt, extra_note)
+          [self.gdb_tool, self.bash_tool], cur_round, response, prompt,
+          extra_note)
 
     if self._parse_tag(response, 'conclusion'):
       if not self.gdb_tool_used:
         extra_note = 'NOTE: You MUST use the provided GDB tool to analyze the crash before providing a conclusion.'
         return self._container_handle_invalid_tool_usage(
-          [self.gdb_tool, self.bash_tool], cur_round, response, prompt, extra_note)
+            [self.gdb_tool, self.bash_tool], cur_round, response, prompt,
+            extra_note)
       return self._container_handle_conclusion(cur_round, response,
                                                crash_result)
     if self._parse_tag(response, 'gdb'):
