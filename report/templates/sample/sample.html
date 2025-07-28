@@ -351,32 +351,10 @@ limitations under the License.
                                     <div class="font-medium mb-2">Step {{ step.number }} - {{ step.name }}</div>
                                     {% if step.log_parts %}
                                       {% for log_part in step.log_parts %}
-                                        <div x-data="{ chatOpen: false }" class="border rounded-lg mb-2">
-                                          <button @click="chatOpen = !chatOpen" class="w-full p-2 flex justify-between items-center text-left outline-none focus:outline-none ring-0">
-                                            <div class="flex-1">
-                                              <span class=" font-medium">
-                                                {% if log_part.chat_prompt %}Chat Prompt{% elif log_part.chat_response %}Chat Response{% else %}Log{% endif %}
-                                              </span>
-                                              <div x-show="!chatOpen" class="text-sm text-gray-500 mt-1 line-clamp-2">
-                                                {% set words = log_part.content.split() %}
-                                                {% if words|length > 50 %}
-                                                  {{ words[:50]|join(' ') }}...
-                                                {% else %}
-                                                  {{ log_part.content }}
-                                                {% endif %}
-                                              </div>
-                                            </div>
-                                            <svg class="w-3 h-3 flex-shrink-0 ml-2" :class="{'rotate-180': chatOpen}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                                            </svg>
-                                          </button>
-                                          <div x-show="chatOpen" class="px-2 pb-2 border-t">
-                                            <pre class="{% if log_part.chat_prompt %}chat_prompt {% elif log_part.chat_response %}chat_response {% endif %} p-2 rounded-md  whitespace-pre-wrap break-words">{{ log_part.content }}</pre>
-                                          </div>
-                                        </div>
+                                        <pre class="{% if log_part.chat_prompt %}chat_prompt {% elif log_part.chat_response %}chat_response {% endif %} p-3 rounded-md mb-2 whitespace-pre-wrap break-words">{{ log_part.content }}</pre>
                                       {% endfor %}
                                     {% else %}
-                                      <pre class="p-3 rounded-md  whitespace-pre-wrap break-words">{{ step.content }}</pre>
+                                      <pre class="p-3 rounded-md whitespace-pre-wrap break-words">{{ step.content }}</pre>
                                     {% endif %}
                                   </div>
                                 {% else %}
@@ -413,32 +391,10 @@ limitations under the License.
                                     <div x-show="stepOpen" class="ml-5 px-3 pb-3 mt-3">
                                       {% if step.log_parts %}
                                         {% for log_part in step.log_parts %}
-                                          <div x-data="{ chatOpen: false }" class="border rounded-lg mb-2 last:mb-0">
-                                            <button @click="chatOpen = !chatOpen" class="w-full p-2 flex justify-between items-center text-left outline-none focus:outline-none ring-0">
-                                              <div class="flex-1 space-y-2">
-                                                <span class=" font-medium">
-                                                  {% if log_part.chat_prompt %}Chat Prompt{% elif log_part.chat_response %}Chat Response{% else %}Log{% endif %}
-                                                </span>
-                                                <div x-show="!chatOpen" class="text-gray-500 mt-1 line-clamp-2">
-                                                  {% set words = log_part.content.split() %}
-                                                  {% if words|length > 50 %}
-                                                    {{ words[:50]|join(' ') }}...
-                                                  {% else %}
-                                                    {{ log_part.content }}
-                                                  {% endif %}
-                                                </div>
-                                              </div>
-                                              <svg class="w-3 h-3 flex-shrink-0 ml-2" :class="{'rotate-180': chatOpen}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                                              </svg>
-                                            </button>
-                                            <div x-show="chatOpen" class="px-2 pb-2 border-t">
-                                              <pre class="{% if log_part.chat_prompt %}chat_prompt {% elif log_part.chat_response %}chat_response {% endif %} p-2 rounded-md  whitespace-pre-wrap break-words">{{ log_part.content }}</pre>
-                                            </div>
-                                          </div>
+                                          <pre class="{% if log_part.chat_prompt %}chat_prompt {% elif log_part.chat_response %}chat_response {% endif %} p-3 rounded-md mb-2 whitespace-pre-wrap break-words">{{ log_part.content }}</pre>
                                         {% endfor %}
                                       {% else %}
-                                        <pre class="p-3 rounded-md  whitespace-pre-wrap break-words">{{ step.content }}</pre>
+                                        <pre class="p-3 rounded-md whitespace-pre-wrap break-words">{{ step.content }}</pre>
                                       {% endif %}
                                     </div>
                                   </div>

@@ -35,6 +35,30 @@ class LogsParser:
   def __init__(self, logs: list[LogPart]):
     self._logs = logs
 
+  def _extract_tool_names(self, content: str) -> list[str]:
+    """Extract tool names from content."""
+    tool_counts = {}
+    lines = content.split('\n')
+    
+    for i, line in enumerate(lines):
+      line = line.strip()
+      if (line in ['<bash>', '<reason>', '<conclusion>', '<build script>', '<fuzz target>'] and 
+          not line.startswith('</')):
+        tool_name = line[1:-1].title()
+        tool_counts[tool_name] = tool_counts.get(tool_name, 0) + 1
+      elif line == '<stderr>':
+        if i + 1 < len(lines) and lines[i + 1].strip():
+          tool_counts['Stderr'] = tool_counts.get('Stderr', 0) + 1
+    
+    tool_names = []
+    for tool_name, count in tool_counts.items():
+      if count == 1:
+        tool_names.append(tool_name)
+      else:
+        tool_names.append(f"{tool_name} (x{count})")
+    
+    return tool_names
+
   def _parse_steps_from_logs(self, agent_logs: list[LogPart]) -> list[dict]:
     """Parse steps from agent logs, grouping by step number."""
     step_pattern = re.compile(r"Step #(\d+) - \"(.+?)\":")
@@ -62,15 +86,10 @@ class LogsParser:
         if step_match:
           step_header_found = True
           current_step_number = step_match.group(1)
-          if len(step_match.groups()) > 1:
-            current_step_name = step_match.group(2).strip()
-          else:
-            current_step_name = "agent-step"
 
           if current_step_number not in steps_dict:
             steps_dict[current_step_number] = {
                 'number': current_step_number,
-                'name': current_step_name,
                 'type': 'Step',
                 'log_parts': []
             }
@@ -81,10 +100,16 @@ class LogsParser:
       elif not step_header_found and not current_step_number and not steps_dict:
         steps_dict['0'] = {
             'number': None,
-            'name': None,
             'type': 'Content',
             'log_parts': [log_part]
         }
+
+    for step_num, step_data in steps_dict.items():
+      if step_data['log_parts']:
+        all_content = '\n'.join([part.content for part in step_data['log_parts']])
+        tool_names = self._extract_tool_names(all_content)
+        if tool_names:
+          step_data['name'] = f"{', '.join(tool_names)}"
 
     steps = []
     for step_num in sorted(steps_dict.keys(),
