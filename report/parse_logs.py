@@ -35,6 +35,78 @@ class LogsParser:
   def __init__(self, logs: list[LogPart]):
     self._logs = logs
 
+  def _extract_bash_commands(self, content: str) -> list[str]:
+    """Extract and parse bash commands from content."""
+    commands = []
+    lines = content.split('\n')
+    
+    for i, line in enumerate(lines):
+      line = line.strip()
+      if line == '<bash>':
+        # Look for the next closing tag
+        for j in range(i + 1, len(lines)):
+          if lines[j].strip() == '</bash>':
+            # Extract bash content between tags
+            bash_content = '\n'.join(lines[i+1:j]).strip()
+            if bash_content:
+              # Parse the first line as the main command
+              first_line = bash_content.split('\n')[0].strip()
+              if first_line:
+                # Skip comments and placeholder text
+                if (first_line.startswith('#') or 
+                    first_line.startswith('[The command') or
+                    first_line.startswith('No bash') or
+                    'No bash' in first_line or
+                    len(first_line) < 3):
+                  continue
+                
+                # Extract command and key arguments
+                parts = first_line.split()
+                if parts:
+                  cmd = parts[0]
+                  
+                  # Special handling for grep commands
+                  if cmd == 'grep':
+                    # Extract the search term (usually the first quoted argument)
+                    import re
+                    quoted_match = re.search(r"'([^']+)'", first_line)
+                    if quoted_match:
+                      search_term = quoted_match.group(1)
+                      command_summary = f"grep '{search_term}'"
+                    else:
+                      # Fallback to regular parsing
+                      key_args = []
+                      for part in parts[1:]:
+                        if not part.startswith('-') and len(part) > 1:
+                          if len(part) > 20:
+                            part = part[:17] + '...'
+                          key_args.append(part)
+                          if len(key_args) >= 1:  # Limit to 1 arg for grep
+                            break
+                      command_summary = f"{cmd} {' '.join(key_args)}".strip()
+                  else:
+                    # Regular command parsing
+                    key_args = []
+                    for part in parts[1:]:
+                      if not part.startswith('-') and len(part) > 1:
+                        if len(part) > 20:
+                          part = part[:17] + '...'
+                        key_args.append(part)
+                        if len(key_args) >= 2:  # Limit to 2 key args
+                          break
+                    
+                    command_summary = f"{cmd} {' '.join(key_args)}".strip()
+                  
+                  if len(command_summary) > 40:
+                    command_summary = command_summary[:37] + '...'
+                  
+                  # Only add if it's not already in the list
+                  if command_summary not in commands:
+                    commands.append(command_summary)
+            break
+    
+    return commands
+
   def _extract_tool_names(self, content: str) -> list[str]:
     """Extract tool names from content."""
     tool_counts = {}
@@ -52,10 +124,7 @@ class LogsParser:
     
     tool_names = []
     for tool_name, count in tool_counts.items():
-      if count == 1:
-        tool_names.append(tool_name)
-      else:
-        tool_names.append(f"{tool_name} (x{count})")
+      tool_names.append(tool_name)
     
     return tool_names
 
@@ -106,10 +175,24 @@ class LogsParser:
 
     for step_num, step_data in steps_dict.items():
       if step_data['log_parts']:
-        all_content = '\n'.join([part.content for part in step_data['log_parts']])
+        # For the first step, exclude the first chat prompt (instruction prompt)
+        if step_num == '1' and len(step_data['log_parts']) > 1:
+          # Skip the first log part if it's a chat prompt
+          first_part = step_data['log_parts'][0]
+          if first_part.chat_prompt:
+            content_parts = step_data['log_parts'][1:]
+          else:
+            content_parts = step_data['log_parts']
+        else:
+          content_parts = step_data['log_parts']
+        
+        all_content = '\n'.join([part.content for part in content_parts])
         tool_names = self._extract_tool_names(all_content)
+        bash_commands = self._extract_bash_commands(all_content)
         if tool_names:
           step_data['name'] = f"{', '.join(tool_names)}"
+        if bash_commands:
+          step_data['bash_commands'] = bash_commands
 
     steps = []
     for step_num in sorted(steps_dict.keys(),
