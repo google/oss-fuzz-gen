@@ -132,8 +132,8 @@ class TestLocalBuilderPipeline(unittest.TestCase):
     # test_ossfuzz_manager.py approach)
     try:
       if oss_fuzz_manager.checkout_path.exists():
-        oss_fuzz_manager.logger.info(
-            f"Repository already exists at {oss_fuzz_manager.checkout_path}")
+        oss_fuzz_manager.logger.info("Repository already exists at %s",
+                                     oss_fuzz_manager.checkout_path)
       else:
         repo_url = "https://github.com/google/oss-fuzz.git"
         cmd = [
@@ -146,8 +146,8 @@ class TestLocalBuilderPipeline(unittest.TestCase):
                                 check=True,
                                 timeout=120)
         oss_fuzz_manager.logger.info(
-            f"Successfully cloned OSS-Fuzz repository "
-            f"to {oss_fuzz_manager.checkout_path}, result={result}")
+            "Successfully cloned OSS-Fuzz repository to %s, result=%s",
+            oss_fuzz_manager.checkout_path, result)
 
     except subprocess.TimeoutExpired:
       self.skipTest("OSS-Fuzz clone timed out - network may be slow")
