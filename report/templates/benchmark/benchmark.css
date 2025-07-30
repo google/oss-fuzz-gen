@@ -1,9 +1,11 @@
+/* Sortable table base styles */
 .sortable-table {
   border-collapse: separate;
   border-spacing: 0;
   width: 100%;
 }
 
+/* Interactive header styles with transitions */
 .sortable-table th {
   background: #f9fafb;
   padding: 12px 16px;
@@ -62,6 +64,7 @@
   color: #9ca3af;
 }
 
+/* Sort direction indicators */
 .sortable-table th:after {
   content: " \25be";
   color: #ccc;

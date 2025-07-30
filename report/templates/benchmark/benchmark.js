@@ -151,6 +151,10 @@ function collapseAllPrompts() {
 }
 
 // Table sorting functionality
+/**
+ * Initializes table sorting functionality for benchmark tables.
+ * Sets default sort by Coverage column and adds click handlers to headers.
+ */
 function initTableSorting() {
   const table = document.querySelector(".sortable-table");
   if (!table) return;
@@ -189,6 +193,12 @@ function initTableSorting() {
   });
 }
 
+/**
+ * Sorts a table by the specified column index and direction.
+ * @param {HTMLTableElement} table - The table element to sort
+ * @param {number} columnIndex - The index of the column to sort by
+ * @param {string} direction - Sort direction: "asc" or "desc"
+ */
 function sortTable(table, columnIndex, direction) {
   const tbody = table.querySelector("tbody");
   const rows = Array.from(tbody.children);
@@ -243,6 +253,10 @@ function sortTable(table, columnIndex, direction) {
   updateRowIndices(tbody);
 }
 
+/**
+ * Updates the row index numbers in the first column after sorting.
+ * @param {HTMLTableSectionElement} tbody - The table body element
+ */
 function updateRowIndices(tbody) {
   const rows = tbody.children;
   for (let i = 0; i < rows.length; i++) {
