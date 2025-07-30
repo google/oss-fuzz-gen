@@ -19,11 +19,13 @@ This PR implements comprehensive table sorting functionality:
 2. **Interactive Sorting**: All column headers (except the first empty column) are now clickable and allow sorting in both ascending and descending order
 
 3. **Visual Indicators**:
+
    - Hover effects on clickable headers
    - Sort direction arrows (▼ for ascending, ▲ for descending)
    - Proper cursor styling
 
 4. **Smart Sorting Logic**:
+
    - Numeric columns (marked with `data-sort-number`) sort numerically
    - Percentage values are parsed correctly (e.g., "85.6%" → 85.6)
    - Boolean values (True/False) sort correctly
@@ -38,16 +40,19 @@ This PR implements comprehensive table sorting functionality:
 ### Files Modified
 
 #### `report/templates/benchmark/benchmark.html`
+
 - Removed hardcoded `data-sorted="asc"` from Sample column
 - Table structure remains unchanged
 
 #### `report/templates/benchmark/benchmark.js`
+
 - Added `initTableSorting()` function
 - Added `sortTable()` function with smart type detection
 - Added `updateRowIndices()` function
 - Integrated table sorting initialization into DOMContentLoaded event
 
 #### `report/templates/benchmark/benchmark.css`
+
 - Enhanced header hover effects
 - Added transition animations
 - Improved user-select handling with vendor prefixes

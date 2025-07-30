@@ -1,36 +1,39 @@
 function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
+  const div = document.createElement("div");
+  div.textContent = text;
+  return div.innerHTML;
 }
 
 // Function to parse prompt tags, preserving order
 function parsePromptTags(rawPrompt) {
-    const tags = [];
-    // Only match system, instruction, task, and solution tags
-    const tagRegex = /<(system|instruction|task|solution)>([\s\S]*?)<\/\1>/g;
-    let match;
+  const tags = [];
+  // Only match system, instruction, task, and solution tags
+  const tagRegex = /<(system|instruction|task|solution)>([\s\S]*?)<\/\1>/g;
+  let match;
 
-    while ((match = tagRegex.exec(rawPrompt)) !== null) {
-        const [_, tagName, content] = match;
-        const processedContent = tagName === 'solution' ? content : content.trim();
-        tags.push({
-            type: tagName,
-            content: processedContent
-        });
-    }
+  while ((match = tagRegex.exec(rawPrompt)) !== null) {
+    const [_, tagName, content] = match;
+    const processedContent = tagName === "solution" ? content : content.trim();
+    tags.push({
+      type: tagName,
+      content: processedContent,
+    });
+  }
 
-    return tags;
+  return tags;
 }
 
 function createAccordionSection(tagName, contents, index) {
-    const id = `${tagName}-${index}`;
-    const icon = getTagIcon(tagName);
-    const formattedContent = tagName === 'solution'
-        ? `<code class="syntax-highlight language-${getLanguageClass()}">${escapeHtml(contents)}</code>`
-        : formatContent(contents);
+  const id = `${tagName}-${index}`;
+  const icon = getTagIcon(tagName);
+  const formattedContent =
+    tagName === "solution"
+      ? `<code class="syntax-highlight language-${getLanguageClass()}">${escapeHtml(
+          contents
+        )}</code>`
+      : formatContent(contents);
 
-    return `
+  return `
         <div class="border-b last:border-b-0">
             <button class="accordion-header w-full p-4 flex items-center justify-between rounded-t-lg hover:bg-opacity-90 transition-colors duration-200"
                     onclick="toggleAccordion('${id}')"
@@ -39,7 +42,11 @@ function createAccordionSection(tagName, contents, index) {
                 <div class="flex items-center space-x-2">
                     ${icon}
                     <span class="text-lg font-medium">${tagName}</span>
-                    ${index > 0 ? `<span class="text-sm">(${index + 1})</span>` : ''}
+                    ${
+                      index > 0
+                        ? `<span class="text-sm">(${index + 1})</span>`
+                        : ""
+                    }
                 </div>
                 <svg class="w-5 h-5 transform transition-transform duration-200" id="${id}-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
@@ -53,193 +60,223 @@ function createAccordionSection(tagName, contents, index) {
 }
 
 function getTagIcon(tagName) {
-    const icons = {
-        system: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>',
-        instruction: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>',
-        code: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>',
-        task: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>',
-        solution: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>'
-    };
-    return icons[tagName] || '';
+  const icons = {
+    system:
+      '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>',
+    instruction:
+      '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>',
+    code: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>',
+    task: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>',
+    solution:
+      '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>',
+  };
+  return icons[tagName] || "";
 }
 
 function formatContent(content) {
-    let formatted = content;
-    formatted = escapeHtml(formatted);
-    formatted = formatCodeBlocks(formatted);
-    formatted = formatFunctionSignature(formatted);
-    return formatted;
+  let formatted = content;
+  formatted = escapeHtml(formatted);
+  formatted = formatCodeBlocks(formatted);
+  formatted = formatFunctionSignature(formatted);
+  return formatted;
 }
 
 function formatCodeBlocks(content) {
-    return content.replace(/<code>([\s\S]*?)<\/code>/g, (match, code) => {
-        return `<code class="syntax-highlight language-${getLanguageClass()}">${code}</code>`;
-    });
+  return content.replace(/<code>([\s\S]*?)<\/code>/g, (match, code) => {
+    return `<code class="syntax-highlight language-${getLanguageClass()}">${code}</code>`;
+  });
 }
 
 function formatFunctionSignature(content) {
-    return content.replace(/<function signature>([\s\S]*?)<\/function signature>/g, (match, signature) => {
-        return `<div class="bg-blue-50 dark:bg-blue-900 p-3 my-2 rounded-lg"><code class="syntax-highlight language-${getLanguageClass()} font-mono">${signature}</code></div>`;
-    });
+  return content.replace(
+    /<function signature>([\s\S]*?)<\/function signature>/g,
+    (match, signature) => {
+      return `<div class="bg-blue-50 dark:bg-blue-900 p-3 my-2 rounded-lg"><code class="syntax-highlight language-${getLanguageClass()} font-mono">${signature}</code></div>`;
+    }
+  );
 }
 
 function getLanguageClass() {
-    if (typeof window.benchmarkData !== 'undefined' && window.benchmarkData.language) {
-        return window.benchmarkData.language.toLowerCase();
-    }
-    return 'plaintext';
+  if (
+    typeof window.benchmarkData !== "undefined" &&
+    window.benchmarkData.language
+  ) {
+    return window.benchmarkData.language.toLowerCase();
+  }
+  return "plaintext";
 }
 
 function toggleAccordion(id) {
-    const content = document.getElementById(`${id}-content`);
-    const icon = document.getElementById(`${id}-icon`);
-    const header = icon.parentElement;
+  const content = document.getElementById(`${id}-content`);
+  const icon = document.getElementById(`${id}-icon`);
+  const header = icon.parentElement;
 
-    content.classList.toggle('hidden');
-    icon.style.transform = content.classList.contains('hidden') ? 'rotate(0deg)' : 'rotate(180deg)';
-    header.setAttribute('aria-expanded', !content.classList.contains('hidden'));
+  content.classList.toggle("hidden");
+  icon.style.transform = content.classList.contains("hidden")
+    ? "rotate(0deg)"
+    : "rotate(180deg)";
+  header.setAttribute("aria-expanded", !content.classList.contains("hidden"));
 }
 
 function expandAllPrompts() {
-    const allContents = document.querySelectorAll('#structured-prompt .accordion-content');
-    const allIcons = document.querySelectorAll('#structured-prompt [id$="-icon"]');
-    const allHeaders = document.querySelectorAll('#structured-prompt .accordion-header');
+  const allContents = document.querySelectorAll(
+    "#structured-prompt .accordion-content"
+  );
+  const allIcons = document.querySelectorAll(
+    '#structured-prompt [id$="-icon"]'
+  );
+  const allHeaders = document.querySelectorAll(
+    "#structured-prompt .accordion-header"
+  );
 
-    allContents.forEach(content => content.classList.remove('hidden'));
-    allIcons.forEach(icon => icon.style.transform = 'rotate(180deg)');
-    allHeaders.forEach(header => header.setAttribute('aria-expanded', 'true'));
+  allContents.forEach((content) => content.classList.remove("hidden"));
+  allIcons.forEach((icon) => (icon.style.transform = "rotate(180deg)"));
+  allHeaders.forEach((header) => header.setAttribute("aria-expanded", "true"));
 }
 
 function collapseAllPrompts() {
-    const allContents = document.querySelectorAll('#structured-prompt .accordion-content');
-    const allIcons = document.querySelectorAll('#structured-prompt [id$="-icon"]');
-    const allHeaders = document.querySelectorAll('#structured-prompt .accordion-header');
+  const allContents = document.querySelectorAll(
+    "#structured-prompt .accordion-content"
+  );
+  const allIcons = document.querySelectorAll(
+    '#structured-prompt [id$="-icon"]'
+  );
+  const allHeaders = document.querySelectorAll(
+    "#structured-prompt .accordion-header"
+  );
 
-    allContents.forEach(content => content.classList.add('hidden'));
-    allIcons.forEach(icon => icon.style.transform = 'rotate(0deg)');
-    allHeaders.forEach(header => header.setAttribute('aria-expanded', 'false'));
+  allContents.forEach((content) => content.classList.add("hidden"));
+  allIcons.forEach((icon) => (icon.style.transform = "rotate(0deg)"));
+  allHeaders.forEach((header) => header.setAttribute("aria-expanded", "false"));
 }
 
 // Table sorting functionality
 function initTableSorting() {
-    const table = document.querySelector('.sortable-table');
-    if (!table) return;
+  const table = document.querySelector(".sortable-table");
+  if (!table) return;
 
-    const headers = table.querySelectorAll('th');
-    const tbody = table.querySelector('tbody');
-    
-    // Set default sort on Coverage column (descending)
-    const coverageHeader = Array.from(headers).find(th => th.textContent.trim() === 'Coverage');
-    if (coverageHeader && tbody && tbody.children.length > 0) {
-        sortTable(table, Array.from(headers).indexOf(coverageHeader), 'desc');
-        coverageHeader.setAttribute('data-sorted', 'desc');
+  const headers = table.querySelectorAll("th");
+  const tbody = table.querySelector("tbody");
+
+  // Set default sort on Coverage column (descending)
+  const coverageHeader = Array.from(headers).find(
+    (th) => th.textContent.trim() === "Coverage"
+  );
+  if (coverageHeader && tbody && tbody.children.length > 0) {
+    sortTable(table, Array.from(headers).indexOf(coverageHeader), "desc");
+    coverageHeader.setAttribute("data-sorted", "desc");
+  }
+
+  // Add click handlers to sortable headers
+  headers.forEach((header, index) => {
+    if (header.textContent.trim() && index > 0) {
+      // Skip empty first column
+      header.style.cursor = "pointer";
+      header.addEventListener("click", () => {
+        const currentSort = header.getAttribute("data-sorted");
+        const newSort = currentSort === "asc" ? "desc" : "asc";
+
+        // Clear all other sort indicators
+        headers.forEach((h) => h.removeAttribute("data-sorted"));
+
+        // Set new sort direction
+        header.setAttribute("data-sorted", newSort);
+
+        // Perform sort
+        sortTable(table, index, newSort);
+      });
     }
-
-    // Add click handlers to sortable headers
-    headers.forEach((header, index) => {
-        if (header.textContent.trim() && index > 0) { // Skip empty first column
-            header.style.cursor = 'pointer';
-            header.addEventListener('click', () => {
-                const currentSort = header.getAttribute('data-sorted');
-                const newSort = currentSort === 'asc' ? 'desc' : 'asc';
-                
-                // Clear all other sort indicators
-                headers.forEach(h => h.removeAttribute('data-sorted'));
-                
-                // Set new sort direction
-                header.setAttribute('data-sorted', newSort);
-                
-                // Perform sort
-                sortTable(table, index, newSort);
-            });
-        }
-    });
+  });
 }
 
 function sortTable(table, columnIndex, direction) {
-    const tbody = table.querySelector('tbody');
-    const rows = Array.from(tbody.children);
-    
-    const sortedRows = rows.sort((a, b) => {
-        const aCell = a.children[columnIndex];
-        const bCell = b.children[columnIndex];
-        
-        // Get sort value from data attribute or text content
-        let aValue = aCell.getAttribute('data-sort-value') || aCell.textContent.trim();
-        let bValue = bCell.getAttribute('data-sort-value') || bCell.textContent.trim();
-        
-        // Handle numeric columns
-        const isNumeric = aCell.parentElement.parentElement.previousElementSibling
-            .children[columnIndex].hasAttribute('data-sort-number');
-        
-        if (isNumeric) {
-            aValue = parseFloat(aValue) || 0;
-            bValue = parseFloat(bValue) || 0;
-        } else {
-            // Handle percentage values like "85.6%"
-            if (typeof aValue === 'string' && aValue.includes('%')) {
-                aValue = parseFloat(aValue.replace('%', '')) || 0;
-                bValue = parseFloat(bValue.replace('%', '')) || 0;
-            } else {
-                // String comparison (case-insensitive)
-                aValue = aValue.toString().toLowerCase();
-                bValue = bValue.toString().toLowerCase();
-            }
-        }
-        
-        // Handle boolean values (for True/False columns)
-        if (aValue === 'true' || aValue === 'false') {
-            aValue = aValue === 'true';
-            bValue = bValue === 'true';
-        }
-        
-        // Compare values
-        if (aValue < bValue) return direction === 'asc' ? -1 : 1;
-        if (aValue > bValue) return direction === 'asc' ? 1 : -1;
-        return 0;
-    });
-    
-    // Re-append sorted rows
-    sortedRows.forEach(row => tbody.appendChild(row));
-    
-    // Update row index numbers
-    updateRowIndices(tbody);
+  const tbody = table.querySelector("tbody");
+  const rows = Array.from(tbody.children);
+
+  const sortedRows = rows.sort((a, b) => {
+    const aCell = a.children[columnIndex];
+    const bCell = b.children[columnIndex];
+
+    // Get sort value from data attribute or text content
+    let aValue =
+      aCell.getAttribute("data-sort-value") || aCell.textContent.trim();
+    let bValue =
+      bCell.getAttribute("data-sort-value") || bCell.textContent.trim();
+
+    // Handle numeric columns
+    const isNumeric =
+      aCell.parentElement.parentElement.previousElementSibling.children[
+        columnIndex
+      ].hasAttribute("data-sort-number");
+
+    if (isNumeric) {
+      aValue = parseFloat(aValue) || 0;
+      bValue = parseFloat(bValue) || 0;
+    } else {
+      // Handle percentage values like "85.6%"
+      if (typeof aValue === "string" && aValue.includes("%")) {
+        aValue = parseFloat(aValue.replace("%", "")) || 0;
+        bValue = parseFloat(bValue.replace("%", "")) || 0;
+      } else {
+        // String comparison (case-insensitive)
+        aValue = aValue.toString().toLowerCase();
+        bValue = bValue.toString().toLowerCase();
+      }
+    }
+
+    // Handle boolean values (for True/False columns)
+    if (aValue === "true" || aValue === "false") {
+      aValue = aValue === "true";
+      bValue = bValue === "true";
+    }
+
+    // Compare values
+    if (aValue < bValue) return direction === "asc" ? -1 : 1;
+    if (aValue > bValue) return direction === "asc" ? 1 : -1;
+    return 0;
+  });
+
+  // Re-append sorted rows
+  sortedRows.forEach((row) => tbody.appendChild(row));
+
+  // Update row index numbers
+  updateRowIndices(tbody);
 }
 
 function updateRowIndices(tbody) {
-    const rows = tbody.children;
-    for (let i = 0; i < rows.length; i++) {
-        const indexCell = rows[i].querySelector('.table-index');
-        if (indexCell) {
-            indexCell.textContent = i + 1;
-        }
+  const rows = tbody.children;
+  for (let i = 0; i < rows.length; i++) {
+    const indexCell = rows[i].querySelector(".table-index");
+    if (indexCell) {
+      indexCell.textContent = i + 1;
     }
+  }
 }
 
 // Process the prompt when the document loads
-document.addEventListener('DOMContentLoaded', () => {
-    // Initialize table sorting
-    initTableSorting();
-    
-    const rawPrompt = document.querySelector('pre').textContent;
-    const tags = parsePromptTags(rawPrompt);
+document.addEventListener("DOMContentLoaded", () => {
+  // Initialize table sorting
+  initTableSorting();
 
-    const structuredPromptDiv = document.getElementById('structured-prompt');
-    let structuredHtml = '';
+  const rawPrompt = document.querySelector("pre").textContent;
+  const tags = parsePromptTags(rawPrompt);
 
-    tags.forEach((tag, index) => {
-        structuredHtml += createAccordionSection(tag.type, tag.content, index);
-    });
+  const structuredPromptDiv = document.getElementById("structured-prompt");
+  let structuredHtml = "";
 
-    structuredPromptDiv.innerHTML = structuredHtml;
+  tags.forEach((tag, index) => {
+    structuredHtml += createAccordionSection(tag.type, tag.content, index);
+  });
 
-    const expandAllBtn = document.getElementById('prompts-expand-all');
-    const collapseAllBtn = document.getElementById('prompts-collapse-all');
+  structuredPromptDiv.innerHTML = structuredHtml;
 
-    if (expandAllBtn) {
-        expandAllBtn.addEventListener('click', expandAllPrompts);
-    }
-    if (collapseAllBtn) {
-        collapseAllBtn.addEventListener('click', collapseAllPrompts);
-    }
+  const expandAllBtn = document.getElementById("prompts-expand-all");
+  const collapseAllBtn = document.getElementById("prompts-collapse-all");
+
+  if (expandAllBtn) {
+    expandAllBtn.addEventListener("click", expandAllPrompts);
+  }
+  if (collapseAllBtn) {
+    collapseAllBtn.addEventListener("click", collapseAllPrompts);
+  }
 });
