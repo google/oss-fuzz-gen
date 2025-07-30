@@ -120,8 +120,107 @@ function collapseAllPrompts() {
     allHeaders.forEach(header => header.setAttribute('aria-expanded', 'false'));
 }
 
+// Table sorting functionality
+function initTableSorting() {
+    const table = document.querySelector('.sortable-table');
+    if (!table) return;
+
+    const headers = table.querySelectorAll('th');
+    const tbody = table.querySelector('tbody');
+    
+    // Set default sort on Coverage column (descending)
+    const coverageHeader = Array.from(headers).find(th => th.textContent.trim() === 'Coverage');
+    if (coverageHeader && tbody && tbody.children.length > 0) {
+        sortTable(table, Array.from(headers).indexOf(coverageHeader), 'desc');
+        coverageHeader.setAttribute('data-sorted', 'desc');
+    }
+
+    // Add click handlers to sortable headers
+    headers.forEach((header, index) => {
+        if (header.textContent.trim() && index > 0) { // Skip empty first column
+            header.style.cursor = 'pointer';
+            header.addEventListener('click', () => {
+                const currentSort = header.getAttribute('data-sorted');
+                const newSort = currentSort === 'asc' ? 'desc' : 'asc';
+                
+                // Clear all other sort indicators
+                headers.forEach(h => h.removeAttribute('data-sorted'));
+                
+                // Set new sort direction
+                header.setAttribute('data-sorted', newSort);
+                
+                // Perform sort
+                sortTable(table, index, newSort);
+            });
+        }
+    });
+}
+
+function sortTable(table, columnIndex, direction) {
+    const tbody = table.querySelector('tbody');
+    const rows = Array.from(tbody.children);
+    
+    const sortedRows = rows.sort((a, b) => {
+        const aCell = a.children[columnIndex];
+        const bCell = b.children[columnIndex];
+        
+        // Get sort value from data attribute or text content
+        let aValue = aCell.getAttribute('data-sort-value') || aCell.textContent.trim();
+        let bValue = bCell.getAttribute('data-sort-value') || bCell.textContent.trim();
+        
+        // Handle numeric columns
+        const isNumeric = aCell.parentElement.parentElement.previousElementSibling
+            .children[columnIndex].hasAttribute('data-sort-number');
+        
+        if (isNumeric) {
+            aValue = parseFloat(aValue) || 0;
+            bValue = parseFloat(bValue) || 0;
+        } else {
+            // Handle percentage values like "85.6%"
+            if (typeof aValue === 'string' && aValue.includes('%')) {
+                aValue = parseFloat(aValue.replace('%', '')) || 0;
+                bValue = parseFloat(bValue.replace('%', '')) || 0;
+            } else {
+                // String comparison (case-insensitive)
+                aValue = aValue.toString().toLowerCase();
+                bValue = bValue.toString().toLowerCase();
+            }
+        }
+        
+        // Handle boolean values (for True/False columns)
+        if (aValue === 'true' || aValue === 'false') {
+            aValue = aValue === 'true';
+            bValue = bValue === 'true';
+        }
+        
+        // Compare values
+        if (aValue < bValue) return direction === 'asc' ? -1 : 1;
+        if (aValue > bValue) return direction === 'asc' ? 1 : -1;
+        return 0;
+    });
+    
+    // Re-append sorted rows
+    sortedRows.forEach(row => tbody.appendChild(row));
+    
+    // Update row index numbers
+    updateRowIndices(tbody);
+}
+
+function updateRowIndices(tbody) {
+    const rows = tbody.children;
+    for (let i = 0; i < rows.length; i++) {
+        const indexCell = rows[i].querySelector('.table-index');
+        if (indexCell) {
+            indexCell.textContent = i + 1;
+        }
+    }
+}
+
 // Process the prompt when the document loads
 document.addEventListener('DOMContentLoaded', () => {
+    // Initialize table sorting
+    initTableSorting();
+    
     const rawPrompt = document.querySelector('pre').textContent;
     const tags = parsePromptTags(rawPrompt);
 

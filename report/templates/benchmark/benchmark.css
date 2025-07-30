@@ -11,11 +11,36 @@
     font-weight: 600;
     border-bottom: 2px solid #e5e7eb;
     cursor: pointer;
+    transition: background-color 0.2s ease;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.sortable-table th:hover {
+    background: #f3f4f6;
+}
+
+.sortable-table th:first-child {
+    cursor: default;
+}
+
+.sortable-table th:first-child:hover {
+    background: #f9fafb;
 }
 
 .dark-mode .sortable-table th {
     background: #333333;
     border-bottom-color: #3d3d3d;
+}
+
+.dark-mode .sortable-table th:hover {
+    background: #3a3a3a;
+}
+
+.dark-mode .sortable-table th:first-child:hover {
+    background: #333333;
 }
 
 .sortable-table td {
