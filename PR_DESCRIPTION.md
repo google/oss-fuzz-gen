@@ -76,6 +76,7 @@ The implementation has been thoroughly tested:
 4. **Performance**: Efficient DOM manipulation with minimal reflows
 
 #### Test Scenarios Covered:
+
 - ✅ Default sorting by Coverage (highest first)
 - ✅ Click sorting by all columns (ascending/descending)
 - ✅ Mixed data types (numbers, percentages, booleans, strings)
