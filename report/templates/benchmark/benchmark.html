@@ -11,11 +11,7 @@ extends 'base.html' %} {% block content %} {% if benchmark_css_content %}
 </style>
 {% endif %} {% if benchmark_js_content %}
 <script>
-  {
-    {
-      benchmark_js_content | safe;
-    }
-  }
+  {{ benchmark_js_content | safe }}
 </script>
 {% endif %}
 
