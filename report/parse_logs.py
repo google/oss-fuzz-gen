@@ -15,6 +15,7 @@
 information such as the crash details, crash symptoms,
 stack traces, etc. to be rendered in the report."""
 
+import html
 import re
 
 from report.common import LogPart
@@ -39,33 +40,27 @@ class LogsParser:
     """Extract and parse bash commands from content."""
     commands = []
     lines = content.split('\n')
-    
+
     for i, line in enumerate(lines):
       line = line.strip()
       if line == '<bash>':
-        # Look for the next closing tag
         for j in range(i + 1, len(lines)):
           if lines[j].strip() == '</bash>':
-            # Extract bash content between tags
-            bash_content = '\n'.join(lines[i+1:j]).strip()
+            bash_content = '\n'.join(lines[i + 1:j]).strip()
             if bash_content:
-              # Parse the first line as the main command
               first_line = bash_content.split('\n')[0].strip()
               if first_line:
-                # Skip comments and placeholder text
-                if (first_line.startswith('#') or 
+                # skip comments and placeholder text
+                if (first_line.startswith('#') or
                     first_line.startswith('[The command') or
                     first_line.startswith('No bash') or
-                    'No bash' in first_line or
-                    len(first_line) < 3):
+                    'No bash' in first_line or len(first_line) < 3):
                   continue
-                
-                # Extract command and key arguments
+
                 parts = first_line.split()
                 if parts:
                   cmd = parts[0]
-                  
-                  # Special handling for grep commands
+
                   if cmd == 'grep':
                     # Extract the search term (usually the first quoted argument)
                     import re
@@ -74,7 +69,6 @@ class LogsParser:
                       search_term = quoted_match.group(1)
                       command_summary = f"grep '{search_term}'"
                     else:
-                      # Fallback to regular parsing
                       key_args = []
                       for part in parts[1:]:
                         if not part.startswith('-') and len(part) > 1:
@@ -85,7 +79,6 @@ class LogsParser:
                             break
                       command_summary = f"{cmd} {' '.join(key_args)}".strip()
                   else:
-                    # Regular command parsing
                     key_args = []
                     for part in parts[1:]:
                       if not part.startswith('-') and len(part) > 1:
@@ -94,42 +87,40 @@ class LogsParser:
                         key_args.append(part)
                         if len(key_args) >= 2:  # Limit to 2 key args
                           break
-                    
+
                     command_summary = f"{cmd} {' '.join(key_args)}".strip()
-                  
+
                   if len(command_summary) > 40:
                     command_summary = command_summary[:37] + '...'
-                  
-                  # Only add if it's not already in the list
+
                   if command_summary not in commands:
                     commands.append(command_summary)
             break
-    
+
     return commands
 
   def _extract_tool_names(self, content: str) -> list[str]:
     """Extract tool names from content."""
     tool_counts = {}
     lines = content.split('\n')
-    
+
     for i, line in enumerate(lines):
       line = line.strip()
-      if (line in ['<bash>', '<reason>', '<conclusion>', '<build script>', '<fuzz target>'] and 
-          not line.startswith('</')):
+      if (line in ['<bash>', '<conclusion>'] and not line.startswith('</')):
         tool_name = line[1:-1].title()
         tool_counts[tool_name] = tool_counts.get(tool_name, 0) + 1
       elif line == '<stderr>':
         if i + 1 < len(lines) and lines[i + 1].strip():
           tool_counts['Stderr'] = tool_counts.get('Stderr', 0) + 1
-    
+
     tool_names = []
     for tool_name, count in tool_counts.items():
       tool_names.append(tool_name)
-    
+
     return tool_names
 
   def _parse_steps_from_logs(self, agent_logs: list[LogPart]) -> list[dict]:
-    """Parse steps from agent logs, grouping by step number."""
+    """Parse steps from agent logs, grouping by chat prompt/response pairs."""
     step_pattern = re.compile(r"Step #(\d+) - \"(.+?)\":")
     simple_step_pattern = re.compile(r"Step #(\d+)")
 
@@ -173,33 +164,118 @@ class LogsParser:
             'log_parts': [log_part]
         }
 
-    for step_num, step_data in steps_dict.items():
-      if step_data['log_parts']:
-        # For the first step, exclude the first chat prompt (instruction prompt)
-        if step_num == '1' and len(step_data['log_parts']) > 1:
-          # Skip the first log part if it's a chat prompt
-          first_part = step_data['log_parts'][0]
-          if first_part.chat_prompt:
-            content_parts = step_data['log_parts'][1:]
-          else:
-            content_parts = step_data['log_parts']
-        else:
-          content_parts = step_data['log_parts']
-        
-        all_content = '\n'.join([part.content for part in content_parts])
-        tool_names = self._extract_tool_names(all_content)
-        bash_commands = self._extract_bash_commands(all_content)
-        if tool_names:
-          step_data['name'] = f"{', '.join(tool_names)}"
-        if bash_commands:
-          step_data['bash_commands'] = bash_commands
+    return self._parse_steps_by_chat_pairs(agent_logs)
 
+  def _parse_steps_by_chat_pairs(self, agent_logs: list[LogPart]) -> list[dict]:
     steps = []
-    for step_num in sorted(steps_dict.keys(),
-                           key=lambda x: int(x) if x.isdigit() else 999):
-      steps.append(steps_dict[step_num])
+
+    first_prompt_idx = -1
+    for i, log_part in enumerate(agent_logs):
+      if log_part.chat_prompt:
+        first_prompt_idx = i
+        break
+
+    if first_prompt_idx == -1:
+      return []
+
+    steps.append({
+        'number': '0 - System Instructions',
+        'type': 'System Instructions',
+        'log_parts': [agent_logs[first_prompt_idx]]
+    })
+
+    # Process logs after the system prompt to group into steps.
+    logs_to_process = agent_logs[first_prompt_idx + 1:]
+    step_counter = 1
+    current_step_parts = []
+
+    for log_part in logs_to_process:
+      if "agent-step" in log_part.content:
+        continue
+
+      # A chat_response marks the beginning of a new step.
+      if log_part.chat_response:
+        if current_step_parts:
+          step_data = self._create_step_data(step_counter, current_step_parts)
+          steps.append(step_data)
+          step_counter += 1
+        current_step_parts = [log_part]
+      else:
+        current_step_parts.append(log_part)
+
+    # Append the last step.
+    if current_step_parts:
+      step_data = self._create_step_data(step_counter, current_step_parts)
+      steps.append(step_data)
 
     return steps
+
+  def _syntax_highlight_content(self, content: str) -> str:
+    """Syntax highlights the content."""
+
+    content = html.escape(content)
+
+    # Simple pre-formatted blocks
+    content = re.sub(r'<conclusion>(.*?)</conclusion>',
+                     r'<pre class="conclusion-block">\1</pre>',
+                     content,
+                     flags=re.DOTALL)
+    content = re.sub(r'<reason>(.*?)</reason>',
+                     r'<pre class="reason-block">\1</pre>',
+                     content,
+                     flags=re.DOTALL)
+
+    # Code blocks with language specification
+    content = re.sub(r'<bash>(.*?)</bash>',
+                     r'<pre><code class="language-bash">\1</code></pre>',
+                     content,
+                     flags=re.DOTALL)
+    content = re.sub(r'<build_script>(.*?)</build_script>',
+                     r'<pre><code class="language-c++">\1</code></pre>',
+                     content,
+                     flags=re.DOTALL)
+    content = re.sub(r'<fuzz_target>(.*?)</fuzz_target>',
+                     r'<pre><code class="language-c++">\1</code></pre>',
+                     content,
+                     flags=re.DOTALL)
+
+    # Standard output/error with return code
+    content = re.sub(
+        r'<stdout>(.*?)</stdout>',
+        r'<h4>Standard Output</h4><pre><code class="language-bash">\1</code></pre>',
+        content,
+        flags=re.DOTALL)
+    content = re.sub(
+        r'<stderr>(.*?)</stderr>',
+        r'<h4>Standard Error</h4><pre><code class="language-bash">\1</code></pre>',
+        content,
+        flags=re.DOTALL)
+    content = re.sub(r'<return_code>(.*?)</return_code>',
+                     r'<h4>Return Code</h4><pre><code>\1</code></pre>',
+                     content,
+                     flags=re.DOTALL)
+
+    return content
+
+  def _create_step_data(self, step_number: int,
+                        log_parts: list[LogPart]) -> dict:
+    """Create step data from log parts."""
+    step_data = {
+        'number': str(step_number),
+        'type': 'Step',
+        'log_parts': log_parts
+    }
+
+    all_content = '\n'.join([part.content for part in log_parts])
+    tool_names = self._extract_tool_names(all_content)
+    bash_commands = self._extract_bash_commands(all_content)
+
+    if tool_names:
+      step_data['name'] = f"{', '.join(tool_names)}"
+    if bash_commands:
+      step_data['bash_commands'] = bash_commands
+
+    return step_data
 
   def get_agent_sections(self) -> dict[str, list[LogPart]]:
     """Get the agent sections from the logs."""
@@ -208,6 +284,20 @@ class LogsParser:
     agent_sections = {}
     current_agent = None
     agent_counters = {}
+
+    # NUMBER OF BASH TOOLS REQUESTED BY LLMS
+    # system prompt is itself
+    # subsequent ones will be LLM request tool -> tool execution
+
+    # NO REASON IF THERE'S BASH
+    # JUST NEED CONCLUSION
+    # SO INSTEAD STEP 4 - BASH REASON CONCLUSION FUZZ TARGET BUILDSCRIPT -> STEP 4 - BASH, CONCLUSION
+
+    # bash syntax highlight - shell
+    # build script - c or c++
+    # stdout/stderror - console/shell/bash - BASH
+
+    # moving to html
 
     for log_part in self._logs:
       lines = log_part.content.split('\n')

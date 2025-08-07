@@ -746,8 +746,8 @@ function renderRegexError(error) {
 }
 
 document.addEventListener('DOMContentLoaded', (event) => {
-    document.querySelectorAll('pre code.syntax-highlight').forEach((block) => {
-        hljs.highlightElement(block);
+    document.querySelectorAll('.prettify-benchmark-name').forEach(el => {
+        el.textContent = prettifyBenchmarkName(el.textContent);
     });
 
     const searchInput = document.getElementById('searchInput');
@@ -798,10 +798,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
                 renderSearchResults(results, currentPage);
             }
         }, 300);
-    });
-
-    document.querySelectorAll('.prettify-benchmark-name').forEach(el => {
-        el.textContent = prettifyBenchmarkName(el.textContent);
     });
 
     const tocTree = document.getElementById('toc-tree');

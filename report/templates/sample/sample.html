@@ -17,7 +17,7 @@ limitations under the License.
 
 {% block content %}
 
-{% if sample_css_content %}
+{% if sample_css_content and sample_css_content.strip() and '{' in sample_css_content %}
 <style type="text/css">
 {{ sample_css_content | safe }}
 </style>
@@ -305,13 +305,15 @@ limitations under the License.
                                   </svg>
                                 </button>
                                 <div x-show="stepOpen" class="px-3 pb-3">
-                                  <pre class="{% if step.chat_prompt %}chat_prompt {% elif step.chat_response %}chat_response {% endif %} p-3 rounded-md  whitespace-pre-wrap break-words">{{ step.content }}</pre>
+                                  {% for log_part in step.log_parts %}
+                                    <pre class="log-part-content {% if log_part.chat_prompt %}chat_prompt{% elif log_part.chat_response %}chat_response{% endif %} p-4 rounded-md mb-4 whitespace-pre-wrap break-words">{{ log_part.content|syntax_highlight|safe }}</pre>
+                                  {% endfor %}
                                 </div>
                               </div>
                             {% endfor %}
                           {% else %}
                             {% for log_part in agent_data.logs %}
-                              <pre class="{% if log_part.chat_prompt %}chat_prompt {% elif log_part.chat_response %}chat_response {% endif %} p-4 rounded-md mb-4 whitespace-pre-wrap break-words">{{ log_part.content }}</pre>
+                              <pre class="{% if log_part.chat_prompt %}chat_prompt {% elif log_part.chat_response %}chat_response {% endif %} p-4 rounded-md mb-4 whitespace-pre-wrap break-words">{{ log_part.content|syntax_highlight|safe }}</pre>
                             {% endfor %}
                           {% endif %}
                         </div>
@@ -348,7 +350,7 @@ limitations under the License.
                                 {% set step = agent_data.steps[0] %}
                                 {% if step.number and step.name %}
                                   <div class="p-3 border-b mt-3">
-                                    <div class="font-medium mb-2">Step {{ step.number }} - 
+                                    <div class="font-medium mb-2">Step {{ step.number }} -
                                       {% if 'Stderr' in step.name %}
                                         {{ step.name.replace('Stderr', '<span class="text-red-600">Stderr</span>') | safe }}
                                       {% else %}
@@ -365,19 +367,19 @@ limitations under the License.
                                     {% endif %}
                                     {% if step.log_parts %}
                                       {% for log_part in step.log_parts %}
-                                        <pre class="{% if log_part.chat_prompt %}chat_prompt {% elif log_part.chat_response %}chat_response {% endif %} p-3 rounded-md mb-2 whitespace-pre-wrap break-words">{{ log_part.content }}</pre>
+                                        <pre class="{% if log_part.chat_prompt %}chat_prompt {% elif log_part.chat_response %}chat_response {% endif %} p-3 rounded-md mb-2 whitespace-pre-wrap break-words">{{ log_part.content|syntax_highlight|safe }}</pre>
                                       {% endfor %}
                                     {% else %}
-                                      <pre class="p-3 rounded-md whitespace-pre-wrap break-words">{{ step.content }}</pre>
+                                      <pre class="p-3 rounded-md whitespace-pre-wrap break-words">{{ step.content|syntax_highlight|safe }}</pre>
                                     {% endif %}
                                   </div>
                                 {% else %}
                                   {% if step.log_parts %}
                                     {% for log_part in step.log_parts %}
-                                      <pre class="{% if log_part.chat_prompt %}chat_prompt {% elif log_part.chat_response %}chat_response {% endif %} p-4 rounded-md mb-4 whitespace-pre-wrap break-words">{{ log_part.content }}</pre>
+                                      <pre class="{% if log_part.chat_prompt %}chat_prompt {% elif log_part.chat_response %}chat_response {% endif %} p-4 rounded-md mb-4 whitespace-pre-wrap break-words">{{ log_part.content|syntax_highlight|safe }}</pre>
                                     {% endfor %}
                                   {% else %}
-                                    <pre class="p-4 rounded-md mb-4 whitespace-pre-wrap break-words">{{ step.content }}</pre>
+                                    <pre class="p-4 rounded-md mb-4 whitespace-pre-wrap break-words">{{ step.content|syntax_highlight|safe }}</pre>
                                   {% endif %}
                                 {% endif %}
                               {% else %}
@@ -389,7 +391,7 @@ limitations under the License.
                                         <span class="font-medium">
                                           {% if step.number %}
                                             {% if step.name %}
-                                              Step {{ step.number }} - 
+                                              Step {{ step.number }} -
                                               {% if 'Stderr' in step.name %}
                                                 {{ step.name.replace('Stderr', '<span class="text-red-600">Stderr</span>') | safe }}
                                               {% else %}
@@ -423,10 +425,10 @@ limitations under the License.
                                     <div x-show="stepOpen" class="ml-5 px-3 pb-3 mt-3">
                                       {% if step.log_parts %}
                                         {% for log_part in step.log_parts %}
-                                          <pre class="{% if log_part.chat_prompt %}chat_prompt {% elif log_part.chat_response %}chat_response {% endif %} p-3 rounded-md mb-2 whitespace-pre-wrap break-words">{{ log_part.content }}</pre>
+                                          <pre class="{% if log_part.chat_prompt %}chat_prompt {% elif log_part.chat_response %}chat_response {% endif %} p-3 rounded-md mb-2 whitespace-pre-wrap break-words">{{ log_part.content|syntax_highlight|safe }}</pre>
                                         {% endfor %}
                                       {% else %}
-                                        <pre class="p-3 rounded-md whitespace-pre-wrap break-words">{{ step.content }}</pre>
+                                        <pre class="p-3 rounded-md whitespace-pre-wrap break-words">{{ step.content|syntax_highlight|safe }}</pre>
                                       {% endif %}
                                     </div>
                                   </div>
@@ -434,7 +436,7 @@ limitations under the License.
                               {% endif %}
                             {% else %}
                               {% for log_part in agent_data.logs %}
-                                <pre class="{% if log_part.chat_prompt %}chat_prompt {% elif log_part.chat_response %}chat_response {% endif %} p-4 rounded-md mb-4 whitespace-pre-wrap break-words">{{ log_part.content }}</pre>
+                                <pre class="{% if log_part.chat_prompt %}chat_prompt {% elif log_part.chat_response %}chat_response {% endif %} p-4 rounded-md mb-4 whitespace-pre-wrap break-words">{{ log_part.content|syntax_highlight|safe }}</pre>
                               {% endfor %}
                             {% endif %}
                           </div>
@@ -460,7 +462,7 @@ limitations under the License.
         <div x-show="logsOpen"
              class="p-4 border-t">
               {% for part in logs %}
-                <pre id="logs" class="{% if part.chat_prompt %}chat_prompt bg-gray-50{% elif part.chat_response %}chat_response bg-gray-100{% endif %} p-4 rounded-md mb-4 overflow-x-auto">{{ part.content }}</pre>
+                <pre id="logs" class="{% if part.chat_prompt %}chat_prompt bg-gray-50{% elif part.chat_response %}chat_response bg-gray-100{% endif %} p-4 rounded-md mb-4 overflow-x-auto">{{ part.content|syntax_highlight|safe }}</pre>
               {% endfor %}
         </div>
       </div>
@@ -514,6 +516,7 @@ limitations under the License.
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    hljs.highlightAll();
     // Agent sections expand/collapse buttons
     const agentSectionsExpandAllButton = document.getElementById('agent-sections-expand-all');
     if (agentSectionsExpandAllButton) {
