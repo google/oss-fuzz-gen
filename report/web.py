@@ -107,6 +107,11 @@ class JinjaEnv:
         'remove_trailing_empty_lines'] = self._remove_trailing_empty_lines
     self._env.filters['splitlines'] = self._splitlines
 
+    # Add a new filter for syntax highlighting
+    logs_parser = LogsParser([])
+    self._env.filters[
+        'syntax_highlight'] = logs_parser._syntax_highlight_content
+
     if template_globals:
       for key, val in template_globals.items():
         self._env.globals[key] = val
@@ -371,6 +376,7 @@ class GenerateReport:
                                     agent_sections=agent_sections,
                                     agent_cycles=agent_cycles,
                                     logs=logs,
+                                    logs_parser=logs_parser,
                                     triage=triage,
                                     targets=sample_targets,
                                     sample_css_content=sample_css_content,
