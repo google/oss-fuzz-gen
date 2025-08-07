@@ -1,0 +1,9 @@
+"language": "c++"
+"project": "libspng"
+"target_name": "spng_write_fuzzer"
+"target_path": "/src/libspng/tests/spng_write_fuzzer.c"
+"test_files":
+- "test_file_path": "/src/libspng/examples/example.c"
+- "test_file_path": "/src/libspng/tests/test.cpp"
+- "test_file_path": "/src/libspng/tests/testsuite.c"
+- "test_file_path": "/src/libspng/tests/target_clones.c"
