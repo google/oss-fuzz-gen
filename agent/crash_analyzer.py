@@ -134,7 +134,8 @@ class CrashAnalyzer(BaseAgent):
     # If there's a conclusion tag and a tool usage tag, then there's an error
     prompt = prompt_builder.CrashAnalyzerTemplateBuilder(self.llm,
                                                          None).build([])
-    if self._parse_tag(response, 'gdb output') or self._parse_tag(response, 'gdb command'):
+    if self._parse_tag(response, 'gdb output') or self._parse_tag(
+        response, 'gdb command'):
       extra_note = 'NOTE: It seems you have hallucinated interaction with the GDB tool. ' \
       'You MUST restart the GDB interaction again and erase the previous interaction from your memory.'
       self.gdb_tool_used = False
