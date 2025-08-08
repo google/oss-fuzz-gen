@@ -36,7 +36,8 @@ from google.api_core.exceptions import (GoogleAPICallError, InternalServerError,
                                         InvalidArgument, ResourceExhausted,
                                         ServiceUnavailable, TooManyRequests)
 from vertexai import generative_models
-from vertexai.preview.generative_models import ChatSession, GenerativeModel
+from vertexai.preview.generative_models import (ChatSession, GenerationResponse,
+                                                GenerativeModel)
 from vertexai.preview.language_models import CodeGenerationModel
 
 from llm_toolkit import prompts
@@ -758,9 +759,10 @@ class VertexAIModel(GoogleModel):
     parameters_list = self._prepare_parameters()
 
     for i in range(self.num_samples):
+      # Handle ValueError thrown when LLM maxes out output token when generating response
       response = self.with_retry_on_error(
           lambda i=i: self.do_generate(model, prompt.get(), parameters_list[i]),
-          [GoogleAPICallError]) or ''
+          [GoogleAPICallError, ValueError]) or ''
       self._save_output(i, response, response_dir)
 
   def ask_llm(self, prompt: prompts.Prompt) -> str:
@@ -770,9 +772,10 @@ class VertexAIModel(GoogleModel):
     model = self.get_model()
     # TODO: Allow each trial to customize its parameters_list.
     parameter = self._prepare_parameters()[0]
+    # Handle ValueError thrown when LLM maxes out output token when generating response
     response = self.with_retry_on_error(
         lambda: self.do_generate(model, prompt.get(), parameter),
-        [GoogleAPICallError]) or ''
+        [GoogleAPICallError, ValueError]) or ''
     return response
 
 
@@ -806,9 +809,12 @@ class GeminiModel(VertexAIModel):
   def do_generate(self, model: Any, prompt: str, config: dict[str, Any]) -> Any:
     # Loosen inapplicable restrictions just in case.
     logger.info('%s generating response with config: %s', self.name, config)
-    return model.generate_content(prompt,
-                                  generation_config=config,
-                                  safety_settings=self.safety_config).text
+    response: GenerationResponse = model.generate_content(
+        prompt, generation_config=config, safety_settings=self.safety_config)
+    # Handle case where LLM response has multiple content.parts
+    if len(response.candidates) > 1:
+      return '\n'.join(candidate.text for candidate in response.candidates)
+    return response.text
 
 
 class VertexAICodeBisonModel(VertexAIModel):
@@ -891,7 +897,7 @@ class GeminiV2D5Flash(GeminiModel):
   _max_output_tokens = 65535
   context_window = 1048576
   name = 'vertex_ai_gemini-2-5-flash'
-  _vertex_ai_model = 'gemini-2.5-flash-preview-04-17'
+  _vertex_ai_model = 'gemini-2.5-flash'
 
 
 class GeminiV2D5Pro(GeminiModel):
@@ -1027,7 +1033,7 @@ class GeminiV2D5FlashChat(GeminiV1D5Chat):
   _max_output_tokens = 65535
   context_window = 1048576
   name = 'vertex_ai_gemini-2-5-flash-chat'
-  _vertex_ai_model = 'gemini-2.5-flash-preview-04-17'
+  _vertex_ai_model = 'gemini-2.5-flash'
 
 
 class GeminiV2D5ProChat(GeminiV1D5Chat):

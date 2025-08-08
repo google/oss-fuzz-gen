@@ -18,6 +18,8 @@ Below is relevant project function code:
 
 To help analyze the root cause behind the runtime crash, you can leverage GDB tool and BASH tool to obtain information.
 
-Instructions
-1. You MUST use the GDB tool to analyze the crash before making a conclusion.
-2. DO NOT hallucinate the output of the provided tools. You must use the tools and use only results provided by the tools.
+Instructions:
+1. ALWAYS use the provided GDB or BASH tools to locate the program lines mentioned in the crash report.
+2. DO NOT TRY TO ANALYZE OR COUNT THE LINES OF CODE IN THE PROGRAM YOURSELF.
+3. You MUST use the GDB tool to analyze the crash before making a conclusion.
+4. DO NOT hallucinate the output of the provided tools. You must use the tools and use only results provided by the tools.
