@@ -73,10 +73,15 @@ class ContextAnalyzer(base_agent.ADKBaseAgent):
 
     last_result = result_history[-1]
 
-    if not isinstance(
-        last_result, resultslib.AnalysisResult) or not last_result.crash_result:
-      logger.error(f'Expected last result to be AnalysisResult, got %s.',
+    # Validate that the last result is an AnalysisResult and has a valid crash_result
+    if not isinstance(last_result, resultslib.AnalysisResult):
+      logger.error('Expected last result to be AnalysisResult, got %s.',
                    type(last_result),
+                   trial=self.trial)
+      return last_result
+
+    if not last_result.crash_result:
+      logger.error('Missing crash_result in the AnalysisResult.',
                    trial=self.trial)
       return last_result
 
@@ -99,6 +104,10 @@ class ContextAnalyzer(base_agent.ADKBaseAgent):
                                      trial=result_history[-1].trial)
       context_result = resultslib.CrashContextResult.from_dict(final_response)
       if context_result:
+        logger.info(
+            'Is context analyzer result consistent: %s',
+            str(context_result.feasible == last_result.crash_result.true_bug),
+            trial=self.trial)
         break
       logger.error('Failed to parse LLM response into CrashContextResult.',
                    trial=self.trial)
@@ -239,7 +248,7 @@ class ContextAnalyzer(base_agent.ADKBaseAgent):
     return response
 
   def report_final_result(self, feasible: bool, analysis: str,
-                          recommendations: str,
+                          source_code_evidence: str, recommendations: str,
                           tool_context: ToolContext) -> dict:
     """
     Provide final result, including the crash feasibility,
@@ -247,8 +256,10 @@ class ContextAnalyzer(base_agent.ADKBaseAgent):
 
     Args:
         feasible (bool): True if the crash is feasible, False otherwise.
-        analysis (str): Detailed analysis and source code evidence showing
+        analysis (str): Detailed analysis showing
                         why the crash is or is not feasible.
+        source_code_evidence (str): Source code evidence supporting the analysis.
+                                    This MUST show the constraints on input variables and why they make the crash feasible or not feasible.
         recommendations (str): Recommendations for modifying the fuzz target to
                         prevent the crash. If the crash is feasible,
                         this should be empty.
@@ -256,14 +267,11 @@ class ContextAnalyzer(base_agent.ADKBaseAgent):
     Returns:
         This function will not return anything to the LLM.
     """
-    response = f"""
-      <feasible>\n{feasible}\n</feasible>
-      <analysis>\n{analysis}\n</analysis>
-      <recommendations>\n{recommendations}\n</recommendations>
-    """
-    self.log_llm_response(response)
     crash_context_result = resultslib.CrashContextResult(
-        feasible=feasible, analysis=analysis, recommendations=recommendations)
+        feasible=feasible,
+        analysis=analysis,
+        source_code_evidence=source_code_evidence,
+        recommendations=recommendations)
 
     # We have received final result. Instruct the agent to terminate execution.
     # tool_context._invocation_context.end_invocation = True

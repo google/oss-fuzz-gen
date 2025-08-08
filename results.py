@@ -310,20 +310,24 @@ class CrashContextResult():
   """Analysis result of the context of the crashing function."""
   feasible: bool
   analysis: str
+  source_code_evidence: str
   recommendations: str
 
   def __init__(self,
                feasible: bool = False,
                analysis: str = '',
+               source_code_evidence: str = '',
                recommendations: str = ''):
     self.feasible = feasible
     self.analysis = analysis
+    self.source_code_evidence = source_code_evidence
     self.recommendations = recommendations
 
   def to_dict(self) -> dict:
     return {
         'feasible': self.feasible,
         'analysis': self.analysis,
+        'source_code_evidence': self.source_code_evidence,
         'recommendations': self.recommendations,
     }
 
@@ -337,6 +341,8 @@ class CrashContextResult():
 
     return CrashContextResult(feasible=data.get('feasible', False),
                               analysis=data.get('analysis', ''),
+                              source_code_evidence=data.get(
+                                  'source_code_evidence', ''),
                               recommendations=data.get('recommendations', ''))
 
 
@@ -767,7 +773,44 @@ class BenchmarkResult:
 
 class FunctionAnalysisResult:
   """The result of the function analyzer."""
+  description: str
+  function_signature: str
+  project_name: str
+  requirements: str
   function_analysis_path: str
 
-  def __init__(self, function_analysis_path: str):
+  def __init__(self,
+               description: str,
+               requirements: str,
+               function_signature: str,
+               project_name: str,
+               function_analysis_path: str = ''):
+    self.description = description
+    self.requirements = requirements
+    self.function_signature = function_signature
+    self.project_name = project_name
     self.function_analysis_path = function_analysis_path
+
+  def to_dict(self) -> dict:
+    return {
+        'description': self.description,
+        'requirements': self.requirements,
+        'function_analysis_path': self.function_analysis_path,
+        'function_signature': self.function_signature,
+        'project_name': self.project_name,
+    }
+
+  @staticmethod
+  def from_dict(data: Any) -> Optional['FunctionAnalysisResult']:
+    """Creates a FunctionAnalysisResult from a dictionary."""
+    if not isinstance(
+        data, dict
+    ) or 'function_signature' not in data or 'project_name' not in data or 'description' not in data or 'requirements' not in data:
+      return None
+
+    return FunctionAnalysisResult(
+        description=data.get('description', ''),
+        function_signature=data.get('function_signature', ''),
+        project_name=data.get('project_name', ''),
+        requirements=data.get('requirements', ''),
+        function_analysis_path=data.get('function_analysis_path', ''))
