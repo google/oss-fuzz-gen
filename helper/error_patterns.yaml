@@ -1,0 +1,201 @@
+INCLUDE ERROR:
+  patterns:
+    - "fatal error: .*: No such file or directory"
+    - "error: no such file or directory: '.*'"
+    - ": .*: No such file or directory"
+    - "fatal error: '.*' file not found"
+    - "cannot find include file"
+    - "header file not found"
+    - "file not found"
+    - "include.*No such file"
+    - "error: include file '.*' not found"
+    - "'[A-Za-z0-9_]+\\.h': No such file or directory"
+    - "fatal error: cannot open file '.*'"
+    - "This header is only to be used internally"
+    - "forward declaration of '.*'"
+    - "cannot open source file"
+  good:
+    - "Suggest including the standard header file for a missing type or function."
+    - "Suggest including a project-specific header file using quotes and the correct relative path."
+    - "Leverage umbrella headers that might provide necessary include paths for other project headers."
+    - "Verify the actual location of header files and use the correct path in include directives."
+    - "Remove unnecessary includes of internal headers that are not exposed by the public API."
+    - "Fallback to forward declarations or typedefs if the specific types are not directly accessible."
+    - "If a header file is not found, suggest adding an include search path to the build script using `-I`."
+    - "Distinguish between system headers (angle brackets) and local/project headers (quotes)."
+    - "If a standard library header is included with angle brackets in a project header, and the project provides its own version, consider replacing the angle brackets with quotes and a relative path."
+    - "If unsure about a header's location, suggest trying both angle brackets and quotes."
+  bad:
+    - "Not verifying if a header file exists in the standard include paths or if it requires a specific include path setting in the build script."
+    - "Using absolute paths when relative paths would be more appropriate and portable."
+    - "Assuming that including a high-level header automatically resolves all dependencies without verifying its contents."
+    - "Insisting on including internal headers that are not meant for direct inclusion."
+    - "Not recognizing that the compiler's include search path might differ from the project's root directory."
+    - "Failing to account for the project's directory structure and include search paths."
+    - "Incorrectly assuming the location of a header file."
+    - "Not considering that a required header might be indirectly included through another header, leading to redundant includes."
+    - "Suggesting incorrect header files or paths."
+    - "Not considering that an undefined reference might stem from a missing library link rather than a missing header."
+
+SYNTACTIC ERROR:
+  patterns:
+    - 'error: expected .*'
+    - 'expected .* before'
+    - 'error: stray '' .* '' in program'
+    - 'syntax error'
+    - 'parse error'
+    - 'missing ''\;'''
+    - 'implicit conversion changes signedness'
+    - 'error: assigning to '' .* '' from incompatible type '' .* '''
+    - 'error: no member named '' .* '' in '' .* '''
+    - 'no matching function for call to'
+    - 'candidate function not viable'
+    - 'requires \d+ arguments, but \d+ were provided'
+    - 'incompatible pointer to .* conversion'
+    - 'no type named .* in namespace .*'
+    - 'is a private member of'
+    - 'expected declaration or statement at end of input'
+    - 'unterminated string literal'
+    - 'expected identifier or ''\('' before .*'
+    - 'expected unqualified-id'
+    - 'use of undeclared identifier '' .* '''
+    - 'error: expected parameter declarator'
+    - 'error: expected ''\)'''
+    - 'invalid conversion from'
+    - 'incomplete type .* named in nested name specifier'
+    - 'unknown type name .*'
+    - 'redefinition of .*'
+    - 'no member named .* in .*'
+    - 'non-void function does not return a value'
+    - 'forward declaration of .*'
+    - 'candidate constructor .* not viable'
+    - 'call to undeclared function'
+    - 'ISO C99 and later do not support implicit function declarations'
+    - 'error: krb5\.h included before k5-int\.h'
+    - 'This header is only to be used internally to libarchive\.'
+    - 'class member cannot be redeclared'
+    - 'expected member name or ''\;'' after declaration specifiers'
+  good:
+    - "Include necessary header files for built-in types like `bool` (`stdbool.h`)."
+    - "Remove code that accesses non-existent members of structs, simplifying logic if necessary."
+    - "Replace undefined constants or macros with valid alternatives if available, or remove them if their usage is incorrect."
+    - "Use code search tools to locate the definition of undefined symbols and include the correct header."
+    - "Correctly identify and fix HTML/encoding issues with operators like `>=` or `<=`."
+    - "Define functions before their usage in struct initializers."
+    - "If a class needs to be instantiated, ensure it's done correctly before using its methods."
+    - "Correctly identify the issue of using a class name as a function name."
+    - "Inspect similar working examples to understand the correct usage pattern."
+    - "Remove redundant definitions of functions or variables if a 'redefinition' error occurs."
+  bad:
+    - "Incorrectly assuming the existence of members in structs based on similar data structures."
+    - "Failing to recognize that certain constants or macros might be tied to specific types or contexts."
+    - "Relying on guesses about the project's structure to pick a header file."
+    - "Including incorrect headers based on partial matches or similar symbol names."
+    - "Ignoring that some types may be defined in-project but not exposed via public headers."
+    - "Guessing header locations without verifying."
+    - "Leaving related undefined types/symbols unresolved after a fix."
+    - "Not proposing a direct replacement for an incorrect function call once identified."
+    - "Suggesting adding include guards via build script (instead of fixing headers)."
+    - "Using a class name as a function name."
+    - "Ignoring namespace impacts."
+
+UNDEFINED REFERENCE ERROR:
+  patterns:
+    - "undefined reference to `.*'"
+    - "undefined reference to '.*'"
+    - "symbol not found"
+    - "unresolved external symbol"
+    - "linker error: symbol undefined"
+    - "error: undefined reference to `.*`"
+    - "error: use of undeclared identifier '.*'"
+  good:
+    - "Suggest including the standard header files that contain the declarations of the undefined functions."
+    - "Correctly identify the missing header based on the undefined function name."
+    - "Explain the missing declaration and its purpose clearly."
+    - "Suggest adding `extern \"C\"` to a fuzz target when C linkage is required."
+    - "If the symbol is in an external library, ensure it is linked in the build script."
+    - "Use `nm` to inspect symbols in objects/libraries."
+    - "Replicate linking approach from a similar working target."
+    - "If explicit linking fails, use build-system variables (e.g., `$LIB_FUZZING_ENGINE`) for the fuzzing engine."
+    - "Add include paths for headers containing the undefined symbols."
+    - "Remove unnecessary internal headers not exposed by the public API."
+  bad:
+    - "Linking random libraries without confirming the symbol actually lives there."
+    - "Adding prototypes without including headers or linking the defining libraries."
+    - "Changing compiler/linker flags when only source/build.sh edits are allowed."
+    - "Misreading a missing entry-point linker error as a source-code issue."
+    - "Blaming flags or libraries when the root cause is build misconfiguration."
+    - "Dismissing relevant diagnostics (e.g., debug info parse errors) without investigation."
+    - "Assuming declarations are in different headers when the linker indicates a missing definition."
+
+LINKER ERROR:
+  patterns:
+    - 'multiple definition of'
+    - 'ld: duplicate symbol'
+    - 'conflicting types for'
+    - 'linking failed'
+    - 'ld returned 1 exit status'
+    - 'collect2: error: ld returned .* exit status'
+    - 'linker command failed with exit code'
+    - 'cannot find -l.*'
+    - 'no such file or directory: ''\$LIB_FUZZING_ENGINE'''
+    - 'relocation overflowed'
+    - 'error: relocation truncated to fit'
+    - 'first defined here'
+    - 'no such file or directory: .*\.a'
+    - '/usr/bin/ld: cannot find -ljsoncpp'
+  good:
+    - "After building a library, verify the location of the built library file."
+    - "Ensure the linker knows where to find libraries using `-L` and link with `-l<name>`."
+    - "Link dependent libraries as well when needed."
+    - "If dynamic linking fails, try static variants if available."
+    - "Inspect the build system config (e.g., CMakeLists.txt, Makefile) to see how libraries are linked."
+    - "Place the C++ standard library and system libs after other libs in the link line."
+    - "Use verbose linker flags (e.g., `-v`) for more detail."
+  bad:
+    - "Suggesting `.c/.cpp` inclusion directly (causing multiple definitions)."
+    - "Confusing linker errors with compile-time errors."
+    - "Failing to provide concrete library path/linking advice (`-L`, `-l`)."
+    - "Misclassifying multiple-definition errors as undefined references."
+    - "Suggesting irrelevant text changes when the issue is link-time."
+
+BUILD_CONFIGURATION_ERROR:
+  patterns:
+    - 'make: \*\*\* No rule to make target .*'
+    - 'CMake Error:.*'
+    - 'CMake was unable to find a build program'
+    - 'CMAKE_(C|CXX)_COMPILER not set'
+    - 'ninja: error: loading ''build\.ninja'': No such file or directory'
+    - 'The source directory .* does not appear to contain CMakeLists\.txt'
+    - 'Policy CMP\d+ is not set'
+    - 'The OLD behavior for policy CMP\d+ will be removed'
+    - 'This warning is for project developers\. *Use -Wno-dev to suppress it'
+    - '/src/build\.sh: line \d+: syntax error'
+    - 'sed: -e expression #1, char \d+: (Invalid content of \{\}|extra characters after command)'
+    - 'sed: can''t read.*No such file or directory'
+    - '/src/build\.sh: line \d+: unbound variable'
+    - 'unbound variable'
+    - 'configure: error: .* not found'
+    - 'configure: WARNING: .*'
+    - 'autoreconf: ''configure\.(ac|in)'' is required'
+    - 'Could not find a package configuration file provided by .*'
+    - 'CMake Error at CMakeLists\.txt:\d+ \(find_package\)'
+    - 'By not providing "Find.*\.cmake" in CMAKE_MODULE_PATH.*'
+    - 'debconf: delaying package configuration, since apt-utils is not installed'
+    - '/src/build\.sh: line \d+: fuzzer/CMakeLists\.txt: No such file or directory'
+    - 'WARNING: png library not available - no png\.h'
+    - '\./aom_configure: No such file or directory'
+    - 'DWARF error: invalid or unhandled FORM value.*'
+    - 'clang\+\+: error: no such file or directory: ''\$LIB_FUZZING_ENGINE'''
+  good:
+    - "If CMake is used, check invocation and arguments."
+    - "Verify the correct generator (Ninja/Unix Makefiles) and presence of CMakeLists.txt."
+    - "Ensure the right source files are listed and targets are hooked up."
+    - "Make sure required packages are discoverable (set `<Pkg>_DIR` or CMAKE_PREFIX_PATH)."
+    - "Use verbose CMake output to diagnose configuration."
+    - "Check for missing dependencies and environment variables required by the build."
+  bad:
+    - "Proposing linker/compile flag changes when only source and a limited build script are allowed."
+    - "Removing configure/bootstrap pieces without understanding their role."
+    - "Copying sources around to satisfy a missing-target error instead of fixing the build script."
+    - "Misclassifying build-system errors as include or linker issues."
