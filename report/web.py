@@ -191,6 +191,25 @@ class GenerateReport:
       sample.result.coverage_report_path = \
         f'/sample/{benchmark.id}/coverage/{sample.id}/linux/'
 
+  def _copy_plot_library(self):
+    """Copies the Plot.js library to the output directory."""
+    d3_js_path = os.path.join(self._jinja.get_template_search_path()[0] + '/../trends_report_web/',
+                                 'd3.min.js')
+    plot_js_path = os.path.join(self._jinja.get_template_search_path()[0] + '/../trends_report_web/',
+                                 'plot.min.js')
+    if os.path.exists(d3_js_path):
+      os.makedirs(self._output_dir, exist_ok=True)
+      shutil.copy(d3_js_path, os.path.join(self._output_dir, 'd3.min.js'))
+      logging.info('Copied d3.min.js to %s', os.path.join(self._output_dir, 'd3.min.js'))
+    else:
+      logging.warning('d3.min.js not found at %s', d3_js_path)
+    if os.path.exists(plot_js_path):
+      os.makedirs(self._output_dir, exist_ok=True)
+      shutil.copy(plot_js_path, os.path.join(self._output_dir, 'plot.min.js'))
+      logging.info('Copied plot.min.js to %s', os.path.join(self._output_dir, 'plot.min.js'))
+    else:
+      logging.warning('Plot.js not found at %s', plot_js_path)
+
   def _read_static_file(self, file_path_in_templates_subdir: str) -> str:
     """Reads a static file from the templates directory."""
 
@@ -218,6 +237,8 @@ class GenerateReport:
 
   def generate(self):
     """Generate and write every report file."""
+    self._copy_plot_library()
+    
     benchmarks = []
     samples_with_bugs = []
     # First pass: collect benchmarks and samples
@@ -377,6 +398,7 @@ class GenerateReport:
                                     agent_cycles=agent_cycles,
                                     logs=logs,
                                     logs_parser=logs_parser,
+                                    default_lang=(benchmark.language.lower() if getattr(benchmark, 'language', '') else ''),
                                     triage=triage,
                                     targets=sample_targets,
                                     sample_css_content=sample_css_content,
