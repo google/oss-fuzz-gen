@@ -193,22 +193,24 @@ class GenerateReport:
 
   def _copy_plot_library(self):
     """Copies the Plot.js library to the output directory."""
-    d3_js_path = os.path.join(self._jinja.get_template_search_path()[0] + '/../trends_report_web/',
-                                 'd3.min.js')
-    plot_js_path = os.path.join(self._jinja.get_template_search_path()[0] + '/../trends_report_web/',
-                                 'plot.min.js')
-    if os.path.exists(d3_js_path):
-      os.makedirs(self._output_dir, exist_ok=True)
-      shutil.copy(d3_js_path, os.path.join(self._output_dir, 'd3.min.js'))
-      logging.info('Copied d3.min.js to %s', os.path.join(self._output_dir, 'd3.min.js'))
-    else:
-      logging.warning('d3.min.js not found at %s', d3_js_path)
-    if os.path.exists(plot_js_path):
-      os.makedirs(self._output_dir, exist_ok=True)
-      shutil.copy(plot_js_path, os.path.join(self._output_dir, 'plot.min.js'))
-      logging.info('Copied plot.min.js to %s', os.path.join(self._output_dir, 'plot.min.js'))
-    else:
-      logging.warning('Plot.js not found at %s', plot_js_path)
+    search_path = self._jinja.get_template_search_path()
+    templates_dir = search_path[0] if search_path else 'report/templates'
+    libs_dir = os.path.abspath(
+        os.path.join(templates_dir, '..', 'trends_report_web'))
+
+    os.makedirs(self._output_dir, exist_ok=True)
+
+    for lib_name in ['plot.min.js', 'd3.min.js']:
+      lib_src = os.path.join(libs_dir, lib_name)
+      lib_dst = os.path.join(self._output_dir, lib_name)
+      if os.path.exists(lib_src):
+        try:
+          shutil.copy(lib_src, lib_dst)
+          logging.info('Copied %s to %s', lib_name, lib_dst)
+        except Exception as e:
+          logging.warning('Failed to copy %s: %s', lib_name, e)
+      else:
+        logging.warning('%s not found at %s', lib_name, lib_src)
 
   def _read_static_file(self, file_path_in_templates_subdir: str) -> str:
     """Reads a static file from the templates directory."""
@@ -238,7 +240,7 @@ class GenerateReport:
   def generate(self):
     """Generate and write every report file."""
     self._copy_plot_library()
-    
+
     benchmarks = []
     samples_with_bugs = []
     # First pass: collect benchmarks and samples
@@ -391,20 +393,22 @@ class GenerateReport:
       agent_sections = logs_parser.get_agent_sections()
       agent_cycles = logs_parser.get_agent_cycles()
 
-      rendered = self._jinja.render('sample/sample.html',
-                                    benchmark=benchmark,
-                                    sample=sample,
-                                    agent_sections=agent_sections,
-                                    agent_cycles=agent_cycles,
-                                    logs=logs,
-                                    logs_parser=logs_parser,
-                                    default_lang=(benchmark.language.lower() if getattr(benchmark, 'language', '') else ''),
-                                    triage=triage,
-                                    targets=sample_targets,
-                                    sample_css_content=sample_css_content,
-                                    sample_js_content=sample_js_content,
-                                    crash_info=crash_info,
-                                    **common_data)
+      rendered = self._jinja.render(
+          'sample/sample.html',
+          benchmark=benchmark,
+          sample=sample,
+          agent_sections=agent_sections,
+          agent_cycles=agent_cycles,
+          logs=logs,
+          logs_parser=logs_parser,
+          default_lang=(benchmark.language.lower() if getattr(
+              benchmark, 'language', '') else ''),
+          triage=triage,
+          targets=sample_targets,
+          sample_css_content=sample_css_content,
+          sample_js_content=sample_js_content,
+          crash_info=crash_info,
+          **common_data)
 
       self._write(f'sample/{benchmark.id}/{sample.id}.html', rendered)
     except Exception as e:
