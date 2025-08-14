@@ -210,7 +210,9 @@ class LogsParser:
 
     return steps
 
-  def _syntax_highlight_content(self, content: str, default_language: str = "") -> str:
+  def _syntax_highlight_content(self,
+                                content: str,
+                                default_language: str = "") -> str:
     """Syntax highlights content while preserving visible tags."""
 
     # Escape everything first so raw logs are safe to render in HTML
@@ -240,45 +242,48 @@ class LogsParser:
 
     lang_key = _normalize_lang(default_language)
 
-    escaped = _sub(r'&lt;conclusion&gt;(\s*[^\s].*?[^\s]\s*|(?:\s*[^\s].*?)?)&lt;/conclusion&gt;',
-                   r'<span class="log-tag">&lt;conclusion&gt;</span>'
-                   r'<pre class="whitespace-pre-wrap break-words overflow-x-auto reason-block">\1</pre>'
-                   r'<span class="log-tag">&lt;/conclusion&gt;</span>', escaped)
-    escaped = _sub(r'&lt;reason&gt;(\s*[^\s].*?[^\s]\s*|(?:\s*[^\s].*?)?)&lt;/reason&gt;',
-                   r'<span class="log-tag">&lt;reason&gt;</span>'
-                   r'<div class="markdown-block whitespace-pre-wrap break-words overflow-x-auto">\1</div>'
-                   r'<span class="log-tag">&lt;/reason&gt;</span>', escaped)
+    escaped = _sub(
+        r'&lt;conclusion&gt;(\s*[^\s].*?[^\s]\s*|(?:\s*[^\s].*?)?)&lt;/conclusion&gt;',
+        r'<span class="log-tag">&lt;conclusion&gt;</span>'
+        r'<pre class="whitespace-pre-wrap break-words overflow-x-auto reason-block">\1</pre>'
+        r'<span class="log-tag">&lt;/conclusion&gt;</span>', escaped)
+    escaped = _sub(
+        r'&lt;reason&gt;(\s*[^\s].*?[^\s]\s*|(?:\s*[^\s].*?)?)&lt;/reason&gt;',
+        r'<span class="log-tag">&lt;reason&gt;</span>'
+        r'<div class="markdown-block whitespace-pre-wrap break-words overflow-x-auto">\1</div>'
+        r'<span class="log-tag">&lt;/reason&gt;</span>', escaped)
 
-    escaped = _sub(r'&lt;bash&gt;(\s*[^\s].*?[^\s]\s*|(?:\s*[^\s].*?)?)&lt;/bash&gt;',
-                   r'<span class="log-tag">&lt;bash&gt;</span>'
-                   r'<pre class="whitespace-pre-wrap break-words overflow-x-auto"><code class="language-bash">\1</code></pre>'
-                   r'<span class="log-tag">&lt;/bash&gt;</span>',
-                   escaped)
-    escaped = _sub(r'&lt;build_script&gt;(\s*[^\s].*?[^\s]\s*|(?:\s*[^\s].*?)?)&lt;/build_script&gt;',
-                   r'<span class="log-tag">&lt;build_script&gt;</span>'
-                   r'<pre class="whitespace-pre-wrap break-words overflow-x-auto"><code class="language-cpp">\1</code></pre>'
-                   r'<span class="log-tag">&lt;/build_script&gt;</span>',
-                   escaped)
-    escaped = _sub(r'&lt;fuzz target&gt;(\s*[^\s].*?[^\s]\s*|(?:\s*[^\s].*?)?)&lt;/fuzz target&gt;',
-                   rf'<span class="log-tag">&lt;fuzz target&gt;</span>'
-                   rf'<pre class="whitespace-pre-wrap break-words overflow-x-auto"><code class="language-{lang_key}">\1</code></pre>'
-                   rf'<span class="log-tag">&lt;/fuzz target&gt;</span>',
-                   escaped)
+    escaped = _sub(
+        r'&lt;bash&gt;(\s*[^\s].*?[^\s]\s*|(?:\s*[^\s].*?)?)&lt;/bash&gt;',
+        r'<span class="log-tag">&lt;bash&gt;</span>'
+        r'<pre class="whitespace-pre-wrap break-words overflow-x-auto"><code class="language-bash">\1</code></pre>'
+        r'<span class="log-tag">&lt;/bash&gt;</span>', escaped)
+    escaped = _sub(
+        r'&lt;build_script&gt;(\s*[^\s].*?[^\s]\s*|(?:\s*[^\s].*?)?)&lt;/build_script&gt;',
+        r'<span class="log-tag">&lt;build_script&gt;</span>'
+        r'<pre class="whitespace-pre-wrap break-words overflow-x-auto"><code class="language-cpp">\1</code></pre>'
+        r'<span class="log-tag">&lt;/build_script&gt;</span>', escaped)
+    escaped = _sub(
+        r'&lt;fuzz target&gt;(\s*[^\s].*?[^\s]\s*|(?:\s*[^\s].*?)?)&lt;/fuzz target&gt;',
+        rf'<span class="log-tag">&lt;fuzz target&gt;</span>'
+        rf'<pre class="whitespace-pre-wrap break-words overflow-x-auto"><code class="language-{lang_key}">\1</code></pre>'
+        rf'<span class="log-tag">&lt;/fuzz target&gt;</span>', escaped)
 
-    escaped = _sub(r'&lt;stdout&gt;(\s*[^\s].*?[^\s]\s*|(?:\s*[^\s].*?)?)&lt;/stdout&gt;',
-                   r'<span class="log-tag">&lt;stdout&gt;</span>'
-                   r'<pre class="whitespace-pre-wrap break-words overflow-x-auto"><code class="language-bash">\1</code></pre>'
-                   r'<span class="log-tag">&lt;/stdout&gt;</span>',
-                   escaped)
-    escaped = _sub(r'&lt;stderr&gt;(\s*[^\s].*?[^\s]\s*|(?:\s*[^\s].*?)?)&lt;/stderr&gt;',
-                   r'<span class="log-tag">&lt;stderr&gt;</span>'
-                   r'<pre class="whitespace-pre-wrap break-words overflow-x-auto"><code class="language-bash">\1</code></pre>'
-                   r'<span class="log-tag">&lt;/stderr&gt;</span>',
-                   escaped)
-    escaped = _sub(r'&lt;return_code&gt;(\s*[^\s].*?[^\s]\s*|(?:\s*[^\s].*?)?)&lt;/return_code&gt;',
-                   r'<span class="log-tag">&lt;return_code&gt;</span>'
-                   r'<pre class="whitespace-pre-wrap break-words overflow-x-auto"><code>\1</code></pre>'
-                   r'<span class="log-tag">&lt;/return_code&gt;</span>', escaped)
+    escaped = _sub(
+        r'&lt;stdout&gt;(\s*[^\s].*?[^\s]\s*|(?:\s*[^\s].*?)?)&lt;/stdout&gt;',
+        r'<span class="log-tag">&lt;stdout&gt;</span>'
+        r'<pre class="whitespace-pre-wrap break-words overflow-x-auto"><code class="language-bash">\1</code></pre>'
+        r'<span class="log-tag">&lt;/stdout&gt;</span>', escaped)
+    escaped = _sub(
+        r'&lt;stderr&gt;(\s*[^\s].*?[^\s]\s*|(?:\s*[^\s].*?)?)&lt;/stderr&gt;',
+        r'<span class="log-tag">&lt;stderr&gt;</span>'
+        r'<pre class="whitespace-pre-wrap break-words overflow-x-auto"><code class="language-bash">\1</code></pre>'
+        r'<span class="log-tag">&lt;/stderr&gt;</span>', escaped)
+    escaped = _sub(
+        r'&lt;return_code&gt;(\s*[^\s].*?[^\s]\s*|(?:\s*[^\s].*?)?)&lt;/return_code&gt;',
+        r'<span class="log-tag">&lt;return_code&gt;</span>'
+        r'<pre class="whitespace-pre-wrap break-words overflow-x-auto"><code>\1</code></pre>'
+        r'<span class="log-tag">&lt;/return_code&gt;</span>', escaped)
 
     return escaped
 
