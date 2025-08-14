@@ -18,8 +18,9 @@ generate correct fuzz target for the function.
 """
 
 import argparse
-import os
 from typing import Optional
+
+from google.adk.tools import ToolContext
 
 import logger
 import results as resultslib
@@ -50,7 +51,10 @@ class FunctionAnalyzer(base_agent.ADKBaseAgent):
 
     instruction = builder.get_instruction().get()
 
-    tools = [self.get_function_implementation, self.search_project_files]
+    tools = [
+        self.get_function_implementation, self.search_project_files,
+        self.return_final_result
+    ]
 
     super().__init__(trial, llm, args, benchmark, description, instruction,
                      tools, name)
@@ -74,17 +78,19 @@ class FunctionAnalyzer(base_agent.ADKBaseAgent):
 
     return requirement_path
 
-  def handle_llm_response(self, final_response_text: str,
-                          result: resultslib.Result) -> None:
+  def handle_llm_response(
+      self, function_analysis_result: resultslib.FunctionAnalysisResult,
+      result: resultslib.Result) -> None:
     """Handle the LLM response and update the result."""
 
-    result_str = self._parse_tag(final_response_text, 'response')
-    requirements = self._parse_tag(result_str, 'requirements')
-    if requirements:
-      # Write the requirements to a file
-      requirement_path = self.write_requirements_to_file(self.args, result_str)
-      function_analysis = resultslib.FunctionAnalysisResult(requirement_path)
-      result.function_analysis = function_analysis
+    function_requirements_text = self.get_xml_representation(
+        function_analysis_result.to_dict())
+
+    # Write the requirements to a file
+    requirement_path = self.write_requirements_to_file(
+        self.args, function_requirements_text)
+    function_analysis_result.function_analysis_path = requirement_path
+    result.function_analysis = function_analysis_result
 
   def execute(self,
               result_history: list[resultslib.Result]) -> resultslib.Result:
@@ -106,15 +112,27 @@ class FunctionAnalyzer(base_agent.ADKBaseAgent):
     # Call the agent asynchronously and return the result
     prompt = self._initial_prompt(result_history)
 
-    final_response_text = self.chat_llm(self.round,
-                                        client=None,
-                                        prompt=prompt,
-                                        trial=result_history[-1].trial)
+    while self.round < self.max_round:
+      final_response = self.chat_llm(self.round,
+                                     client=None,
+                                     prompt=prompt,
+                                     trial=result_history[-1].trial)
 
-    self.handle_llm_response(final_response_text, result)
+      function_analyzer_result = resultslib.FunctionAnalysisResult.from_dict(
+          final_response)
+      if function_analyzer_result:
+        self.handle_llm_response(function_analyzer_result, result)
+        break
+
+      # Handle invalid LLM response
+      template_builder = prompt_builder.FunctionAnalyzerTemplateBuilder(
+          self.llm, self.benchmark)
+
+      prompt = self._container_handle_invalid_tool_usage(
+          [self.inspect_tool], self.round, final_response,
+          template_builder.build(), template_builder.get_response_format())
 
     self.inspect_tool.terminate()
-
     return result
 
   def _initial_prompt(
@@ -126,7 +144,7 @@ class FunctionAnalyzer(base_agent.ADKBaseAgent):
     builder = prompt_builder.FunctionAnalyzerTemplateBuilder(
         self.llm, self.benchmark)
 
-    prompt = builder.build_prompt()
+    prompt = builder.build_prompt(self.inspect_tool.project_dir)
 
     prompt.append(self.inspect_tool.tutorial())
 
@@ -230,3 +248,31 @@ class FunctionAnalyzer(base_agent.ADKBaseAgent):
     self.log_llm_prompt(response)
 
     return response
+
+  def return_final_result(self, project_name: str, function_signature: str,
+                          description: str, requirements: str,
+                          tool_context: ToolContext) -> dict:
+    """
+    Provide final analysis results, including a detailed description of the function and requirements on its input and global variables.
+
+    Args:
+        project_name (str): The name of the project.
+        function_signature (str): The signature of the function you were provided.
+        description (str): A detailed description of the function.
+        requirements (str): Requirements on the function's input and global variables, formatted using <requirement> tags.
+
+    Returns:
+        This function does not return anything.
+    """
+
+    function_analysis = resultslib.FunctionAnalysisResult(
+        description=description,
+        function_signature=function_signature,
+        project_name=project_name,
+        requirements=requirements,
+    )
+
+    # We have received final result. Instruct the agent to terminate execution.
+    # tool_context._invocation_context.end_invocation = True
+    self.end_llm_chat(tool_context)
+    return function_analysis.to_dict()

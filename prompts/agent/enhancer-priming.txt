@@ -91,4 +91,10 @@ Additionally, the build script requires modification to link against the necessa
 
 </steps>
 
+Here are the requirements for the target function.
+MAKE SURE THAT THE GENERATED FUZZ DRIVER DO NOT VIOLATE ANY OF THESE REQUIREMENTS.
+<function-requirements>
+{FUNCTION_REQUIREMENTS}
+</function-requirements>
+
 {TOOL_GUIDES}
