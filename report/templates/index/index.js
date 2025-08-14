@@ -1,4 +1,97 @@
 document.addEventListener('DOMContentLoaded', function() {
+    function waitForPlot() {
+        if (typeof Plot !== 'undefined') {
+            setTimeout(initializeCharts, 100);
+        } else {
+            setTimeout(waitForPlot, 100);
+        }
+    }
+
+    function getBarY() {
+        if (Plot.barY) return Plot.barY;
+        if (Plot.BarY) return Plot.BarY;
+        if (Plot.rectY) {
+            return (data, opts) => {
+                const { x, y, fill, title } = opts || {};
+                return Plot.rectY(data, { x, y2: y, y1: 0, fill, title });
+            };
+        }
+        return null;
+    }
+
+    function initializeCharts() {
+        const BarY = getBarY();
+        if (!BarY) return;
+
+        const projectData = Array.from(document.querySelectorAll('#project-summary-table tbody tr.project-data-row')).map(row => {
+            const cells = row.querySelectorAll('td');
+            if (cells.length >= 9) {
+                return {
+                    project: cells[1].dataset.sortValue,
+                    new_lines: parseInt(cells[7].dataset.sortValue) || 0,
+                    existing_lines: parseInt(cells[8].dataset.sortValue) || 0
+                };
+            }
+            return null;
+        }).filter(Boolean);
+
+        if (projectData.length > 0) {
+            try {
+                const coveragePlot = Plot.plot({
+                    title: "New vs. Existing Code Coverage by Project",
+                    x: { label: "Project", domain: projectData.map(d => d.project) },
+                    y: { label: "Lines of Code" },
+                    marks: [
+                        BarY(projectData, { x: "project", y: "existing_lines", fill: "#94a3b8", title: "Existing Coverage" }),
+                        BarY(projectData, { x: "project", y: "new_lines", fill: "#3b82f6", title: "New Coverage" })
+                    ],
+                    width: 800,
+                    height: 400
+                });
+                const el = document.getElementById('coverage-chart');
+                if (el) { el.innerHTML = ''; el.appendChild(coveragePlot); }
+            } catch (error) {
+                const el = document.getElementById('coverage-chart');
+                if (el) el.innerHTML = '<p class="text-red-500">' + error.message + '</p>';
+            }
+        }
+
+        const bugsData = {};
+        projectData.forEach(project => { bugsData[project.project] = 0; });
+        const bugRows = document.querySelectorAll('#project-summary-table tbody tr.project-data-row');
+        bugRows.forEach(row => {
+            const cells = row.querySelectorAll('td');
+            if (cells.length >= 6) {
+                const project = cells[1].dataset.sortValue;
+                const bugs = parseInt(cells[5].dataset.sortValue) || 0;
+                if (project in bugsData) bugsData[project] += bugs;
+            }
+        });
+
+        const bugsChartData = Object.entries(bugsData).map(([project, bugs]) => ({ project, bugs }));
+        if (bugsChartData.length > 0) {
+            try {
+                const bugsPlot = Plot.plot({
+                    title: "Bugs Found by Project",
+                    x: { label: "Project", domain: bugsChartData.map(d => d.project) },
+                    y: { label: "Number of Bugs" },
+                    marks: [
+                        BarY(bugsChartData, { x: "project", y: "bugs", fill: "#ef4444", title: "Bugs Found" })
+                    ],
+                    width: 800,
+                    height: 400
+                });
+                const el = document.getElementById('bugs-chart');
+                if (el) { el.innerHTML = ''; el.appendChild(bugsPlot); }
+            } catch (error) {
+                const el = document.getElementById('bugs-chart');
+                if (el) el.innerHTML = '<p class="text-red-500">' + error.message + '</p>';
+            }
+        }
+    }
+
+    waitForPlot();
+
     // Project summary table expand/collapse buttons
     const projectSummaryExpandAllButton = document.getElementById('project-summary-expand-all');
     if (projectSummaryExpandAllButton) {

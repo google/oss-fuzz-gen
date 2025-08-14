@@ -87,12 +87,14 @@ tbody tr:nth-child(odd) {
     background-color: #333333;
 }
 .chat_prompt {
-    background-color: #fff7f2;
+    background-color: #e2e8f0;
+    border: 1px solid #a0aec0;
     max-width: 50%;
     overflow: scroll;
 }
 .chat_response {
-    background-color: #fcfff2;
+    background-color: #ececec;
+    border: 1px solid #718096;
     max-width: 50%;
     overflow: scroll;
     margin-left: auto;
@@ -507,6 +509,8 @@ tbody tr:nth-child(odd) {
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.10.3/cdn.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+<script src="d3.min.js" defer></script>
+<script src="plot.min.js" defer></script>
 
 {% if unified_data %}
 <script type="application/json" id="unified-data">{{ unified_data|tojson|safe }}</script>
@@ -909,16 +913,51 @@ document.addEventListener('DOMContentLoaded', (event) => {
 });
 
 </script>
+  <!-- added highlight.js for syntax highlighting -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/default.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+  <!-- additional languages -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/bash.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/c.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/cpp.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/java.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/python.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/rust.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/go.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script>
+  <script>
+    window.addEventListener('DOMContentLoaded', function() {
+      if (window.hljs && typeof window.hljs.highlightAll === 'function') {
+        window.hljs.highlightAll();
+      }
 
+      function renderMarkdownBlocks(root) {
+        if (!window.marked) return;
+        const blocks = (root || document).querySelectorAll('.markdown-block');
+        blocks.forEach((el) => {
+          try {
+            el.innerHTML = window.marked.parse(el.textContent || '');
+          } catch (_) {}
+        });
+      }
+
+      renderMarkdownBlocks(document);
+      if (window.hljs) {
+        const observer = new MutationObserver((mutations) => {
+          for (const mutation of mutations) {
+            for (const node of mutation.addedNodes) {
+              if (!(node instanceof HTMLElement)) continue;
+              renderMarkdownBlocks(node);
+              node.querySelectorAll('pre code:not(.hljs)').forEach((el) => {
+                try { window.hljs.highlightElement(el); } catch (_) {}
+              });
+            }
+          }
+        });
+        try {
+          observer.observe(document.body, { childList: true, subtree: true });
+        } catch (_) {}
+      }
+    });
+  </script>
 </body>
-<!-- added highlight.js for syntax highlighting -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/default.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
-<!-- some additional language -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/bash.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/c.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/cpp.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/java.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/python.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/rust.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/go.min.js"></script>

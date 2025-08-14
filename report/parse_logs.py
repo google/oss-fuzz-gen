@@ -190,7 +190,7 @@ class LogsParser:
     current_step_parts = []
 
     for log_part in logs_to_process:
-      if "agent-step" in log_part.content:
+      if "agent-step" in log_part.content or "Trial ID:" in log_part.content:
         continue
 
       # A chat_response marks the beginning of a new step.
@@ -210,52 +210,77 @@ class LogsParser:
 
     return steps
 
-  def _syntax_highlight_content(self, content: str) -> str:
-    """Syntax highlights the content."""
+  def _syntax_highlight_content(self, content: str, default_language: str = "") -> str:
+    """Syntax highlights content while preserving visible tags."""
 
-    content = html.escape(content)
+    # Escape everything first so raw logs are safe to render in HTML
+    escaped = html.escape(content)
 
-    # Simple pre-formatted blocks
-    content = re.sub(r'<conclusion>(.*?)</conclusion>',
-                     r'<pre class="conclusion-block">\1</pre>',
-                     content,
-                     flags=re.DOTALL)
-    content = re.sub(r'<reason>(.*?)</reason>',
-                     r'<pre class="reason-block">\1</pre>',
-                     content,
-                     flags=re.DOTALL)
+    # Helper to simplify substitutions
+    def _sub(pattern: str, repl: str, text: str) -> str:
+      return re.sub(pattern, repl, text, flags=re.DOTALL)
 
-    # Code blocks with language specification
-    content = re.sub(r'<bash>(.*?)</bash>',
-                     r'<pre><code class="language-bash">\1</code></pre>',
-                     content,
-                     flags=re.DOTALL)
-    content = re.sub(r'<build_script>(.*?)</build_script>',
-                     r'<pre><code class="language-c++">\1</code></pre>',
-                     content,
-                     flags=re.DOTALL)
-    content = re.sub(r'<fuzz_target>(.*?)</fuzz_target>',
-                     r'<pre><code class="language-c++">\1</code></pre>',
-                     content,
-                     flags=re.DOTALL)
+    def _normalize_lang(lang: str) -> str:
+      if not lang:
+        return 'cpp'
+      lang = lang.strip().lower()
+      if lang in ['c++', 'cpp', 'cxx']:
+        return 'cpp'
+      if lang in ['c']:
+        return 'c'
+      if lang in ['python', 'py']:
+        return 'python'
+      if lang in ['java']:
+        return 'java'
+      if lang in ['rust', 'rs']:
+        return 'rust'
+      if lang in ['go', 'golang']:
+        return 'go'
+      return 'cpp'
 
-    # Standard output/error with return code
-    content = re.sub(
-        r'<stdout>(.*?)</stdout>',
-        r'<h4>Standard Output</h4><pre><code class="language-bash">\1</code></pre>',
-        content,
-        flags=re.DOTALL)
-    content = re.sub(
-        r'<stderr>(.*?)</stderr>',
-        r'<h4>Standard Error</h4><pre><code class="language-bash">\1</code></pre>',
-        content,
-        flags=re.DOTALL)
-    content = re.sub(r'<return_code>(.*?)</return_code>',
-                     r'<h4>Return Code</h4><pre><code>\1</code></pre>',
-                     content,
-                     flags=re.DOTALL)
+    lang_key = _normalize_lang(default_language)
 
-    return content
+    escaped = _sub(r'&lt;conclusion&gt;(\s*[^\s].*?[^\s]\s*|(?:\s*[^\s].*?)?)&lt;/conclusion&gt;',
+                   r'<span class="log-tag">&lt;conclusion&gt;</span>'
+                   r'<pre class="whitespace-pre-wrap break-words overflow-x-auto reason-block">\1</pre>'
+                   r'<span class="log-tag">&lt;/conclusion&gt;</span>', escaped)
+    escaped = _sub(r'&lt;reason&gt;(\s*[^\s].*?[^\s]\s*|(?:\s*[^\s].*?)?)&lt;/reason&gt;',
+                   r'<span class="log-tag">&lt;reason&gt;</span>'
+                   r'<div class="markdown-block whitespace-pre-wrap break-words overflow-x-auto">\1</div>'
+                   r'<span class="log-tag">&lt;/reason&gt;</span>', escaped)
+
+    escaped = _sub(r'&lt;bash&gt;(\s*[^\s].*?[^\s]\s*|(?:\s*[^\s].*?)?)&lt;/bash&gt;',
+                   r'<span class="log-tag">&lt;bash&gt;</span>'
+                   r'<pre class="whitespace-pre-wrap break-words overflow-x-auto"><code class="language-bash">\1</code></pre>'
+                   r'<span class="log-tag">&lt;/bash&gt;</span>',
+                   escaped)
+    escaped = _sub(r'&lt;build_script&gt;(\s*[^\s].*?[^\s]\s*|(?:\s*[^\s].*?)?)&lt;/build_script&gt;',
+                   r'<span class="log-tag">&lt;build_script&gt;</span>'
+                   r'<pre class="whitespace-pre-wrap break-words overflow-x-auto"><code class="language-cpp">\1</code></pre>'
+                   r'<span class="log-tag">&lt;/build_script&gt;</span>',
+                   escaped)
+    escaped = _sub(r'&lt;fuzz target&gt;(\s*[^\s].*?[^\s]\s*|(?:\s*[^\s].*?)?)&lt;/fuzz target&gt;',
+                   rf'<span class="log-tag">&lt;fuzz target&gt;</span>'
+                   rf'<pre class="whitespace-pre-wrap break-words overflow-x-auto"><code class="language-{lang_key}">\1</code></pre>'
+                   rf'<span class="log-tag">&lt;/fuzz target&gt;</span>',
+                   escaped)
+
+    escaped = _sub(r'&lt;stdout&gt;(\s*[^\s].*?[^\s]\s*|(?:\s*[^\s].*?)?)&lt;/stdout&gt;',
+                   r'<span class="log-tag">&lt;stdout&gt;</span>'
+                   r'<pre class="whitespace-pre-wrap break-words overflow-x-auto"><code class="language-bash">\1</code></pre>'
+                   r'<span class="log-tag">&lt;/stdout&gt;</span>',
+                   escaped)
+    escaped = _sub(r'&lt;stderr&gt;(\s*[^\s].*?[^\s]\s*|(?:\s*[^\s].*?)?)&lt;/stderr&gt;',
+                   r'<span class="log-tag">&lt;stderr&gt;</span>'
+                   r'<pre class="whitespace-pre-wrap break-words overflow-x-auto"><code class="language-bash">\1</code></pre>'
+                   r'<span class="log-tag">&lt;/stderr&gt;</span>',
+                   escaped)
+    escaped = _sub(r'&lt;return_code&gt;(\s*[^\s].*?[^\s]\s*|(?:\s*[^\s].*?)?)&lt;/return_code&gt;',
+                   r'<span class="log-tag">&lt;return_code&gt;</span>'
+                   r'<pre class="whitespace-pre-wrap break-words overflow-x-auto"><code>\1</code></pre>'
+                   r'<span class="log-tag">&lt;/return_code&gt;</span>', escaped)
+
+    return escaped
 
   def _create_step_data(self, step_number: int,
                         log_parts: list[LogPart]) -> dict:
@@ -284,20 +309,6 @@ class LogsParser:
     agent_sections = {}
     current_agent = None
     agent_counters = {}
-
-    # NUMBER OF BASH TOOLS REQUESTED BY LLMS
-    # system prompt is itself
-    # subsequent ones will be LLM request tool -> tool execution
-
-    # NO REASON IF THERE'S BASH
-    # JUST NEED CONCLUSION
-    # SO INSTEAD STEP 4 - BASH REASON CONCLUSION FUZZ TARGET BUILDSCRIPT -> STEP 4 - BASH, CONCLUSION
-
-    # bash syntax highlight - shell
-    # build script - c or c++
-    # stdout/stderror - console/shell/bash - BASH
-
-    # moving to html
 
     for log_part in self._logs:
       lines = log_part.content.split('\n')
