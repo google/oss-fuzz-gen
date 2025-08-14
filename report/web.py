@@ -107,6 +107,11 @@ class JinjaEnv:
         'remove_trailing_empty_lines'] = self._remove_trailing_empty_lines
     self._env.filters['splitlines'] = self._splitlines
 
+    # Add a new filter for syntax highlighting
+    logs_parser = LogsParser([])
+    self._env.filters[
+        'syntax_highlight'] = logs_parser._syntax_highlight_content
+
     if template_globals:
       for key, val in template_globals.items():
         self._env.globals[key] = val
@@ -186,6 +191,27 @@ class GenerateReport:
       sample.result.coverage_report_path = \
         f'/sample/{benchmark.id}/coverage/{sample.id}/linux/'
 
+  def _copy_plot_library(self):
+    """Copies the Plot.js library to the output directory."""
+    search_path = self._jinja.get_template_search_path()
+    templates_dir = search_path[0] if search_path else 'report/templates'
+    libs_dir = os.path.abspath(
+        os.path.join(templates_dir, '..', 'trends_report_web'))
+
+    os.makedirs(self._output_dir, exist_ok=True)
+
+    for lib_name in ['plot.min.js', 'd3.min.js']:
+      lib_src = os.path.join(libs_dir, lib_name)
+      lib_dst = os.path.join(self._output_dir, lib_name)
+      if os.path.exists(lib_src):
+        try:
+          shutil.copy(lib_src, lib_dst)
+          logging.info('Copied %s to %s', lib_name, lib_dst)
+        except Exception as e:
+          logging.warning('Failed to copy %s: %s', lib_name, e)
+      else:
+        logging.warning('%s not found at %s', lib_name, lib_src)
+
   def _read_static_file(self, file_path_in_templates_subdir: str) -> str:
     """Reads a static file from the templates directory."""
 
@@ -213,6 +239,8 @@ class GenerateReport:
 
   def generate(self):
     """Generate and write every report file."""
+    self._copy_plot_library()
+
     benchmarks = []
     samples_with_bugs = []
     # First pass: collect benchmarks and samples
@@ -365,18 +393,22 @@ class GenerateReport:
       agent_sections = logs_parser.get_agent_sections()
       agent_cycles = logs_parser.get_agent_cycles()
 
-      rendered = self._jinja.render('sample/sample.html',
-                                    benchmark=benchmark,
-                                    sample=sample,
-                                    agent_sections=agent_sections,
-                                    agent_cycles=agent_cycles,
-                                    logs=logs,
-                                    triage=triage,
-                                    targets=sample_targets,
-                                    sample_css_content=sample_css_content,
-                                    sample_js_content=sample_js_content,
-                                    crash_info=crash_info,
-                                    **common_data)
+      rendered = self._jinja.render(
+          'sample/sample.html',
+          benchmark=benchmark,
+          sample=sample,
+          agent_sections=agent_sections,
+          agent_cycles=agent_cycles,
+          logs=logs,
+          logs_parser=logs_parser,
+          default_lang=(benchmark.language.lower() if getattr(
+              benchmark, 'language', '') else ''),
+          triage=triage,
+          targets=sample_targets,
+          sample_css_content=sample_css_content,
+          sample_js_content=sample_js_content,
+          crash_info=crash_info,
+          **common_data)
 
       self._write(f'sample/{benchmark.id}/{sample.id}.html', rendered)
     except Exception as e:
