@@ -34,6 +34,7 @@ Usage:
     GOOGLE_APPLICATION_CREDENTIALS=/path/to/creds.json python -m unittest
     test_cloud_builder_pipeline.py -v
 """
+import os
 import shutil
 import subprocess
 import unittest
@@ -131,7 +132,8 @@ class TestCloudBuilderPipeline(unittest.TestCase):
 
     print("✓ OSS-Fuzz repository cloned successfully")
 
-    benchmark_yaml_path = "../../benchmark-sets/all/libspng.yaml"
+    benchmark_yaml_path = os.path.join(os.path.dirname(__file__),
+                                       "../../benchmark-sets/all/libspng.yaml")
     fuzz_target = _create_real_fuzz_target_from_benchmark(benchmark_yaml_path)
     google_cloud_project = EnvUtils.get_env(EnvVars.GOOGLE_CLOUD_PROJECT,
                                             "oss-fuzz") or "oss-fuzz"
