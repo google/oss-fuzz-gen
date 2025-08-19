@@ -1,0 +1,7 @@
+"language": "c++"
+"project": "ibmswtpm2"
+"target_name": "fuzz_tpm_server"
+"target_path": "/src/ibmswtpm2/src/fuzzer.cc"
+"test_files":
+- "test_file_path": "/src/ibmswtpm2/src/AttestationCommands.c"
+- "test_file_path": "/src/ibmswtpm2/src/Attest_spt.c"
