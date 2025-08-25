@@ -21,6 +21,7 @@ import re
 from abc import abstractmethod
 from typing import Any, Optional, Tuple
 
+from helper.error_classifier import BuildErrorClassifier
 import jinja2
 
 from data_prep import introspector, project_targets
@@ -671,6 +672,48 @@ class PrototyperFixerTemplateBuilder(PrototyperTemplateBuilder):
 
     return self._prompt
 
+class PrototyperErrorClassifierTemplateBuilder(PrototyperTemplateBuilder):
+  def __init__(self, model, benchmark, build_result, compile_log, error_classifier: BuildErrorClassifier, initial=None):
+    super().__init__(model, benchmark, DEFAULT_TEMPLATE_DIR, initial)
+    self.build_result = build_result
+    self.compile_log = compile_log
+    self.error_classifier = error_classifier
+    self.priming_template_file = self._find_template(self.agent_templare_dir,
+                                                      'prototyper-error-classifier.txt')
+
+  def build(self, project_dir='') -> prompts.Prompt:
+    classification = self.error_classifier.classify(self.compile_log)
+
+    error_type = classification["type"] if classification else "UNKNOWN"
+    function_signature = self.benchmark.function_signature
+    fuzz_target_source = self.build_result.fuzz_target_source
+    binary_path = os.path.join('/out', self.benchmark.target_name)
+
+    # Handle build script formatting
+    if self.build_result.build_script_source:
+      build_text = (f'<build script>\n{self.build_result.build_script_source}\n</build script>')
+    else:
+      build_text = 'Build script reuses `/src/build.bk.sh`.'
+
+    # Format tips section
+    if classification:
+      good_lines = '\n'.join(f"- {line}" for line in classification["good"])
+      bad_lines = '\n'.join(f"- {line}" for line in classification["bad"])
+      tips = f"What to do (✓):\n{good_lines}\n\nWhat to avoid (✗):\n{bad_lines}"
+    else:
+      tips = "No specific suggestions found. Analyze the error log and apply best practices."
+
+    # Load and format template
+    prompt = self._get_template(self.priming_template_file)
+    prompt = prompt.replace('{FUZZ_TARGET_SOURCE}', fuzz_target_source)
+    prompt = prompt.replace('{BUILD_TEXT}', build_text)
+    prompt = prompt.replace('{COMPILE_LOG}', self.compile_log)
+    prompt = prompt.replace('{FUNCTION_SIGNATURE}', function_signature)
+    prompt = prompt.replace('{PROJECT_DIR}', project_dir)
+    prompt = prompt.replace('{TIPS}', tips)
+
+    self._prompt.append(prompt)
+    return self._prompt
 
 class CoverageAnalyzerTemplateBuilder(PrototyperTemplateBuilder):
   """Builder specifically targeted C (and excluding C++)."""
