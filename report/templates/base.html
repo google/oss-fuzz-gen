@@ -282,6 +282,24 @@ tbody tr:nth-child(odd) {
 .dark-mode .toc-item {
     color: #9ca3af;
 }
+
+.log-tag {
+    color: #8b7355;
+}
+
+.dark-mode .log-tag {
+    color: #a08968;
+}
+
+.chat_prompt .log-tag {
+    color: #5a6b8a;
+}
+
+.dark-mode .chat_prompt .log-tag {
+    color: #7a8ba8;
+}
+
+
 </style>
 <body
       x-data="{
@@ -924,30 +942,19 @@ document.addEventListener('DOMContentLoaded', (event) => {
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/python.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/rust.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/go.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script>
+
   <script>
     window.addEventListener('DOMContentLoaded', function() {
       if (window.hljs && typeof window.hljs.highlightAll === 'function') {
         window.hljs.highlightAll();
       }
 
-      function renderMarkdownBlocks(root) {
-        if (!window.marked) return;
-        const blocks = (root || document).querySelectorAll('.markdown-block');
-        blocks.forEach((el) => {
-          try {
-            el.innerHTML = window.marked.parse(el.textContent || '');
-          } catch (_) {}
-        });
-      }
 
-      renderMarkdownBlocks(document);
       if (window.hljs) {
         const observer = new MutationObserver((mutations) => {
           for (const mutation of mutations) {
             for (const node of mutation.addedNodes) {
               if (!(node instanceof HTMLElement)) continue;
-              renderMarkdownBlocks(node);
               node.querySelectorAll('pre code:not(.hljs)').forEach((el) => {
                 try { window.hljs.highlightElement(el); } catch (_) {}
               });

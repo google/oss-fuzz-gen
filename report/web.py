@@ -109,8 +109,13 @@ class JinjaEnv:
 
     # Add a new filter for syntax highlighting
     logs_parser = LogsParser([])
-    self._env.filters[
-        'syntax_highlight'] = logs_parser._syntax_highlight_content
+    self._env.filters['syntax_highlight'] = logs_parser.syntax_highlight_content
+
+    def syntax_highlight_with_agent(content, default_lang="", agent_name=""):
+      return logs_parser.syntax_highlight_content(content, default_lang,
+                                                  agent_name)
+
+    self._env.filters['syntax_highlight_agent'] = syntax_highlight_with_agent
 
     if template_globals:
       for key, val in template_globals.items():
@@ -148,7 +153,8 @@ class GenerateReport:
     self._output_dir = output_dir
     self._jinja = jinja_env
     self.results_dir = results_dir
-    # If cloud, this will be `llm-exp.oss-fuzz.com/Result-reports/ofg-pr/experiment-name`
+    # If cloud, this will be
+    # `llm-exp.oss-fuzz.com/Result-reports/ofg-pr/experiment-name`
     self._base_url = base_url
 
   def read_timings(self):

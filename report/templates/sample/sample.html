@@ -313,7 +313,7 @@ limitations under the License.
                             {% endfor %}
                           {% else %}
                             {% for log_part in agent_data.logs %}
-                              <div class="{% if log_part.chat_prompt %}chat_prompt {% elif log_part.chat_response %}chat_response {% endif %} p-4 rounded-md mb-4 whitespace-pre-wrap break-words">{{ log_part.content|syntax_highlight(default_lang)|safe }}</div>
+                              <div class="{% if log_part.chat_prompt %}chat_prompt {% elif log_part.chat_response %}chat_response {% endif %} p-4 rounded-md mb-4 whitespace-pre-wrap break-words">{{ log_part.content|syntax_highlight_agent(default_lang, agent_name)|safe }}</div>
                             {% endfor %}
                           {% endif %}
                         </div>
@@ -425,7 +425,7 @@ limitations under the License.
                                     <div x-show="stepOpen" class="ml-5 px-3 pb-3 mt-3">
                                       {% if step.log_parts %}
                                         {% for log_part in step.log_parts %}
-                                          <div class="{% if log_part.chat_prompt %}chat_prompt {% elif log_part.chat_response %}chat_response {% endif %} p-3 rounded-md mb-2 whitespace-pre-wrap break-words">{{ log_part.content|syntax_highlight(default_lang)|safe }}</div>
+                                          <div class="{% if log_part.chat_prompt %}chat_prompt {% elif log_part.chat_response %}chat_response {% endif %} p-3 rounded-md mb-2 whitespace-pre-wrap break-words">{{ log_part.content|syntax_highlight_agent(default_lang, agent_name)|safe }}</div>
                                         {% endfor %}
                                       {% else %}
                                         <div class="p-3 rounded-md whitespace-pre-wrap break-words">{{ step.content|syntax_highlight|safe }}</div>
@@ -436,7 +436,7 @@ limitations under the License.
                               {% endif %}
                             {% else %}
                               {% for log_part in agent_data.logs %}
-                                <div class="{% if log_part.chat_prompt %}chat_prompt {% elif log_part.chat_response %}chat_response {% endif %} p-4 rounded-md mb-4 whitespace-pre-wrap break-words">{{ log_part.content|syntax_highlight(default_lang)|safe }}</div>
+                                <div class="{% if log_part.chat_prompt %}chat_prompt {% elif log_part.chat_response %}chat_response {% endif %} p-4 rounded-md mb-4 whitespace-pre-wrap break-words">{{ log_part.content|syntax_highlight_agent(default_lang, agent_name)|safe }}</div>
                               {% endfor %}
                             {% endif %}
                           </div>

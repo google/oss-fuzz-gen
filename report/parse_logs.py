@@ -44,77 +44,91 @@ class LogsParser:
     for i, line in enumerate(lines):
       line = line.strip()
       if line == '<bash>':
-        for j in range(i + 1, len(lines)):
-          if lines[j].strip() == '</bash>':
-            bash_content = '\n'.join(lines[i + 1:j]).strip()
-            if bash_content:
-              first_line = bash_content.split('\n')[0].strip()
-              if first_line:
-                # skip comments and placeholder text
-                if (first_line.startswith('#') or
-                    first_line.startswith('[The command') or
-                    first_line.startswith('No bash') or
-                    'No bash' in first_line or len(first_line) < 3):
-                  continue
-
-                parts = first_line.split()
-                if parts:
-                  cmd = parts[0]
-
-                  if cmd == 'grep':
-                    # Extract the search term (usually the first quoted argument)
-                    import re
-                    quoted_match = re.search(r"'([^']+)'", first_line)
-                    if quoted_match:
-                      search_term = quoted_match.group(1)
-                      command_summary = f"grep '{search_term}'"
-                    else:
-                      key_args = []
-                      for part in parts[1:]:
-                        if not part.startswith('-') and len(part) > 1:
-                          if len(part) > 20:
-                            part = part[:17] + '...'
-                          key_args.append(part)
-                          if len(key_args) >= 1:  # Limit to 1 arg for grep
-                            break
-                      command_summary = f"{cmd} {' '.join(key_args)}".strip()
-                  else:
-                    key_args = []
-                    for part in parts[1:]:
-                      if not part.startswith('-') and len(part) > 1:
-                        if len(part) > 20:
-                          part = part[:17] + '...'
-                        key_args.append(part)
-                        if len(key_args) >= 2:  # Limit to 2 key args
-                          break
-
-                    command_summary = f"{cmd} {' '.join(key_args)}".strip()
-
-                  if len(command_summary) > 40:
-                    command_summary = command_summary[:37] + '...'
-
-                  if command_summary not in commands:
-                    commands.append(command_summary)
-            break
+        command = self._process_bash_block(lines, i)
+        if command and command not in commands:
+          commands.append(command)
 
     return commands
+
+  def _process_bash_block(self, lines: list[str], start_idx: int) -> str:
+    """Process a single bash block and extract command summary."""
+    for j in range(start_idx + 1, len(lines)):
+      if lines[j].strip() == '</bash>':
+        bash_content = '\n'.join(lines[start_idx + 1:j]).strip()
+        if bash_content:
+          return self._extract_command_from_content(bash_content)
+        break
+    return ""
+
+  def _extract_command_from_content(self, bash_content: str) -> str:
+    """Extract command summary from bash content."""
+    first_line = bash_content.split('\n', 1)[0].strip()
+    if not first_line:
+      return ""
+
+    # Skip comments and placeholder text
+    if (first_line.startswith('#') or first_line.startswith('[The command') or
+        first_line.startswith('No bash') or 'No bash' in first_line or
+        len(first_line) < 3):
+      return ""
+
+    parts = first_line.split()
+    if not parts:
+      return ""
+
+    cmd = parts[0]
+    command_summary = self._build_command_summary(cmd, parts, first_line)
+
+    if len(command_summary) > 40:
+      command_summary = command_summary[:37] + '...'
+
+    return command_summary
+
+  def _build_command_summary(self, cmd: str, parts: list[str],
+                             first_line: str) -> str:
+    """Build command summary based on command type."""
+    if cmd == 'grep':
+      quoted_match = re.search(r"'([^']+)'", first_line)
+      if quoted_match:
+        search_term = quoted_match.group(1)
+        return f"grep '{search_term}'"
+      return self._extract_key_args(cmd, parts[1:], 1)
+    return self._extract_key_args(cmd, parts[1:], 2)
+
+  def _extract_key_args(self, cmd: str, parts: list[str], max_args: int) -> str:
+    """Extract key arguments from command parts."""
+    key_args = []
+    for part in parts:
+      if not part.startswith('-') and len(part) > 1:
+        if len(part) > 20:
+          part = part[:17] + '...'
+        key_args.append(part)
+        if len(key_args) >= max_args:
+          break
+    return f"{cmd} {' '.join(key_args)}".strip()
 
   def _extract_tool_names(self, content: str) -> list[str]:
     """Extract tool names from content."""
     tool_counts = {}
     lines = content.split('\n')
 
+    # For step titles
+    relevant_tool_tags = [
+        '<bash>', '<conclusion>', '<stderr>', '<gdb>', '<gdb command>',
+        '<gdb output>', '<solution>', '<system>', '<return_code>'
+    ]
+
     for i, line in enumerate(lines):
       line = line.strip()
-      if (line in ['<bash>', '<conclusion>'] and not line.startswith('</')):
-        tool_name = line[1:-1].title()
+      if line in relevant_tool_tags and not line.startswith('</'):
+        tool_name = line[1:-1].replace('_', ' ').title()
         tool_counts[tool_name] = tool_counts.get(tool_name, 0) + 1
       elif line == '<stderr>':
         if i + 1 < len(lines) and lines[i + 1].strip():
           tool_counts['Stderr'] = tool_counts.get('Stderr', 0) + 1
 
     tool_names = []
-    for tool_name, count in tool_counts.items():
+    for tool_name in tool_counts:
       tool_names.append(tool_name)
 
     return tool_names
@@ -126,7 +140,6 @@ class LogsParser:
 
     steps_dict = {}
     current_step_number = None
-    current_step_name = None
 
     for log_part in agent_logs:
       content = log_part.content.strip()
@@ -167,6 +180,7 @@ class LogsParser:
     return self._parse_steps_by_chat_pairs(agent_logs)
 
   def _parse_steps_by_chat_pairs(self, agent_logs: list[LogPart]) -> list[dict]:
+    """Parse steps from agent logs by grouping chat prompt/response pairs."""
     steps = []
 
     first_prompt_idx = -1
@@ -210,15 +224,44 @@ class LogsParser:
 
     return steps
 
-  def _syntax_highlight_content(self,
-                                content: str,
-                                default_language: str = "") -> str:
+  def _convert_newlines_outside_tags(self, content: str) -> str:
+    """Convert \\n to <br> tags when they appear outside XML tags."""
+    tag_pattern = r'&lt;/?[^&]*?&gt;'
+
+    tag_matches = list(re.finditer(tag_pattern, content))
+
+    if not tag_matches:
+      return content.replace('\\n', '<br>')
+
+    result = []
+    last_end = 0
+
+    for match in tag_matches:
+      # Process text before this tag
+      before_tag = content[last_end:match.start()]
+      result.append(before_tag.replace('\\n', '<br>'))
+
+      # Add the tag itself (unchanged)
+      result.append(match.group())
+
+      last_end = match.end()
+
+    remaining = content[last_end:]
+    result.append(remaining.replace('\\n', '<br>'))
+
+    return ''.join(result)
+
+  def syntax_highlight_content(self,
+                               content: str,
+                               default_language: str = "",
+                               agent_name: str = "") -> str:
     """Syntax highlights content while preserving visible tags."""
 
     # Escape everything first so raw logs are safe to render in HTML
     escaped = html.escape(content)
 
-    # Helper to simplify substitutions
+    escaped = self._convert_newlines_outside_tags(escaped)
+
     def _sub(pattern: str, repl: str, text: str) -> str:
       return re.sub(pattern, repl, text, flags=re.DOTALL)
 
@@ -243,49 +286,170 @@ class LogsParser:
     lang_key = _normalize_lang(default_language)
 
     escaped = _sub(
-        r'&lt;conclusion&gt;(\s*[^\s].*?[^\s]\s*|(?:\s*[^\s].*?)?)&lt;/conclusion&gt;',
+        r'&lt;conclusion&gt;(\s*[^\s].*?[^\s]\s*|(?:\s*[^\s].*?)?)'
+        r'&lt;/conclusion&gt;',
         r'<span class="log-tag">&lt;conclusion&gt;</span>'
-        r'<pre class="whitespace-pre-wrap break-words overflow-x-auto reason-block">\1</pre>'
+        r'<pre class="whitespace-pre-wrap break-words overflow-x-auto '
+        r'reason-block">\1</pre>'
         r'<span class="log-tag">&lt;/conclusion&gt;</span>', escaped)
     escaped = _sub(
-        r'&lt;reason&gt;(\s*[^\s].*?[^\s]\s*|(?:\s*[^\s].*?)?)&lt;/reason&gt;',
-        r'<span class="log-tag">&lt;reason&gt;</span>'
-        r'<div class="markdown-block whitespace-pre-wrap break-words overflow-x-auto">\1</div>'
+        r'&lt;reason&gt;(\s*[^\s].*?[^\s]\s*|(?:\s*[^\s].*?)?)'
+        r'&lt;/reason&gt;', r'<span class="log-tag">&lt;reason&gt;</span>'
+        r'<div class="markdown-block whitespace-pre-wrap break-words '
+        r'overflow-x-auto">\1</div>'
         r'<span class="log-tag">&lt;/reason&gt;</span>', escaped)
 
     escaped = _sub(
-        r'&lt;bash&gt;(\s*[^\s].*?[^\s]\s*|(?:\s*[^\s].*?)?)&lt;/bash&gt;',
-        r'<span class="log-tag">&lt;bash&gt;</span>'
-        r'<pre class="whitespace-pre-wrap break-words overflow-x-auto"><code class="language-bash">\1</code></pre>'
+        r'&lt;bash&gt;(\s*[^\s].*?[^\s]\s*|(?:\s*[^\s].*?)?)'
+        r'&lt;/bash&gt;', r'<span class="log-tag">&lt;bash&gt;</span>'
+        r'<pre class="whitespace-pre-wrap break-words overflow-x-auto">'
+        r'<code class="language-bash">\1</code></pre>'
         r'<span class="log-tag">&lt;/bash&gt;</span>', escaped)
     escaped = _sub(
-        r'&lt;build_script&gt;(\s*[^\s].*?[^\s]\s*|(?:\s*[^\s].*?)?)&lt;/build_script&gt;',
+        r'&lt;build_script&gt;(\s*[^\s].*?[^\s]\s*|(?:\s*[^\s].*?)?)'
+        r'&lt;/build_script&gt;',
         r'<span class="log-tag">&lt;build_script&gt;</span>'
-        r'<pre class="whitespace-pre-wrap break-words overflow-x-auto"><code class="language-cpp">\1</code></pre>'
+        r'<pre class="whitespace-pre-wrap break-words overflow-x-auto">'
+        r'<code class="language-cpp">\1</code></pre>'
         r'<span class="log-tag">&lt;/build_script&gt;</span>', escaped)
     escaped = _sub(
-        r'&lt;fuzz target&gt;(\s*[^\s].*?[^\s]\s*|(?:\s*[^\s].*?)?)&lt;/fuzz target&gt;',
+        r'&lt;fuzz target&gt;(\s*[^\s].*?[^\s]\s*|(?:\s*[^\s].*?)?)'
+        r'&lt;/fuzz target&gt;',
         rf'<span class="log-tag">&lt;fuzz target&gt;</span>'
-        rf'<pre class="whitespace-pre-wrap break-words overflow-x-auto"><code class="language-{lang_key}">\1</code></pre>'
+        rf'<pre class="whitespace-pre-wrap break-words overflow-x-auto">'
+        rf'<code class="language-{lang_key}">\1</code></pre>'
         rf'<span class="log-tag">&lt;/fuzz target&gt;</span>', escaped)
 
     escaped = _sub(
-        r'&lt;stdout&gt;(\s*[^\s].*?[^\s]\s*|(?:\s*[^\s].*?)?)&lt;/stdout&gt;',
-        r'<span class="log-tag">&lt;stdout&gt;</span>'
-        r'<pre class="whitespace-pre-wrap break-words overflow-x-auto"><code class="language-bash">\1</code></pre>'
+        r'&lt;stdout&gt;(\s*[^\s].*?[^\s]\s*|(?:\s*[^\s].*?)?)'
+        r'&lt;/stdout&gt;', r'<span class="log-tag">&lt;stdout&gt;</span>'
+        r'<pre class="whitespace-pre-wrap break-words overflow-x-auto">'
+        r'<code class="language-bash">\1</code></pre>'
         r'<span class="log-tag">&lt;/stdout&gt;</span>', escaped)
     escaped = _sub(
-        r'&lt;stderr&gt;(\s*[^\s].*?[^\s]\s*|(?:\s*[^\s].*?)?)&lt;/stderr&gt;',
-        r'<span class="log-tag">&lt;stderr&gt;</span>'
-        r'<pre class="whitespace-pre-wrap break-words overflow-x-auto"><code class="language-bash">\1</code></pre>'
+        r'&lt;stderr&gt;(\s*[^\s].*?[^\s]\s*|(?:\s*[^\s].*?)?)'
+        r'&lt;/stderr&gt;', r'<span class="log-tag">&lt;stderr&gt;</span>'
+        r'<pre class="whitespace-pre-wrap break-words overflow-x-auto">'
+        r'<code class="language-bash">\1</code></pre>'
         r'<span class="log-tag">&lt;/stderr&gt;</span>', escaped)
     escaped = _sub(
-        r'&lt;return_code&gt;(\s*[^\s].*?[^\s]\s*|(?:\s*[^\s].*?)?)&lt;/return_code&gt;',
+        r'&lt;return_code&gt;(\s*[^\s].*?[^\s]\s*|(?:\s*[^\s].*?)?)'
+        r'&lt;/return_code&gt;',
         r'<span class="log-tag">&lt;return_code&gt;</span>'
-        r'<pre class="whitespace-pre-wrap break-words overflow-x-auto"><code>\1</code></pre>'
+        r'<pre class="whitespace-pre-wrap break-words overflow-x-auto">'
+        r'<code>\1</code></pre>'
         r'<span class="log-tag">&lt;/return_code&gt;</span>', escaped)
 
+    escaped = _sub(
+        r'&lt;build script&gt;(\s*[^\s].*?[^\s]\s*|(?:\s*[^\s].*?)?)'
+        r'&lt;/build script&gt;',
+        r'<span class="log-tag">&lt;build script&gt;</span>'
+        r'<pre class="whitespace-pre-wrap break-words overflow-x-auto">'
+        r'<code class="language-bash">\1</code></pre>'
+        r'<span class="log-tag">&lt;/build script&gt;</span>', escaped)
+
+    escaped = _sub(
+        r'&lt;gcb&gt;(\s*[^\s].*?[^\s]\s*|(?:\s*[^\s].*?)?)&lt;/gcb&gt;',
+        r'<span class="log-tag">&lt;gcb&gt;</span>'
+        r'<pre class="whitespace-pre-wrap break-words overflow-x-auto">'
+        r'<code class="language-bash">\1</code></pre>'
+        r'<span class="log-tag">&lt;/gcb&gt;</span>', escaped)
+
+    escaped = _sub(
+        r'&lt;gdb&gt;(\s*[^\s].*?[^\s]\s*|(?:\s*[^\s].*?)?)&lt;/gdb&gt;',
+        r'<span class="log-tag">&lt;gdb&gt;</span>'
+        r'<pre class="whitespace-pre-wrap break-words overflow-x-auto">'
+        r'<code class="language-bash">\1</code></pre>'
+        r'<span class="log-tag">&lt;/gdb&gt;</span>', escaped)
+
+    escaped = _sub(
+        r'&lt;gdb command&gt;(\s*[^\s].*?[^\s]\s*|(?:\s*[^\s].*?)?)'
+        r'&lt;/gdb command&gt;',
+        r'<span class="log-tag">&lt;gdb command&gt;</span>'
+        r'<pre class="whitespace-pre-wrap break-words overflow-x-auto">'
+        r'<code class="language-bash">\1</code></pre>'
+        r'<span class="log-tag">&lt;/gdb command&gt;</span>', escaped)
+
+    escaped = _sub(
+        r'&lt;gdb output&gt;(\s*[^\s].*?[^\s]\s*|(?:\s*[^\s].*?)?)'
+        r'&lt;/gdb output&gt;',
+        r'<span class="log-tag">&lt;gdb output&gt;</span>'
+        r'<pre class="whitespace-pre-wrap break-words overflow-x-auto">'
+        r'<code class="language-bash">\1</code></pre>'
+        r'<span class="log-tag">&lt;/gdb output&gt;</span>', escaped)
+
+    escaped = _sub(
+        r'&lt;code&gt;(\s*[^\s].*?[^\s]\s*|(?:\s*[^\s].*?)?)&lt;/code&gt;',
+        r'<span class="log-tag">&lt;code&gt;</span>'
+        r'<pre class="whitespace-pre-wrap break-words overflow-x-auto">'
+        rf'<code class="language-{lang_key}">\1</code></pre>'
+        r'<span class="log-tag">&lt;/code&gt;</span>', escaped)
+
+    escaped = _sub(
+        r'&lt;solution&gt;(\s*[^\s].*?[^\s]\s*|(?:\s*[^\s].*?)?)'
+        r'&lt;/solution&gt;', r'<span class="log-tag">&lt;solution&gt;</span>'
+        r'<pre class="whitespace-pre-wrap break-words overflow-x-auto">'
+        rf'<code class="language-{lang_key}">\1</code></pre>'
+        r'<span class="log-tag">&lt;/solution&gt;</span>', escaped)
+
+    def process_system_content(match):
+      content = match.group(1)
+      return (r'<span class="log-tag">&lt;system&gt;</span>'
+              r'<div class="whitespace-pre-wrap break-words '
+              r'overflow-x-auto">' + content +
+              r'</div><span class="log-tag">&lt;/system&gt;</span>')
+
+    escaped = re.sub(
+        r'&lt;system&gt;(\s*[^\s].*?[^\s]\s*|(?:\s*[^\s].*?)?)'
+        r'&lt;/system&gt;',
+        process_system_content,
+        escaped,
+        flags=re.DOTALL)
+
+    # Handle steps tag (usually opening only, no closing tag)
+    escaped = _sub(r'&lt;steps&gt;',
+                   r'<span class="log-tag">&lt;steps&gt;</span>', escaped)
+
+    # Generic fallback for any remaining XML tags not explicitly handled above
+    # This ensures all XML tags get the log-tag styling
+    escaped = _sub(r'&lt;([^/&][^&]*?)&gt;',
+                   r'<span class="log-tag">&lt;\1&gt;</span>', escaped)
+    escaped = _sub(r'&lt;(/[^&]*?)&gt;',
+                   r'<span class="log-tag">&lt;\1&gt;</span>', escaped)
+
+    # Handle ExecutionStage-specific highlighting for fuzz target source
+    if "ExecutionStage" in agent_name:
+      escaped = self._highlight_execution_stage_content(escaped, lang_key)
+
     return escaped
+
+  def _highlight_execution_stage_content(self, content: str,
+                                         lang_key: str) -> str:
+    """Add syntax highlighting for ExecutionStage-specific content patterns."""
+
+    # Pattern to match "Fuzz target source:" followed by code until
+    # "Build script source:"
+    fuzz_target_pattern = (r'(Fuzz target source:)\s*\n'
+                           r'(.*?)'
+                           r'(?=Build script source:|$)')
+
+    def replace_fuzz_target(match):
+      header = match.group(1)
+      code_content = match.group(2).strip()
+
+      if code_content:
+        return (
+            f'<div class="font-medium text-blue-600 mb-2">{header}</div>'
+            '<pre class="whitespace-pre-wrap break-words overflow-x-auto">'
+            f'<code class="language-{lang_key}">{code_content}</code></pre>')
+      return f'<div class="font-medium text-blue-600 mb-2">{header}</div>'
+
+    content = re.sub(fuzz_target_pattern,
+                     replace_fuzz_target,
+                     content,
+                     flags=re.DOTALL)
+
+    return content
 
   def _create_step_data(self, step_number: int,
                         log_parts: list[LogPart]) -> dict:
@@ -310,7 +474,7 @@ class LogsParser:
   def get_agent_sections(self) -> dict[str, list[LogPart]]:
     """Get the agent sections from the logs."""
 
-    pattern = re.compile(r"\*{24}(.+?)\*{24}")
+    pattern = re.compile(r"\*{20,}([^*]+?)\*{20,}")
     agent_sections = {}
     current_agent = None
     agent_counters = {}
