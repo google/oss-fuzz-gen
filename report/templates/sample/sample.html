@@ -69,17 +69,42 @@ limitations under the License.
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
             <div class="p-4 rounded-lg">
               <p class="text-sm uppercase tracking-wide">Sanitizer</p>
-              <p class="font-medium mt-1">{{ crash_info.crash_symptom.split(": ")[1] }}</p>
+              <p class="font-medium mt-1"><span id="sym-sanitizer"></span></p>
             </div>
             <div class="p-4 rounded-lg">
               <p class="text-sm uppercase tracking-wide">Bug Type</p>
-              <p class="font-medium mt-1">{{ crash_info.crash_symptom.split(" ")[2] }}</p>
+              <p class="font-medium mt-1"><span id="sym-bugtype"></span></p>
             </div>
             <div class="p-4 rounded-lg">
               <p class="text-sm uppercase tracking-wide">Crash Address</p>
-              <p class="font-medium mt-1 font-mono">{{ crash_info.crash_symptom.split("address ")[1] }}</p>
+              <p class="font-medium mt-1 font-mono"><span id="sym-address"></span></p>
             </div>
           </div>
+          <script>
+          (function() {
+            var symptom = {{ crash_info.crash_symptom | tojson | safe }};
+            var sanitizer = '';
+            var bugType = '';
+            var address = '';
+            if (symptom && typeof symptom === 'string') {
+              var mSan = symptom.match(/ERROR:\s*([A-Za-z0-9_-]+)\s*:/i);
+              if (mSan) sanitizer = mSan[1];
+              var mType = symptom.match(/AddressSanitizer:\s*(.+?)\s+on\b/i);
+              if (mType) {
+                bugType = mType[1].trim();
+              } else {
+                var mTypeFallback = symptom.match(/ERROR:\s*AddressSanitizer:\s*([A-Za-z0-9 _-]+)/i);
+                if (mTypeFallback) bugType = mTypeFallback[1].trim();
+              }
+              var mAddr = symptom.match(/address\s+([^\s]+)/i);
+              if (mAddr) address = mAddr[1];
+            }
+            var el;
+            el = document.getElementById('sym-sanitizer'); if (el) el.textContent = sanitizer || 'AddressSanitizer';
+            el = document.getElementById('sym-bugtype'); if (el) el.textContent = bugType || 'N/A';
+            el = document.getElementById('sym-address'); if (el) el.textContent = address || '';
+          })();
+          </script>
           {% endif %}
 
           {% if crash_info.execution_stats %}
@@ -100,7 +125,7 @@ limitations under the License.
           <script>
             function processStackTracesForElement(elementId) {
               const element = document.getElementById(elementId);
-              if (element && window.AnsiUp) {
+              if (element and window.AnsiUp) {
                 const ansi_up = new window.AnsiUp();
                 const textContent = element.textContent || element.innerText;
                 let htmlContent = ansi_up.ansi_to_html(textContent);
@@ -115,7 +140,6 @@ limitations under the License.
                     for (const frameId in stackTraces) {
                       const frameData = stackTraces[frameId];
 
-                      // First try to match by memory address
                       if (match.includes(frameData.memory_address)) {
                         if (frameData.url) {
                           formattedPath = '<a href="' + frameData.url + '" target="_blank" class="text-blue-500 hover:text-blue-700 underline">' + filePath + '</a>';
@@ -123,9 +147,8 @@ limitations under the License.
                         }
                       }
 
-                      // Then as fallback, match by function name and similar file path (without line:column)
-                      const filePathBase = filePath.split(':')[0]; // Remove :line:column
-                      const framePathBase = frameData.path.split(':')[0]; // Remove :line:column
+                      const filePathBase = filePath.split(':')[0];
+                      const framePathBase = frameData.path.split(':')[0];
                       if (match.includes(frameData.function) && filePathBase === framePathBase) {
                         if (frameData.url) {
                           formattedPath = '<a href="' + frameData.url + '" target="_blank" class="text-blue-500 hover:text-blue-700 underline">' + filePath + '</a>';
@@ -133,7 +156,6 @@ limitations under the License.
                         }
                       }
 
-                      // As final fallback, match by frame number and function name
                       if (frameId === frameNum && match.includes(frameData.function)) {
                         if (frameData.url) {
                           formattedPath = '<a href="' + frameData.url + '" target="_blank" class="text-blue-500 hover:text-blue-700 underline">' + filePath + '</a>';

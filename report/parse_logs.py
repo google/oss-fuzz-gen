@@ -17,6 +17,7 @@ stack traces, etc. to be rendered in the report."""
 
 import html
 import re
+from datetime import datetime
 
 from report.common import LogPart
 
@@ -233,13 +234,13 @@ class LogsParser:
     return steps
 
   def _convert_newlines_outside_tags(self, content: str) -> str:
-    """Convert \\n to <br> tags when they appear outside XML tags."""
+    """Convert \n to <br> tags when they appear outside XML tags."""
     tag_pattern = r'&lt;/?[^&]*?&gt;'
 
     tag_matches = list(re.finditer(tag_pattern, content))
 
     if not tag_matches:
-      return content.replace('\\n', '<br>')
+      return content.replace('\n', '<br>')
 
     result = []
     last_end = 0
@@ -247,7 +248,7 @@ class LogsParser:
     for match in tag_matches:
       # Process text before this tag
       before_tag = content[last_end:match.start()]
-      result.append(before_tag.replace('\\n', '<br>'))
+      result.append(before_tag.replace('\n', '<br>'))
 
       # Add the tag itself (unchanged)
       result.append(match.group())
@@ -255,7 +256,7 @@ class LogsParser:
       last_end = match.end()
 
     remaining = content[last_end:]
-    result.append(remaining.replace('\\n', '<br>'))
+    result.append(remaining.replace('\n', '<br>'))
 
     return ''.join(result)
 
@@ -454,12 +455,11 @@ class LogsParser:
     return content
 
   def _replace_stdout_with_language_blocks(self, escaped: str,
-                                            default_lang: str) -> str:
+                                           default_lang: str) -> str:
     """Replace <stdout> blocks with language-aware code blocks.
     Chooses language based on the preceding <bash> command and file extensions.
     """
-    pattern = re.compile(r'&lt;(bash|stdout)&gt;(.*?)&lt;/\1&gt;',
-                         re.DOTALL)
+    pattern = re.compile(r'&lt;(bash|stdout)&gt;(.*?)&lt;/\1&gt;', re.DOTALL)
     matches = list(pattern.finditer(escaped))
     if not matches:
       return escaped
@@ -502,6 +502,7 @@ class LogsParser:
       infer from stdout first path; fallback to bash.
     - For unknown: use bash.
     """
+
     def pick_from_path(path: str) -> str:
       path = path.strip()
       if not path:
@@ -716,6 +717,57 @@ class LogsParser:
 
     return [cycles_dict[cycle] for cycle in sorted(cycles_dict.keys())]
 
+  def count_cycles(self) -> int:
+    """Count distinct cycle numbers present in the logs."""
+    agent_sections = self.get_agent_sections()
+    cycles: set[int] = set()
+    for agent_name in agent_sections.keys():
+      m = re.search(r'\(Cycle (\d+)\)', agent_name)
+      if m:
+        try:
+          cycles.add(int(m.group(1)))
+        except Exception:
+          pass
+    return len(cycles)
+
+  def extract_trial_timestamps(self) -> dict[str, list[datetime]]:
+    """Extract all timestamps grouped by Trial ID from agent logs.
+
+    Pattern example: "2025-09-04 08:20:04 [Trial ID: 03] INFO"
+    """
+    trial_to_times: dict[str, list[datetime]] = {}
+    ts_regex = re.compile(
+        r'(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}).*?\[Trial ID:\s*([^\]]+)\]')
+    for part in self._logs:
+      for line in part.content.split('\n'):
+        line = line.strip()
+        m = ts_regex.search(line)
+        if not m:
+          continue
+        ts_str = m.group(1)
+        trial_id = m.group(2).strip()
+        try:
+          ts = datetime.strptime(ts_str, '%Y-%m-%d %H:%M:%S')
+        except Exception:
+          continue
+        trial_to_times.setdefault(trial_id, []).append(ts)
+    return trial_to_times
+
+  def compute_trial_durations_seconds(self) -> dict[str, float]:
+    """Return per-trial duration in seconds as max(timestamp)-min(timestamp)."""
+    trial_to_times = self.extract_trial_timestamps()
+    durations: dict[str, float] = {}
+    for trial_id, times in trial_to_times.items():
+      if not times:
+        continue
+      try:
+        tmin = min(times)
+        tmax = max(times)
+        durations[trial_id] = max(0.0, (tmax - tmin).total_seconds())
+      except Exception:
+        continue
+    return durations
+
 
 class RunLogsParser:
   """Parse the run log."""
@@ -784,7 +836,7 @@ class RunLogsParser:
         memory_addr = parts[1]
         remaining = parts[2]
 
-        in_match = re.search(r'in (.+?) (/[^\s]+)', remaining)
+        in_match = re.search(r'in (.+?) (/[^^\s]+)', remaining)
         if not in_match:
           continue
 

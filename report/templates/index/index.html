@@ -35,6 +35,7 @@ limitations under the License.
     languageOpen: true,
     crashesFoundOpen: true,
     ofgMetricsOpen: true,
+    cyclesOpen: true,
     chartsOpen: true,
 }" class="space-y-2">
 
@@ -45,7 +46,7 @@ limitations under the License.
                 Benchmark summary
             </span>
             <svg class="w-5 h-5 transform transition-transform duration-200"
-                 :class="{'rotate-180': projectOpen}"
+                 :class="{'rotate-180': benchmarkOpen}"
                  fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
             </svg>
@@ -451,6 +452,164 @@ limitations under the License.
     </div>
 
     <div class="border rounded-lg toc-section">
+        <button @click="cyclesOpen = !cyclesOpen"
+                class="w-full p-4 flex justify-between items-center">
+            <span class="text-lg font-bold">Cycles / Time</span>
+            <svg class="w-5 h-5 transform transition-transform duration-200"
+                 :class="{'rotate-180': cyclesOpen}"
+                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+        </button>
+        <div x-show="cyclesOpen" class="p-4 border-t space-y-8">
+            <div>
+                <h3 class="text-md font-semibold mb-2">Per Project</h3>
+                <div class="overflow-x-auto">
+                    <table class="sortable-table min-w-full">
+                        <thead>
+                            <tr>
+                                <th data-sorted="asc">Project</th>
+                                <th data-sort-number>Avg cycles/benchmark</th>
+                                <th data-sort-number>Avg trial duration (min)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% set ns_proj = namespace(total_cycles=0, total_duration=0, count=0) %}
+                            {% for project_name, pdata in unified_data.items() %}
+                            {% set cycles = (pdata.get('average_cycles_per_benchmark') or 0) | float %}
+                            {% set duration = (pdata.get('average_trial_duration_sec') or 0) | float %}
+                            {% set ns_proj.total_cycles = ns_proj.total_cycles + cycles %}
+                            {% set ns_proj.total_duration = ns_proj.total_duration + duration %}
+                            {% set ns_proj.count = ns_proj.count + 1 %}
+                            <tr>
+                                <td data-sort-value="{{ project_name }}">{{ project_name }}</td>
+                                <td data-sort-value="{{ cycles }}">{{ cycles }}</td>
+                                <td data-sort-value="{{ (duration / 60) | round(2) }}">{{ (duration / 60) | round(2) }}</td>
+                            </tr>
+                            {% endfor %}
+                            {% if ns_proj.count > 0 %}
+                            <tr class="font-bold">
+                                <td>Average</td>
+                                <td>{{ (ns_proj.total_cycles / ns_proj.count) | round(2) }}</td>
+                                <td>{{ ((ns_proj.total_duration / ns_proj.count) / 60) | round(2) }}</td>
+                            </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div>
+                <h3 class="text-md font-semibold mb-2">Per Benchmark</h3>
+                <div class="overflow-x-auto">
+                    <table class="sortable-table min-w-full">
+                        <thead>
+                            <tr>
+                                <th>Project</th>
+                                <th data-sorted="asc">Benchmark</th>
+                                <th data-sort-number>Average cycles/sample</th>
+                                <th data-sort-number>Average trial duration (min)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% set ns_bench = namespace(total_cycles=0, total_duration=0, count=0) %}
+                            {% for project_name, pdata in unified_data.items() %}
+                                {% if pdata.benchmarks %}
+                                    {% for bench_id, bdata in pdata.benchmarks.items() %}
+                                    {% set cycles = (bdata.get('avg_cycles_per_sample') or 0) | float %}
+                                    {% set duration = (bdata.get('avg_trial_duration_sec') or 0) | float %}
+                                    {% set ns_bench.total_cycles = ns_bench.total_cycles + cycles %}
+                                    {% set ns_bench.total_duration = ns_bench.total_duration + duration %}
+                                    {% set ns_bench.count = ns_bench.count + 1 %}
+                                    <tr>
+                                        <td data-sort-value="{{ project_name }}">{{ project_name }}</td>
+                                        <td data-sort-value="{{ bench_id }}">
+                                            <pre class="signature">
+                                                <a href="benchmark/{{ bench_id|urlencode }}/index.html" class="prettify-benchmark-name">{{ bench_id }}</a>
+                                            </pre>
+                                        </td>
+                                        <td data-sort-value="{{ cycles }}">{{ cycles }}</td>
+                                        <td data-sort-value="{{ (duration / 60) | round(2) }}">{{ (duration / 60) | round(2) }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                {% endif %}
+                            {% endfor %}
+                            {% if ns_bench.count > 0 %}
+                            <tr class="font-bold">
+                                <td>Average</td>
+                                <td>-</td>
+                                <td>{{ (ns_bench.total_cycles / ns_bench.count) | round(2) }}</td>
+                                <td>{{ ((ns_bench.total_duration / ns_bench.count) / 60) | round(2) }}</td>
+                            </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div>
+                <h3 class="text-md font-semibold mb-2">Per Sample</h3>
+                <div class="overflow-x-auto">
+                    <table class="sortable-table min-w-full">
+                        <thead>
+                            <tr>
+                                <th>Project</th>
+                                <th>Benchmark</th>
+                                <th data-sorted="asc">Sample</th>
+                                <th data-sort-number>Cycles</th>
+                                <th data-sort-number>Trial duration (min)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% set ns_sample = namespace(total_cycles=0, total_duration=0, count=0) %}
+                            {% for project_name, pdata in unified_data.items() %}
+                                {% if pdata.benchmarks %}
+                                    {% for bench_id, bdata in pdata.benchmarks.items() %}
+                                        {% if bdata.samples %}
+                                            {% for s in bdata.samples %}
+                                            {% set cycles = (s.get('cycles_count') or 0) | int %}
+                                            {% set duration = (s.get('trial_avg_duration_sec') or 0) | float %}
+                                            {% set ns_sample.total_cycles = ns_sample.total_cycles + cycles %}
+                                            {% set ns_sample.total_duration = ns_sample.total_duration + duration %}
+                                            {% set ns_sample.count = ns_sample.count + 1 %}
+                                            <tr>
+                                                <td data-sort-value="{{ project_name }}">{{ project_name }}</td>
+                                                <td data-sort-value="{{ bench_id }}">
+                                                    <pre class="signature">
+                                                        <a href="benchmark/{{ bench_id|urlencode }}/index.html" class="prettify-benchmark-name">{{ bench_id }}</a>
+                                                    </pre>
+                                                </td>
+                                                <td data-sort-value="{{ s.sample }}">
+                                                    <pre class="signature">
+                                                        <a href="sample/{{ bench_id|urlencode }}/{{ s.sample }}.html">Sample {{ s.sample }}</a>
+                                                    </pre>
+                                                </td>
+                                                <td data-sort-value="{{ cycles }}">{{ cycles }}</td>
+                                                <td data-sort-value="{{ (duration / 60) | round(2) }}">{{ (duration / 60) | round(2) }}</td>
+                                            </tr>
+                                            {% endfor %}
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endif %}
+                            {% endfor %}
+                            {% if ns_sample.count > 0 %}
+                            <tr class="font-bold">
+                                <td>Average</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>{{ (ns_sample.total_cycles / ns_sample.count) | round(2) }}</td>
+                                <td>{{ ((ns_sample.total_duration / ns_sample.count) / 60) | round(2) }}</td>
+                            </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="border rounded-lg toc-section">
         <button @click="languageOpen = !languageOpen"
                 class="w-full p-4 flex justify-between items-center">
             <span class="text-lg font-bold">
@@ -505,10 +664,19 @@ limitations under the License.
             </button>
             <div x-show="chartsOpen" class="p-4 border-t">
                 <div class="chart-row">
-                    <div id="coverage-chart" class="chart-box"></div>
+                    <div id="coverage-chart" class="chart-box" style="grid-column: 1 / -1; width: 100%"></div>
+                    <div id="language-coverage-chart" class="chart-box" style="display:none"></div>
                 </div>
                 <div class="chart-row">
                     <div id="crash-reasons-chart" class="chart-box"></div>
+                </div>
+                <div class="chart-row">
+                    <div id="cycles-projects-chart" class="chart-box"></div>
+                    <div id="duration-projects-chart" class="chart-box"></div>
+                </div>
+                <div class="chart-row">
+                    <div id="cycles-benchmarks-chart" class="chart-box"></div>
+                    <div id="duration-benchmarks-chart" class="chart-box"></div>
                 </div>
             </div>
         </div>

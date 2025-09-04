@@ -399,6 +399,8 @@ class GenerateReport:
       agent_sections = logs_parser.get_agent_sections()
       agent_cycles = logs_parser.get_agent_cycles()
 
+      crash_info = self._get_crash_info_from_run_logs(benchmark.id, sample)
+
       rendered = self._jinja.render(
           'sample/sample.html',
           benchmark=benchmark,
@@ -466,20 +468,33 @@ class GenerateReport:
 
     project_build_successes = {}
     project_crashes = {}
+    project_cycles_sum = {}
+    project_trial_avg_duration_sum = {}
+    project_benchmark_counts = {}
 
     for benchmark in benchmarks:
-      samples = self._results.get_samples(
-          *self._results.get_results(benchmark.id))
+      results, targets = self._results.get_results(benchmark.id)
+      samples = self._results.get_samples(results, targets)
       samples_data = []
 
       benchmark_metrics = {
           "crashes": 0,
           "compiles": 0,
           "total_coverage": 0,
-          "total_line_coverage_diff": 0
+          "total_line_coverage_diff": 0,
+          "cycles_sum": 0,
+          "avg_trial_duration_sum": 0.0
       }
 
       for sample in samples:
+        logs = self._results.get_logs(benchmark.id, sample.id) or []
+        logs_parser = LogsParser(logs)
+        cycles_count = logs_parser.count_cycles()
+        trial_durations = logs_parser.compute_trial_durations_seconds()
+        avg_trial_duration_sec = (sum(trial_durations.values()) /
+                                  len(trial_durations)
+                                  if trial_durations else 0.0)
+
         crash_info = self._get_crash_info_from_run_logs(benchmark.id, sample)
         triage = self._results.get_triage(benchmark.id, sample.id) or {
             "result": "",
@@ -496,16 +511,22 @@ class GenerateReport:
             "crash_reason": getattr(sample.result, 'semantic_error', '') or '',
             "triage": triage.result,
             "triager_prompt": triage.triager_prompt,
-            # Give the full crash details for template rendering
             "crash_details": crash_info["crash_details"],
-            "crash_symptom": crash_info["crash_symptom"]
+            "crash_symptom": crash_info["crash_symptom"],
+            # New metrics
+            "cycles_count": cycles_count,
+            "trial_avg_duration_sec": avg_trial_duration_sec
         }
         samples_data.append(sample_data)
+
         benchmark_metrics["total_coverage"] += int(sample.result.coverage)
         benchmark_metrics["total_line_coverage_diff"] += int(
             sample.result.line_coverage_diff)
         benchmark_metrics["crashes"] += int(sample.result.crashes)
         benchmark_metrics["compiles"] += int(sample.result.compiles)
+        benchmark_metrics["cycles_sum"] += int(cycles_count)
+        benchmark_metrics["avg_trial_duration_sum"] += float(
+            avg_trial_duration_sec)
 
       if len(samples) > 0:
         build_success_rate = float(benchmark_metrics["compiles"]) / float(
@@ -515,11 +536,17 @@ class GenerateReport:
             len(samples))
         average_line_coverage_diff = benchmark_metrics[
             "total_line_coverage_diff"] / float(len(samples))
+        avg_cycles_per_sample = benchmark_metrics["cycles_sum"] / float(
+            len(samples))
+        avg_trial_duration_sec = benchmark_metrics[
+            "avg_trial_duration_sum"] / float(len(samples))
       else:
         build_success_rate = 0
         crash_rate = 0
         average_coverage = 0
         average_line_coverage_diff = 0
+        avg_cycles_per_sample = 0
+        avg_trial_duration_sec = 0.0
 
       unified_data[benchmark.project]["benchmarks"][benchmark.id] = {
           "samples":
@@ -537,18 +564,30 @@ class GenerateReport:
           "total_line_coverage_diff":
               benchmark_metrics["total_line_coverage_diff"],
           "average_line_coverage_diff":
-              average_line_coverage_diff
+              average_line_coverage_diff,
+          # New aggregates per benchmark
+          "avg_cycles_per_sample":
+              avg_cycles_per_sample,
+          "avg_trial_duration_sec":
+              avg_trial_duration_sec
       }
 
       if benchmark.project not in project_build_successes:
         project_build_successes[benchmark.project] = 0
         project_crashes[benchmark.project] = 0
+        project_cycles_sum[benchmark.project] = 0.0
+        project_trial_avg_duration_sum[benchmark.project] = 0.0
+        project_benchmark_counts[benchmark.project] = 0
 
       project_build_successes[benchmark.project] += build_success_rate
       project_crashes[benchmark.project] += crash_rate
+      project_cycles_sum[benchmark.project] += avg_cycles_per_sample
+      project_trial_avg_duration_sum[
+          benchmark.project] += avg_trial_duration_sec
+      project_benchmark_counts[benchmark.project] += 1
 
     for project_name in unified_data:
-      benchmark_count = len(unified_data[project_name]["benchmarks"])
+      benchmark_count = project_benchmark_counts.get(project_name, 0)
       if benchmark_count > 0:
         if project_name in project_build_successes:
           unified_data[project_name][
@@ -556,6 +595,10 @@ class GenerateReport:
                   project_name] / benchmark_count
           unified_data[project_name]["average_crash_rate"] = project_crashes[
               project_name] / benchmark_count
+          unified_data[project_name]["average_cycles_per_benchmark"] = (
+              project_cycles_sum[project_name] / benchmark_count)
+          unified_data[project_name]["average_trial_duration_sec"] = (
+              project_trial_avg_duration_sum[project_name] / benchmark_count)
 
     return unified_data
 
