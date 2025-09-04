@@ -93,6 +93,8 @@ class LogsParser:
         search_term = quoted_match.group(1)
         return f"grep '{search_term}'"
       return self._extract_key_args(cmd, parts[1:], 1)
+    if cmd == 'cat':
+      return self._extract_key_args(cmd, parts[1:], 1)
     return self._extract_key_args(cmd, parts[1:], 2)
 
   def _extract_key_args(self, cmd: str, parts: list[str], max_args: int) -> str:
@@ -121,11 +123,17 @@ class LogsParser:
     for i, line in enumerate(lines):
       line = line.strip()
       if line in relevant_tool_tags and not line.startswith('</'):
+        if line == '<stderr>':
+          # handled separately via regex to ensure non-empty only
+          continue
         tool_name = line[1:-1].replace('_', ' ').title()
         tool_counts[tool_name] = tool_counts.get(tool_name, 0) + 1
-      elif line == '<stderr>':
-        if i + 1 < len(lines) and lines[i + 1].strip():
-          tool_counts['Stderr'] = tool_counts.get('Stderr', 0) + 1
+
+    # Add 'Stderr' only if any block has non-empty inner content
+    for m in re.finditer(r'<stderr>(.*?)</stderr>', content, flags=re.DOTALL):
+      if m.group(1).strip():
+        tool_counts['Stderr'] = tool_counts.get('Stderr', 0) + 1
+        break
 
     tool_names = []
     for tool_name in tool_counts:
@@ -285,6 +293,12 @@ class LogsParser:
 
     lang_key = _normalize_lang(default_language)
 
+    # Pre-process stdout blocks to choose language based on preceding bash command
+    escaped = self._replace_stdout_with_language_blocks(escaped, lang_key)
+
+    # Pre-process stderr blocks to avoid greedy regex and stop at the first closing tag
+    escaped = self._replace_tag_with_code_blocks(escaped, 'stderr', 'bash')
+
     escaped = _sub(
         r'&lt;conclusion&gt;(\s*[^\s].*?[^\s]\s*|(?:\s*[^\s].*?)?)'
         r'&lt;/conclusion&gt;',
@@ -320,18 +334,6 @@ class LogsParser:
         rf'<code class="language-{lang_key}">\1</code></pre>'
         rf'<span class="log-tag">&lt;/fuzz target&gt;</span>', escaped)
 
-    escaped = _sub(
-        r'&lt;stdout&gt;(\s*[^\s].*?[^\s]\s*|(?:\s*[^\s].*?)?)'
-        r'&lt;/stdout&gt;', r'<span class="log-tag">&lt;stdout&gt;</span>'
-        r'<pre class="whitespace-pre-wrap break-words overflow-x-auto">'
-        r'<code class="language-bash">\1</code></pre>'
-        r'<span class="log-tag">&lt;/stdout&gt;</span>', escaped)
-    escaped = _sub(
-        r'&lt;stderr&gt;(\s*[^\s].*?[^\s]\s*|(?:\s*[^\s].*?)?)'
-        r'&lt;/stderr&gt;', r'<span class="log-tag">&lt;stderr&gt;</span>'
-        r'<pre class="whitespace-pre-wrap break-words overflow-x-auto">'
-        r'<code class="language-bash">\1</code></pre>'
-        r'<span class="log-tag">&lt;/stderr&gt;</span>', escaped)
     escaped = _sub(
         r'&lt;return_code&gt;(\s*[^\s].*?[^\s]\s*|(?:\s*[^\s].*?)?)'
         r'&lt;/return_code&gt;',
@@ -450,6 +452,174 @@ class LogsParser:
                      flags=re.DOTALL)
 
     return content
+
+  def _replace_stdout_with_language_blocks(self, escaped: str,
+                                            default_lang: str) -> str:
+    """Replace <stdout> blocks with language-aware code blocks.
+    Chooses language based on the preceding <bash> command and file extensions.
+    """
+    pattern = re.compile(r'&lt;(bash|stdout)&gt;(.*?)&lt;/\1&gt;',
+                         re.DOTALL)
+    matches = list(pattern.finditer(escaped))
+    if not matches:
+      return escaped
+
+    result_parts = []
+    cursor = 0
+    last_bash_content = ""
+
+    for m in matches:
+      tag = m.group(1)
+      content = m.group(2)
+      if tag == 'bash':
+        # Keep as-is; specialized bash replacement will handle it later
+        result_parts.append(escaped[cursor:m.end()])
+        cursor = m.end()
+        last_bash_content = content.strip()
+      else:  # stdout
+        stdout_content = content
+        language = self._derive_language_for_stdout(last_bash_content,
+                                                    stdout_content,
+                                                    default_lang)
+        replacement = (
+            '<span class="log-tag">&lt;stdout&gt;</span>'
+            '<pre class="whitespace-pre-wrap break-words overflow-x-auto">'
+            f'<code class="language-{language}">{stdout_content}</code></pre>'
+            '<span class="log-tag">&lt;/stdout&gt;</span>')
+        result_parts.append(escaped[cursor:m.start()])
+        result_parts.append(replacement)
+        cursor = m.end()
+
+    result_parts.append(escaped[cursor:])
+    return ''.join(result_parts)
+
+  def _derive_language_for_stdout(self, bash_content: str, stdout_content: str,
+                                  default_lang: str) -> str:
+    """Derive a reasonable syntax highlight language for stdout.
+
+    - For `cat <file>`: use file extension.
+    - For `grep ... <file or dir>`: use file extension if a file, else try to
+      infer from stdout first path; fallback to bash.
+    - For unknown: use bash.
+    """
+    def pick_from_path(path: str) -> str:
+      path = path.strip()
+      if not path:
+        return 'bash'
+      # Treat directories as bash
+      if path.endswith('/') or ('/' in path and '.' not in path.split('/')[-1]):
+        return 'bash'
+      lower = path.lower()
+      if lower.endswith(('.cc', '.cpp', '.cxx', '.hpp', '.hh', '.hxx')):
+        return 'cpp'
+      if lower.endswith('.h'):
+        return 'cpp'
+      if lower.endswith('.c'):
+        return 'c'
+      if lower.endswith('.py'):
+        return 'python'
+      if lower.endswith('.java'):
+        return 'java'
+      if lower.endswith('.rs'):
+        return 'rust'
+      if lower.endswith('.go'):
+        return 'go'
+      if lower.endswith('.sh'):
+        return 'bash'
+      return 'bash'
+
+    def first_token(text: str) -> str:
+      for line in text.split('\n'):
+        line = line.strip()
+        if line:
+          return line.split()[0]
+      return ''
+
+    def cat_target(text: str) -> str:
+      # Extract first non-option argument after 'cat'
+      for line in text.split('\n'):
+        line = line.strip()
+        if not line:
+          continue
+        parts = line.split()
+        if not parts:
+          continue
+        if parts[0] != 'cat':
+          continue
+        for tok in parts[1:]:
+          if not tok.startswith('-'):
+            return tok
+      return ''
+
+    def grep_target_and_guess(text: str) -> str:
+      # Try to get last non-option token as path (common grep usage)
+      for line in text.split('\n'):
+        line = line.strip()
+        if not line:
+          continue
+        parts = line.split()
+        if not parts or parts[0] != 'grep':
+          continue
+        # Remove options and pattern; pattern may be quoted (escaped as entities)
+        # Heuristic: take last token
+        candidate = parts[-1] if len(parts) > 1 else ''
+        return candidate
+      return ''
+
+    cmd = first_token(bash_content)
+    if cmd == 'cat':
+      target = cat_target(bash_content)
+      return pick_from_path(target)
+    if cmd == 'grep':
+      target = grep_target_and_guess(bash_content)
+      lang = pick_from_path(target)
+      if lang != 'bash':
+        return lang
+      # Try to infer from grep stdout: path:line:...
+      for line in stdout_content.split('\n'):
+        line = line.strip()
+        if not line:
+          continue
+        # Lines often look like /path/file.ext:NN:content
+        path_part = line.split(':', 1)[0]
+        if path_part:
+          return pick_from_path(path_part)
+      return 'bash'
+    # Default behavior
+    return 'bash'
+
+  def _replace_tag_with_code_blocks(self, escaped: str, tag: str,
+                                    language: str) -> str:
+    """Replace a given escaped tag with a non-greedy code block wrapper.
+
+    Ensures that each opening tag pairs with the first subsequent closing tag.
+    """
+    open_tag = f'&lt;{tag}&gt;'
+    close_tag = f'&lt;/{tag}&gt;'
+    pos = 0
+    parts: list[str] = []
+    while True:
+      start = escaped.find(open_tag, pos)
+      if start == -1:
+        parts.append(escaped[pos:])
+        break
+      parts.append(escaped[pos:start])
+      content_start = start + len(open_tag)
+      end = escaped.find(close_tag, content_start)
+      if end == -1:
+        # No closing tag; leave remainder as-is
+        parts.append(escaped[start:])
+        break
+      inner = escaped[content_start:end]
+      replacement = (
+          f'<span class="log-tag">{open_tag}</span>'
+          '<pre class="whitespace-pre-wrap break-words overflow-x-auto">'
+          f'<code class="language-{language}">{inner}</code></pre>'
+          f'<span class="log-tag">{close_tag}</span>')
+      parts.append(replacement)
+      pos = end + len(close_tag)
+
+    return ''.join(parts)
 
   def _create_step_data(self, step_number: int,
                         log_parts: list[LogPart]) -> dict:
