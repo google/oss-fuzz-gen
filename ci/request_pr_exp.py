@@ -280,7 +280,8 @@ def _remove_existing_job_bucket(gke_job_name: str, bucket_link: str,
     logging.error('STDERR:\n  %s', del_bucket.stderr.decode('utf-8'))
 
 
-def _prepare_experiment_info(args: argparse.Namespace) -> tuple[str, str, str]:
+def _prepare_experiment_info(
+    args: argparse.Namespace) -> tuple[str, str, str, str, str]:
   """
   Prepares and logs the key experiment information for easier accesses.
   """
@@ -320,7 +321,7 @@ def _prepare_experiment_info(args: argparse.Namespace) -> tuple[str, str, str]:
       bucket_link,
       bucket_gs_link,
   )
-  return gke_job_name, bucket_link, bucket_gs_link
+  return gke_job_name, bucket_link, bucket_gs_link, gke_job_link, report_link
 
 
 def _get_gke_credential(args: argparse.Namespace):
@@ -384,11 +385,14 @@ def _request_experiment(substituted_file_path: str):
 def main(cmd=None):
   """The main function."""
   args = _parse_args(cmd)
-  gke_job_name, bucket_link, bucket_gs_link = _prepare_experiment_info(args)
+  gke_job_name, bucket_link, bucket_gs_link, gke_job_link, report_link = _prepare_experiment_info(
+      args)
   _get_gke_credential(args)
   _remove_existing_job_bucket(gke_job_name, bucket_link, bucket_gs_link)
   _request_experiment(_fill_template(args))
+  return gke_job_name, bucket_link, bucket_gs_link, gke_job_link, report_link
 
 
 if __name__ == "__main__":
-  sys.exit(main())
+  main()
+  sys.exit(0)

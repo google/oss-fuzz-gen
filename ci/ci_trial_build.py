@@ -71,7 +71,25 @@ def exec_command_from_github(pull_request_number):
   command = ['-p', str(pull_request_number)] + command
   command = [c for c in command if c]
   logging.info('Command: %s.', command)
-  return request_pr_exp.main(command)
+  links = request_pr_exp.main(command)
+  try:
+    if isinstance(links, tuple) and len(links) == 5:
+      gke_job_name, bucket_link, bucket_gs_link, gke_job_link, report_link = links
+      if all([
+          gke_job_name, gke_job_link, report_link, bucket_link, bucket_gs_link
+      ]):
+        github_obj = github.Github()
+        repo = github_obj.get_repo('google/oss-fuzz-gen')
+        issue = repo.get_issue(pull_request_number)
+        body = (f"Requesting a GKE experiment named {gke_job_name}:\n"
+                f"JOB: {gke_job_link}\n"
+                f"REPORT: {report_link}\n"
+                f"BUCKET: {bucket_link}\n"
+                f"BUCKET GS: `{bucket_gs_link}`\n")
+        issue.create_comment(body)
+  except Exception as e:
+    logging.warning('Failed to post PR comment: %s', e)
+  return links
 
 
 def main():
