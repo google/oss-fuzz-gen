@@ -368,34 +368,54 @@ class Prototyper(BaseAgent):
     # Preference 7: New fuzz target + both `build.sh`s cannot compile. No need
     # to mention the default build.sh.
     # return build_result
-    error_classifier = BuildErrorClassifier("helper/error_patterns.yaml")
-    classification = error_classifier.classify(compile_log)
-    logger.debug("=== Compilation Log Start ===\n%s\n=== Compilation Log End ===", compile_log, trial=build_result.trial)
+    rag_enabled = False
+    try:
+      rag_enabled = bool(getattr(self, 'args', None)) and bool(getattr(self.args, 'rag_classifier', False))
+    except Exception:
+      rag_enabled = False
+    if rag_enabled:
+      # Use RAG-based classifier to build a targeted prompt.
+      error_classifier = BuildErrorClassifier("helper/error_patterns.yaml")
+      classification = error_classifier.classify(compile_log)
+      logger.debug("=== Compilation Log Start ===\n%s\n=== Compilation Log End ===", compile_log, trial=build_result.trial)
 
-    if classification:
-      logger.info("RAG match: identified build error type %s", classification["type"], trial=build_result.trial)
-      builder = prompt_builder.PrototyperErrorClassifierTemplateBuilder(
+      if classification:
+        logger.info("RAG match: identified build error type %s", classification["type"], trial=build_result.trial)
+        builder = prompt_builder.PrototyperErrorClassifierTemplateBuilder(
+            model=self.llm,
+            benchmark=build_result.benchmark,
+            build_result=build_result,
+            compile_log=compile_log,
+            error_classifier=error_classifier,
+            initial=prompt.get()
+        )
+        prompt = builder.build(project_dir=self.inspect_tool.project_dir)
+        return build_result, prompt
+
+      # If RAG could not classify, fall back to generic fixer template.
+      logger.warning("RAG match: classification failed, no error type matched", trial=build_result.trial)
+      builder = prompt_builder.PrototyperFixerTemplateBuilder(
           model=self.llm,
           benchmark=build_result.benchmark,
           build_result=build_result,
           compile_log=compile_log,
-          error_classifier=error_classifier,
           initial=prompt.get()
       )
-      prompt = builder.build(project_dir=self.inspect_tool.project_dir)
+      prompt = builder.build(example_pair=[], project_dir=self.inspect_tool.project_dir)
       return build_result, prompt
 
-    # Fallback: uncategorized error
-    logger.warning("RAG match: classification failed, no error type matched", trial=build_result.trial)
-    builder = prompt_builder.PrototyperFixerTemplateBuilder(
-        model=self.llm,
-        benchmark=build_result.benchmark,
-        build_result=build_result,
-        compile_log=compile_log,
-        initial=prompt.get())
-    prompt = builder.build(example_pair=[],
-                          project_dir=self.inspect_tool.project_dir)
-    return build_result, prompt
+    else:
+      # RAG disabled -> always use the generic fixer template.
+      logger.info("RAG classifier disabled (no --rag-classifier flag); using FixerTemplateBuilder.", trial=build_result.trial)
+      builder = prompt_builder.PrototyperFixerTemplateBuilder(
+          model=self.llm,
+          benchmark=build_result.benchmark,
+          build_result=build_result,
+          compile_log=compile_log,
+          initial=prompt.get()
+      )
+      prompt = builder.build(example_pair=[], project_dir=self.inspect_tool.project_dir)
+      return build_result, prompt
 
   def _container_handle_conclusion(self, cur_round: int, response: str,
                                    build_result: BuildResult,

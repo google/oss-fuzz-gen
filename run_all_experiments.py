@@ -251,6 +251,10 @@ def parse_args() -> argparse.Namespace:
                       action='store_true',
                       default=False,
                       help='Enables agent enhancement.')
+  parser.add_argument('-rc',
+                      '--rag-classifier',
+                      action='store_true',
+                      help='Enable the RAG-based build error classifier (off by default).')
   parser.add_argument('--custom-pipeline', type=str, default='')
   parser.add_argument('-mr',
                       '--max-round',
