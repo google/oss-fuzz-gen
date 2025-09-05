@@ -78,15 +78,19 @@ def exec_command_from_github(pull_request_number):
       if all([
           gke_job_name, gke_job_link, report_link, bucket_link, bucket_gs_link
       ]):
-        github_obj = github.Github()
-        repo = github_obj.get_repo('google/oss-fuzz-gen')
-        issue = repo.get_issue(pull_request_number)
-        body = (f"Requesting a GKE experiment named {gke_job_name}:\n"
-                f"JOB: {gke_job_link}\n"
-                f"REPORT: {report_link}\n"
-                f"BUCKET: {bucket_link}\n"
-                f"BUCKET GS: `{bucket_gs_link}`\n")
-        issue.create_comment(body)
+        token = os.environ.get('GITHUB_TOKEN') or os.environ.get('GH_TOKEN')
+        if not token:
+          logging.warning('GITHUB_TOKEN not set; skipping PR comment.')
+        else:
+          github_obj = github.Github(token)
+          repo = github_obj.get_repo('google/oss-fuzz-gen')
+          issue = repo.get_issue(pull_request_number)
+          body = (f"Requesting a GKE experiment named {gke_job_name}:\n"
+                  f"JOB: {gke_job_link}\n"
+                  f"REPORT: {report_link}\n"
+                  f"BUCKET: {bucket_link}\n"
+                  f"BUCKET GS: `{bucket_gs_link}`\n")
+          issue.create_comment(body)
   except Exception as e:
     logging.warning('Failed to post PR comment: %s', e)
   return links
