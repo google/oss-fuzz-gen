@@ -197,6 +197,8 @@ BUILD_CONFIGURATION_ERROR:
     - "Suggesting setting CFLAGS and CXXFLAGS before the configure step, potentially interfering with the configure process."
     - "Incorrectly assuming the location of necessary files, the fuzz target is modified in place from the original fuzz target."
     - "Using repeated or incorrect sed commands on build files, causing accumulated or broken changes."
+    - "Overcomplicating build processes when official project script commands suffice."
+    - "Hardcoding invalid include paths, flags, or library names."
 
 
 CORRUPTED CODE ERROR:
