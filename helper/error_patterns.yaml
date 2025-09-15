@@ -183,18 +183,21 @@ BUILD_CONFIGURATION_ERROR:
     - 'DWARF error: invalid or unhandled FORM value.*'
     - 'clang\+\+: error: no such file or directory: ''\$LIB_FUZZING_ENGINE'''
   good:
-    - "If CMake is being used, check how it is invoked and whether the correct arguments are being passed."
-    - "Verify that the correct source files are specified in the CMakeLists.txt file."
-    - "Check for missing or incorrect CMake commands or options."
-    - "If using a `find_package` command, ensure that the package's config file is accessible or that the `*_DIR` variable is set correctly."
-    - "If a variable is unbound, initialize it with the correct value or ensure it's set before use."
-    - "Ensure that environment variables are passed correctly to CMake or other build tools."
+    - "Inspect build system config files (Makefile, CMakeLists.txt, meson.build, configure.ac)."
+    - "Verify build rules and target dependencies are correctly defined and ordered."
+    - "Check for missing dependencies/incorrect paths; install exact packages (e.g., libssl-dev, zlib1g-dev)."
+    - "Clean build dir and rebuild (e.g., rm -rf build && mkdir build)."
+    - "Set compiler/linker flags via build system (CMAKE_C_FLAGS, target_link_libraries)."
+    - "Check environment variables (PKG_CONFIG_PATH, CMAKE_PREFIX_PATH, LD_LIBRARY_PATH)."
+    - "Leverage official project scripts (oss-fuzz.sh, build.sh) when available."
   bad:
     - "Suggesting modifications to CMake commands or flags when the LLM is restricted to modifying only the source code or a limited build script."
     - "Removing the sourcing of configure.sh without understanding its purpose."
     - "Suggesting copying the fuzz target source file to the current directory as a solution to a 'no such file or directory' error."
     - "Suggesting setting CFLAGS and CXXFLAGS before the configure step, potentially interfering with the configure process."
-    - "Incorrectly assuming the location of necessary files."
+    - "Incorrectly assuming the location of necessary files, the fuzz target is modified in place from the original fuzz target."
+    - "Using repeated or incorrect sed commands on build files, causing accumulated or broken changes."
+
 
 CORRUPTED CODE ERROR:
   patterns:
