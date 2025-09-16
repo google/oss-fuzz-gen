@@ -154,7 +154,7 @@ LINKER ERROR:
     - "Assuming the linker needs dynamic versions of libraries when static versions are already linked."
     - "Not providing a concrete solution for missing library paths, such as using `-L`."
 
-BUILD_CONFIGURATION_ERROR:
+BUILD CONFIGURATION ERROR:
   patterns:
     - 'make: \*\*\* No rule to make target .*'
     - 'CMake Error:.*'
@@ -182,6 +182,9 @@ BUILD_CONFIGURATION_ERROR:
     - '\./aom_configure: No such file or directory'
     - 'DWARF error: invalid or unhandled FORM value.*'
     - 'clang\+\+: error: no such file or directory: ''\$LIB_FUZZING_ENGINE'''
+    - 'configure: error: .* (required|dependency) .* (not found|not available|missing)'
+    - 'configure: error: .* but required .* (library|package).* not available'
+    - 'configure: error: .* requires .* (but it is not installed|not found|not available)'
   good:
     - "Inspect build system config files (Makefile, CMakeLists.txt, meson.build, configure.ac)."
     - "Verify build rules and target dependencies are correctly defined and ordered."
