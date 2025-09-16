@@ -254,7 +254,8 @@ def parse_args() -> argparse.Namespace:
   parser.add_argument('-rag',
                       '--rag-classifier',
                       action='store_true',
-                      help='Enable the RAG-based build error classifier (off by default).')
+                      default=True,
+                      help='Enable the RAG-based build error classifier (default: on).')
   parser.add_argument('--custom-pipeline', type=str, default='')
   parser.add_argument('-mr',
                       '--max-round',
@@ -531,6 +532,9 @@ def main():
 
   args = parse_args()
   _setup_logging(args.log_level, is_cloud=args.cloud_experiment_name != '')
+  logger.info('[dbg] agent=%s rag_classifier=%s model=%s bench_yaml=%s bench_dir=%s',
+              args.agent, args.rag_classifier, args.model,
+              getattr(args, 'benchmark_yaml', ''), getattr(args, 'benchmarks_directory', ''))
   logger.info('Starting experiments on PR branch')
 
   # Capture time at start
