@@ -251,7 +251,7 @@ def parse_args() -> argparse.Namespace:
                       action='store_true',
                       default=False,
                       help='Enables agent enhancement.')
-  parser.add_argument('-rc',
+  parser.add_argument('-rag',
                       '--rag-classifier',
                       action='store_true',
                       help='Enable the RAG-based build error classifier (off by default).')
