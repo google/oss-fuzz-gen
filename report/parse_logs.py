@@ -80,8 +80,10 @@ class LogsParser:
     cmd = parts[0]
     command_summary = self._build_command_summary(cmd, parts, first_line)
 
-    if len(command_summary) > 40:
-      command_summary = command_summary[:37] + '...'
+    if cmd not in ['grep', 'cat']:
+      max_len = 40
+      if len(command_summary) > max_len:
+        command_summary = command_summary[:max_len - 3] + '...'
 
     return command_summary
 
@@ -89,13 +91,34 @@ class LogsParser:
                              first_line: str) -> str:
     """Build command summary based on command type."""
     if cmd == 'grep':
-      quoted_match = re.search(r"'([^']+)'", first_line)
+      # Extract pattern (single or double quoted) and target path
+      quoted_match = re.search(r"(['\"])(.+?)\1", first_line)
+      search_term = None
       if quoted_match:
-        search_term = quoted_match.group(1)
+        search_term = quoted_match.group(2)
+
+      # Choose last non-option token as target path (common grep usage)
+      target_path = ''
+      for tok in reversed(parts[1:]):
+        if tok and not tok.startswith('-'):
+          target_path = tok
+          break
+
+      if search_term and target_path:
+        return f"grep '{search_term}' {target_path}"
+      if search_term:
         return f"grep '{search_term}'"
-      return self._extract_key_args(cmd, parts[1:], 1)
+      # Fallback: show up to two key args
+      return self._extract_key_args(cmd, parts[1:], 2)
     if cmd == 'cat':
-      return self._extract_key_args(cmd, parts[1:], 1)
+      # Include full file paths (may include multiple targets)
+      file_args: list[str] = []
+      for tok in parts[1:]:
+        if tok and not tok.startswith('-'):
+          file_args.append(tok)
+      if file_args:
+        return f"cat {' '.join(file_args)}"
+      return 'cat'
     return self._extract_key_args(cmd, parts[1:], 2)
 
   def _extract_key_args(self, cmd: str, parts: list[str], max_args: int) -> str:

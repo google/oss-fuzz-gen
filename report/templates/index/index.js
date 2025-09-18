@@ -181,15 +181,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
 		const idxNew = getProjectSummaryColumnIndex('oss-fuzz-gen new covered lines');
 		const idxExisting = getProjectSummaryColumnIndex('existing covered lines');
+		const idxTotalLines = getProjectSummaryColumnIndex('total project lines');
 
 		const projectData = Array.from(document.querySelectorAll('#project-summary-table tbody tr.project-data-row')).map(row => {
 			const cells = row.querySelectorAll('td');
-			if (cells.length > Math.max(idxNew, idxExisting) && idxNew !== -1 && idxExisting !== -1) {
+			if (cells.length > Math.max(idxNew, idxExisting, idxTotalLines) && idxNew !== -1 && idxExisting !== -1 && idxTotalLines !== -1) {
 				return {
 					project: cells[1].dataset.sortValue,
 					projectLabel: truncateLabel(cells[1].dataset.sortValue),
 					new_lines: parseInt(cells[idxNew].dataset.sortValue) || 0,
-					existing_lines: parseInt(cells[idxExisting].dataset.sortValue) || 0
+					existing_lines: parseInt(cells[idxExisting].dataset.sortValue) || 0,
+					total_lines: parseInt(cells[idxTotalLines].dataset.sortValue) || 0
 				};
 			}
 			return null;
@@ -212,7 +214,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				legendDiv.style.gap = '16px';
 				legendDiv.style.alignItems = 'center';
 				legendDiv.style.fontSize = '14px';
-				legendDiv.innerHTML = '<span style="display:inline-flex;align-items:center;gap:6px"><span style="display:inline-block;width:12px;height:12px;background:#94a3b8"></span>Existing Coverage</span><span style="display:inline-flex;align-items:center;gap:6px"><span style="display:inline-block;width:12px;height:12px;background+#3b82f6"></span>New Coverage</span>'.replace('background+','#3b82f6').replace('background','background:');
+				legendDiv.innerHTML = '<span style="display:inline-flex;align-items:center;gap:6px"><span style="display:inline-block;width:12px;height:12px;background:#94a3b8"></span><span>Existing Coverage</span></span><span style="display:inline-flex;align-items:center;gap:6px"><span style="display:inline-block;width:12px;height:12px;background:#3b82f6"></span><span>New Coverage</span></span>';
 
 				const normalizeWrapper = document.createElement('label');
 				normalizeWrapper.style.display = 'inline-flex';
@@ -236,17 +238,21 @@ document.addEventListener('DOMContentLoaded', function() {
 				function renderCoveragePlot(normalized) {
 					plotContainer.innerHTML = '';
 					const { width, height } = containerSize(coverageEl);
-					const xLabel = normalized ? 'Percent of Project Lines' : 'Lines of Code';
+					const xLabel = normalized ? 'Percent of Covered Lines' : 'Lines of Code';
 					const xOptions = normalized ? { label: xLabel, domain: [0, 100] } : { label: xLabel };
+					const yDomain = projectData.map(d => d.projectLabel);
+					const longest = yDomain.reduce((m, l) => Math.max(m, (l || '').length), 0);
+					const marginLeft = Math.min(400, Math.max(120, Math.round(longest * 8 + 24)));
+					const normalizedData = projectData.filter(d => (d.existing_lines + d.new_lines) > 0);
 					const marks = normalized ? [
-						Plot.rectX(projectData, { y: 'projectLabel', x1: 0, x2: d => {
-							const total = (d.existing_lines + d.new_lines) || 1;
-							return (d.existing_lines / total) * 100;
-						}, fill: '#94a3b8', title: d => `${d.project}: Existing Coverage (%)` }),
-						Plot.rectX(projectData, { y: 'projectLabel', x1: d => {
-							const total = (d.existing_lines + d.new_lines) || 1;
-							return (d.existing_lines / total) * 100;
-						}, x2: 100, fill: '#3b82f6', title: d => `${d.project}: New Coverage (%)` })
+						Plot.rectX(normalizedData, { y: 'projectLabel', x1: 0, x2: d => {
+							const covered = (d.existing_lines + d.new_lines) || 0;
+							return covered > 0 ? (d.existing_lines / covered) * 100 : 0;
+						}, fill: '#94a3b8', title: d => `${d.project}: Existing Coverage (share of covered)` }),
+						Plot.rectX(normalizedData, { y: 'projectLabel', x1: d => {
+							const covered = (d.existing_lines + d.new_lines) || 0;
+							return covered > 0 ? (d.existing_lines / covered) * 100 : 0;
+						}, x2: 100, fill: '#3b82f6', title: d => `${d.project}: New Coverage (share of covered)` })
 					] : [
 						Plot.rectX(projectData, { y: 'projectLabel', x1: 0, x2: 'existing_lines', fill: '#94a3b8', title: d => `${d.project}: Existing Coverage` }),
 						Plot.rectX(projectData, { y: 'projectLabel', x1: 'existing_lines', x2: d => d.existing_lines + d.new_lines, fill: '#3b82f6', title: d => `${d.project}: New Coverage` })
@@ -257,10 +263,11 @@ document.addEventListener('DOMContentLoaded', function() {
 					const plot = Plot.plot({
 						title: null,
 						x: xOptions,
-						y: { label: 'Project', domain: projectData.map(d => d.projectLabel) },
+						y: { label: 'Project', domain: yDomain },
 						marks,
 						width: Math.max(800, width),
-						height: plotHeight
+						height: plotHeight,
+						marginLeft
 					});
 					plotContainer.appendChild(plot);
 				}
@@ -285,8 +292,9 @@ document.addEventListener('DOMContentLoaded', function() {
 						if (bench.samples) {
 							bench.samples.forEach(s => {
 								const bugType = extractBugType((s.crash_symptom || '').trim());
-								const reason = bugType || 'N/A';
-								crashReasons[reason] = (crashReasons[reason] || 0) + (s.crashes ? 1 : 0);
+								if (bugType) {
+									crashReasons[bugType] = (crashReasons[bugType] || 0) + (s.crashes ? 1 : 0);
+								}
 							});
 						}
 					}
@@ -341,7 +349,8 @@ document.addEventListener('DOMContentLoaded', function() {
 						y: { label: 'Project', domain: projData.map(d=>d.projectLabel) },
 						marks: [Plot.barX(projData, { y: 'projectLabel', x: 'cycles', fill: cyclesProject, title: d => `${d.project}: ${d.cycles}` })],
 						width,
-						height: Math.max(240, height - 28)
+						height: Math.max(240, height - 28),
+						marginLeft: 120
 					});
 					projCyclesEl.appendChild(plot1);
 
@@ -364,7 +373,8 @@ document.addEventListener('DOMContentLoaded', function() {
 							y: { label: 'Project', domain: data.map(d=>d.projectLabel) },
 							marks: [Plot.barX(data, { y: 'projectLabel', x: 'duration', fill: durationProject, title: d => `${d.project}: ${d.duration.toFixed(2)} ${unitLabel(unit)}` })],
 							width,
-							height: Math.max(240, height - 28)
+							height: Math.max(240, height - 28),
+							marginLeft: 120
 						});
 						plotContainer.appendChild(plot2);
 					}
@@ -399,7 +409,7 @@ document.addEventListener('DOMContentLoaded', function() {
 						x: { label: 'Avg Cycles' },
 						y: { label: 'Benchmark', domain: benchData.map(d=>d.benchmarkLabel) },
 						marks: [Plot.barX(benchData, { y: 'benchmarkLabel', x: 'cycles', fill: cyclesBench, title: d => `${d.benchmark}: ${d.cycles}` })],
-						marginLeft: 120,
+						marginLeft: 140,
 						width,
 						height: plotHeight
 					});
@@ -425,7 +435,7 @@ document.addEventListener('DOMContentLoaded', function() {
 							x: { label: unitLabel(unit) },
 							y: { label: 'Benchmark', domain: data.map(d=>d.benchmarkLabel) },
 							marks: [Plot.barX(data, { y: 'benchmarkLabel', x: 'duration', fill: durationBench, title: d => `${d.benchmark}: ${d.duration.toFixed(2)} ${unitLabel(unit)}` })],
-							marginLeft: 120,
+							marginLeft: 140,
 							width,
 							height: plotHeight
 						});
