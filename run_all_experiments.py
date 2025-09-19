@@ -254,8 +254,8 @@ def parse_args() -> argparse.Namespace:
   parser.add_argument('-rag',
                       '--rag-classifier',
                       action='store_true',
-                      default=True,
-                      help='Enable the RAG-based build error classifier (default: on).')
+                      default=False,
+                      help='Enable the RAG-based build error classifier (default: off).')
   parser.add_argument('--custom-pipeline', type=str, default='')
   parser.add_argument('-mr',
                       '--max-round',
