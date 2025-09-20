@@ -114,6 +114,7 @@ the model is supported by way of Vertex AI:
 14. `gpt-4o`
 15. `gpt-4o-azure`
 16. `gpt-4-azure`
+17. `gpt-5`
 
 Experiments can also be run on Google Cloud using Google Cloud Build. You can
 do this by passing

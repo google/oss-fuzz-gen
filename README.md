@@ -22,6 +22,7 @@ Current supported models are:
 - OpenAI GPT-3.5-turbo (Azure)
 - OpenAI GPT-4 (Azure)
 - OpenAI GPT-4o (Azure)
+- OpenAI GPT-5
 
 Generated fuzz targets are evaluated with four metrics against the most up-to-date data from production environment:
 - Compilability
