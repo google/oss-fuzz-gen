@@ -443,6 +443,106 @@ class GPT4Turbo(GPT):
 
   name = 'gpt-4-turbo'
 
+class GPT5Chat(GPT):
+  """OpenAI's GPT-5-Chat model."""
+
+  name = 'gpt-5-chat'
+
+class GPT5(GPT):
+  """OpenAI's GPT-5 model (no temperature setting)."""
+
+  name = 'gpt-5'
+
+  def chat_llm(self, client: Any, prompt: prompts.Prompt) -> str:
+    """Queries LLM in a chat session and returns its response (no temperature)."""
+    if self.ai_binary:
+      raise ValueError(f'OpenAI does not use local AI binary: {self.ai_binary}')
+    if self.temperature_list:
+      logger.info('GPT-5 does not allow temperature list: %s',
+                  self.temperature_list)
+
+    self.messages.extend(prompt.get())
+
+    completion = self.with_retry_on_error(
+        lambda: client.chat.completions.create(messages=self.messages,
+                                               model=self.name,
+                                               n=self.num_samples),
+        [openai.OpenAIError])
+
+    llm_response = completion.choices[0].message.content
+    self.messages.append({'role': 'assistant', 'content': llm_response})
+
+    return llm_response
+
+  def ask_llm(self, prompt: prompts.Prompt) -> str:
+    """Queries LLM a single prompt and returns its response (no temperature)."""
+    if self.ai_binary:
+      raise ValueError(f'OpenAI does not use local AI binary: {self.ai_binary}')
+    if self.temperature_list:
+      logger.info('GPT-5 does not allow temperature list: %s',
+                  self.temperature_list)
+
+    client = self._get_client()
+
+    completion = self.with_retry_on_error(
+        lambda: client.chat.completions.create(messages=prompt.get(),
+                                               model=self.name,
+                                               n=self.num_samples),
+        [openai.OpenAIError])
+    return completion.choices[0].message.content
+
+  def ask_llm_to_file(self, prompt: prompts.Prompt, response_dir: str) -> None:
+    """Queries OpenAI's API and stores response in |response_dir| (no temperature)."""
+    if self.ai_binary:
+      raise ValueError(f'OpenAI does not use local AI binary: {self.ai_binary}')
+    if self.temperature_list:
+      logger.info('GPT-5 does not allow temperature list: %s',
+                  self.temperature_list)
+
+    client = self._get_client()
+
+    completion = self.with_retry_on_error(
+        lambda: client.chat.completions.create(messages=prompt.get(),
+                                               model=self.name,
+                                               n=self.num_samples),
+        [openai.OpenAIError])
+    for index, choice in enumerate(completion.choices):  # type: ignore
+      content = choice.message.content
+      response_file = os.path.join(response_dir, f'response_{index}.txt')
+      with open(response_file, 'w') as f:
+        f.write(content)
+
+
+class GPT5Chat(GPT):
+  """OpenAI's GPT-5-Chat model (with temperature setting)."""
+
+  name = 'gpt-5-chat'
+
+
+class DeepSeek(GPT):
+  """DeepSeek's model encapsulator using OpenAI API."""
+
+  def _get_client(self):
+    """Returns the DeepSeek client using OpenAI API format."""
+    return openai.OpenAI(
+        api_key=os.getenv('DEEPSEEK_API_KEY'),
+        base_url="https://api.deepseek.com"
+    )
+
+
+class DeepSeekChat(DeepSeek):
+  """DeepSeek Chat model."""
+
+  name = 'deepseek-chat'
+  MAX_INPUT_TOKEN = 128000
+
+
+class DeepSeekReasoner(DeepSeek):
+  """DeepSeek Reasoner model."""
+
+  name = 'deepseek-reasoner'
+  MAX_INPUT_TOKEN = 128000
+
 
 class ChatGPT(GPT):
   """OpenAI's GPT model with chat session."""
