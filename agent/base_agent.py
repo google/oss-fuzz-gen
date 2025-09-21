@@ -59,6 +59,33 @@ class BaseAgent(ABC):
   def __repr__(self) -> str:
     return self.__class__.__name__
 
+  def _save_prompt_to_file(self, file_type: str, content: str) -> None:
+    """Save prompt or response content to local file for analysis."""
+    import os
+    
+    # Create directory for prompt logs
+    prompt_log_dir = f'./results-prompt_logs_{self.name}_{self.trial}'
+    os.makedirs(prompt_log_dir, exist_ok=True)
+    
+    # Save with round number (initialize if needed)
+    if not hasattr(self, 'round'):
+      self.round = 1
+    
+    filename = f'{file_type}_round_{self.round:02d}.txt'
+    filepath = os.path.join(prompt_log_dir, filename)
+    
+    try:
+      with open(filepath, 'w', encoding='utf-8') as f:
+        f.write(f"=== {file_type.upper()} ROUND {self.round:02d} ===\n")
+        f.write(f"Agent: {self.name}\n")
+        f.write(f"Trial: {self.trial}\n")
+        f.write(f"Length: {len(content)} characters\n")
+        f.write("=" * 50 + "\n\n")
+        f.write(content)
+      logger.debug('Saved %s to %s', file_type, filepath, trial=self.trial)
+    except Exception as e:
+      logger.warning('Failed to save %s to file: %s', file_type, e, trial=self.trial)
+
   def get_tool(self, tool_name: str) -> Optional[BaseTool]:
     """Gets a tool of the agent by name."""
     for tool in self.tools:
@@ -89,32 +116,60 @@ class BaseAgent(ABC):
   def chat_llm(self, cur_round: int, client: Any, prompt: Prompt,
                trial: int) -> str:
     """Chat with LLM."""
+    # Save prompt to file (initialize round if needed)
+    if not hasattr(self, 'round'):
+      self.round = 0
+    self.round = cur_round
+    
+    prompt_text = prompt.gettext()
     logger.info('<CHAT PROMPT:ROUND %02d>%s</CHAT PROMPT:ROUND %02d>',
                 cur_round,
-                prompt.gettext(),
+                prompt_text,
                 cur_round,
                 trial=trial)
+    
+    # Save prompt to local file for analysis
+    self._save_prompt_to_file('prompt', prompt_text)
+    
     response = self.llm.chat_llm(client=client, prompt=prompt)
     logger.info('<CHAT RESPONSE:ROUND %02d>%s</CHAT RESPONSE:ROUND %02d>',
                 cur_round,
                 response,
                 cur_round,
                 trial=trial)
+    
+    # Save response to local file for analysis  
+    self._save_prompt_to_file('response', response)
+    
     return response
 
   def ask_llm(self, cur_round: int, prompt: Prompt, trial: int) -> str:
     """Ask LLM."""
+    # Save prompt to file (initialize round if needed)
+    if not hasattr(self, 'round'):
+      self.round = 0
+    self.round = cur_round
+    
+    prompt_text = prompt.gettext()
     logger.info('<ASK PROMPT:ROUND %02d>%s</ASK PROMPT:ROUND %02d>',
                 cur_round,
-                prompt.gettext(),
+                prompt_text,
                 cur_round,
                 trial=trial)
+    
+    # Save prompt to local file for analysis
+    self._save_prompt_to_file('ask_prompt', prompt_text)
+    
     response = self.llm.ask_llm(prompt=prompt)
     logger.info('<ASK RESPONSE:ROUND %02d>%s</ASK RESPONSE:ROUND %02d>',
                 cur_round,
                 response,
                 cur_round,
                 trial=trial)
+    
+    # Save response to local file for analysis
+    self._save_prompt_to_file('ask_response', response)
+    
     return response
 
   def _parse_tag(self, response: str, tag: str) -> str:
@@ -317,6 +372,47 @@ class BaseAgent(ABC):
   def _initial_prompt(self, results: list[Result]) -> Prompt:
     """The initial prompt of the agent."""
 
+  def log_llm_prompt(self, prompt: str) -> None:
+    """Log LLM prompt and save to file for analysis."""
+    logger.info('<PROMPT>%s</PROMPT>', prompt, trial=self.trial)
+    self._save_prompt_to_file('prompt', prompt)
+
+  def log_llm_response(self, response: str) -> None:
+    """Log LLM response and save to file for analysis."""
+    logger.info('<RESPONSE>%s</RESPONSE>', response, trial=self.trial)
+    self._save_prompt_to_file('response', response)
+
+  def _save_prompt_to_file(self, file_type: str, content: str) -> None:
+    """Save prompt or response content to local file for analysis."""
+    import os
+    
+    # Create directory for prompt logs
+    prompt_log_dir = f'./results-prompt_logs_{self.name}_{self.trial}'
+    os.makedirs(prompt_log_dir, exist_ok=True)
+    
+    # Save with timestamp
+    import datetime
+    timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+    filename = f'{file_type}_{timestamp}.txt'
+    filepath = os.path.join(prompt_log_dir, filename)
+    
+    try:
+      with open(filepath, 'w', encoding='utf-8') as f:
+        f.write(f"=== {file_type.upper()} ===\n")
+        f.write(f"Agent: {self.name}\n")
+        f.write(f"Trial: {self.trial}\n")
+        f.write(f"Timestamp: {timestamp}\n")
+        f.write(f"Length: {len(str(content))} characters\n")
+        f.write("=" * 50 + "\n\n")
+        # Convert content to string if it's a list or other type
+        if isinstance(content, list):
+          f.write(str(content))
+        else:
+          f.write(str(content))
+      logger.debug('Saved %s to %s', file_type, filepath, trial=self.trial)
+    except Exception as e:
+      logger.warning('Failed to save %s to file: %s', file_type, e, trial=self.trial)
+
   @abstractmethod
   def execute(self, result_history: list[Result]) -> Result:
     """Executes the agent based on previous result."""
@@ -339,37 +435,44 @@ class ADKBaseAgent(BaseAgent):
 
     self.benchmark = benchmark
 
-    # For now, ADKBaseAgents only support the Vertex AI Models.
-    if not isinstance(llm, VertexAIModel):
-      raise ValueError(f'{self.name} only supports Vertex AI models.')
+    # Check if this is a Vertex AI model - if not, fallback to BaseAgent behavior
+    self.use_adk = isinstance(llm, VertexAIModel)
+    
+    if not self.use_adk:
+      logger.warning('Non-Vertex AI model detected for %s. Using fallback mode without ADK.', self.name, trial=self.trial)
 
-    # Create the agent using the ADK library
-    adk_agent = agents.LlmAgent(
-        name=self.name,
-        model=llm._vertex_ai_model,
-        description=description,
-        instruction=instruction,
-        tools=tools or [],
-    )
+    # Create the agent using the ADK library only for Vertex AI models
+    if self.use_adk:
+      adk_agent = agents.LlmAgent(
+          name=self.name,
+          model=llm._vertex_ai_model,
+          description=description,
+          instruction=instruction,
+          tools=tools or [],
+      )
 
-    # Create the session service
-    session_service = sessions.InMemorySessionService()
-    session_service.create_session(
-        app_name=self.name,
-        user_id=benchmark.id,
-        session_id=f'session_{self.trial}',
-    )
+      # Create the session service
+      session_service = sessions.InMemorySessionService()
+      session_service.create_session(
+          app_name=self.name,
+          user_id=benchmark.id,
+          session_id=f'session_{self.trial}',
+      )
 
-    # Create the runner
-    self.runner = runners.Runner(
-        agent=adk_agent,
-        app_name=self.name,
-        session_service=session_service,
-    )
+      # Create the runner
+      self.runner = runners.Runner(
+          agent=adk_agent,
+          app_name=self.name,
+          session_service=session_service,
+      )
+
+      logger.info('ADK Agent %s created.', self.name, trial=self.trial)
+    else:
+      # Fallback mode for non-Vertex AI models
+      self.runner = None
+      logger.info('Fallback Agent %s created (no ADK).', self.name, trial=self.trial)
 
     self.round = 0
-
-    logger.info('ADK Agent %s created.', self.name, trial=self.trial)
 
   def get_xml_representation(self, response: Optional[dict]) -> str:
     """Returns the XML representation of the response."""
@@ -393,46 +496,74 @@ class ADKBaseAgent(BaseAgent):
 
     self.log_llm_prompt(prompt.get())
 
-    async def _call():
-      user_id = self.benchmark.id
-      session_id = f'session_{self.trial}'
-      content = types.Content(role='user',
-                              parts=[types.Part(text=prompt.get())])
+    if self.use_adk:
+      # Use ADK for Vertex AI models
+      async def _call():
+        user_id = self.benchmark.id
+        session_id = f'session_{self.trial}'
+        content = types.Content(role='user',
+                                parts=[types.Part(text=prompt.get())])
 
-      final_response = None
+        final_response = None
 
-      async for event in self.runner.run_async(
-          user_id=user_id,
-          session_id=session_id,
-          new_message=content,
-      ):
-        if event.is_final_response():
-          if (event.content and event.content.parts):
-            if event.content.parts[0].text:
-              final_response = event.content.parts[0].text
-              self.log_llm_response(final_response)
-            elif event.content.parts[0].function_response:
-              final_response = event.content.parts[0].function_response.response
-              self.log_llm_response(self.get_xml_representation(final_response))
-          elif event.actions and event.actions.escalate:
-            error_message = event.error_message
-            logger.error('Agent escalated: %s', error_message, trial=self.trial)
+        async for event in self.runner.run_async(
+            user_id=user_id,
+            session_id=session_id,
+            new_message=content,
+        ):
+          if event.is_final_response():
+            if (event.content and event.content.parts):
+              if event.content.parts[0].text:
+                final_response = event.content.parts[0].text
+                self.log_llm_response(final_response)
+              elif event.content.parts[0].function_response:
+                final_response = event.content.parts[0].function_response.response
+                self.log_llm_response(self.get_xml_representation(final_response))
+            elif event.actions and event.actions.escalate:
+              error_message = event.error_message
+              logger.error('Agent escalated: %s', error_message, trial=self.trial)
 
-      if not final_response:
-        self.log_llm_response('No valid response from LLM.')
+        if not final_response:
+          self.log_llm_response('No valid response from LLM.')
 
-      return final_response
+        return final_response
 
-    return self.llm.with_retry_on_error(lambda: asyncio.run(_call()),
-                                        [errors.ClientError])
+      return self.llm.with_retry_on_error(lambda: asyncio.run(_call()),
+                                          [errors.ClientError])
+    else:
+      # Fallback to BaseAgent behavior for non-Vertex AI models
+      # Create a proper client for the LLM
+      llm_client = None
+      if hasattr(self.llm, '_get_client'):
+        llm_client = self.llm._get_client()
+      elif hasattr(self.llm, 'create_client'):
+        llm_client = self.llm.create_client()
+      response = super().chat_llm(cur_round, llm_client, prompt, trial)
+      self.log_llm_response(response)
+      return response
 
-  def log_llm_prompt(self, promt: str) -> None:
+  def log_llm_prompt(self, prompt) -> None:
     self.round += 1
+    
+    # Convert prompt to string format for logging and saving
+    if isinstance(prompt, list):
+      # Handle chat format: [{'role': 'system', 'content': '...'}, ...]
+      prompt_str = ""
+      for message in prompt:
+        role = message.get('role', 'unknown')
+        content = message.get('content', '')
+        prompt_str += f"\n{role}:\n{content}\n" + "="*50 + "\n"
+    else:
+      prompt_str = str(prompt)
+    
     logger.info('<CHAT PROMPT:ROUND %02d>%s</CHAT PROMPT:ROUND %02d>',
                 self.round,
-                promt,
+                prompt_str,
                 self.round,
                 trial=self.trial)
+    
+    # Save prompt to local file for analysis
+    self._save_prompt_to_file('prompt', prompt_str)
 
   def log_llm_response(self, response: str) -> None:
     logger.info('<CHAT RESPONSE:ROUND %02d>%s</CHAT RESPONSE:ROUND %02d>',
@@ -440,6 +571,10 @@ class ADKBaseAgent(BaseAgent):
                 response,
                 self.round,
                 trial=self.trial)
+    
+    # Save response to local file for analysis
+    self._save_prompt_to_file('response', response)
+
 
   def end_llm_chat(self, tool_context: ToolContext) -> None:
     """Ends the LLM chat session."""

@@ -135,6 +135,21 @@ def parse_args() -> argparse.Namespace:
       default='')
 
   parser.add_argument('-w', '--work-dir', default=RESULTS_DIR)
+  
+  # Add model configuration parameters
+  parser.add_argument('-l',
+                      '--model',
+                      default='vertex_ai_gemini-2-5-pro-chat',
+                      help=('Models available: '
+                            f'{", ".join(models.LLM.all_llm_names())}.'))
+  parser.add_argument('-a',
+                      '--ai-binary',
+                      required=False,
+                      nargs='?',
+                      const=os.getenv('AI_BINARY', ''),
+                      default='',
+                      type=str,
+                      help='AI binary path for local model execution.')
 
   parsed_args = parser.parse_args()
 
@@ -216,9 +231,10 @@ def write_result(args: argparse.Namespace, trial: int,
 
 if __name__ == '__main__':
 
-  model = models.LLM.setup(ai_binary='', name='vertex_ai_gemini-2-5-pro-chat')
-
   args = parse_args()
+  
+  # Setup model using command line arguments
+  model = models.LLM.setup(ai_binary=args.ai_binary, name=args.model)
 
   introspector.set_introspector_endpoints(args.introspector_endpoint)
 
