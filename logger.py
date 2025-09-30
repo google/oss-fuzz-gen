@@ -1,16 +1,3 @@
-# Copyright 2025 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
 """A note-taker module to write experiment logs and result files. It attaches
 extra key info to logs and results (such as trial ID, function signature,
 project) to help identify log during debugging and result tracking."""
@@ -26,7 +13,6 @@ from google.cloud import storage
 from results import Result, RunResult, TrialResult
 
 FINAL_RESULT_JSON = 'result.json'
-
 
 class CustomLoggerAdapter(logging.LoggerAdapter):
   """A note-taker to log and record experiment status, key info, and final
@@ -121,7 +107,6 @@ class CustomLoggerAdapter(logging.LoggerAdapter):
               local_run_log_path,
               trial=result.trial)
 
-
 def debug(msg: object,
           *args: object,
           trial: int,
@@ -137,7 +122,6 @@ def debug(msg: object,
                                              stacklevel=stacklevel,
                                              extra=extra,
                                              **kwargs)
-
 
 def info(msg: object,
          *args: object,
@@ -155,7 +139,6 @@ def info(msg: object,
                                             extra=extra,
                                             **kwargs)
 
-
 def warning(msg: object,
             *args: object,
             trial: int,
@@ -172,7 +155,6 @@ def warning(msg: object,
                                                extra=extra,
                                                **kwargs)
 
-
 def error(msg: object,
           *args: object,
           trial: int,
@@ -188,7 +170,6 @@ def error(msg: object,
                                              stacklevel=stacklevel,
                                              extra=extra,
                                              **kwargs)
-
 
 def get_trial_logger(name: str = __name__,
                      trial: int = 0,

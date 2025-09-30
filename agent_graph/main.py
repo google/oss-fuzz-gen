@@ -1,17 +1,4 @@
 #!/usr/bin/env python3
-# Copyright 2025 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
 """
 LangGraph模式的正式入口点。
 
@@ -36,7 +23,6 @@ from llm_toolkit.models import LLM
 
 logger = logging.getLogger(__name__)
 
-
 def setup_logging(verbose: bool = False) -> None:
     """Setup logging configuration."""
     level = logging.DEBUG if verbose else logging.INFO
@@ -45,7 +31,6 @@ def setup_logging(verbose: bool = False) -> None:
         format='%(asctime)s [%(levelname)s] %(name)s: %(message)s',
         datefmt='%Y-%m-%d %H:%M:%S'
     )
-
 
 def create_llm_instance(args: argparse.Namespace) -> LLM:
     """Create and configure LLM instance."""
@@ -62,7 +47,6 @@ def create_llm_instance(args: argparse.Namespace) -> LLM:
     except Exception as e:
         logger.error(f"Failed to setup LLM '{args.model}': {e}")
         raise
-
 
 def run_single_benchmark(args: argparse.Namespace) -> bool:
     """运行单个benchmark的LangGraph workflow."""
@@ -119,7 +103,6 @@ def run_single_benchmark(args: argparse.Namespace) -> bool:
             traceback.print_exc()
         return False
 
-
 def create_argument_parser() -> argparse.ArgumentParser:
     """Create argument parser for LangGraph main entry point."""
     parser = argparse.ArgumentParser(
@@ -165,7 +148,6 @@ Examples:
     
     return parser
 
-
 def main() -> int:
     """Main entry point for LangGraph fuzzing workflow."""
     parser = create_argument_parser()
@@ -192,7 +174,6 @@ def main() -> int:
     # Run the workflow
     success = run_single_benchmark(args)
     return 0 if success else 1
-
 
 if __name__ == "__main__":
     sys.exit(main())

@@ -1,17 +1,4 @@
 #!/usr/bin/env python3
-# Copyright 2024 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
 """Project source parser."""
 
 import logging
@@ -32,7 +19,6 @@ logger = logging.getLogger(__name__)
 SEARCH_IGNORE_DIRS = ['aflplusplus', 'fuzztest', 'honggfuzz', 'libfuzzer']
 SEARCH_EXTS = ['.c', '.cc', '.cpp', '.cxx', '.c++']
 
-
 def _read_harness(src_file: str, encoding_error_handling: str = 'replace'):
   """Reads content of a harness |src_file| and handles encoding error."""
   with open(src_file, encoding='utf-8', errors=encoding_error_handling) as fp:
@@ -42,7 +28,6 @@ def _read_harness(src_file: str, encoding_error_handling: str = 'replace'):
       raise type(e)(f'Failed to decode fuzz target {src_file} with '
                     f'{encoding_error_handling}.')
   return content
-
 
 def _format_source(src_file: str) -> str:
   """Runs Clang format and returns formatted code."""
@@ -74,7 +59,6 @@ def _format_source(src_file: str) -> str:
 
   return ''
 
-
 def _get_interesting_file(src_file: str, out: str) -> tuple[str, str]:
   """Returns the path name and content of |src_file|"""
   short_path = src_file[len(out):]
@@ -82,7 +66,6 @@ def _get_interesting_file(src_file: str, out: str) -> tuple[str, str]:
   if not content:
     return '', ''
   return short_path, content
-
 
 def _get_harness(src_file: str, out: str, language: str) -> tuple[str, str]:
   """Returns the path name and content of harness."""
@@ -103,7 +86,6 @@ def _get_harness(src_file: str, out: str, language: str) -> tuple[str, str]:
   short_path = src_file[len(out):]
   return short_path, content
 
-
 def _build_project_local_docker(project: str):
   """Builds the project with OSS-Fuzz."""
   helper_path = os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR, 'infra',
@@ -123,7 +105,6 @@ def _build_project_local_docker(project: str):
     raise Exception('Failed to build OSS-Fuzz image for {project}')
   logger.info('Done building image.')
 
-
 def _copy_project_src(project: str,
                       out: str,
                       cloud_experiment_bucket: str = '',
@@ -141,7 +122,6 @@ def _copy_project_src(project: str,
         project)
     _build_project_local_docker(project)
     _copy_project_src_from_local(project, out, language)
-
 
 def _build_project_on_cloud(project: str, cloud_experiment_bucket: str) -> str:
   """Builds project image on cloud and copies /src."""
@@ -176,7 +156,6 @@ def _build_project_on_cloud(project: str, cloud_experiment_bucket: str) -> str:
 
   return uid
 
-
 def _copy_project_src_from_cloud(bucket_dirname: str, out: str,
                                  cloud_experiment_bucket: str):
   """Copies /src from |bucket_dirname|."""
@@ -200,7 +179,6 @@ def _copy_project_src_from_cloud(bucket_dirname: str, out: str,
     logger.info('Downloaded %s to %s', blob.name, local_file_path)
     blob.delete()
     logger.info('Deleted %s from the bucket.', blob.name)
-
 
 def _copy_project_src_from_local(project: str, out: str, language: str):
   """Runs the project's OSS-Fuzz image to copy /|src| to /|out|."""
@@ -279,7 +257,6 @@ def _copy_project_src_from_local(project: str, out: str, language: str):
       logger.error('STDOUT: %s', result.stdout)
       logger.error('STDERR: %s', result.stderr)
 
-
 def _identify_fuzz_targets(out: str, interesting_filenames: list[str],
                            language: str) -> tuple[list[str], list[str]]:
   """
@@ -335,7 +312,6 @@ def _identify_fuzz_targets(out: str, interesting_filenames: list[str],
 
   return potential_harnesses, interesting_filepaths
 
-
 def _parse_fuzz_targets(project: str, out: str, potential_harnesses: list[str],
                         interesting_filepaths: list[str],
                         language: str) -> tuple[dict[str, str], dict[str, str]]:
@@ -362,7 +338,6 @@ def _parse_fuzz_targets(project: str, out: str, potential_harnesses: list[str],
 
   return fuzz_targets, interesting_files
 
-
 def _copy_fuzz_targets(harness_path: str, dest_dir: str, project: str):
   """Copies the harness from |harness_path| to ./|dest_dir|/|project|/."""
   if not dest_dir:
@@ -379,7 +354,6 @@ def _copy_fuzz_targets(harness_path: str, dest_dir: str, project: str):
 
   logger.info('Retrieved fuzz targets from %s:\n  %s', project,
               '\n  '.join(os.listdir(dest_dir)))
-
 
 def search_source(
     project: str,

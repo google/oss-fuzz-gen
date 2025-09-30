@@ -1,17 +1,4 @@
 #!/usr/bin/env python3
-# Copyright 2024 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
 """Run an experiment with all function-under-tests."""
 
 import argparse
@@ -59,7 +46,6 @@ LOG_LEVELS = ['debug', 'info']
 LOG_FMT = ('%(asctime)s.%(msecs)03d %(levelname)s '
            '%(module)s - %(funcName)s: %(message)s')
 
-
 class Result:
   benchmark: benchmarklib.Benchmark
   result: run_one_experiment.AggregatedResult | str
@@ -67,7 +53,6 @@ class Result:
   def __init__(self, benchmark, result):
     self.benchmark = benchmark
     self.result = result
-
 
 def generate_benchmarks(args: argparse.Namespace) -> None:
   """Generates benchmarks, write to filesystem and set args benchmark dir."""
@@ -89,7 +74,6 @@ def generate_benchmarks(args: argparse.Namespace) -> None:
         project, project_lang, args.generate_benchmarks_max, benchmark_oracles)
     if benchmarks:
       benchmarklib.Benchmark.to_yaml(benchmarks, outdir=benchmark_dir)
-
 
 def prepare_experiment_targets(
     args: argparse.Namespace) -> list[benchmarklib.Benchmark]:
@@ -116,7 +100,6 @@ def prepare_experiment_targets(
 
   return experiment_configs
 
-
 def run_experiments(benchmark: benchmarklib.Benchmark, args) -> Result:
   """Runs an experiment based on the |benchmark| config."""
   try:
@@ -140,7 +123,6 @@ def run_experiments(benchmark: benchmarklib.Benchmark, args) -> Result:
     logger.error('Exception while running experiment: %s', str(e))
     traceback.print_exc()
     return Result(benchmark, f'Exception while running experiment: {e}')
-
 
 def parse_args() -> argparse.Namespace:
   """Parses command line arguments."""
@@ -293,7 +275,6 @@ def parse_args() -> argparse.Namespace:
       'them, cloud experiment needs both.')
   return args
 
-
 def extend_report_with_coverage_gains() -> None:
   """Process total gain from all generated harnesses for each projects and
   update summary report. This makes it possible to view per-project stats
@@ -334,7 +315,6 @@ def extend_report_with_coverage_gains() -> None:
   add_to_json_report(WORK_DIR, 'comperative_coverage_gains',
                      comparative_cov_gains)
 
-
 def extend_report_with_coverage_gains_process():
   """A process that continuously runs to update coverage gains in the
   background."""
@@ -346,13 +326,11 @@ def extend_report_with_coverage_gains_process():
       logger.error('Failed to extend report with coverage gains')
       traceback.print_exc()
 
-
 def _print_experiment_result(result: Result):
   """Prints the |result| of a single experiment."""
   logger.info('\n**** Finished benchmark %s, %s ****\n%s',
               result.benchmark.project, result.benchmark.function_signature,
               result.result)
-
 
 def _print_experiment_results(results: list[Result],
                               cov_gain: dict[str, dict[str, Any]]):
@@ -365,7 +343,6 @@ def _print_experiment_results(results: list[Result],
   logger.info('**** TOTAL COVERAGE GAIN: ****')
   for project in cov_gain:
     logger.info('*%s: %s', project, cov_gain[project]["coverage_diff"])
-
 
 def _setup_logging(verbose: str = 'info', is_cloud: bool = False) -> None:
   """Set up logging level."""
@@ -390,7 +367,6 @@ def _setup_logging(verbose: str = 'info', is_cloud: bool = False) -> None:
   # Set the base logger level
   logging.getLogger('').setLevel(log_level)
 
-
 def add_to_json_report(outdir: str, key: str, value: Any) -> None:
   """Adds a key/value pair to JSON report."""
   os.makedirs(outdir, exist_ok=True)
@@ -406,7 +382,6 @@ def add_to_json_report(outdir: str, key: str, value: Any) -> None:
   # Overwrite the new json file
   with open(json_report_path, 'w') as f:
     f.write(json.dumps(json_report))
-
 
 def _process_total_coverage_gain() -> dict[str, dict[str, Any]]:
   """Processes and calculates the total coverage gain for each project."""
@@ -521,7 +496,6 @@ def _process_total_coverage_gain() -> dict[str, dict[str, Any]]:
 
   return coverage_gain
 
-
 def main():
   global WORK_DIR
 
@@ -595,7 +569,6 @@ def main():
 
   coverage_gain_dict = _process_total_coverage_gain()
   _print_experiment_results(experiment_results, coverage_gain_dict)
-
 
 if __name__ == '__main__':
   sys.exit(main())

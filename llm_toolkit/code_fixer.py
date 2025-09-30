@@ -1,17 +1,4 @@
 #!/usr/bin/env python3
-# Copyright 2024 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
 """Fixing fuzz target with LLM."""
 
 import argparse
@@ -40,7 +27,6 @@ UNKNOWN_TYPE_ERROR = 'error: unknown type name'
 FALSE_FUZZED_DATA_PROVIDER_ERROR = 'include/fuzzer/FuzzedDataProvider.h:16:10:'
 FALSE_EXTERN_KEYWORD_ERROR = 'expected identifier or \'(\'\nextern "C"'
 FDP_INCLUDE_STATEMENT = '#include <fuzzer/FuzzedDataProvider.h>'
-
 
 def parse_args():
   """Parses command line arguments."""
@@ -88,7 +74,6 @@ def parse_args():
 
   return args
 
-
 def get_target_files(target_dir: str) -> list[str]:
   """Returns the fuzz target files in the raw target directory."""
   return [
@@ -96,7 +81,6 @@ def get_target_files(target_dir: str) -> list[str]:
       for f in os.listdir(target_dir)
       if benchmarklib.is_c_file(f) or benchmarklib.is_cpp_file(f)
   ]
-
 
 def collect_specific_fixes(project: str,
                            file_name: str) -> list[Callable[[str], str]]:
@@ -126,7 +110,6 @@ def collect_specific_fixes(project: str,
 
   return list(required_fixes)
 
-
 def apply_specific_fixes(content: str,
                          required_fixes: list[Callable[[str], str]]) -> str:
   """Fixes frequent errors in |raw_content| and returns fixed content."""
@@ -134,7 +117,6 @@ def apply_specific_fixes(content: str,
     content = required_fix(content)
 
   return content
-
 
 def fix_all_targets(target_dir: str, project: str):
   """Reads raw content, applies fixes, and saves the fixed content."""
@@ -147,7 +129,6 @@ def fix_all_targets(target_dir: str, project: str):
               'w+') as fixed_file:
       fixed_file.write(fixed_content)
 
-
 # ========================= Specific Fixes ========================= #
 def append_extern_c(raw_content: str) -> str:
   """Appends `extern "C"` before fuzzer entry `LLVMFuzzerTestOneInput`."""
@@ -156,18 +137,15 @@ def append_extern_c(raw_content: str) -> str:
   fixed_content = re.sub(pattern, replacement, raw_content)
   return fixed_content
 
-
 def insert_cstdlib(raw_content: str) -> str:
   """Includes `cstdlib` library."""
   fixed_content = f'#include <cstdlib>\n{raw_content}'
   return fixed_content
 
-
 def insert_cstdint(raw_content: str) -> str:
   """Includes `cstdint` library."""
   fixed_content = f'#include <cstdint>\n{raw_content}'
   return fixed_content
-
 
 def insert_stdint(content: str) -> str:
   """Includes `stdint` library."""
@@ -175,7 +153,6 @@ def insert_stdint(content: str) -> str:
   if include_stdint not in content:
     content = f'{include_stdint}{content}'
   return content
-
 
 def remove_nonexist_png_functions(content: str) -> str:
   """Removes non-exist functions in libpng-proto."""
@@ -188,7 +165,6 @@ def remove_nonexist_png_functions(content: str) -> str:
   for pattern in non_exist_functions:
     content = re.sub(pattern, '', content)
   return content
-
 
 def include_builtin_library(content: str) -> str:
   """Includes builtin libraries when its function was invoked."""
@@ -206,7 +182,6 @@ def include_builtin_library(content: str) -> str:
       content = f'{library}\n{content}'
   return content
 
-
 def include_pngrio(content: str) -> str:
   """Includes <pngrio.c> when using its functions."""
   functions = [
@@ -220,15 +195,12 @@ def include_pngrio(content: str) -> str:
     content = f'{include_pngrio}\n{content}'
   return content
 
-
 def remove_const_from_png_symbols(content: str) -> str:
   """Removes const from png types."""
   re.sub(r'png_const_', 'png_', content)
   return content
 
-
 # ========================= LLM Fixes ========================= #
-
 
 def extract_error_message(log_path: str, project_target_basename: str,
                           language: str) -> list[str]:
@@ -243,7 +215,6 @@ def extract_error_message(log_path: str, project_target_basename: str,
   if not errors:
     logger.warning('Failed to parse error message from %s.', log_path)
   return errors
-
 
 def extract_error_from_lines(log_lines: list[str], project_target_basename: str,
                              language: str) -> list[str]:
@@ -330,7 +301,6 @@ def extract_error_from_lines(log_lines: list[str], project_target_basename: str,
 
   return group_error_messages(errors)
 
-
 def group_error_messages(error_lines: list[str]) -> list[str]:
   """Groups multi-line error block into one string"""
   state_unknown = 'UNKNOWN'
@@ -389,7 +359,6 @@ def group_error_messages(error_lines: list[str]) -> list[str]:
     error_blocks.append('\n'.join(curr_block))
   return error_blocks
 
-
 def llm_fix(ai_binary: str, target_path: str, benchmark: benchmarklib.Benchmark,
             llm_fix_id: int, error_desc: Optional[str], errors: list[str],
             fixer_model_name: str, language: str) -> None:
@@ -442,7 +411,6 @@ def llm_fix(ai_binary: str, target_path: str, benchmark: benchmarklib.Benchmark,
   parser.save_output(preferred_fix_code, fixed_target_path)
   parser.save_output(preferred_fix_code, target_path)
 
-
 def apply_llm_fix(ai_binary: str,
                   benchmark: benchmarklib.Benchmark,
                   fuzz_target_source_code: str,
@@ -482,7 +450,6 @@ def apply_llm_fix(ai_binary: str,
 
   fixer_model.query_llm(prompt, response_dir)
 
-
 def collect_context(benchmark: benchmarklib.Benchmark,
                     errors: list[str]) -> str:
   """Collects the useful context to fix the errors."""
@@ -495,7 +462,6 @@ def collect_context(benchmark: benchmarklib.Benchmark,
 
   return context
 
-
 def _collect_context_no_member(benchmark: benchmarklib.Benchmark,
                                error: str) -> str:
   """Collects the useful context to fix 'no member in' errors."""
@@ -505,7 +471,6 @@ def _collect_context_no_member(benchmark: benchmarklib.Benchmark,
   target_type = matched.group(1)
   ci = context_introspector.ContextRetriever(benchmark)
   return ci.get_type_def(target_type)
-
 
 def collect_instructions(benchmark: benchmarklib.Benchmark, errors: list[str],
                          fuzz_target_source_code: str) -> str:
@@ -527,7 +492,6 @@ def collect_instructions(benchmark: benchmarklib.Benchmark, errors: list[str],
   instruction += _collect_consume_buffers(fuzz_target_source_code)
 
   return instruction
-
 
 def _collect_instruction_undefined_reference(
     benchmark: benchmarklib.Benchmark, error: str,
@@ -583,7 +547,6 @@ def _collect_instruction_undefined_reference(
           'correctly implemented in your generated fuzz target, following the '
           "library's guidance.")
   return instruction
-
 
 def _collect_instruction_file_not_found(benchmark: benchmarklib.Benchmark,
                                         error: str,
@@ -646,7 +609,6 @@ def _collect_instruction_file_not_found(benchmark: benchmarklib.Benchmark,
         f'that may be correct alternatives:\n<code>\n{statements}\n</code>\n')
   return instruction
 
-
 def _collect_instruction_fdp_in_c_target(benchmark: benchmarklib.Benchmark,
                                          errors: list[str],
                                          fuzz_target_source_code: str) -> str:
@@ -667,7 +629,6 @@ def _collect_instruction_fdp_in_c_target(benchmark: benchmarklib.Benchmark,
 
   return ''
 
-
 def _collect_instruction_no_goto(fuzz_target_source_code: str) -> str:
   """Collects the instruction to avoid using goto."""
   if 'goto' in fuzz_target_source_code:
@@ -677,7 +638,6 @@ def _collect_instruction_no_goto(fuzz_target_source_code: str) -> str:
         'variables BEFORE the <code>goto</code>. Never introduce new variables '
         'after the <code>goto</code>.')
   return ''
-
 
 def _collect_instruction_builtin_libs_first(benchmark: benchmarklib.Benchmark,
                                             errors: list[str]) -> str:
@@ -693,7 +653,6 @@ def _collect_instruction_builtin_libs_first(benchmark: benchmarklib.Benchmark,
         'use these declared symbols.')
   return ''
 
-
 def _collect_instruction_extern(benchmark: benchmarklib.Benchmark) -> str:
   """Collects the instructions to use extern "C" in C++ fuzz targets."""
   if not benchmark.needs_extern:
@@ -707,7 +666,6 @@ def _collect_instruction_extern(benchmark: benchmarklib.Benchmark) -> str:
       'Include necessary C headers, source files, functions, and code here.\n}'
       '\n</code>\n')
   return instruction
-
 
 def _collect_consume_buffers(fuzz_target_source_code: str) -> str:
   """Provides advice on the use of ConsumeBytes and ConsumeData"""
@@ -730,11 +688,9 @@ def _collect_consume_buffers(fuzz_target_source_code: str) -> str:
 
   return instruction
 
-
 def main():
   args = parse_args()
   fix_all_targets(args.target_dir, args.project)
-
 
 if __name__ == '__main__':
   sys.exit(main())

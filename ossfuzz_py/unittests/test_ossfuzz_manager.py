@@ -1,16 +1,3 @@
-# Copyright 2025 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
 """
 Comprehensive unit tests for ossfuzz_py.core.ossfuzz_manager module.
 
@@ -40,7 +27,6 @@ sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 sys.path.insert(
     0, str(Path(__file__).parent.parent.parent / "ossfuzz_py" / "core"))
 
-
 class TestOSSFuzzManagerInit(unittest.TestCase):
   """Test OSSFuzzManager initialization."""
 
@@ -69,7 +55,6 @@ class TestOSSFuzzManagerInit(unittest.TestCase):
 
       expected_checkout = self.test_dir / "oss-fuzz"
       self.assertEqual(manager.checkout_path, expected_checkout)
-
 
 class TestOSSFuzzManagerClone(unittest.TestCase):
   """Test OSSFuzzManager clone functionality."""
@@ -139,7 +124,6 @@ class TestOSSFuzzManagerClone(unittest.TestCase):
     self.assertIn("Unexpected error during clone: Network error",
                   str(context.exception))
 
-
 class TestOSSFuzzManagerProjectOperations(unittest.TestCase):
   """Test OSSFuzzManager project-related operations."""
 
@@ -182,7 +166,6 @@ class TestOSSFuzzManagerProjectOperations(unittest.TestCase):
 
     self.assertEqual(str(context.exception),
                      "Project 'nonexistent_project' not found")
-
 
 class TestOSSFuzzManagerListProjects(unittest.TestCase):
   """Test OSSFuzzManager list_projects functionality."""
@@ -269,7 +252,6 @@ class TestOSSFuzzManagerListProjects(unittest.TestCase):
 
       self.assertIn("Project listing failed: Access denied",
                     str(context.exception))
-
 
 class TestOSSFuzzManagerProjectConfig(unittest.TestCase):
   """Test OSSFuzzManager project configuration functionality."""
@@ -400,7 +382,6 @@ class TestOSSFuzzManagerProjectConfig(unittest.TestCase):
     result = self.manager.get_project_language("test_project")
     self.assertEqual(result, "c++")
 
-
 class TestOSSFuzzManagerRepositoryOperations(unittest.TestCase):
   """Test OSSFuzzManager repository operations."""
 
@@ -463,7 +444,6 @@ class TestOSSFuzzManagerRepositoryOperations(unittest.TestCase):
     self.assertIn("Unexpected error during update: Network timeout",
                   str(context.exception))
 
-
 class TestOSSFuzzManagerCleanup(unittest.TestCase):
   """Test OSSFuzzManager cleanup functionality."""
 
@@ -510,7 +490,6 @@ class TestOSSFuzzManagerCleanup(unittest.TestCase):
 
       self.assertFalse(result)
 
-
 class TestOSSFuzzManagerIntegration(unittest.TestCase):
   """Integration tests for OSSFuzzManager."""
 
@@ -554,7 +533,6 @@ class TestOSSFuzzManagerIntegration(unittest.TestCase):
       # Test cleanup
       result = manager.postprocess()
       self.assertTrue(result)
-
 
 class TestOSSFuzzManagerRealExecution(unittest.TestCase):
   """Real execution tests for OSSFuzzManager (no mocking of subprocess)."""
@@ -668,7 +646,6 @@ class TestOSSFuzzManagerRealExecution(unittest.TestCase):
     self.assertTrue(manager.postprocess())
     if manager.clean_up_on_exit:
       self.assertFalse(manager.temp_dir.exists())
-
 
 if __name__ == '__main__':
   unittest.main()

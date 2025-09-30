@@ -1,16 +1,3 @@
-# Copyright 2024 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
 """
 Tools used for experiments.
 """
@@ -41,7 +28,6 @@ CLEAN_UP_OSS_FUZZ = bool(int(os.getenv('OFG_CLEAN_UP_OSS_FUZZ', '1')))
 
 VENV_DIR: str = 'venv'
 
-
 def _remove_temp_oss_fuzz_repo():
   """Deletes the temporary OSS-Fuzz directory."""
   # Ensure we aren't deleting a real repo someone cares about.
@@ -52,7 +38,6 @@ def _remove_temp_oss_fuzz_repo():
     logger.warning('No permission to remove %s: %s', OSS_FUZZ_DIR, e)
   except FileNotFoundError as e:
     logger.warning('No OSS-Fuzz directory %s: %s', OSS_FUZZ_DIR, e)
-
 
 def _set_temp_oss_fuzz_repo():
   """Creates a temporary directory for OSS-Fuzz repo and update |OSS_FUZZ_DIR|.
@@ -65,7 +50,6 @@ def _set_temp_oss_fuzz_repo():
   OSS_FUZZ_DIR = GLOBAL_TEMP_DIR
   atexit.register(_remove_temp_oss_fuzz_repo)
   _clone_oss_fuzz_repo()
-
 
 def _clone_oss_fuzz_repo():
   """Clones OSS-Fuzz to |OSS_FUZZ_DIR|."""
@@ -81,7 +65,6 @@ def _clone_oss_fuzz_repo():
   if proc.returncode != 0:
     logger.info(stdout)
     logger.info(stderr)
-
 
 def clone_oss_fuzz(oss_fuzz_dir: str = ''):
   """Clones the OSS-Fuzz repository."""
@@ -112,7 +95,6 @@ def clone_oss_fuzz(oss_fuzz_dir: str = ''):
       dst_project = os.path.join(OSS_FUZZ_DIR, 'projects', proj)
       logger.info('Copying: %s to %s', src_project, dst_project)
       shutil.copytree(src_project, dst_project)
-
 
 def postprocess_oss_fuzz() -> None:
   """Prepares the oss-fuzz directory for experiments."""
@@ -151,7 +133,6 @@ def postprocess_oss_fuzz() -> None:
     logger.info('stdout: %s', result.stdout)
     logger.info('stderr: %s', result.stderr)
 
-
 def list_c_cpp_projects() -> list[str]:
   """Returns a list of all c/c++ projects from oss-fuzz."""
   projects = []
@@ -165,7 +146,6 @@ def list_c_cpp_projects() -> list[str]:
         projects.append(project)
   return sorted(projects)
 
-
 def get_project_language(project: str) -> str:
   """Returns the |project| language read from its project.yaml."""
   project_yaml_path = os.path.join(OSS_FUZZ_DIR, 'projects', project,
@@ -178,7 +158,6 @@ def get_project_language(project: str) -> str:
   with open(project_yaml_path, 'r') as benchmark_file:
     data = yaml.safe_load(benchmark_file)
     return data.get('language', 'C++')
-
 
 def get_project_repository(project: str) -> str:
   """Returns the |project| repository read from its project.yaml."""
@@ -194,11 +173,9 @@ def get_project_repository(project: str) -> str:
     data = yaml.safe_load(benchmark_file)
     return data.get('main_repo', '')
 
-
 def _get_project_cache_name(project: str) -> str:
   """Gets name of cached container for a project."""
   return f'gcr.io.oss-fuzz.{project}_cache'
-
 
 def _get_project_cache_image_name(project: str, sanitizer: str) -> str:
   """Gets name of cached Docker image for a project and a respective
@@ -206,12 +183,10 @@ def _get_project_cache_image_name(project: str, sanitizer: str) -> str:
   return ('us-central1-docker.pkg.dev/oss-fuzz/oss-fuzz-gen/'
           f'{project}-ofg-cached-{sanitizer}')
 
-
 def _has_cache_build_script(project: str) -> bool:
   """Checks if a project has cached fuzzer build script."""
   cached_build_script = os.path.join('fuzzer_build_script', project)
   return os.path.isfile(cached_build_script)
-
 
 def _prepare_image_cache(project: str) -> bool:
   """Prepares cached images of fuzzer build containers."""
@@ -279,7 +254,6 @@ def _prepare_image_cache(project: str) -> bool:
       logger.info('Could not rename image.')
   return True
 
-
 def prepare_cached_images(
     experiment_targets: list[benchmarklib.Benchmark]) -> None:
   """Builds cached Docker images for a set of targets."""
@@ -291,7 +265,6 @@ def prepare_cached_images(
 
   for project in all_projects:
     _prepare_image_cache(project)
-
 
 def is_image_cached(project_name: str, sanitizer: str) -> bool:
   """Checks whether a project has a cached Docker image post fuzzer
@@ -308,7 +281,6 @@ def is_image_cached(project_name: str, sanitizer: str) -> bool:
     return True
   except sp.CalledProcessError:
     return False
-
 
 def rewrite_project_to_cached_project(project_name: str, generated_project: str,
                                       sanitizer: str) -> None:
@@ -369,7 +341,6 @@ def rewrite_project_to_cached_project(project_name: str, generated_project: str,
   with open(cached_dockerfile, 'w') as f:
     f.write(new_content)
 
-
 def prepare_build(project_name, sanitizer, generated_project):
   """Prepares the correct Dockerfile to be used for cached builds."""
   generated_project_folder = os.path.join(OSS_FUZZ_DIR, 'projects',
@@ -387,7 +358,6 @@ def prepare_build(project_name, sanitizer, generated_project):
   else:
     logger.info('Using original dockerfile')
     shutil.copy(original_dockerfile, dockerfile_to_use)
-
 
 def _build_image(project_name: str) -> str:
   """Builds project image in OSS-Fuzz"""
@@ -411,7 +381,6 @@ def _build_image(project_name: str) -> str:
                  e.stderr.decode('utf-8'))
     return ''
 
-
 def rectify_docker_tag(docker_tag: str) -> str:
   # Replace "::" and any character not \w, _, or . with "-".
   valid_docker_tag = re.sub(r'::', '-', docker_tag)
@@ -419,7 +388,6 @@ def rectify_docker_tag(docker_tag: str) -> str:
   # Docker fails with tags containing -_ or _-.
   valid_docker_tag = re.sub(r'[-_]{2,}', '-', valid_docker_tag)
   return valid_docker_tag
-
 
 def create_ossfuzz_project(benchmark: benchmarklib.Benchmark,
                            generated_oss_fuzz_project: str) -> str:
@@ -434,7 +402,6 @@ def create_ossfuzz_project(benchmark: benchmarklib.Benchmark,
                                        benchmark.project)
   shutil.copytree(oss_fuzz_project_path, generated_project_path)
   return generated_project_path
-
 
 def prepare_project_image(benchmark: benchmarklib.Benchmark,
                           project_name: str = '') -> str:
@@ -461,7 +428,6 @@ def prepare_project_image(benchmark: benchmarklib.Benchmark,
     logger.warning('Unable to find cached project image for %s', project)
   return _build_image(generated_oss_fuzz_project)
 
-
 def create_ossfuzz_project_by_name(original_name: str,
                                    generated_oss_fuzz_project: str) -> str:
   """Creates an OSS-Fuzz project by replicating an existing project."""
@@ -474,7 +440,6 @@ def create_ossfuzz_project_by_name(original_name: str,
   oss_fuzz_project_path = os.path.join(OSS_FUZZ_DIR, 'projects', original_name)
   shutil.copytree(oss_fuzz_project_path, generated_project_path)
   return generated_project_path
-
 
 def prepare_project_image_by_name(project_name: str) -> str:
   """Prepares original image of the |project_name|'s fuzz target build

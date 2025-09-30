@@ -1,16 +1,3 @@
-# Copyright 2024 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
 """
 LLM-generated project Evaluator.
 """
@@ -39,7 +26,6 @@ GENERATE_CORPUS = bool(os.getenv('LLM_GENERATE_CORPUS', ''))
 
 OSS_FUZZ_COVERAGE_BUCKET = 'oss-fuzz-coverage'
 OSS_FUZZ_INTROSPECTOR_BUCKET = 'oss-fuzz-introspector'
-
 
 @dataclasses.dataclass
 class Result:
@@ -73,7 +59,6 @@ class Result:
   def to_dict(self):
     return dataclasses.asdict(self)
 
-
 def load_existing_textcov(project: str) -> textcov.Textcov:
   """Loads existing textcovs."""
   storage_client = storage.Client.create_anonymous_client()
@@ -106,7 +91,6 @@ def load_existing_textcov(project: str) -> textcov.Textcov:
 
   return existing_textcov
 
-
 def load_existing_jvm_textcov(project: str) -> textcov.Textcov:
   """Loads existing textcovs for JVM project."""
   storage_client = storage.Client.create_anonymous_client()
@@ -129,7 +113,6 @@ def load_existing_jvm_textcov(project: str) -> textcov.Textcov:
   with blob.open() as f:
     return textcov.Textcov.from_jvm_file(f)
 
-
 def load_existing_python_textcov(project: str) -> textcov.Textcov:
   """Loads existing textcovs for python project."""
   storage_client = storage.Client.create_anonymous_client()
@@ -151,7 +134,6 @@ def load_existing_python_textcov(project: str) -> textcov.Textcov:
   logger.info('Loading existing all_cov.json textcov from %s', blob.name)
   with blob.open() as f:
     return textcov.Textcov.from_python_file(f)
-
 
 def load_existing_rust_textcov(project: str) -> textcov.Textcov:
   """Loads existing textcovs for rust project."""
@@ -185,7 +167,6 @@ def load_existing_rust_textcov(project: str) -> textcov.Textcov:
 
   return existing_textcov
 
-
 def load_existing_coverage_summary(project: str) -> dict:
   """Load existing summary.json."""
   storage_client = storage.Client.create_anonymous_client()
@@ -208,7 +189,6 @@ def load_existing_coverage_summary(project: str) -> dict:
   with blob.open() as f:
     return json.load(f)
 
-
 def compute_total_lines_without_fuzz_targets(coverage_summary: dict,
                                              fuzz_target_base_name: str) -> int:
   """Counts the total number of lines excluding the fuzz target."""
@@ -218,7 +198,6 @@ def compute_total_lines_without_fuzz_targets(coverage_summary: dict,
       for f in coverage_summary['data'][0]['files']
       if fuzz_target_base_name not in f['filename']
   ])
-
 
 # TODO(Dongge): Make this universally available.
 class _Logger:
@@ -241,7 +220,6 @@ class _Logger:
       json.dump(result.to_dict(), f)
 
     return result
-
 
 class Evaluator:
   """Target evaluator."""

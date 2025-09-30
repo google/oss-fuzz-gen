@@ -1,16 +1,3 @@
-# Copyright 2025 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
 """Generate a prompt to identify and remediate the security vulnerability
 Usage:
   # Under venv.
@@ -81,12 +68,10 @@ STACK_FRAME_PATH_LINE_REGEX = re.compile(
     r'(?<=\[|\(|\s)([a-zA-Z/.][^\s]*?)\s*(:|@)\s*(\d+)(?=\]$|\)$|:\d+$|$)')
 EXCLUDED_FILE_PATH_SUBSTRINGS = ('/compiler-rt/', '/glibc-', '/usr/')
 
-
 def get_local_repo_path(repo_url):
   """Returns the local path of the repository."""
   local_repo_name = repo_url.split('/')[-1]
   return os.path.join(PROJECTS_DIR, local_repo_name)
-
 
 def get_git_commit_range(regression_range):
   """Converts a regression range to a git commit range."""
@@ -95,7 +80,6 @@ def get_git_commit_range(regression_range):
     return f"{regression_range}~..{regression_range}"
 
   return regression_range.replace(':', '..')
-
 
 def get_changeset_diff(repo_url, regression_range):
   """Fetches the code diff for a given commit range in a Git repository."""
@@ -125,7 +109,6 @@ def get_changeset_diff(repo_url, regression_range):
   except Exception as e:
     raise RuntimeError(f"Error retrieving changeset diff: {e}")
 
-
 def find_file(file_path, commit):
   """Finds a file in a git commit tree."""
   # Check if the file exists in the git commit tree.
@@ -141,7 +124,6 @@ def find_file(file_path, commit):
 
   # File not found.
   return None
-
 
 def get_file_content(repo_url, crash_revision, file_path):
   """Fetches the content of a file in a Git repository."""
@@ -170,7 +152,6 @@ def get_file_content(repo_url, crash_revision, file_path):
   except Exception:
     print(f"Error: '{file_path}' not found at commit '{crash_revision}'.")
     return None
-
 
 if __name__ == "__main__":
   parser = argparse.ArgumentParser(

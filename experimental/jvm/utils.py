@@ -1,17 +1,4 @@
 #!/usr/bin/env python3
-# Copyright 2024 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
 ###############################################################################
 """Provides a set of utils for oss-fuzz-gen on new Java projects integration"""
 
@@ -30,7 +17,6 @@ from experimental.jvm import constants, oss_fuzz_templates
 
 logger = logging.getLogger(__name__)
 
-
 # Project preparation utils
 ###########################
 def git_clone_project(github_url: str, destination: str) -> bool:
@@ -47,7 +33,6 @@ def git_clone_project(github_url: str, destination: str) -> bool:
   except subprocess.CalledProcessError:
     return False
   return True
-
 
 def get_project_name(github_url: str) -> Optional[str]:
   """Get project name by simplify github url"""
@@ -76,7 +61,6 @@ def get_project_name(github_url: str) -> Optional[str]:
 
   # Malformed or invalid github url
   return None
-
 
 def prepare_base_files(base_dir: str, project_name: str, url: str) -> bool:
   """Prepare OSS-Fuzz base files for Java project fuzzing"""
@@ -108,7 +92,6 @@ def prepare_base_files(base_dir: str, project_name: str, url: str) -> bool:
 
   return True
 
-
 def _get_build_file(build_type: str) -> str:
   """Prepare build.sh content for this project."""
 
@@ -122,7 +105,6 @@ def _get_build_file(build_type: str) -> str:
     return ''
 
   return build_file + oss_fuzz_templates.BUILD_JAVA_BASE
-
 
 def _get_docker_file(build_type: str, version: str, url: str) -> str:
   """Prepare build.sh content for this project."""
@@ -151,7 +133,6 @@ def _get_docker_file(build_type: str, version: str, url: str) -> str:
 
   return docker_file
 
-
 # Java Project discovery utils
 ##############################
 def _find_dir_build_type(project_dir: str) -> tuple[str, str]:
@@ -170,7 +151,6 @@ def _find_dir_build_type(project_dir: str) -> tuple[str, str]:
 
   return '', ''
 
-
 def _get_maven_version(base_dir: str) -> str:
   """Prepare Maven specific logic for build.sh."""
   with open(os.path.join(base_dir, 'pom.xml'), 'r') as f:
@@ -184,7 +164,6 @@ def _get_maven_version(base_dir: str) -> str:
     return '3.2.5'
 
   return '3.9.2'
-
 
 def _find_project_build_type(project_dir: str,
                              proj_name: str) -> tuple[str, str]:

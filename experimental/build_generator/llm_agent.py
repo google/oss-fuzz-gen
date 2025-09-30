@@ -1,16 +1,3 @@
-# Copyright 2025 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
 """LLM Build Script Agent"""
 
 import argparse
@@ -31,7 +18,6 @@ from tool.container_tool import ProjectContainerTool
 
 SAMPLE_HEADERS_COUNT = 30
 MAX_DISCOVERY_ROUND = 100
-
 
 class BuildScriptAgent(BaseAgent):
   """Base class for build script agent."""
@@ -319,7 +305,6 @@ class BuildScriptAgent(BaseAgent):
 
     return build_result
 
-
 class BuildSystemBuildScriptAgent(BuildScriptAgent):
   """Generate a working Dockerfile and build script from scratch
   with build system."""
@@ -413,7 +398,6 @@ class BuildSystemBuildScriptAgent(BuildScriptAgent):
                          chat_history={self.name: ''})
 
     return super().execute(result_history)
-
 
 class AutoDiscoveryBuildScriptAgent(BuildScriptAgent):
   """Generate a working Dockerfile and build script from scratch

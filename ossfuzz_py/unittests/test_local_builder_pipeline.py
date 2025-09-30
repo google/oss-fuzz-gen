@@ -1,16 +1,3 @@
-# Copyright 2025 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
 """
 Integration test: LocalBuilder → real Docker build.
 
@@ -46,7 +33,6 @@ from ossfuzz_py.execution.fuzz_target import FuzzTarget
 from ossfuzz_py.utils.env_utils import EnvUtils
 from ossfuzz_py.utils.work_dir_manager import WorkDirManager
 
-
 def _create_dummy_c_target() -> FuzzTarget:
   """Generate a minimal C++ fuzz target and build script."""
   # Source with a no-op LLVMFuzzerTestOneInput
@@ -72,7 +58,6 @@ def _create_dummy_c_target() -> FuzzTarget:
                     project_name="dummy",
                     language="cpp")
 
-
 def _create_real_fuzz_target_from_benchmark(
     benchmark_yaml_path: str) -> FuzzTarget:
   """Create a real fuzz target from a benchmark YAML file."""
@@ -90,7 +75,6 @@ def _create_real_fuzz_target_from_benchmark(
   fuzz_target = FuzzTarget.create_basic_template(benchmark)
 
   return fuzz_target
-
 
 class TestLocalBuilderPipeline(unittest.TestCase):
   """Test class for LocalBuilder pipeline integration tests."""
@@ -561,7 +545,6 @@ class TestLocalBuilderPipeline(unittest.TestCase):
       print("  - Environment preparation: successful")
       print("  - Artifact processing: functional")
       print("  - Cleanup: successful")
-
 
 if __name__ == '__main__':
   unittest.main()

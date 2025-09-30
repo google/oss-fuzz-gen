@@ -1,16 +1,3 @@
-# Copyright 2025 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
 """
 Docker management subsystem for the Custom Fuzzing Module build system.
 
@@ -53,7 +40,6 @@ ENABLE_CACHING = EnvUtils.get_env_bool(EnvVars.OFG_USE_CACHING, default=True)
 CLEAN_UP_OSS_FUZZ = EnvUtils.get_env_bool(EnvVars.OFG_CLEAN_UP_OSS_FUZZ,
                                           default=True)
 
-
 @dataclass
 class CommandResult:
   """Result of a command execution."""
@@ -66,7 +52,6 @@ class CommandResult:
   def output(self) -> str:
     """Combined stdout and stderr output."""
     return f"{self.stdout}\n{self.stderr}".strip()
-
 
 class DockerManager:
   """

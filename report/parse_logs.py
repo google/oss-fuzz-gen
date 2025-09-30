@@ -1,16 +1,3 @@
-# Copyright 2025 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
 """A dedicated parser to parse the run log and extract
 information such as the crash details, crash symptoms,
 stack traces, etc. to be rendered in the report."""
@@ -19,7 +6,6 @@ import re
 
 from report.common import LogPart
 
-
 def extract_project_from_coverage_path(file_path: str) -> str:
   """Extract the project name from coverage file paths."""
   if file_path.startswith('/src/'):
@@ -27,7 +13,6 @@ def extract_project_from_coverage_path(file_path: str) -> str:
     if path_parts:
       return path_parts[0]
   return ""
-
 
 class LogsParser:
   """Parse the logs"""
@@ -103,7 +88,6 @@ class LogsParser:
         cycles_dict[0][agent_name] = agent_logs
 
     return [cycles_dict[cycle] for cycle in sorted(cycles_dict.keys())]
-
 
 class RunLogsParser:
   """Parse the run log."""

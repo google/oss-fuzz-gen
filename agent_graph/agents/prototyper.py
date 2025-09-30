@@ -1,16 +1,3 @@
-# Copyright 2025 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
 """An LLM agent to generate a simple fuzz target prototype that can build.
 Use it as a usual module locally, or as script in cloud builds.
 """
@@ -31,7 +18,6 @@ from llm_toolkit import prompt_builder
 from llm_toolkit.prompts import Prompt
 from results import BuildResult, Result
 from tool.container_tool import ProjectContainerTool
-
 
 class Prototyper(BaseAgent):
   """The Agent to generate a simple but valid fuzz target from scratch."""

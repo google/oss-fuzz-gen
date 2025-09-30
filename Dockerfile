@@ -1,17 +1,3 @@
-# Copyright 2024 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
 # Build a virtualenv using the appropriate Debian release:
 # * Install python3-venv for the built-in Python3 venv module (not installed by default).
 # * Install gcloud CLI from Google Cloud's apt repository.
@@ -40,7 +26,6 @@ RUN echo "deb https://packages.cloud.google.com/apt cloud-sdk main" | tee -a /et
 # Set timezone to Australia/Sydney.
 ENV TZ='Australia/Sydney'
 
-
 # Install Docker for OSS-Fuzz.
 # Add Docker's official GPG key:
 RUN apt-get install ca-certificates curl gnupg && \
@@ -60,7 +45,6 @@ RUN apt-get update && \
     containerd.io \
     docker-buildx-plugin \
     docker-compose-plugin
-
 
 COPY . /experiment
 WORKDIR /experiment

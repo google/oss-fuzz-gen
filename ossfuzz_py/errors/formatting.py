@@ -1,16 +1,3 @@
-# Copyright 2025 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
 """
 Error formatting and conversion utilities for the OSS-Fuzz Python SDK.
 
@@ -50,7 +37,6 @@ _CONVERSION_MAP: Dict[Type[Exception], Type[OSSFuzzError]] = {
     # Note: Most auth errors will be custom, but we can catch some generic ones
 }
 
-
 def handle_error(exc: Exception) -> OSSFuzzError:
   """
   Convert various exceptions to OSS-Fuzz SDK errors using mapping.
@@ -87,7 +73,6 @@ def handle_error(exc: Exception) -> OSSFuzzError:
   # Default fallback
   return OSSFuzzError(str(exc), ErrorCode.UNKNOWN, ErrorDomain.CONFIG)
 
-
 def to_dict(error: OSSFuzzError) -> Dict[str, Any]:
   """
   Convert an OSSFuzzError to dictionary format for serialization.
@@ -108,7 +93,6 @@ def to_dict(error: OSSFuzzError) -> Dict[str, Any]:
       'VALIDATION_FAILED'
   """
   return error.to_dict()
-
 
 def format_error(error: OSSFuzzError) -> str:
   """
@@ -137,7 +121,6 @@ def format_error(error: OSSFuzzError) -> str:
 
   return base_message
 
-
 def format_error_simple(error: OSSFuzzError) -> str:
   """
   Format an error for simple display (just message and code).
@@ -156,7 +139,6 @@ def format_error_simple(error: OSSFuzzError) -> str:
   """
   return f"{error.code.value}: {error.message}"
 
-
 def format_error_json(error: OSSFuzzError) -> str:
   """
   Format an error as JSON string for logging or API responses.
@@ -169,7 +151,6 @@ def format_error_json(error: OSSFuzzError) -> str:
   """
   import json
   return json.dumps(to_dict(error), indent=2)
-
 
 def is_retryable_error(error: Exception) -> bool:
   """
@@ -193,7 +174,6 @@ def is_retryable_error(error: Exception) -> bool:
 
   return error.retryable()
 
-
 def get_error_category(error: Exception) -> str:
   """
   Get the high-level category of an error.
@@ -215,7 +195,6 @@ def get_error_category(error: Exception) -> str:
     error = handle_error(error)
 
   return error.domain.name
-
 
 # Backward compatibility functions (matching original API)
 def format_error_legacy(error: OSSFuzzError) -> str:

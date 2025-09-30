@@ -1,16 +1,3 @@
-# Copyright 2024 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
 """
 LLM prompt definitions.
 """
@@ -20,7 +7,6 @@ from abc import abstractmethod
 from typing import Any
 
 logger = logging.getLogger(__name__)
-
 
 class Prompt:
   """Base prompt."""
@@ -59,7 +45,6 @@ class Prompt:
   @abstractmethod
   def save(self, location: str) -> None:
     """Saves the prompt to a filelocation."""
-
 
 class TextPrompt(Prompt):
   """Text-style prompts."""
@@ -106,7 +91,6 @@ class TextPrompt(Prompt):
     """Saves the prompt to a filelocation."""
     with open(location, 'w+') as prompt_file:
       prompt_file.write(self.get())
-
 
 class OpenAIPrompt(Prompt):
   """OpenAI style structured prompt."""
@@ -191,7 +175,6 @@ class OpenAIPrompt(Prompt):
     else:
       # There are no prompt exists, append the text as priming prompt
       self.add_priming(text)
-
 
 class ClaudePrompt(OpenAIPrompt):
   """Claude style structured prompt."""

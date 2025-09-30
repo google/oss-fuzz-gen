@@ -1,17 +1,3 @@
-# Copyright 2025 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
 """State management for LangGraph-based fuzzing workflow."""
 
 from typing_extensions import TypedDict, NotRequired, Annotated
@@ -21,7 +7,6 @@ import operator
 def add_messages(left: List[Dict[str, Any]], right: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     """Message reducer for combining message lists."""
     return left + right
-
 
 class FuzzingWorkflowState(TypedDict):
     """
@@ -86,7 +71,6 @@ class FuzzingWorkflowState(TypedDict):
     build_errors: NotRequired[List[str]]  # Build error list
     active_containers: NotRequired[List[str]]  # Active container list
 
-
 class WorkerState(TypedDict):
     """State for worker nodes in parallel execution."""
     
@@ -98,7 +82,6 @@ class WorkerState(TypedDict):
     error: NotRequired[str]  # Error message if task failed
     start_time: NotRequired[float]  # Task start timestamp
     end_time: NotRequired[float]  # Task completion timestamp
-
 
 def create_initial_state(
     benchmark,  # benchmarklib.Benchmark or Dict[str, Any]
@@ -183,7 +166,6 @@ def create_initial_state(
         active_containers=[]
     )
 
-
 def is_terminal_state(state: FuzzingWorkflowState) -> bool:
     """Check if the workflow has reached a terminal state."""
     
@@ -204,7 +186,6 @@ def is_terminal_state(state: FuzzingWorkflowState) -> bool:
         return True
     
     return False
-
 
 def get_state_summary(state: FuzzingWorkflowState) -> str:
     """Get a human-readable summary of the current state."""

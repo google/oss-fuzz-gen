@@ -1,17 +1,4 @@
 #!/usr/bin/env python3
-# Copyright 2024 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
 """Interacts with FuzzIntrospector APIs"""
 
 import argparse
@@ -87,7 +74,6 @@ INTROSPECTOR_FUNCTION_WITH_MATCHING_RETURN_TYPE = ''
 INTROSPECTOR_JVM_PROPERTIES = ''
 INTROSPECTOR_JVM_PUBLIC_CLASSES = ''
 
-
 def get_oracle_dict() -> Dict[str, Any]:
   """Returns the oracles available to identify targets."""
   # Do this in a function to allow for forward-declaration of functions below.
@@ -100,7 +86,6 @@ def get_oracle_dict() -> Dict[str, Any]:
       'all-public-candidates': query_introspector_all_public_candidates,
   }
   return oracle_dict
-
 
 def set_introspector_endpoints(endpoint):
   """Sets URLs for Fuzz Introspector endpoints to local or remote endpoints."""
@@ -168,11 +153,9 @@ def set_introspector_endpoints(endpoint):
   INTROSPECTOR_CHECK_MACRO = f'{INTROSPECTOR_ENDPOINT}/check_macro'
   INTROSPECTOR_ALL_FUNCTIONS = f'{INTROSPECTOR_ENDPOINT}/all-functions'
 
-
 def _construct_url(api: str, params: dict) -> str:
   """Constructs an encoded url for the |api| with |params|."""
   return api + '?' + urlencode(params)
-
 
 def _query_introspector(api: str, params: dict) -> Optional[requests.Response]:
   """Queries FuzzIntrospector API and returns the json payload,
@@ -214,7 +197,6 @@ def _query_introspector(api: str, params: dict) -> Optional[requests.Response]:
 
   return None
 
-
 def _get_data(resp: Optional[requests.Response], key: str,
               default_value: T) -> T:
   """Gets the value specified by |key| from a Request |resp|."""
@@ -244,14 +226,12 @@ def _get_data(resp: Optional[requests.Response], key: str,
                '%s', key, resp.url, data)
   return default_value
 
-
 def query_introspector_for_tests(project: str) -> list[str]:
   """Gets the list of test files in the target project."""
   resp = _query_introspector(INTROSPECTOR_ORACLE_ALL_TESTS, {
       'project': project,
   })
   return _get_data(resp, 'test-file-list', [])
-
 
 def query_introspector_for_tests_xref(
     project: str, functions: Optional[list[str]]) -> dict[str, list[Any]]:
@@ -356,7 +336,6 @@ def query_introspector_for_tests_xref(
   result_dict['details'] = detail_list
   return result_dict
 
-
 def query_introspector_for_harness_intrinsics(
     project: str) -> list[dict[str, str]]:
   """Gets the list of test files in the target project."""
@@ -365,14 +344,12 @@ def query_introspector_for_harness_intrinsics(
   })
   return _get_data(resp, 'pairs', [])
 
-
 def query_introspector_all_functions(project: str) -> list[dict]:
   """Queries FuzzIntrospector API for all functions in a project."""
   resp = _query_introspector(INTROSPECTOR_ALL_FUNCTIONS, {
       'project': project,
   })
   return _get_data(resp, 'functions', [])
-
 
 def query_introspector_all_signatures(project: str) -> list[str]:
   """Queries FuzzIntrospector API for all functions in a project."""
@@ -381,7 +358,6 @@ def query_introspector_all_signatures(project: str) -> list[str]:
   for func in functions:
     new_funcs.append(func['function_signature'])
   return new_funcs
-
 
 def query_introspector_oracle(project: str, oracle_api: str) -> list[dict]:
   """Queries a fuzz target oracle API from Fuzz Introspector."""
@@ -398,22 +374,18 @@ def query_introspector_oracle(project: str, oracle_api: str) -> list[dict]:
       })
   return _get_data(resp, 'functions', [])
 
-
 def query_introspector_for_optimal_targets(project: str) -> list[dict]:
   """Queries Fuzz Introspector for optimal target analysis."""
   return query_introspector_oracle(project, INTROSPECTOR_ORACLE_OPTIMAL)
-
 
 def query_introspector_for_keyword_targets(project: str) -> list[dict]:
   """Queries FuzzIntrospector for targets with interesting fuzz keywords."""
   return query_introspector_oracle(project, INTROSPECTOR_ORACLE_KEYWORD)
 
-
 def query_introspector_for_easy_param_targets(project: str) -> list[dict]:
   """Queries Fuzz Introspector for targets that have fuzzer-friendly params,
   such as data buffers."""
   return query_introspector_oracle(project, INTROSPECTOR_ORACLE_EASY_PARAMS)
-
 
 def query_introspector_all_public_candidates(project: str) -> list[dict]:
   """Queries Fuzz Introspector for all public accessible function or
@@ -421,7 +393,6 @@ def query_introspector_all_public_candidates(project: str) -> list[dict]:
   """
   return query_introspector_oracle(project,
                                    INTROSPECTOR_ORACLE_ALL_PUBLIC_CANDIDATES)
-
 
 def query_introspector_for_targets(project, target_oracle) -> list[Dict]:
   """Queries introspector for target functions."""
@@ -431,12 +402,10 @@ def query_introspector_for_targets(project, target_oracle) -> list[Dict]:
     sys.exit(1)
   return query_func(project)
 
-
 def query_introspector_cfg(project: str) -> dict:
   """Queries FuzzIntrospector API for CFG."""
   resp = _query_introspector(INTROSPECTOR_CFG, {'project': project})
   return _get_data(resp, 'project', {})
-
 
 def query_introspector_source_file_path(project: str, func_sig: str) -> str:
   """Queries FuzzIntrospector API for file path of |func_sig|."""
@@ -446,7 +415,6 @@ def query_introspector_source_file_path(project: str, func_sig: str) -> str:
   })
   return _get_data(resp, 'filepath', '')
 
-
 def query_introspector_function_source(project: str, func_sig: str) -> str:
   """Queries FuzzIntrospector API for source code of |func_sig|."""
   resp = _query_introspector(INTROSPECTOR_FUNCTION_SOURCE, {
@@ -455,7 +423,6 @@ def query_introspector_function_source(project: str, func_sig: str) -> str:
   })
   return _get_data(resp, 'source', '')
 
-
 def query_introspector_function_line(project: str, func_sig: str) -> list:
   """Queries FuzzIntrospector API for source line of |func_sig|."""
   resp = _query_introspector(INTROSPECTOR_FUNCTION_SOURCE, {
@@ -463,7 +430,6 @@ def query_introspector_function_line(project: str, func_sig: str) -> list:
       'function_signature': func_sig
   })
   return [_get_data(resp, 'src_begin', 0), _get_data(resp, 'src_end', 0)]
-
 
 def query_introspector_function_props(project: str, func_sig: str) -> dict:
   """Queries FuzzIntrospector API for additional properties of |func_sig|."""
@@ -477,13 +443,11 @@ def query_introspector_function_props(project: str, func_sig: str) -> dict:
       'need-close': _get_data(resp, 'need-close', False)
   }
 
-
 def query_introspector_public_classes(project: str) -> list[str]:
   """Queries FuzzIntrospector API for all public classes of |project|."""
   resp = _query_introspector(INTROSPECTOR_JVM_PUBLIC_CLASSES,
                              {'project': project})
   return _get_data(resp, 'classes', [])
-
 
 def query_introspector_source_code(project: str,
                                    filepath: str,
@@ -502,7 +466,6 @@ def query_introspector_source_code(project: str,
 
   return _get_data(resp, 'source_code', '')
 
-
 def query_introspector_test_source(project: str, filepath: str) -> str:
   """Queries the source code of a test file from."""
   resp = _query_introspector(INTROSPECTOR_TEST_SOURCE, {
@@ -511,14 +474,12 @@ def query_introspector_test_source(project: str, filepath: str) -> str:
   })
   return _get_data(resp, 'source_code', '')
 
-
 def query_introspector_header_files(project: str) -> List[str]:
   """Queries for the header files used in a given project."""
   resp = _query_introspector(INTROSPECTOR_ALL_HEADER_FILES,
                              {'project': project})
   all_header_files = _get_data(resp, 'all-header-files', [])
   return all_header_files
-
 
 def query_introspector_sample_xrefs(project: str, func_sig: str) -> List[str]:
   """Queries for sample references in the form of source code."""
@@ -528,13 +489,11 @@ def query_introspector_sample_xrefs(project: str, func_sig: str) -> List[str]:
   })
   return _get_data(resp, 'source-code-refs', [])
 
-
 def query_introspector_jvm_source_path(project: str) -> List[str]:
   """Queries for all java source paths of a given project."""
   resp = _query_introspector(INTROSPECTOR_ALL_JVM_SOURCE_PATH,
                              {'project': project})
   return _get_data(resp, 'src_path', [])
-
 
 def query_introspector_matching_function_constructor_type(
     project: str, return_type: str, is_function: bool) -> List[Dict[str, Any]]:
@@ -559,7 +518,6 @@ def query_introspector_matching_function_constructor_type(
 
   return _get_data(resp, 'constructors', [])
 
-
 def query_introspector_header_files_to_include(project: str,
                                                func_sig: str) -> List[str]:
   """Queries Fuzz Introspector header files where a function is likely
@@ -570,7 +528,6 @@ def query_introspector_header_files_to_include(project: str,
   })
   arg_types = _get_data(resp, 'headers-to-include', [])
   return arg_types
-
 
 def query_introspector_function_debug_arg_types(project: str,
                                                 func_sig: str) -> List[str]:
@@ -583,7 +540,6 @@ def query_introspector_function_debug_arg_types(project: str,
   arg_types = _get_data(resp, 'arg-types', [])
   return arg_types
 
-
 def query_introspector_type_definition(project: str) -> List[dict]:
   """Queries FuzzIntrospector for a full list of custom type definition
   including, union, struct, typedef, enum and macro definition."""
@@ -592,7 +548,6 @@ def query_introspector_type_definition(project: str) -> List[dict]:
   })
   result = _get_data(resp, 'project', {})
   return result.get('typedef_list', [])
-
 
 def query_introspector_macro_block(project: str,
                                    source_path: str,
@@ -609,7 +564,6 @@ def query_introspector_macro_block(project: str,
       })
   result = _get_data(resp, 'project', {})
   return result.get('macro_block_info', [])
-
 
 def query_introspector_cross_references(project: str,
                                         func_sig: str) -> list[str]:
@@ -629,13 +583,11 @@ def query_introspector_cross_references(project: str,
     xref_source.append(source)
   return xref_source
 
-
 def query_introspector_language_stats() -> dict:
   """Queries introspector for language stats"""
 
   resp = _query_introspector(INTROSPECTOR_LANGUAGE_STATS, {})
   return _get_data(resp, 'stats', {})
-
 
 def query_introspector_function_signature(project: str,
                                           function_name: str) -> str:
@@ -646,7 +598,6 @@ def query_introspector_function_signature(project: str,
   })
   return _get_data(resp, 'signature', '')
 
-
 def query_introspector_addr_type_info(project: str, addr: str) -> str:
   """Queries FuzzIntrospector API for type information for a type
   identified by its address used during compilation."""
@@ -656,7 +607,6 @@ def query_introspector_addr_type_info(project: str, addr: str) -> str:
   })
 
   return _get_data(resp, 'dwarf-map', '')
-
 
 def get_next_generated_benchmarks_dir() -> str:
   """Retuns the next folder to be used for generated benchmarks."""
@@ -675,7 +625,6 @@ def get_next_generated_benchmarks_dir() -> str:
   max_idx += 1
   return os.path.join(BENCHMARK_ROOT, f'{GENERATED_BENCHMARK}{max_idx}')
 
-
 def query_introspector_target_function(project: str, function: str) -> dict:
   resp = _query_introspector(INTROSPECTOR_GET_TARGET_FUNCTION, {
       'project': project,
@@ -684,11 +633,9 @@ def query_introspector_target_function(project: str, function: str) -> dict:
 
   return _get_data(resp, 'function', {})
 
-
 def query_introspector_for_far_reach_low_cov(project):
   functions = query_introspector_oracle(project, INTROSPECTOR_ORACLE_FAR_REACH)
   return functions
-
 
 def demangle(name: str) -> str:
   return subprocess.run(['c++filt', name],
@@ -696,7 +643,6 @@ def demangle(name: str) -> str:
                         capture_output=True,
                         stdin=subprocess.DEVNULL,
                         text=True).stdout.strip()
-
 
 def clean_type(name: str) -> str:
   """Fix comment function type mistakes from FuzzIntrospector."""
@@ -714,7 +660,6 @@ def clean_type(name: str) -> str:
   name.strip()
   return name
 
-
 def _get_raw_return_type(function: dict, project: str) -> str:
   """Returns the raw function type."""
   return_type = function.get('return-type') or function.get('return_type', '')
@@ -725,7 +670,6 @@ def _get_raw_return_type(function: dict, project: str) -> str:
         get_raw_function_name(function, project))
   return return_type
 
-
 def _get_clean_return_type(function: dict, project: str) -> str:
   """Returns the cleaned function type."""
   raw_return_type = _get_raw_return_type(function, project).strip()
@@ -735,7 +679,6 @@ def _get_clean_return_type(function: dict, project: str) -> str:
     return 'void'
   return clean_type(raw_return_type)
 
-
 def get_raw_function_name(function: dict, project: str) -> str:
   """Returns the raw function name."""
   raw_name = (function.get('raw-function-name') or
@@ -744,7 +687,6 @@ def get_raw_function_name(function: dict, project: str) -> str:
     logger.error('No raw function name in project: %s for function: %s',
                  project, function)
   return raw_name
-
 
 def _get_clean_arg_types(function: dict, project: str) -> list[str]:
   """Returns the cleaned function argument types."""
@@ -757,13 +699,11 @@ def _get_clean_arg_types(function: dict, project: str) -> list[str]:
         get_raw_function_name(function, project))
   return [clean_type(arg_type) for arg_type in raw_arg_types]
 
-
 def _get_arg_count(function: dict) -> int:
   """Count the number of arguments for this function."""
   raw_arg_types = (function.get('arg-types') or
                    function.get('function_arguments', []))
   return len(raw_arg_types)
-
 
 def _get_arg_names(function: dict, project: str, language: str) -> list[str]:
   """Returns the function argument names."""
@@ -783,7 +723,6 @@ def _get_arg_names(function: dict, project: str, language: str) -> list[str]:
         get_raw_function_name(function, project))
   return arg_names
 
-
 def get_function_signature(function: dict, project: str) -> str:
   """Returns the function signature."""
   function_signature = function.get('function_signature', '')
@@ -797,7 +736,6 @@ def get_function_signature(function: dict, project: str) -> str:
         get_raw_function_name(function, project))
   return function_signature
 
-
 # TODO(dongge): Remove this function when FI fixes it.
 def _parse_type_from_raw_tagged_type(tagged_type: str, language: str) -> str:
   """Returns type name from |tagged_type| such as struct.TypeA"""
@@ -810,7 +748,6 @@ def _parse_type_from_raw_tagged_type(tagged_type: str, language: str) -> str:
     return tagged_type
   return tagged_type.split('.')[-1]
 
-
 def _group_function_params(param_types: list[str], param_names: list[str],
                            language: str) -> list[dict[str, str]]:
   """Groups the type and name of each parameter."""
@@ -818,7 +755,6 @@ def _group_function_params(param_types: list[str], param_names: list[str],
       'type': _parse_type_from_raw_tagged_type(param_type, language),
       'name': param_name
   } for param_type, param_name in zip(param_types, param_names)]
-
 
 def _select_top_functions_from_oracle(project: str, limit: int,
                                       target_oracle: str,
@@ -831,7 +767,6 @@ def _select_top_functions_from_oracle(project: str, limit: int,
   functions = query_introspector_for_targets(project, target_oracle)[:limit]
 
   return OrderedDict((func['function_signature'], func) for func in functions)
-
 
 def _combine_functions(a: list[str], b: list[str], c: list[str],
                        limit: int) -> list[str]:
@@ -866,7 +801,6 @@ def _combine_functions(a: list[str], b: list[str], c: list[str],
     combined.add(func)
   return list(combined)
 
-
 def _select_functions_from_jvm_oracles(project: str, limit: int,
                                        target_oracles: list[str]) -> list[dict]:
   """Selects functions from oracles designated for jvm projects, with
@@ -886,7 +820,6 @@ def _select_functions_from_jvm_oracles(project: str, limit: int,
     all_functions.update(tmp_functions)
 
   return list(all_functions.values())[:limit]
-
 
 def _select_functions_from_oracles(project: str, limit: int,
                                    target_oracles: list[str]) -> list[dict]:
@@ -926,7 +859,6 @@ def _select_functions_from_oracles(project: str, limit: int,
 
   return [all_functions[func] for func in selected_singatures]
 
-
 def _get_harness_intrinsics(
     project,
     filenames,
@@ -957,7 +889,6 @@ def _get_harness_intrinsics(
 
   return harness, target_name, interesting_files
 
-
 def populate_benchmarks_using_test_migration(
     project: str, language: str, limit: int) -> list[benchmarklib.Benchmark]:
   """Populates benchmarks using tests for test-to-harness conversion."""
@@ -982,7 +913,6 @@ def populate_benchmarks_using_test_migration(
                                preferred_target_name=target_name,
                                test_file_path=test_file))
   return potential_benchmarks[:limit]
-
 
 def generate_benchmark_for_targeted_function(project: str, function_name: str):
   """generates a benchmark for a single function."""
@@ -1013,7 +943,6 @@ def generate_benchmark_for_targeted_function(project: str, function_name: str):
   os.makedirs(benchmark_dir)
   benchmarklib.Benchmark.to_yaml(target_benchmarks, outdir=benchmark_dir)
   return benchmark_dir
-
 
 def populate_benchmarks_using_introspector(project: str, language: str,
                                            limit: int,
@@ -1125,12 +1054,10 @@ def populate_benchmarks_using_introspector(project: str, language: str,
 
   return potential_benchmarks
 
-
 def pick_one(d: dict):
   if not d:
     return None
   return list(d.keys())[0]
-
 
 def get_target_name(project_name: str, harness: str) -> Optional[str]:
   """Gets the matching target name."""
@@ -1140,7 +1067,6 @@ def get_target_name(project_name: str, harness: str) -> Optional[str]:
       return annotated['fuzzer_name']
 
   return None
-
 
 ##### Helper logic for downloading fuzz introspector reports.
 # Download introspector report.
@@ -1157,7 +1083,6 @@ def _identify_latest_report(project_name: str):
   logger.error('Error: %s has no summary.', project_name)
   return None
 
-
 def _extract_introspector_report(project_name):
   """Queries and extracts FuzzIntrospector report data of |project_name|."""
   project_url = _identify_latest_report(project_name)
@@ -1171,7 +1096,6 @@ def _extract_introspector_report(project_name):
     return None
   return introspector_report
 
-
 def _contains_function(funcs: List[Dict], target_func: Dict):
   """Returns True if |funcs| contains |target_func|, vice versa."""
   key_fields = ['function-name', 'source-file', 'return-type', 'arg-list']
@@ -1180,12 +1104,10 @@ def _contains_function(funcs: List[Dict], target_func: Dict):
       return True
   return False
 
-
 def _postprocess_function(target_func: dict, project_name: str):
   """Post-processes target function."""
   target_func['return-type'] = _get_clean_return_type(target_func, project_name)
   target_func['function-name'] = demangle(target_func['function-name'])
-
 
 def get_project_funcs(project_name: str) -> Dict[str, List[Dict]]:
   """Fetches the latest fuzz targets and function signatures of |project_name|
@@ -1230,7 +1152,6 @@ def get_project_funcs(project_name: str) -> Dict[str, List[Dict]]:
         funcs, key=lambda f: f.get('cyclomatic-complexity'), reverse=True)
   return fuzz_target_funcs
 
-
 def _parse_arguments() -> argparse.Namespace:
   """Parses command line args."""
   parser = argparse.ArgumentParser(
@@ -1260,7 +1181,6 @@ def _parse_arguments() -> argparse.Namespace:
                       help='Oracles used to determine interesting targets.')
 
   return parser.parse_args()
-
 
 # Set default endpoint.
 set_introspector_endpoints(DEFAULT_INTROSPECTOR_ENDPOINT)

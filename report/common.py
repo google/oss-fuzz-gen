@@ -1,16 +1,3 @@
-# Copyright 2024 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
 """Common libraries for report generation."""
 
 import dataclasses
@@ -40,7 +27,6 @@ _CHAT_PROMPT_END_MARKER = re.compile(r'</CHAT PROMPT:ROUND\s+\d+>')
 _CHAT_RESPONSE_START_MARKER = re.compile(r'<CHAT RESPONSE:ROUND\s+\d+>')
 _CHAT_RESPONSE_END_MARKER = re.compile(r'</CHAT RESPONSE:ROUND\s+\d+>')
 
-
 @dataclasses.dataclass
 class AccumulatedResult:
   """Container for storing accumulated results."""
@@ -63,7 +49,6 @@ class AccumulatedResult:
   def build_rate(self) -> float:
     return float(self.compiles) / float(self.total_runs)
 
-
 @dataclasses.dataclass
 class Benchmark:
   """The class of a benchmark function and its experiment results."""
@@ -74,7 +59,6 @@ class Benchmark:
   project: str = ''
   function: str = ''
   language: str = ''
-
 
 @dataclasses.dataclass
 class Project:
@@ -88,7 +72,6 @@ class Project:
   coverage_existing_total_covered_lines = 0
   coverage_existing_total_lines = 0
   coverage_ofg_total_covered_lines = 0
-
 
 @dataclasses.dataclass
 class Sample:
@@ -125,26 +108,22 @@ class Sample:
     reproducer_link = self.result.reproducer_path
     return reproducer_link.removesuffix('reproducer') + 'run.log'
 
-
 @dataclasses.dataclass
 class Target:
   code: str
   fixer_prompt: Optional[str] = None
   build_script_code: Optional[str] = None
 
-
 @dataclasses.dataclass
 class Triage:
   result: str
   triager_prompt: str
-
 
 @dataclasses.dataclass
 class LogPart:
   chat_prompt: bool = False
   chat_response: bool = False
   content: str = ''
-
 
 class FileSystem:
   """
@@ -253,7 +232,6 @@ class FileSystem:
       return blob.size if blob.size is not None else 0
 
     return os.path.getsize(self._path)
-
 
 class Results:
   """Results provides functions to explore the experiment results in a
@@ -711,7 +689,6 @@ class Results:
     except Exception as e:
       logging.error('Failed to read benchmark file %s: %s', project_path, e)
       return ''
-
 
 def _parse_log_parts(log: str) -> list[LogPart]:
   """Parse log into parts."""

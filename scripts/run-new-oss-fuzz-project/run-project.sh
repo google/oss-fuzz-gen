@@ -1,17 +1,4 @@
 #!/bin/bash
-# Copyright 2024 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
 
 OSS_FUZZ_GEN_DIR=$PWD
 OSS_FUZZ_GEN_MODEL=${MODEL}
@@ -28,7 +15,6 @@ for proj in ${PROJECTS}; do
 done
 comma_separated=${comma_separated::-1}
 
-
 # Specifify OSS-Fuzz-gen to not clean up the OSS-Fuzz project. Enabling
 # this will cause all changes in the OSS-Fuzz repository to be nullified.
 export OFG_CLEAN_UP_OSS_FUZZ=0
@@ -39,7 +25,6 @@ echo "Targeting project: $project"
 # generation.
 echo "Creating introspector reports"
 cd ${OSS_FUZZ_DIR}
-
 
 for p2 in ${PROJECTS}; do
   python3 $FI_DIR/oss_fuzz_integration/runner.py \
@@ -103,4 +88,3 @@ LLM_NUM_EVA=4 LLM_NUM_EXP=4 ./run_all_experiments.py \
 
 echo "Shutting down started webserver"
 curl --silent http://localhost:8080/api/shutdown || true
-

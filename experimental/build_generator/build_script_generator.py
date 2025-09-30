@@ -1,17 +1,4 @@
 #!/usr/bin/env python3
-# Copyright 2024 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
 """Utilities for generating builder scripts for a GitHub repository."""
 
 import logging
@@ -26,7 +13,6 @@ import constants
 import file_utils as utils
 
 logger = logging.getLogger(name=__name__)
-
 
 ############################################################
 #### Logic for auto building a given source code folder ####
@@ -44,7 +30,6 @@ class AutoBuildContainer:
       self.list_of_required_packages = []
       self.heuristic_id = ''
 
-
 class BuildWorker:
   """Keeper of data on auto generated builds."""
 
@@ -56,7 +41,6 @@ class BuildWorker:
     self.build_directory: str = build_directory
     self.executable_files_build: Dict[str, List[str]] = executable_files_build
     self.base_fuzz_build: bool = False
-
 
 class AutoBuildBase:
   """Base class for auto builders."""
@@ -96,7 +80,6 @@ class AutoBuildBase:
                          if lib in constants.LIBRARY_PACKAGE_MAP]
 
     return list(set(required_packages))
-
 
 class HeaderOnlyCBuilder(AutoBuildBase):
   """Wrapper for building header-only targets"""
@@ -145,7 +128,6 @@ llvm-ar rcs libfuzz.a *.o
   def name(self):
     return 'HeaderOnlyCBuilder'
 
-
 class PureCFileCompiler(AutoBuildBase):
   """Builder for compiling .c files direcetly in root repo dir."""
 
@@ -184,7 +166,6 @@ llvm-ar rcs libfuzz.a *.o
   def name(self):
     return 'pureCFileCompiler'
 
-
 class PureCFileCompilerFind(AutoBuildBase):
   """Builder for compiling .c files direcetly in root repo dir, using find."""
 
@@ -217,7 +198,6 @@ llvm-ar rcs libfuzz.a *.o
   @property
   def name(self):
     return 'pureCFileCompilerFind'
-
 
 class PureCPPFileCompilerFind(AutoBuildBase):
   """Builder for compiling .cpp files direcetly in root repo dir, using find."""
@@ -253,7 +233,6 @@ llvm-ar rcs libfuzz.a *.o
   def name(self):
     return 'PureCPPFileCompilerFind'
 
-
 class PureMakefileScanner(AutoBuildBase):
   """Auto builder for pure Makefile projects, only relying on "make"."""
 
@@ -272,7 +251,6 @@ class PureMakefileScanner(AutoBuildBase):
   @property
   def name(self):
     return 'make'
-
 
 class PureMakefileScannerWithPThread(AutoBuildBase):
   """Auto builder for pure Makefile projects, only relying on "make"."""
@@ -294,7 +272,6 @@ class PureMakefileScannerWithPThread(AutoBuildBase):
   @property
   def name(self):
     return 'make'
-
 
 class PureMakefileScannerWithSubstitutions(AutoBuildBase):
   """Auto builder for pure Makefile projects with substitions."""
@@ -324,7 +301,6 @@ class PureMakefileScannerWithSubstitutions(AutoBuildBase):
   @property
   def name(self):
     return 'makeWithSubstitutions'
-
 
 class PureMakefileScannerWithLibFlag(AutoBuildBase):
   """Auto builder for pure Makefile projects, relying on "make" with
@@ -387,7 +363,6 @@ class PureMakefileScannerWithLibFlag(AutoBuildBase):
   def name(self):
     return 'makewithlibflag'
 
-
 class AutoRefConfScanner(AutoBuildBase):
   """Auto-builder for patterns of "autoreconf fi; ./configure' make"""
 
@@ -408,7 +383,6 @@ class AutoRefConfScanner(AutoBuildBase):
   @property
   def name(self):
     return 'autogen'
-
 
 class RawMake(AutoBuildBase):
   """Similar to PureMake but also adds option for "make test". This is useful
@@ -437,7 +411,6 @@ class RawMake(AutoBuildBase):
   def name(self):
     return 'RawMake'
 
-
 class AutogenScanner(AutoBuildBase):
   """Auto builder for projects relying on "autoconf; autoheader."""
 
@@ -460,7 +433,6 @@ class AutogenScanner(AutoBuildBase):
   def name(self):
     return 'autogen'
 
-
 class AutogenScannerSH(AutoBuildBase):
   """Auto builder for projects relying on "autogen.sh; autoconf; autoheader."""
 
@@ -478,7 +450,6 @@ class AutogenScannerSH(AutoBuildBase):
   @property
   def name(self):
     return 'autogen20'
-
 
 class BootstrapScanner(AutoBuildBase):
   """Auto builder for projects that rely on bootstrap.sh; configure; make."""
@@ -501,7 +472,6 @@ class BootstrapScanner(AutoBuildBase):
   def name(self):
     return 'bootstrap-make'
 
-
 class AutogenConfScanner(AutoBuildBase):
   """Auto builder for projects relying on "autoconf; autoheader."""
 
@@ -523,7 +493,6 @@ class AutogenConfScanner(AutoBuildBase):
   @property
   def name(self):
     return 'autogen-ConfMake'
-
 
 class CMakeScannerOptsParser(AutoBuildBase):
   """Calls cmake to extract options from the CMakeLists.txt file of a project
@@ -640,7 +609,6 @@ class CMakeScannerOptsParser(AutoBuildBase):
       elif option['default'] != 'OFF':
         cmake_string += f'-D{option["name"]}=OFF '
     return cmake_string
-
 
 class CMakeScanner(AutoBuildBase):
   """Auto builder for CMake projects."""
@@ -784,7 +752,6 @@ class CMakeScanner(AutoBuildBase):
   def name(self):
     return 'cmake'
 
-
 class KConfigBuildScanner(AutoBuildBase):
   """Auto builder for KConfig-based projects."""
 
@@ -837,7 +804,6 @@ llvm-ar rcs libfuzz.a $(cat objfiles)
   def name(self):
     return 'kconfig'
 
-
 def match_build_heuristics_on_folder(abspath_of_target: str):
   """Yields AutoBuildContainer objects.
 
@@ -885,7 +851,6 @@ def match_build_heuristics_on_folder(abspath_of_target: str):
       logger.info('Matched: %s', scanner.name)
       yield from scanner.steps_to_build()
 
-
 def get_all_binary_files_from_folder(path: str) -> Dict[str, List[str]]:
   """Extracts binary artifacts from a list of files, based on file suffix."""
   all_files = utils.get_all_files_in_path(path, path)
@@ -900,7 +865,6 @@ def get_all_binary_files_from_folder(path: str) -> Dict[str, List[str]]:
       executable_files['dynamic-libs'].append(fil)
   return executable_files
 
-
 def wrap_build_script(test_dir: str, build_container: AutoBuildContainer,
                       abspath_of_target: str) -> str:
   build_script = '#!/bin/bash\n'
@@ -911,7 +875,6 @@ def wrap_build_script(test_dir: str, build_container: AutoBuildContainer,
     build_script += cmd + '\n'
 
   return build_script
-
 
 def convert_build_heuristics_to_scripts(
     all_build_suggestions: List[AutoBuildContainer], testing_base_dir: str,
@@ -925,7 +888,6 @@ def convert_build_heuristics_to_scripts(
                                      abspath_of_target)
     all_build_scripts.append((build_script, test_dir, build_suggestion))
   return all_build_scripts
-
 
 def extract_build_suggestions(
     target_dir, testing_base_dir) -> List[Tuple[str, str, AutoBuildContainer]]:
@@ -942,7 +904,6 @@ def extract_build_suggestions(
   all_build_scripts = convert_build_heuristics_to_scripts(
       all_build_suggestions, testing_base_dir, target_dir)
   return all_build_scripts
-
 
 def raw_build_evaluation(
     all_build_scripts: List[Tuple[str, str, AutoBuildContainer]]

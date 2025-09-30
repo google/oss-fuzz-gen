@@ -1,17 +1,4 @@
 #!/usr/bin/env python3
-# Copyright 2024 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
 """
 Generates function-under-test and fuzz targets of OSS-Fuzz projects in pairs
 for training.
@@ -36,7 +23,6 @@ logger = logging.getLogger(__name__)
 OSS_FUZZ_EXP_BUCKET = 'oss-fuzz-llm-public'
 # TODO(dongge): Use tmp dir.
 OSS_FUZZ_PATH = os.path.join(os.path.dirname(__file__), '..', 'oss-fuzz')
-
 
 def _get_fuzz_target_dir(project_name: str) -> str:
   """Returns the directory that contains the fuzz targets of |project_name|.
@@ -63,7 +49,6 @@ def _get_fuzz_target_dir(project_name: str) -> str:
 
   return project_fuzz_target_dir
 
-
 def _match_target_path_content(target_paths: List[str],
                                fuzz_target_dir: str) -> Dict[str, str]:
   """Returns a dictionary with |target_paths| as keys and its file content
@@ -85,7 +70,6 @@ def _match_target_path_content(target_paths: List[str],
           path_contents[target_path] = filter_target_lines(content)
 
   return path_contents
-
 
 def _bucket_match_target_content_signatures(
     target_funcs: Dict[str, List[Dict]], fuzz_target_dir: str,
@@ -133,7 +117,6 @@ def _bucket_match_target_content_signatures(
 
   return target_content_signature_dict
 
-
 def generate_data(project_name: str,
                   language: str,
                   sig_per_target: int = 1,
@@ -171,7 +154,6 @@ def generate_data(project_name: str,
 
   return sig_contents[-max_samples:]
 
-
 def _remove_header_comments(code: str) -> str:
   """Removes comments and empty lines in the code."""
   # Remove multi-line comments.
@@ -191,7 +173,6 @@ def _remove_header_comments(code: str) -> str:
   code.rstrip('\n ')
   return code
 
-
 def _remove_header(code: str) -> str:
   """Removes header comments (e.g. copyright) only before the first #include.
     """
@@ -201,12 +182,10 @@ def _remove_header(code: str) -> str:
   content = '#include' + parts[1] if len(parts) > 1 else ''
   return _remove_header_comments(header) + content
 
-
 def filter_target_lines(target_content: str) -> str:
   """Remove non-interesting lines in the target_content."""
   target_content = _remove_header(target_content)
   return target_content
-
 
 def _match_target_content_signatures(
     target_funcs: Dict[str, List[Dict]],
@@ -260,7 +239,6 @@ def _match_target_content_signatures(
     target_content_signature_dict[content].extend(signatures)
 
   return target_content_signature_dict
-
 
 def _parse_arguments():
   """Parses command line args."""
@@ -321,7 +299,6 @@ def _parse_arguments():
     parsed_args.result_path = f'{parsed_args.project_name}.json'
   return parsed_args
 
-
 def _generate_project_training_data(project_name: str,
                                     sig_per_target,
                                     max_samples,
@@ -334,7 +311,6 @@ def _generate_project_training_data(project_name: str,
   except Exception as e:
     logger.info('Project %s failed:\n%s', project_name, e)
     return None
-
 
 def main():
   args = _parse_arguments()
@@ -368,7 +344,6 @@ def main():
   result_path = f'{result_name}_{len(training_data)}{result_ext}'
   with open(result_path, 'w+') as file:
     json.dump(training_data, file, indent=4)
-
 
 if __name__ == '__main__':
   sys.exit(main())

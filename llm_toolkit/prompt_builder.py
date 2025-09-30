@@ -1,16 +1,3 @@
-# Copyright 2024 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
 """
 Prompt building tools.
 """
@@ -80,7 +67,6 @@ FIX_RECOMMENDATION_HEADER = 'Here are some fix suggestions you can apply.\n'
 
 C_PROMPT_HEADERS_TO_ALWAYS_INCLUDES = ['stdio.h', 'stdlib.h', 'stdint.h']
 
-
 class PromptBuilder:
   """Prompt builder."""
 
@@ -110,7 +96,6 @@ class PromptBuilder:
     """Allows prompt builder to adjust the generated code."""
     # return the same by default
     return generated_code
-
 
 class DefaultTemplateBuilder(PromptBuilder):
   """Default builder for C/C++."""
@@ -564,7 +549,6 @@ class DefaultTemplateBuilder(PromptBuilder):
                    project, func_name, target_lines)
     return ''
 
-
 class PrototyperTemplateBuilder(DefaultTemplateBuilder):
   """Builder specifically targeted C (and excluding C++)."""
 
@@ -622,7 +606,6 @@ class PrototyperTemplateBuilder(DefaultTemplateBuilder):
     self._prompt.append(tool_guides, True)
     return self._prompt
 
-
 class PrototyperFixerTemplateBuilder(PrototyperTemplateBuilder):
   """Builder specifically targeted C (and excluding C++)."""
 
@@ -671,7 +654,6 @@ class PrototyperFixerTemplateBuilder(PrototyperTemplateBuilder):
 
     return self._prompt
 
-
 class CoverageAnalyzerTemplateBuilder(PrototyperTemplateBuilder):
   """Builder specifically targeted C (and excluding C++)."""
 
@@ -713,7 +695,6 @@ class CoverageAnalyzerTemplateBuilder(PrototyperTemplateBuilder):
 
     self._prompt.append(prompt)
     return self._prompt
-
 
 class EnhancerTemplateBuilder(PrototyperTemplateBuilder):
   """Builder specifically targeted C (and excluding C++)."""
@@ -780,7 +761,6 @@ class EnhancerTemplateBuilder(PrototyperTemplateBuilder):
     self._prepare_prompt(priming, problem)
     return self._prompt
 
-
 class CrashEnhancerTemplateBuilder(PrototyperTemplateBuilder):
   """Builder specifically targeted C (and excluding C++)."""
 
@@ -846,7 +826,6 @@ class CrashEnhancerTemplateBuilder(PrototyperTemplateBuilder):
 
     return self._prompt
 
-
 class CoverageEnhancerTemplateBuilder(PrototyperTemplateBuilder):
   """Builder specifically targeted C (and excluding C++)."""
 
@@ -900,7 +879,6 @@ class CoverageEnhancerTemplateBuilder(PrototyperTemplateBuilder):
     self._prompt.append(prompt)
 
     return self._prompt
-
 
 class FunctionAnalyzerTemplateBuilder(DefaultTemplateBuilder):
   """Builder for function analyzer."""
@@ -1010,7 +988,6 @@ class FunctionAnalyzerTemplateBuilder(DefaultTemplateBuilder):
          tool_guides, project_dir, project_name, function_signature)
 
     return self._prompt
-
 
 class ContextAnalyzerTemplateBuilder(DefaultTemplateBuilder):
   """Builder for function analyzer."""
@@ -1122,7 +1099,6 @@ class ContextAnalyzerTemplateBuilder(DefaultTemplateBuilder):
 
     return self._prompt
 
-
 class CrashAnalyzerTemplateBuilder(DefaultTemplateBuilder):
   """Builder for C/C++."""
 
@@ -1202,7 +1178,6 @@ class CrashAnalyzerTemplateBuilder(DefaultTemplateBuilder):
 
     self._prepare_prompt(priming, '')
     return self._prompt
-
 
 class DefaultJvmTemplateBuilder(PromptBuilder):
   """Default builder for JVM projects."""
@@ -1642,7 +1617,6 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
 
     return generated_code
 
-
 class DefaultRustTemplateBuilder(PromptBuilder):
   """Default builder for Rust projects."""
 
@@ -1733,7 +1707,6 @@ class DefaultRustTemplateBuilder(PromptBuilder):
     """Allows prompt builder to adjust the generated code."""
     # Do nothing for rust project now.
     return generated_code
-
 
 class JvmFixingBuilder(PromptBuilder):
   """Prompt builder for fixing JVM harness with complication error or
@@ -1838,7 +1811,6 @@ class JvmFixingBuilder(PromptBuilder):
     """Allows prompt builder to adjust the generated code."""
     return generated_code
 
-
 class DefaultPythonTemplateBuilder(PromptBuilder):
   """Default builder for Python projects."""
 
@@ -1938,7 +1910,6 @@ class DefaultPythonTemplateBuilder(PromptBuilder):
     """Allows prompt builder to adjust the generated code."""
     # Do nothing for python project now.
     return generated_code
-
 
 class CSpecificBuilder(PromptBuilder):
   """Builder specifically targeted C (and excluding C++)."""
@@ -2058,7 +2029,6 @@ class CSpecificBuilder(PromptBuilder):
     for header in C_PROMPT_HEADERS_TO_ALWAYS_INCLUDES:
       generated_code = f'#include <{header}>\n' + generated_code
     return generated_code
-
 
 class TestToHarnessConverter(PromptBuilder):
   """Builder for test-to-harness conversion."""

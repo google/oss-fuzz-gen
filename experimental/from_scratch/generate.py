@@ -1,17 +1,4 @@
 #!/usr/bin/env python3
-# Copyright 2025 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
 """Module for generating harnesses in arbitrary projects."""
 
 import argparse
@@ -42,7 +29,6 @@ NUM_SAMPLES: int = 1
 TEMPERATURE: float = 1
 MAX_TOKENS: int = 8192
 
-
 def _add_default_args(parser):
   """Default arguments for subparsers"""
   parser.add_argument('-m',
@@ -62,7 +48,6 @@ def _add_default_args(parser):
                       '--language',
                       help='Main language of the target project source.',
                       required=True)
-
 
 def parse_args() -> argparse.Namespace:
   """Parses command line arguments."""
@@ -114,14 +99,12 @@ def parse_args() -> argparse.Namespace:
 
   return parser.parse_args()
 
-
 def setup_model(args) -> models.LLM:
   return models.LLM.setup(ai_binary='',
                           name=args.model,
                           max_tokens=MAX_TOKENS,
                           num_samples=NUM_SAMPLES,
                           temperature=TEMPERATURE)
-
 
 def get_target_benchmark_for_function(
     language, target_dir, target_function_name, only_exact_match
@@ -186,7 +169,6 @@ def get_target_benchmark_for_function(
 
   return None, None
 
-
 def get_target_benchmark_for_source(
     language, target_dir, target_source_file, target_source_line
 ) -> Tuple[Optional[benchmarklib.Benchmark], Optional[dict[str, Any]]]:
@@ -250,7 +232,6 @@ def get_target_benchmark_for_source(
 
   return None, None
 
-
 def construct_fuzz_prompt(model, benchmark, context,
                           language) -> prompts.Prompt:
   """Local benchmarker"""
@@ -266,7 +247,6 @@ def construct_fuzz_prompt(model, benchmark, context,
   fuzz_prompt = builder.build([], project_context_content=context)
   return fuzz_prompt
 
-
 def print_prompt(fuzz_prompt: prompts.Prompt) -> None:
   """Prints prompt to stdout."""
   print('Querying with the prompt')
@@ -280,7 +260,6 @@ def print_prompt(fuzz_prompt: prompts.Prompt) -> None:
     print(raw_prompt)
   print('-' * 40)
 
-
 def get_fuzz_prompt_str(fuzz_prompt: prompts.Prompt) -> str:
   """Prints prompt to stdout."""
   prompt_string = ''
@@ -290,7 +269,6 @@ def get_fuzz_prompt_str(fuzz_prompt: prompts.Prompt) -> str:
       if isinstance(elem, dict) and 'content' in elem:
         prompt_string += elem['content']
   return prompt_string
-
 
 def introspector_lang_to_entrypoint(language: str) -> str:
   """Map an introspector language to entrypoint function."""
@@ -303,7 +281,6 @@ def introspector_lang_to_entrypoint(language: str) -> str:
 
   # Not supporting other language yet
   return ''
-
 
 def get_far_reach_benchmarks(
     language, target_dir
@@ -381,7 +358,6 @@ def get_far_reach_benchmarks(
 
   return target_benchmarks
 
-
 def get_next_out_dir(out_dir: str) -> str:
   """Prepare next folder to put generate harness in."""
   idx = 0
@@ -390,7 +366,6 @@ def get_next_out_dir(out_dir: str) -> str:
     if not os.path.isdir(target_response):
       return target_response
     idx += 1
-
 
 def get_introspector_language(args) -> str:
   """Gets the language in introspector style from the CLI args."""
@@ -405,7 +380,6 @@ def get_introspector_language(args) -> str:
 
   print(f'Language {args.language} not support. Exiting.')
   sys.exit(0)
-
 
 def generate_far_reach_targets(args):
   """Generates a set of harnesses based on far-reach analysis."""
@@ -448,7 +422,6 @@ def generate_far_reach_targets(args):
               'w',
               encoding='utf-8') as f:
       f.write(fuzz_harness)
-
 
 def generate_test_to_harness_targets(args):
   """Test to harness converter"""
@@ -506,7 +479,6 @@ def generate_test_to_harness_targets(args):
     with open(os.path.join(response_dir, 'fuzz.c'), 'w', encoding='utf-8') as f:
       f.write(generated_source)
 
-
 def generate_for_target_function(args):
   """Generate harness for single function/source location"""
   model = setup_model(args)
@@ -549,7 +521,6 @@ def generate_for_target_function(args):
             encoding='utf-8') as f:
     f.write(generated_fuzz_harness)
 
-
 def main():
   """Entrypoint"""
   args = parse_args()
@@ -560,7 +531,6 @@ def main():
     generate_test_to_harness_targets(args)
   else:
     generate_for_target_function(args)
-
 
 if __name__ == "__main__":
   main()

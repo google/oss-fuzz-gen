@@ -1,17 +1,4 @@
 #!/usr/bin/env python3
-# Copyright 2024 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
 """
 A script to generate LLM prompts based on existing example code and scaffold.
 """
@@ -22,11 +9,9 @@ from llm_toolkit.crash_triager import TriageResult
 
 RAW_OUTPUT_EXT = '.rawoutput'
 
-
 def is_raw_output(file: str) -> bool:
   """Checks if the |file| is a raw output from LLM by its extension."""
   return file.endswith(RAW_OUTPUT_EXT)
-
 
 def parse_args() -> argparse.Namespace:
   """Parses command line arguments."""
@@ -44,7 +29,6 @@ def parse_args() -> argparse.Namespace:
   args = parser.parse_args()
 
   return args
-
 
 def _parse_code_block_by_marker(lines: list[str], start_marker: str,
                                 end_marker: str) -> list[str]:
@@ -67,13 +51,11 @@ def _parse_code_block_by_marker(lines: list[str], start_marker: str,
       contains_api = contains_api or 'LLVMFuzzerTestOneInput' in line
   return block if block else lines
 
-
 def parse_code(response_path: str) -> str:
   """Parses the expected output from the |response_path|."""
   with open(response_path) as file:
     response = file.read()
   return filter_code(response)
-
 
 def filter_code(response: str) -> str:
   # TODO(dongge): Merge this into prompt_builder.post_process_generated_code().
@@ -95,7 +77,6 @@ def filter_code(response: str) -> str:
 
   return '\n'.join(lines)
 
-
 def parse_triage(triage_path: str) -> tuple[str, str]:
   """Parses the triage from the |triage_path|."""
   with open(triage_path) as file:
@@ -110,18 +91,15 @@ def parse_triage(triage_path: str) -> tuple[str, str]:
 
   return (TriageResult.NOT_APPLICABLE, '\n'.join(lines))
 
-
 def save_output(content: str, output_path: str) -> None:
   """Saves the parsed |content| to |output_path|."""
   with open(output_path, 'w+') as output_file:
     output_file.write(content)
 
-
 def main():
   args = parse_args()
   content = parse_code(args.llm_response_path)
   save_output(content, args.output_path)
-
 
 if __name__ == "__main__":
   sys.exit(main())

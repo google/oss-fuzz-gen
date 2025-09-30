@@ -1,16 +1,3 @@
-# Copyright 2025 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
 """The Writing Stage class for generating and refining fuzz targets and their
 corresponding build scripts. This stage is responsible for creating new fuzz
 targets or improving existing ones to enhance code coverage and bug-finding
@@ -20,7 +7,6 @@ from typing import cast
 
 from results import BuildResult, Result
 from stage.base_stage import BaseStage
-
 
 class WritingStage(BaseStage):
   """Handles the creation and refinement of fuzz targets and build scripts.

@@ -402,3 +402,7 @@ yapf==0.40.1
     # via -r requirements.in
 zipp==3.21.0
     # via importlib-metadata
+
+langgraph>=0.2.74
+langgraph-checkpoint>=1.0.0
+langgraph-checkpoint-postgres>=1.0.0

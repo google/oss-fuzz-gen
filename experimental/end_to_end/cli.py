@@ -1,17 +1,4 @@
 #!/usr/bin/env python3
-# Copyright 2025 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
 """Create OSS-Fuzz projects from scratch."""
 
 import argparse
@@ -39,7 +26,6 @@ LOG_FMT = ('%(asctime)s %(levelname)s [%(filename)s:%(lineno)d] '
 
 OFG_BASE_DIR = os.path.abspath(
     os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", ".."))
-
 
 def setup_workdirs(defined_dir):
   """Sets up the working directory."""
@@ -78,7 +64,6 @@ def setup_workdirs(defined_dir):
                                          'web-fuzzing-introspection'))
   return workdir
 
-
 def _run_introspector_collection(runner_script, project, wd, semaphore):
   """Run introspector on the given project."""
   semaphore.acquire()
@@ -100,7 +85,6 @@ def _run_introspector_collection(runner_script, project, wd, semaphore):
   except subprocess.CalledProcessError:
     pass
   semaphore.release()
-
 
 def extract_introspector_reports_for_benchmarks(projects_to_run, workdir,
                                                 parallel_build_jobs):
@@ -126,7 +110,6 @@ def extract_introspector_reports_for_benchmarks(projects_to_run, workdir,
   # Call reset here to ensure we're in a safe state.
   subprocess.check_call('reset', shell=True)
 
-
 def shutdown_fi_webapp():
   """Shutsdown the FI webapp if it exists."""
   try:
@@ -134,7 +117,6 @@ def shutdown_fi_webapp():
                           shell=True)
   except subprocess.CalledProcessError:
     pass
-
 
 def create_fi_db(workdir):
   """Creates the FI webapp database"""
@@ -158,7 +140,6 @@ def create_fi_db(workdir):
   except subprocess.CalledProcessError:
     logger.info('Failed creation of DB')
 
-
 def launch_fi_webapp(workdir):
   """Launches webapp so OFG can query projects."""
   logger.info('Launching webapp')
@@ -177,7 +158,6 @@ def launch_fi_webapp(workdir):
                         stdout=subprocess.DEVNULL,
                         stderr=subprocess.STDOUT)
 
-
 def wait_until_fi_webapp_is_launched():
   """Return when the webapp has started"""
   logger.info('Waiting for the webapp to start')
@@ -193,7 +173,6 @@ def wait_until_fi_webapp_is_launched():
   # Exit.
   logger.info('Could not start FI webapp')
   sys.exit(0)
-
 
 def run_ofg_generation(projects_to_run, workdir, args, target_benchmarks=''):
   """Runs harness generation"""
@@ -233,7 +212,6 @@ def run_ofg_generation(projects_to_run, workdir, args, target_benchmarks=''):
 
   subprocess.check_call(' '.join(cmd), shell=True, env=environ)
 
-
 def copy_generated_projects_to_harness_gen(out_gen, workdir):
   """Copies projects from build generation ready for harness generation."""
   projects_dir = os.path.join(out_gen, 'oss-fuzz-projects')
@@ -253,7 +231,6 @@ def copy_generated_projects_to_harness_gen(out_gen, workdir):
                     os.path.join(workdir, 'oss-fuzz', 'projects', project))
     projects_to_run.append(project)
   return projects_to_run
-
 
 def create_merged_oss_fuzz_projects(
     projects_to_run,
@@ -358,7 +335,6 @@ def create_merged_oss_fuzz_projects(
 
     shutil.copy(fuzz_src, fuzz_dst)
 
-
 def _create_data_dir(workdir):
   """Copy data from build generation to directory for cloud experimentation"""
   dst_dir = _get_next_data_dst_dir()
@@ -408,7 +384,6 @@ def _create_data_dir(workdir):
 
   return dst_dir
 
-
 def prepare_fuzz_introspector_db(out_gen, workdir, parallel_introspector_jobs):
   # Run introspector collection on the generated projects
   projects_to_run = copy_generated_projects_to_harness_gen(out_gen, workdir)
@@ -419,7 +394,6 @@ def prepare_fuzz_introspector_db(out_gen, workdir, parallel_introspector_jobs):
   # the working directory's OSS-Fuzz.
   shutdown_fi_webapp()
   create_fi_db(workdir)
-
 
 def run_harness_generation(workdir,
                            args,
@@ -470,11 +444,9 @@ def run_harness_generation(workdir,
   create_merged_oss_fuzz_projects(projects_to_run, workdir)
   return projects_to_run
 
-
 def setup_logging():
   """Initiate logging."""
   logging.basicConfig(level=logging.DEBUG, format=LOG_FMT)
-
 
 def _get_next_folder_in_idx(base_name):
   """Get next pre-named work directory."""
@@ -485,16 +457,13 @@ def _get_next_folder_in_idx(base_name):
     idx += 1
   return f'{base_name}-{idx}'
 
-
 def get_next_out_folder():
   """Get next pre-named work directory."""
   return _get_next_folder_in_idx('generated-projects')
 
-
 def _get_next_data_dst_dir():
   """Gets next data dir"""
   return _get_next_folder_in_idx('data-dir')
-
 
 def _run_build_generation(workdir, out_folder, args):
   """Build script generation."""
@@ -518,7 +487,6 @@ def _run_build_generation(workdir, out_folder, args):
     logger.info('Unknown build generation mode: %s', args.build_generation_mode)
     sys.exit(1)
 
-
 def run_fuzz_introspector_db_creation(workdir, generated_builds,
                                       parallel_build_jobs):
   """Entrypoint for fuzz introspector database creation."""
@@ -529,7 +497,6 @@ def run_fuzz_introspector_db_creation(workdir, generated_builds,
   if not os.path.isdir(workdir):
     workdir = setup_workdirs(workdir)
   prepare_fuzz_introspector_db(generated_builds, workdir, parallel_build_jobs)
-
 
 def run_build_generation(args):
   """Generates builds and harnesses for repositories in input."""
@@ -545,7 +512,6 @@ def run_build_generation(args):
 
   _run_build_generation(abs_workdir, out_folder, args)
 
-
 def run_cmd_fix_build(args):
   """Command entrypoint for fixing OSS-Fuzz build scripts."""
   workdir = setup_workdirs(None)
@@ -553,7 +519,6 @@ def run_cmd_fix_build(args):
   oss_fuzz_dir = os.path.join(abs_workdir, 'oss-fuzz')
   args.work_dirs = 'work_dirs'
   build_fix.fix_build(args, oss_fuzz_dir)
-
 
 def run_cmd_harness_generation(args):
   """Entrypoint for command for harness generation."""
@@ -568,7 +533,6 @@ def run_cmd_harness_generation(args):
   # Log results.
   logger.info('Finished analysis')
   logger.info('Projects generated (%d): ', len(projects_run))
-
 
 def run_full(args):
   """Generates builds and harnesses for repositories in input."""
@@ -593,7 +557,6 @@ def run_full(args):
   # Log results.
   logger.info('Finished analysis')
   logger.info('Projects generated (%d): ', len(projects_run))
-
 
 def _add_base_build_gen_arguments(parser):
   """Adds base arguments for build generation."""
@@ -624,7 +587,6 @@ def _add_base_build_gen_arguments(parser):
       type=int)
   parser.add_argument('-w', '--workdir', help='Work directory to use')
 
-
 def _add_base_harness_gen_arguments(parser):
   """Adds base arguments for harness generation."""
   parser.add_argument('--hg-agent',
@@ -645,7 +607,6 @@ def _add_base_harness_gen_arguments(parser):
       '--benchmark-oracles',
       default=('far-reach-low-coverage,low-cov-with-fuzz-keyword,'
                'easy-params-far-reach,test-migration'))
-
 
 def parse_commandline():
   """Parse the commandline."""
@@ -730,7 +691,6 @@ def parse_commandline():
 
   return parser.parse_args()
 
-
 def main():
   args = parse_commandline()
   setup_logging()
@@ -746,7 +706,6 @@ def main():
     run_cmd_harness_generation(args)
   if args.command == 'fix-build':
     run_cmd_fix_build(args)
-
 
 if __name__ == '__main__':
   main()

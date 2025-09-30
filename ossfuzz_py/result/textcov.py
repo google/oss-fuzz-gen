@@ -1,16 +1,3 @@
-# Copyright 2024 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
 """Textcov parsing and analysis."""
 
 from __future__ import annotations
@@ -47,11 +34,9 @@ JVM_SKIPPED_METHOD = [
     'fuzzerTestOneInput', 'fuzzerInitialize', 'fuzzerTearDown'
 ]
 
-
 def demangle(data: str) -> str:
   """Demangles a string containing mangled C++ symbols."""
   return subprocess.check_output(['c++filt'], input=data, encoding='utf-8')
-
 
 def _discard_fuzz_target_lines(covreport_content: str) -> str:
   """Removes fuzz target lines from the coverage report."""
@@ -67,11 +52,9 @@ def _discard_fuzz_target_lines(covreport_content: str) -> str:
   ]
   return '\n\n'.join(project_file_contents)
 
-
 def normalize_template_args(name: str) -> str:
   """Normalizes template arguments."""
   return re.sub(r'<.*>', '<>', name)
-
 
 def _parse_hitcount(data: str) -> float:
   """Parse a hitcount."""
@@ -99,13 +82,11 @@ def _parse_hitcount(data: str) -> float:
 
   raise ValueError(f'Suffix {data[-1]} is not supported')
 
-
 @dataclasses.dataclass
 class Line:
   """Represents a line."""
   contents: str = ''
   hit_count: float = 0
-
 
 @dataclasses.dataclass
 class Function:
@@ -142,7 +123,6 @@ class Function:
         if line.hit_count and line.contents in self.lines:
           del self.lines[line.contents]
 
-
 @dataclasses.dataclass
 class File:
   """Represents a file in a textcov, only for Python."""
@@ -170,7 +150,6 @@ class File:
       other_line = other.lines.get(line_no)
       if other_line and other_line.hit_count > 0:
         line.hit_count = 0
-
 
 @dataclasses.dataclass
 class Textcov:

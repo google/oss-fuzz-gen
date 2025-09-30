@@ -1,17 +1,4 @@
 #!/usr/bin/env python3
-# Copyright 2024 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
 """Manager for running auto-gen from scratch."""
 
 import argparse
@@ -39,7 +26,6 @@ silent_global = False
 logger = logging.getLogger(name=__name__)
 LOG_FMT = ('%(asctime)s %(levelname)s [%(filename)s:%(lineno)d] '
            ': %(funcName)s: %(message)s')
-
 
 def setup_worker_project(oss_fuzz_base: str,
                          project_name: str,
@@ -121,7 +107,6 @@ def setup_worker_project(oss_fuzz_base: str,
 
   return language
 
-
 def run_autogen(github_url,
                 outdir,
                 oss_fuzz_base,
@@ -190,7 +175,6 @@ def run_autogen(github_url,
   except subprocess.CalledProcessError:
     pass
 
-
 def read_targets_file(filename: str) -> List[str]:
   """Parse input file."""
   res_targets = []
@@ -202,7 +186,6 @@ def read_targets_file(filename: str) -> List[str]:
       if e:
         res_targets.append(e)
   return res_targets
-
 
 def run_on_targets(target,
                    oss_fuzz_base,
@@ -247,7 +230,6 @@ def run_on_targets(target,
   if semaphore is not None:
     semaphore.release()
 
-
 def get_next_worker_project(oss_fuzz_base: str) -> str:
   """Gets next OSS-Fuzz worker projecet."""
   max_idx = -1
@@ -260,7 +242,6 @@ def get_next_worker_project(oss_fuzz_base: str) -> str:
     except:
       continue
   return f'{constants.PROJECT_BASE}{max_idx+1}'
-
 
 def copy_result_to_out(project_generated,
                        oss_fuzz_base,
@@ -351,7 +332,6 @@ def copy_result_to_out(project_generated,
   with open(dst_yaml, 'w') as f:
     f.write('\n'.join(lines))
 
-
 def run_parallels(oss_fuzz_base,
                   target_repositories,
                   llm_model,
@@ -385,7 +365,6 @@ def run_parallels(oss_fuzz_base,
 
   for proc in jobs:
     proc.join()
-
 
 def run_agent(target_repositories: List[str], args: argparse.Namespace):
   """Generates build script and fuzzer harnesses for a GitHub repository using
@@ -488,7 +467,6 @@ def run_agent(target_repositories: List[str], args: argparse.Namespace):
   if os.path.isdir(args.work_dirs):
     shutil.rmtree(args.work_dirs)
 
-
 def parse_commandline():
   """Parse the commandline."""
   parser = argparse.ArgumentParser()
@@ -528,10 +506,8 @@ def parse_commandline():
 
   return parser.parse_args()
 
-
 def setup_logging():
   logging.basicConfig(level=logging.INFO, format=LOG_FMT)
-
 
 def extract_target_repositories(target_input) -> list[str]:
   if not target_input:
@@ -552,7 +528,6 @@ def extract_target_repositories(target_input) -> list[str]:
 
   return refined_targets
 
-
 def main():
   global silent_global
 
@@ -567,7 +542,6 @@ def main():
   else:
     run_parallels(os.path.abspath(args.oss_fuzz), target_repositories,
                   args.model, args.build_heuristics, args.out)
-
 
 if __name__ == '__main__':
   main()

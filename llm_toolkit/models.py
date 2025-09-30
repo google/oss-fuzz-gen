@@ -1,16 +1,3 @@
-# Copyright 2024 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
 """
 LLM models and their functions.
 """
@@ -49,7 +36,6 @@ logger = logging.getLogger(__name__)
 MAX_TOKENS: int = 2000
 NUM_SAMPLES: int = 1
 TEMPERATURE: float = 0.4
-
 
 class LLM:
   """Base LLM."""
@@ -230,7 +216,6 @@ class LLM:
   def get_chat_client(self, model: Any) -> Any:
     """Returns a new chat session."""
 
-
 class GPT(LLM):
   """OpenAI's GPT model encapsulator."""
 
@@ -397,24 +382,20 @@ class GPT(LLM):
       content = choice.message.content
       self._save_output(index, content, response_dir)
 
-
 class GPT4(GPT):
   """OpenAI's GPT-4 model."""
 
   name = 'gpt-4'
-
 
 class GPT41(GPT):
   """OpenAI's GPT-4.1 model."""
 
   name = 'gpt-4.1'
 
-
 class GPT41Mini(GPT):
   """OpenAI's GPT-4.1-Mini model."""
 
   name = 'gpt-4.1-mini'
-
 
 class GPT4o(GPT):
   """OpenAI's GPT-4o model."""
@@ -423,7 +404,6 @@ class GPT4o(GPT):
   MAX_INPUT_TOKEN = 128000
   _gpt_ai_model = 'gpt-4o'
 
-
 class ChatGPT4oLatest(GPT):
   """OpenAI's chatgpt-4o-latest model."""
 
@@ -431,12 +411,10 @@ class ChatGPT4oLatest(GPT):
   MAX_INPUT_TOKEN = 128000
   _gpt_ai_model = 'gpt-4o'
 
-
 class GPT4oMini(GPT):
   """OpenAI's GPT-4o-mini model."""
 
   name = 'gpt-4o-mini'
-
 
 class GPT4Turbo(GPT):
   """OpenAI's GPT-4 Turbo model."""
@@ -512,12 +490,10 @@ class GPT5(GPT):
       with open(response_file, 'w') as f:
         f.write(content)
 
-
 class GPT5Chat(GPT):
   """OpenAI's GPT-5-Chat model (with temperature setting)."""
 
   name = 'gpt-5-chat'
-
 
 class DeepSeek(GPT):
   """DeepSeek's model encapsulator using OpenAI API."""
@@ -529,20 +505,17 @@ class DeepSeek(GPT):
         base_url="https://api.deepseek.com"
     )
 
-
 class DeepSeekChat(DeepSeek):
   """DeepSeek Chat model."""
 
   name = 'deepseek-chat'
   MAX_INPUT_TOKEN = 128000
 
-
 class DeepSeekReasoner(DeepSeek):
   """DeepSeek Reasoner model."""
 
   name = 'deepseek-reasoner'
   MAX_INPUT_TOKEN = 128000
-
 
 class ChatGPT(GPT):
   """OpenAI's GPT model with chat session."""
@@ -588,30 +561,25 @@ class ChatGPT(GPT):
 
     return longest_response
 
-
 class ChatGPT4(ChatGPT):
   """OpenAI's GPT4 model with chat session."""
 
   name = 'chatgpt-4'
-
 
 class ChatGPT4o(ChatGPT):
   """OpenAI's GPT-4o model with chat session."""
 
   name = 'chatgpt-4o'
 
-
 class ChatGPT4oMini(ChatGPT):
   """OpenAI's GPT-4o-mini model with chat session."""
 
   name = 'chatgpt-4o-mini'
 
-
 class ChatGPT4Turbo(ChatGPT):
   """OpenAI's GPT-4 Turbo model with chat session."""
 
   name = 'chatgpt-4-turbo'
-
 
 class AzureGPT(GPT):
   """Azure's GPT model."""
@@ -630,18 +598,15 @@ class AzureGPT(GPT):
                               api_version=os.getenv("AZURE_OPENAI_API_VERSION",
                                                     "2024-02-01"))
 
-
 class AzureGPT4(AzureGPT):
   """Azure's GPTi-4 model."""
 
   name = 'gpt-4-azure'
 
-
 class AzureGPT4o(AzureGPT):
   """Azure's GPTi-4 model."""
 
   name = 'gpt-4o-azure'
-
 
 class Claude(LLM):
   """Anthropic's Claude model encapsulator."""
@@ -704,13 +669,11 @@ class Claude(LLM):
     # Placeholder: To Be Implemented.
     return
 
-
 class ClaudeHaikuV3(Claude):
   """Claude Haiku 3."""
 
   name = 'vertex_ai_claude-3-haiku'
   _vertex_ai_model = 'claude-3-haiku@20240307'
-
 
 class ClaudeOpusV3(Claude):
   """Claude Opus 3."""
@@ -718,13 +681,11 @@ class ClaudeOpusV3(Claude):
   name = 'vertex_ai_claude-3-opus'
   _vertex_ai_model = 'claude-3-opus@20240229'
 
-
 class ClaudeSonnetV3D5(Claude):
   """Claude Sonnet 3.5."""
 
   name = 'vertex_ai_claude-3-5-sonnet'
   _vertex_ai_model = 'claude-3-5-sonnet@20240620'
-
 
 class GoogleModel(LLM):
   """Generic Google model."""
@@ -819,7 +780,6 @@ class GoogleModel(LLM):
     # Placeholder: To Be Implemented.
     return
 
-
 class VertexAIModel(GoogleModel):
   """Vertex AI model."""
 
@@ -878,7 +838,6 @@ class VertexAIModel(GoogleModel):
         [GoogleAPICallError, ValueError]) or ''
     return response
 
-
 class GeminiModel(VertexAIModel):
   """Gemini models."""
 
@@ -916,13 +875,11 @@ class GeminiModel(VertexAIModel):
       return '\n'.join(candidate.text for candidate in response.candidates)
     return response.text
 
-
 class VertexAICodeBisonModel(VertexAIModel):
   """code-bison."""
 
   name = 'vertex_ai_code-bison'
   _vertex_ai_model = 'code-bison'
-
 
 class VertexAICodeBison32KModel(VertexAIModel):
   """code-bison-32k."""
@@ -933,7 +890,6 @@ class VertexAICodeBison32KModel(VertexAIModel):
   name = 'vertex_ai_code-bison-32k'
   _vertex_ai_model = 'code-bison-32k'
 
-
 class GeminiPro(GeminiModel):
   """Gemini Pro."""
 
@@ -942,7 +898,6 @@ class GeminiPro(GeminiModel):
 
   name = 'vertex_ai_gemini-pro'
   _vertex_ai_model = 'gemini-1.0-pro'
-
 
 class GeminiUltra(GeminiModel):
   """Gemini Ultra."""
@@ -953,7 +908,6 @@ class GeminiUltra(GeminiModel):
   name = 'vertex_ai_gemini-ultra'
   _vertex_ai_model = 'gemini-ultra'
 
-
 class GeminiExperimental(GeminiModel):
   """Gemini Experimental."""
 
@@ -962,7 +916,6 @@ class GeminiExperimental(GeminiModel):
 
   name = 'vertex_ai_gemini-experimental'
   _vertex_ai_model = 'gemini-experimental'
-
 
 class GeminiV1D5(GeminiModel):
   """Gemini 1.5."""
@@ -973,24 +926,20 @@ class GeminiV1D5(GeminiModel):
   name = 'vertex_ai_gemini-1-5'
   _vertex_ai_model = 'gemini-1.5-pro-002'
 
-
 class GeminiV2Flash(GeminiV1D5):
   """Gemini 2 Flash."""
   name = 'vertex_ai_gemini-2-flash'
   _vertex_ai_model = 'gemini-2.0-flash-001'
-
 
 class GeminiV2(GeminiV1D5):
   """Gemini 2."""
   name = 'vertex_ai_gemini-2'
   _vertex_ai_model = 'gemini-2.0-pro-exp-02-05'
 
-
 class GeminiV2Think(GeminiV1D5):
   """Gemini 2 thinking."""
   name = 'vertex_ai_gemini-2-think'
   _vertex_ai_model = 'gemini-2.0-flash-thinking-exp-01-21'
-
 
 class GeminiV2D5Flash(GeminiModel):
   """Gemini 2.5 flash."""
@@ -999,14 +948,12 @@ class GeminiV2D5Flash(GeminiModel):
   name = 'vertex_ai_gemini-2-5-flash'
   _vertex_ai_model = 'gemini-2.5-flash'
 
-
 class GeminiV2D5Pro(GeminiModel):
   """Gemini 2.5 pro."""
   _max_output_tokens = 65535
   context_window = 1048576
   name = 'vertex_ai_gemini-2-5-pro'
   _vertex_ai_model = 'gemini-2.5-pro'
-
 
 class GeminiV1D5Chat(GeminiV1D5):
   """Gemini 1.5 for chat session."""
@@ -1109,24 +1056,20 @@ class GeminiV1D5Chat(GeminiV1D5):
     # Placeholder: To Be Implemented.
     return
 
-
 class GeminiV2FlashChat(GeminiV1D5Chat):
   """Gemini 2 Flash for chat session."""
   name = 'vertex_ai_gemini-2-flash-chat'
   _vertex_ai_model = 'gemini-2.0-flash-001'
-
 
 class GeminiV2Chat(GeminiV1D5Chat):
   """Gemini 2 for chat session."""
   name = 'vertex_ai_gemini-2-chat'
   _vertex_ai_model = 'gemini-2.0-pro-exp-02-05'
 
-
 class GeminiV2ThinkChat(GeminiV1D5Chat):
   """Gemini 2 for chat session."""
   name = 'vertex_ai_gemini-2-think-chat'
   _vertex_ai_model = 'gemini-2.0-flash-thinking-exp-01-21'
-
 
 class GeminiV2D5FlashChat(GeminiV1D5Chat):
   """Gemini 2.5 flash for chat session."""
@@ -1135,14 +1078,12 @@ class GeminiV2D5FlashChat(GeminiV1D5Chat):
   name = 'vertex_ai_gemini-2-5-flash-chat'
   _vertex_ai_model = 'gemini-2.5-flash'
 
-
 class GeminiV2D5ProChat(GeminiV1D5Chat):
   """Gemini 2.5 pro for chat session."""
   _max_output_tokens = 65535
   context_window = 1048576
   name = 'vertex_ai_gemini-2-5-pro-chat'
   _vertex_ai_model = 'gemini-2.5-pro'
-
 
 class AIBinaryModel(GoogleModel):
   """A customized model hosted internally."""
@@ -1172,6 +1113,5 @@ class AIBinaryModel(GoogleModel):
     """Queries the LLM in the given chat session with tools."""
     # Placeholder: To Be Implemented.
     return
-
 
 DefaultModel = GeminiV1D5

@@ -1,17 +1,4 @@
 #!/usr/bin/env python
-# Copyright 2024 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
 """Report generation tool to create HTML reports for experiment result."""
 
 import argparse
@@ -35,7 +22,6 @@ from report.export import CSVExporter
 from report.parse_logs import LogsParser, RunLogsParser
 
 LOCAL_HOST = '127.0.0.1'
-
 
 class JinjaEnv:
   """JinjaEnv wraps the set up of a jinja2 environment."""
@@ -120,7 +106,6 @@ class JinjaEnv:
   def render(self, template_name: str, **kwargs):
     """Render a template with variables provides through kwargs."""
     return self._env.get_template(template_name).render(**kwargs)
-
 
 class GenerateReport:
   """
@@ -540,7 +525,6 @@ class GenerateReport:
         "execution_stats": execution_stats
     }
 
-
 def generate_report(args: argparse.Namespace) -> None:
   """Generates static web server files."""
   logging.info('Generating web page files in %s', args.output_dir)
@@ -574,7 +558,6 @@ def generate_report(args: argparse.Namespace) -> None:
                       base_url=base_url)
   gr.generate()
 
-
 def launch_webserver(args):
   """Launches a local web server to browse results."""
   logging.info('Launching webserver at %s:%d', LOCAL_HOST, args.port)
@@ -582,7 +565,6 @@ def launch_webserver(args):
                                partial(SimpleHTTPRequestHandler,
                                        directory=args.output_dir))
   server.serve_forever()
-
 
 def _parse_arguments() -> argparse.Namespace:
   """Parses command line args."""
@@ -631,7 +613,6 @@ def _parse_arguments() -> argparse.Namespace:
 
   return parser.parse_args()
 
-
 def main():
   args = _parse_arguments()
 
@@ -651,7 +632,6 @@ def main():
       except KeyboardInterrupt:
         logging.info('Exiting.')
         os._exit(0)
-
 
 if __name__ == '__main__':
   logging.getLogger().setLevel(os.environ.get('LOGLEVEL', 'WARN').upper())

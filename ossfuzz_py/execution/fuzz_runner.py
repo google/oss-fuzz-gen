@@ -1,16 +1,3 @@
-# Copyright 2025 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
 """
 Abstract FuzzRunner interface for the Custom Fuzzing Module.
 
@@ -48,7 +35,6 @@ from ossfuzz_py.utils.work_dir_manager import WorkDirManager
 # Configure module logger
 logger = logging.getLogger('ossfuzz_sdk.fuzz_runner')
 
-
 class FuzzRunOptions(BaseModel):
   """Options for a fuzzing run."""
   engine: FuzzingEngine = FuzzingEngine.LIBFUZZER
@@ -69,7 +55,6 @@ class FuzzRunOptions(BaseModel):
       str] = "fuzz_output"  # Relative to a run-specific directory
   engine_args: List[str] = Field(default_factory=list)
   env_vars: Dict[str, str] = Field(default_factory=dict)
-
 
 class FuzzRunner(ABC):
   """
@@ -134,7 +119,6 @@ class FuzzRunner(ABC):
         'crashes': crashes,
         'crash_info': crash_info
     }
-
 
 class LocalRunner(FuzzRunner):
   """
@@ -318,7 +302,6 @@ class LocalRunner(FuzzRunner):
   #   # 4. Updating run_info with coverage data
   #   self.logger.info('Coverage extraction not yet implemented for %s',
   #                    target_name)
-
 
 class CloudRunner(FuzzRunner):
   """

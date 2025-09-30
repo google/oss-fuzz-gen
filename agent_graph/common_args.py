@@ -1,16 +1,3 @@
-# Copyright 2025 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
 """Common argument parsing logic shared between agent_test.py and LangGraph."""
 
 import argparse
@@ -23,7 +10,6 @@ from llm_toolkit import models
 RESULTS_DIR = f'./results-{datetime.now().strftime("%Y-%m-%d-%H-%M")}'
 NUM_ANA = int(os.getenv('LLM_NUM_ANA', '2'))
 RUN_TIMEOUT: int = 300
-
 
 def add_common_arguments(parser: argparse.ArgumentParser) -> None:
     """Add common arguments used by both agent_test.py and LangGraph interface."""
@@ -121,7 +107,6 @@ def add_common_arguments(parser: argparse.ArgumentParser) -> None:
                         default='',
                         help='Path to AI binary for model execution.')
 
-
 def add_langgraph_only_arguments(parser: argparse.ArgumentParser) -> None:
     """Add core arguments for LangGraph main.py (without pipeline requirement)."""
     
@@ -211,7 +196,6 @@ def add_langgraph_only_arguments(parser: argparse.ArgumentParser) -> None:
                         default='',
                         help='Path to AI binary for model execution.')
 
-
 def add_langgraph_specific_arguments(parser: argparse.ArgumentParser) -> None:
     """Add LangGraph-specific arguments."""
     
@@ -233,14 +217,12 @@ def add_langgraph_specific_arguments(parser: argparse.ArgumentParser) -> None:
                         action='store_true',
                         help='Enable human-in-the-loop for LangGraph workflow.')
 
-
 def create_parser(description: str = "Fuzzing agent test interface") -> argparse.ArgumentParser:
     """Create a parser with all common arguments."""
     parser = argparse.ArgumentParser(description=description)
     add_common_arguments(parser)
     add_langgraph_specific_arguments(parser)
     return parser
-
 
 def validate_pipeline_args(pipeline_str: str) -> list[str]:
     """Validate and parse pipeline argument."""

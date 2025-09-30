@@ -1,16 +1,3 @@
-# Copyright 2025 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
 """
 Abstract builder interface for the Custom Fuzzing Module build system.
 
@@ -48,7 +35,6 @@ from ossfuzz_py.utils.file_utils import FileUtils
 # Configure module logger
 logger = logging.getLogger('ossfuzz_sdk.builder')
 
-
 class Result:
   """Simple result class for build operations."""
 
@@ -61,7 +47,6 @@ class Result:
     self.message = message
     self.artifacts = artifacts or {}
     self.metadata = metadata or {}
-
 
 class Builder(ABC):
   """
@@ -158,7 +143,6 @@ class Builder(ABC):
     Returns:
         Dict[str, Path]: Dictionary mapping artifact names to paths
     """
-
 
 class LocalBuilder(Builder):
   """
@@ -415,7 +399,6 @@ RUN compile
       self.logger.error('Failed to build target %s', generated_project)
 
     return success
-
 
 class CloudBuilder(Builder):
   """

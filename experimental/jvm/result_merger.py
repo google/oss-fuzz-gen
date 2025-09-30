@@ -1,17 +1,4 @@
 #!/usr/bin/env python3
-# Copyright 2024 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
 ##########################################################################
 """Merged projects created by from-scratch and OFG core."""
 
@@ -25,7 +12,6 @@ from typing import Optional
 logger = logging.getLogger(name=__name__)
 LOG_FMT = ('%(asctime)s %(levelname)s [%(filename)s:%(lineno)d] '
            ': %(funcName)s: %(message)s')
-
 
 def retrieve_top_harness_index(benchmark_dir: str) -> Optional[str]:
   """Return the top harness index for a generated target"""
@@ -48,7 +34,6 @@ def retrieve_top_harness_index(benchmark_dir: str) -> Optional[str]:
 
   return None
 
-
 def retrieve_success_harness_name(project_dir_list: list[str]) -> list[str]:
   """Returns name of success harnesses of the target project."""
   result_list = []
@@ -58,7 +43,6 @@ def retrieve_success_harness_name(project_dir_list: list[str]) -> list[str]:
       result_list.append(f'{os.path.basename(project_dir)}-{top_harness_index}')
 
   return result_list
-
 
 def group_result_dir_by_project_name(
     result_dir: str, project_name_list: list[str]) -> dict[str, list]:
@@ -73,7 +57,6 @@ def group_result_dir_by_project_name(
         break
 
   return result_dir_map
-
 
 def copy_success_ofg_autogens(result_dir: str, destination: str,
                               project_name_list: list[str],
@@ -100,7 +83,6 @@ def copy_success_ofg_autogens(result_dir: str, destination: str,
       logger.warning('No success target for project %s', project_name)
       shutil.rmtree(destination_dir)
 
-
 def parse_commandline():
   """Parse commandline."""
   parser = argparse.ArgumentParser()
@@ -124,7 +106,6 @@ def parse_commandline():
                       type=str)
   return parser.parse_args()
 
-
 def main():
   """CLI entrypoint."""
   logging.basicConfig(level=logging.INFO, format=LOG_FMT)
@@ -132,7 +113,6 @@ def main():
   args = parse_commandline()
   copy_success_ofg_autogens(args.result_dir, args.destination_dir,
                             args.project_name, args.oss_fuzz_path)
-
 
 if __name__ == "__main__":
   main()

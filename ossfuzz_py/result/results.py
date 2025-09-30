@@ -1,16 +1,3 @@
-# Copyright 2025 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
 """The data structure of all result kinds."""
 
 from dataclasses import dataclass, field
@@ -19,7 +6,6 @@ from typing import Any, Dict, List, Optional
 
 from ossfuzz_py.core.benchmark_manager import Benchmark
 from ossfuzz_py.result import textcov
-
 
 class FuzzTargetResult(Enum):
   """Error types for fuzz target analysis.
@@ -144,7 +130,6 @@ class FuzzTargetResult(Enum):
 
     return mapping.get(self, '')
 
-
 @dataclass
 class BuildInfo:
   """Information about a fuzz target build."""
@@ -174,7 +159,6 @@ class BuildInfo:
         'fuzz_target_source': self.fuzz_target_source,
         'build_script_source': self.build_script_source,
     }
-
 
 @dataclass
 class RunInfo:
@@ -207,7 +191,6 @@ class RunInfo:
         'coverage_report_path': self.coverage_report_path,
     }
 
-
 @dataclass
 class CrashAnalysis:
   """Analysis of a crash during fuzzing."""
@@ -239,7 +222,6 @@ class CrashAnalysis:
         'error_type': self.error_type.to_string() if self.error_type else '',
     }
 
-
 @dataclass
 class CoverageAnalysis:
   """Analysis of code coverage from fuzzing."""
@@ -262,7 +244,6 @@ class CoverageAnalysis:
         'suggestions': self.suggestions,
         'error_type': self.error_type.to_string() if self.error_type else '',
     }
-
 
 @dataclass
 class AnalysisInfo:
@@ -288,7 +269,6 @@ class AnalysisInfo:
         'success':
             self.success,
     }
-
 
 @dataclass
 class Result:
@@ -347,7 +327,6 @@ class Result:
       result.update(self.analysis_info.to_dict())
 
     return result
-
 
 class TrialResult:
   """All history results for a trial of a benchmark in an experiment."""
@@ -508,7 +487,6 @@ class TrialResult:
         'crashes': self.crashes,
         'is_semantic_error': self.is_semantic_error,
     }
-
 
 class BenchmarkResult:
   """All trial results for a benchmark in an experiment."""

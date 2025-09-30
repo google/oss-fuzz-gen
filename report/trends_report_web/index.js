@@ -1,17 +1,3 @@
-// Copyright 2025 Google LLC
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
 const BASE_URL = 'https://llm-exp.oss-fuzz.com/trend-reports';
 
 class Dropdown {
@@ -365,7 +351,6 @@ class Page {
     table.appendChild(tbody);
     tableContainer.appendChild(table);
 
-
     for (let h of ['Report Name', 'Build Rate', 'Crashes', 'Crash Cases', 'Average Coverage', 'Average Line Coverage Diff']) {
       const th = document.createElement('th');
       th.innerText = h;
@@ -674,7 +659,6 @@ class Page {
     }
   }
 }
-
 
 async function main() {
   const index = await (await fetch(`${BASE_URL}/index.json`)).json();

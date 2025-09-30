@@ -1,16 +1,3 @@
-# Copyright 2025 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
 """The data structure of all result kinds."""
 import dataclasses
 import os
@@ -20,7 +7,6 @@ from experiment import textcov
 from experiment.benchmark import Benchmark
 from experiment.fuzz_target_error import SemanticCheckResult
 from experiment.workdir import WorkDirs
-
 
 class Result:
   """A benchmark generation result."""
@@ -79,7 +65,6 @@ class Result:
         'chat_history': self.chat_history,
     }
 
-
 # TODO: Make this class an attribute of Result, avoid too many attributes in one
 # class.
 class BuildResult(Result):
@@ -124,7 +109,6 @@ class BuildResult(Result):
   @property
   def success(self):
     return self.compiles and self.binary_exists and self.is_function_referenced
-
 
 # TODO: Make this class an attribute of Result, avoid too many attributes in one
 # class.
@@ -258,7 +242,6 @@ class RunResult(BuildResult):
 
   # TODO(dongge): Define success property to show if the fuzz target was run.
 
-
 class CrashResult(Result):
   """The fuzzing run-time result with crash info."""
   stacktrace: str
@@ -283,7 +266,6 @@ class CrashResult(Result):
         'insight': self.insight,
     }
 
-
 class CoverageResult():
   """The fuzzing run-time result with code coverage info."""
   improve_required: bool = False
@@ -304,7 +286,6 @@ class CoverageResult():
         if k not in self._repr_exclude
     ]
     return f'{self.__class__.__name__}({", ".join(attributes)})'
-
 
 class CrashContextResult():
   """Analysis result of the context of the crashing function."""
@@ -344,7 +325,6 @@ class CrashContextResult():
                               source_code_evidence=data.get(
                                   'source_code_evidence', ''),
                               recommendations=data.get('recommendations', ''))
-
 
 # TODO: Make this class an attribute of Result, avoid too many attributes in one
 # class.
@@ -421,7 +401,6 @@ class AnalysisResult(Result):
   @property
   def log_path(self) -> str:
     return self.run_result.log_path
-
 
 class TrialResult:
   """All history results for a trial of a benchmark in an experiment."""
@@ -703,7 +682,6 @@ class TrialResult:
             self.semantic_error,
     }
 
-
 class BenchmarkResult:
   """All trial results for a benchmark in an experiment."""
   benchmark: Benchmark
@@ -769,7 +747,6 @@ class BenchmarkResult:
     for result in self.trial_results:
       all_textcov.merge(result.textcov_diff)
     return all_textcov
-
 
 class FunctionAnalysisResult:
   """The result of the function analyzer."""

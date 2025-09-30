@@ -1,16 +1,3 @@
-# Copyright 2025 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
 """The abstract base class for LLM agents in stages."""
 import argparse
 import asyncio
@@ -39,7 +26,6 @@ from results import Result
 from tool.base_tool import BaseTool
 from agent_graph.logger import LoggingMixin
 
-
 class BaseAgent(LoggingMixin, ABC):
   """The abstract base class for LLM agents in stages."""
 
@@ -62,7 +48,6 @@ class BaseAgent(LoggingMixin, ABC):
 
   def __repr__(self) -> str:
     return self.__class__.__name__
-
 
   def get_tool(self, tool_name: str) -> Optional[BaseTool]:
     """Gets a tool of the agent by name."""
@@ -320,7 +305,6 @@ class BaseAgent(LoggingMixin, ABC):
   def _initial_prompt(self, results: list[Result]) -> Prompt:
     """The initial prompt of the agent."""
 
-
   def finalize(self) -> None:
     """Finalize agent execution and flush logs."""
     try:
@@ -331,7 +315,6 @@ class BaseAgent(LoggingMixin, ABC):
   @abstractmethod
   def execute(self, result_history: list[Result]) -> Result:
     """Executes the agent based on previous result."""
-
 
 class ADKBaseAgent(BaseAgent):
   """The abstract base class for agents created using the ADK library."""
@@ -386,7 +369,6 @@ class ADKBaseAgent(BaseAgent):
       # Fallback mode for non-Vertex AI models
       self.runner = None
       logger.info('Fallback Agent %s created (no ADK).', self.name, trial=self.trial)
-
 
   def get_xml_representation(self, response: Optional[dict]) -> str:
     """Returns the XML representation of the response."""
@@ -477,14 +459,12 @@ class ADKBaseAgent(BaseAgent):
     # Use parent class unified logging
     super().log_llm_response(response)
 
-
   def end_llm_chat(self, tool_context: ToolContext) -> None:
     """Ends the LLM chat session."""
     tool_context.actions.skip_summarization = True
     
     # Finalize logging when chat ends
     self.finalize()
-
 
 if __name__ == "__main__":
   # For cloud experiments.

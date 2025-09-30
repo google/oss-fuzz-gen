@@ -1,17 +1,4 @@
 #!/usr/bin/env python3
-# Copyright 2024 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
 """Run an experiment with one function-under-test."""
 
 import argparse
@@ -64,7 +51,6 @@ TEMPERATURE: float = 0.4
 
 RESULTS_DIR = './results'
 
-
 # TODO(dongge): Move this to results.py
 @dataclasses.dataclass
 class AggregatedResult:
@@ -106,7 +92,6 @@ class AggregatedResult:
         max_coverage_diff_report=benchmark_result.line_coverage_report,
         full_textcov_diff=benchmark_result.textcov_diff)
 
-
 def generate_targets(benchmark: Benchmark, model: models.LLM,
                      prompt: prompts.Prompt, work_dirs: WorkDirs,
                      builder: prompt_builder.PromptBuilder) -> list[str]:
@@ -137,7 +122,6 @@ def generate_targets(benchmark: Benchmark, model: models.LLM,
     logging.info('Failed to generate targets: %s', generated_targets)
   return generated_targets
 
-
 def fix_code(work_dirs: WorkDirs, generated_targets: List[str]) -> List[str]:
   """Copies the generated target to the fixed target directory for simple
     code fixes."""
@@ -149,7 +133,6 @@ def fix_code(work_dirs: WorkDirs, generated_targets: List[str]) -> List[str]:
     fixed_targets.append(fixed_target)
 
   return fixed_targets
-
 
 def aggregate_results(target_stats: list[tuple[int, exp_evaluator.Result]],
                       generated_targets: list[str]) -> AggregatedResult:
@@ -186,7 +169,6 @@ def aggregate_results(target_stats: list[tuple[int, exp_evaluator.Result]],
                           found_bug, max_coverage, max_line_coverage_diff,
                           max_coverage_sample, max_coverage_diff_sample,
                           max_coverage_diff_report, all_textcov)
-
 
 def check_targets(
     ai_binary: str,
@@ -234,12 +216,10 @@ def check_targets(
   logging.info('No targets to check.')
   return None
 
-
 def prepare(oss_fuzz_dir: str) -> None:
   """Prepares the experiment environment."""
   oss_fuzz_checkout.clone_oss_fuzz(oss_fuzz_dir)
   oss_fuzz_checkout.postprocess_oss_fuzz()
-
 
 def _fuzzing_pipeline(benchmark: Benchmark, model: models.LLM,
                       args: argparse.Namespace, work_dirs: WorkDirs,
@@ -266,34 +246,49 @@ def _fuzzing_pipeline(benchmark: Benchmark, model: models.LLM,
                                                args=args),
                           ])
   elif args.agent:
-
-    writer_agents = []
-    if 'gemini' in args.model or 'vertex' in args.model:
-      writer_agents.append(
-          FunctionAnalyzer(trial=trial,
-                           llm=model,
-                           args=args,
-                           benchmark=benchmark))
-    writer_agents += [
-        Prototyper(trial=trial, llm=model, args=args),
-        Enhancer(trial=trial, llm=model, args=args)
-    ]
-    p = pipeline.Pipeline(args=args,
-                          trial=trial,
-                          writing_stage_agents=writer_agents,
-                          analysis_stage_agents=[
-                              SemanticAnalyzer(trial=trial,
-                                               llm=model,
-                                               args=args),
-                              CoverageAnalyzer(trial=trial,
-                                               llm=model,
-                                               args=args),
-                              CrashAnalyzer(trial=trial, llm=model, args=args),
-                              ContextAnalyzer(trial=trial,
-                                              llm=model,
-                                              args=args,
-                                              benchmark=benchmark),
-                          ])
+    # Use the new LangGraph-based agent system
+    trial_logger.info('Using LangGraph-based agent workflow')
+    
+    # Update args with work_dirs for compatibility
+    args.work_dirs = work_dirs
+    
+    # Create and run the LangGraph workflow
+    workflow = FuzzingWorkflow(model, args)
+    
+    # Run the full supervisor-based workflow
+    final_state = workflow.run(
+        benchmark=benchmark,
+        trial=trial,
+        workflow_type='full'
+    )
+    
+    # Convert LangGraph state back to legacy Result format
+    result = Result(benchmark=benchmark, trial=trial, work_dirs=work_dirs)
+    
+    # Map key results from LangGraph state to legacy Result
+    if 'fuzz_target_source' in final_state:
+      result.fuzz_target_source = final_state['fuzz_target_source']
+    if 'build_script_source' in final_state:
+      result.build_script = final_state['build_script_source']
+    if 'compile_success' in final_state:
+      result.compile_success = final_state['compile_success']
+    if 'run_success' in final_state:
+      result.run_success = final_state['run_success']
+    if 'crash_func' in final_state:
+      result.crash_func = final_state['crash_func']
+    
+    trial_logger.info('LangGraph workflow completed')
+    
+    # Create trial result to match expected return format
+    trial_result = TrialResult(benchmark=benchmark,
+                               trial=trial,
+                               work_dirs=work_dirs,
+                               result_history=[result])
+    trial_logger.write_result(
+        result_status_dir=trial_result.best_result.work_dirs.status,
+        result=trial_result,
+        finished=True)
+    return trial_result
   else:
     writer_agents = []
     if 'gemini' in args.model or 'vertex' in args.model:
@@ -330,7 +325,6 @@ def _fuzzing_pipeline(benchmark: Benchmark, model: models.LLM,
       finished=True)
   return trial_result
 
-
 def _fuzzing_pipelines(benchmark: Benchmark, model: models.LLM,
                        args: argparse.Namespace,
                        work_dirs: WorkDirs) -> BenchmarkResult:
@@ -344,7 +338,6 @@ def _fuzzing_pipelines(benchmark: Benchmark, model: models.LLM,
   return BenchmarkResult(benchmark=benchmark,
                          work_dirs=work_dirs,
                          trial_results=trial_results)
-
 
 def run(benchmark: Benchmark, model: models.LLM, args: argparse.Namespace,
         work_dirs: WorkDirs) -> Optional[AggregatedResult]:

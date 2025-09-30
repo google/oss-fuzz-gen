@@ -1,17 +1,4 @@
 #!/usr/bin/env python
-# Copyright 2025 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
 """Report generation tool to create summary json files for trends report."""
 
 import argparse
@@ -23,14 +10,12 @@ from typing import Any, Dict, List
 
 from report.common import FileSystem, Results
 
-
 @dataclasses.dataclass
 class Summary:
   """Summary of the experiment for trends report."""
   benchmarks: List[Dict[str, Any]]
   accumulated_results: Dict[str, Any]
   projects: List[Dict[str, Any]]
-
 
 def generate_summary(results_util: Results) -> Summary:
   """Returns a summary object from the experiment results."""
@@ -57,7 +42,6 @@ def generate_summary(results_util: Results) -> Summary:
   projects = list(
       map(dataclasses.asdict, results_util.get_project_summary(benchmarks)))
   return Summary(benchmark_summaries, accumulated_results, projects)
-
 
 def _parse_arguments() -> argparse.Namespace:
   """Parses command line args."""
@@ -115,7 +99,6 @@ def _parse_arguments() -> argparse.Namespace:
 
   return parser.parse_args()
 
-
 def main():
   args = _parse_arguments()
   summary = dataclasses.asdict(
@@ -148,7 +131,6 @@ def main():
 
   with FileSystem(args.output_path).open('w', encoding='utf-8') as f:
     json.dump(summary_json, f)
-
 
 if __name__ == '__main__':
   logging.getLogger().setLevel(os.environ.get('LOGLEVEL', 'WARN').upper())

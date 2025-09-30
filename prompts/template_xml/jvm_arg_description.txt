@@ -1,6 +1,0 @@
-<argument>
-Argument #{ARG_COUNT} requires {TYPE}.
-{GENERAL_DESC}
-{GENERIC_DESC}
-</argument>
-

@@ -1,16 +1,3 @@
-# Copyright 2025 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
 """
 FunctionAnalyzer node for LangGraph workflow.
 
@@ -24,7 +11,6 @@ from agent_graph.agents.function_analyzer import FunctionAnalyzer
 from agent_graph.adapters import StateAdapter, AgentNodeWrapper
 from agent_graph.state import FuzzingWorkflowState
 from ..benchmark import LangGraphBenchmark as Benchmark
-
 
 def function_analyzer_node(state: FuzzingWorkflowState, config: Dict[str, Any]) -> Dict[str, Any]:
     """
@@ -97,7 +83,6 @@ def function_analyzer_node(state: FuzzingWorkflowState, config: Dict[str, Any]) 
             }]
         }
 
-
 # Alternative implementation using the generic wrapper
 def create_function_analyzer_node():
     """
@@ -112,7 +97,6 @@ def create_function_analyzer_node():
         agent_class=FunctionAnalyzer,
         name='FunctionAnalyzer'
     )
-
 
 # For backward compatibility and explicit control, we export the manual implementation
 # but the wrapper version is available for other nodes

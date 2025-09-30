@@ -1,16 +1,3 @@
-# Copyright 2025 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
 """
 Usage:
   docker_run.py [options]
@@ -30,13 +17,12 @@ BENCHMARK_SET = 'comparison'
 FREQUENCY_LABEL = 'daily'
 RUN_TIMEOUT = 300
 SUB_DIR = 'default'
-MODEL = 'vertex_ai_gemini-1-5'
+MODEL = 'gpt-5'
 DELAY = 0
 NUM_SAMPLES = 10
 LLM_FIX_LIMIT = 5
 MAX_ROUND = 100
 DATA_DIR = '/experiment/data-dir/'
-
 
 def _parse_args(cmd) -> argparse.Namespace:
   """Parses the command line arguments."""
@@ -137,12 +123,10 @@ def _parse_args(cmd) -> argparse.Namespace:
 
   return args
 
-
 def _run_command(command: list[str], shell=False):
   """Runs a command and return its exit code."""
   process = subprocess.run(command, shell=shell, check=False)
   return process.returncode
-
 
 def _authorize_gcloud():
   """Authorizes to gcloud"""
@@ -160,7 +144,6 @@ def _authorize_gcloud():
     # TODO: Set GOOGLE_APPLICATION_CREDENTIALS and ensure cloud build uses it.
     logging.info("GOOGLE APPLICATION CREDENTIALS is not set.")
 
-
 def _log_common_args(args):
   """Prints args useful for logging"""
   logging.info("Benchmark set is %s.", args.benchmark_set)
@@ -171,7 +154,6 @@ def _log_common_args(args):
       " your experiment.", args.sub_dir)
   logging.info("LLM is %s.", args.model)
   logging.info("DELAY is %s.", args.delay)
-
 
 def main(cmd=None):
   """Main entrypoint"""
@@ -184,7 +166,6 @@ def main(cmd=None):
     run_on_data_from_scratch(cmd)
   else:
     run_standard(cmd)
-
 
 def run_on_data_from_scratch(cmd=None):
   """Creates experiment for projects that are not in OSS-Fuzz upstream"""
@@ -330,7 +311,6 @@ def run_on_data_from_scratch(cmd=None):
   # Exit with the return value of `./run_all_experiments`.
   return ret_val
 
-
 def run_standard(cmd=None):
   """The main function."""
   args = _parse_args(cmd)
@@ -458,6 +438,6 @@ def run_standard(cmd=None):
   # Exit with the return value of `./run_all_experiments`.
   return ret_val
 
-
 if __name__ == "__main__":
   sys.exit(main())
+# /venv/bin/python3 run_all_experiments.py -l gpt-5 -y benchmark-sets/0-conti/cjson.yaml

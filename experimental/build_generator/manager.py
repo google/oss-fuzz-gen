@@ -1,17 +1,4 @@
 #!/usr/bin/env python3
-# Copyright 2024 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
 """Auto OSS-Fuzz generator from inside OSS-Fuzz containers."""
 
 import argparse
@@ -45,11 +32,9 @@ logger = logging.getLogger(name=__name__)
 LOG_FMT = ('%(asctime)s %(levelname)s [%(filename)s:%(lineno)d] '
            ': %(funcName)s: %(message)s')
 
-
 def setup_model(model: str):
   global LLM_MODEL
   LLM_MODEL = model
-
 
 class Test:
   """Holder of data about tests used by a repository."""
@@ -57,7 +42,6 @@ class Test:
   def __init__(self, test_path, test_content):
     self.test_path = test_path
     self.test_content = test_content
-
 
 def get_all_functions_in_project(introspection_files_found):
   all_functions_in_project = []
@@ -69,11 +53,9 @@ def get_all_functions_in_project(introspection_files_found):
 
   return all_functions_in_project
 
-
 ##################################################
 #### Heuristics for auto generating harnesses ####
 ##################################################
-
 
 def get_all_header_files(all_files: List[str]) -> List[str]:
   all_header_files = []
@@ -86,7 +68,6 @@ def get_all_header_files(all_files: List[str]) -> List[str]:
       all_header_files.append(yaml_file)
   return all_header_files
 
-
 def get_all_introspector_files(target_dir):
   all_files = utils.get_all_files_in_path(target_dir)
   introspection_files_found = []
@@ -97,7 +78,6 @@ def get_all_introspector_files(target_dir):
     elif 'fuzzerLogFile-' in yaml_file and yaml_file.endswith('.yaml'):
       introspection_files_found.append(yaml_file)
   return introspection_files_found
-
 
 def build_empty_fuzzers(build_workers, language) -> None:
   """Run build scripts against an empty fuzzer harness."""
@@ -140,7 +120,6 @@ def build_empty_fuzzers(build_workers, language) -> None:
     logger.info('Base fuzz build: %s', str(base_fuzz_build))
     build_worker.base_fuzz_build = base_fuzz_build
 
-
 def refine_static_libs(build_results) -> None:
   """Returns a list of static libraries with substitution of common gtest
   libraries, which should not be linked in the fuzzer builds."""
@@ -159,7 +138,6 @@ def refine_static_libs(build_results) -> None:
       refined_static_list.append(static_lib)
     build_worker.executable_files_build[
         'refined-static-libs'] = refined_static_list
-
 
 def run_introspector_on_dir(build_worker, test_dir,
                             language) -> Tuple[bool, List[str]]:
@@ -226,7 +204,6 @@ def run_introspector_on_dir(build_worker, test_dir,
 
   logger.info('Introspector build: %s', str(build_returned_error))
   return build_returned_error, fuzzer_build_cmd
-
 
 def create_clean_oss_fuzz_from_empty(github_repo: str, build_worker,
                                      language: str, test_dir) -> None:
@@ -318,7 +295,6 @@ def create_clean_oss_fuzz_from_empty(github_repo: str, build_worker,
   with open(os.path.join(oss_fuzz_folder, 'build.sh'), 'w') as f:
     f.write(clean_build_content)
 
-
 def create_clean_oss_fuzz_from_success(github_repo: str, out_dir: str,
                                        pkgs: List[str], language: str) -> None:
   """Converts a successful out dir into a working OSS-Fuzz project."""
@@ -362,7 +338,6 @@ def create_clean_oss_fuzz_from_success(github_repo: str, out_dir: str,
   with open(os.path.join(oss_fuzz_folder, 'build.sh'), 'w') as f:
     f.write(clean_build_content)
 
-
 def create_clean_clusterfuzz_lite_from_success(github_repo: str, out_dir: str,
                                                pkgs: List[str],
                                                language: str) -> None:
@@ -403,7 +378,6 @@ def create_clean_clusterfuzz_lite_from_success(github_repo: str, out_dir: str,
 
   with open(os.path.join(cflite_folder, 'cflite_pr.yml'), 'w') as f:
     f.write(templates.CFLITE_TEMPLATE)
-
 
 def convert_fuzz_build_line_to_loop(clean_build_content: str,
                                     original_build_folder: str,
@@ -447,7 +421,6 @@ done'''
   split_lines[target_line_idx] = wrapper_script
   return '\n'.join(split_lines)
 
-
 def convert_test_build_to_clean_build(test_build_script: str,
                                       project_repo_dir: str) -> str:
   """Rewrites a build.sh used during testing to a proper OSS-Fuzz build.sh."""
@@ -464,14 +437,12 @@ def convert_test_build_to_clean_build(test_build_script: str,
       clean_build_content_lines, original_build_folder, project_repo_dir)
   return clean_build_content
 
-
 def append_to_report(outdir, msg):
   if not os.path.isdir(outdir):
     os.mkdir(outdir)
   report_path = os.path.join(outdir, 'report.txt')
   with open(report_path, 'a+') as f:
     f.write(msg + '\n')
-
 
 def load_introspector_report():
   """Extract introspector as python dictionary from local run."""
@@ -492,7 +463,6 @@ def load_introspector_report():
 
   summary_report['MergedProjectProfile']['all-functions'] = all_functions_list
   return summary_report
-
 
 def auto_generate(github_url, disable_testing_build_scripts=False, outdir=''):
   """Generates build script and fuzzer harnesses for a GitHub repository."""
@@ -626,7 +596,6 @@ def auto_generate(github_url, disable_testing_build_scripts=False, outdir=''):
     create_clean_oss_fuzz_from_empty(github_url, build_worker, language,
                                      test_dir)
 
-
 def parse_commandline():
   """Commandline parser."""
   parser = argparse.ArgumentParser()
@@ -641,10 +610,8 @@ def parse_commandline():
                       type=str)
   return parser
 
-
 def setup_logging():
   logging.basicConfig(level=logging.INFO, format=LOG_FMT)
-
 
 def main():
   parser = parse_commandline()
@@ -656,7 +623,6 @@ def main():
   append_to_report(args.out, f'Analysing: {args.repo}')
 
   auto_generate(args.repo, args.disable_build_test, args.out)
-
 
 if __name__ == '__main__':
   main()

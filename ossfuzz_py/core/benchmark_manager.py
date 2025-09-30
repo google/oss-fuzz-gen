@@ -1,16 +1,3 @@
-# Copyright 2025 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
 """
 Benchmark Management System for the OSS-Fuzz SDK.
 
@@ -39,7 +26,6 @@ from ossfuzz_py.utils.file_utils import FileUtils
 
 # Configure module logger
 logger = logging.getLogger('ossfuzz_sdk.benchmark_manager')
-
 
 @dataclass(frozen=True)
 class Benchmark:
@@ -206,7 +192,6 @@ class Benchmark:
   def needs_extern(self) -> bool:
     """Checks if it is C++ fuzz target for a C project, which needs `extern`."""
     return self.is_cpp_target and self.is_c_project
-
 
 class BenchmarkManager:
   """

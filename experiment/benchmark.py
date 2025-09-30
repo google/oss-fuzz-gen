@@ -1,16 +1,3 @@
-# Copyright 2024 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
 """
 Benchmark class that contains the project-under-test information.
 """
@@ -23,7 +10,6 @@ from typing import Any, List, Optional
 
 import yaml
 
-
 class FileType(Enum):
   """File types of target files."""
   C = 'C'
@@ -31,13 +17,11 @@ class FileType(Enum):
   JAVA = 'Java'
   NONE = ''
 
-
 # Define a custom representer for quoting strings
 def quoted_string_presenter(dumper, data):
   if '\n' in data:
     return dumper.represent_scalar('tag:yaml.org,2002:str', data, style='|')
   return dumper.represent_scalar('tag:yaml.org,2002:str', data, style='"')
-
 
 class Benchmark:
   """Represents a benchmark."""
@@ -268,7 +252,6 @@ class Benchmark:
     """Checks if it is C++ fuzz target for a C project, which needs `extern`."""
     return self.is_cpp_target and self.is_c_project
 
-
 def get_file_type(file_path: str) -> FileType:
   """Returns the file type based on the extension of |file_name|."""
   if file_path.endswith('.c'):
@@ -280,16 +263,13 @@ def get_file_type(file_path: str) -> FileType:
     return FileType.JAVA
   return FileType.NONE
 
-
 def is_c_file(file_path: str) -> bool:
   """Validates if |file_path| is a C file by its extension."""
   return get_file_type(file_path) == FileType.C
 
-
 def is_cpp_file(file_path: str) -> bool:
   """Validates if |file_path| is a C++ file by its extension."""
   return get_file_type(file_path) == FileType.CPP
-
 
 def is_java_file(file_path: str) -> bool:
   """Validates if |file_path| is a Java file by its extension."""

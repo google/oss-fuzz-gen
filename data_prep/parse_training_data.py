@@ -1,17 +1,4 @@
 #!/usr/bin/env python3
-# Copyright 2024 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
 """
 This script provides functionality to parse benchmark data from a result
 directory for training reward models.
@@ -38,7 +25,6 @@ logger = logging.getLogger(__name__)
 
 STORAGE_CLIENT = storage.Client()
 FUZZ_TARGET_FIXING_DIR_PATTERN = r'\d+-F\d+'
-
 
 class Benchmark:
   """The result directory of a benchmark."""
@@ -204,7 +190,6 @@ class Benchmark:
       json.dump(data, file, indent=4)
     logger.info('Saved to: %s', data_filapath)
 
-
 class Experiment:
   """The directory of an experiment, containing benchmark result directories."""
 
@@ -244,13 +229,11 @@ class Experiment:
       json.dump(data, file, indent=4)
     logger.info('Saved to: %s', data_filapath)
 
-
 def _parse_gcs_uri(bucket_uri: str) -> tuple[str, str]:
   """Parses the bucket name and directory prefix from |bucket_uri|."""
   bucket_name = bucket_uri.removeprefix('gs://').split('/')[0]
   directory_prefix = bucket_uri.removeprefix(f'gs://{bucket_name}/')
   return bucket_name, directory_prefix
-
 
 def _download_files(experiment_dir: str, bucket_uri: str) -> None:
   """
@@ -267,7 +250,6 @@ def _download_files(experiment_dir: str, bucket_uri: str) -> None:
       logger.info('%d / %d', i, blobs_num)
       executor.submit(_download_file, blob, experiment_dir)
 
-
 def _download_file(file_blob: storage.Blob, local_dir: str) -> None:
   """
   Downloads a file from |file_blob| and preserve its path after |bucket_dir|.
@@ -283,12 +265,10 @@ def _download_file(file_blob: storage.Blob, local_dir: str) -> None:
   os.makedirs(os.path.dirname(local_path), exist_ok=True)
   file_blob.download_to_filename(local_path)
 
-
 def _validate_bucket(bucket_uri: str) -> bool:
   """Checks if the |directory_uri| is local or from a bucket."""
   # Assume we will only use gs:// links for simplicity in directory operations.
   return bucket_uri.startswith('gs://')
-
 
 def _parse_args() -> argparse.Namespace:
   """Handles command-line arguments."""
@@ -352,7 +332,6 @@ def _parse_args() -> argparse.Namespace:
     os.makedirs(args.save_dir, exist_ok=True)
   return args
 
-
 def main() -> int:
   """Main function to and initiate the parsing process."""
   args = _parse_args()
@@ -367,7 +346,6 @@ def main() -> int:
     return 1
   result.save_json(args.coverage, args.group, args.save_dir)
   return 0
-
 
 if __name__ == "__main__":
   sys.exit(main())

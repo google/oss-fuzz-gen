@@ -1,16 +1,3 @@
-# Copyright 2025 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
 """File utils for target repository"""
 
 import os
@@ -22,7 +9,6 @@ try:
 except (ImportError, SystemError):
   # For execution inside of a docker container
   import templates
-
 
 def determine_project_language(path: str) -> str:
   """Returns the likely language of a project by looking at file suffixes."""
@@ -45,7 +31,6 @@ def determine_project_language(path: str) -> str:
       max_count = count
   return target_language
 
-
 def get_language_defaults(language: str):
   compilers_and_flags = {
       'c': ('$CC', '$CFLAGS', '/src/empty-fuzzer.c', templates.C_BASE_TEMPLATE),
@@ -53,7 +38,6 @@ def get_language_defaults(language: str):
               templates.CPP_BASE_TEMPLATE),
   }
   return compilers_and_flags[language]
-
 
 def get_all_files_in_path(base_path: str,
                           path_to_subtract: Optional[str] = None) -> List[str]:

@@ -1,16 +1,3 @@
-# Copyright 2025 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
 """Play with Gemini models manually
 Usage:
   # Under venv.
@@ -29,7 +16,6 @@ from llm_toolkit import models, prompts
 NUM_SAMPLES: int = 1
 TEMPERATURE: float = 1
 MAX_TOKENS: int = 8192
-
 
 def parse_args() -> argparse.Namespace:
   """Parses command line arguments."""
@@ -63,7 +49,6 @@ def parse_args() -> argparse.Namespace:
                       help='LLM response directory.')
   return parser.parse_args()
 
-
 def setup_model() -> models.LLM:
   return models.LLM.setup(
       ai_binary='',
@@ -73,14 +58,12 @@ def setup_model() -> models.LLM:
       temperature=args.temperature,
   )
 
-
 def construct_prompt() -> prompts.Prompt:
   with open(args.prompt, 'r') as prompt_file:
     content = prompt_file.read()
   prompt = model.prompt_type()()
   prompt.add_problem(content)
   return prompt
-
 
 if __name__ == "__main__":
   args = parse_args()
