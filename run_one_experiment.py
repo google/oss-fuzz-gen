@@ -40,7 +40,6 @@ NUM_EVA = int(os.getenv('LLM_NUM_EVA', '3'))
 # #182 shows Gemini returns NUM_SAMPLES independent responses via repeated
 #  queries, which generally performs better than top-k responses from one
 #  query [1].
-# [1] TODO(@happy-qop): Update the link.
 # WARN: Avoid large NUM_SAMPLES in highly parallelized local experiments.
 # It controls the number of LLM responses per prompt, which may exceed your
 # LLM's limit on query-per-second.
@@ -51,7 +50,6 @@ TEMPERATURE: float = 0.4
 
 RESULTS_DIR = './results'
 
-# TODO(dongge): Move this to results.py
 @dataclasses.dataclass
 class AggregatedResult:
   """Aggregated evaluation result."""

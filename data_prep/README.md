@@ -55,19 +55,6 @@ python -m data_prep.project_src -p <project-name>
 python -m data_prep.project_src -p all
 ```
 
-## Training Data
-We provide ways to generate training data for model fine-tuning or Parameter
-Efficient Tuning (PET). The training data contains a list of 2-item-sublists,
-with function signature and the corresponding fuzz target being the first and
-second item in the sublist. Since a fuzz targets may test multiple functions,
-multiple `function_signature`s may share the same `fuzz_target`, i.e.:
-```
-[
-  [<function_signature_1>, <fuzz_target_1>],
-  [<function_signature_2>, <fuzz_target_2>],
-  [<function_signature_3>, <fuzz_target_2>],
-]
-```
 
 ### Generation
 Use [`project_targets.py`](project_targets.py) to generate a JSON file based on a `C`/`C++` project in `OSS-Fuzz`:

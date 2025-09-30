@@ -4,9 +4,21 @@ from abc import ABC, abstractmethod
 from typing import Optional
 
 import logger
-from agent.base_agent import BaseAgent
-from common.cloud_builder import CloudBuilder
+from agent_graph.agents.base_agent import BaseAgent
+# from common.cloud_builder import CloudBuilder # we removed this since no need to run on cloud, 
+# to keep compatibility with original code, we introduce a fake cloud_builder
 from results import Result
+
+class CloudBuilder:
+  """Fake cloud builder for compatibility with original code."""
+
+  def __init__(self, args: argparse.Namespace):
+    self.args = args
+  
+  def run(self, agent: BaseAgent, result_history: list[Result], dill_dir: str) -> Result:
+    """Run the agent in cloud."""
+    return agent.execute(result_history)
+
 
 class BaseStage(ABC):
   """The abstract base class for stages in fuzzing pipeline."""
