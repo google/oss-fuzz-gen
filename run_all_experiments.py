@@ -501,7 +501,6 @@ def main():
 
   args = parse_args()
   _setup_logging(args.log_level, is_cloud=args.cloud_experiment_name != '')
-  logger.info('Starting experiments on PR branch')
 
   # Capture time at start
   start = time.time()
