@@ -574,7 +574,7 @@ def _parse_arguments() -> argparse.Namespace:
 
   parser.add_argument('--results-dir',
                       '-r',
-                      help='Directory with results from OSS-Fuzz-gen.',
+                      help='Directory with results from LogicFuzz.',
                       required=True)
   parser.add_argument(
       '--output-dir',

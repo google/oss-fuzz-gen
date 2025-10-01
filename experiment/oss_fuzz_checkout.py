@@ -180,7 +180,7 @@ def _get_project_cache_name(project: str) -> str:
 def _get_project_cache_image_name(project: str, sanitizer: str) -> str:
   """Gets name of cached Docker image for a project and a respective
   sanitizer."""
-  return ('us-central1-docker.pkg.dev/oss-fuzz/oss-fuzz-gen/'
+  return ('us-central1-docker.pkg.dev/oss-fuzz/logicfuzz/'
           f'{project}-ofg-cached-{sanitizer}')
 
 def _has_cache_build_script(project: str) -> bool:

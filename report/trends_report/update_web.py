@@ -8,8 +8,9 @@ import zipfile
 
 from google.cloud import storage
 
-REPO_ZIP_LINK = 'https://github.com/google/oss-fuzz-gen/archive/refs/heads/main.zip'
-ZIP_DIR = 'oss-fuzz-gen-trends-report'
+# Note: GitHub repo references removed for LogicFuzz
+REPO_ZIP_LINK = None  # Disabled - no longer using external GitHub repo
+ZIP_DIR = 'logicfuzz-trends-report'
 
 def trends_report_web(event, context):
   """Update trends report web page files from GitHub."""

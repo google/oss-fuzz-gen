@@ -23,8 +23,8 @@ RUN echo "deb https://packages.cloud.google.com/apt cloud-sdk main" | tee -a /et
     curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add - && \
     apt-get update -y && \
     apt-get install google-cloud-cli -y
-# Set timezone to Australia/Sydney.
-ENV TZ='Australia/Sydney'
+# Set timezone to Singapore
+ENV TZ='Asia/Singapore'
 
 # Install Docker for OSS-Fuzz.
 # Add Docker's official GPG key:

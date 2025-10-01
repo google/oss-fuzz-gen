@@ -4,13 +4,17 @@
 
 {% if index_css_content %}
 <style>
-{{ index_css_content | safe }}
+    {
+            {
+            index_css_content | safe
+        }
+    }
 </style>
 {% endif %}
 
 {% if index_js_content %}
 <script>
-{{ index_js_content | safe }}
+    { { index_js_content | safe } }
 </script>
 {% endif %}
 
@@ -23,20 +27,17 @@
 }" class="space-y-2">
 
     <div class="border rounded-lg toc-section">
-        <button @click="benchmarkOpen = !benchmarkOpen"
-                class="w-full p-4 flex justify-between items-center">
+        <button @click="benchmarkOpen = !benchmarkOpen" class="w-full p-4 flex justify-between items-center">
             <span class="text-lg font-bold">
                 Benchmark summary
             </span>
-            <svg class="w-5 h-5 transform transition-transform duration-200"
-                 :class="{'rotate-180': projectOpen}"
-                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            <svg class="w-5 h-5 transform transition-transform duration-200" :class="{'rotate-180': projectOpen}"
+                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
             </svg>
         </button>
 
-        <div x-show="benchmarkOpen"
-            class="p-4 border-t">
+        <div x-show="benchmarkOpen" class="p-4 border-t">
             <div class="overflow-x-auto">
                 <table class="sortable-table min-w-full" id="benchmark-summary-table">
                     <thead>
@@ -62,11 +63,17 @@
                                 </pre>
                             </td>
                             <td data-sort-value="{{ benchmark.status }}">{{ benchmark.status }}</td>
-                            <td data-sort-value="{{ benchmark.result.build_success_rate|percent }}">{{ benchmark.result.build_success_rate|percent}}</td>
-                            <td data-sort-value="{{ benchmark.result.crash_rate|percent }}"><a href="benchmark/{{ benchmark.id|urlencode }}/crash.json"> {{ benchmark.result.crash_rate|percent }} </a></td>
+                            <td data-sort-value="{{ benchmark.result.build_success_rate|percent }}">{{
+                                benchmark.result.build_success_rate|percent}}</td>
+                            <td data-sort-value="{{ benchmark.result.crash_rate|percent }}"><a
+                                    href="benchmark/{{ benchmark.id|urlencode }}/crash.json"> {{
+                                    benchmark.result.crash_rate|percent }} </a></td>
                             <td data-sort-value="{{ benchmark.result.found_bug }}">{{ benchmark.result.found_bug }}</td>
-                            <td data-sort-value="{{ benchmark.result.max_coverage |percent }}">{{ benchmark.result.max_coverage |percent }}</td>
-                            <td data-sort-value="{{ benchmark.result.max_line_coverage_diff|percent }}"><a href="{{ benchmark.result.max_coverage_diff_report | cov_report_link }}">{{ benchmark.result.max_line_coverage_diff|percent }}</a></td>
+                            <td data-sort-value="{{ benchmark.result.max_coverage |percent }}">{{
+                                benchmark.result.max_coverage |percent }}</td>
+                            <td data-sort-value="{{ benchmark.result.max_line_coverage_diff|percent }}"><a
+                                    href="{{ benchmark.result.max_coverage_diff_report | cov_report_link }}">{{
+                                    benchmark.result.max_line_coverage_diff|percent }}</a></td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -78,19 +85,16 @@
     </div>
 
     <div class="border rounded-lg toc-section">
-        <button @click="projectOpen = !projectOpen"
-                class="w-full p-4 flex justify-between items-center">
+        <button @click="projectOpen = !projectOpen" class="w-full p-4 flex justify-between items-center">
             <span class="text-lg font-bold">
                 Project summary
             </span>
-            <svg class="w-5 h-5 transform transition-transform duration-200"
-                 :class="{'rotate-180': projectOpen}"
-                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            <svg class="w-5 h-5 transform transition-transform duration-200" :class="{'rotate-180': projectOpen}"
+                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
             </svg>
         </button>
-        <div x-show="projectOpen"
-             class="p-4 border-t">
+        <div x-show="projectOpen" class="p-4 border-t">
 
             <div class="flex justify-between">
                 <div class="controls flex gap-2">
@@ -113,8 +117,8 @@
                             <th data-sort-number>Successful benchmarks</th>
                             <th data-sort-number>Total coverage gain</th>
                             <th data-sort-number>Total relative gain</th>
-                            <th data-sort-number>OSS-Fuzz-Gen total covered lines</th>
-                            <th data-sort-number>OSS-Fuzz-Gen new covered lines</th>
+                            <th data-sort-number>LogicFuzz total covered lines</th>
+                            <th data-sort-number>LogicFuzz new covered lines</th>
                             <th data-sort-number>Existing covered lines</th>
                             <th data-sort-number>Total project lines</th>
                         </tr>
@@ -122,68 +126,91 @@
                     <tbody>
                         <!-- TODO: Revisit coverage and relative gains in the future, currently they're sums of percentages -->
                         {% set ns_projects = namespace(
-                            sum_successful_benchmarks=0,
-                            sum_total_coverage_gain=0,
-                            sum_total_relative_gain=0,
-                            sum_ofg_total_covered_lines=0,
-                            sum_ofg_new_covered_lines=0,
-                            sum_existing_covered_lines=0,
-                            sum_total_project_lines=0) %}
+                        sum_successful_benchmarks=0,
+                        sum_total_coverage_gain=0,
+                        sum_total_relative_gain=0,
+                        sum_ofg_total_covered_lines=0,
+                        sum_ofg_new_covered_lines=0,
+                        sum_existing_covered_lines=0,
+                        sum_total_project_lines=0) %}
 
                         {% for project in projects %}
 
-                        {% set ns_projects.sum_successful_benchmarks = ns_projects.sum_successful_benchmarks + project.count %}
-                        {% set ns_projects.sum_ofg_total_covered_lines = ns_projects.sum_ofg_total_covered_lines + project.coverage_ofg_total_covered_lines %}
-                        {% set ns_projects.sum_ofg_new_covered_lines = ns_projects.sum_ofg_new_covered_lines + project.coverage_ofg_total_new_covered_lines %}
-                        {% set ns_projects.sum_existing_covered_lines = ns_projects.sum_existing_covered_lines + project.coverage_existing_total_covered_lines %}
-                        {% set ns_projects.sum_total_project_lines = ns_projects.sum_total_project_lines + project.coverage_existing_total_lines %}
+                        {% set ns_projects.sum_successful_benchmarks = ns_projects.sum_successful_benchmarks +
+                        project.count %}
+                        {% set ns_projects.sum_ofg_total_covered_lines = ns_projects.sum_ofg_total_covered_lines +
+                        project.coverage_ofg_total_covered_lines %}
+                        {% set ns_projects.sum_ofg_new_covered_lines = ns_projects.sum_ofg_new_covered_lines +
+                        project.coverage_ofg_total_new_covered_lines %}
+                        {% set ns_projects.sum_existing_covered_lines = ns_projects.sum_existing_covered_lines +
+                        project.coverage_existing_total_covered_lines %}
+                        {% set ns_projects.sum_total_project_lines = ns_projects.sum_total_project_lines +
+                        project.coverage_existing_total_lines %}
                         <tr class="project-data-row">
                             <td class="table-index">
-                                <button class="w-5 h-5 flex items-center justify-center focus:outline-none" @click="$refs.benchmarks_{{ loop.index }}.classList.toggle('hidden')">
-                                    <svg class="w-4 h-4 transform transition-transform duration-200" :class="{'rotate-180': !$refs.benchmarks_{{ loop.index }}.classList.contains('hidden')}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                                <button class="w-5 h-5 flex items-center justify-center focus:outline-none"
+                                    @click="$refs.benchmarks_{{ loop.index }}.classList.toggle('hidden')">
+                                    <svg class="w-4 h-4 transform transition-transform duration-200"
+                                        :class="{'rotate-180': !$refs.benchmarks_{{ loop.index }}.classList.contains('hidden')}"
+                                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M19 9l-7 7-7-7" />
                                     </svg>
                                 </button>
                             </td>
                             <td data-sort-value="{{ project.name }}" class="w-full">
-                                <button @click="$refs.benchmarks_{{ loop.index }}.classList.toggle('hidden')" class="text-left hover:text-blue-600 focus:outline-none toc-subsection">
+                                <button @click="$refs.benchmarks_{{ loop.index }}.classList.toggle('hidden')"
+                                    class="text-left hover:text-blue-600 focus:outline-none toc-subsection">
                                     {{ project.name }}
                                     {% set ns = namespace(
-                                        bug_found=false,
-                                        aggregated_build_rate=0,
-                                        aggregated_crash_rate=0,
-                                        aggregated_found_bug=0,
-                                        aggregated_max_coverage=0,
-                                        aggregated_max_line_coverage_diff=0) %}
+                                    bug_found=false,
+                                    aggregated_build_rate=0,
+                                    aggregated_crash_rate=0,
+                                    aggregated_found_bug=0,
+                                    aggregated_max_coverage=0,
+                                    aggregated_max_line_coverage_diff=0) %}
                                     {% for benchmark in benchmarks %}
-                                        {% if benchmark.project == project.name %}
-                                            {% if benchmark.result.found_bug %}
-                                                {% set ns.bug_found = true %}
-                                                <!-- TODO: Track the average number of bugs as well, in order to identify if a single benchmark has an exceptionally high bug count making it an outlier that needs priority fixing -->
-                                            {% endif %}
-                                            {% set ns.aggregated_build_rate = ns.aggregated_build_rate + benchmark.result.build_success_rate %}
-                                            {% set ns.aggregated_crash_rate = ns.aggregated_crash_rate + benchmark.result.crash_rate %}
-                                            {% set ns.aggregated_found_bug = ns.aggregated_found_bug + benchmark.result.found_bug %}
-                                            {% set ns.aggregated_max_coverage = ns.aggregated_max_coverage + benchmark.result.max_coverage %}
-                                            {% set ns.aggregated_max_line_coverage_diff = ns.aggregated_max_line_coverage_diff + benchmark.result.max_line_coverage_diff %}
-                                        {% endif %}
+                                    {% if benchmark.project == project.name %}
+                                    {% if benchmark.result.found_bug %}
+                                    {% set ns.bug_found = true %}
+                                    <!-- TODO: Track the average number of bugs as well, in order to identify if a single benchmark has an exceptionally high bug count making it an outlier that needs priority fixing -->
+                                    {% endif %}
+                                    {% set ns.aggregated_build_rate = ns.aggregated_build_rate +
+                                    benchmark.result.build_success_rate %}
+                                    {% set ns.aggregated_crash_rate = ns.aggregated_crash_rate +
+                                    benchmark.result.crash_rate %}
+                                    {% set ns.aggregated_found_bug = ns.aggregated_found_bug +
+                                    benchmark.result.found_bug %}
+                                    {% set ns.aggregated_max_coverage = ns.aggregated_max_coverage +
+                                    benchmark.result.max_coverage %}
+                                    {% set ns.aggregated_max_line_coverage_diff = ns.aggregated_max_line_coverage_diff +
+                                    benchmark.result.max_line_coverage_diff %}
+                                    {% endif %}
                                     {% endfor %}
-                                    <span class="status-indicator ml-1 {{ 'has_bugs' if ns.bug_found else 'no_bugs' }}"></span>
+                                    <span
+                                        class="status-indicator ml-1 {{ 'has_bugs' if ns.bug_found else 'no_bugs' }}"></span>
                                 </button>
                             </td>
                             <td data-sort-value="{{ project.count }}">{{ project.count }}</td>
                             <td data-sort-value="{{ project.success }}">{{ project.success }}</td>
-                            <td data-sort-value="{{ project.coverage_gain|percent }}">{{ project.coverage_gain|percent }}%</td>
-                            <td data-sort-value="{{ project.coverage_relative_gain|percent}}">{{ project.coverage_relative_gain | percent }}%</td>
-                            <td data-sort-value="{{ project.coverage_ofg_total_covered_lines}}">{{project.coverage_ofg_total_covered_lines }}</td>
-                            <td data-sort-value="{{ project.coverage_ofg_total_new_covered_lines}}">{{ project.coverage_ofg_total_new_covered_lines }}</td>
-                            <td data-sort-value="{{ project.coverage_existing_total_covered_lines}}">{{ project.coverage_existing_total_covered_lines }}</td>
-                            <td data-sort-value="{{ project.coverage_existing_total_lines}}">{{ project.coverage_existing_total_lines }}</td>
+                            <td data-sort-value="{{ project.coverage_gain|percent }}">{{ project.coverage_gain|percent
+                                }}%</td>
+                            <td data-sort-value="{{ project.coverage_relative_gain|percent}}">{{
+                                project.coverage_relative_gain | percent }}%</td>
+                            <td data-sort-value="{{ project.coverage_ofg_total_covered_lines}}">
+                                {{project.coverage_ofg_total_covered_lines }}</td>
+                            <td data-sort-value="{{ project.coverage_ofg_total_new_covered_lines}}">{{
+                                project.coverage_ofg_total_new_covered_lines }}</td>
+                            <td data-sort-value="{{ project.coverage_existing_total_covered_lines}}">{{
+                                project.coverage_existing_total_covered_lines }}</td>
+                            <td data-sort-value="{{ project.coverage_existing_total_lines}}">{{
+                                project.coverage_existing_total_lines }}</td>
                         </tr>
                         <tr class="project-benchmarks-container-row">
                             <td colspan="10" class="">
                                 <div x-ref="benchmarks_{{ loop.index }}" class="hidden">
-                                    <table class="sortable-table min-w-full ml-8" id="benchmarks-table-{{ loop.index }}">
+                                    <table class="sortable-table min-w-full ml-8"
+                                        id="benchmarks-table-{{ loop.index }}">
                                         <thead>
                                             <tr>
                                                 <th></th>
@@ -211,11 +238,23 @@
                                                     </pre>
                                                 </td>
                                                 <td data-sort-value="{{ benchmark.status }}">{{ benchmark.status }}</td>
-                                                <td data-sort-value="{{ benchmark.result.build_success_rate|percent }}">{{ benchmark.result.build_success_rate|percent}}</td>
-                                                <td data-sort-value="{{ benchmark.result.crash_rate|percent }}"><a href="benchmark/{{ benchmark.id|urlencode }}/crash.json"> {{ benchmark.result.crash_rate|percent }} </a></td>
-                                                <td data-sort-value="{{ benchmark.result.found_bug if benchmark.result and benchmark.result.found_bug is not none else 'N/A' }}">{{ benchmark.result.found_bug if benchmark.result and benchmark.result.found_bug is not none else 'N/A' }}</td>
-                                                <td data-sort-value="{{ benchmark.result.max_coverage |percent }}">{{ benchmark.result.max_coverage |percent }}</td>
-                                                <td data-sort-value="{{ benchmark.result.max_line_coverage_diff|percent }}"><a href="{{ benchmark.result.max_coverage_diff_report | cov_report_link }}">{{ benchmark.result.max_line_coverage_diff|percent }}</a></td>
+                                                <td data-sort-value="{{ benchmark.result.build_success_rate|percent }}">
+                                                    {{ benchmark.result.build_success_rate|percent}}</td>
+                                                <td data-sort-value="{{ benchmark.result.crash_rate|percent }}"><a
+                                                        href="benchmark/{{ benchmark.id|urlencode }}/crash.json"> {{
+                                                        benchmark.result.crash_rate|percent }} </a></td>
+                                                <td
+                                                    data-sort-value="{{ benchmark.result.found_bug if benchmark.result and benchmark.result.found_bug is not none else 'N/A' }}">
+                                                    {{ benchmark.result.found_bug if benchmark.result and
+                                                    benchmark.result.found_bug is not none else 'N/A' }}</td>
+                                                <td data-sort-value="{{ benchmark.result.max_coverage |percent }}">{{
+                                                    benchmark.result.max_coverage |percent }}</td>
+                                                <td
+                                                    data-sort-value="{{ benchmark.result.max_line_coverage_diff|percent }}">
+                                                    <a
+                                                        href="{{ benchmark.result.max_coverage_diff_report | cov_report_link }}">{{
+                                                        benchmark.result.max_line_coverage_diff|percent }}</a>
+                                                </td>
                                             </tr>
                                             {% endif %}
                                             {% endfor %}
@@ -227,7 +266,8 @@
                                                 <td>{{ (ns.aggregated_crash_rate / project.count)|percent }}</td>
                                                 <td>{{ ns.aggregated_found_bug }}</td>
                                                 <td>{{ (ns.aggregated_max_coverage / project.count)|percent }}</td>
-                                                <td>{{ (ns.aggregated_max_line_coverage_diff / project.count)|percent }}</td>
+                                                <td>{{ (ns.aggregated_max_line_coverage_diff / project.count)|percent }}
+                                                </td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -236,15 +276,17 @@
                         </tr>
                         {% endfor %}
                         {% if ns_projects.sum_total_project_lines > 0 %}
-                            {% set ns_projects.sum_total_coverage_gain = ns_projects.sum_ofg_new_covered_lines / ns_projects.sum_total_project_lines %}
+                        {% set ns_projects.sum_total_coverage_gain = ns_projects.sum_ofg_new_covered_lines /
+                        ns_projects.sum_total_project_lines %}
                         {% else %}
-                            {% set ns_projects.sum_total_coverage_gain = 0 %}
+                        {% set ns_projects.sum_total_coverage_gain = 0 %}
                         {% endif %}
 
                         {% if ns_projects.sum_existing_covered_lines > 0 %}
-                            {% set ns_projects.sum_total_relative_gain = ns_projects.sum_ofg_new_covered_lines / ns_projects.sum_existing_covered_lines %}
+                        {% set ns_projects.sum_total_relative_gain = ns_projects.sum_ofg_new_covered_lines /
+                        ns_projects.sum_existing_covered_lines %}
                         {% else %}
-                             {% set ns_projects.sum_total_relative_gain = 0 %}
+                        {% set ns_projects.sum_total_relative_gain = 0 %}
                         {% endif %}
                         <tr class="font-bold">
                             <td></td>
@@ -265,19 +307,16 @@
     </div>
 
     <div class="border rounded-lg toc-section">
-        <button @click="crashesFoundOpen = !crashesFoundOpen"
-                class="w-full p-4 flex justify-between items-center">
+        <button @click="crashesFoundOpen = !crashesFoundOpen" class="w-full p-4 flex justify-between items-center">
             <span class="text-lg font-bold">
                 Crashes found by generated fuzz harnesses
             </span>
-            <svg class="w-5 h-5 transform transition-transform duration-200"
-                 :class="{'rotate-180': crashesFoundOpen}"
-                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            <svg class="w-5 h-5 transform transition-transform duration-200" :class="{'rotate-180': crashesFoundOpen}"
+                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
             </svg>
         </button>
-        <div x-show="crashesFoundOpen"
-             class="p-4 border-t">
+        <div x-show="crashesFoundOpen" class="p-4 border-t">
 
             <div class="flex justify-between">
                 <div class="controls flex gap-2">
@@ -290,7 +329,7 @@
                 </div>
             </div>
 
-             <table class="sortable-table min-w-full" id="crashes-table">
+            <table class="sortable-table min-w-full" id="crashes-table">
                 <thead>
                     <tr>
                         <th></th>
@@ -304,50 +343,65 @@
                 <tbody>
                     {% set projects_with_crashes = {} %}
                     {% for bug_sample in samples_with_bugs %}
-                        {% if bug_sample.benchmark.project not in projects_with_crashes %}
-                            {% set _ = projects_with_crashes.update({bug_sample.benchmark.project: {}}) %}
-                        {% endif %}
-                        {% if bug_sample.benchmark.id not in projects_with_crashes[bug_sample.benchmark.project] %}
-                            {% set _ = projects_with_crashes[bug_sample.benchmark.project].update({bug_sample.benchmark.id: []}) %}
-                        {% endif %}
-                        {% set _ = projects_with_crashes[bug_sample.benchmark.project][bug_sample.benchmark.id].append(bug_sample) %}
+                    {% if bug_sample.benchmark.project not in projects_with_crashes %}
+                    {% set _ = projects_with_crashes.update({bug_sample.benchmark.project: {}}) %}
+                    {% endif %}
+                    {% if bug_sample.benchmark.id not in projects_with_crashes[bug_sample.benchmark.project] %}
+                    {% set _ = projects_with_crashes[bug_sample.benchmark.project].update({bug_sample.benchmark.id: []})
+                    %}
+                    {% endif %}
+                    {% set _ =
+                    projects_with_crashes[bug_sample.benchmark.project][bug_sample.benchmark.id].append(bug_sample) %}
                     {% endfor %}
 
                     {% set ns_projects_with_crashes = namespace(
-                        sum_total_crashes=0,
-                        sum_total_benchmarks=0,
-                        sum_true_positives=0,
-                        sum_false_positives=0) %}
+                    sum_total_crashes=0,
+                    sum_total_benchmarks=0,
+                    sum_true_positives=0,
+                    sum_false_positives=0) %}
                     {% for project_name, project_benchmarks in projects_with_crashes.items() %}
                     {% set project_loop = loop %}
                     {% set project_bugs = [] %}
                     {% for benchmark_bugs in project_benchmarks.values() %}
-                        {% set _ = project_bugs.extend(benchmark_bugs) %}
+                    {% set _ = project_bugs.extend(benchmark_bugs) %}
                     {% endfor %}
-                    {% set ns_projects_with_crashes.sum_total_crashes = ns_projects_with_crashes.sum_total_crashes + project_bugs|length %}
-                    {% set ns_projects_with_crashes.sum_total_benchmarks = ns_projects_with_crashes.sum_total_benchmarks + project_benchmarks|length %}
-                    {% set ns_projects_with_crashes.sum_true_positives = ns_projects_with_crashes.sum_true_positives + project_bugs|selectattr('sample.result.is_semantic_error', 'equalto', false)|list|length %}
-                    {% set ns_projects_with_crashes.sum_false_positives = ns_projects_with_crashes.sum_false_positives + project_bugs|selectattr('sample.result.is_semantic_error', 'equalto', true)|list|length %}
+                    {% set ns_projects_with_crashes.sum_total_crashes = ns_projects_with_crashes.sum_total_crashes +
+                    project_bugs|length %}
+                    {% set ns_projects_with_crashes.sum_total_benchmarks = ns_projects_with_crashes.sum_total_benchmarks
+                    + project_benchmarks|length %}
+                    {% set ns_projects_with_crashes.sum_true_positives = ns_projects_with_crashes.sum_true_positives +
+                    project_bugs|selectattr('sample.result.is_semantic_error', 'equalto', false)|list|length %}
+                    {% set ns_projects_with_crashes.sum_false_positives = ns_projects_with_crashes.sum_false_positives +
+                    project_bugs|selectattr('sample.result.is_semantic_error', 'equalto', true)|list|length %}
                     <tr class="project-data-row">
                         <td class="table-index">
-                            <button class="w-5 h-5 flex items-center justify-center focus:outline-none" @click="$refs.project_{{ loop.index }}.classList.toggle('hidden')">
-                                <svg class="w-4 h-4 transform transition-transform duration-200" :class="{'rotate-180': !$refs.project_{{ loop.index }}.classList.contains('hidden')}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                            <button class="w-5 h-5 flex items-center justify-center focus:outline-none"
+                                @click="$refs.project_{{ loop.index }}.classList.toggle('hidden')">
+                                <svg class="w-4 h-4 transform transition-transform duration-200"
+                                    :class="{'rotate-180': !$refs.project_{{ loop.index }}.classList.contains('hidden')}"
+                                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 9l-7 7-7-7" />
                                 </svg>
                             </button>
                         </td>
                         <td data-sort-value="{{ project_name }}">
-                            <button @click="$refs.project_{{ loop.index }}.classList.toggle('hidden')" class="text-left font-medium hover:text-blue-600 focus:outline-none toc-subsection">
+                            <button @click="$refs.project_{{ loop.index }}.classList.toggle('hidden')"
+                                class="text-left font-medium hover:text-blue-600 focus:outline-none toc-subsection">
                                 {{ project_name }}
                             </button>
                         </td>
                         <td data-sort-value="{{ project_bugs|length }}">{{ project_bugs|length }}</td>
                         <td data-sort-value="{{ project_benchmarks|length }}">{{ project_benchmarks|length }}</td>
-                        <td data-sort-value="{{ project_bugs|selectattr('sample.result.is_semantic_error', 'equalto', false)|list|length }}">
-                            {{ project_bugs|selectattr('sample.result.is_semantic_error', 'equalto', false)|list|length }}
+                        <td
+                            data-sort-value="{{ project_bugs|selectattr('sample.result.is_semantic_error', 'equalto', false)|list|length }}">
+                            {{ project_bugs|selectattr('sample.result.is_semantic_error', 'equalto', false)|list|length
+                            }}
                         </td>
-                        <td data-sort-value="{{ project_bugs|selectattr('sample.result.is_semantic_error', 'equalto', true)|list|length }}">
-                            {{ project_bugs|selectattr('sample.result.is_semantic_error', 'equalto', true)|list|length }}
+                        <td
+                            data-sort-value="{{ project_bugs|selectattr('sample.result.is_semantic_error', 'equalto', true)|list|length }}">
+                            {{ project_bugs|selectattr('sample.result.is_semantic_error', 'equalto', true)|list|length
+                            }}
                         </td>
                     </tr>
                     <tr>
@@ -358,7 +412,8 @@
                                         <button id="project-expand-all-{{ loop.index }}" class="border rounded-lg p-3">
                                             Expand All
                                         </button>
-                                        <button id="project-collapse-all-{{ loop.index }}" class="border rounded-lg p-3">
+                                        <button id="project-collapse-all-{{ loop.index }}"
+                                            class="border rounded-lg p-3">
                                             Collapse All
                                         </button>
                                     </div>
@@ -377,37 +432,52 @@
                                         {% for benchmark_id, benchmark_bugs in project_benchmarks.items() %}
                                         <tr>
                                             <td class="table-index">
-                                                <button class="w-5 h-5 flex items-center justify-center focus:outline-none" @click="$refs.samples_{{ loop.index }}_{{ project_loop.index }}.classList.toggle('hidden')">
-                                                    <svg class="w-4 h-4 transform transition-transform duration-200" :class="{'rotate-180': $refs.samples_{{ loop.index }}_{{ project_loop.index }}.classList.contains('hidden')}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                                                <button
+                                                    class="w-5 h-5 flex items-center justify-center focus:outline-none"
+                                                    @click="$refs.samples_{{ loop.index }}_{{ project_loop.index }}.classList.toggle('hidden')">
+                                                    <svg class="w-4 h-4 transform transition-transform duration-200"
+                                                        :class="{'rotate-180': $refs.samples_{{ loop.index }}_{{ project_loop.index }}.classList.contains('hidden')}"
+                                                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2" d="M19 9l-7 7-7-7" />
                                                     </svg>
                                                 </button>
                                             </td>
                                             <td data-sort-value="{{ benchmark_id }}">
-                                                <button @click="$refs.samples_{{ loop.index }}_{{ project_loop.index }}.classList.toggle('hidden')" class="text-left hover:text-blue-600 focus:outline-none toc-item">
+                                                <button
+                                                    @click="$refs.samples_{{ loop.index }}_{{ project_loop.index }}.classList.toggle('hidden')"
+                                                    class="text-left hover:text-blue-600 focus:outline-none toc-item">
                                                     <pre class="signature">
                                                         <a href="benchmark/{{ benchmark_id|urlencode }}/index.html" class="prettify-benchmark-name">{{ benchmark_id }}</a>
                                                     </pre>
                                                 </button>
                                             </td>
-                                            <td data-sort-value="{{ benchmark_bugs|length }}">{{ benchmark_bugs|length }}</td>
-                                            <td data-sort-value="{{ benchmark_bugs|selectattr('sample.result.is_semantic_error', 'equalto', false)|list|length }}">
-                                                {{ benchmark_bugs|selectattr('sample.result.is_semantic_error', 'equalto', false)|list|length }}
+                                            <td data-sort-value="{{ benchmark_bugs|length }}">{{ benchmark_bugs|length
+                                                }}</td>
+                                            <td
+                                                data-sort-value="{{ benchmark_bugs|selectattr('sample.result.is_semantic_error', 'equalto', false)|list|length }}">
+                                                {{ benchmark_bugs|selectattr('sample.result.is_semantic_error',
+                                                'equalto', false)|list|length }}
                                             </td>
-                                            <td data-sort-value="{{ benchmark_bugs|selectattr('sample.result.is_semantic_error', 'equalto', true)|list|length }}">
-                                                {{ benchmark_bugs|selectattr('sample.result.is_semantic_error', 'equalto', true)|list|length }}
+                                            <td
+                                                data-sort-value="{{ benchmark_bugs|selectattr('sample.result.is_semantic_error', 'equalto', true)|list|length }}">
+                                                {{ benchmark_bugs|selectattr('sample.result.is_semantic_error',
+                                                'equalto', true)|list|length }}
                                             </td>
                                         </tr>
                                         <tr>
                                             <td colspan="5">
                                                 <div x-ref="samples_{{ loop.index }}_{{ project_loop.index }}">
                                                     {% for bug in benchmark_bugs %}
-                                                    <div class="flex items-center space-x-12 ml-56 py-1 px-4 border-l-2 border-gray-500">
+                                                    <div
+                                                        class="flex items-center space-x-12 ml-56 py-1 px-4 border-l-2 border-gray-500">
                                                         <pre class="signature">
                                                             <a href="sample/{{ bug.benchmark.id|urlencode }}/{{ bug.sample.id }}.html">Sample {{ bug.sample.id }}</a>
                                                         </pre>
-                                                        <span class="p-2 rounded-lg {{ 'bg-red-300 text-black' if bug.sample.result.crashes and not bug.sample.result.is_semantic_error else 'bg-green-300 text-black' }}">
-                                                            {{ 'False positive' if bug.sample.result.is_semantic_error else 'True positive' }}
+                                                        <span
+                                                            class="p-2 rounded-lg {{ 'bg-red-300 text-black' if bug.sample.result.crashes and not bug.sample.result.is_semantic_error else 'bg-green-300 text-black' }}">
+                                                            {{ 'False positive' if bug.sample.result.is_semantic_error
+                                                            else 'True positive' }}
                                                         </span>
                                                     </div>
                                                     {% endfor %}
@@ -435,21 +505,18 @@
     </div>
 
     <div class="border rounded-lg toc-section">
-        <button @click="languageOpen = !languageOpen"
-                class="w-full p-4 flex justify-between items-center">
+        <button @click="languageOpen = !languageOpen" class="w-full p-4 flex justify-between items-center">
             <span class="text-lg font-bold">
                 Language coverage
             </span>
-            <svg class="w-5 h-5 transform transition-transform duration-200"
-                 :class="{'rotate-180': languageOpen}"
-                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            <svg class="w-5 h-5 transform transition-transform duration-200" :class="{'rotate-180': languageOpen}"
+                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
             </svg>
         </button>
 
-        <div x-show="languageOpen"
-             class="p-4 border-t">
-             <table class="sortable-table mb-8" id="language-coverage-gain">
+        <div x-show="languageOpen" class="p-4 border-t">
+            <table class="sortable-table mb-8" id="language-coverage-gain">
                 <thead>
                     <th data-sorted="asc" data-sort-string>Language</th>
                     <th data-sort-number>OSS-Fuzz total lines</th>
@@ -462,11 +529,25 @@
                     {% for language in coverage_language_gains['coverage_gains_per_language'] %}
                     <tr>
                         <td data-sort-value="{{language}}">{{language}}</td>
-                        <td data-sort-value="{{ coverage_language_gains['oss_fuzz_language_status'].get(language, {}).get('total', 'N/A') }}">{{ coverage_language_gains['oss_fuzz_language_status'].get(language, {}).get('total', 'N/A') }}</td>
-                        <td data-sort-value="{{ coverage_language_gains['oss_fuzz_language_status'].get(language, {}).get('covered', 'N/A') }}">{{ coverage_language_gains['oss_fuzz_language_status'].get(language, {}).get('covered', 'N/A') }}</td>
-                        <td data-sort-value="{{ coverage_language_gains['coverage_gains_per_language'].get(language, 'N/A') }}">{{ coverage_language_gains['coverage_gains_per_language'].get(language, 'N/A') }}</td>
-                        <td data-sort-value="{{ coverage_language_gains['comperative_coverage_gains'].get(language, {}).get('total_coverage_increase', 'N/A') }}">{{ coverage_language_gains['comperative_coverage_gains'].get(language, {}).get('total_coverage_increase', 'N/A') }}%</td>
-                        <td data-sort-value="{{ coverage_language_gains['comperative_coverage_gains'].get(language, {}).get('relative_coverage_increase', 'N/A') }}">{{ coverage_language_gains['comperative_coverage_gains'].get(language, {}).get('relative_coverage_increase', 'N/A') }}%</td>
+                        <td
+                            data-sort-value="{{ coverage_language_gains['oss_fuzz_language_status'].get(language, {}).get('total', 'N/A') }}">
+                            {{ coverage_language_gains['oss_fuzz_language_status'].get(language, {}).get('total', 'N/A')
+                            }}</td>
+                        <td
+                            data-sort-value="{{ coverage_language_gains['oss_fuzz_language_status'].get(language, {}).get('covered', 'N/A') }}">
+                            {{ coverage_language_gains['oss_fuzz_language_status'].get(language, {}).get('covered',
+                            'N/A') }}</td>
+                        <td
+                            data-sort-value="{{ coverage_language_gains['coverage_gains_per_language'].get(language, 'N/A') }}">
+                            {{ coverage_language_gains['coverage_gains_per_language'].get(language, 'N/A') }}</td>
+                        <td
+                            data-sort-value="{{ coverage_language_gains['comperative_coverage_gains'].get(language, {}).get('total_coverage_increase', 'N/A') }}">
+                            {{ coverage_language_gains['comperative_coverage_gains'].get(language,
+                            {}).get('total_coverage_increase', 'N/A') }}%</td>
+                        <td
+                            data-sort-value="{{ coverage_language_gains['comperative_coverage_gains'].get(language, {}).get('relative_coverage_increase', 'N/A') }}">
+                            {{ coverage_language_gains['comperative_coverage_gains'].get(language,
+                            {}).get('relative_coverage_increase', 'N/A') }}%</td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -477,7 +558,8 @@
 </div>
 
 <button class="toc-toggle" id="tocToggle">
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">Add commentMore actions
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">Add commentMore actions
         <line x1="3" y1="12" x2="21" y2="12"></line>
         <line x1="3" y1="6" x2="21" y2="6"></line>
         <line x1="3" y1="18" x2="21" y2="18"></line>

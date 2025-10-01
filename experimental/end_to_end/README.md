@@ -8,7 +8,7 @@ with fuzzing harnesses.
 ## Usage
 
 To run OSS-Fuzz project generation a CLI tool is exposed from
-installing OSS-Fuzz-gen in a Python virtual environment. This is installed
+installing LogicFuzz in a Python virtual environment. This is installed
 using the following command:
 
 ```sh
@@ -16,13 +16,10 @@ using the following command:
 python3.11 -m virtualenv .venv
 . .venv/bin/activate
 
-# Clone and install OSS-Fuzz-gen
-git clone https://github.com/google/oss-fuzz-gen
-cd oss-fuzz-gen
 python3 -m pip install .
 ```
 
-Upon installation of OSS-Fuzz-gen in the Python environment,
+Upon installation of LogicFuzz in the Python environment,
 a CLI tool `oss-fuzz-generator` is made available that has
 the following `help`:
 

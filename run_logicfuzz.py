@@ -15,7 +15,7 @@ from typing import Any
 
 from google.cloud import logging as cloud_logging
 
-import run_one_experiment
+import run_single_fuzz
 from data_prep import introspector
 from experiment import benchmark as benchmarklib
 from experiment import evaluator, oss_fuzz_checkout, textcov
@@ -26,17 +26,17 @@ logger = logging.getLogger(__name__)
 
 # WARN: Avoid large NUM_EXP for local experiments.
 # NUM_EXP controls the number of experiments in parallel, while each experiment
-# will evaluate {run_one_experiment.NUM_EVA, default 3} fuzz targets in
+# will evaluate {run_single_fuzz.NUM_EVA, default 3} fuzz targets in
 # parallel.
 NUM_EXP = int(os.getenv('LLM_NUM_EXP', '2'))
 
 # Default LLM hyper-parameters.
-MAX_TOKENS: int = run_one_experiment.MAX_TOKENS
-NUM_SAMPLES: int = run_one_experiment.NUM_SAMPLES
-RUN_TIMEOUT: int = run_one_experiment.RUN_TIMEOUT
-TEMPERATURE: float = run_one_experiment.TEMPERATURE
+MAX_TOKENS: int = run_single_fuzz.MAX_TOKENS
+NUM_SAMPLES: int = run_single_fuzz.NUM_SAMPLES
+RUN_TIMEOUT: int = run_single_fuzz.RUN_TIMEOUT
+TEMPERATURE: float = run_single_fuzz.TEMPERATURE
 
-RESULTS_DIR: str = run_one_experiment.RESULTS_DIR
+RESULTS_DIR: str = run_single_fuzz.RESULTS_DIR
 JSON_REPORT = 'report.json'
 TIME_STAMP_FMT = '%Y-%m-%d %H:%M:%S'
 
@@ -48,7 +48,7 @@ LOG_FMT = ('%(asctime)s.%(msecs)03d %(levelname)s '
 
 class Result:
   benchmark: benchmarklib.Benchmark
-  result: run_one_experiment.AggregatedResult | str
+  result: run_single_fuzz.AggregatedResult | str
 
   def __init__(self, benchmark, result):
     self.benchmark = benchmark
@@ -114,7 +114,7 @@ def run_experiments(benchmark: benchmarklib.Benchmark, args) -> Result:
         temperature_list=args.temperature_list,
     )
 
-    result = run_one_experiment.run(benchmark=benchmark,
+    result = run_single_fuzz.run(benchmark=benchmark,
                                     model=model,
                                     args=args,
                                     work_dirs=work_dirs)
@@ -513,7 +513,7 @@ def main():
   # right API endpoint is used throughout.
   introspector.set_introspector_endpoints(args.introspector_endpoint)
 
-  run_one_experiment.prepare(args.oss_fuzz_dir)
+  run_single_fuzz.prepare(args.oss_fuzz_dir)
 
   experiment_targets = prepare_experiment_targets(args)
   if oss_fuzz_checkout.ENABLE_CACHING:

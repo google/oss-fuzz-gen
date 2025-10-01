@@ -20,8 +20,8 @@ def get_script(
   harness.
 
   The script generated is purely generated and should be considered untrusted
-  in the general sense. OSS-Fuzz-gen already executes arbitrary code since
-  OSS-Fuzz-gen executes arbitrary open source projects with no checking on
+  in the general sense. LogicFuzz already executes arbitrary code since
+  LogicFuzz executes arbitrary open source projects with no checking on
   what code is committed to the given projects."""
   corpus_model = models.LLM.setup(
       ai_binary=ai_binary,

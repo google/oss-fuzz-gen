@@ -1180,40 +1180,16 @@ class CrashAnalyzerTemplateBuilder(DefaultTemplateBuilder):
     return self._prompt
 
 class DefaultJvmTemplateBuilder(PromptBuilder):
-  """Default builder for JVM projects."""
+  """Default builder for JVM projects - DEPRECATED: JVM support has been removed."""
 
   def __init__(self,
                model: models.LLM,
                benchmark: Benchmark,
                template_dir: str = DEFAULT_TEMPLATE_DIR):
-    super().__init__(model)
-    self._template_dir = template_dir
-    self.benchmark = benchmark
-    self.project_url = oss_fuzz_checkout.get_project_repository(
-        self.benchmark.project)
-
-    # Retrieve additional properties for the target method
-    temp_properties = introspector.query_introspector_function_props(
-        self.benchmark.project, self.benchmark.function_signature)
-    self.exceptions = temp_properties.get('exceptions', [])
-    self.is_jvm_static = temp_properties.get('is-jvm-static', False)
-    self.need_close = temp_properties.get('need_close', False)
-
-    # Load templates.
-    self.priming_template_file = self._find_template(template_dir,
-                                                     'jvm_priming.txt')
-    self.data_filler_template_file = self._find_template(
-        template_dir, 'jvm_specific_data_filler.txt')
-    self.requirement_template_file = self._find_template(
-        template_dir, 'jvm_requirement.txt')
-    self.problem_template_file = self._find_template(template_dir,
-                                                     'jvm_problem.txt')
-    self.target_template_file = self._find_template(template_dir,
-                                                    'jvm_target.txt')
-    self.arg_description_template_file = self._find_template(
-        template_dir, 'jvm_arg_description.txt')
-    self.import_template_file = self._find_template(template_dir,
-                                                    'jvm_import_mapping.txt')
+    raise NotImplementedError(
+        "JVM/Java support has been removed from LogicFuzz. "
+        "The experimental/jvm module and related functionality are no longer available."
+    )
 
   def _find_template(self, template_dir: str, template_name: str) -> str:
     """Finds template file based on |template_dir|."""
@@ -2188,7 +2164,7 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {}
       prompt_text = prompt_text.replace('{HARNESS_HEADERS}', '')
 
       # Fuzz Introspector use JVM as it support other JVM languages in addition
-      # to Java. Currently, the logic in OSS-Fuzz-Gen is only working on Java.
+      # to Java. Currently, the logic in LogicFuzz is only working on Java.
       prompt_text = prompt_text.replace('{PROG_LANG}', 'Java')
 
       # Provide list of public classes of this project

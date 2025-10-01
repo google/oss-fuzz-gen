@@ -4,7 +4,6 @@
 # per-benchmark).
 # Usage: curl http://localhost:PORT/json | python aggregate_coverage_diff.py
 # (where http://localhost:PORT comes from `python web.py <results-dir> <port>`)
-# TODO: Generate this into the default web report.
 
 import json
 import logging

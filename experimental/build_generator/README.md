@@ -3,7 +3,7 @@
 This directory holds logic for generating build scripts for projects
 from scratch. The goal is to automatically create OSS-Fuzz projects
 given a set of repositories as input, and then use these generated
-OSS-Fuzz projects as input to OSS-Fuzz-gen's core harness generation logic.
+OSS-Fuzz projects as input to LogicFuzz's core harness generation logic.
 
 The projects generated contain an empty fuzzer that can be used by
 OFG's core harness generation. As such, there is no focus here on
@@ -14,8 +14,6 @@ building and linking script that includes relevant target code.
 ## Usage
 
 ```
-git clone https://github.com/google/oss-fuzz-gen
-cd oss-fuzz-gen
 python3.11 -m virtualenv .venv
 . .venv/bin/activate
 python3 -m pip install -r requirements.txt

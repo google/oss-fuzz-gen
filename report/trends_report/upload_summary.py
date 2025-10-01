@@ -50,7 +50,7 @@ def _parse_arguments() -> argparse.Namespace:
       'generates a summary json file used for trends report.'))
 
   parser.add_argument('--results-dir',
-                      help='Directory with results from OSS-Fuzz-gen.',
+                      help='Directory with results from LogicFuzz.',
                       required=True)
   parser.add_argument(
       '--output-path',

@@ -1,6 +1,6 @@
-# Run OSS-Fuzz-gen on a new OSS-Fuzz project
+# Run LogicFuzz on a new OSS-Fuzz project
 
-This folder contains logic for running OSS-Fuzz-gen on a new OSS-Fuzz project.
+This folder contains logic for running LogicFuzz on a new OSS-Fuzz project.
 A new OSS-Fuzz project in this case means a project where you have developed a
 proper OSS-Fuzz project that works locally, but the project is not part of
 upstream OSS-Fuzz.
@@ -14,22 +14,21 @@ This serves two purposes:
 
 
 2) Help in the OSS-Fuzz project development generation by leveraging the powers
-   of OSS-Fuzz-gen to create harnesses for you.
+   of LogicFuzz to create harnesses for you.
    
    
 ## Usage
 
 The following commands show a sample of how to use the logic of this folder.
 
-### Set up OSS-Fuzz-gen
+### Set up LogicFuzz
 
-In the event you haven't already set up OSS-Fuzz-gen, you can use the following
+In the event you haven't already set up LogicFuzz, you can use the following
 steps:
 
 ```sh
-# Set up OSS-Fuzz-gen
-git clone https://github.com/google/oss-fuzz-gen
-cd oss-fuzz-gen
+
+cd /path/to/logicfuzz
 BASE_OFG=$PWD
 
 python3.11 -m virtualenv .venv
@@ -38,9 +37,9 @@ python3 -m pip install -r requirements.txt
 ```
 
 
-### Run OSS-Fuzz-gen on new project
+### Run LogicFuzz on new project
 The following assumes you are already in a virtual environment
-with OSS-Fuzz requirements installed.
+with LogicFuzz requirements installed.
  
 ```sh
 BASE_OFG=$PWD

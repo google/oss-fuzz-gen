@@ -7,7 +7,7 @@ base you want to analyse.
 ## Setting up
 
 The first step is to create a virtual environment with Fuzz Introspector
-installed and also OSS-Fuzz-gen dependencies installed. The following
+installed and also LogicFuzz dependencies installed. The following
 commands achieve this:
 
 ```sh
@@ -21,10 +21,7 @@ cd fuzz-introspector/src
 python3 -m pip install .
 cd ../../
 
-# Clone OSS-Fuzz-gen and install dependencies
-# Clone oss-fuzz-gen
-git clone https://github.com/google/oss-fuzz-gen
-cd oss-fuzz-gen
+# install dependencies
 python3 -m pip install -r ./requirements.txt
 ```
 
@@ -32,7 +29,7 @@ python3 -m pip install -r ./requirements.txt
 
 Sample run where `${MODEL}` holds your model name:
 
-Perform the following operations from inside the OSS-Fuzz-gen repository
+Perform the following operations from inside the LogicFuzz repository
 at the root of the repository. In this example, we generate a target based
 on the function name of the target function.
 
@@ -80,7 +77,7 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
 ## Run harness generation on Java code
 Sample run where `${MODEL}` holds your model name:
 
-Perform the following operations from inside the OSS-Fuzz-gen repository
+Perform the following operations from inside the LogicFuzz repository
 at the root of the repository.
 
 In comparison to the C example above, in this example we provide souce

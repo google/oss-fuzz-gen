@@ -15,7 +15,7 @@ for proj in ${PROJECTS}; do
 done
 comma_separated=${comma_separated::-1}
 
-# Specifify OSS-Fuzz-gen to not clean up the OSS-Fuzz project. Enabling
+# Specify LogicFuzz to not clean up the OSS-Fuzz project. Enabling
 # this will cause all changes in the OSS-Fuzz repository to be nullified.
 export OFG_CLEAN_UP_OSS_FUZZ=0
 
@@ -31,7 +31,7 @@ for p2 in ${PROJECTS}; do
     introspector $p2 1 --disable-webserver
   # Reset is necessary because some project exeuction
   # could break the display encoding which affect
-  # the later oss-fuzz-gen execution.
+  # the later LogicFuzz execution.
   reset
 done
 
@@ -67,14 +67,14 @@ do
   sleep ${SECONDS}
 done
 
-# Run OSS-Fuzz-gen on the projects
-echo "[+] Running OSS-Fuzz-gen experiment"
+# Run LogicFuzz on the projects
+echo "[+] Running LogicFuzz experiment"
 cd ${OSS_FUZZ_GEN_DIR}
 
-# Hack to ensure no complaints from: https://github.com/google/oss-fuzz-gen/blob/54d4acc02ef5b15288f1e0718f00bfbf8f5024c5/experiment/oss_fuzz_checkout.py#L117-L123
+# Hack to ensure no complaints from oss_fuzz_checkout.py
 mkdir -p ${OSS_FUZZ_DIR}/venv
 
-# Run OSS-Fuzz-gen
+# Run LogicFuzz
 # - Generate benchmarks
 # - Use a local version version of OSS-Fuzz (the one in /work/oss-fuzz)
 EXTRA_ARGS="${EXTRA_OFG_ARGS}"
