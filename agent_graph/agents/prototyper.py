@@ -121,8 +121,13 @@ class Prototyper(BaseAgent):
     # LLVMFuzzerTestOneInput and binary dumps are only valid
     # for C/C++ projects.
     # Temporary skipping this check for other language.
-    if benchmark.language in ['jvm', 'python', 'rust']:
+    if benchmark.language in ['python', 'rust']:
       return True
+    if benchmark.language == 'jvm':
+      raise NotImplementedError(
+          "JVM/Java support has been removed from LogicFuzz. "
+          "The experimental/jvm module and related functionality are no longer available."
+      )
 
     disassemble_result = compilation_tool.execute(
         'objdump --disassemble=LLVMFuzzerTestOneInput -d '

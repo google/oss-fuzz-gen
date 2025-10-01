@@ -241,8 +241,10 @@ def construct_fuzz_prompt(model, benchmark, context,
     builder = prompt_builder.DefaultRustTemplateBuilder(model,
                                                         benchmark=benchmark)
   else:
-    builder = prompt_builder.DefaultJvmTemplateBuilder(model,
-                                                       benchmark=benchmark)
+    raise NotImplementedError(
+        f"Language '{language}' is not supported. "
+        "JVM/Java support has been removed from LogicFuzz."
+    )
 
   fuzz_prompt = builder.build([], project_context_content=context)
   return fuzz_prompt
@@ -373,10 +375,13 @@ def get_introspector_language(args) -> str:
     return 'c'
   if args.language in ['c++', 'cpp']:
     return 'c++'
-  if args.language in ['jvm', 'java']:
-    return 'jvm'
-  if args.language in ['rs', 'rust']:
-    return 'rust'
+  # if args.language in ['jvm', 'java']:
+  #   raise NotImplementedError(
+  #       "JVM/Java support has been removed from LogicFuzz. "
+  #       "Please use a supported language: c, c++, rust, python."
+  #   )
+  # if args.language in ['rs', 'rust']:
+  #   return 'rust'
 
   print(f'Language {args.language} not support. Exiting.')
   sys.exit(0)

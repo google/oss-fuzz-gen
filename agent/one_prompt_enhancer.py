@@ -37,10 +37,11 @@ class OnePromptEnhancer(OnePromptPrototyper):
       return Prompt()
 
     if benchmark.language == 'jvm':
-      # TODO: Do this in a separate agent for JVM coverage.
-      builder = JvmFixingBuilder(self.llm, benchmark,
-                                 last_result.run_result.fuzz_target_source, [])
-      prompt = builder.build([], None, None)
+      # JVM support has been removed
+      raise NotImplementedError(
+          "JVM/Java support has been removed from LogicFuzz. "
+          "The experimental/jvm module and related functionality are no longer available."
+      )
     else:
       # TODO(dongge): Refine this logic.
       builder = DefaultTemplateBuilder(self.llm)
