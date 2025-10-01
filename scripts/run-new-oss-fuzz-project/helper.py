@@ -1,5 +1,5 @@
-"""Module for running OFG on multiple new OSS-Fuzz projects. This module
-must be run from the base of OFG."""
+"""Module for running LogicFuzz on multiple new OSS-Fuzz projects. This module
+must be run from the base of LogicFuzz."""
 import os
 import shutil
 import subprocess
