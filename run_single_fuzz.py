@@ -32,7 +32,7 @@ from results import BenchmarkResult, Result, TrialResult
 
 # WARN: Avoid high value for NUM_EVA for local experiments.
 # NUM_EVA controls the number of fuzz targets to evaluate in parallel by each
-# experiment, while {run_all_experiments.NUM_EXP, default 2} experiments will
+# experiment, while {run_logicfuzz.NUM_EXP, default 2} experiments will
 # run in parallel.
 NUM_EVA = int(os.getenv('LLM_NUM_EVA', '3'))
 

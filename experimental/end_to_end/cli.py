@@ -179,7 +179,7 @@ def run_ofg_generation(projects_to_run, workdir, args, target_benchmarks=''):
   logger.info('Running OFG experiment: %s', os.getcwd())
   oss_fuzz_dir = os.path.join(workdir, 'oss-fuzz')
 
-  cmd = ['python3', os.path.join(OFG_BASE_DIR, 'run_all_experiments.py')]
+  cmd = ['python3', os.path.join(OFG_BASE_DIR, 'run_logicfuzz.py')]
   cmd.append('--model')
   cmd.append(args.model)
 

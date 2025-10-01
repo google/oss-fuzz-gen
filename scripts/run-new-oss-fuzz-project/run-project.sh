@@ -78,7 +78,7 @@ mkdir -p ${OSS_FUZZ_DIR}/venv
 # - Generate benchmarks
 # - Use a local version version of OSS-Fuzz (the one in /work/oss-fuzz)
 EXTRA_ARGS="${EXTRA_OFG_ARGS}"
-LLM_NUM_EVA=4 LLM_NUM_EXP=4 ./run_all_experiments.py \
+LLM_NUM_EVA=4 LLM_NUM_EXP=4 ./run_logicfuzz.py \
     --model=$OSS_FUZZ_GEN_MODEL \
     -g ${BENCHMARK_HEURISTICS} \
     -gp ${comma_separated} \

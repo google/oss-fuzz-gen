@@ -3,7 +3,7 @@
 LangGraph模式的正式入口点。
 
 这是运行LangGraph fuzzing workflow的主要命令行接口，
-与run_all_experiments.py并行存在，提供基于LangGraph的实验执行。
+与run_logicfuzz.py并行存在，提供基于LangGraph的实验执行。
 """
 
 import argparse

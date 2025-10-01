@@ -208,7 +208,7 @@ def run_on_data_from_scratch(cmd=None):
       args.benchmark_set, args.model
   ] + args.additional_args)
 
-  # Launch run_all_experiments.py
+  # Launch run_logicfuzz.py
   # some notes:
   # - we will generate benchmarks using the local FI running
   # - we will use the oss-fuzz project of our workdir, which is
@@ -231,7 +231,7 @@ def run_on_data_from_scratch(cmd=None):
 
   introspector_endpoint = "http://127.0.0.1:8080/api"
 
-  cmd = [python_path, 'run_all_experiments.py']
+  cmd = [python_path, 'run_logicfuzz.py']
   cmd.append('-g')
   cmd.append(
       'far-reach-low-coverage,low-cov-with-fuzz-keyword,easy-params-far-reach')
@@ -308,7 +308,7 @@ def run_on_data_from_scratch(cmd=None):
 
   subprocess.run(trends_cmd, check=False)
 
-  # Exit with the return value of `./run_all_experiments`.
+  # Exit with the return value of `./run_logicfuzz`.
   return ret_val
 
 def run_standard(cmd=None):
@@ -365,7 +365,7 @@ def run_standard(cmd=None):
 
   # Prepare the command to run experiments
   run_cmd = [
-      python_path, "run_all_experiments.py", "--benchmarks-directory",
+      python_path, "run_logicfuzz.py", "--benchmarks-directory",
       f"benchmark-sets/{args.benchmark_set}", "--run-timeout",
       str(args.run_timeout), "--cloud-experiment-name", experiment_name,
       "--cloud-experiment-bucket", "oss-fuzz-gcb-experiment-run-logs",
@@ -435,9 +435,9 @@ def run_standard(cmd=None):
 
   subprocess.run(trends_cmd, check=False)
 
-  # Exit with the return value of `./run_all_experiments`.
+  # Exit with the return value of `./run_logicfuzz`.
   return ret_val
 
 if __name__ == "__main__":
   sys.exit(main())
-# /venv/bin/python3 run_all_experiments.py -l gpt-5 -y benchmark-sets/0-conti/cjson.yaml
+# /venv/bin/python3 run_logicfuzz.py -l gpt-5 -y benchmark-sets/0-conti/cjson.yaml
