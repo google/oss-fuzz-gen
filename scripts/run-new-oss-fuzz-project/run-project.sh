@@ -1,5 +1,14 @@
 #!/bin/bash
 
+# 检查参数
+if [ $# -eq 0 ]; then
+    echo "用法: $0 <项目名称>"
+    echo "例如: $0 conti_test"
+    exit 1
+fi
+
+PROJECT_NAME="$1"
+
 LOGIC_FUZZ_DIR=$PWD
 # LOGIC_FUZZ_MODEL=${MODEL}
 LOGIC_FUZZ_MODEL=gpt-5
@@ -8,11 +17,25 @@ FI_DIR=$LOGIC_FUZZ_DIR/work/fuzz-introspector
 BENCHMARK_HEURISTICS=far-reach-low-coverage,low-cov-with-fuzz-keyword,easy-params-far-reach
 VAR_HARNESSES_PER_PROJECT=4
 
-# Use test.yaml as the benchmark configuration
-BENCHMARK_YAML="$LOGIC_FUZZ_DIR/conti-benchmark/0-conti/test.yaml"
-PROJECTS="test"  # 从yaml文件中提取的项目名
+# 在conti-benchmark目录下搜索项目对应的yaml文件
+BENCHMARK_YAML=""
+for yaml_file in "$LOGIC_FUZZ_DIR/conti-benchmark/${PROJECT_NAME}.yaml"; do
+    if [ -f "$yaml_file" ]; then
+        BENCHMARK_YAML="$yaml_file"
+        break
+    fi
+done
 
-comma_separated="test"
+# 检查是否找到yaml文件
+if [ -z "$BENCHMARK_YAML" ]; then
+    echo "错误: 在 $LOGIC_FUZZ_DIR/conti-benchmark/ 目录下找不到 ${PROJECT_NAME}.yaml 文件"
+    exit 1
+fi
+
+echo "找到项目配置文件: $BENCHMARK_YAML"
+
+PROJECTS="$PROJECT_NAME"
+comma_separated="$PROJECT_NAME"
 
 # Specify LogicFuzz to not clean up the OSS-Fuzz project. Enabling
 # this will cause all changes in the OSS-Fuzz repository to be nullified.
@@ -77,7 +100,7 @@ fi
 # - Use a local version version of OSS-Fuzz (the one in /work/oss-fuzz)
 
 
-python3 oss-fuzz/infra/helper.py introspector test
+python3 oss-fuzz/infra/helper.py introspector ${PROJECTS}
 
 
 EXTRA_ARGS="${EXTRA_OFG_ARGS}"

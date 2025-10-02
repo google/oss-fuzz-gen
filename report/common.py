@@ -12,7 +12,7 @@ from typing import List, Optional
 import yaml
 from google.cloud import storage
 
-import run_one_experiment
+import run_single_fuzz
 from data_prep import project_src
 from experiment import evaluator
 from experiment.workdir import WorkDirs
@@ -54,7 +54,7 @@ class Benchmark:
   """The class of a benchmark function and its experiment results."""
   id: str
   status: str
-  result: run_one_experiment.AggregatedResult
+  result: run_single_fuzz.AggregatedResult
   signature: str = ''
   project: str = ''
   function: str = ''
@@ -256,9 +256,9 @@ class Results:
     filtered_results = [(i, stat) for i, stat in enumerate(results) if stat]
 
     if filtered_results:
-      result = run_one_experiment.aggregate_results(filtered_results, targets)
+      result = run_single_fuzz.aggregate_results(filtered_results, targets)
     else:
-      result = run_one_experiment.AggregatedResult()
+      result = run_single_fuzz.AggregatedResult()
 
     return self._create_benchmark(benchmark_id, status, result)
 
@@ -634,7 +634,7 @@ class Results:
 
   def _create_benchmark(
       self, benchmark_id: str, status: str,
-      result: run_one_experiment.AggregatedResult) -> Benchmark:
+      result: run_single_fuzz.AggregatedResult) -> Benchmark:
     project = '-'.join(benchmark_id.split('-')[1:-1])
     function = benchmark_id.split('-')[-1]
     signature = self._find_benchmark_signature(project,
