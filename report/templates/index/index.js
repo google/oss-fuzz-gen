@@ -130,7 +130,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		return -1;
 	}
 
-	function renderCrashReasonsPie(el, data) {
+	function renderCrashReasonsPie(el, data, unified) {
 		if (typeof d3 === 'undefined') return false;
 		try {
 			const children = Array.from(el.children);
@@ -139,33 +139,240 @@ document.addEventListener('DOMContentLoaded', function() {
 			}
 		} catch (_) {}
 		const { width, height } = containerSize(el);
-		const svgHeight = Math.max(240, height - 28);
-		const legend = d3.select(el).append('div')
-			.style('display','flex')
-			.style('flexWrap','wrap')
-			.style('gap','10px')
-			.style('justifyContent','center')
-			.style('marginBottom','8px');
+		
+		// Create main container with three columns
+		const mainContainer = d3.select(el).append('div')
+			.style('display', 'flex')
+			.style('height', '100%')
+			.style('gap', '16px')
+			.style('position', 'relative');
+		
+		// Legend column (left)
+		const legendWidth = Math.min(200, width * 0.25);
+		const legendContainer = mainContainer.append('div')
+			.style('width', `${legendWidth}px`)
+			.style('flex-shrink', '0')
+			.style('overflow-y', 'auto')
+			.style('max-height', `${height - 40}px`);
+		
+    // Pie chart column (center) - static layout (no animations)
+    const hoverWidth = Math.max(200, width - legendWidth - 250);
+    const pieContainer = mainContainer.append('div')
+      .attr('class', 'pie-chart-container')
+      .style('flex', '1')
+      .style('display', 'flex')
+      .style('align-items', 'center')
+      .style('justify-content', 'flex-start')
+      .style('min-width', '0'); // Allow flex shrinking
+		
+		// Hover panel column (right)
+    const hoverPanel = mainContainer.append('div')
+      .attr('class', 'crash-hover-panel')
+      .style('width', `${hoverWidth}px`)
+      .style('flex-shrink', '0')
+      .style('padding', '12px')
+      .style('border-radius', '8px')
+      .style('border', '1px solid')
+      .style('opacity', '1')
+      .style('max-height', `${height - 40}px`)
+      .style('overflow', 'hidden')
+      .style('display', 'flex')
+      .style('flex-direction', 'column');
+		
+		const hoverTitle = hoverPanel.append('div')
+			.attr('class', 'crash-hover-title')
+			.style('font-weight', '600')
+			.style('margin-bottom', '8px')
+			.style('flex-shrink', '0')
+			.text('Click on pie chart to pin');
+		
+		const hoverContent = hoverPanel.append('div')
+			.attr('class', 'crash-hover-content')
+			.style('font-size', '14px')
+			.style('flex', '1')
+			.style('overflow-y', 'auto')
+			.style('min-height', '0');
+		
+		let isPinned = false;
+
 		const scheme = (d3.schemeTableau10 || d3.schemeCategory10 || []);
 		const color = scheme.length ? d3.scaleOrdinal(scheme) : d3.scaleOrdinal().range(['#3b82f6','#22c55e','#ef4444','#f59e0b','#8b5cf6','#06b6d4','#84cc16','#e11d48','#64748b','#a855f7']);
 		color.domain(data.map(d=>d.reason));
-		data.forEach(d => {
-			const item = legend.append('div').style('display','flex').style('alignItems','center').style('gap','6px');
-			item.append('span').style('display','inline-block').style('width','12px').style('height','12px').style('background', color(d.reason));
-			item.append('span').text(`${d.reason}: ${d.count}`);
+		
+    // Build legend (clickable, scrollable already via legendContainer styles)
+    data.forEach(d => {
+      const item = legendContainer.append('div')
+				.style('display','flex')
+				.style('align-items','center')
+				.style('gap','8px')
+				.style('margin-bottom', '6px')
+				.style('cursor', 'pointer')
+				.style('padding', '4px')
+				.style('border-radius', '4px')
+        .style('transition', 'background-color 0.2s')
+        .on('click', function(event){
+          event.stopPropagation();
+          isPinned = true;
+          showCrashDetails({ data: d });
+        });
+			
+			item.append('span')
+				.style('display','inline-block')
+				.style('width','16px')
+				.style('height','16px')
+				.style('border-radius', '2px')
+				.style('background', color(d.reason));
+			
+			const textContainer = item.append('div');
+			textContainer.append('div')
+				.style('font-weight', '500')
+				.style('font-size', '14px')
+				.text(d.reason);
+			textContainer.append('div')
+				.style('font-size', '12px')
+				.style('color', '#6b7280')
+				.text(`${d.count} crashes`);
 		});
+
 		const values = data.map(d => d.count || 0);
 		const sum = values.reduce((a,b)=>a+b,0);
-		if (sum <= 0) { el.appendChild(document.createTextNode('No crash reasons')); return true; }
-		const radius = Math.min(width, svgHeight) / 2 - 8;
-		const svg = d3.select(el).append('svg').attr('width', width).attr('height', svgHeight)
-			.append('g').attr('transform', `translate(${width/2},${svgHeight/2})`);
+		if (sum <= 0) { 
+			pieContainer.append('div').text('No crash reasons');
+			setContainerHeight(el, 200);
+			return true; 
+		}
+		
+		const availableWidth = width - legendWidth - 32;
+		const pieSize = Math.min(availableWidth * 0.6, height - 80, 350);
+		const pieHeight = pieSize;
+		const maxRadius = Math.min(pieSize / 2 - 20, pieHeight / 2 - 20);
+		const radius = Math.max(80, maxRadius);
+		
+		const svg = pieContainer.append('svg')
+			.attr('width', pieSize)
+			.attr('height', pieHeight);
+		
+		const g = svg.append('g')
+			.attr('transform', `translate(${pieSize/2},${pieHeight/2})`);
+
 		const pie = d3.pie().sort(null).value(d => d.count)(data);
 		const arc = d3.arc().outerRadius(radius).innerRadius(0);
-		svg.selectAll('path').data(pie).enter().append('path')
+		
+		// Get crash details for hover
+		function getCrashDetails(reason) {
+			const details = [];
+			if (!unified) return details;
+			
+			for (const projectName in unified) {
+				const project = unified[projectName];
+				if (project.benchmarks) {
+					for (const benchId in project.benchmarks) {
+						const bench = project.benchmarks[benchId];
+						if (bench.samples) {
+							bench.samples.forEach(s => {
+								const bugType = extractBugType((s.crash_symptom || '').trim());
+								if (bugType === reason && s.crashes) {
+									details.push({
+										project: projectName,
+										benchmark: benchId,
+										sample: s.sample,
+										symptom: s.crash_symptom
+									});
+								}
+							});
+						}
+					}
+				}
+			}
+			return details;
+		}
+		
+    function showCrashDetails(d) {
+      hoverTitle.text(`${d.data.reason} (${d.data.count} crashes)`);
+      const details = getCrashDetails(d.data.reason);
+      hoverContent.selectAll('*').remove();
+      if (details.length === 0) {
+        hoverContent.append('div')
+          .attr('class', 'crash-no-details')
+          .style('font-style', 'italic')
+          .text('No detailed crash info available');
+      } else {
+        details.forEach(detail => {
+          const item = hoverContent.append('div')
+            .attr('class', 'crash-detail-item')
+            .style('margin-bottom', '8px')
+            .style('padding', '6px')
+            .style('border-radius', '4px')
+            .style('border', '1px solid')
+            .style('box-shadow', '0 1px 2px rgba(0,0,0,0.05)');
+          const header = item.append('div')
+            .attr('class', 'crash-detail-project')
+            .style('font-weight', '500')
+            .style('font-size', '12px');
+          header.append('span').text(`${detail.project}/`);
+          const prettyBench = (typeof prettifyBenchmarkName === 'function') ? prettifyBenchmarkName(detail.benchmark) : detail.benchmark;
+          header.append('span')
+            .attr('class', 'prettify-benchmark-name')
+            .text(prettyBench);
+          const sampleRow = item.append('div')
+            .attr('class', 'crash-detail-sample')
+            .style('font-size', '11px');
+          const sampleUrl = `sample/${encodeURIComponent(detail.benchmark)}/${encodeURIComponent(detail.sample)}.html`;
+          sampleRow.append('a')
+            .attr('href', sampleUrl)
+            .text(`Sample ${detail.sample}`);
+
+          // Make entire item clickable to the sample page
+          item
+            .style('cursor', 'pointer')
+            .attr('tabindex', '0')
+            .on('click', function() {
+              window.location.href = sampleUrl;
+            })
+            .on('keydown', function(event) {
+              if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                window.location.href = sampleUrl;
+              }
+            });
+          if (detail.symptom && detail.symptom.length > 50) {
+            item.append('div')
+              .attr('class', 'crash-detail-symptom')
+              .style('font-size', '10px')
+              .style('margin-top', '2px')
+              .text(detail.symptom.substring(0, 80) + '...');
+          }
+        });
+      }
+    }
+		
+    g.selectAll('path')
+			.data(pie)
+			.enter()
+			.append('path')
 			.attr('d', arc)
 			.attr('fill', d => color(d.data.reason))
-			.append('title').text(d => `${d.data.reason}: ${d.data.count}`);
+			.style('cursor', 'pointer')
+			.style('stroke', '#ffffff')
+			.style('stroke-width', '2px')
+			.on('mouseenter', function(event, d) {
+				d3.select(this).style('opacity', '0.8');
+			})
+			.on('mouseleave', function(event, d) {
+				d3.select(this).style('opacity', '1');
+			})
+			.on('click', function(event, d) {
+        showCrashDetails(d);
+			});
+		
+    // No outside-click close logic (panel always visible)
+		
+    setContainerHeight(el, Math.max(300, pieHeight + 40));
+
+    // Default to first crash category on load
+    if (data.length > 0) {
+      showCrashDetails({ data: data[0] });
+    }
 		return true;
 	}
 
@@ -260,15 +467,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
 					const plotHeight = Math.min(500, Math.max(260, projectData.length * 30 + 80));
 					setContainerHeight(coverageEl, plotHeight + 100);
-					const plot = Plot.plot({
+						const plot = Plot.plot({
 						title: null,
 						x: xOptions,
 						y: { label: 'Project', domain: yDomain },
 						marks,
-						width: Math.max(800, width),
-						height: plotHeight,
+							width: Math.max(800, width),
+							height: plotHeight,
 						marginLeft
 					});
+						setContainerHeight(coverageEl, plotHeight + 120);
 					plotContainer.appendChild(plot);
 				}
 
@@ -306,7 +514,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				try {
 					crEl.innerHTML = '';
 					appendTitle(crEl, 'Crash Reasons');
-					if (!renderCrashReasonsPie(crEl, crashReasonData)) {
+					if (!renderCrashReasonsPie(crEl, crashReasonData, unified)) {
 						const { width, height } = containerSize(crEl);
 						const crPlot = Plot.plot({
 							title: null,
@@ -318,6 +526,7 @@ document.addEventListener('DOMContentLoaded', function() {
 							width,
 							height: Math.max(240, height - 28)
 						});
+						setContainerHeight(crEl, Math.max(240, height - 28) + 16);
 						crEl.appendChild(crPlot);
 					}
 				} catch (error) {
@@ -340,26 +549,38 @@ document.addEventListener('DOMContentLoaded', function() {
 				const projCyclesEl = document.getElementById('cycles-projects-chart');
 				const projDurEl = document.getElementById('duration-projects-chart');
 				if (projData.length && projCyclesEl && projDurEl) {
+					const sharedProjectHeight = Math.min(400, Math.max(240, projData.length * 30 + 80));
+					const sharedProjectContainerHeight = sharedProjectHeight + 60;
+					
 					projCyclesEl.innerHTML = '';
-					appendTitle(projCyclesEl, 'Avg Cycles per Benchmark (by Project)');
+					appendTitle(projCyclesEl, 'Average Cycles per Benchmark (by Project)');
 					let { width, height } = containerSize(projCyclesEl);
+					setContainerHeight(projCyclesEl, sharedProjectContainerHeight);
 					let plot1 = Plot.plot({
 						title: null,
-						x: { label: 'Avg Cycles' },
+						x: { label: 'Average Cycles' },
 						y: { label: 'Project', domain: projData.map(d=>d.projectLabel) },
 						marks: [Plot.barX(projData, { y: 'projectLabel', x: 'cycles', fill: cyclesProject, title: d => `${d.project}: ${d.cycles}` })],
 						width,
-						height: Math.max(240, height - 28),
+						height: sharedProjectHeight,
 						marginLeft: 120
 					});
 					projCyclesEl.appendChild(plot1);
 
 					projDurEl.innerHTML = '';
-					appendTitle(projDurEl, 'Avg Trial Duration (by Project)');
-					const controls = appendControls(projDurEl);
+					const titleContainer = document.createElement('div');
+					titleContainer.style.display = 'flex';
+					titleContainer.style.alignItems = 'center';
+					titleContainer.style.gap = '16px';
+					titleContainer.style.marginBottom = '8px';
+					const titleEl = document.createElement('div');
+					titleEl.textContent = 'Average Trial Duration (by Project)';
+					titleEl.style.fontWeight = '600';
 					const select = document.createElement('select');
 					select.innerHTML = '<option value="s">Seconds</option><option value="m" selected>Minutes</option><option value="h">Hours</option>';
-					controls.appendChild(select);
+					titleContainer.appendChild(titleEl);
+					titleContainer.appendChild(select);
+					projDurEl.appendChild(titleContainer);
 					const plotContainer = document.createElement('div');
 					projDurEl.appendChild(plotContainer);
 
@@ -367,13 +588,14 @@ document.addEventListener('DOMContentLoaded', function() {
 						plotContainer.innerHTML = '';
 						({ width, height } = containerSize(projDurEl));
 						const data = projData.map(d => ({ projectLabel: d.projectLabel, project: d.project, duration: durationScaled(d.durationSec, unit) }));
+						setContainerHeight(projDurEl, sharedProjectContainerHeight);
 						const plot2 = Plot.plot({
 							title: null,
 							x: { label: unitLabel(unit) },
 							y: { label: 'Project', domain: data.map(d=>d.projectLabel) },
 							marks: [Plot.barX(data, { y: 'projectLabel', x: 'duration', fill: durationProject, title: d => `${d.project}: ${d.duration.toFixed(2)} ${unitLabel(unit)}` })],
 							width,
-							height: Math.max(240, height - 28),
+							height: sharedProjectHeight,
 							marginLeft: 120
 						});
 						plotContainer.appendChild(plot2);
@@ -399,28 +621,38 @@ document.addEventListener('DOMContentLoaded', function() {
 				const benchCyclesEl = document.getElementById('cycles-benchmarks-chart');
 				const benchDurEl = document.getElementById('duration-benchmarks-chart');
 				if (benchData.length && benchCyclesEl && benchDurEl) {
+					const sharedBenchHeight = Math.min(500, Math.max(300, benchData.length * 18 + 80));
+					const sharedBenchContainerHeight = sharedBenchHeight + 60;
+					
 					benchCyclesEl.innerHTML = '';
-					appendTitle(benchCyclesEl, 'Avg Cycles per Sample (by Benchmark)');
+					appendTitle(benchCyclesEl, 'Average Cycles per Sample (by Benchmark)');
 					let { width, height } = containerSize(benchCyclesEl);
-					const plotHeight = Math.min(600, Math.max(300, benchData.length * 20 + 60));
-					setContainerHeight(benchCyclesEl, plotHeight + 40);
+					setContainerHeight(benchCyclesEl, sharedBenchContainerHeight);
 					let plot3 = Plot.plot({
 						title: null,
-						x: { label: 'Avg Cycles' },
+						x: { label: 'Average Cycles' },
 						y: { label: 'Benchmark', domain: benchData.map(d=>d.benchmarkLabel) },
 						marks: [Plot.barX(benchData, { y: 'benchmarkLabel', x: 'cycles', fill: cyclesBench, title: d => `${d.benchmark}: ${d.cycles}` })],
 						marginLeft: 140,
 						width,
-						height: plotHeight
+						height: sharedBenchHeight
 					});
 					benchCyclesEl.appendChild(plot3);
 
 					benchDurEl.innerHTML = '';
-					appendTitle(benchDurEl, 'Avg Trial Duration (by Benchmark)');
-					const controlsB = appendControls(benchDurEl);
+					const titleContainerB = document.createElement('div');
+					titleContainerB.style.display = 'flex';
+					titleContainerB.style.alignItems = 'center';
+					titleContainerB.style.gap = '16px';
+					titleContainerB.style.marginBottom = '8px';
+					const titleElB = document.createElement('div');
+					titleElB.textContent = 'Average Trial Duration (by Benchmark)';
+					titleElB.style.fontWeight = '600';
 					const selectB = document.createElement('select');
 					selectB.innerHTML = '<option value="s">Seconds</option><option value="m" selected>Minutes</option><option value="h">Hours</option>';
-					controlsB.appendChild(selectB);
+					titleContainerB.appendChild(titleElB);
+					titleContainerB.appendChild(selectB);
+					benchDurEl.appendChild(titleContainerB);
 					const plotContainerB = document.createElement('div');
 					benchDurEl.appendChild(plotContainerB);
 
@@ -428,8 +660,7 @@ document.addEventListener('DOMContentLoaded', function() {
 						plotContainerB.innerHTML = '';
 						({ width, height } = containerSize(benchDurEl));
 						const data = benchData.map(d => ({ benchmarkLabel: d.benchmarkLabel, benchmark: d.benchmark, duration: durationScaled(d.durationSec, unit) }));
-						const plotHeight = Math.min(600, Math.max(300, benchData.length * 20 + 60));
-						setContainerHeight(benchDurEl, plotHeight + 80);
+						setContainerHeight(benchDurEl, sharedBenchContainerHeight);
 						const plot4 = Plot.plot({
 							title: null,
 							x: { label: unitLabel(unit) },
@@ -437,7 +668,7 @@ document.addEventListener('DOMContentLoaded', function() {
 							marks: [Plot.barX(data, { y: 'benchmarkLabel', x: 'duration', fill: durationBench, title: d => `${d.benchmark}: ${d.duration.toFixed(2)} ${unitLabel(unit)}` })],
 							marginLeft: 140,
 							width,
-							height: plotHeight
+							height: sharedBenchHeight
 						});
 						plotContainerB.appendChild(plot4);
 					}
@@ -595,11 +826,12 @@ document.addEventListener('DOMContentLoaded', function() {
 						}
 					}
 				} else {
-					if (table_element.id && table_element.id.startsWith('benchmarks-table-')) {
-						const averageRowIndex = allRowsInBody.findIndex(row => row.cells.length > 0 && row.cells[0].innerText.trim() === 'Average');
-						if (averageRowIndex !== -1) {
-							appendedRows.push(allRowsInBody.splice(averageRowIndex, 1)[0]);
-						}
+					const averageRows = allRowsInBody.filter(row => row.cells.length > 0 && row.cells[0].innerText.trim() === 'Average');
+					if (averageRows.length) {
+						averageRows.forEach(r => {
+							const idx = allRowsInBody.indexOf(r);
+							if (idx !== -1) appendedRows.push(allRowsInBody.splice(idx, 1)[0]);
+						});
 					}
 					allRowsInBody.forEach(row => {
 						sortableUnits.push({ representativeRow: row, actualRows: [row] });

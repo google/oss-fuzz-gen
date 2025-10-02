@@ -21,6 +21,25 @@ from datetime import datetime
 
 from report.common import LogPart
 
+_RE_GREP_QUOTED = re.compile(r"(['\"])\s*(.+?)\1")
+_RE_STDERR_BLOCK = re.compile(r'<stderr>(.*?)</stderr>', flags=re.DOTALL)
+_RE_STEP_HEADER = re.compile(r"Step #(\d+) - \"(.+?)\":")
+_RE_STEP_SIMPLE = re.compile(r"Step #(\d+)")
+_RE_HTML_TAG = re.compile(r'&lt;/?[^&]*?&gt;')
+_RE_SYSTEM_BLOCK = re.compile(
+    r'&lt;system&gt;(\s*[^\s].*?[^\s]\s*|(?:\s*[^\s].*?)?)&lt;/system&gt;',
+    flags=re.DOTALL)
+_RE_BASH_OR_STDOUT = re.compile(r'&lt;(bash|stdout)&gt;(.*?)&lt;/\1&gt;',
+                                re.DOTALL)
+_RE_AGENT_HEADER = re.compile(r"\*{20,}([^*]+?)\*{20,}")
+_RE_CYCLE_NUM = re.compile(r'\(Cycle (\d+)\)')
+_RE_TRIAL_TS = re.compile(
+    r'(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}).*?\[Trial ID:\s*([^\]]+)\]')
+_RE_CRASH_SYMPTOM = re.compile(r'(?:^\s*\x1b\[[0-9;]*m)*==\d+==\s*(ERROR:.*)',
+                               re.DOTALL)
+_RE_STACK_LINE = re.compile(r'^ {4}#\d+\s+.*$')
+_RE_STACK_IN = re.compile(r'in (.+?) (/[^^\s]+)')
+
 
 def extract_project_from_coverage_path(file_path: str) -> str:
   """Extract the project name from coverage file paths."""
@@ -42,7 +61,7 @@ class LogsParser:
     commands = []
     lines = content.split('\n')
 
-    for i, line in enumerate(lines):
+    for line in lines:
       line = line.strip()
       if line == '<bash>':
         command = self._process_bash_block(lines, i)
@@ -154,21 +173,17 @@ class LogsParser:
         tool_counts[tool_name] = tool_counts.get(tool_name, 0) + 1
 
     # Add 'Stderr' only if any block has non-empty inner content
-    for m in re.finditer(r'<stderr>(.*?)</stderr>', content, flags=re.DOTALL):
+    for m in _RE_STDERR_BLOCK.finditer(content):
       if m.group(1).strip():
         tool_counts['Stderr'] = tool_counts.get('Stderr', 0) + 1
         break
 
-    tool_names = []
-    for tool_name in tool_counts:
-      tool_names.append(tool_name)
-
-    return tool_names
+    return list(tool_counts.keys())
 
   def _parse_steps_from_logs(self, agent_logs: list[LogPart]) -> list[dict]:
     """Parse steps from agent logs, grouping by chat prompt/response pairs."""
-    step_pattern = re.compile(r"Step #(\d+) - \"(.+?)\":")
-    simple_step_pattern = re.compile(r"Step #(\d+)")
+    step_pattern = _RE_STEP_HEADER
+    simple_step_pattern = _RE_STEP_SIMPLE
 
     steps_dict = {}
     current_step_number = None
@@ -202,7 +217,8 @@ class LogsParser:
 
       if not step_header_found and current_step_number:
         steps_dict[current_step_number]['log_parts'].append(log_part)
-      elif not step_header_found and not current_step_number and not steps_dict:
+      elif (not step_header_found and not current_step_number and
+            not steps_dict):
         steps_dict['0'] = {
             'number': None,
             'type': 'Content',
@@ -258,9 +274,7 @@ class LogsParser:
 
   def _convert_newlines_outside_tags(self, content: str) -> str:
     """Convert \n to <br> tags when they appear outside XML tags."""
-    tag_pattern = r'&lt;/?[^&]*?&gt;'
-
-    tag_matches = list(re.finditer(tag_pattern, content))
+    tag_matches = list(_RE_HTML_TAG.finditer(content))
 
     if not tag_matches:
       return content.replace('\n', '<br>')
@@ -318,10 +332,12 @@ class LogsParser:
     lang_key = _normalize_lang(default_language)
 
     # Pre-process stdout blocks to choose language based on preceding bash command
-    escaped = self._replace_stdout_with_language_blocks(escaped, lang_key)
+    escaped = self._replace_stdout_with_language_blocks(
+        escaped, lang_key)
 
     # Pre-process stderr blocks to avoid greedy regex and stop at the first closing tag
-    escaped = self._replace_tag_with_code_blocks(escaped, 'stderr', 'bash')
+    escaped = self._replace_tag_with_code_blocks(
+        escaped, 'stderr', 'bash')
 
     escaped = _sub(
         r'&lt;conclusion&gt;(\s*[^\s].*?[^\s]\s*|(?:\s*[^\s].*?)?)'
@@ -425,12 +441,7 @@ class LogsParser:
               r'overflow-x-auto">' + content +
               r'</div><span class="log-tag">&lt;/system&gt;</span>')
 
-    escaped = re.sub(
-        r'&lt;system&gt;(\s*[^\s].*?[^\s]\s*|(?:\s*[^\s].*?)?)'
-        r'&lt;/system&gt;',
-        process_system_content,
-        escaped,
-        flags=re.DOTALL)
+    escaped = _RE_SYSTEM_BLOCK.sub(process_system_content, escaped)
 
     # Handle steps tag (usually opening only, no closing tag)
     escaped = _sub(r'&lt;steps&gt;',
@@ -482,8 +493,7 @@ class LogsParser:
     """Replace <stdout> blocks with language-aware code blocks.
     Chooses language based on the preceding <bash> command and file extensions.
     """
-    pattern = re.compile(r'&lt;(bash|stdout)&gt;(.*?)&lt;/\1&gt;', re.DOTALL)
-    matches = list(pattern.finditer(escaped))
+    matches = list(_RE_BASH_OR_STDOUT.finditer(escaped))
     if not matches:
       return escaped
 
@@ -668,7 +678,7 @@ class LogsParser:
   def get_agent_sections(self) -> dict[str, list[LogPart]]:
     """Get the agent sections from the logs."""
 
-    pattern = re.compile(r"\*{20,}([^*]+?)\*{20,}")
+    pattern = _RE_AGENT_HEADER
     agent_sections = {}
     current_agent = None
     agent_counters = {}
@@ -678,7 +688,7 @@ class LogsParser:
       agent_headers = []
 
       for i, line in enumerate(lines):
-        match = re.search(pattern, line)
+        match = pattern.search(line)
         if match:
           agent_name = match.group(1)
           # Handle repeated agents by creating unique keys
@@ -724,7 +734,7 @@ class LogsParser:
       # Parse steps for this agent
       steps = self._parse_steps_from_logs(agent_logs)
 
-      cycle_match = re.search(r'\(Cycle (\d+)\)', agent_name)
+      cycle_match = _RE_CYCLE_NUM.search(agent_name)
       if cycle_match:
         cycle_number = int(cycle_match.group(1))
         if cycle_number not in cycles_dict:
@@ -759,8 +769,7 @@ class LogsParser:
     Pattern example: "2025-09-04 08:20:04 [Trial ID: 03] INFO"
     """
     trial_to_times: dict[str, list[datetime]] = {}
-    ts_regex = re.compile(
-        r'(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}).*?\[Trial ID:\s*([^\]]+)\]')
+    ts_regex = _RE_TRIAL_TS
     for part in self._logs:
       for line in part.content.split('\n'):
         line = line.strip()
@@ -830,8 +839,7 @@ class RunLogsParser:
     """Get the crash symptom from the run log."""
     crash_symptom = ""
 
-    pattern = re.compile(r"(?:^\s*\x1b\[[0-9;]*m)*==\d+==\s*(ERROR:.*)",
-                         re.DOTALL)
+    pattern = _RE_CRASH_SYMPTOM
 
     for line in self._lines:
       match = pattern.search(line)
@@ -844,7 +852,7 @@ class RunLogsParser:
   def get_formatted_stack_traces(self,
                                  base_url: str) -> dict[str, dict[str, str]]:
     """Get the formatted stack traces from the run log."""
-    pattern = re.compile(r'^ {4}#\d+\s+.*$')
+    pattern = _RE_STACK_LINE
     stack_traces = {}
     base_url = base_url.rstrip('/')
 
@@ -859,7 +867,7 @@ class RunLogsParser:
         memory_addr = parts[1]
         remaining = parts[2]
 
-        in_match = re.search(r'in (.+?) (/[^^\s]+)', remaining)
+        in_match = _RE_STACK_IN.search(remaining)
         if not in_match:
           continue
 

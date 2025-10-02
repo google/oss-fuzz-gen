@@ -23,6 +23,78 @@ limitations under the License.
 </style>
 {% endif %}
 
+<style>
+/* Crash hover panel dark mode styles - following base.html theme */
+.crash-hover-panel {
+    background-color: #edf2f7;
+    border-color: #a0aec0;
+    color: #292929;
+}
+
+.dark-mode .crash-hover-panel {
+    background-color: #333333;
+    border-color: #3d3d3d;
+    color: #f7fafc;
+}
+
+.crash-hover-title {
+    color: #292929;
+}
+
+.dark-mode .crash-hover-title {
+    color: #f7fafc;
+}
+
+.crash-no-details {
+    color: #718096;
+}
+
+.dark-mode .crash-no-details {
+    color: #a0aec0;
+}
+
+.crash-detail-item {
+    background-color: white;
+    border-color: #a0aec0;
+}
+
+.dark-mode .crash-detail-item {
+    background-color: #333333;
+    border-color: #3d3d3d;
+}
+
+.crash-detail-project {
+    color: #292929;
+}
+
+.dark-mode .crash-detail-project {
+    color: #f7fafc;
+}
+
+.crash-detail-sample {
+    color: #718096;
+}
+
+.dark-mode .crash-detail-sample {
+    color: #a0aec0;
+}
+
+.crash-detail-symptom {
+    color: #718096;
+}
+
+.dark-mode .crash-detail-symptom {
+    color: #a0aec0;
+}
+
+/* Pie chart container centering */
+.pie-chart-container {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+</style>
+
 {% if index_js_content %}
 <script>
 {{ index_js_content | safe }}
