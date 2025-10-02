@@ -21,25 +21,55 @@ historical fuzzing results, and execute customized fuzzing experiments.
 
 from .core.benchmark_manager import Benchmark, BenchmarkManager
 # Data models and enums
-from .core.data_models import (CrashData, FuzzingEngine, ProjectConfig,
-                               Sanitizer, Severity)
+from .core.data_models import (BuildHistoryData, CorpusHistoryData,
+                               CoverageHistoryData, CrashData, CrashHistoryData,
+                               FuzzingEngine, HistoricalSummary, ProjectConfig,
+                               Sanitizer, Severity, TimeSeriesData)
 # Core SDK - Main SDK class and modules
 from .core.ossfuzz_manager import OSSFuzzManager
+from .core.ossfuzz_sdk import OSSFuzzSDK
+from .data.storage_adapter import (FileStorageAdapter, GCSStorageAdapter,
+                                   StorageAdapter)
+# Storage components
+from .data.storage_manager import StorageManager
 # Error handling
 from .errors import *
+# History managers
+from .history import (BuildHistoryManager, CorpusHistoryManager,
+                      CoverageHistoryManager, CrashHistoryManager,
+                      HistoryManager)
 
 # Public API - All exports available to SDK clients
 __all__ = [
     # Core SDK - Main classes according to UML diagram
     'OSSFuzzManager',
+    'OSSFuzzSDK',
     'BenchmarkManager',
     'Benchmark',
+
+    # History managers
+    'HistoryManager',
+    'BuildHistoryManager',
+    'CrashHistoryManager',
+    'CorpusHistoryManager',
+    'CoverageHistoryManager',
+
+    # Storage components
+    'StorageManager',
+    'StorageAdapter',
+    'FileStorageAdapter',
+    'GCSStorageAdapter',
 
     # Data models and enums
     'Severity',
     'Sanitizer',
-    'Sanitizer',
     'FuzzingEngine',
+    'BuildHistoryData',
+    'CrashHistoryData',
+    'CorpusHistoryData',
+    'CoverageHistoryData',
+    'TimeSeriesData',
+    'HistoricalSummary',
 
     # Core error types and enums
     'ErrorCode',
