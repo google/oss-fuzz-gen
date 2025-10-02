@@ -21,7 +21,7 @@ from report.common import (AccumulatedResult, Benchmark, FileSystem, Project,
 from report.export import CSVExporter
 from report.parse_logs import LogsParser, RunLogsParser
 
-LOCAL_HOST = '127.0.0.1'
+LOCAL_HOST = '0.0.0.0'
 
 class JinjaEnv:
   """JinjaEnv wraps the set up of a jinja2 environment."""
