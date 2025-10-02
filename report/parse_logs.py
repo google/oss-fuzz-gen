@@ -61,10 +61,10 @@ class LogsParser:
     commands = []
     lines = content.split('\n')
 
-    for line in lines:
+    for idx, line in enumerate(lines):
       line = line.strip()
       if line == '<bash>':
-        command = self._process_bash_block(lines, i)
+        command = self._process_bash_block(lines, idx)
         if command and command not in commands:
           commands.append(command)
 
@@ -163,7 +163,7 @@ class LogsParser:
         '<gdb output>', '<solution>', '<system>', '<return_code>'
     ]
 
-    for i, line in enumerate(lines):
+    for line in lines:
       line = line.strip()
       if line in relevant_tool_tags and not line.startswith('</'):
         if line == '<stderr>':
@@ -332,12 +332,10 @@ class LogsParser:
     lang_key = _normalize_lang(default_language)
 
     # Pre-process stdout blocks to choose language based on preceding bash command
-    escaped = self._replace_stdout_with_language_blocks(
-        escaped, lang_key)
+    escaped = self._replace_stdout_with_language_blocks(escaped, lang_key)
 
     # Pre-process stderr blocks to avoid greedy regex and stop at the first closing tag
-    escaped = self._replace_tag_with_code_blocks(
-        escaped, 'stderr', 'bash')
+    escaped = self._replace_tag_with_code_blocks(escaped, 'stderr', 'bash')
 
     escaped = _sub(
         r'&lt;conclusion&gt;(\s*[^\s].*?[^\s]\s*|(?:\s*[^\s].*?)?)'

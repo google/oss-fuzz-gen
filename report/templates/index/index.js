@@ -139,14 +139,14 @@ document.addEventListener('DOMContentLoaded', function() {
 			}
 		} catch (_) {}
 		const { width, height } = containerSize(el);
-		
+
 		// Create main container with three columns
 		const mainContainer = d3.select(el).append('div')
 			.style('display', 'flex')
 			.style('height', '100%')
 			.style('gap', '16px')
 			.style('position', 'relative');
-		
+
 		// Legend column (left)
 		const legendWidth = Math.min(200, width * 0.25);
 		const legendContainer = mainContainer.append('div')
@@ -154,7 +154,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			.style('flex-shrink', '0')
 			.style('overflow-y', 'auto')
 			.style('max-height', `${height - 40}px`);
-		
+
     // Pie chart column (center) - static layout (no animations)
     const hoverWidth = Math.max(200, width - legendWidth - 250);
     const pieContainer = mainContainer.append('div')
@@ -164,7 +164,7 @@ document.addEventListener('DOMContentLoaded', function() {
       .style('align-items', 'center')
       .style('justify-content', 'flex-start')
       .style('min-width', '0'); // Allow flex shrinking
-		
+
 		// Hover panel column (right)
     const hoverPanel = mainContainer.append('div')
       .attr('class', 'crash-hover-panel')
@@ -178,27 +178,27 @@ document.addEventListener('DOMContentLoaded', function() {
       .style('overflow', 'hidden')
       .style('display', 'flex')
       .style('flex-direction', 'column');
-		
+
 		const hoverTitle = hoverPanel.append('div')
 			.attr('class', 'crash-hover-title')
 			.style('font-weight', '600')
 			.style('margin-bottom', '8px')
 			.style('flex-shrink', '0')
 			.text('Click on pie chart to pin');
-		
+
 		const hoverContent = hoverPanel.append('div')
 			.attr('class', 'crash-hover-content')
 			.style('font-size', '14px')
 			.style('flex', '1')
 			.style('overflow-y', 'auto')
 			.style('min-height', '0');
-		
+
 		let isPinned = false;
 
 		const scheme = (d3.schemeTableau10 || d3.schemeCategory10 || []);
 		const color = scheme.length ? d3.scaleOrdinal(scheme) : d3.scaleOrdinal().range(['#3b82f6','#22c55e','#ef4444','#f59e0b','#8b5cf6','#06b6d4','#84cc16','#e11d48','#64748b','#a855f7']);
 		color.domain(data.map(d=>d.reason));
-		
+
     // Build legend (clickable, scrollable already via legendContainer styles)
     data.forEach(d => {
       const item = legendContainer.append('div')
@@ -215,14 +215,14 @@ document.addEventListener('DOMContentLoaded', function() {
           isPinned = true;
           showCrashDetails({ data: d });
         });
-			
+
 			item.append('span')
 				.style('display','inline-block')
 				.style('width','16px')
 				.style('height','16px')
 				.style('border-radius', '2px')
 				.style('background', color(d.reason));
-			
+
 			const textContainer = item.append('div');
 			textContainer.append('div')
 				.style('font-weight', '500')
@@ -236,33 +236,33 @@ document.addEventListener('DOMContentLoaded', function() {
 
 		const values = data.map(d => d.count || 0);
 		const sum = values.reduce((a,b)=>a+b,0);
-		if (sum <= 0) { 
+		if (sum <= 0) {
 			pieContainer.append('div').text('No crash reasons');
 			setContainerHeight(el, 200);
-			return true; 
+			return true;
 		}
-		
+
 		const availableWidth = width - legendWidth - 32;
 		const pieSize = Math.min(availableWidth * 0.6, height - 80, 350);
 		const pieHeight = pieSize;
 		const maxRadius = Math.min(pieSize / 2 - 20, pieHeight / 2 - 20);
 		const radius = Math.max(80, maxRadius);
-		
+
 		const svg = pieContainer.append('svg')
 			.attr('width', pieSize)
 			.attr('height', pieHeight);
-		
+
 		const g = svg.append('g')
 			.attr('transform', `translate(${pieSize/2},${pieHeight/2})`);
 
 		const pie = d3.pie().sort(null).value(d => d.count)(data);
 		const arc = d3.arc().outerRadius(radius).innerRadius(0);
-		
+
 		// Get crash details for hover
 		function getCrashDetails(reason) {
 			const details = [];
 			if (!unified) return details;
-			
+
 			for (const projectName in unified) {
 				const project = unified[projectName];
 				if (project.benchmarks) {
@@ -286,7 +286,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			}
 			return details;
 		}
-		
+
     function showCrashDetails(d) {
       hoverTitle.text(`${d.data.reason} (${d.data.count} crashes)`);
       const details = getCrashDetails(d.data.reason);
@@ -345,7 +345,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
       }
     }
-		
+
     g.selectAll('path')
 			.data(pie)
 			.enter()
@@ -364,9 +364,9 @@ document.addEventListener('DOMContentLoaded', function() {
 			.on('click', function(event, d) {
         showCrashDetails(d);
 			});
-		
+
     // No outside-click close logic (panel always visible)
-		
+
     setContainerHeight(el, Math.max(300, pieHeight + 40));
 
     // Default to first crash category on load
@@ -551,7 +551,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				if (projData.length && projCyclesEl && projDurEl) {
 					const sharedProjectHeight = Math.min(400, Math.max(240, projData.length * 30 + 80));
 					const sharedProjectContainerHeight = sharedProjectHeight + 60;
-					
+
 					projCyclesEl.innerHTML = '';
 					appendTitle(projCyclesEl, 'Average Cycles per Benchmark (by Project)');
 					let { width, height } = containerSize(projCyclesEl);
@@ -623,7 +623,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				if (benchData.length && benchCyclesEl && benchDurEl) {
 					const sharedBenchHeight = Math.min(500, Math.max(300, benchData.length * 18 + 80));
 					const sharedBenchContainerHeight = sharedBenchHeight + 60;
-					
+
 					benchCyclesEl.innerHTML = '';
 					appendTitle(benchCyclesEl, 'Average Cycles per Sample (by Benchmark)');
 					let { width, height } = containerSize(benchCyclesEl);
