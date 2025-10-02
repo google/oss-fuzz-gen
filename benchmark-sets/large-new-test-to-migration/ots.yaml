@@ -1,0 +1,6 @@
+"language": "c++"
+"project": "ots"
+"target_name": "ots-fuzzer"
+"target_path": "/src/ots/util/ots-fuzzer.cc"
+"test_files":
+- "test_file_path": "/src/ots/tests/cff_charstring_test.cc"
