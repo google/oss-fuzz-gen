@@ -23,6 +23,8 @@ from experiment.workdir import WorkDirs
 from llm_toolkit import models, prompt_builder
 
 logger = logging.getLogger(__name__)
+# log the debug and info
+logger.setLevel(logging.DEBUG)
 
 # WARN: Avoid large NUM_EXP for local experiments.
 # NUM_EXP controls the number of experiments in parallel, while each experiment
@@ -237,7 +239,7 @@ def parse_args() -> argparse.Namespace:
   parser.add_argument('-mr',
                       '--max-round',
                       type=int,
-                      default=100,
+                      default=10,
                       help='Max trial round for agents.')
 
   args = parser.parse_args()

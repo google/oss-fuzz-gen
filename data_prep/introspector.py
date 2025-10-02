@@ -1071,15 +1071,34 @@ def get_target_name(project_name: str, harness: str) -> Optional[str]:
 ##### Helper logic for downloading fuzz introspector reports.
 # Download introspector report.
 def _identify_latest_report(project_name: str):
-  """Returns the latest summary in the FuzzIntrospector bucket."""
-  client = storage.Client.create_anonymous_client()
-  bucket = client.get_bucket('oss-fuzz-introspector')
-  blobs = bucket.list_blobs(prefix=project_name)
-  summaries = sorted(
-      [blob.name for blob in blobs if blob.name.endswith('summary.json')])
-  if summaries:
-    return ('https://storage.googleapis.com/oss-fuzz-introspector/'
-            f'{summaries[-1]}')
+  """Returns the latest summary in the FuzzIntrospector bucket or local API."""
+  # First try to use local introspector endpoint if available
+  if INTROSPECTOR_ENDPOINT and INTROSPECTOR_ENDPOINT != DEFAULT_INTROSPECTOR_ENDPOINT:
+    try:
+      # Try to get project summary from local API
+      local_summary_url = f'{INTROSPECTOR_ENDPOINT}/project-summary?project={project_name}'
+      response = requests.get(local_summary_url, timeout=10)
+      if response.status_code == 200:
+        data = response.json()
+        if data.get('result') == 'success':
+          logger.info('Found project %s in local introspector API', project_name)
+          return local_summary_url  # Return the API endpoint
+    except Exception as e:
+      logger.debug('Local introspector API not available for %s: %s', project_name, e)
+  
+  # Fallback to Google Cloud Storage
+  try:
+    client = storage.Client.create_anonymous_client()
+    bucket = client.get_bucket('oss-fuzz-introspector')
+    blobs = bucket.list_blobs(prefix=project_name)
+    summaries = sorted(
+        [blob.name for blob in blobs if blob.name.endswith('summary.json')])
+    if summaries:
+      return ('https://storage.googleapis.com/oss-fuzz-introspector/'
+              f'{summaries[-1]}')
+  except Exception as e:
+    logger.debug('Failed to access cloud storage for %s: %s', project_name, e)
+  
   logger.error('Error: %s has no summary.', project_name)
   return None
 
@@ -1091,10 +1110,20 @@ def _extract_introspector_report(project_name):
   # Read the introspector artifact.
   try:
     raw_introspector_json_request = requests.get(project_url, timeout=10)
-    introspector_report = json.loads(raw_introspector_json_request.text)
+    response_data = json.loads(raw_introspector_json_request.text)
+    
+    # Handle local API response format
+    if (INTROSPECTOR_ENDPOINT and 
+        INTROSPECTOR_ENDPOINT != DEFAULT_INTROSPECTOR_ENDPOINT and 
+        project_url.startswith(INTROSPECTOR_ENDPOINT)):
+      # Extract introspector data from local API response
+      if response_data.get('result') == 'success':
+        return response_data.get('project', {}).get('introspector_data', {})
+    
+    # Handle cloud storage response (direct JSON)
+    return response_data
   except:
     return None
-  return introspector_report
 
 def _contains_function(funcs: List[Dict], target_func: Dict):
   """Returns True if |funcs| contains |target_func|, vice versa."""

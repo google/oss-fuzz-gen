@@ -1,25 +1,24 @@
 #!/bin/bash
 
-OSS_FUZZ_GEN_DIR=$PWD
-OSS_FUZZ_GEN_MODEL=${MODEL}
-OSS_FUZZ_DIR=$OSS_FUZZ_GEN_DIR/work/oss-fuzz
-FI_DIR=$OSS_FUZZ_GEN_DIR/work/fuzz-introspector
+LOGIC_FUZZ_DIR=$PWD
+# LOGIC_FUZZ_MODEL=${MODEL}
+LOGIC_FUZZ_MODEL=gpt-5
+OSS_FUZZ_DIR=$LOGIC_FUZZ_DIR/work/oss-fuzz
+FI_DIR=$LOGIC_FUZZ_DIR/work/fuzz-introspector
 BENCHMARK_HEURISTICS=far-reach-low-coverage,low-cov-with-fuzz-keyword,easy-params-far-reach
 VAR_HARNESSES_PER_PROJECT=4
-PROJECTS=${@}
 
-comma_separated=""
-for proj in ${PROJECTS}; do
-  echo ${proj}
-  comma_separated="${comma_separated}${proj},"
-done
-comma_separated=${comma_separated::-1}
+# Use test.yaml as the benchmark configuration
+BENCHMARK_YAML="$LOGIC_FUZZ_DIR/conti-benchmark/0-conti/test.yaml"
+PROJECTS="test"  # 从yaml文件中提取的项目名
+
+comma_separated="test"
 
 # Specify LogicFuzz to not clean up the OSS-Fuzz project. Enabling
 # this will cause all changes in the OSS-Fuzz repository to be nullified.
 export OFG_CLEAN_UP_OSS_FUZZ=0
 
-echo "Targeting project: $project"
+echo "Targeting project: $PROJECTS"
 
 # Generate fresh introspector reports that OFG can use as seed for auto
 # generation.
@@ -29,9 +28,6 @@ cd ${OSS_FUZZ_DIR}
 for p2 in ${PROJECTS}; do
   python3 $FI_DIR/oss_fuzz_integration/runner.py \
     introspector $p2 1 --disable-webserver
-  # Reset is necessary because some project exeuction
-  # could break the display encoding which affect
-  # the later LogicFuzz execution.
   reset
 done
 
@@ -69,21 +65,28 @@ done
 
 # Run LogicFuzz on the projects
 echo "[+] Running LogicFuzz experiment"
-cd ${OSS_FUZZ_GEN_DIR}
+cd ${LOGIC_FUZZ_DIR}
 
 # Hack to ensure no complaints from oss_fuzz_checkout.py
+if [ ! -d ${OSS_FUZZ_DIR}/venv ]; then
 mkdir -p ${OSS_FUZZ_DIR}/venv
+fi
 
 # Run LogicFuzz
 # - Generate benchmarks
 # - Use a local version version of OSS-Fuzz (the one in /work/oss-fuzz)
+
+
+python3 oss-fuzz/infra/helper.py introspector test
+
+
 EXTRA_ARGS="${EXTRA_OFG_ARGS}"
 LLM_NUM_EVA=4 LLM_NUM_EXP=4 ./run_logicfuzz.py \
-    --model=$OSS_FUZZ_GEN_MODEL \
-    -g ${BENCHMARK_HEURISTICS} \
-    -gp ${comma_separated} \
-    -gm ${VAR_HARNESSES_PER_PROJECT} \
+    --model=$LOGIC_FUZZ_MODEL \
+    -y "${BENCHMARK_YAML}" \
     -of ${OSS_FUZZ_DIR} \
+    -mr 2 \
+    --context \
     -e http://127.0.0.1:8080/api ${EXTRA_ARGS}
 
 echo "Shutting down started webserver"

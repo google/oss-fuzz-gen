@@ -43,9 +43,9 @@ NUM_EVA = int(os.getenv('LLM_NUM_EVA', '3'))
 # WARN: Avoid large NUM_SAMPLES in highly parallelized local experiments.
 # It controls the number of LLM responses per prompt, which may exceed your
 # LLM's limit on query-per-second.
-NUM_SAMPLES = 2
-MAX_TOKENS: int = 4096
-RUN_TIMEOUT: int = 30
+NUM_SAMPLES = 5
+MAX_TOKENS: int = 409600
+RUN_TIMEOUT: int = 60
 TEMPERATURE: float = 0.4
 
 RESULTS_DIR = './results'

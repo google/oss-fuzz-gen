@@ -9,15 +9,15 @@ from .workdir import LangGraphWorkDirs
 from .benchmark import LangGraphBenchmark
 
 logger = logging.getLogger(__name__)
-import run_one_experiment
+import run_single_fuzz
 
 def load_benchmark_from_args(args: argparse.Namespace) -> LangGraphBenchmark:
     """Load benchmark from command line arguments.
     
     This replicates the exact logic from agent_test.py lines 243-244.
     """
-    # Prepare the environment (equivalent to run_one_experiment.prepare)
-    run_one_experiment.prepare(args.oss_fuzz_dir)
+    # Prepare the environment (equivalent to run_single_fuzz.prepare)
+    run_single_fuzz.prepare(args.oss_fuzz_dir)
     
     # Initialize test benchmark (exact replica of agent_test.py:244)
     benchmarks = benchmarklib.Benchmark.from_yaml(args.benchmark_yaml)

@@ -52,12 +52,12 @@ BASE_OFG=$PWD
 
 # Create an OSS-Fuzz project that will be used for the experiment.
 cd work/oss-fuzz/projects
-git clone https://github.com/AdaLogics/oss-fuzz-auto
+git clone https://github.com/testacctcodeql/test.git conti_test
 
 cd $BASE_OFG
 
 # Now run our the generation on our newly created OSS-Fuzz project.
-./scripts/run-new-oss-fuzz-project/run-project.sh oss-fuzz-auto
+./scripts/run-new-oss-fuzz-project/run-project.sh conti_test
 
 # Once finished, check results
 python3 -m report.web -r results -s
