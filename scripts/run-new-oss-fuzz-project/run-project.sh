@@ -35,7 +35,6 @@ fi
 echo "找到项目配置文件: $BENCHMARK_YAML"
 
 PROJECTS="$PROJECT_NAME"
-comma_separated="$PROJECT_NAME"
 
 # Specify LogicFuzz to not clean up the OSS-Fuzz project. Enabling
 # this will cause all changes in the OSS-Fuzz repository to be nullified.
@@ -43,8 +42,7 @@ export OFG_CLEAN_UP_OSS_FUZZ=0
 
 echo "Targeting project: $PROJECTS"
 
-# Generate fresh introspector reports that OFG can use as seed for auto
-# generation.
+# Generate fresh introspector reports that OFG can use as seed for auto generation.
 echo "Creating introspector reports"
 cd ${OSS_FUZZ_DIR}
 
@@ -55,7 +53,7 @@ for p2 in ${PROJECTS}; do
 done
 
 # Shut down the existing webapp if it's running
-curl --silent http://localhost:8080/api/shutdown || true
+curl --silent http://0.0.0.0:8080/api/shutdown || true
 
 # Create Fuzz Introspector's webserver DB
 echo "[+] Creating the webapp DB"
@@ -65,7 +63,7 @@ python3 ./web_db_creator_from_summary.py \
 
 # Start webserver
 echo "Shutting down server in case it's running"
-curl --silent http://localhost:8080/api/shutdown || true
+curl --silent http://0.0.0.0:8080/api/shutdown || true
 
 echo "[+] Launching FI webapp"
 cd $FI_DIR/tools/web-fuzzing-introspection/app/
@@ -77,7 +75,7 @@ SECONDS=5
 while true
 do
   # Checking if exists
-  MSG=$(curl -v --silent 127.0.0.1:8080 2>&1 | grep "Fuzzing" | wc -l)
+  MSG=$(curl -v --silent 0.0.0.0:8080 2>&1 | grep "Fuzzing" | wc -l)
   if [[ $MSG > 0 ]]; then
     echo "Found it"
     break
@@ -95,22 +93,15 @@ if [ ! -d ${OSS_FUZZ_DIR}/venv ]; then
 mkdir -p ${OSS_FUZZ_DIR}/venv
 fi
 
-# Run LogicFuzz
-# - Generate benchmarks
-# - Use a local version version of OSS-Fuzz (the one in /work/oss-fuzz)
+python3 "${OSS_FUZZ_DIR}/infra/helper.py" introspector "${PROJECTS}"
 
-
-python3 oss-fuzz/infra/helper.py introspector ${PROJECTS}
-
-
-EXTRA_ARGS="${EXTRA_OFG_ARGS}"
 LLM_NUM_EVA=4 LLM_NUM_EXP=4 ./run_logicfuzz.py \
-    --model=$LOGIC_FUZZ_MODEL \
+    -l "${LOGIC_FUZZ_MODEL}" \
     -y "${BENCHMARK_YAML}" \
-    -of ${OSS_FUZZ_DIR} \
+    -of "${OSS_FUZZ_DIR}" \
     -mr 2 \
     --context \
-    -e http://127.0.0.1:8080/api ${EXTRA_ARGS}
+    -e http://0.0.0.0:8080/api 
 
 echo "Shutting down started webserver"
-curl --silent http://localhost:8080/api/shutdown || true
+curl --silent http://0.0.0.0:8080/api/shutdown || true
