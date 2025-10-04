@@ -52,7 +52,7 @@ BASE_OFG=$PWD
 
 # Create an OSS-Fuzz project that will be used for the experiment.
 cd work/oss-fuzz/projects
-git clone https://github.com/testacctcodeql/test.git conti_test
+git clone https://github.com/MarkLee131/test.git conti_test
 
 cd $BASE_OFG
 
