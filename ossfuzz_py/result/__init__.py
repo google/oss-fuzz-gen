@@ -11,5 +11,26 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-# This module has been consolidated into the root ossfuzz_py package.
-# All exports are now available directly from ossfuzz_py.
+"""
+Result management module for OSS-Fuzz SDK.
+
+This module provides result management capabilities including the ResultManager
+class and related result data structures.
+"""
+
+from .result_manager import ResultManager
+from .results import (AnalysisInfo, BenchmarkResult, BuildInfo,
+                      CoverageAnalysis, CrashAnalysis, Result, RunInfo,
+                      TrialResult)
+
+__all__ = [
+    'ResultManager',
+    'Result',
+    'BuildInfo',
+    'RunInfo',
+    'AnalysisInfo',
+    'TrialResult',
+    'BenchmarkResult',
+    'CoverageAnalysis',
+    'CrashAnalysis',
+]
