@@ -83,16 +83,32 @@ th:last-child {
 tbody tr:nth-child(odd) {
     background-color: #edf2f7;
 }
+.dark-mode select {
+    background-color: #3d3d3d;
+    color: #f7fafc;
+    border-color: #3d3d3d;
+}
+.dark-mode select:focus {
+    background-color: #3d3d3d;
+    color: #f7fafc;
+}
+.dark-mode option {
+    background-color: #3d3d3d;
+    color: #f7fafc;
+}
+
 .dark-mode tbody tr:nth-child(odd) {
     background-color: #333333;
 }
 .chat_prompt {
-    background-color: #fff7f2;
+    background-color: #e2e8f0;
+    border: 1px solid #a0aec0;
     max-width: 50%;
     overflow: scroll;
 }
 .chat_response {
-    background-color: #fcfff2;
+    background-color: #ececec;
+    border: 1px solid #718096;
     max-width: 50%;
     overflow: scroll;
     margin-left: auto;
@@ -112,6 +128,7 @@ tbody tr:nth-child(odd) {
     width: fit-content;
     max-width: 100%;
 }
+
 .dark-mode .code-container {
     background-color: #222222;
     border: 1px solid #3d3d3d;
@@ -280,6 +297,24 @@ tbody tr:nth-child(odd) {
 .dark-mode .toc-item {
     color: #9ca3af;
 }
+
+.log-tag {
+    color: #8b7355;
+}
+
+.dark-mode .log-tag {
+    color: #a08968;
+}
+
+.chat_prompt .log-tag {
+    color: #5a6b8a;
+}
+
+.dark-mode .chat_prompt .log-tag {
+    color: #7a8ba8;
+}
+
+
 </style>
 <body
       x-data="{
@@ -334,7 +369,6 @@ tbody tr:nth-child(odd) {
                 <div class="py-1" role="menu">
                     <a href="{{ json_url_path }}" class="block px-4 py-2 text-sm" role="menuitem">Export as JSON (.json)</a>
                     <a href="{{ csv_url_path }}" class="block px-4 py-2 text-sm" role="menuitem">Export as CSV (.csv)</a>
-                    <a href="#" class="block px-4 py-2 text-sm" role="menuitem">Export as Google Sheet</a>
                 </div>
             </div>
         </div>
@@ -507,6 +541,8 @@ tbody tr:nth-child(odd) {
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.10.3/cdn.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+<script src="d3.min.js" defer></script>
+<script src="plot.min.js" defer></script>
 
 {% if unified_data %}
 <script type="application/json" id="unified-data">{{ unified_data|tojson|safe }}</script>
@@ -746,8 +782,8 @@ function renderRegexError(error) {
 }
 
 document.addEventListener('DOMContentLoaded', (event) => {
-    document.querySelectorAll('pre code.syntax-highlight').forEach((block) => {
-        hljs.highlightElement(block);
+    document.querySelectorAll('.prettify-benchmark-name').forEach(el => {
+        el.textContent = prettifyBenchmarkName(el.textContent);
     });
 
     const searchInput = document.getElementById('searchInput');
@@ -798,10 +834,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
                 renderSearchResults(results, currentPage);
             }
         }, 300);
-    });
-
-    document.querySelectorAll('.prettify-benchmark-name').forEach(el => {
-        el.textContent = prettifyBenchmarkName(el.textContent);
     });
 
     const tocTree = document.getElementById('toc-tree');
@@ -913,16 +945,40 @@ document.addEventListener('DOMContentLoaded', (event) => {
 });
 
 </script>
+  <!-- added highlight.js for syntax highlighting -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/default.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+  <!-- additional languages -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/bash.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/c.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/cpp.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/java.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/python.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/rust.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/go.min.js"></script>
 
+  <script>
+    window.addEventListener('DOMContentLoaded', function() {
+      if (window.hljs && typeof window.hljs.highlightAll === 'function') {
+        window.hljs.highlightAll();
+      }
+
+
+      if (window.hljs) {
+        const observer = new MutationObserver((mutations) => {
+          for (const mutation of mutations) {
+            for (const node of mutation.addedNodes) {
+              if (!(node instanceof HTMLElement)) continue;
+              node.querySelectorAll('pre code:not(.hljs)').forEach((el) => {
+                try { window.hljs.highlightElement(el); } catch (_) {}
+              });
+            }
+          }
+        });
+        try {
+          observer.observe(document.body, { childList: true, subtree: true });
+        } catch (_) {}
+      }
+    });
+  </script>
 </body>
-<!-- added highlight.js for syntax highlighting -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/default.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
-<!-- some additional language -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/bash.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/c.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/cpp.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/java.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/python.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/rust.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/go.min.js"></script>
