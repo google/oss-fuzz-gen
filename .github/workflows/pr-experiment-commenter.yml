@@ -1,0 +1,80 @@
+name: PR Experiment Commenter
+
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  comment-experiment-links:
+    if: github.event.issue.pull_request && startsWith(github.event.comment.body, '/gcbrun exp ')
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+
+    steps:
+    - name: Parse gcbrun command and post experiment links
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const comment = context.payload.comment.body;
+          const prNumber = context.payload.issue.number;
+
+          const TRIGGER_COMMAND = '/gcbrun';
+          const TRIAL_BUILD_COMMAND_STR = `${TRIGGER_COMMAND} exp `;
+
+          if (!comment.startsWith(TRIAL_BUILD_COMMAND_STR)) {
+            console.log('Not a valid /gcbrun exp command');
+            return;
+          }
+
+          const args = comment.slice(TRIAL_BUILD_COMMAND_STR.length).trim().split(/\s+/);
+          console.log('Parsed args:', args);
+
+          let nameSuffix = '';
+          let benchmarkSet = 'comparison';
+
+          for (let i = 0; i < args.length; i++) {
+            if (args[i] === '-n' && i + 1 < args.length) {
+              nameSuffix = args[i + 1];
+            } else if (args[i] === '-b' && i + 1 < args.length) {
+              benchmarkSet = args[i + 1];
+            }
+          }
+
+          if (!nameSuffix) {
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: prNumber,
+              body: 'Error: Missing required `-n` (name suffix) parameter in /gcbrun command.'
+            });
+            return;
+          }
+
+          const now = new Date();
+          const date = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`; // YYYY-MM-DD local
+          const experimentName = `${prNumber}-${nameSuffix}`;
+          const gkeJobName = `ofg-pr-${experimentName}`;
+
+          const basePath = `${date}-${prNumber}-${nameSuffix}-${benchmarkSet}`;
+          const gkeJobLink = `https://console.cloud.google.com/kubernetes/job/us-central1-c/llm-experiment/default/ofg-pr-${experimentName}`;
+          const reportLink = `https://llm-exp.oss-fuzz.com/Result-reports/ofg-pr/${basePath}/index.html`;
+          const bucketLink = `https://console.cloud.google.com/storage/browser/oss-fuzz-gcb-experiment-run-logs/Result-reports/ofg-pr/${basePath}`;
+          const bucketGsLink = `gs://oss-fuzz-gcb-experiment-run-logs/Result-reports/ofg-pr/${basePath}`;
+
+          const body = `Requested GKE Job: ${gkeJobName}
+
+          JOB: ${gkeJobLink}
+          REPORT: ${reportLink}
+          BUCKET: ${bucketLink}
+          BUCKET (GS): ${bucketGsLink}`;
+
+          await github.rest.issues.createComment({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            issue_number: prNumber,
+            body: body
+          });
+
+          console.log(`Posted experiment links for PR #${prNumber}, job: ${gkeJobName}`);

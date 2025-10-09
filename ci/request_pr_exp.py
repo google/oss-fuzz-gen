@@ -69,17 +69,41 @@ BUCKET_GS_LINK_PREFIX = (
 DEFAULT_VERTEX_AI_LOCATION = 'us-central1'
 VERTEX_AI_LOCATIONS = {
     'vertex_ai_gemini-pro':
-        'asia-east1,asia-east2,asia-northeast1,asia-northeast3,asia-south1,asia-southeast1,australia-southeast1,europe-central2,europe-north1,europe-southwest1,europe-west1,europe-west2,europe-west3,europe-west4,europe-west6,europe-west8,europe-west9,southamerica-east1,us-central1,us-east1,us-east4,us-east5,us-south1,us-west1,us-west4',
+        ('asia-east1,asia-east2,asia-northeast1,asia-northeast3,asia-south1,'
+         'asia-southeast1,australia-southeast1,europe-central2,europe-north1,'
+         'europe-southwest1,europe-west1,europe-west2,europe-west3,'
+         'europe-west4,europe-west6,europe-west8,europe-west9,'
+         'southamerica-east1,us-central1,us-east1,us-east4,us-east5,'
+         'us-south1,us-west1,us-west4'),
     'vertex_ai_gemini-ultra':
-        'asia-east1,asia-east2,asia-northeast1,asia-northeast3,asia-south1,asia-southeast1,australia-southeast1,europe-central2,europe-north1,europe-southwest1,europe-west1,europe-west2,europe-west3,europe-west4,europe-west6,europe-west8,europe-west9,southamerica-east1,us-central1,us-east1,us-east4,us-east5,us-south1,us-west1,us-west4',
+        ('asia-east1,asia-east2,asia-northeast1,asia-northeast3,asia-south1,'
+         'asia-southeast1,australia-southeast1,europe-central2,europe-north1,'
+         'europe-southwest1,europe-west1,europe-west2,europe-west3,'
+         'europe-west4,europe-west6,europe-west8,europe-west9,'
+         'southamerica-east1,us-central1,us-east1,us-east4,us-east5,'
+         'us-south1,us-west1,us-west4'),
     'vertex_ai_gemini-1-5':
-        'asia-east1,asia-east2,asia-northeast1,asia-northeast3,asia-south1,asia-southeast1,australia-southeast1,europe-central2,europe-north1,europe-southwest1,europe-west1,europe-west2,europe-west3,europe-west4,europe-west6,europe-west8,europe-west9,southamerica-east1,us-central1,us-east1,us-east4,us-east5,us-south1,us-west1,us-west4',
+        ('asia-east1,asia-east2,asia-northeast1,asia-northeast3,asia-south1,'
+         'asia-southeast1,australia-southeast1,europe-central2,europe-north1,'
+         'europe-southwest1,europe-west1,europe-west2,europe-west3,'
+         'europe-west4,europe-west6,europe-west8,europe-west9,'
+         'southamerica-east1,us-central1,us-east1,us-east4,us-east5,'
+         'us-south1,us-west1,us-west4'),
     'vertex_ai_gemini-1-5-chat':
-        'asia-east1,asia-east2,asia-northeast1,asia-northeast3,asia-south1,asia-southeast1,australia-southeast1,europe-central2,europe-north1,europe-southwest1,europe-west1,europe-west2,europe-west3,europe-west4,europe-west6,europe-west8,europe-west9,southamerica-east1,us-central1,us-east1,us-east4,us-east5,us-south1,us-west1,us-west4',
+        ('asia-east1,asia-east2,asia-northeast1,asia-northeast3,asia-south1,'
+         'asia-southeast1,australia-southeast1,europe-central2,europe-north1,'
+         'europe-southwest1,europe-west1,europe-west2,europe-west3,'
+         'europe-west4,europe-west6,europe-west8,europe-west9,'
+         'southamerica-east1,us-central1,us-east1,us-east4,us-east5,'
+         'us-south1,us-west1,us-west4'),
     'vertex_ai_gemini-2-flash':
-        'europe-central2,europe-north1,europe-southwest1,europe-west1,europe-west4,europe-west8,europe-west9,us-central1,us-east1,us-east4,us-east5,us-south1,us-west1,us-west4',
+        ('europe-central2,europe-north1,europe-southwest1,europe-west1,'
+         'europe-west4,europe-west8,europe-west9,us-central1,us-east1,'
+         'us-east4,us-east5,us-south1,us-west1,us-west4'),
     'vertex_ai_gemini-2-flash-chat':
-        'europe-central2,europe-north1,europe-southwest1,europe-west1,europe-west4,europe-west8,europe-west9,us-central1,us-east1,us-east4,us-east5,us-south1,us-west1,us-west4'
+        ('europe-central2,europe-north1,europe-southwest1,europe-west1,'
+         'europe-west4,europe-west8,europe-west9,us-central1,us-east1,'
+         'us-east4,us-east5,us-south1,us-west1,us-west4')
 }
 
 
@@ -280,8 +304,7 @@ def _remove_existing_job_bucket(gke_job_name: str, bucket_link: str,
     logging.error('STDERR:\n  %s', del_bucket.stderr.decode('utf-8'))
 
 
-def _prepare_experiment_info(
-    args: argparse.Namespace) -> tuple[str, str, str, str, str]:
+def _prepare_experiment_info(args: argparse.Namespace) -> tuple[str, str, str]:
   """
   Prepares and logs the key experiment information for easier accesses.
   """
@@ -321,7 +344,7 @@ def _prepare_experiment_info(
       bucket_link,
       bucket_gs_link,
   )
-  return gke_job_name, bucket_link, bucket_gs_link, gke_job_link, report_link
+  return gke_job_name, bucket_link, bucket_gs_link
 
 
 def _get_gke_credential(args: argparse.Namespace):
@@ -385,14 +408,11 @@ def _request_experiment(substituted_file_path: str):
 def main(cmd=None):
   """The main function."""
   args = _parse_args(cmd)
-  gke_job_name, bucket_link, bucket_gs_link, gke_job_link, report_link = _prepare_experiment_info(
-      args)
+  gke_job_name, bucket_link, bucket_gs_link = _prepare_experiment_info(args)
   _get_gke_credential(args)
   _remove_existing_job_bucket(gke_job_name, bucket_link, bucket_gs_link)
   _request_experiment(_fill_template(args))
-  return gke_job_name, bucket_link, bucket_gs_link, gke_job_link, report_link
 
 
 if __name__ == "__main__":
-  main()
-  sys.exit(0)
+  sys.exit(main())

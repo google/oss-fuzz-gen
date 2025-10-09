@@ -25,7 +25,6 @@ steps:
     - 'PULL_REQUEST_NUMBER=${_PR_NUMBER}'
     - 'BRANCH=${_HEAD_BRANCH}'
     - 'REPO=${_HEAD_REPO_URL}'
-    - 'GITHUB_TOKEN=${_GITHUB_TOKEN}'
 images:
 - us-central1-docker.pkg.dev/oss-fuzz-base/oss-fuzz-gen/ci
 logsBucket: gs://oss-fuzz-gen-ci-logs
