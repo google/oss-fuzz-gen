@@ -61,5 +61,3 @@ async function runPrExperimentCommenter({ github, context }) {
 
   console.log(`Posted experiment links for PR #${prNumber}, job: ${gkeJobName}`);
 }
-
-
