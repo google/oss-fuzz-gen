@@ -21,7 +21,7 @@ jobs:
         script: |
           const fs = require('fs');
           const path = require('path');
-          const scriptPath = path.join(process.cwd(), 'ci', 'pr_exp_script.js');
+          const scriptPath = path.join(process.cwd(), 'ci', 'pr_exp_comment.js');
           const code = fs.readFileSync(scriptPath, 'utf8');
           eval(code);
           await runPrExperimentCommenter({ github, context });
