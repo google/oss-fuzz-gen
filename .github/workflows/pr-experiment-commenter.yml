@@ -1,0 +1,27 @@
+name: PR Experiment Commenter
+
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  comment-experiment-links:
+    if: github.event.issue.pull_request && startsWith(github.event.comment.body, '/gcbrun exp ')
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+
+    steps:
+    - name: Check out the repository to the runner
+      uses: actions/checkout@v4
+    - name: Parse gcbrun command and post experiment links
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const fs = require('fs');
+          const path = require('path');
+          const scriptPath = path.join(process.cwd(), 'ci', 'pr_exp_comment.js');
+          const code = fs.readFileSync(scriptPath, 'utf8');
+          eval(code);
+          await runPrExperimentCommenter({ github, context });
