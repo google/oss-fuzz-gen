@@ -24,10 +24,15 @@ from report.parse_logs import RunLogsParser
 class BaseExporter:
   """Base class for exporters."""
 
-  def __init__(self, results: Results, output_dir: str, base_url: str = ''):
+  def __init__(self,
+               results: Results,
+               output_dir: str,
+               base_url: str = '',
+               gcs_dir: str = ''):
     self._results = results
     self._output_dir = output_dir
     self._base_url = base_url.rstrip('/')
+    self._gcs_dir = gcs_dir
     self._headers = [
         "Project", "Function Signature", "Sample", "Crash Type", "Compiles",
         "Crashes", "Coverage", "Line Coverage Diff", "Reproducer Path"
@@ -51,6 +56,21 @@ class BaseExporter:
 class CSVExporter(BaseExporter):
   """Export a report to CSV."""
 
+  def _get_reproducer_url(self, benchmark_id: str,
+                          crash_reproduction_path: str) -> str:
+    """Get the reproducer URL, using GCS bucket URL for cloud builds."""
+    if not crash_reproduction_path:
+      return ""
+
+    if self._gcs_dir:
+      return (f"https://console.cloud.google.com/storage/browser/"
+              f"oss-fuzz-gcb-experiment-run-logs/Result-reports/"
+              f"{self._gcs_dir}/results/{benchmark_id}/artifacts/"
+              f"{crash_reproduction_path}")
+    else:
+      return self._get_full_url(
+          f'results/{benchmark_id}/artifacts/{crash_reproduction_path}')
+
   def generate(self):
     """Generate a CSV file with the results."""
     csv_path = os.path.join(self._output_dir, 'crashes.csv')
@@ -70,8 +90,6 @@ class CSVExporter(BaseExporter):
 
         project_name = benchmark_id.split("-")[1]
 
-        project_name = benchmark_id.split("-")[1]
-
         for sample in samples:
           run_logs = self._results.get_run_logs(benchmark_id, sample.id) or ""
           parser = RunLogsParser(run_logs, benchmark_id, sample.id)
@@ -79,9 +97,8 @@ class CSVExporter(BaseExporter):
 
           report_url = self._get_full_url(
               f"sample/{benchmark_id}/{sample.id}.html")
-          reproducer_path = self._get_full_url(
-              f'results/{benchmark_id}/artifacts/{sample.id}.fuzz_target-F0-01/'
-              f'{crash_reproduction_path}') if crash_reproduction_path else ""
+          reproducer_path = self._get_reproducer_url(benchmark_id,
+                                                     crash_reproduction_path)
 
           writer.writerow({
               "Project":

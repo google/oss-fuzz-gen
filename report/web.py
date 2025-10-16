@@ -148,7 +148,8 @@ class GenerateReport:
                jinja_env: JinjaEnv,
                results_dir: str,
                output_dir: str = 'results-report',
-               base_url: str = ''):
+               base_url: str = '',
+               gcs_dir: str = ''):
     self._results = results
     self._output_dir = output_dir
     self._jinja = jinja_env
@@ -156,6 +157,7 @@ class GenerateReport:
     # If cloud, this will be
     # `llm-exp.oss-fuzz.com/Result-reports/ofg-pr/experiment-name`
     self._base_url = base_url
+    self._gcs_dir = gcs_dir
 
   def read_timings(self):
     with open(os.path.join(self.results_dir, 'report.json'), 'r') as f:
@@ -602,6 +604,21 @@ class GenerateReport:
 
     return unified_data
 
+  def _get_artifact_folder_url(self, benchmark_id: str, sample: Sample) -> dict:
+    """Get the artifact folder URLs for cloud builds."""
+    if not sample.result.crashes:
+      return {}
+    if not self._gcs_dir:
+      return {}
+
+    gs_url = (f"gs://oss-fuzz-gcb-experiment-run-logs/Result-reports/"
+              f"{self._gcs_dir}/results/{benchmark_id}/artifacts")
+    console_url = (f"https://console.cloud.google.com/storage/browser/"
+                   f"oss-fuzz-gcb-experiment-run-logs/Result-reports/"
+                   f"{self._gcs_dir}/results/{benchmark_id}/artifacts")
+
+    return {"gs_url": gs_url, "console_url": console_url}
+
   def _get_crash_info_from_run_logs(self, benchmark_id: str,
                                     sample: Sample) -> dict:
     """Get the crash info from the run logs."""
@@ -614,11 +631,13 @@ class GenerateReport:
     crash_symptom = parser.get_crash_symptom()
     stack_traces = parser.get_formatted_stack_traces(self._base_url)
     execution_stats = parser.get_execution_stats()
+    artifact_folder = self._get_artifact_folder_url(benchmark_id, sample)
     return {
         "crash_details": crash_details,
         "crash_symptom": crash_symptom,
         "stack_traces": stack_traces,
-        "execution_stats": execution_stats
+        "execution_stats": execution_stats,
+        "artifact_folder": artifact_folder
     }
 
 
@@ -637,7 +656,8 @@ def generate_report(args: argparse.Namespace) -> None:
   if args.with_csv:
     csv_reporter = CSVExporter(results=results,
                                output_dir=args.output_dir,
-                               base_url=base_url)
+                               base_url=base_url,
+                               gcs_dir=args.gcs_dir)
     csv_reporter.generate()
     # Temporarily commented out because locally this is just a relative path
     # template_globals['csv_url_path'] = csv_reporter.get_url_path()
@@ -652,7 +672,8 @@ def generate_report(args: argparse.Namespace) -> None:
                       jinja_env=jinja_env,
                       results_dir=args.results_dir,
                       output_dir=args.output_dir,
-                      base_url=base_url)
+                      base_url=base_url,
+                      gcs_dir=args.gcs_dir)
   gr.generate()
 
 
@@ -709,6 +730,9 @@ def _parse_arguments() -> argparse.Namespace:
       '--base-url',
       help='Base URL for the report (used in cloud environments).',
       default='')
+  parser.add_argument('--gcs-dir',
+                      help='GCS directory for experiment.',
+                      default='')
 
   return parser.parse_args()
 
