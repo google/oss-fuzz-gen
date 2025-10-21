@@ -257,7 +257,7 @@ class Evaluator:
     
     # Build the target
     build_succeeded = self.builder_runner.build_target_local(
-        generated_project_path,
+        project_name,
         log_path,
         sanitizer='address'
     )
