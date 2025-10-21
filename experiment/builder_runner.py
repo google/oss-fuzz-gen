@@ -522,8 +522,10 @@ class BuilderRunner:
     run_result = RunResult()
 
     run_log_path = os.path.join(self.work_dirs.run_logs, f'{trial:02d}.log')
-    self.run_target_local(generated_project, benchmark_target_name,
-                          run_log_path)
+    run_succeeded = self.run_target_local(generated_project, benchmark_target_name,
+                                          run_log_path)
+    run_result.succeeded = run_succeeded
+    
     artifact_dir = self.work_dirs.artifact(benchmark_target_name, iteration,
                                            trial)
     outdir = get_build_artifact_dir(generated_project, 'out')
@@ -549,8 +551,12 @@ class BuilderRunner:
     return build_result, run_result
 
   def run_target_local(self, generated_project: str, benchmark_target_name: str,
-                       log_path: str):
-    """Runs a target in the fixed target directory."""
+                       log_path: str) -> bool:
+    """Runs a target in the fixed target directory.
+    
+    Returns:
+      True if fuzzer ran successfully (returncode == 0), False otherwise.
+    """
     # If target name is not overridden, use the basename of the target path
     # in the Dockerfile.
     logger.info('Running %s', generated_project)
@@ -576,8 +582,10 @@ class BuilderRunner:
 
     if proc.returncode != 0:
       logger.info('********** Failed to run %s. **********', generated_project)
+      return False
     else:
       logger.info('Successfully run %s.', generated_project)
+      return True
 
   def build_target_local(self,
                          generated_project: str,
