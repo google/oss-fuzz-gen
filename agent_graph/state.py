@@ -86,6 +86,16 @@ class FuzzingWorkflowState(TypedDict):
     run_log: NotRequired[str]
     artifact_path: NotRequired[str]
     crash_func: NotRequired[str]
+    crashes: NotRequired[bool]
+    reproducer_path: NotRequired[str]
+    
+    # === Coverage Results ===
+    coverage_summary: NotRequired[str]
+    coverage_percent: NotRequired[float]
+    line_coverage_diff: NotRequired[float]
+    coverage_report_path: NotRequired[str]
+    cov_pcs: NotRequired[int]
+    total_pcs: NotRequired[int]
     
     # === Analysis Results (from Analyzers) ===
     analysis_complete: NotRequired[bool]

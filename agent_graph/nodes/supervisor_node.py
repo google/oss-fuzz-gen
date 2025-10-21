@@ -156,6 +156,7 @@ def _determine_next_action(state: FuzzingWorkflowState) -> str:
     # Step 6: Execution succeeded, check if we should continue enhancing
     # Check coverage diff - if it's 0, we're not discovering new code paths
     coverage_diff = state.get("line_coverage_diff", 0.0)
+    logger.debug(f'Retrieved line_coverage_diff from state: {coverage_diff}', trial=state.get("trial", 0))
     
     # Check iteration count to avoid infinite loops
     current_iteration = state.get("current_iteration", 0)
