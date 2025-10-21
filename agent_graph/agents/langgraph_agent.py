@@ -13,6 +13,7 @@ from llm_toolkit.models import LLM
 from agent_graph.state import FuzzingWorkflowState
 from agent_graph.memory import get_agent_messages, add_agent_message
 from agent_graph.prompt_loader import get_prompt_manager
+from agent_graph.agents.utils import parse_tag
 
 
 class LangGraphAgent(ABC):
@@ -228,9 +229,12 @@ class LangGraphPrototyper(LangGraphAgent):
         # Chat with LLM (using prototyper's own message history)
         response = self.chat_llm(state, prompt)
         
-        # Extract code from response
-        # TODO: Add proper code extraction logic
-        fuzz_target_code = response
+        # Extract code from <fuzz target> tags
+        fuzz_target_code = parse_tag(response, 'fuzz target')
+        
+        # If no tags found, use the whole response as fallback
+        if not fuzz_target_code:
+            fuzz_target_code = response
         
         return {
             "fuzz_target_source": fuzz_target_code,
@@ -280,8 +284,15 @@ class LangGraphEnhancer(LangGraphAgent):
         # Chat with LLM (using enhancer's own message history)
         response = self.chat_llm(state, prompt)
         
+        # Extract code from <fuzz target> tags
+        fuzz_target_code = parse_tag(response, 'fuzz target')
+        
+        # If no tags found, use the whole response as fallback
+        if not fuzz_target_code:
+            fuzz_target_code = response
+        
         return {
-            "fuzz_target_source": response,
+            "fuzz_target_source": fuzz_target_code,
             "retry_count": state.get("retry_count", 0) + 1,
             "compile_success": None,  # Reset to trigger rebuild
             "build_errors": []  # Clear previous errors

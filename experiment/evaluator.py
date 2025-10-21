@@ -269,7 +269,7 @@ class Evaluator:
         build_log = f.read()
     
     # Check if binary exists
-    outdir = builder_runner.get_build_artifact_dir(generated_project_path, 'out')
+    outdir = builder_runner.get_build_artifact_dir(project_name, 'out')
     target_binary = os.path.join(outdir, self.benchmark.target_name)
     binary_exists = os.path.exists(target_binary)
     
