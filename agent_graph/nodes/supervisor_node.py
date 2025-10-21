@@ -108,23 +108,35 @@ def _determine_next_action(state: FuzzingWorkflowState) -> str:
         return "function_analyzer"
     
     # Step 2: Check if we need a fuzz target
-    if not state.get("fuzz_target_source"):
+    fuzz_target_source = state.get("fuzz_target_source")
+    if not fuzz_target_source:
+        logger.debug(f'No fuzz_target_source found, routing to prototyper', trial=state.get("trial", 0))
         return "prototyper"
+    else:
+        logger.debug(f'fuzz_target_source exists (length={len(fuzz_target_source)})', trial=state.get("trial", 0))
     
     # Step 3: Check if we've built successfully
     compile_success = state.get("compile_success")
+    logger.debug(f'compile_success={compile_success}', trial=state.get("trial", 0))
     if compile_success is None:
         # Haven't tried building yet
         return "build"
     elif not compile_success:
         # Build failed, need to enhance or retry
-        if state.get("retry_count", 0) < 2:  # Allow a few build retries
+        retry_count = state.get("retry_count", 0)
+        logger.debug(f'Build failed, retry_count={retry_count}', trial=state.get("trial", 0))
+        max_retries = state.get("max_retries", 3)
+        if retry_count < max_retries:
             return "enhancer"
         else:
-            return "prototyper"  # Start over with new target
+            # Exceeded retries, end workflow
+            logger.warning(f'Build failed after {retry_count} retries, ending workflow', 
+                         trial=state.get("trial", 0))
+            return "END"
     
     # Step 4: Build succeeded, check if we've run
     run_success = state.get("run_success")
+    logger.debug(f'Build succeeded, run_success={run_success}', trial=state.get("trial", 0))
     if run_success is None:
         # Haven't tried running yet
         return "execution"

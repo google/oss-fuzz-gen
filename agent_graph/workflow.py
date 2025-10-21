@@ -104,7 +104,8 @@ class FuzzingWorkflow:
                 "llm": self.llm,
                 "args": self.args,
                 "thread_id": f"{benchmark.id}_trial_{trial}"
-            }
+            },
+            "recursion_limit": getattr(self.args, 'max_iterations', 5) * 10  # Allow enough cycles
         }
         
         final_state = compiled_workflow.invoke(initial_state, config=config)

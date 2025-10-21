@@ -40,7 +40,13 @@ def prototyper_node(state: FuzzingWorkflowState, config: Dict[str, Any]) -> Dict
         # Execute agent
         result = agent.execute(state)
         
-        logger.info('Prototyper node completed', trial=trial)
+        # Debug: log what we're returning
+        if "fuzz_target_source" in result:
+            code_length = len(result["fuzz_target_source"])
+            logger.info(f'Prototyper node completed, returning fuzz_target_source (length={code_length})', trial=trial)
+        else:
+            logger.warning('Prototyper node completed but no fuzz_target_source in result', trial=trial)
+        
         return result
         
     except Exception as e:

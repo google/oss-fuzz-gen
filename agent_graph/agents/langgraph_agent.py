@@ -233,7 +233,9 @@ class LangGraphPrototyper(LangGraphAgent):
         fuzz_target_code = response
         
         return {
-            "fuzz_target_source": fuzz_target_code
+            "fuzz_target_source": fuzz_target_code,
+            "compile_success": None,  # Reset to trigger build
+            "retry_count": 0  # Reset retry count for new target
         }
 
 
@@ -280,7 +282,9 @@ class LangGraphEnhancer(LangGraphAgent):
         
         return {
             "fuzz_target_source": response,
-            "retry_count": state.get("retry_count", 0) + 1
+            "retry_count": state.get("retry_count", 0) + 1,
+            "compile_success": None,  # Reset to trigger rebuild
+            "build_errors": []  # Clear previous errors
         }
 
 

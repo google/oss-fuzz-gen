@@ -100,20 +100,70 @@ def execution_node(state: FuzzingWorkflowState, config: Dict[str, Any]) -> Dict[
         # Execute the fuzz target
         logger.info('Executing fuzz target', trial=trial)
         
-        # Convert state to result history for evaluator
-        result_history = StateAdapter.state_to_result_history(state)
-        
-        # Run the evaluation
-        run_result = evaluator.evaluate(
-            result_history=result_history,
-            cycle_count=1,  # Single cycle for now
-            status_path=status_path
+        # Build and run the target
+        build_result, run_result = builder_runner.build_and_run(
+            generated_oss_fuzz_project,
+            fuzz_target_path,
+            0,  # iteration
+            benchmark.language,
+            cloud_build_tags=[
+                str(trial),
+                'Execution',
+                'ofg',
+                benchmark.project,
+            ] if args.cloud_experiment_name else None,
+            trial=trial
         )
         
-        # Convert RunResult back to state updates
-        state_update = StateAdapter.result_to_state_update(run_result)
+        if not run_result:
+            raise Exception('No RunResult received from build_and_run')
         
-        logger.info('Execution node completed successfully', trial=trial)
+        # Process coverage information
+        coverage_percent = 0.0
+        coverage_diff = 0.0
+        
+        if run_result.total_pcs:
+            coverage_percent = run_result.cov_pcs / run_result.total_pcs
+            logger.info(f'Coverage: {coverage_percent:.2%} ({run_result.cov_pcs}/{run_result.total_pcs})', 
+                       trial=trial)
+        
+        if run_result.coverage_summary:
+            generated_target_name = os.path.basename(benchmark.target_path)
+            from experiment import evaluator as evaluator_lib
+            total_lines = evaluator_lib.compute_total_lines_without_fuzz_targets(
+                run_result.coverage_summary, generated_target_name)
+            
+            # Load existing textcov and compute diff
+            existing_textcov = evaluator.load_existing_textcov()
+            run_result.coverage.subtract_covered_lines(existing_textcov)
+            
+            if total_lines:
+                coverage_diff = run_result.coverage.covered_lines / total_lines
+                logger.info(f'Coverage diff: {coverage_diff:.2%}', trial=trial)
+        
+        # Create state update
+        state_update = {
+            "run_success": run_result.succeeded if hasattr(run_result, 'succeeded') else True,
+            "run_error": run_result.crash_info if hasattr(run_result, 'crash_info') else "",
+            "crashes": run_result.crashes if hasattr(run_result, 'crashes') else False,
+            "crash_func": run_result.semantic_check.crash_func if hasattr(run_result, 'semantic_check') else "",
+            "coverage_summary": run_result.coverage_summary,
+            "coverage_percent": coverage_percent,
+            "line_coverage_diff": coverage_diff,
+            "reproducer_path": run_result.reproducer_path if hasattr(run_result, 'reproducer_path') else "",
+            "artifact_path": run_result.artifact_path if hasattr(run_result, 'artifact_path') else "",
+            "coverage_report_path": run_result.coverage_report_path if hasattr(run_result, 'coverage_report_path') else "",
+            "cov_pcs": run_result.cov_pcs if hasattr(run_result, 'cov_pcs') else 0,
+            "total_pcs": run_result.total_pcs if hasattr(run_result, 'total_pcs') else 0,
+            "messages": [{
+                "role": "assistant",
+                "content": f"Execution {'successful' if run_result.succeeded else 'failed'}"
+            }]
+        }
+        
+        logger.info(f'Execution completed: success={state_update["run_success"]}, '
+                   f'crashes={state_update["crashes"]}, coverage={coverage_percent:.2%}',
+                   trial=trial)
         
         return state_update
         
@@ -201,6 +251,12 @@ def build_node(state: FuzzingWorkflowState, config: Dict[str, Any]) -> Dict[str,
         
         build_result = evaluator.build_only(generated_project_path)
         
+        # Log build result details
+        logger.info(f"Build result: success={build_result.get('success')}, "
+                   f"binary_exists={build_result.get('binary_exists')}, "
+                   f"errors={len(build_result.get('errors', []))}",
+                   trial=trial)
+        
         # Create state update based on build result
         state_update = {
             "compile_success": build_result.get("success", False),
@@ -213,7 +269,7 @@ def build_node(state: FuzzingWorkflowState, config: Dict[str, Any]) -> Dict[str,
             }]
         }
         
-        logger.info('Build node completed successfully', trial=trial)
+        logger.info('Build node completed', trial=trial)
         
         return state_update
         
