@@ -12,6 +12,12 @@ from .function_analyzer import FunctionAnalyzer
 from .prototyper import Prototyper
 from .enhancer import Enhancer
 from .crash_analyzer import CrashAnalyzer
+from .context_analyzer import ContextAnalyzer
+from .coverage_analyzer import CoverageAnalyzer
+from .semantic_analyzer import SemanticAnalyzer
+from .one_prompt_prototyper import OnePromptPrototyper
+from .one_prompt_enhancer import OnePromptEnhancer
+from .function_based_prototyper import FunctionToolPrototyper
 
 __all__ = [
     'BaseAgent',
@@ -21,4 +27,10 @@ __all__ = [
     'Prototyper',
     'Enhancer',
     'CrashAnalyzer',
+    'ContextAnalyzer',
+    'CoverageAnalyzer',
+    'SemanticAnalyzer',
+    'OnePromptPrototyper',
+    'OnePromptEnhancer',
+    'FunctionToolPrototyper',
 ]

@@ -1,103 +1,54 @@
 """
 FunctionAnalyzer node for LangGraph workflow.
 
-This module provides the LangGraph-compatible node wrapper for the original
-FunctionAnalyzer agent.
+Uses agent-specific messages for clean context management.
 """
 from typing import Dict, Any
 
 import logger
-from agent_graph.agents.function_analyzer import FunctionAnalyzer
-from agent_graph.adapters import StateAdapter, AgentNodeWrapper
 from agent_graph.state import FuzzingWorkflowState
-from ..benchmark import LangGraphBenchmark as Benchmark
+from agent_graph.agents.langgraph_agent import LangGraphFunctionAnalyzer
+
 
 def function_analyzer_node(state: FuzzingWorkflowState, config: Dict[str, Any]) -> Dict[str, Any]:
     """
-    LangGraph node that wraps the original FunctionAnalyzer agent.
-    
-    This node performs function analysis by:
-    1. Converting LangGraph state to Result objects
-    2. Executing the original FunctionAnalyzer
-    3. Converting the result back to state updates
+    Analyze the target function.
     
     Args:
-        state: Current LangGraph workflow state
+        state: Current workflow state
         config: Configuration containing LLM, args, etc.
-        
+    
     Returns:
-        Dictionary of state updates
+        State updates
     """
+    trial = state["trial"]
+    logger.info('Starting FunctionAnalyzer node', trial=trial)
+    
     try:
-        
-        # Extract configuration from LangGraph's configurable system
+        # Extract config
         configurable = config.get("configurable", {})
         llm = configurable["llm"]
         args = configurable["args"]
-        benchmark = Benchmark.from_dict(state["benchmark"])
-        trial = state["trial"]
         
-        logger.info('Starting FunctionAnalyzer node', trial=trial)
-        
-        # Convert state to result history that FunctionAnalyzer expects
-        result_history = StateAdapter.state_to_result_history(state)
-        
-        # Create the FunctionAnalyzer instance
-        analyzer = FunctionAnalyzer(
-            trial=trial,
+        # Create agent
+        agent = LangGraphFunctionAnalyzer(
             llm=llm,
-            args=args,
-            benchmark=benchmark,
-            name='FunctionAnalyzer'
+            trial=trial,
+            args=args
         )
         
-        # Execute the analyzer
-        result = analyzer.execute(result_history)
+        # Execute agent
+        result = agent.execute(state)
         
-        # Convert result back to state updates
-        state_update = StateAdapter.result_to_state_update(result)
-        
-        # Ensure logging is finalized (though analyzer.execute should handle this)
-        try:
-            analyzer.finalize()
-        except Exception as log_error:
-            logger.warning(f'Failed to finalize analyzer logging: {log_error}', trial=trial)
-        
-        logger.info('FunctionAnalyzer node completed successfully', trial=trial)
-        
-        return state_update
+        logger.info('FunctionAnalyzer node completed', trial=trial)
+        return result
         
     except Exception as e:
-        # Handle errors gracefully
-        logger.error(f'Error in FunctionAnalyzer node: {str(e)}', 
-                    trial=state.get("trial", 0))
+        logger.error(f'FunctionAnalyzer failed: {e}', trial=trial)
         return {
             "errors": [{
                 "node": "FunctionAnalyzer",
                 "message": str(e),
                 "type": type(e).__name__
-            }],
-            "messages": [{
-                "role": "assistant",
-                "content": f"FunctionAnalyzer failed: {str(e)}"
             }]
         }
-
-# Alternative implementation using the generic wrapper
-def create_function_analyzer_node():
-    """
-    Create a FunctionAnalyzer node using the generic AgentNodeWrapper.
-    
-    This demonstrates how to use the wrapper for consistent node creation.
-    
-    Returns:
-        LangGraph node function for FunctionAnalyzer
-    """
-    return AgentNodeWrapper.create_agent_node(
-        agent_class=FunctionAnalyzer,
-        name='FunctionAnalyzer'
-    )
-
-# For backward compatibility and explicit control, we export the manual implementation
-# but the wrapper version is available for other nodes
-__all__ = ['function_analyzer_node', 'create_function_analyzer_node']

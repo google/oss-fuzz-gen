@@ -1,0 +1,129 @@
+Determine if the following crash is feasible from the project's external entry points.
+
+**Project**: {PROJECT_NAME}
+
+**Fuzz Target**:
+```
+{FUZZ_TARGET}
+```
+
+**Function Requirements**:
+{FUNCTION_REQUIREMENTS}
+
+**Crash Stacktrace**:
+{CRASH_STACKTRACE}
+
+**Crash Analysis**:
+{CRASH_ANALYSIS}
+
+{ADDITIONAL_CONTEXT}
+
+**Your Task**:
+Work backwards from the functions called by the fuzz target to the project's entry points and determine if the crash is feasible. Provide detailed analysis and source code evidence.
+
+**Analysis Steps**:
+
+1. **Identify the Target Function**:
+   - Find the function called by the fuzz driver that led to the crash
+   - This is the function directly called by LLVMFuzzerTestOneInput or other fuzz driver functions
+   - Example: In stack trace `#4 encode_ise`, `#5 symbolic_to_physical`, `#6 LLVMFuzzerTestOneInput`
+     * The target function is `symbolic_to_physical` (called by fuzz driver)
+     * NOT `encode_ise` (called internally by symbolic_to_physical)
+
+2. **Identify Crash Input Conditions**:
+   - What specific input conditions did the fuzz driver create?
+   - What values or states directly led to the crash?
+   - How are these conditions necessary for the crash?
+   - Consider ALL variables involved and their relationships
+
+3. **Find Real Call Sites**:
+   - Locate all places in the project where the target function is called
+   - How do these call sites generate input arguments?
+   - What constraints do they enforce on inputs?
+   - What validations are performed?
+
+4. **Trace from Entry Points**:
+   - Identify the project's public entry points (exported functions, API functions)
+   - Can you trace a path from any entry point to the target function?
+   - What path constraints must be satisfied?
+   - Can the crash conditions be achieved along this path?
+
+5. **Provide Source Code Evidence**:
+   - Quote actual code showing constraints
+   - Provide file names and line numbers
+   - Show initialization patterns from real callers
+   - Demonstrate why the crash is or isn't possible
+   - DO NOT speculate - use only actual source code
+
+6. **Determine Feasibility**:
+   - **Feasible (True)**: The crash can be triggered from entry points
+     * Show the execution path from entry point to crash
+     * Document all necessary conditions
+     * Prove they can all be satisfied
+   
+   - **Infeasible (False)**: The crash cannot be triggered from entry points
+     * Show which constraints prevent the crash
+     * Prove the fuzz driver violated function requirements
+     * Explain why real callers can't create this condition
+
+7. **Provide Recommendations**:
+   - For infeasible crashes: How to fix the fuzz driver
+   - For feasible crashes: Describe the bug and its impact
+
+**Important Constraints**:
+- Consider relationships between variables (e.g., `data` NULL ⟺ `len` == 0)
+- For compound conditions (e.g., `x * y > limit`), analyze the cross product of ranges
+- Never assume function behavior - always examine implementations
+- Base all conclusions on actual source code evidence
+
+**Output Format**:
+
+First, provide your determination as a single word:
+- **True** if the crash IS feasible from entry points (real bug)
+- **False** if the crash is NOT feasible from entry points (driver bug)
+
+Then provide your detailed analysis:
+
+## Target Function
+[The function called by the fuzz driver that led to the crash]
+
+## Crash Conditions
+[Specific input conditions that caused the crash, with variable values and relationships]
+
+## Real Caller Analysis
+[How real callers in the project invoke the target function:
+ - Call site locations (file:line)
+ - Input generation patterns
+ - Constraints enforced
+ - Validations performed]
+
+## Entry Point Tracing
+[Analysis of paths from public entry points:
+ - Which entry points can reach the target function
+ - Path constraints that must be satisfied
+ - Whether crash conditions can be achieved]
+
+## Source Code Evidence
+[Detailed source code quotes proving your conclusion:
+ - Specific file names and line numbers
+ - Code showing constraints or validations
+ - Initialization patterns from real callers]
+
+## Feasibility Determination
+[Clear statement:
+ - Feasible or Infeasible
+ - Why (with evidence)
+ - Which constraints allow or prevent the crash]
+
+## Recommendations
+[If infeasible: Minimal fuzz driver modifications to prevent the crash, mirroring real caller patterns]
+[If feasible: Description of the bug, security impact, and likelihood of real-world triggering]
+
+**Critical Requirements**:
+- Answer ONLY "True" or "False" for feasibility determination (as the first word)
+- Provide actual source code evidence (file:line, code quotes)
+- Do NOT speculate or assume
+- Consider all variable relationships
+- Be thorough and methodical
+
+

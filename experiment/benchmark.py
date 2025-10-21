@@ -246,6 +246,47 @@ class Benchmark:
   def is_java_project(self) -> bool:
     """Validates if the project is written in Java."""
     return self.language.lower() == 'jvm'
+  
+  def to_dict(self) -> dict:
+    """Convert benchmark to a dictionary for serialization."""
+    return {
+        'id': self.id,
+        'project': self.project,
+        'language': self.language,
+        'function_signature': self.function_signature,
+        'function_name': self.function_name,
+        'return_type': self.return_type,
+        'params': self.params,
+        'target_path': self.target_path,
+        '_preferred_target_name': self._preferred_target_name,
+        'use_project_examples': self.use_project_examples,
+        'use_context': self.use_context,
+        'cppify_headers': self.cppify_headers,
+        'commit': self.commit,
+        'test_file_path': self.test_file_path,
+        'function_dict': self.function_dict,
+    }
+  
+  @classmethod
+  def from_dict(cls, data: dict) -> 'Benchmark':
+    """Create benchmark from a dictionary."""
+    return cls(
+        benchmark_id=data['id'],
+        project=data['project'],
+        language=data['language'],
+        function_signature=data['function_signature'],
+        function_name=data['function_name'],
+        return_type=data['return_type'],
+        params=data['params'],
+        target_path=data['target_path'],
+        preferred_target_name=data.get('_preferred_target_name'),
+        use_project_examples=data.get('use_project_examples', True),
+        cppify_headers=data.get('cppify_headers', False),
+        use_context=data.get('use_context', False),
+        commit=data.get('commit'),
+        function_dict=data.get('function_dict'),
+        test_file_path=data.get('test_file_path', ''),
+    )
 
   @property
   def needs_extern(self) -> bool:

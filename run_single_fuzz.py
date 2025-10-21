@@ -11,16 +11,16 @@ from typing import List, Optional
 
 import logger
 import pipeline
-from agent.context_analyzer import ContextAnalyzer
-from agent.coverage_analyzer import CoverageAnalyzer
-from agent.crash_analyzer import CrashAnalyzer
-from agent.enhancer import Enhancer
-from agent.function_analyzer import FunctionAnalyzer
-from agent.function_based_prototyper import FunctionToolPrototyper
-from agent.one_prompt_enhancer import OnePromptEnhancer
-from agent.one_prompt_prototyper import OnePromptPrototyper
-from agent.prototyper import Prototyper
-from agent.semantic_analyzer import SemanticAnalyzer
+from agent_graph.agents.context_analyzer import ContextAnalyzer
+from agent_graph.agents.coverage_analyzer import CoverageAnalyzer
+from agent_graph.agents.crash_analyzer import CrashAnalyzer
+from agent_graph.agents.enhancer import Enhancer
+from agent_graph.agents.function_analyzer import FunctionAnalyzer
+from agent_graph.agents.function_based_prototyper import FunctionToolPrototyper
+from agent_graph.agents.one_prompt_enhancer import OnePromptEnhancer
+from agent_graph.agents.one_prompt_prototyper import OnePromptPrototyper
+from agent_graph.agents.prototyper import Prototyper
+from agent_graph.agents.semantic_analyzer import SemanticAnalyzer
 from agent_graph import FuzzingWorkflow
 from experiment import builder_runner as builder_runner_lib
 from experiment import evaluator as exp_evaluator

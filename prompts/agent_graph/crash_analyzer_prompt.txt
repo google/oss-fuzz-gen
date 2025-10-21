@@ -1,0 +1,99 @@
+Analyze the following crash from fuzzing to determine if it's caused by a bug in the fuzz driver or the target project code.
+
+**Crash Report**:
+{CRASH_INFO}
+
+**Stack Trace**:
+{STACK_TRACE}
+
+**Fuzz Driver Code**:
+```
+{FUZZ_TARGET_CODE}
+```
+
+{ADDITIONAL_CONTEXT}
+
+**Your Task**:
+Perform a thorough analysis to determine whether this crash represents a true bug in the project code or a false positive caused by the fuzz driver.
+
+**Analysis Steps**:
+
+1. **Examine the Stack Trace**:
+   - Read the stack trace from top to bottom
+   - Identify the function where the crash occurred
+   - Locate the first frame that is NOT part of the fuzzer infrastructure
+   - Determine if the crash is in LLVMFuzzerTestOneInput (driver) or in project code
+
+2. **Identify the Crash Type**:
+   - Memory error (heap/stack overflow, use-after-free, buffer overflow)?
+   - Assertion failure?
+   - Null pointer dereference?
+   - Segmentation fault?
+   - Other error type?
+
+3. **Analyze the Root Cause**:
+   - What specific condition triggered the crash?
+   - What variables or values were involved?
+   - Is this condition possible in real usage of the project?
+   - Did the fuzz driver violate any function requirements?
+
+4. **Make Your Determination**:
+   - Is this a **driver bug** (False)?
+     * Incorrect parameter initialization
+     * Missing null checks in driver
+     * Invalid input that violates function requirements
+     * Wrong function call order
+   
+   - Is this a **project bug** (True)?
+     * Memory corruption in project code
+     * Logic error in project code
+     * Missing validation in project code
+     * Security vulnerability
+
+5. **Assess Severity** (if project bug):
+   - Critical: Memory corruption with potential exploitability
+   - High: Security-relevant bugs
+   - Medium: Logic errors, assertion failures
+   - Low: Minor issues
+   - Info: Expected behavior
+
+**Output Format**:
+
+First, provide your determination as a single word on its own line:
+- **True** if the crash is caused by a bug in PROJECT code
+- **False** if the crash is caused by a bug in FUZZ DRIVER code
+
+Then provide your detailed analysis:
+
+## Root Cause Analysis
+[Explain:
+ - What exactly caused the crash
+ - Which function and line number
+ - What condition triggered it
+ - Evidence from the stack trace]
+
+## Determination
+[State clearly:
+ - Driver bug OR Project bug
+ - Why you made this determination
+ - Evidence supporting your conclusion]
+
+## Severity Assessment
+[If project bug:
+ - Severity level (Critical/High/Medium/Low/Info)
+ - Security impact
+ - Exploitability assessment]
+
+## Recommendations
+[Provide specific, actionable recommendations:
+ - If driver bug: How to fix the fuzz driver
+ - If project bug: What needs to be fixed in the project
+ - Should fuzzing continue or should this be fixed first?]
+
+**Critical Requirements**:
+- Answer ONLY "True" or "False" for the determination (as the first word)
+- Provide evidence from the actual stack trace and crash report
+- Do NOT speculate or make assumptions
+- Use specific line numbers and function names
+- Base conclusions on the provided information only
+

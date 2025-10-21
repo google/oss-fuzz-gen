@@ -7,8 +7,8 @@ and the original agent system's Result objects.
 import argparse
 from typing import Dict, Any, List, Optional
 
-from .workdir import LangGraphWorkDirs
-from .benchmark import LangGraphBenchmark as Benchmark
+from experiment.workdir import WorkDirs
+from experiment.benchmark import Benchmark
 from llm_toolkit.models import LLM
 from results import (
     Result, BuildResult, RunResult, AnalysisResult, 
@@ -35,8 +35,9 @@ class StateAdapter:
         Returns:
             List of Result objects reconstructed from state
         """
+        # Deserialize benchmark and work_dirs from dicts
         benchmark = Benchmark.from_dict(state["benchmark"])
-        work_dirs = LangGraphWorkDirs.from_dict(state["work_dirs"])
+        work_dirs = WorkDirs.from_dict(state["work_dirs"])
         trial = state["trial"]
         
         result_history = []
@@ -203,7 +204,7 @@ class StateAdapter:
     
     @staticmethod
     def _extract_crash_result(state: FuzzingWorkflowState, benchmark: Benchmark, 
-                             trial: int, work_dirs: LangGraphWorkDirs) -> Optional[CrashResult]:
+                             trial: int, work_dirs: WorkDirs) -> Optional[CrashResult]:
         """Extract crash result from state."""
         crash_data = state.get("crash_analysis")
         if not crash_data:
@@ -221,7 +222,7 @@ class StateAdapter:
     
     @staticmethod
     def _extract_coverage_result(state: FuzzingWorkflowState, benchmark: Benchmark,
-                                trial: int, work_dirs: LangGraphWorkDirs) -> Optional[CoverageResult]:
+                                trial: int, work_dirs: WorkDirs) -> Optional[CoverageResult]:
         """Extract coverage result from state."""
         cov_data = state.get("coverage_analysis")
         if not cov_data:

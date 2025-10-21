@@ -239,6 +239,55 @@ class Evaluator:
     return os.path.join(self.work_dirs.run_logs,
                         f'{generated_target_name}-{trial:02d}.log')
 
+  def build_only(self, generated_project_path: str) -> dict:
+    """Builds a fuzz target without running it.
+    
+    Args:
+        generated_project_path: Path to the generated OSS-Fuzz project
+        
+    Returns:
+        Dictionary with build results containing:
+        - success: bool indicating if build succeeded
+        - errors: list of error messages
+        - log: build log content
+        - binary_exists: bool indicating if binary was created
+    """
+    project_name = os.path.basename(generated_project_path)
+    log_path = os.path.join(self.work_dirs.run_logs, f'{project_name}-build.log')
+    
+    # Build the target
+    build_succeeded = self.builder_runner.build_target_local(
+        generated_project_path,
+        log_path,
+        sanitizer='address'
+    )
+    
+    # Read build log
+    build_log = ""
+    if os.path.exists(log_path):
+      with open(log_path, 'r') as f:
+        build_log = f.read()
+    
+    # Check if binary exists
+    outdir = builder_runner.get_build_artifact_dir(generated_project_path, 'out')
+    target_binary = os.path.join(outdir, self.benchmark.target_name)
+    binary_exists = os.path.exists(target_binary)
+    
+    # Parse errors from log if build failed
+    errors = []
+    if not build_succeeded:
+      # Extract error lines from log
+      for line in build_log.split('\n'):
+        if 'error:' in line.lower() or 'undefined reference' in line:
+          errors.append(line.strip())
+    
+    return {
+        'success': build_succeeded and binary_exists,
+        'errors': errors,
+        'log': build_log,
+        'binary_exists': binary_exists
+    }
+
   @staticmethod
   def create_ossfuzz_project(benchmark: Benchmark,
                              name: str,

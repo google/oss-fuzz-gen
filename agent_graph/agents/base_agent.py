@@ -22,7 +22,6 @@ from data_prep import introspector
 from experiment import benchmark as benchmarklib
 from llm_toolkit.models import LLM, VertexAIModel
 from llm_toolkit.prompts import Prompt
-from llm_toolkit.truncated_session_service import TokenAwareSessionService
 from results import Result
 from tool.base_tool import BaseTool
 from agent_graph.logger import LoggingMixin
@@ -350,13 +349,10 @@ class ADKBaseAgent(BaseAgent):
           tools=tools or [],
       )
 
-      # Create the session service with automatic truncation
-      # Using TokenAwareSessionService to prevent context overflow
-      # Max tokens set to 200k to leave buffer below 272k API limit
-      session_service = TokenAwareSessionService(
-          max_tokens=200000,  # Conservative limit below 272k
-          keep_system_message=True
-      )
+      # Create the session service
+      # Note: ADK agents still use the old session-based approach
+      # New LangGraph agents use agent-specific messages instead
+      session_service = sessions.InMemorySessionService()
       session_service.create_session(
           app_name=self.name,
           user_id=benchmark.id,
@@ -370,7 +366,7 @@ class ADKBaseAgent(BaseAgent):
           session_service=session_service,
       )
 
-      logger.info('ADK Agent %s created with TokenAwareSessionService (max 200k tokens).', 
+      logger.info('ADK Agent %s created with InMemorySessionService.', 
                   self.name, trial=self.trial)
     else:
       # Fallback mode for non-Vertex AI models

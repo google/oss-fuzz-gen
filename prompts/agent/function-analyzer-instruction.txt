@@ -1,3 +1,0 @@
-You are a security engineer tasked with analyzing a function
-    and extracting its input requirements,
-    necessary for it to execute correctly.

@@ -13,9 +13,9 @@ from agent_graph.state import FuzzingWorkflowState
 from experiment import builder_runner as builder_runner_lib
 from experiment import evaluator as evaluator_lib
 from experiment import oss_fuzz_checkout
-from ..benchmark import LangGraphBenchmark as Benchmark
+from experiment.benchmark import Benchmark
 from experiment.evaluator import Evaluator
-from ..workdir import LangGraphWorkDirs
+from experiment.workdir import WorkDirs
 
 def execution_node(state: FuzzingWorkflowState, config: Dict[str, Any]) -> Dict[str, Any]:
     """
@@ -37,9 +37,13 @@ def execution_node(state: FuzzingWorkflowState, config: Dict[str, Any]) -> Dict[
         # Extract configuration from LangGraph's configurable system
         configurable = config.get("configurable", {})
         args = configurable["args"]
+        
+        # Deserialize benchmark and work_dirs from dicts
+        from experiment.benchmark import Benchmark
+        from experiment.workdir import WorkDirs
         benchmark = Benchmark.from_dict(state["benchmark"])
         trial = state["trial"]
-        work_dirs = LangGraphWorkDirs.from_dict(state["work_dirs"])
+        work_dirs = WorkDirs.from_dict(state["work_dirs"])
         
         logger.info('Starting Execution node', trial=trial)
         
@@ -146,9 +150,13 @@ def build_node(state: FuzzingWorkflowState, config: Dict[str, Any]) -> Dict[str,
         # Extract configuration from LangGraph's configurable system
         configurable = config.get("configurable", {})
         args = configurable["args"]
+        
+        # Deserialize benchmark and work_dirs from dicts
+        from experiment.benchmark import Benchmark
+        from experiment.workdir import WorkDirs
         benchmark = Benchmark.from_dict(state["benchmark"])
         trial = state["trial"]
-        work_dirs = LangGraphWorkDirs.from_dict(state["work_dirs"])
+        work_dirs = WorkDirs.from_dict(state["work_dirs"])
         
         logger.info('Starting Build node', trial=trial)
         

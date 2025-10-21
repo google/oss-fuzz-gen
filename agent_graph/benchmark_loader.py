@@ -3,15 +3,15 @@
 import argparse
 import logging
 import os
-from typing import List, Optional
+from typing import Tuple
+
 from experiment import benchmark as benchmarklib
-from .workdir import LangGraphWorkDirs
-from .benchmark import LangGraphBenchmark
+from experiment.workdir import WorkDirs
 
 logger = logging.getLogger(__name__)
 import run_single_fuzz
 
-def load_benchmark_from_args(args: argparse.Namespace) -> LangGraphBenchmark:
+def load_benchmark_from_args(args: argparse.Namespace) -> benchmarklib.Benchmark:
     """Load benchmark from command line arguments.
     
     This replicates the exact logic from agent_test.py lines 243-244.
@@ -51,35 +51,18 @@ def load_benchmark_from_args(args: argparse.Namespace) -> LangGraphBenchmark:
     if hasattr(args, 'context') and args.context:
         benchmark.use_context = True
     
-    # Convert to LangGraphBenchmark for consistent interface
-    langgraph_benchmark = LangGraphBenchmark(
-        id=benchmark.id,
-        project=benchmark.project,
-        function_name=benchmark.function_name,
-        signature=benchmark.function_signature,
-        filepath=benchmark.target_path,  # Use target_path as filepath
-        begin_line=0,  # Default values
-        end_line=0,    # Default values
-        params=[{'name': p.get('name', ''), 'type': p.get('type', '')} for p in benchmark.params],
-        return_type=benchmark.return_type,
-        target_path=benchmark.target_path,
-        build_script='',  # Default value
-        language=benchmark.language,
-        additional_info={'use_context': getattr(benchmark, 'use_context', False)}
-    )
-    
-    return langgraph_benchmark
+    return benchmark
 
-def setup_work_dirs(args: argparse.Namespace) -> LangGraphWorkDirs:
+def setup_work_dirs(args: argparse.Namespace) -> WorkDirs:
     """Setup work directories based on arguments."""
-    work_dirs = LangGraphWorkDirs(args.work_dir)
+    work_dirs = WorkDirs(args.work_dir)
     
     # Store work_dirs in args for compatibility with existing code
     args.work_dirs = work_dirs
     
     return work_dirs
 
-def prepare_experiment_environment(args: argparse.Namespace) -> tuple[benchmarklib.Benchmark, LangGraphWorkDirs]:
+def prepare_experiment_environment(args: argparse.Namespace) -> Tuple[benchmarklib.Benchmark, WorkDirs]:
     """Prepare the complete experiment environment.
     
     This function combines benchmark loading and work directory setup,

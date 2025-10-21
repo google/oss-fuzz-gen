@@ -1,78 +1,54 @@
 """
 Prototyper node for LangGraph workflow.
 
-This module provides the LangGraph-compatible node wrapper for the original
-Prototyper agent.
+Uses agent-specific messages for clean context management.
 """
 from typing import Dict, Any
 
 import logger
-from agent_graph.agents.prototyper import Prototyper
-from agent_graph.adapters import StateAdapter
 from agent_graph.state import FuzzingWorkflowState
-from ..benchmark import LangGraphBenchmark as Benchmark
+from agent_graph.agents.langgraph_agent import LangGraphPrototyper
+
 
 def prototyper_node(state: FuzzingWorkflowState, config: Dict[str, Any]) -> Dict[str, Any]:
     """
-    LangGraph node that wraps the original Prototyper agent.
-    
-    This node generates fuzz target prototypes by:
-    1. Converting LangGraph state to Result objects
-    2. Executing the original Prototyper agent
-    3. Converting the BuildResult back to state updates
+    Generate fuzz target code.
     
     Args:
-        state: Current LangGraph workflow state
+        state: Current workflow state
         config: Configuration containing LLM, args, etc.
-        
+    
     Returns:
-        Dictionary of state updates
+        State updates
     """
+    trial = state["trial"]
+    logger.info('Starting Prototyper node', trial=trial)
+    
     try:
-        # Extract configuration from LangGraph's configurable system
+        # Extract config
         configurable = config.get("configurable", {})
         llm = configurable["llm"]
         args = configurable["args"]
-        benchmark = Benchmark.from_dict(state["benchmark"])
-        trial = state["trial"]
         
-        logger.info('Starting Prototyper node', trial=trial)
-        
-        # Convert state to result history that Prototyper expects
-        result_history = StateAdapter.state_to_result_history(state)
-        
-        # Create the Prototyper instance
-        prototyper = Prototyper(
-            trial=trial,
+        # Create agent
+        agent = LangGraphPrototyper(
             llm=llm,
-            args=args,
-            name='Prototyper'
+            trial=trial,
+            args=args
         )
         
-        # Execute the prototyper
-        build_result = prototyper.execute(result_history)
+        # Execute agent
+        result = agent.execute(state)
         
-        # Convert BuildResult back to state updates
-        state_update = StateAdapter.result_to_state_update(build_result)
-        
-        logger.info('Prototyper node completed successfully', trial=trial)
-        
-        return state_update
+        logger.info('Prototyper node completed', trial=trial)
+        return result
         
     except Exception as e:
-        # Handle errors gracefully
-        logger.error(f'Error in Prototyper node: {str(e)}', 
-                    trial=state.get("trial", 0))
+        logger.error(f'Prototyper failed: {e}', trial=trial)
         return {
             "errors": [{
                 "node": "Prototyper",
                 "message": str(e),
                 "type": type(e).__name__
-            }],
-            "messages": [{
-                "role": "assistant",
-                "content": f"Prototyper failed: {str(e)}"
             }]
         }
-
-__all__ = ['prototyper_node']

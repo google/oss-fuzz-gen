@@ -140,6 +140,27 @@ class LLM:
   def chat_llm(self, client: Any, prompt: prompts.Prompt) -> str:
     """Queries the LLM in the given chat session and returns the response."""
 
+  def chat_with_messages(self, messages: list[dict[str, str]]) -> str:
+    """
+    Chat with LLM using a list of messages.
+    
+    This is a convenience method for LangGraph agents that work with message lists.
+    
+    Args:
+        messages: List of message dicts with 'role' and 'content' keys
+    
+    Returns:
+        LLM response text
+    """
+    # Create a prompt from messages
+    prompt = self.prompt_type()(messages)
+    
+    # Get or create a client
+    client = self.get_chat_client(None)
+    
+    # Call the existing chat_llm method
+    return self.chat_llm(client, prompt)
+
   @abstractmethod
   def get_model(self) -> Any:
     """Returns the underlying model instance."""

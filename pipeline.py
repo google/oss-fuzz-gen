@@ -3,7 +3,7 @@ import argparse
 from typing import Optional
 
 import logger
-from agent.base_agent import BaseAgent
+from agent_graph.agents.base_agent import BaseAgent
 from results import AnalysisResult, BuildResult, Result, RunResult, TrialResult
 from stage.analysis_stage import AnalysisStage
 from stage.execution_stage import ExecutionStage

@@ -124,3 +124,15 @@ class WorkDirs:
     if match:
       return int(match.group(1))
     return None
+  
+  def to_dict(self) -> dict:
+    """Convert WorkDirs to a dictionary for serialization."""
+    return {
+        'base_dir': self._base_dir,
+    }
+  
+  @classmethod
+  def from_dict(cls, data: dict) -> 'WorkDirs':
+    """Create WorkDirs from a dictionary."""
+    # Use keep=True to avoid clearing the directory on reconstruction
+    return cls(data['base_dir'], keep=True)

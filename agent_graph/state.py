@@ -2,8 +2,6 @@
 
 from typing_extensions import TypedDict, NotRequired, Annotated
 from typing import List, Dict, Any, Optional
-import operator
-from agent_graph.memory import trim_messages_by_tokens
 
 
 def add_agent_messages(
@@ -25,6 +23,8 @@ def add_agent_messages(
     Returns:
         Merged and trimmed agent messages
     """
+    from agent_graph.memory import trim_messages_by_tokens
+    
     # Start with a copy of left
     result = left.copy()
     
@@ -55,9 +55,9 @@ class FuzzingWorkflowState(TypedDict):
     """
     
     # === Core Information (Required) ===
-    benchmark: Dict[str, Any]  # Serialized Benchmark object
+    benchmark: Dict[str, Any]  # Benchmark dict (serialized from experiment.benchmark.Benchmark)
     trial: int  # Trial number
-    work_dirs: Dict[str, str]  # Serialized WorkDirs object
+    work_dirs: Dict[str, Any]  # WorkDirs dict (serialized from experiment.workdir.WorkDirs)
     
     # === Agent-Specific Messages ===
     # Each agent maintains its own conversation history independently
@@ -125,8 +125,8 @@ class WorkerState(TypedDict):
     end_time: NotRequired[float]  # Task completion timestamp
 
 def create_initial_state(
-    benchmark,  # benchmarklib.Benchmark or Dict[str, Any]
-    work_dirs,  # workdir.WorkDirs or Dict[str, str] 
+    benchmark,  # experiment.benchmark.Benchmark object
+    work_dirs,  # experiment.workdir.WorkDirs object
     trial: int = 0,
     max_round: int = 100,
     run_timeout: int = 300,
@@ -140,36 +140,9 @@ def create_initial_state(
 ) -> FuzzingWorkflowState:
     """Create an initial state for the fuzzing workflow with full parameter support."""
     
-    # Handle benchmark conversion
-    if hasattr(benchmark, 'to_dict'):
-        benchmark_dict = benchmark.to_dict()
-    elif isinstance(benchmark, dict):
-        benchmark_dict = benchmark
-    else:
-        # Convert benchmark object to dict manually
-        benchmark_dict = {
-            'id': getattr(benchmark, 'id', 'unknown'),
-            'project': getattr(benchmark, 'project', 'unknown'),
-            'function_name': getattr(benchmark, 'function_name', 'unknown'),
-            'language': getattr(benchmark, 'language', 'c++'),
-            'function_signature': getattr(benchmark, 'function_signature', ''),
-            'target_path': getattr(benchmark, 'target_path', ''),
-            'target_name': getattr(benchmark, 'target_name', ''),
-            'use_context': use_context
-        }
-    
-    # Handle work_dirs conversion
-    if hasattr(work_dirs, 'to_dict'):
-        work_dirs_dict = work_dirs.to_dict()
-    elif isinstance(work_dirs, dict):
-        work_dirs_dict = work_dirs
-    else:
-        # Convert work_dirs object to dict manually
-        work_dirs_dict = {
-            'base': getattr(work_dirs, 'base', ''),
-            'fuzz_targets': getattr(work_dirs, 'fuzz_targets', ''),
-            'status': getattr(work_dirs, 'status', '')
-        }
+    # Serialize objects to dicts for msgpack compatibility
+    benchmark_dict = benchmark.to_dict()
+    work_dirs_dict = work_dirs.to_dict()
     
     # Initialize agent_messages dict (empty, agents will add their own system messages)
     agent_messages = {}

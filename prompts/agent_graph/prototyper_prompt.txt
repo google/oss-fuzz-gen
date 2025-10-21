@@ -1,0 +1,81 @@
+Generate a LibFuzzer fuzz target for the following function:
+
+**Project**: {PROJECT_NAME}
+**Function**: {FUNCTION_NAME}
+**Signature**: {FUNCTION_SIGNATURE}
+**Language**: {LANGUAGE}
+
+**Function Analysis**:
+{FUNCTION_ANALYSIS}
+
+{ADDITIONAL_CONTEXT}
+
+**Your Task**:
+Write a complete, compilable fuzz target that:
+1. Follows the function analysis requirements
+2. Properly extracts and initializes all parameters from fuzzer input
+3. Handles complex type initialization correctly
+4. Includes all necessary headers with correct paths
+5. Manages resources properly (allocation and cleanup)
+6. Covers edge cases identified in the analysis
+7. Builds successfully with the project's build system
+
+**Implementation Guidelines**:
+
+1. **Study Existing Code**:
+   - Look at other fuzz targets in the project for header include patterns
+   - Understand how the project initializes similar types
+   - Follow the project's coding style and conventions
+
+2. **Header Includes**:
+   - Include headers using the same relative path style as existing fuzz targets
+   - Ensure all types and functions you use are properly declared
+   - Include necessary system headers (stdint.h, stddef.h, etc.)
+
+3. **Input Extraction**:
+   - For C++ targets: use FuzzedDataProvider to extract typed values
+   - For C targets: manually parse the data buffer with size checks
+   - Always verify sufficient input size before consumption
+   - Handle variable-length data appropriately
+
+4. **Parameter Initialization**:
+   - Follow the initialization methods specified in the function analysis
+   - Use constructor/initialization functions when available
+   - Properly initialize structs based on analysis requirements
+   - Set up any required global state before calling the target function
+
+5. **Error Handling**:
+   - Handle initialization failures gracefully
+   - Don't crash on invalid input (unless testing for crashes)
+   - Return 0 for successful fuzzer execution
+
+6. **Cleanup**:
+   - Free all allocated memory
+   - Close file descriptors, network connections, etc.
+   - Reset global state if the target might be called multiple times
+
+**Output Format**:
+
+Provide your complete solution in the following format:
+
+<conclusion>
+[Brief explanation of your implementation approach, including:
+ - How you extract parameters from fuzzer input
+ - Any special initialization steps required
+ - Key design decisions made]
+</conclusion>
+
+<fuzz target>
+[Complete, compilable fuzz target code]
+</fuzz target>
+
+<build script>
+[Modified build script if needed, otherwise leave this section out]
+</build script>
+
+**Important Notes**:
+- Provide the COMPLETE fuzz target code (not just snippets)
+- Do not use triple backticks (```) to wrap code
+- Use the XML-style tags shown above
+- Ensure the code is ready to compile without modifications
+

@@ -1,0 +1,79 @@
+Fix the compilation errors in the following fuzz target:
+
+**Language**: {LANGUAGE}
+
+**Current Fuzz Target Code**:
+```
+{CURRENT_CODE}
+```
+
+**Compilation Errors**:
+{BUILD_ERRORS}
+
+{ADDITIONAL_CONTEXT}
+
+**Your Task**:
+Analyze the build errors and fix them while preserving the fuzzing logic and intent.
+
+**Analysis Steps**:
+
+1. **Understand Each Error**:
+   - Read each error message carefully
+   - Identify the error type (syntax, type mismatch, linker, etc.)
+   - Locate the exact line and context where the error occurs
+
+2. **Identify Root Causes**:
+   - Are headers missing or included incorrectly?
+   - Are there type mismatches or casting issues?
+   - Are function signatures incorrect?
+   - Are symbols undefined (linker errors)?
+   - Is the API being used incorrectly?
+
+3. **Plan Your Fixes**:
+   - Determine the minimal changes needed to fix each error
+   - Ensure fixes don't break the fuzzing logic
+   - Consider if fixes might introduce new errors
+   - Check if the fixes respect function requirements
+
+4. **Verify Your Solution**:
+   - Mentally test that the fixes address all errors
+   - Ensure the fuzzing logic remains intact
+   - Confirm all includes are correct and complete
+   - Verify type compatibility throughout
+
+**Fix Guidelines**:
+- Make only the changes necessary to fix the errors
+- Preserve the original fuzzing approach and logic
+- Don't refactor unrelated code
+- Keep the code readable and maintainable
+- Follow the project's coding style
+- Ensure all includes use correct relative paths
+- Verify function signatures match their declarations
+
+**Output Format**:
+
+Provide your complete solution in the following format:
+
+<conclusion>
+[Brief explanation covering:
+ - What errors were present
+ - Root causes you identified
+ - How you fixed each issue
+ - Any important considerations]
+</conclusion>
+
+<fuzz target>
+[Complete corrected fuzz target code - do NOT omit any existing code]
+</fuzz target>
+
+<build script>
+[Modified build script if needed, otherwise omit this section]
+</build script>
+
+**Critical Requirements**:
+- Provide the FULL corrected code (not just the changed parts)
+- Do not use triple backticks (```) inside the XML tags
+- Ensure all resources are properly managed
+- Maintain the original fuzzing intent
+- Keep changes minimal and focused
+
