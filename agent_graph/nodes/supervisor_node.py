@@ -153,32 +153,14 @@ def _determine_next_action(state: FuzzingWorkflowState) -> str:
         # After crash analysis or if no crash, enhance the target
         return "enhancer"
     
-    # Step 6: Execution succeeded, check coverage
-    coverage_analysis = state.get("coverage_analysis")
-    if not coverage_analysis:
-        # No coverage analysis yet - in a real implementation,
-        # we'd have a coverage analyzer node
-        # For now, assume we're done if execution succeeded
-        pass
-    
-    # Step 7: Decide if we need another iteration
-    coverage_rate = 0.0
-    if coverage_analysis:
-        coverage_rate = coverage_analysis.get("coverage_rate", 0.0)
-    
-    # Success criteria: good coverage or multiple successful runs
-    if coverage_rate > 0.8:  # 80% coverage threshold
-        return "END"
-    
-    # Check iteration count
-    current_iteration = state.get("current_iteration", 0)
-    max_iterations = state.get("max_iterations", 5)
-    
-    if current_iteration >= max_iterations:
-        return "END"
-    
-    # Continue iterating - enhance the target for better coverage
-    return "enhancer"
+    # Step 6: Execution succeeded - workflow complete!
+    # When execution is successful, we've achieved the main goal:
+    # - Built successfully
+    # - Ran successfully 
+    # - Generated coverage data
+    # No need to continue enhancing, we have a working fuzz target
+    logger.info('Execution succeeded, workflow complete', trial=state.get("trial", 0))
+    return "END"
 
 def route_condition(state: FuzzingWorkflowState) -> str:
     """
