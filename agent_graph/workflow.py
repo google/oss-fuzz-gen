@@ -4,6 +4,7 @@ import argparse
 from typing import Dict, Any
 
 from langgraph.graph import StateGraph, END
+from langgraph.checkpoint.memory import MemorySaver
 from agent_graph.state import FuzzingWorkflowState, create_initial_state
 from agent_graph.adapters import ConfigAdapter
 from agent_graph.nodes import (
@@ -19,6 +20,7 @@ from agent_graph.nodes import (
 from experiment.benchmark import Benchmark
 from experiment.workdir import WorkDirs
 from llm_toolkit.models import LLM
+from agent_graph.memory import create_memory_checkpointer
 
 class FuzzingWorkflow:
     """
@@ -28,18 +30,22 @@ class FuzzingWorkflow:
     with proper configuration and state management.
     """
     
-    def __init__(self, llm: LLM, args: argparse.Namespace):
+    def __init__(self, llm: LLM, args: argparse.Namespace, use_checkpointer: bool = True):
         """
         Initialize the fuzzing workflow.
         
         Args:
             llm: LLM instance for agents
             args: Command line arguments
+            use_checkpointer: Whether to use memory checkpointer for persistence
         """
         self.llm = llm
         self.args = args
         self.workflow_graph = None
         self.config = ConfigAdapter.create_config(llm, args)
+        
+        # Create memory checkpointer for conversation persistence
+        self.checkpointer = create_memory_checkpointer() if use_checkpointer else None
     
     def create_workflow(self, workflow_type: str = "full") -> StateGraph:
         """
@@ -84,19 +90,24 @@ class FuzzingWorkflow:
             work_dirs=self.args.work_dirs
         )
         
-        # Compile and run the workflow
-        compiled_workflow = self.workflow_graph.compile()
+        # Compile and run the workflow with checkpointer
+        compile_kwargs = {}
+        if self.checkpointer:
+            compile_kwargs['checkpointer'] = self.checkpointer
+        
+        compiled_workflow = self.workflow_graph.compile(**compile_kwargs)
         
         # Execute the workflow with configurable parameters
-        final_state = compiled_workflow.invoke(
-            initial_state,
-            config={
-                "configurable": {
-                    "llm": self.llm,
-                    "args": self.args
-                }
+        # Use thread_id for conversation persistence
+        config = {
+            "configurable": {
+                "llm": self.llm,
+                "args": self.args,
+                "thread_id": f"{benchmark.id}_trial_{trial}"
             }
-        )
+        }
+        
+        final_state = compiled_workflow.invoke(initial_state, config=config)
         
         return final_state
     

@@ -12,13 +12,14 @@ from google.adk.tools import ToolContext
 import logger
 import results as resultslib
 from agent_graph.agents import base_agent
+from agent_graph.agents.langgraph_agent import LangGraphAgent
 from data_prep import introspector
 from experiment import benchmark as benchmarklib
 from experiment.workdir import WorkDirs
 from llm_toolkit import models, prompt_builder, prompts
 from tool import container_tool
 
-class FunctionAnalyzer(base_agent.ADKBaseAgent):
+class FunctionAnalyzer(LangGraphAgent):
   """An LLM agent to analyze a function and identify its implicit requirements.
   The results of this analysis will be used by the writer agents to
   generate correct fuzz target for the function.

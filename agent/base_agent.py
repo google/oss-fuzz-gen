@@ -35,6 +35,7 @@ from data_prep import introspector
 from experiment import benchmark as benchmarklib
 from llm_toolkit.models import LLM, VertexAIModel
 from llm_toolkit.prompts import Prompt
+from llm_toolkit.truncated_session_service import TokenAwareSessionService
 from results import Result
 from tool.base_tool import BaseTool
 
@@ -339,37 +340,50 @@ class ADKBaseAgent(BaseAgent):
 
     self.benchmark = benchmark
 
-    # For now, ADKBaseAgents only support the Vertex AI Models.
-    if not isinstance(llm, VertexAIModel):
-      raise ValueError(f'{self.name} only supports Vertex AI models.')
+    # Check if this is a Vertex AI model - if not, fallback to BaseAgent behavior
+    self.use_adk = isinstance(llm, VertexAIModel)
+    
+    if not self.use_adk:
+      logger.warning('Non-Vertex AI model detected for %s. Using fallback mode without ADK.', self.name, trial=self.trial)
 
-    # Create the agent using the ADK library
-    adk_agent = agents.LlmAgent(
-        name=self.name,
-        model=llm._vertex_ai_model,
-        description=description,
-        instruction=instruction,
-        tools=tools or [],
-    )
+    # Create the agent using the ADK library only for Vertex AI models
+    if self.use_adk:
+      adk_agent = agents.LlmAgent(
+          name=self.name,
+          model=llm._vertex_ai_model,
+          description=description,
+          instruction=instruction,
+          tools=tools or [],
+      )
 
-    # Create the session service
-    session_service = sessions.InMemorySessionService()
-    session_service.create_session(
-        app_name=self.name,
-        user_id=benchmark.id,
-        session_id=f'session_{self.trial}',
-    )
+      # Create the session service with automatic truncation
+      # Using TokenAwareSessionService to prevent context overflow
+      # Max tokens set to 200k to leave buffer below 272k API limit
+      session_service = TokenAwareSessionService(
+          max_tokens=200000,  # Conservative limit below 272k
+          keep_system_message=True
+      )
+      session_service.create_session(
+          app_name=self.name,
+          user_id=benchmark.id,
+          session_id=f'session_{self.trial}',
+      )
 
-    # Create the runner
-    self.runner = runners.Runner(
-        agent=adk_agent,
-        app_name=self.name,
-        session_service=session_service,
-    )
+      # Create the runner
+      self.runner = runners.Runner(
+          agent=adk_agent,
+          app_name=self.name,
+          session_service=session_service,
+      )
+
+      logger.info('ADK Agent %s created with TokenAwareSessionService (max 200k tokens).', 
+                  self.name, trial=self.trial)
+    else:
+      # Fallback mode for non-Vertex AI models
+      self.runner = None
+      logger.info('Fallback Agent %s created (no ADK).', self.name, trial=self.trial)
 
     self.round = 0
-
-    logger.info('ADK Agent %s created.', self.name, trial=self.trial)
 
   def get_xml_representation(self, response: Optional[dict]) -> str:
     """Returns the XML representation of the response."""
@@ -393,38 +407,51 @@ class ADKBaseAgent(BaseAgent):
 
     self.log_llm_prompt(prompt.get())
 
-    async def _call():
-      user_id = self.benchmark.id
-      session_id = f'session_{self.trial}'
-      content = types.Content(role='user',
-                              parts=[types.Part(text=prompt.get())])
+    if self.use_adk:
+      # Use ADK for Vertex AI models
+      async def _call():
+        user_id = self.benchmark.id
+        session_id = f'session_{self.trial}'
+        content = types.Content(role='user',
+                                parts=[types.Part(text=prompt.get())])
 
-      final_response = None
+        final_response = None
 
-      async for event in self.runner.run_async(
-          user_id=user_id,
-          session_id=session_id,
-          new_message=content,
-      ):
-        if event.is_final_response():
-          if (event.content and event.content.parts):
-            if event.content.parts[0].text:
-              final_response = event.content.parts[0].text
-              self.log_llm_response(final_response)
-            elif event.content.parts[0].function_response:
-              final_response = event.content.parts[0].function_response.response
-              self.log_llm_response(self.get_xml_representation(final_response))
-          elif event.actions and event.actions.escalate:
-            error_message = event.error_message
-            logger.error('Agent escalated: %s', error_message, trial=self.trial)
+        async for event in self.runner.run_async(
+            user_id=user_id,
+            session_id=session_id,
+            new_message=content,
+        ):
+          if event.is_final_response():
+            if (event.content and event.content.parts):
+              if event.content.parts[0].text:
+                final_response = event.content.parts[0].text
+                self.log_llm_response(final_response)
+              elif event.content.parts[0].function_response:
+                final_response = event.content.parts[0].function_response.response
+                self.log_llm_response(self.get_xml_representation(final_response))
+            elif event.actions and event.actions.escalate:
+              error_message = event.error_message
+              logger.error('Agent escalated: %s', error_message, trial=self.trial)
 
-      if not final_response:
-        self.log_llm_response('No valid response from LLM.')
+        if not final_response:
+          self.log_llm_response('No valid response from LLM.')
 
-      return final_response
+        return final_response
 
-    return self.llm.with_retry_on_error(lambda: asyncio.run(_call()),
-                                        [errors.ClientError])
+      return self.llm.with_retry_on_error(lambda: asyncio.run(_call()),
+                                          [errors.ClientError])
+    else:
+      # Fallback to BaseAgent behavior for non-Vertex AI models (e.g., GPT-5)
+      # Create a proper client for the LLM
+      llm_client = None
+      if hasattr(self.llm, '_get_client'):
+        llm_client = self.llm._get_client()
+      elif hasattr(self.llm, 'create_client'):
+        llm_client = self.llm.create_client()
+      response = super().chat_llm(cur_round, llm_client, prompt, trial)
+      self.log_llm_response(response)
+      return response
 
   def log_llm_prompt(self, promt: str) -> None:
     self.round += 1

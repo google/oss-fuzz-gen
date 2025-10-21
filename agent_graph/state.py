@@ -3,10 +3,48 @@
 from typing_extensions import TypedDict, NotRequired, Annotated
 from typing import List, Dict, Any, Optional
 import operator
+from agent_graph.memory import trim_messages_by_tokens
 
-def add_messages(left: List[Dict[str, Any]], right: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
-    """Message reducer for combining message lists."""
-    return left + right
+
+def add_agent_messages(
+    left: Dict[str, List[Dict[str, Any]]], 
+    right: Dict[str, List[Dict[str, Any]]]
+) -> Dict[str, List[Dict[str, Any]]]:
+    """
+    Message reducer for agent-specific messages.
+    
+    This reducer:
+    1. Merges agent-specific message dictionaries
+    2. Trims each agent's messages independently to 50k tokens
+    3. Preserves system messages for each agent
+    
+    Args:
+        left: Existing agent messages {agent_name: [messages]}
+        right: New agent messages to merge
+    
+    Returns:
+        Merged and trimmed agent messages
+    """
+    # Start with a copy of left
+    result = left.copy()
+    
+    # Merge each agent's messages from right
+    for agent_name, messages in right.items():
+        if agent_name in result:
+            # Combine existing and new messages for this agent
+            combined = result[agent_name] + messages
+        else:
+            # New agent, just use the messages from right
+            combined = messages
+        
+        # Trim this agent's messages to 50k tokens
+        result[agent_name] = trim_messages_by_tokens(
+            combined,
+            max_tokens=50000,  # Each agent gets 50k tokens
+            keep_system=True
+        )
+    
+    return result
 
 class FuzzingWorkflowState(TypedDict):
     """
@@ -21,8 +59,11 @@ class FuzzingWorkflowState(TypedDict):
     trial: int  # Trial number
     work_dirs: Dict[str, str]  # Serialized WorkDirs object
     
-    # === Messages for LangGraph ===
-    messages: Annotated[List[Dict[str, Any]], add_messages]
+    # === Agent-Specific Messages ===
+    # Each agent maintains its own conversation history independently
+    # Format: {agent_name: [messages]}
+    # Example: {"function_analyzer": [...], "prototyper": [...]}
+    agent_messages: NotRequired[Annotated[Dict[str, List[Dict[str, Any]]], add_agent_messages]]
     
     # === Function Analysis (from FunctionAnalyzer) ===
     function_analysis: NotRequired[Dict[str, Any]]
@@ -130,26 +171,14 @@ def create_initial_state(
             'status': getattr(work_dirs, 'status', '')
         }
     
-    # Create initial message
-    initial_message = {
-        "role": "system",
-        "content": f"Starting fuzzing workflow for {benchmark_dict.get('project', 'unknown project')} "
-                  f"function {benchmark_dict.get('function_name', 'unknown function')} (trial {trial})"
-    }
-    
-    # Add initial prompt if provided
-    messages = [initial_message]
-    if initial_prompt:
-        messages.append({
-            "role": "user",
-            "content": initial_prompt
-        })
+    # Initialize agent_messages dict (empty, agents will add their own system messages)
+    agent_messages = {}
     
     return FuzzingWorkflowState(
         benchmark=benchmark_dict,
         trial=trial,
         work_dirs=work_dirs_dict,
-        messages=messages,
+        agent_messages=agent_messages,
         current_iteration=0,
         max_iterations=max_round,
         workflow_status="initialized",

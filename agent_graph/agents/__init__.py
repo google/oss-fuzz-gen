@@ -7,6 +7,7 @@ main agent/ directory.
 """
 
 from .base_agent import BaseAgent, ADKBaseAgent
+from .langgraph_agent import LangGraphAgent
 from .function_analyzer import FunctionAnalyzer
 from .prototyper import Prototyper
 from .enhancer import Enhancer
@@ -15,6 +16,7 @@ from .crash_analyzer import CrashAnalyzer
 __all__ = [
     'BaseAgent',
     'ADKBaseAgent',
+    'LangGraphAgent',
     'FunctionAnalyzer',
     'Prototyper',
     'Enhancer',
