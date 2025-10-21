@@ -8,6 +8,7 @@ benchmark-sets/generated-benchmark-*
 venv/
 .venv/
 __pycache__/
+*.log
 *.swp
 *.egg-info
 .vscode/
