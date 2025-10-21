@@ -153,13 +153,23 @@ def _determine_next_action(state: FuzzingWorkflowState) -> str:
         # After crash analysis or if no crash, enhance the target
         return "enhancer"
     
-    # Step 6: Execution succeeded - workflow complete!
-    # When execution is successful, we've achieved the main goal:
-    # - Built successfully
-    # - Ran successfully 
-    # - Generated coverage data
-    # No need to continue enhancing, we have a working fuzz target
-    logger.info('Execution succeeded, workflow complete', trial=state.get("trial", 0))
+    # Step 6: Execution succeeded, check if we should continue enhancing
+    # Check coverage diff - if it's 0, we're not discovering new code paths
+    coverage_diff = state.get("line_coverage_diff", 0.0)
+    
+    # Check iteration count to avoid infinite loops
+    current_iteration = state.get("current_iteration", 0)
+    max_iterations = state.get("max_iterations", 5)
+    
+    if coverage_diff == 0.0 and current_iteration < max_iterations:
+        # No new coverage discovered, try to enhance the target
+        logger.info(f'No new coverage (diff={coverage_diff:.2%}), enhancing target', 
+                   trial=state.get("trial", 0))
+        return "enhancer"
+    
+    # Either we found new coverage or reached max iterations - we're done
+    logger.info(f'Execution succeeded with coverage diff={coverage_diff:.2%}, workflow complete', 
+               trial=state.get("trial", 0))
     return "END"
 
 def route_condition(state: FuzzingWorkflowState) -> str:
