@@ -92,9 +92,9 @@ def _determine_next_action(state: FuzzingWorkflowState) -> str:
     1. Function analysis -> Prototyper
     2. Prototyper -> Build/Execution
     3. Build success -> Execution
-    4. Execution with crashes -> CrashAnalyzer
-    5. Execution with coverage -> CoverageAnalyzer (if available)
-    6. Analysis results -> Enhancer
+    4. Execution with crashes -> CrashAnalyzer -> ContextAnalyzer
+    5. Execution with low coverage -> CoverageAnalyzer
+    6. Analysis results -> Enhancer or END
     7. Multiple cycles until success or max iterations
     
     Args:
@@ -145,31 +145,63 @@ def _determine_next_action(state: FuzzingWorkflowState) -> str:
     if not run_success:
         # Execution failed/crashed
         run_error = state.get("run_error", "")
-        if run_error and "crash" in run_error.lower():
-            # We have a crash to analyze
-            if not state.get("crash_analysis"):
-                return "crash_analyzer"
+        crashes = state.get("crashes", False)
         
-        # After crash analysis or if no crash, enhance the target
+        if crashes or (run_error and "crash" in run_error.lower()):
+            # We have a crash to analyze
+            crash_analysis = state.get("crash_analysis")
+            if not crash_analysis:
+                logger.debug('Crash detected, routing to crash_analyzer', trial=state.get("trial", 0))
+                return "crash_analyzer"
+            
+            # We have crash analysis, check if we need context analysis
+            context_analysis = state.get("context_analysis")
+            if not context_analysis:
+                logger.debug('Crash analyzed, routing to context_analyzer', trial=state.get("trial", 0))
+                return "context_analyzer"
+            
+            # Both crash and context analysis done
+            # If crash is feasible (true bug), we're done successfully
+            if context_analysis.get("feasible", False):
+                logger.info('Found a feasible crash (true bug)!', trial=state.get("trial", 0))
+                return "END"
+            else:
+                # False positive, try to enhance the target based on recommendations
+                logger.info('Crash is not feasible, enhancing target', trial=state.get("trial", 0))
+                return "enhancer"
+        
+        # Execution failed but not a crash, enhance the target
+        logger.debug('Execution failed (not a crash), enhancing target', trial=state.get("trial", 0))
         return "enhancer"
     
-    # Step 6: Execution succeeded, check if we should continue enhancing
-    # Check coverage diff - if it's 0, we're not discovering new code paths
+    # Step 6: Execution succeeded, check coverage results
+    coverage_percent = state.get("coverage_percent", 0.0)
     coverage_diff = state.get("line_coverage_diff", 0.0)
-    logger.debug(f'Retrieved line_coverage_diff from state: {coverage_diff}', trial=state.get("trial", 0))
+    logger.debug(f'Execution succeeded: coverage={coverage_percent:.2%}, diff={coverage_diff:.2%}', 
+                trial=state.get("trial", 0))
     
     # Check iteration count to avoid infinite loops
     current_iteration = state.get("current_iteration", 0)
     max_iterations = state.get("max_iterations", 5)
     
-    if coverage_diff == 0.0 and current_iteration < max_iterations:
-        # No new coverage discovered, try to enhance the target
-        logger.info(f'No new coverage (diff={coverage_diff:.2%}), enhancing target', 
-                   trial=state.get("trial", 0))
-        return "enhancer"
+    # Check if we should analyze coverage (low coverage or no improvement)
+    COVERAGE_THRESHOLD = 0.5  # 50% coverage threshold
+    if coverage_percent < COVERAGE_THRESHOLD or coverage_diff <= 0.01:
+        coverage_analysis = state.get("coverage_analysis")
+        if not coverage_analysis and current_iteration < max_iterations:
+            logger.debug(f'Low coverage ({coverage_percent:.2%}), routing to coverage_analyzer', 
+                        trial=state.get("trial", 0))
+            return "coverage_analyzer"
+        
+        # We have coverage analysis or reached max iterations
+        if coverage_analysis and coverage_analysis.get("improve_required", False):
+            # Coverage analyzer suggests improvement is possible
+            if current_iteration < max_iterations:
+                logger.info('Coverage can be improved, enhancing target', trial=state.get("trial", 0))
+                return "enhancer"
     
-    # Either we found new coverage or reached max iterations - we're done
-    logger.info(f'Execution succeeded with coverage diff={coverage_diff:.2%}, workflow complete', 
+    # Good coverage or max iterations reached - we're done
+    logger.info(f'Workflow complete: coverage={coverage_percent:.2%}, iterations={current_iteration}', 
                trial=state.get("trial", 0))
     return "END"
 
@@ -196,6 +228,8 @@ def route_condition(state: FuzzingWorkflowState) -> str:
         "build": "build",
         "execution": "execution",
         "crash_analyzer": "crash_analyzer",
+        "coverage_analyzer": "coverage_analyzer",
+        "context_analyzer": "context_analyzer",
         "END": "__end__"
     }
     

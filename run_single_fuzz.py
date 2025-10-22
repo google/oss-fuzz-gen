@@ -3,9 +3,9 @@
 
 import argparse
 import dataclasses
+import datetime
 import logging
 import os
-import shutil
 from multiprocessing import pool
 from typing import List, Optional
 
@@ -48,7 +48,9 @@ MAX_TOKENS: int = 409600
 RUN_TIMEOUT: int = 60
 TEMPERATURE: float = 0.4
 
-RESULTS_DIR = './results'
+# Create a unique results directory for each run to avoid interference
+# between different experiments
+RESULTS_DIR = f'./results/run-{datetime.datetime.now().strftime("%Y%m%d-%H%M%S")}'
 
 @dataclasses.dataclass
 class AggregatedResult:

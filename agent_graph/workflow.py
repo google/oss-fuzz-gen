@@ -114,6 +114,9 @@ class FuzzingWorkflow:
     
     def _create_full_workflow(self) -> StateGraph:
         """Create the full supervisor-based workflow."""
+        from agent_graph.nodes.coverage_analyzer_node import coverage_analyzer_node
+        from agent_graph.nodes.context_analyzer_node import context_analyzer_node
+        
         workflow = StateGraph(FuzzingWorkflowState)
         
         # Add all nodes
@@ -124,6 +127,8 @@ class FuzzingWorkflow:
         workflow.add_node("build", build_node)
         workflow.add_node("execution", execution_node)
         workflow.add_node("crash_analyzer", crash_analyzer_node)
+        workflow.add_node("coverage_analyzer", coverage_analyzer_node)
+        workflow.add_node("context_analyzer", context_analyzer_node)
         
         # Set entry point
         workflow.set_entry_point("supervisor")
@@ -139,6 +144,8 @@ class FuzzingWorkflow:
                 "build": "build",
                 "execution": "execution",
                 "crash_analyzer": "crash_analyzer",
+                "coverage_analyzer": "coverage_analyzer",
+                "context_analyzer": "context_analyzer",
                 "__end__": END
             }
         )
@@ -150,6 +157,8 @@ class FuzzingWorkflow:
         workflow.add_edge("build", "supervisor")
         workflow.add_edge("execution", "supervisor")
         workflow.add_edge("crash_analyzer", "supervisor")
+        workflow.add_edge("coverage_analyzer", "supervisor")
+        workflow.add_edge("context_analyzer", "supervisor")
         
         return workflow
     
