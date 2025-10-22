@@ -13,3 +13,4 @@ __pycache__/
 *.egg-info
 .vscode/
 .DS_Store
+.cursor/
