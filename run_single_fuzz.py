@@ -90,47 +90,29 @@ class AggregatedResult:
         max_coverage_diff_report=benchmark_result.line_coverage_report,
         full_textcov_diff=benchmark_result.textcov_diff)
 
+# DEPRECATED: The following functions were used in the old non-agent workflow.
+# They are no longer needed in the new LangGraph-based agent workflow.
+# Kept for backwards compatibility with legacy experiments.
+
 def generate_targets(benchmark: Benchmark, model: models.LLM,
                      prompt: prompts.Prompt, work_dirs: WorkDirs,
                      builder: prompt_builder.PromptBuilder) -> list[str]:
-  """Generates fuzz target with LLM."""
-  logging.info('Generating targets for %s %s using %s..', benchmark.project,
-               benchmark.function_signature, model.name)
-  model.query_llm(prompt, response_dir=work_dirs.raw_targets)
-
-  _, target_ext = os.path.splitext(benchmark.target_path)
-  generated_targets = []
-  for file in os.listdir(work_dirs.raw_targets):
-    if not output_parser.is_raw_output(file):
-      continue
-    raw_output = os.path.join(work_dirs.raw_targets, file)
-    target_code = output_parser.parse_code(raw_output)
-    target_code = builder.post_process_generated_code(target_code)
-    target_id, _ = os.path.splitext(raw_output)
-    target_file = f'{target_id}{target_ext}'
-    target_path = os.path.join(work_dirs.raw_targets, target_file)
-    output_parser.save_output(target_code, target_path)
-    generated_targets.append(target_path)
-
-  if generated_targets:
-    targets_relpath = map(os.path.relpath, generated_targets)
-    targets_relpath_str = '\n '.join(targets_relpath)
-    logging.info('Generated:\n %s', targets_relpath_str)
-  else:
-    logging.info('Failed to generate targets: %s', generated_targets)
-  return generated_targets
+  """[DEPRECATED] Generates fuzz target with LLM.
+  
+  This function is deprecated and only used in legacy non-agent workflows.
+  The new agent workflow generates targets via FuzzingWorkflow.
+  """
+  raise NotImplementedError(
+      "generate_targets() is deprecated. Use the agent workflow instead.")
 
 def fix_code(work_dirs: WorkDirs, generated_targets: List[str]) -> List[str]:
-  """Copies the generated target to the fixed target directory for simple
-    code fixes."""
-  fixed_targets = []
-  # Prepare all LLM-generated targets for code fixes.
-  for file in generated_targets:
-    fixed_target = os.path.join(work_dirs.fixed_targets, os.path.basename(file))
-    shutil.copyfile(file, fixed_target)
-    fixed_targets.append(fixed_target)
-
-  return fixed_targets
+  """[DEPRECATED] Copies the generated target to the fixed target directory.
+  
+  This function is deprecated and only used in legacy non-agent workflows.
+  The new agent workflow handles code fixes internally.
+  """
+  raise NotImplementedError(
+      "fix_code() is deprecated. Use the agent workflow instead.")
 
 def aggregate_results(target_stats: list[tuple[int, exp_evaluator.Result]],
                       generated_targets: list[str]) -> AggregatedResult:
@@ -260,22 +242,63 @@ def _fuzzing_pipeline(benchmark: Benchmark, model: models.LLM,
         workflow_type='full'
     )
     
-    # Convert LangGraph state back to legacy Result format
-    result = Result(benchmark=benchmark, trial=trial, work_dirs=work_dirs)
+    # Convert LangGraph state back to legacy RunResult format
+    from results import RunResult
+    result = RunResult(
+        benchmark=benchmark,
+        trial=trial,
+        work_dirs=work_dirs,
+        fuzz_target_source=final_state.get('fuzz_target_source', ''),
+        build_script_source=final_state.get('build_script_source', ''),
+        compiles=final_state.get('compile_success', False),
+        compile_error='\n'.join(final_state.get('build_errors', [])),
+        compile_log=final_state.get('compile_log', ''),
+        binary_exists=final_state.get('binary_exists', False),
+        is_function_referenced=final_state.get('is_function_referenced', False),
+        crashes=final_state.get('crashes', False),
+        run_error=final_state.get('run_error', ''),
+        crash_func=final_state.get('crash_func', {}),
+        run_log=final_state.get('run_log', ''),
+        coverage_summary=final_state.get('coverage_summary', {}),
+        coverage=final_state.get('coverage_percent', 0.0),
+        line_coverage_diff=final_state.get('line_coverage_diff', 0.0),
+        reproducer_path=final_state.get('reproducer_path', ''),
+        artifact_path=final_state.get('artifact_path', ''),
+        sanitizer='address',  # Default from execution
+        coverage_report_path=final_state.get('coverage_report_path', ''),
+        cov_pcs=final_state.get('cov_pcs', 0),
+        total_pcs=final_state.get('total_pcs', 0),
+        log_path='',  # Not tracked in LangGraph state
+        corpus_path='',  # Not tracked in LangGraph state
+        textcov_diff=None  # Not tracked in LangGraph state
+    )
     
-    # Map key results from LangGraph state to legacy Result
-    if 'fuzz_target_source' in final_state:
-      result.fuzz_target_source = final_state['fuzz_target_source']
-    if 'build_script_source' in final_state:
-      result.build_script = final_state['build_script_source']
-    if 'compile_success' in final_state:
-      result.compile_success = final_state['compile_success']
-    if 'run_success' in final_state:
-      result.run_success = final_state['run_success']
-    if 'crash_func' in final_state:
-      result.crash_func = final_state['crash_func']
+    # Convert agent_messages to chat_history format
+    if 'agent_messages' in final_state:
+      chat_history = {}
+      for agent_name, messages in final_state['agent_messages'].items():
+        # Convert message list to string format
+        history_str = '\n'.join([
+            f"{msg.get('role', 'unknown').upper()}: {msg.get('content', '')}"
+            for msg in messages
+        ])
+        chat_history[agent_name] = history_str
+      result.chat_history = chat_history
     
     trial_logger.info('LangGraph workflow completed')
+    
+    # Save fuzz target and build script to disk (matching WritingStage behavior)
+    if result.fuzz_target_source:
+      trial_logger.write_fuzz_target(result)
+      trial_logger.info(f'Saved fuzz target to {work_dirs.fuzz_targets}')
+    if result.build_script_source:
+      trial_logger.write_build_script(result)
+      trial_logger.info(f'Saved build script to {work_dirs.fuzz_targets}')
+    
+    # Save chat history
+    if result.chat_history:
+      trial_logger.write_chat_history(result, cycle_count=0)
+      trial_logger.info(f'Saved chat history to {work_dirs.status}')
     
     # Create trial result to match expected return format
     trial_result = TrialResult(benchmark=benchmark,

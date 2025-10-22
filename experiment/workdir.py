@@ -21,14 +21,13 @@ class WorkDirs:
     os.makedirs(self._base_dir, exist_ok=True)
 
     os.makedirs(self.status, exist_ok=True)
-    os.makedirs(self.raw_targets, exist_ok=True)
-    os.makedirs(self.fixed_targets, exist_ok=True)
     os.makedirs(self.build_logs, exist_ok=True)
     os.makedirs(self.run_logs, exist_ok=True)
     os.makedirs(self._corpus_base, exist_ok=True)
     os.makedirs(self.dills, exist_ok=True)
     os.makedirs(self.fuzz_targets, exist_ok=True)
     os.makedirs(self._artifact_base, exist_ok=True)
+    # requirements: stores LLM-generated API semantic modeling outputs
     os.makedirs(self.requirements, exist_ok=True)
 
   def __repr__(self) -> str:
@@ -76,17 +75,8 @@ class WorkDirs:
 
   @property
   def fuzz_targets(self) -> str:
+    """Directory for generated fuzz target code files."""
     return os.path.join(self._base_dir, 'fuzz_targets')
-
-  # TODO(dongge): Deprecate this.
-  @property
-  def raw_targets(self) -> str:
-    return os.path.join(self._base_dir, 'raw_targets')
-
-  # TODO(dongge): Deprecate this.
-  @property
-  def fixed_targets(self) -> str:
-    return os.path.join(self._base_dir, 'fixed_targets')
 
   @property
   def build_logs(self) -> str:
@@ -102,6 +92,7 @@ class WorkDirs:
 
   @property
   def requirements(self) -> str:
+    """Directory for LLM-generated API semantic modeling outputs."""
     return os.path.join(self._base_dir, 'requirements')
 
   def build_logs_target(self, generated_target_name: str, iteration: int,

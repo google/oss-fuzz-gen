@@ -264,10 +264,14 @@ class Results:
 
   def get_final_target_code(self, benchmark: str, sample: str) -> str:
     """Gets the targets of benchmark |benchmark| with sample ID |sample|."""
+    # DEPRECATED: fixed_targets is from the old non-agent workflow.
+    # The agent workflow uses fuzz_targets instead.
     targets_dir = os.path.join(self._results_dir, benchmark, 'fixed_targets')
-    # TODO(donggeliu): Make this consistent with agent output.
     if not os.path.exists(targets_dir):
-      return ''
+      # Fallback to the new agent workflow directory
+      targets_dir = os.path.join(self._results_dir, benchmark, 'fuzz_targets')
+      if not os.path.exists(targets_dir):
+        return ''
 
     for name in sorted(FileSystem(targets_dir).listdir()):
       path = os.path.join(targets_dir, name)
@@ -325,10 +329,15 @@ class Results:
     """Gets the triage of benchmark |benchmark| with sample ID |sample|."""
     result = ''
     triager_prompt = ''
+    # DEPRECATED: fixed_targets is from the old non-agent workflow.
     fixed_dir = os.path.join(self._results_dir, benchmark, 'fixed_targets')
     triage_dir = os.path.join(fixed_dir, f'{sample}-triage')
     if not os.path.exists(triage_dir):
-      return Triage(result, triager_prompt)
+      # Fallback to agent workflow directory
+      fixed_dir = os.path.join(self._results_dir, benchmark, 'fuzz_targets')
+      triage_dir = os.path.join(fixed_dir, f'{sample}-triage')
+      if not os.path.exists(triage_dir):
+        return Triage(result, triager_prompt)
 
     for name in os.listdir(triage_dir):
       if name == 'prompt.txt':
@@ -352,9 +361,11 @@ class Results:
 
   def _get_targets(self, benchmark: str, sample: str) -> list[Target]:
     """Gets the targets of benchmark |benchmark| with sample ID |sample| from
-    the OFG version 1 (single prompt)."""
+    the OFG version 1 (single prompt).
+    
+    DEPRECATED: This uses the old fixed_targets directory from non-agent workflows.
+    """
     targets_dir = os.path.join(self._results_dir, benchmark, 'fixed_targets')
-    # TODO(donggeliu): Make this consistent with agent output.
     if not os.path.exists(targets_dir):
       return []
 
@@ -582,13 +593,15 @@ class Results:
                                 expected_dir)).isdir()
         for expected_dir in expected_dirs)
 
-  # TODO(dongge): Deprecate this.
+  # DEPRECATED: This function uses the old raw_targets directory from non-agent workflows.
   def _get_generated_targets(self, benchmark: str) -> list[str]:
-    """Gets the targets of benchmark |benchmark| from the OFG version 1 (single
-    prompt)."""
+    """Gets the targets of benchmark |benchmark| from the OFG version 1 (single prompt).
+    
+    DEPRECATED: This uses the old raw_targets directory from non-agent workflows.
+    The agent workflow uses fuzz_targets instead.
+    """
     targets = []
     raw_targets_dir = os.path.join(self._results_dir, benchmark, 'raw_targets')
-    # TODO(donggeliu): Make this consistent with agent output.
     if not os.path.exists(raw_targets_dir):
       return []
 
