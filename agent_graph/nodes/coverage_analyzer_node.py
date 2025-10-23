@@ -45,7 +45,14 @@ def coverage_analyzer_node(state: FuzzingWorkflowState, config: Dict[str, Any]) 
         
     except Exception as e:
         logger.error(f'CoverageAnalyzer failed: {e}', trial=trial)
+        # Return a default coverage_analysis to prevent infinite loops
         return {
+            "coverage_analysis": {
+                "suggestions": f"Coverage analysis failed: {str(e)}",
+                "improve_required": False,
+                "analyzed": False,
+                "error": str(e)
+            },
             "errors": [{
                 "node": "CoverageAnalyzer",
                 "message": str(e),

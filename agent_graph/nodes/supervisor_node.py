@@ -30,6 +30,23 @@ def supervisor_node(state: FuzzingWorkflowState, config: Dict[str, Any]) -> Dict
         trial = state["trial"]
         logger.info('Starting Supervisor node', trial=trial)
         
+        # Increment and check global supervisor call count (similar to no_coverage_improvement_count)
+        supervisor_call_count = state.get("supervisor_call_count", 0) + 1
+        MAX_SUPERVISOR_CALLS = 50  # Absolute upper bound to prevent infinite loops
+        
+        if supervisor_call_count > MAX_SUPERVISOR_CALLS:
+            logger.warning(f'Global loop limit reached: supervisor called {supervisor_call_count} times', 
+                          trial=trial)
+            return {
+                "next_action": "END",
+                "termination_reason": "global_loop_limit",
+                "supervisor_call_count": supervisor_call_count,
+                "messages": [{
+                    "role": "assistant",
+                    "content": f"Workflow terminated: supervisor called {supervisor_call_count} times (safety limit)"
+                }]
+            }
+        
         # Check for errors that should terminate the workflow
         errors = state.get("errors", [])
         if len(errors) >= config.get("max_errors", 5):
@@ -37,6 +54,7 @@ def supervisor_node(state: FuzzingWorkflowState, config: Dict[str, Any]) -> Dict
             return {
                 "next_action": "END",
                 "termination_reason": "too_many_errors",
+                "supervisor_call_count": supervisor_call_count,
                 "messages": [{
                     "role": "assistant",
                     "content": f"Workflow terminated due to {len(errors)} errors"
@@ -52,6 +70,7 @@ def supervisor_node(state: FuzzingWorkflowState, config: Dict[str, Any]) -> Dict
             return {
                 "next_action": "END",
                 "termination_reason": "max_retries_reached",
+                "supervisor_call_count": supervisor_call_count,
                 "messages": [{
                     "role": "assistant",
                     "content": f"Workflow terminated after {retry_count} retries"
@@ -61,10 +80,35 @@ def supervisor_node(state: FuzzingWorkflowState, config: Dict[str, Any]) -> Dict
         # Routing logic based on current state
         next_action = _determine_next_action(state)
         
-        logger.info(f'Supervisor determined next action: {next_action}', trial=trial)
+        # Track per-node visit counts (similar to no_coverage_improvement_count)
+        node_visit_counts = state.get("node_visit_counts", {}).copy()
+        if next_action != "END":
+            node_visit_counts[next_action] = node_visit_counts.get(next_action, 0) + 1
+            
+            # Check if a single node is being visited too many times
+            MAX_NODE_VISITS = 10
+            if node_visit_counts[next_action] > MAX_NODE_VISITS:
+                logger.warning(f'Node {next_action} visited {node_visit_counts[next_action]} times, '
+                              f'possible loop detected', trial=trial)
+                return {
+                    "next_action": "END",
+                    "termination_reason": "node_loop_detected",
+                    "supervisor_call_count": supervisor_call_count,
+                    "node_visit_counts": node_visit_counts,
+                    "messages": [{
+                        "role": "assistant",
+                        "content": f"Workflow terminated: {next_action} visited {node_visit_counts[next_action]} times"
+                    }]
+                }
+        
+        logger.info(f'Supervisor determined next action: {next_action} '
+                   f'(call #{supervisor_call_count}, node visits: {node_visit_counts.get(next_action, 0)})', 
+                   trial=trial)
         
         return {
             "next_action": next_action,
+            "supervisor_call_count": supervisor_call_count,
+            "node_visit_counts": node_visit_counts,
             "messages": [{
                 "role": "assistant",
                 "content": f"Supervisor routing to: {next_action}"

@@ -741,6 +741,22 @@ class BenchmarkResult:
     return ''
 
   @property
+  def max_coverage_sample(self) -> str:
+    """Fuzz target source code of the trial with max coverage."""
+    for result in self.trial_results:
+      if result.coverage == self.coverage:
+        return result.fuzz_target_source
+    return ''
+
+  @property
+  def max_coverage_diff_sample(self) -> str:
+    """Fuzz target source code of the trial with max coverage diff."""
+    for result in self.trial_results:
+      if result.line_coverage_diff == self.line_coverage_diff:
+        return result.fuzz_target_source
+    return ''
+
+  @property
   def textcov_diff(self) -> textcov.Textcov:
     """Sum textcov diff."""
     all_textcov = textcov.Textcov()

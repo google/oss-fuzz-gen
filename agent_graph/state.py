@@ -108,6 +108,8 @@ class FuzzingWorkflowState(TypedDict):
     next_action: NotRequired[str]  # For supervisor routing
     retry_count: NotRequired[int]
     max_retries: NotRequired[int]
+    supervisor_call_count: NotRequired[int]  # Global counter for supervisor invocations (loop prevention)
+    node_visit_counts: NotRequired[Dict[str, int]]  # Per-node visit counter (loop prevention)
     
     # === Error Handling ===
     errors: NotRequired[List[Dict[str, Any]]]
@@ -169,6 +171,9 @@ def create_initial_state(
         workflow_status="initialized",
         errors=[],
         warnings=[],
+        # Loop prevention counters (similar to no_coverage_improvement_count)
+        supervisor_call_count=0,
+        node_visit_counts={},
         # Store additional configuration
         pipeline=pipeline or [],
         use_context=use_context,

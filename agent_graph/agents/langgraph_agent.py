@@ -1332,6 +1332,34 @@ class LangGraphContextAnalyzer(LangGraphAgent):
         
         return new_prompt
     
+    def _format_bash_result(self, result: Any) -> str:
+        """
+        Format bash tool result for prompt.
+        
+        Args:
+            result: Result from inspect_tool.execute()
+            
+        Returns:
+            Formatted string for prompt
+        """
+        if isinstance(result, dict):
+            stdout = result.get('stdout', '')
+            stderr = result.get('stderr', '')
+            returncode = result.get('returncode', 0)
+            
+            formatted = ""
+            if stdout:
+                formatted += f"<stdout>\n{stdout}\n</stdout>\n"
+            if stderr:
+                formatted += f"<stderr>\n{stderr}\n</stderr>\n"
+            if returncode != 0:
+                formatted += f"<returncode>{returncode}</returncode>\n"
+            
+            return formatted if formatted else "No output"
+        
+        # Fallback for string or other types
+        return str(result)
+    
     def _get_function_implementation_from_text(self, request: str) -> str:
         """
         Get function implementation from introspector.

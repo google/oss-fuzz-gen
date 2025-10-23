@@ -45,7 +45,17 @@ def context_analyzer_node(state: FuzzingWorkflowState, config: Dict[str, Any]) -
         
     except Exception as e:
         logger.error(f'ContextAnalyzer failed: {e}', trial=trial)
+        # Return a default context_analysis to prevent infinite loops
+        # (similar to how execution_node sets default coverage values)
         return {
+            "context_analysis": {
+                "feasible": False,
+                "analysis": f"Analysis failed: {str(e)}",
+                "source_code_evidence": "",
+                "recommendations": "",
+                "analyzed": False,
+                "error": str(e)
+            },
             "errors": [{
                 "node": "ContextAnalyzer",
                 "message": str(e),

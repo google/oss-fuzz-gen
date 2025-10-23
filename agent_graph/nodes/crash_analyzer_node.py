@@ -45,7 +45,15 @@ def crash_analyzer_node(state: FuzzingWorkflowState, config: Dict[str, Any]) -> 
         
     except Exception as e:
         logger.error(f'CrashAnalyzer failed: {e}', trial=trial)
+        # Return a default crash_analysis to prevent infinite loops
         return {
+            "crash_analysis": {
+                "insight": f"Crash analysis failed: {str(e)}",
+                "severity": "unknown",
+                "root_cause": "",
+                "analyzed": False,
+                "error": str(e)
+            },
             "errors": [{
                 "node": "CrashAnalyzer",
                 "message": str(e),

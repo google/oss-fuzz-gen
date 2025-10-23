@@ -78,6 +78,8 @@ class AggregatedResult:
         crash_rate=benchmark_result.crash_rate,
         max_coverage=benchmark_result.coverage,
         max_line_coverage_diff=benchmark_result.line_coverage_diff,
+        max_coverage_sample=benchmark_result.max_coverage_sample,
+        max_coverage_diff_sample=benchmark_result.max_coverage_diff_sample,
         max_coverage_diff_report=benchmark_result.line_coverage_report,
         full_textcov_diff=benchmark_result.textcov_diff)
 

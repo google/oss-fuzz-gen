@@ -336,9 +336,18 @@ def _print_experiment_results(results: list[Result],
     logger.info('%s\n*%s, %s*\n%s\n', '=' * 80, result.benchmark.project,
                 result.benchmark.function_signature, result.result)
 
-  logger.info('**** TOTAL COVERAGE GAIN: ****')
-  for project in cov_gain:
-    logger.info('*%s: %s', project, cov_gain[project]["coverage_diff"])
+  # Only print coverage gain for projects in current experiments
+  projects_in_results = {result.benchmark.project for result in results}
+  relevant_cov_gain = {
+      project: gain 
+      for project, gain in cov_gain.items() 
+      if project in projects_in_results
+  }
+  
+  if relevant_cov_gain:
+    logger.info('**** TOTAL COVERAGE GAIN: ****')
+    for project in relevant_cov_gain:
+      logger.info('*%s: %s', project, relevant_cov_gain[project]["coverage_diff"])
 
 def _setup_logging(verbose: str = 'info', is_cloud: bool = False) -> None:
   """Set up logging level."""

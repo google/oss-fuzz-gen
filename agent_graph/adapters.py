@@ -65,9 +65,10 @@ class StateAdapter:
                 compile_error="\n".join(state.get("build_errors", [])),
                 compile_log=state.get("compile_log", ""),
                 binary_exists=state.get("binary_exists", False),
-                is_function_referenced=state.get("is_function_referenced", False),
-                function_analysis=StateAdapter._extract_function_analysis(state)
+                is_function_referenced=state.get("is_function_referenced", False)
             )
+            # Set function_analysis as an attribute (not via __init__)
+            build_result.function_analysis = StateAdapter._extract_function_analysis(state)
             result_history.append(build_result)
         
         # Add RunResult if execution information exists
@@ -79,29 +80,40 @@ class StateAdapter:
                 fuzz_target_source=state.get("fuzz_target_source", ""),
                 build_script_source=state.get("build_script_source", ""),
                 compiles=state.get("compile_success", False),
-                run_success=state.get("run_success", False),
                 run_error=state.get("run_error", ""),
                 run_log=state.get("run_log", ""),
                 artifact_path=state.get("artifact_path", ""),
-                crash_func=state.get("crash_func", ""),
-                function_analysis=StateAdapter._extract_function_analysis(state)
+                crash_func=state.get("crash_func", {})
             )
+            # Set function_analysis as an attribute (not via __init__)
+            run_result.function_analysis = StateAdapter._extract_function_analysis(state)
             result_history.append(run_result)
         
         # Add AnalysisResult if analysis information exists
         if state.get("analysis_complete"):
+            # Get the most recent RunResult or create a minimal one
+            run_result_for_analysis = None
+            for r in reversed(result_history):
+                if isinstance(r, RunResult):
+                    run_result_for_analysis = r
+                    break
+            
+            if run_result_for_analysis is None:
+                # Create a minimal RunResult if none exists
+                run_result_for_analysis = RunResult(
+                    benchmark=benchmark,
+                    trial=trial,
+                    work_dirs=work_dirs
+                )
+            
             analysis_result = AnalysisResult(
-                benchmark=benchmark,
-                trial=trial,
-                work_dirs=work_dirs,
-                fuzz_target_source=state.get("fuzz_target_source", ""),
-                build_script_source=state.get("build_script_source", ""),
-                compiles=state.get("compile_success", False),
-                run_result=result_history[-1] if result_history else None,
+                author=None,  # AnalysisResult expects author as first param
+                run_result=run_result_for_analysis,
                 crash_result=StateAdapter._extract_crash_result(state, benchmark, trial, work_dirs),
-                coverage_result=StateAdapter._extract_coverage_result(state, benchmark, trial, work_dirs),
-                function_analysis=StateAdapter._extract_function_analysis(state)
+                coverage_result=StateAdapter._extract_coverage_result(state, benchmark, trial, work_dirs)
             )
+            # Set function_analysis as an attribute (not via __init__)
+            analysis_result.function_analysis = StateAdapter._extract_function_analysis(state)
             result_history.append(analysis_result)
         
         return result_history
@@ -148,12 +160,19 @@ class StateAdapter:
         
         # Run result information
         if isinstance(result, RunResult):
+            # RunResult doesn't have run_success attribute, derive it from other fields
+            # Consider it successful if it has artifacts and doesn't have critical errors
+            run_success = bool(result.artifact_path) or result.coverage > 0
+            
             state_update.update({
-                "run_success": result.run_success,
+                "run_success": run_success,
                 "run_error": result.run_error,
                 "run_log": result.run_log,
                 "artifact_path": result.artifact_path,
-                "crash_func": result.crash_func
+                "crash_func": result.crash_func,
+                "crashes": result.crashes,
+                "coverage": result.coverage,
+                "coverage_summary": result.coverage_summary
             })
         
         # Analysis result information
