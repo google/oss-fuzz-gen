@@ -550,7 +550,12 @@ class DefaultTemplateBuilder(PromptBuilder):
     return ''
 
 class PrototyperTemplateBuilder(DefaultTemplateBuilder):
-  """Builder specifically targeted C (and excluding C++)."""
+  """
+  DEPRECATED: This class has been migrated to agent_graph/prompt_loader.py.
+  Use PromptManager from agent_graph.prompt_loader instead.
+  
+  Builder specifically targeted C (and excluding C++).
+  """
 
   def __init__(self,
                model: models.LLM,
@@ -607,7 +612,12 @@ class PrototyperTemplateBuilder(DefaultTemplateBuilder):
     return self._prompt
 
 class PrototyperFixerTemplateBuilder(PrototyperTemplateBuilder):
-  """Builder specifically targeted C (and excluding C++)."""
+  """
+  DEPRECATED: This class has been migrated to agent_graph/prompt_loader.py.
+  Use PromptManager from agent_graph.prompt_loader instead.
+  
+  Builder specifically targeted C (and excluding C++).
+  """
 
   def __init__(self,
                model: models.LLM,
@@ -655,7 +665,12 @@ class PrototyperFixerTemplateBuilder(PrototyperTemplateBuilder):
     return self._prompt
 
 class CoverageAnalyzerTemplateBuilder(PrototyperTemplateBuilder):
-  """Builder specifically targeted C (and excluding C++)."""
+  """
+  DEPRECATED: This class has been migrated to agent_graph/prompt_loader.py.
+  Use PromptManager from agent_graph.prompt_loader instead.
+  
+  Builder specifically targeted C (and excluding C++).
+  """
 
   def __init__(self,
                model: models.LLM,
@@ -697,7 +712,12 @@ class CoverageAnalyzerTemplateBuilder(PrototyperTemplateBuilder):
     return self._prompt
 
 class EnhancerTemplateBuilder(PrototyperTemplateBuilder):
-  """Builder specifically targeted C (and excluding C++)."""
+  """
+  DEPRECATED: This class has been migrated to agent_graph/prompt_loader.py.
+  Use PromptManager from agent_graph.prompt_loader instead.
+  
+  Builder specifically targeted C (and excluding C++).
+  """
 
   def __init__(self,
                model: models.LLM,
@@ -762,7 +782,12 @@ class EnhancerTemplateBuilder(PrototyperTemplateBuilder):
     return self._prompt
 
 class CrashEnhancerTemplateBuilder(PrototyperTemplateBuilder):
-  """Builder specifically targeted C (and excluding C++)."""
+  """
+  DEPRECATED: This class has been migrated to agent_graph/prompt_loader.py.
+  Use PromptManager from agent_graph.prompt_loader instead.
+  
+  Builder specifically targeted C (and excluding C++).
+  """
 
   def __init__(self,
                model: models.LLM,
@@ -827,7 +852,12 @@ class CrashEnhancerTemplateBuilder(PrototyperTemplateBuilder):
     return self._prompt
 
 class CoverageEnhancerTemplateBuilder(PrototyperTemplateBuilder):
-  """Builder specifically targeted C (and excluding C++)."""
+  """
+  DEPRECATED: This class has been migrated to agent_graph/prompt_loader.py.
+  Use PromptManager from agent_graph.prompt_loader instead.
+  
+  Builder specifically targeted C (and excluding C++).
+  """
 
   def __init__(self,
                model: models.LLM,
@@ -881,7 +911,12 @@ class CoverageEnhancerTemplateBuilder(PrototyperTemplateBuilder):
     return self._prompt
 
 class FunctionAnalyzerTemplateBuilder(DefaultTemplateBuilder):
-  """Builder for function analyzer."""
+  """
+  DEPRECATED: This class has been migrated to agent_graph/prompt_loader.py.
+  Use PromptManager from agent_graph.prompt_loader instead.
+  
+  Builder for function analyzer.
+  """
 
   def __init__(self,
                model: models.LLM,
@@ -990,7 +1025,12 @@ class FunctionAnalyzerTemplateBuilder(DefaultTemplateBuilder):
     return self._prompt
 
 class ContextAnalyzerTemplateBuilder(DefaultTemplateBuilder):
-  """Builder for function analyzer."""
+  """
+  DEPRECATED: This class has been migrated to agent_graph/prompt_loader.py.
+  Use PromptManager from agent_graph.prompt_loader instead.
+  
+  Builder for context analyzer.
+  """
 
   def __init__(self,
                model: models.LLM,
@@ -1100,7 +1140,12 @@ class ContextAnalyzerTemplateBuilder(DefaultTemplateBuilder):
     return self._prompt
 
 class CrashAnalyzerTemplateBuilder(DefaultTemplateBuilder):
-  """Builder for C/C++."""
+  """
+  DEPRECATED: This class has been migrated to agent_graph/prompt_loader.py.
+  Use PromptManager from agent_graph.prompt_loader instead.
+  
+  Builder for crash analyzer.
+  """
 
   def __init__(self,
                model: models.LLM,

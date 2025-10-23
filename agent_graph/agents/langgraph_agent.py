@@ -582,11 +582,8 @@ class LangGraphCrashAnalyzer(LangGraphAgent):
     def _handle_response(self, cur_round: int, response: str, 
                         crash_result: dict) -> Optional[Any]:
         """Handle LLM response and determine next action."""
-        from llm_toolkit.prompts import Prompt
-        from llm_toolkit.prompt_builder import CrashAnalyzerTemplateBuilder
-        
         # Create empty prompt for building response
-        prompt = CrashAnalyzerTemplateBuilder(self.llm, None).build([])
+        prompt = self.llm.prompt_type()(None)
         
         # Check for hallucinated tool usage
         if self._parse_tag(response, 'gdb output') or \
@@ -1308,9 +1305,7 @@ class LangGraphContextAnalyzer(LangGraphAgent):
         
         Simulates ADK tools: search_project_files, get_function_implementation
         """
-        from llm_toolkit import prompt_builder
-        
-        new_prompt = prompt_builder.DefaultTemplateBuilder(self.llm, None).build([])
+        new_prompt = self.llm.prompt_type()(None)
         
         # Handle bash commands for search_project_files
         bash_commands = parse_tags(response, 'bash')

@@ -83,7 +83,23 @@ class StateAdapter:
                 run_error=state.get("run_error", ""),
                 run_log=state.get("run_log", ""),
                 artifact_path=state.get("artifact_path", ""),
-                crash_func=state.get("crash_func", {})
+                crash_func=state.get("crash_func", {}),
+                crashes=state.get("crashes", False),
+                coverage=state.get("coverage_percent", 0.0),
+                line_coverage_diff=state.get("line_coverage_diff", 0.0),
+                coverage_summary=state.get("coverage_summary", {}),
+                compile_error="\n".join(state.get("build_errors", [])),
+                compile_log=state.get("compile_log", ""),
+                binary_exists=state.get("binary_exists", False),
+                is_function_referenced=state.get("is_function_referenced", False),
+                reproducer_path=state.get("reproducer_path", ""),
+                sanitizer=state.get("sanitizer", ""),
+                log_path=state.get("log_path", ""),
+                corpus_path=state.get("corpus_path", ""),
+                coverage_report_path=state.get("coverage_report_path", ""),
+                cov_pcs=state.get("cov_pcs", 0),
+                total_pcs=state.get("total_pcs", 0),
+                textcov_diff=state.get("textcov_diff")
             )
             # Set function_analysis as an attribute (not via __init__)
             run_result.function_analysis = StateAdapter._extract_function_analysis(state)
@@ -171,8 +187,17 @@ class StateAdapter:
                 "artifact_path": result.artifact_path,
                 "crash_func": result.crash_func,
                 "crashes": result.crashes,
-                "coverage": result.coverage,
-                "coverage_summary": result.coverage_summary
+                "coverage_percent": result.coverage,
+                "line_coverage_diff": result.line_coverage_diff,
+                "coverage_summary": result.coverage_summary,
+                "reproducer_path": result.reproducer_path,
+                "sanitizer": result.sanitizer,
+                "log_path": result.log_path,
+                "corpus_path": result.corpus_path,
+                "coverage_report_path": result.coverage_report_path,
+                "cov_pcs": result.cov_pcs,
+                "total_pcs": result.total_pcs,
+                "textcov_diff": result.textcov_diff
             })
         
         # Analysis result information
