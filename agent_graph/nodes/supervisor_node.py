@@ -203,12 +203,16 @@ def _determine_next_action(state: FuzzingWorkflowState) -> str:
                    trial=state.get("trial", 0))
         return "END"
     
-    # Check if we should analyze coverage (low coverage or no improvement)
+    # Check if we should analyze coverage (low coverage AND no improvement)
     COVERAGE_THRESHOLD = 0.5  # 50% coverage threshold
-    if coverage_percent < COVERAGE_THRESHOLD or coverage_diff <= IMPROVEMENT_THRESHOLD:
+    SIGNIFICANT_IMPROVEMENT = 0.05  # 5% is considered significant improvement
+    
+    # Only analyze if coverage is low AND there's no significant improvement
+    # If there's significant improvement, continue the current strategy even if absolute coverage is low
+    if coverage_percent < COVERAGE_THRESHOLD and coverage_diff <= SIGNIFICANT_IMPROVEMENT:
         coverage_analysis = state.get("coverage_analysis")
         if not coverage_analysis and current_iteration < max_iterations:
-            logger.debug(f'Low coverage ({coverage_percent:.2%}) or no improvement (diff={coverage_diff:.2%}, '
+            logger.debug(f'Low coverage ({coverage_percent:.2%}) and no significant improvement (diff={coverage_diff:.2%}, '
                         f'no_improvement_count={no_improvement_count}), routing to coverage_analyzer', 
                         trial=state.get("trial", 0))
             return "coverage_analyzer"

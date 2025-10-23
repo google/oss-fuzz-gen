@@ -16,7 +16,7 @@ Current supported models are:
 
 ## Basic usage
 
-Currently, we just use version 1: non-agent mode to show the effectiveness.
+-Currently, we just use version 1: non-agent mode to show the effectiveness.-
 
 ### Agent Mode (LangGraph Implementation)
 

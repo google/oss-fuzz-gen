@@ -10,17 +10,6 @@ from multiprocessing import pool
 from typing import List, Optional
 
 import logger
-import pipeline
-from agent_graph.agents.context_analyzer import ContextAnalyzer
-from agent_graph.agents.coverage_analyzer import CoverageAnalyzer
-from agent_graph.agents.crash_analyzer import CrashAnalyzer
-from agent_graph.agents.enhancer import Enhancer
-from agent_graph.agents.function_analyzer import FunctionAnalyzer
-from agent_graph.agents.function_based_prototyper import FunctionToolPrototyper
-from agent_graph.agents.one_prompt_enhancer import OnePromptEnhancer
-from agent_graph.agents.one_prompt_prototyper import OnePromptPrototyper
-from agent_graph.agents.prototyper import Prototyper
-from agent_graph.agents.semantic_analyzer import SemanticAnalyzer
 from agent_graph import FuzzingWorkflow
 from experiment import builder_runner as builder_runner_lib
 from experiment import evaluator as exp_evaluator
@@ -206,142 +195,69 @@ def prepare(oss_fuzz_dir: str) -> None:
 def _fuzzing_pipeline(benchmark: Benchmark, model: models.LLM,
                       args: argparse.Namespace, work_dirs: WorkDirs,
                       trial: int) -> TrialResult:
-  """Runs the predefined 3-stage pipeline for one trial."""
+  """Runs the LangGraph-based fuzzing workflow for one trial."""
   trial_logger = logger.get_trial_logger(trial=trial, level=logging.DEBUG)
   trial_logger.info('Trial Starts')
 
-  # Support custom pipeline.
-  if args.custom_pipeline == 'function_based_prototyper':
-    p = pipeline.Pipeline(args=args,
-                          trial=trial,
-                          writing_stage_agents=[
-                              FunctionToolPrototyper(trial=trial,
-                                                     llm=model,
-                                                     args=args),
-                              FunctionToolPrototyper(trial=trial,
-                                                     llm=model,
-                                                     args=args),
-                          ],
-                          analysis_stage_agents=[
-                              SemanticAnalyzer(trial=trial,
-                                               llm=model,
-                                               args=args),
-                          ])
-  elif args.agent:
-    # Use the new LangGraph-based agent system
-    trial_logger.info('Using LangGraph-based agent workflow')
-    
-    # Update args with work_dirs for compatibility
-    args.work_dirs = work_dirs
-    
-    # Create and run the LangGraph workflow
-    workflow = FuzzingWorkflow(model, args)
-    
-    # Run the full supervisor-based workflow
-    final_state = workflow.run(
-        benchmark=benchmark,
-        trial=trial,
-        workflow_type='full'
-    )
-    
-    # Convert LangGraph state back to legacy RunResult format
-    from results import RunResult
-    result = RunResult(
-        benchmark=benchmark,
-        trial=trial,
-        work_dirs=work_dirs,
-        fuzz_target_source=final_state.get('fuzz_target_source', ''),
-        build_script_source=final_state.get('build_script_source', ''),
-        compiles=final_state.get('compile_success', False),
-        compile_error='\n'.join(final_state.get('build_errors', [])),
-        compile_log=final_state.get('compile_log', ''),
-        binary_exists=final_state.get('binary_exists', False),
-        is_function_referenced=final_state.get('is_function_referenced', False),
-        crashes=final_state.get('crashes', False),
-        run_error=final_state.get('run_error', ''),
-        crash_func=final_state.get('crash_func', {}),
-        run_log=final_state.get('run_log', ''),
-        coverage_summary=final_state.get('coverage_summary', {}),
-        coverage=final_state.get('coverage_percent', 0.0),
-        line_coverage_diff=final_state.get('line_coverage_diff', 0.0),
-        reproducer_path=final_state.get('reproducer_path', ''),
-        artifact_path=final_state.get('artifact_path', ''),
-        sanitizer='address',  # Default from execution
-        coverage_report_path=final_state.get('coverage_report_path', ''),
-        cov_pcs=final_state.get('cov_pcs', 0),
-        total_pcs=final_state.get('total_pcs', 0),
-        log_path='',  # Not tracked in LangGraph state
-        corpus_path='',  # Not tracked in LangGraph state
-        textcov_diff=None  # Not tracked in LangGraph state
-    )
-    
-    # Convert agent_messages to chat_history format
-    if 'agent_messages' in final_state:
-      chat_history = {}
-      for agent_name, messages in final_state['agent_messages'].items():
-        # Convert message list to string format
-        history_str = '\n'.join([
-            f"{msg.get('role', 'unknown').upper()}: {msg.get('content', '')}"
-            for msg in messages
-        ])
-        chat_history[agent_name] = history_str
-      result.chat_history = chat_history
-    
-    trial_logger.info('LangGraph workflow completed')
-    
-    # Save fuzz target and build script to disk (matching WritingStage behavior)
-    if result.fuzz_target_source:
-      trial_logger.write_fuzz_target(result)
-      trial_logger.info(f'Saved fuzz target to {work_dirs.fuzz_targets}')
-    if result.build_script_source:
-      trial_logger.write_build_script(result)
-      trial_logger.info(f'Saved build script to {work_dirs.fuzz_targets}')
-    
-    # Save chat history
-    if result.chat_history:
-      trial_logger.write_chat_history(result, cycle_count=0)
-      trial_logger.info(f'Saved chat history to {work_dirs.status}')
-    
-    # Create trial result to match expected return format
-    trial_result = TrialResult(benchmark=benchmark,
-                               trial=trial,
-                               work_dirs=work_dirs,
-                               result_history=[result])
-    trial_logger.write_result(
-        result_status_dir=trial_result.best_result.work_dirs.status,
-        result=trial_result,
-        finished=True)
-    return trial_result
-  else:
-    writer_agents = []
-    if 'gemini' in args.model or 'vertex' in args.model:
-      writer_agents.append(
-          FunctionAnalyzer(trial=trial,
-                           llm=model,
-                           args=args,
-                           benchmark=benchmark))
-    writer_agents += [
-        OnePromptPrototyper(trial=trial, llm=model, args=args),
-        OnePromptEnhancer(trial=trial, llm=model, args=args)
-    ]
-
-    p = pipeline.Pipeline(args=args,
-                          trial=trial,
-                          writing_stage_agents=writer_agents,
-                          analysis_stage_agents=[
-                              SemanticAnalyzer(trial=trial,
-                                               llm=model,
-                                               args=args),
-                          ])
-
-  results = p.execute(result_history=[
-      Result(benchmark=benchmark, trial=trial, work_dirs=work_dirs)
-  ])
-
+  # Use the LangGraph-based agent system
+  trial_logger.info('Using LangGraph-based agent workflow')
+  
+  # Update args with work_dirs for compatibility
+  args.work_dirs = work_dirs
+  
+  # Create and run the LangGraph workflow
+  workflow = FuzzingWorkflow(model, args)
+  
+  # Run the full supervisor-based workflow
+  final_state = workflow.run(
+      benchmark=benchmark,
+      trial=trial,
+      workflow_type='full'
+  )
+  
+  # Convert LangGraph state back to legacy result format using StateAdapter
+  from agent_graph.adapters import StateAdapter
+  
+  # Use StateAdapter to properly convert state to result_history
+  # This creates a complete result_history with BaseResult, BuildResult, RunResult, etc.
+  result_history = StateAdapter.state_to_result_history(final_state)
+  
+  trial_logger.info('LangGraph workflow completed')
+  
+  # Get the best result for saving files
+  # The last result should be the most complete one (RunResult or AnalysisResult)
+  best_result = result_history[-1] if result_history else None
+  
+  # Save fuzz target and build script to disk (matching WritingStage behavior)
+  if best_result and best_result.fuzz_target_source:
+    trial_logger.write_fuzz_target(best_result)
+    trial_logger.info(f'Saved fuzz target to {work_dirs.fuzz_targets}')
+  if best_result and best_result.build_script_source:
+    trial_logger.write_build_script(best_result)
+    trial_logger.info(f'Saved build script to {work_dirs.fuzz_targets}')
+  
+  # Convert agent_messages to chat_history format
+  if best_result and 'agent_messages' in final_state:
+    chat_history = {}
+    for agent_name, messages in final_state['agent_messages'].items():
+      # Convert message list to string format
+      history_str = '\n'.join([
+          f"{msg.get('role', 'unknown').upper()}: {msg.get('content', '')}"
+          for msg in messages
+      ])
+      chat_history[agent_name] = history_str
+    best_result.chat_history = chat_history
+  
+  # Save chat history
+  if best_result and best_result.chat_history:
+    trial_logger.write_chat_history(best_result, cycle_count=0)
+    trial_logger.info(f'Saved chat history to {work_dirs.status}')
+  
+  # Create trial result to match expected return format
   trial_result = TrialResult(benchmark=benchmark,
                              trial=trial,
                              work_dirs=work_dirs,
-                             result_history=results)
+                             result_history=result_history)
   trial_logger.write_result(
       result_status_dir=trial_result.best_result.work_dirs.status,
       result=trial_result,

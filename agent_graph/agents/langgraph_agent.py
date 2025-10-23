@@ -348,12 +348,11 @@ class LangGraphCrashAnalyzer(LangGraphAgent):
         """
         Analyze crash using GDB and provide insights.
         
-        Following the original CrashAnalyzer logic from crash_analyzer.py.
+        First checks if this is a false positive (fuzz target bug), then 
+        performs detailed analysis if it's a potential true bug.
         """
         import os
         import subprocess as sp
-        from llm_toolkit import prompt_builder
-        from llm_toolkit.prompt_builder import CrashAnalyzerTemplateBuilder
         from tool.container_tool import ProjectContainerTool
         from tool.gdb_tool import GDBTool
         from experiment.workdir import WorkDirs
@@ -372,6 +371,32 @@ class LangGraphCrashAnalyzer(LangGraphAgent):
         run_error = crash_info.get("error_message", "")
         stack_trace = crash_info.get("stack_trace", "")
         artifact_path = crash_info.get("artifact_path", "")
+        run_log = state.get("run_log", "")
+        
+        # First, perform semantic check to detect false positives
+        semantic_result = self._check_false_positive(
+            run_log=run_log,
+            project_name=benchmark.project,
+            stack_trace=stack_trace
+        )
+        
+        # If it's a known false positive, skip detailed GDB analysis
+        if semantic_result["is_false_positive"]:
+            logger.info(
+                f'Crash identified as false positive: {semantic_result["reason"]}',
+                trial=self.trial
+            )
+            return {
+                "crash_analysis": {
+                    "root_cause": semantic_result["description"],
+                    "true_bug": False,
+                    "false_positive_type": semantic_result["fp_type"],
+                    "severity": "low",
+                    "analyzed": True,
+                    "gdb_used": False,
+                    "semantic_check": semantic_result
+                }
+            }
         
         # Validate artifact path
         if not artifact_path or not os.path.exists(artifact_path):
@@ -461,18 +486,27 @@ class LangGraphCrashAnalyzer(LangGraphAgent):
             benchmark, name='check', project_name=generated_oss_fuzz_project)
         self.bash_tool.compile(extra_commands=' && rm -rf /out/* > /dev/null')
         
-        # Build initial prompt
-        builder = CrashAnalyzerTemplateBuilder(self.llm, benchmark)
+        # Build initial prompt using PromptManager
+        from agent_graph.prompt_loader import get_prompt_manager
+        prompt_manager = get_prompt_manager()
         
-        # Extract crash function from stack trace if available
-        crash_func = self._extract_crash_function(stack_trace)
-        
-        prompt = builder.build_crash_analyzer_prompt(
-            benchmark, fuzz_target_source, run_error, crash_func)
+        # Build user prompt with crash information
+        user_prompt = prompt_manager.build_user_prompt(
+            "crash_analyzer",
+            CRASH_INFO=run_error,
+            STACK_TRACE=stack_trace,
+            FUZZ_TARGET_CODE=fuzz_target_source,
+            ADDITIONAL_CONTEXT=f"Project: {benchmark.project}\nFunction: {benchmark.function_name}"
+        )
         
         # Add tool tutorials
-        prompt.add_problem(self.gdb_tool.tutorial())
-        prompt.add_problem(self.bash_tool.tutorial())
+        user_prompt += "\n\n**Available Tools**:\n\n"
+        user_prompt += self.gdb_tool.tutorial() + "\n\n"
+        user_prompt += self.bash_tool.tutorial()
+        
+        # Create prompt object
+        prompt = self.llm.prompt_type()(None)
+        prompt.add_priming(user_prompt)
         
         # Multi-round interaction
         crash_result = {
@@ -710,6 +744,183 @@ class LangGraphCrashAnalyzer(LangGraphAgent):
         import re
         matches = re.findall(rf'<{tag}>(.*?)</{tag}>', response, re.DOTALL)
         return [content.strip() for content in matches]
+    
+    def _check_false_positive(self, run_log: str, project_name: str, 
+                             stack_trace: str) -> Dict[str, Any]:
+        """
+        Check if crash is a false positive (fuzz target bug).
+        
+        Migrated from SemanticAnalyzer logic.
+        
+        Returns:
+            Dictionary with keys:
+            - is_false_positive: bool
+            - fp_type: str (type of false positive)
+            - reason: str (short reason)
+            - description: str (detailed description)
+        """
+        import re
+        
+        # Regex patterns (migrated from SemanticAnalyzer)
+        LIBFUZZER_MODULES_LOADED_REGEX = re.compile(
+            r'^INFO:\s+Loaded\s+\d+\s+(modules|PC tables)\s+\((\d+)\s+.*\).*')
+        LIBFUZZER_COV_REGEX = re.compile(r'.*cov: (\d+) ft:')
+        LIBFUZZER_COV_LINE_PREFIX = re.compile(r'^#(\d+)')
+        LIBFUZZER_STACK_FRAME_LINE_PREFIX = re.compile(r'^\s+#\d+')
+        CRASH_STACK_WITH_SOURCE_INFO = re.compile(r'in.*:\d+:\d+$')
+        
+        LIBFUZZER_LOG_STACK_FRAME_LLVM = '/src/llvm-project/compiler-rt'
+        LIBFUZZER_LOG_STACK_FRAME_LLVM2 = '/work/llvm-stage2/projects/compiler-rt'
+        LIBFUZZER_LOG_STACK_FRAME_CPP = '/usr/local/bin/../include/c++'
+        EARLY_FUZZING_ROUND_THRESHOLD = 3
+        
+        lines = run_log.split('\n')
+        
+        # Parse coverage info
+        initcov, donecov, lastround = None, None, None
+        for line in lines:
+            if line.startswith('#'):
+                match = LIBFUZZER_COV_LINE_PREFIX.match(line)
+                roundno = int(match.group(1)) if match else None
+                
+                if roundno is not None:
+                    lastround = roundno
+                    if 'INITED' in line and 'cov: ' in line:
+                        initcov = int(line.split('cov: ')[1].split(' ft:')[0])
+                    elif 'DONE' in line and 'cov: ' in line:
+                        donecov = int(line.split('cov: ')[1].split(' ft:')[0])
+        
+        # Extract symptom from run log
+        symptom = self._extract_symptom(run_log)
+        
+        # Parse stack traces
+        crash_stacks = self._parse_stacks_from_libfuzzer_logs(lines)
+        
+        # FP case 1: Common fuzz target errors
+        if symptom == 'null-deref':
+            return {
+                "is_false_positive": True,
+                "fp_type": "NULL_DEREF",
+                "reason": "Null pointer dereference",
+                "description": "Null-deref indicating inadequate parameter initialization or wrong function usage"
+            }
+        
+        if symptom == 'signal':
+            return {
+                "is_false_positive": True,
+                "fp_type": "SIGNAL",
+                "reason": "Signal (assertion failure)",
+                "description": "Signal indicating assertion failure due to inadequate parameter initialization"
+            }
+        
+        if symptom.endswith('fuzz target exited'):
+            return {
+                "is_false_positive": True,
+                "fp_type": "EXIT",
+                "reason": "Fuzz target exited",
+                "description": "Fuzz target exited in a controlled manner, blocking bug discovery"
+            }
+        
+        if symptom.endswith('fuzz target overwrites its const input'):
+            return {
+                "is_false_positive": True,
+                "fp_type": "OVERWRITE_CONST",
+                "reason": "Modified const input",
+                "description": "Fuzz target overwrites its const input"
+            }
+        
+        if 'out-of-memory' in symptom or 'out of memory' in symptom:
+            return {
+                "is_false_positive": True,
+                "fp_type": "FP_OOM",
+                "reason": "Out of memory",
+                "description": "OOM indicating malloc parameter is too large (e.g., using size directly)"
+            }
+        
+        # FP case 2: Crash at init or first few rounds
+        if lastround is None or lastround <= EARLY_FUZZING_ROUND_THRESHOLD:
+            return {
+                "is_false_positive": True,
+                "fp_type": "FP_NEAR_INIT_CRASH",
+                "reason": "Crash near initialization",
+                "description": f"Crash occurred at round {lastround} (≤{EARLY_FUZZING_ROUND_THRESHOLD}), likely initialization issue"
+            }
+        
+        # FP case 3: No func in 1st thread stack belongs to testing project
+        if len(crash_stacks) > 0:
+            first_stack = crash_stacks[0]
+            for stack_frame in first_stack:
+                if self._stack_func_is_of_testing_project(stack_frame):
+                    if 'LLVMFuzzerTestOneInput' in stack_frame:
+                        return {
+                            "is_false_positive": True,
+                            "fp_type": "FP_TARGET_CRASH",
+                            "reason": "Crash in fuzz target code",
+                            "description": "Crash occurred in LLVMFuzzerTestOneInput, not in project code"
+                        }
+                    break
+        
+        # Not a known false positive
+        return {
+            "is_false_positive": False,
+            "fp_type": "NONE",
+            "reason": "Potential true bug",
+            "description": "No false positive pattern detected, proceeding with detailed analysis"
+        }
+    
+    def _extract_symptom(self, fuzzlog: str) -> str:
+        """Extract crash symptom from libFuzzer log."""
+        # This should match SemanticCheckResult.extract_symptom behavior
+        # Simplified version - real implementation would need full logic
+        if 'AddressSanitizer: SEGV on unknown address' in fuzzlog:
+            return 'null-deref'
+        if 'fuzz target exited' in fuzzlog:
+            return 'fuzz target exited'
+        if 'fuzz target overwrites its const input' in fuzzlog:
+            return 'fuzz target overwrites its const input'
+        if 'out-of-memory' in fuzzlog or 'out of memory' in fuzzlog:
+            return 'out-of-memory'
+        # Check for signal
+        if 'ERROR: libFuzzer: deadly signal' in fuzzlog:
+            return 'signal'
+        return 'unknown'
+    
+    def _parse_stacks_from_libfuzzer_logs(self, lines: list[str]) -> list[list[str]]:
+        """Parse stack traces from libFuzzer logs."""
+        import re
+        LIBFUZZER_STACK_FRAME_LINE_PREFIX = re.compile(r'^\s+#\d+')
+        
+        stacks = []
+        stack, stack_parsing = [], False
+        
+        for line in lines:
+            is_stack_frame_line = LIBFUZZER_STACK_FRAME_LINE_PREFIX.match(line) is not None
+            if (not stack_parsing) and is_stack_frame_line:
+                stack_parsing = True
+                stack = [line.strip()]
+            elif stack_parsing and is_stack_frame_line:
+                stack.append(line.strip())
+            elif stack_parsing and (not is_stack_frame_line):
+                stack_parsing = False
+                stacks.append(stack)
+        
+        if stack_parsing:
+            stacks.append(stack)
+        
+        return stacks
+    
+    def _stack_func_is_of_testing_project(self, stack_frame: str) -> bool:
+        """Check if stack frame belongs to testing project."""
+        import re
+        CRASH_STACK_WITH_SOURCE_INFO = re.compile(r'in.*:\d+:\d+$')
+        LIBFUZZER_LOG_STACK_FRAME_LLVM = '/src/llvm-project/compiler-rt'
+        LIBFUZZER_LOG_STACK_FRAME_LLVM2 = '/work/llvm-stage2/projects/compiler-rt'
+        LIBFUZZER_LOG_STACK_FRAME_CPP = '/usr/local/bin/../include/c++'
+        
+        return (bool(CRASH_STACK_WITH_SOURCE_INFO.match(stack_frame)) and
+                LIBFUZZER_LOG_STACK_FRAME_LLVM not in stack_frame and
+                LIBFUZZER_LOG_STACK_FRAME_LLVM2 not in stack_frame and
+                LIBFUZZER_LOG_STACK_FRAME_CPP not in stack_frame)
 
 
 class LangGraphCoverageAnalyzer(LangGraphAgent):
@@ -950,8 +1161,6 @@ class LangGraphContextAnalyzer(LangGraphAgent):
         Following the original ContextAnalyzer logic from context_analyzer.py.
         Uses ADK-style tool functions that LLM can call.
         """
-        from llm_toolkit import prompt_builder
-        from llm_toolkit.prompt_builder import ContextAnalyzerTemplateBuilder
         from tool.container_tool import ProjectContainerTool
         from experiment.workdir import WorkDirs
         from experiment import benchmark as benchmarklib
@@ -974,24 +1183,29 @@ class LangGraphContextAnalyzer(LangGraphAgent):
         # Get function requirements
         function_requirements = self._get_function_requirements(state)
         
-        # Build initial prompt using the original template builder
-        builder = ContextAnalyzerTemplateBuilder(self.llm, benchmark)
+        # Build initial prompt using PromptManager
+        from agent_graph.prompt_loader import get_prompt_manager
+        prompt_manager = get_prompt_manager()
         
-        # Create a mock AnalysisResult for the builder
-        class MockAnalysisResult:
-            def __init__(self, state_data):
-                self.crash_result = type('obj', (object,), {
-                    'stacktrace': state_data.get('crash_info', {}).get('stack_trace', ''),
-                    'true_bug': True  # We don't know yet
-                })()
+        # Get crash analysis from previous step
+        crash_insight = crash_analysis.get("insight", "")
+        stack_trace = state.get("crash_info", {}).get("stack_trace", "")
+        fuzz_target = state.get("fuzz_target_source", "")
         
-        mock_result = MockAnalysisResult(state)
-        prompt = builder.build_context_analysis_prompt(
-            mock_result,
-            function_requirements,
-            self.inspect_tool.tutorial(),
-            self.inspect_tool.project_dir
+        # Build user prompt with context information
+        user_prompt = prompt_manager.build_user_prompt(
+            "context_analyzer",
+            PROJECT_NAME=benchmark.project,
+            FUZZ_TARGET=fuzz_target,
+            FUNCTION_REQUIREMENTS=function_requirements,
+            CRASH_STACKTRACE=stack_trace,
+            CRASH_ANALYSIS=crash_insight,
+            ADDITIONAL_CONTEXT=f"**Available Tools**:\n\n{self.inspect_tool.tutorial()}\n\nProject directory: {self.inspect_tool.project_dir}"
         )
+        
+        # Create prompt object
+        prompt = self.llm.prompt_type()(None)
+        prompt.add_priming(user_prompt)
         
         # Multi-round interaction - simulating ADK tool calling
         context_result = None
@@ -1020,7 +1234,7 @@ class LangGraphContextAnalyzer(LangGraphAgent):
                 
                 if not prompt or not prompt.get():
                     # Invalid response, ask for correction
-                    prompt = self._handle_invalid_response(response, builder)
+                    prompt = self._handle_invalid_response(response)
                 
                 cur_round += 1
                 
@@ -1174,17 +1388,15 @@ class LangGraphContextAnalyzer(LangGraphAgent):
         
         return response
     
-    def _handle_invalid_response(self, response: str, builder: Any) -> Any:
+    def _handle_invalid_response(self, response: str) -> Any:
         """Handle invalid LLM response."""
-        from llm_toolkit import prompt_builder
-        
         logger.warning(f'Invalid response from LLM: {response[:200]}...', trial=self.trial)
         
-        prompt = prompt_builder.DefaultTemplateBuilder(self.llm, None).build([])
-        prompt.append('No valid instruction received. Please follow the interaction protocols.\n\n')
-        prompt.append(self.inspect_tool.tutorial())
-        prompt.append('\n\n')
-        prompt.append(builder.get_response_format().get() if hasattr(builder, 'get_response_format') else '')
+        # Create a simple error correction prompt
+        prompt = self.llm.prompt_type()(None)
+        prompt.add_problem('No valid instruction received. Please follow the interaction protocols.\n\n')
+        prompt.add_problem(self.inspect_tool.tutorial())
+        prompt.add_problem('\n\nPlease provide a valid analysis following the requested format.')
         
         return prompt
 

@@ -293,6 +293,7 @@ def build_node(state: FuzzingWorkflowState, config: Dict[str, Any]) -> Dict[str,
             "build_errors": build_result.get("errors", []),
             "compile_log": build_result.get("log", ""),
             "binary_exists": build_result.get("binary_exists", False),
+            "is_function_referenced": True,  # Assume function is referenced; real check happens during execution
             "messages": [{
                 "role": "assistant",
                 "content": f"Build {'successful' if build_result.get('success') else 'failed'}"

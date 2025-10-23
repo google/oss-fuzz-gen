@@ -1,4 +1,0 @@
-Below are instructions to assist you in fixing the error.
-<instruction>
-{INSTRUCTION}
-</instruction>

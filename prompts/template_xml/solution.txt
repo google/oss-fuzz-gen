@@ -1,4 +1,0 @@
-<solution>
-{SOLUTION_CONTENT}
-</solution>
-
