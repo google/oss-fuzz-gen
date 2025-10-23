@@ -27,8 +27,8 @@ T = TypeVar('T', str, list, dict, int)  # Generic type.
 TIMEOUT = 45
 MAX_RETRY = 5
 
-BENCHMARK_ROOT: str = './benchmark-sets'
-BENCHMARK_DIR: str = f'{BENCHMARK_ROOT}/comparison'
+BENCHMARK_ROOT: str = './conti-benchmark'
+BENCHMARK_DIR: str = f'{BENCHMARK_ROOT}/conti-cmp'
 GENERATED_BENCHMARK: str = 'generated-benchmark-'
 
 USE_FI_TO_GET_TARGETS = bool(int(os.getenv('OSS_FI_TO_GET_TARGETS', '1')))

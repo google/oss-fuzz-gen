@@ -91,12 +91,8 @@ def _parse_args(cmd) -> argparse.Namespace:
       default="true",
       help=
       'Use different temperatures for each sample. Set to "false" to disable.')
-  parser.add_argument(
-      '-ag',
-      '--agent',
-      type=str,
-      default="false",
-      help='Enables agent enhancement. Set to "true" to enable.')
+  # Note: Agent mode (LangGraph) is now the default and only mode.
+  # The --agent flag has been removed.
   parser.add_argument('-mr',
                       '--max-round',
                       type=int,
@@ -118,7 +114,6 @@ def _parse_args(cmd) -> argparse.Namespace:
   # Parse boolean arguments
   args.local_introspector = args.local_introspector.lower() == "true"
   args.vary_temperature = args.vary_temperature.lower() == "true"
-  args.agent = args.agent.lower() == "true"
   args.redirect_outs = args.redirect_outs.lower() == "true"
 
   return args
@@ -255,8 +250,7 @@ def run_on_data_from_scratch(cmd=None):
       str(args.delay), "--context", "--temperature-list",
       *[str(temp) for temp in vary_temperature], "--model", args.model
   ]
-  if args.agent:
-    cmd.append("--agent")
+  # Note: Agent mode is now the default, no need to append --agent flag
 
   # Run the experiment and redirect to file if indicated.
   if args.redirect_outs:
@@ -378,9 +372,7 @@ def run_standard(cmd=None):
       "--max-round",
       str(args.max_round)
   ]
-
-  if args.agent:
-    run_cmd.append("--agent")
+  # Note: Agent mode is now the default, no need to append --agent flag
 
   if args.additional_args:
     run_cmd.extend(args.additional_args)

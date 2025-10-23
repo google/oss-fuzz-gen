@@ -182,7 +182,7 @@ def parse_args() -> argparse.Namespace:
   parser.add_argument('-td',
                       '--template-directory',
                       type=str,
-                      default=prompt_builder.DEFAULT_TEMPLATE_DIR)
+                      default=prompt_builder.AGENT_TEMPLATE_DIR)
   parser.add_argument('-w', '--work-dir', default=RESULTS_DIR)
   parser.add_argument('--context',
                       action='store_true',
@@ -231,11 +231,8 @@ def parse_args() -> argparse.Namespace:
                       '--prompt-builder',
                       help='The prompt builder to use for harness generation.',
                       default='DEFAULT')
-  parser.add_argument('-ag',
-                      '--agent',
-                      action='store_true',
-                      default=False,
-                      help='Enables agent enhancement.')
+  # Note: Agent mode (LangGraph) is now the default and only mode.
+  # The --agent flag has been removed.
   parser.add_argument('--custom-pipeline', type=str, default='')
   parser.add_argument('-mr',
                       '--max-round',
@@ -265,10 +262,6 @@ def parse_args() -> argparse.Namespace:
       '--generate-benchmarks. --benchmark-yaml takes one benchmark YAML file, '
       '--benchmarks-directory takes: a directory of them and '
       '--generate-benchmarks generates them during analysis.')
-
-  # Validate templates.
-  assert os.path.isdir(args.template_directory), (
-      '--template-directory must be an existing directory.')
 
   # Validate cloud experiment configs.
   assert (

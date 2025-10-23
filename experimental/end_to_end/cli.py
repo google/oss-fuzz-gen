@@ -200,8 +200,7 @@ def run_ofg_generation(projects_to_run, workdir, args, target_benchmarks=''):
   cmd.append('http://127.0.0.1:8080/api')
   cmd.append('-mr')
   cmd.append(str(args.max_round))
-  if args.hg_agent:
-    cmd.append('--agent')
+  # Note: Agent mode is now the default, no need to append --agent flag
 
   environ = os.environ.copy()
 

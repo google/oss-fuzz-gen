@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 DEFAULT_TEMPLATE_DIR: str = os.path.join(os.path.dirname(__file__),
                                          '../prompts/template_xml/')
 AGENT_TEMPLATE_DIR: str = os.path.join(os.path.dirname(__file__),
-                                       '../prompts/agent/')
+                                       '../prompts/agent_graph/')
 
 # TODO(Dongge): Refactor this tot avoid hard-coding.
 # Example files.

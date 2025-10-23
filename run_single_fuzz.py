@@ -37,9 +37,9 @@ MAX_TOKENS: int = 409600
 RUN_TIMEOUT: int = 60
 TEMPERATURE: float = 0.4
 
-# Create a unique results directory for each run to avoid interference
-# between different experiments
-RESULTS_DIR = f'./results/run-{datetime.datetime.now().strftime("%Y%m%d-%H%M%S")}'
+# Default results directory (matches main branch behavior)
+# Each benchmark gets its own directory: results/output-{project}-{function}/
+RESULTS_DIR = './results'
 
 @dataclasses.dataclass
 class AggregatedResult:

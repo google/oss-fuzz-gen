@@ -3,15 +3,15 @@
 LangGraph模式的正式入口点。
 
 这是运行LangGraph fuzzing workflow的主要命令行接口。
-此脚本是一个轻量级wrapper，调用标准流程 run_logicfuzz.py --agent，
+此脚本是一个轻量级wrapper，调用标准流程 run_logicfuzz.py，
 确保单一数据源和一致的结果保存逻辑。
 
 Architecture:
-  agent_graph/main.py  →  run_logicfuzz.py --agent  →  run_single_fuzz.py
-                                                      ↓
-                                                LangGraph workflow
-                                                      ↓
-                                                Standard result saving
+  agent_graph/main.py  →  run_logicfuzz.py  →  run_single_fuzz.py
+                                             ↓
+                                       LangGraph workflow
+                                             ↓
+                                       Standard result saving
 
 This ensures:
 - Single source of truth for workflow execution (run_single_fuzz.py)
@@ -45,7 +45,7 @@ def setup_logging(verbose: bool = False) -> None:
 
 def build_run_logicfuzz_command(args: argparse.Namespace) -> List[str]:
     """
-    Convert agent_graph/main.py arguments to run_logicfuzz.py --agent arguments.
+    Convert agent_graph/main.py arguments to run_logicfuzz.py arguments.
     
     This function maps the LangGraph CLI to the standard run_logicfuzz.py interface,
     ensuring all experiments flow through the same execution path.
@@ -57,8 +57,7 @@ def build_run_logicfuzz_command(args: argparse.Namespace) -> List[str]:
     
     cmd = [sys.executable, run_logicfuzz_path]
     
-    # Enable agent mode (the key flag that activates LangGraph workflow)
-    cmd.extend(['--agent'])
+    # Agent mode is now the default, no need to specify --agent flag
     
     # Required arguments
     if args.benchmark_yaml:
@@ -113,7 +112,7 @@ def build_run_logicfuzz_command(args: argparse.Namespace) -> List[str]:
 
 def run_via_wrapper(args: argparse.Namespace) -> bool:
     """
-    Execute the LangGraph workflow by calling run_logicfuzz.py --agent.
+    Execute the LangGraph workflow by calling run_logicfuzz.py.
     
     This delegates all execution to the standard pipeline, ensuring:
     - Consistent result format
@@ -133,7 +132,7 @@ def run_via_wrapper(args: argparse.Namespace) -> bool:
     logger.info("=" * 60)
     
     try:
-        # Execute run_logicfuzz.py with --agent flag
+        # Execute run_logicfuzz.py (agent mode is now the default)
         # Use subprocess.run to get real-time output
         result = subprocess.run(
             cmd,
@@ -160,7 +159,7 @@ def run_via_wrapper(args: argparse.Namespace) -> bool:
 def create_argument_parser() -> argparse.ArgumentParser:
     """Create argument parser for LangGraph main entry point."""
     parser = argparse.ArgumentParser(
-        description="LangGraph-based fuzzing workflow (wrapper for run_logicfuzz.py --agent)",
+        description="LangGraph-based fuzzing workflow (wrapper for run_logicfuzz.py)",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
@@ -178,7 +177,7 @@ Examples:
     --max-iterations 5 --run-timeout 600
 
 Note: This script is a convenience wrapper around:
-  python run_logicfuzz.py --agent -y <benchmark> --model <model> ...
+  python run_logicfuzz.py -y <benchmark> --model <model> ...
 
 All entry points produce identical results using the standard pipeline.
         """
