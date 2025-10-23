@@ -164,17 +164,17 @@ def create_argument_parser() -> argparse.ArgumentParser:
         epilog="""
 Examples:
   # Process first function in YAML automatically
-  python agent_graph/main.py -y benchmark-sets/0-conti/cjson.yaml \\
-    --model vertex_ai_gemini-2-5-pro-chat
+  python agent_graph/main.py -y conti-benchmark/cjson.yaml \\
+    --model gpt-5
   
   # Process specific function
-  python agent_graph/main.py -y benchmark-sets/0-conti/cjson.yaml \\
-    -f cJSON_Parse --model vertex_ai_gemini-2-5-pro-chat
+  python agent_graph/main.py -y conti-benchmark/cjson.yaml \\
+    -f cJSON_Parse --model gpt-5
     
   # Run with custom iterations and context
-  python agent_graph/main.py -y benchmark-sets/0-conti/cjson.yaml \\
-    --model vertex_ai_gemini-2-5-pro-chat --context \\
-    --max-iterations 5 --run-timeout 600
+  python agent_graph/main.py -y conti-benchmark/cjson.yaml \\
+    --model gpt-5 --context \\
+    --max-round 5 --run-timeout 600
 
 Note: This script is a convenience wrapper around:
   python run_logicfuzz.py -y <benchmark> --model <model> ...
