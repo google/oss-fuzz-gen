@@ -1,20 +1,20 @@
-# LangGraph Agent 状态机图
+# LangGraph Agent State Machine
 
-## 完整工作流程图
+## Complete Workflow Diagram
 
 ```mermaid
 flowchart TD
-    Start([开始]) --> Supervisor{Supervisor<br/>监督节点}
+    Start([Start]) --> Supervisor{Supervisor<br/>Node}
     
-    Supervisor -->|1. 无函数分析| FunctionAnalyzer[Function Analyzer<br/>函数分析器]
-    Supervisor -->|2. 无Fuzz Target| Prototyper[Prototyper<br/>原型生成器]
-    Supervisor -->|3. 有Target但未构建| Build[Build<br/>构建节点]
-    Supervisor -->|4. 构建失败<br/>retry < max| Enhancer[Enhancer<br/>增强器]
-    Supervisor -->|5. 构建成功<br/>但未运行| Execution[Execution<br/>执行节点]
-    Supervisor -->|6. 崩溃未分析| CrashAnalyzer[Crash Analyzer<br/>崩溃分析器]
-    Supervisor -->|7. 崩溃已分析<br/>未做上下文分析| ContextAnalyzer[Context Analyzer<br/>上下文分析器]
-    Supervisor -->|8. 低覆盖率<br/>无显著改进| CoverageAnalyzer[Coverage Analyzer<br/>覆盖率分析器]
-    Supervisor -->|9. 达到终止条件| End([结束])
+    Supervisor -->|1. No function analysis| FunctionAnalyzer[Function Analyzer]
+    Supervisor -->|2. No Fuzz Target| Prototyper[Prototyper]
+    Supervisor -->|3. Has Target but not built| Build[Build<br/>Node]
+    Supervisor -->|4. Build failed<br/>retry < max| Enhancer[Enhancer]
+    Supervisor -->|5. Build success<br/>but not run| Execution[Execution<br/>Node]
+    Supervisor -->|6. Crash not analyzed| CrashAnalyzer[Crash Analyzer]
+    Supervisor -->|7. Crash analyzed<br/>no context analysis| ContextAnalyzer[Context Analyzer]
+    Supervisor -->|8. Low coverage<br/>no significant improvement| CoverageAnalyzer[Coverage Analyzer]
+    Supervisor -->|9. Termination condition met| End([End])
     
     FunctionAnalyzer --> Supervisor
     Prototyper --> Supervisor
@@ -38,88 +38,88 @@ flowchart TD
     style CoverageAnalyzer fill:#FF6347
 ```
 
-### 核心循环结构说明
+### Core Loop Structure
 
-工作流是一个**中心化的星型结构**，所有节点执行后都返回Supervisor进行下一步决策：
+The workflow follows a **centralized star topology** where all nodes return to Supervisor for next-step decision making:
 
 1. **FunctionAnalyzer** → Supervisor → **Prototyper** → Supervisor → **Build** → Supervisor
-2. Build成功 → **Execution** → Supervisor
-3. Build失败 → **Enhancer** → Supervisor → Build (重试循环)
-4. 发现崩溃 → **CrashAnalyzer** → Supervisor → **ContextAnalyzer** → Supervisor
-5. 低覆盖率 → **CoverageAnalyzer** → Supervisor → **Enhancer** → Supervisor (改进循环)
+2. Build success → **Execution** → Supervisor
+3. Build failure → **Enhancer** → Supervisor → Build (retry loop)
+4. Crash detected → **CrashAnalyzer** → Supervisor → **ContextAnalyzer** → Supervisor
+5. Low coverage → **CoverageAnalyzer** → Supervisor → **Enhancer** → Supervisor (improvement loop)
 
-## 状态机详细说明
+## State Machine Details
 
-### 1. 节点类型
+### 1. Node Types
 
-#### 监督节点 (Supervisor)
-- **功能**: 根据当前状态决定下一步操作
-- **输入**: 当前工作流状态
-- **输出**: next_action (下一个要执行的节点)
+#### Supervisor Node
+- **Function**: Decides next action based on current state
+- **Input**: Current workflow state
+- **Output**: next_action (next node to execute)
 
-#### LLM驱动节点 (使用大语言模型)
-- **Function Analyzer**: 分析目标函数，生成函数签名和需求
-- **Prototyper**: 生成初始的fuzz target和构建脚本
-- **Enhancer**: 基于错误反馈改进fuzz target
-- **Crash Analyzer**: 分析崩溃信息，判断是否为真bug
-- **Coverage Analyzer**: 分析覆盖率报告，提供改进建议
-- **Context Analyzer**: 分析崩溃的上下文，判断可行性
+#### LLM-Driven Nodes (Using Large Language Models)
+- **Function Analyzer**: Analyzes target function, generates function signature and requirements
+- **Prototyper**: Generates initial fuzz target and build scripts
+- **Enhancer**: Improves fuzz target based on error feedback
+- **Crash Analyzer**: Analyzes crash information, determines if it's a real bug
+- **Coverage Analyzer**: Analyzes coverage reports, provides improvement suggestions
+- **Context Analyzer**: Analyzes crash context, determines feasibility
 
-#### 非LLM节点
-- **Build**: 编译fuzz target
-- **Execution**: 运行fuzzer并收集结果
+#### Non-LLM Nodes
+- **Build**: Compiles fuzz target
+- **Execution**: Runs fuzzer and collects results
 
-### 2. 路由决策树
+### 2. Routing Decision Tree
 
 ```mermaid
 flowchart TD
-    Start{开始路由决策} --> HasFuncAnalysis{是否有<br/>函数分析?}
+    Start{Start Routing Decision} --> HasFuncAnalysis{Has<br/>Function Analysis?}
     
-    HasFuncAnalysis -->|否| FuncAnalyzer[→ function_analyzer]
-    HasFuncAnalysis -->|是| HasFuzzTarget{是否有<br/>Fuzz Target?}
+    HasFuncAnalysis -->|No| FuncAnalyzer[→ function_analyzer]
+    HasFuncAnalysis -->|Yes| HasFuzzTarget{Has<br/>Fuzz Target?}
     
-    HasFuzzTarget -->|否| Proto[→ prototyper]
-    HasFuzzTarget -->|是| HasBuilt{是否已构建?}
+    HasFuzzTarget -->|No| Proto[→ prototyper]
+    HasFuzzTarget -->|Yes| HasBuilt{Built?}
     
-    HasBuilt -->|未构建| BuildNode[→ build]
-    HasBuilt -->|构建失败| BuildFailed{重试次数<br/>< 最大值?}
-    HasBuilt -->|构建成功| HasRun{是否已运行?}
+    HasBuilt -->|Not Built| BuildNode[→ build]
+    HasBuilt -->|Build Failed| BuildFailed{Retry Count<br/>< Max?}
+    HasBuilt -->|Build Success| HasRun{Run?}
     
-    BuildFailed -->|是| Enhance1[→ enhancer]
-    BuildFailed -->|否| EndNode1[→ END]
+    BuildFailed -->|Yes| Enhance1[→ enhancer]
+    BuildFailed -->|No| EndNode1[→ END]
     
-    HasRun -->|未运行| ExecNode[→ execution]
-    HasRun -->|运行失败| RunFailed{是否崩溃?}
-    HasRun -->|运行成功| CheckCov{检查覆盖率}
+    HasRun -->|Not Run| ExecNode[→ execution]
+    HasRun -->|Run Failed| RunFailed{Crashed?}
+    HasRun -->|Run Success| CheckCov{Check Coverage}
     
-    RunFailed -->|是崩溃| HasCrashAnalysis{是否有<br/>崩溃分析?}
-    RunFailed -->|否| Enhance2[→ enhancer]
+    RunFailed -->|Crashed| HasCrashAnalysis{Has<br/>Crash Analysis?}
+    RunFailed -->|No| Enhance2[→ enhancer]
     
-    HasCrashAnalysis -->|否| CrashAna[→ crash_analyzer]
-    HasCrashAnalysis -->|是| HasContext{是否有<br/>上下文分析?}
+    HasCrashAnalysis -->|No| CrashAna[→ crash_analyzer]
+    HasCrashAnalysis -->|Yes| HasContext{Has<br/>Context Analysis?}
     
-    HasContext -->|否| ContextAna[→ context_analyzer]
-    HasContext -->|是| IsFeasible{崩溃可行<br/>真bug?}
+    HasContext -->|No| ContextAna[→ context_analyzer]
+    HasContext -->|Yes| IsFeasible{Crash Feasible<br/>Real Bug?}
     
-    IsFeasible -->|是| EndNode2[→ END<br/>发现真bug!]
-    IsFeasible -->|否| Enhance3[→ enhancer<br/>假阳性]
+    IsFeasible -->|Yes| EndNode2[→ END<br/>Real Bug Found!]
+    IsFeasible -->|No| Enhance3[→ enhancer<br/>False Positive]
     
-    CheckCov --> CovPercent{覆盖率 < 50%<br/>且无显著改进?}
+    CheckCov --> CovPercent{Coverage < 50%<br/>No Significant Improvement?}
     
-    CovPercent -->|是| HasCovAnalysis{是否有<br/>覆盖率分析?}
-    CovPercent -->|否| CheckStagnant{连续<br/>无改进次数<br/>>= 3?}
+    CovPercent -->|Yes| HasCovAnalysis{Has<br/>Coverage Analysis?}
+    CovPercent -->|No| CheckStagnant{Consecutive<br/>No Improvement<br/>>= 3?}
     
-    HasCovAnalysis -->|否| CovAna[→ coverage_analyzer]
-    HasCovAnalysis -->|是| NeedImprove{建议改进?}
+    HasCovAnalysis -->|No| CovAna[→ coverage_analyzer]
+    HasCovAnalysis -->|Yes| NeedImprove{Needs Improvement?}
     
-    NeedImprove -->|是| CheckIter{迭代次数<br/>< 最大值?}
-    NeedImprove -->|否| EndNode3[→ END]
+    NeedImprove -->|Yes| CheckIter{Iteration Count<br/>< Max?}
+    NeedImprove -->|No| EndNode3[→ END]
     
-    CheckIter -->|是| Enhance4[→ enhancer]
-    CheckIter -->|否| EndNode4[→ END]
+    CheckIter -->|Yes| Enhance4[→ enhancer]
+    CheckIter -->|No| EndNode4[→ END]
     
-    CheckStagnant -->|是| EndNode5[→ END<br/>覆盖率稳定]
-    CheckStagnant -->|否| EndNode6[→ END<br/>达标或迭代完成]
+    CheckStagnant -->|Yes| EndNode5[→ END<br/>Coverage Stable]
+    CheckStagnant -->|No| EndNode6[→ END<br/>Target Met or Iterations Complete]
     
     style Start fill:#87CEEB
     style FuncAnalyzer fill:#FFD700
