@@ -141,25 +141,25 @@ flowchart TD
     style EndNode6 fill:#90EE90
 ```
 
-### 3. 循环控制机制
+### 3. Loop Control Mechanism
 
 ```mermaid
 flowchart TD
-    Check{循环检查} --> GlobalCount{supervisor_call_count<br/>> 50?}
-    GlobalCount -->|是| Term1[终止: global_loop_limit]
-    GlobalCount -->|否| ErrorCount{错误数量<br/>> max_errors?}
+    Check{Loop Check} --> GlobalCount{supervisor_call_count<br/>> 50?}
+    GlobalCount -->|Yes| Term1[Terminate: global_loop_limit]
+    GlobalCount -->|No| ErrorCount{Error Count<br/>> max_errors?}
     
-    ErrorCount -->|是| Term2[终止: too_many_errors]
-    ErrorCount -->|否| RetryCount{retry_count<br/>> max_retries?}
+    ErrorCount -->|Yes| Term2[Terminate: too_many_errors]
+    ErrorCount -->|No| RetryCount{retry_count<br/>> max_retries?}
     
-    RetryCount -->|是| Term3[终止: max_retries_reached]
-    RetryCount -->|否| NodeVisit{单节点访问次数<br/>> 10?}
+    RetryCount -->|Yes| Term3[Terminate: max_retries_reached]
+    RetryCount -->|No| NodeVisit{Single Node Visit Count<br/>> 10?}
     
-    NodeVisit -->|是| Term4[终止: node_loop_detected]
-    NodeVisit -->|否| NoImprov{无覆盖率改进<br/>次数 >= 3?}
+    NodeVisit -->|Yes| Term4[Terminate: node_loop_detected]
+    NodeVisit -->|No| NoImprov{No Coverage Improvement<br/>Count >= 3?}
     
-    NoImprov -->|是| Term5[正常结束: 覆盖率稳定]
-    NoImprov -->|否| Continue[继续执行]
+    NoImprov -->|Yes| Term5[Normal End: Coverage Stable]
+    NoImprov -->|No| Continue[Continue Execution]
     
     style Check fill:#87CEEB
     style Term1 fill:#FFB6C1
@@ -170,18 +170,18 @@ flowchart TD
     style Continue fill:#90EE90
 ```
 
-### 4. 状态数据流
+### 4. State Data Flow
 
 ```mermaid
 flowchart LR
     State[(FuzzingWorkflowState)]
     
-    State -->|基础信息| Basic[benchmark<br/>trial<br/>work_dirs]
-    State -->|分析结果| Analysis[function_analysis<br/>context_analysis<br/>crash_analysis<br/>coverage_analysis]
-    State -->|构建结果| Build[compile_success<br/>build_errors<br/>binary_exists]
-    State -->|执行结果| Exec[run_success<br/>coverage_percent<br/>crashes<br/>crash_info]
-    State -->|工作流控制| Control[next_action<br/>retry_count<br/>supervisor_call_count<br/>node_visit_counts]
-    State -->|消息历史| Messages[agent_messages<br/>每个agent独立]
+    State -->|Basic Info| Basic[benchmark<br/>trial<br/>work_dirs]
+    State -->|Analysis Results| Analysis[function_analysis<br/>context_analysis<br/>crash_analysis<br/>coverage_analysis]
+    State -->|Build Results| Build[compile_success<br/>build_errors<br/>binary_exists]
+    State -->|Execution Results| Exec[run_success<br/>coverage_percent<br/>crashes<br/>crash_info]
+    State -->|Workflow Control| Control[next_action<br/>retry_count<br/>supervisor_call_count<br/>node_visit_counts]
+    State -->|Message History| Messages[agent_messages<br/>per agent]
     
     style State fill:#87CEEB
     style Basic fill:#FFD700
@@ -192,50 +192,50 @@ flowchart LR
     style Messages fill:#FFA500
 ```
 
-### 5. 典型执行路径
+### 5. Typical Execution Paths
 
-#### 路径1: 成功发现真bug
+#### Path 1: Real Bug Successfully Found
 ```
 Start → Supervisor → FunctionAnalyzer → Supervisor → Prototyper → 
 Supervisor → Build → Supervisor → Execution → Supervisor → 
-CrashAnalyzer → Supervisor → ContextAnalyzer → Supervisor → END (真bug!)
+CrashAnalyzer → Supervisor → ContextAnalyzer → Supervisor → END (Real Bug!)
 ```
 
-#### 路径2: 达到良好覆盖率
+#### Path 2: Good Coverage Achieved
 ```
 Start → Supervisor → FunctionAnalyzer → Supervisor → Prototyper → 
 Supervisor → Build → Supervisor → Execution → Supervisor → 
 CoverageAnalyzer → Supervisor → Enhancer → Supervisor → Build → 
-Supervisor → Execution → Supervisor → END (覆盖率达标)
+Supervisor → Execution → Supervisor → END (Coverage Target Met)
 ```
 
-#### 路径3: 构建失败后修复
+#### Path 3: Build Failure then Fixed
 ```
 Start → Supervisor → FunctionAnalyzer → Supervisor → Prototyper → 
-Supervisor → Build (失败) → Supervisor → Enhancer → Supervisor → 
+Supervisor → Build (Failed) → Supervisor → Enhancer → Supervisor → 
 Build → Supervisor → Execution → Supervisor → END
 ```
 
-### 6. 关键配置参数
+### 6. Key Configuration Parameters
 
-| 参数 | 默认值 | 说明 |
+| Parameter | Default | Description |
 |------|--------|------|
-| MAX_SUPERVISOR_CALLS | 50 | 全局supervisor调用次数上限 |
-| MAX_NODE_VISITS | 10 | 单个节点最大访问次数 |
-| max_retries | 3 | 最大重试次数 |
-| max_errors | 5 | 最大错误数量 |
-| NO_IMPROVEMENT_THRESHOLD | 3 | 连续无覆盖率改进次数阈值 |
-| COVERAGE_THRESHOLD | 0.5 | 低覆盖率阈值 (50%) |
-| IMPROVEMENT_THRESHOLD | 0.01 | 最小改进阈值 (1%) |
-| SIGNIFICANT_IMPROVEMENT | 0.05 | 显著改进阈值 (5%) |
-| max_iterations | 5 | 最大迭代次数 |
+| MAX_SUPERVISOR_CALLS | 50 | Global supervisor call count limit |
+| MAX_NODE_VISITS | 10 | Maximum visits per node |
+| max_retries | 3 | Maximum retry count |
+| max_errors | 5 | Maximum error count |
+| NO_IMPROVEMENT_THRESHOLD | 3 | Threshold for consecutive no-improvement iterations |
+| COVERAGE_THRESHOLD | 0.5 | Low coverage threshold (50%) |
+| IMPROVEMENT_THRESHOLD | 0.01 | Minimum improvement threshold (1%) |
+| SIGNIFICANT_IMPROVEMENT | 0.05 | Significant improvement threshold (5%) |
+| max_iterations | 5 | Maximum iteration count |
 
-## 图例说明
+## Legend
 
-- 🟢 **绿色**: 开始/成功结束
-- 🔵 **蓝色**: Supervisor监督节点
-- 🟡 **黄色**: LLM驱动的分析/生成节点
-- 🟣 **紫色**: 构建/执行节点（非LLM）
-- 🔴 **红色**: 分析节点（崩溃/覆盖率）
-- 🔴 **粉色**: 异常终止
+- 🟢 **Green**: Start/Successful End
+- 🔵 **Blue**: Supervisor Node
+- 🟡 **Yellow**: LLM-Driven Analysis/Generation Nodes
+- 🟣 **Purple**: Build/Execution Nodes (Non-LLM)
+- 🔴 **Red**: Analysis Nodes (Crash/Coverage)
+- 🔴 **Pink**: Abnormal Termination
 
