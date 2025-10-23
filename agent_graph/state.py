@@ -87,6 +87,7 @@ class FuzzingWorkflowState(TypedDict):
     artifact_path: NotRequired[str]
     crash_func: NotRequired[str]
     crashes: NotRequired[bool]
+    crash_info: NotRequired[Dict[str, Any]]  # Detailed crash information including artifact_path, stack_trace, etc.
     reproducer_path: NotRequired[str]
     
     # === Coverage Results ===
@@ -96,6 +97,7 @@ class FuzzingWorkflowState(TypedDict):
     coverage_report_path: NotRequired[str]
     cov_pcs: NotRequired[int]
     total_pcs: NotRequired[int]
+    no_coverage_improvement_count: NotRequired[int]  # Track consecutive iterations without coverage improvement
     
     # === Analysis Results (from Analyzers) ===
     analysis_complete: NotRequired[bool]

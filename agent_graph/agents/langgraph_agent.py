@@ -7,6 +7,7 @@ without the legacy ADK/session baggage.
 from abc import ABC, abstractmethod
 from typing import Any, Dict, List, Optional
 import argparse
+import subprocess as sp
 
 import logger
 from llm_toolkit.models import LLM
@@ -321,51 +322,394 @@ class LangGraphEnhancer(LangGraphAgent):
 
 
 class LangGraphCrashAnalyzer(LangGraphAgent):
-    """Crash analyzer agent for LangGraph."""
+    """
+    Crash analyzer agent for LangGraph.
+    
+    This agent follows the original CrashAnalyzer's approach:
+    - Uses GDBTool for interactive debugging
+    - Uses ProjectContainerTool for bash commands
+    - Multi-round interaction until conclusion is reached
+    - Parses GDB commands, bash commands, and conclusion tags
+    """
     
     def __init__(self, llm: LLM, trial: int, args: argparse.Namespace):
-        # Load system prompt from file
-        prompt_manager = get_prompt_manager()
-        system_message = prompt_manager.get_system_prompt("crash_analyzer")
-        
         super().__init__(
             name="crash_analyzer",
             llm=llm,
             trial=trial,
             args=args,
-            system_message=system_message
+            system_message=""  # Will use prompt builder instead
         )
+        self.gdb_tool = None
+        self.bash_tool = None
+        self.gdb_tool_used = False
     
     def execute(self, state: FuzzingWorkflowState) -> Dict[str, Any]:
-        """Analyze crash information."""
-        benchmark = state["benchmark"]
+        """
+        Analyze crash using GDB and provide insights.
+        
+        Following the original CrashAnalyzer logic from crash_analyzer.py.
+        """
+        import os
+        import subprocess as sp
+        from llm_toolkit import prompt_builder
+        from llm_toolkit.prompt_builder import CrashAnalyzerTemplateBuilder
+        from tool.container_tool import ProjectContainerTool
+        from tool.gdb_tool import GDBTool
+        from experiment.workdir import WorkDirs
+        from experiment import benchmark as benchmarklib
+        from experiment import evaluator as evaluator_lib
+        from experiment import oss_fuzz_checkout
+        
+        # Get benchmark object
+        benchmark_dict = state["benchmark"]
+        benchmark = benchmarklib.Benchmark.from_dict(benchmark_dict)
+        
+        # Get crash info and source
         crash_info = state.get("crash_info", {})
-        fuzz_target = state.get("fuzz_target_source", "")
+        fuzz_target_source = state.get("fuzz_target_source", "")
+        build_script_source = state.get("build_script_source", "")
+        run_error = crash_info.get("error_message", "")
+        stack_trace = crash_info.get("stack_trace", "")
+        artifact_path = crash_info.get("artifact_path", "")
         
-        # Determine language
-        language = benchmark.get('language', 'C++')
+        # Validate artifact path
+        if not artifact_path or not os.path.exists(artifact_path):
+            logger.error(f'Artifact path {artifact_path} does not exist', 
+                        trial=self.trial)
+            return {
+                "errors": [{
+                    "node": "CrashAnalyzer",
+                    "message": f"Artifact path {artifact_path} not found"
+                }]
+            }
         
-        # Build prompt from template file
-        prompt_manager = get_prompt_manager()
-        prompt = prompt_manager.build_user_prompt(
-            "crash_analyzer",
-            crash_info=crash_info.get('error_message', 'No error message'),
-            stack_trace=crash_info.get('stack_trace', 'No stack trace'),
-            language=language,
-            fuzz_target_code=fuzz_target[:1000],
-            additional_context=""
+        # Create work directories
+        work_dirs = state.get("work_dirs")
+        if not work_dirs:
+            logger.error('No work_dirs in state', trial=self.trial)
+            return {"errors": [{"message": "No work_dirs found"}]}
+        
+        WorkDirs(work_dirs, keep=True)
+        
+        # Generate project name for GDB container
+        generated_target_name = os.path.basename(benchmark.target_path)
+        sample_id = os.path.splitext(generated_target_name)[0]
+        generated_oss_fuzz_project = (
+            f'{benchmark.id}-{sample_id}-gdb-{self.trial:02d}')
+        generated_oss_fuzz_project = oss_fuzz_checkout.rectify_docker_tag(
+            generated_oss_fuzz_project)
+        
+        # Write fuzz target and build script to files
+        fuzz_target_path = os.path.join(work_dirs, 'fuzz_targets',
+                                       f'{self.trial:02d}.fuzz_target')
+        os.makedirs(os.path.dirname(fuzz_target_path), exist_ok=True)
+        with open(fuzz_target_path, 'w') as ft_file:
+            ft_file.write(fuzz_target_source)
+        
+        if build_script_source:
+            build_script_path = os.path.join(work_dirs, 'fuzz_targets',
+                                           f'{self.trial:02d}.build_script')
+            with open(build_script_path, 'w') as ft_file:
+                ft_file.write(build_script_source)
+        else:
+            build_script_path = ''
+        
+        # Create OSS-Fuzz project with GDB support
+        # Create a minimal RunResult-like object for compatibility
+        class MockRunResult:
+            def __init__(self, benchmark, artifact_path):
+                self.benchmark = benchmark
+                self.artifact_path = artifact_path
+        
+        mock_result = MockRunResult(benchmark, artifact_path)
+        
+        evaluator_lib.Evaluator.create_ossfuzz_project_with_gdb(
+            benchmark, generated_oss_fuzz_project, fuzz_target_path,
+            mock_result, build_script_path, artifact_path)
+        
+        # Initialize GDB tool
+        self.gdb_tool = GDBTool(
+            benchmark,
+            result=mock_result,
+            name='gdb',
+            project_name=generated_oss_fuzz_project
         )
         
-        # Chat with LLM (using crash_analyzer's own message history)
-        response = self.chat_llm(state, prompt)
+        # Setup GDB environment
+        logger.info('Setting up GDB environment', trial=self.trial)
+        self.gdb_tool.execute(
+            'apt update && '
+            'apt install -y software-properties-common && '
+            'add-apt-repository -y ppa:ubuntu-toolchain-r/test && '
+            'apt update && '
+            'apt install -y gdb screen')
+        self.gdb_tool.execute('export CFLAGS="$CFLAGS -g -O0"')
+        self.gdb_tool.execute('export CXXFLAGS="$CXXFLAGS -g -O0"')
+        self.gdb_tool.execute('compile > /dev/null')
         
+        # Launch GDB session
+        self.gdb_tool.execute(
+            f'screen -dmS gdb_session -L '
+            f'-Logfile /tmp/gdb_log.txt '
+            f'gdb /out/{benchmark.target_name}')
+        
+        self.gdb_tool_used = False
+        
+        # Initialize bash tool for additional commands
+        self.bash_tool = ProjectContainerTool(
+            benchmark, name='check', project_name=generated_oss_fuzz_project)
+        self.bash_tool.compile(extra_commands=' && rm -rf /out/* > /dev/null')
+        
+        # Build initial prompt
+        builder = CrashAnalyzerTemplateBuilder(self.llm, benchmark)
+        
+        # Extract crash function from stack trace if available
+        crash_func = self._extract_crash_function(stack_trace)
+        
+        prompt = builder.build_crash_analyzer_prompt(
+            benchmark, fuzz_target_source, run_error, crash_func)
+        
+        # Add tool tutorials
+        prompt.add_problem(self.gdb_tool.tutorial())
+        prompt.add_problem(self.bash_tool.tutorial())
+        
+        # Multi-round interaction
+        crash_result = {
+            "true_bug": None,
+            "insight": "",
+            "stacktrace": stack_trace
+        }
+        
+        cur_round = 0
+        max_round = self.args.max_round
+        
+        try:
+            client = self.llm.get_chat_client(model=self.llm.get_model())
+            while prompt and prompt.get() and cur_round < max_round:
+                # Chat with LLM
+                response = self.llm.chat_llm(client=client, prompt=prompt)
+                
+                # Log the interaction
+                logger.info(
+                    f'<CRASH ANALYZER ROUND {cur_round}>\n{response}\n</CRASH ANALYZER ROUND {cur_round}>',
+                    trial=self.trial
+                )
+                
+                # Handle the response
+                prompt = self._handle_response(cur_round, response, crash_result)
+                cur_round += 1
+                
+                # If no more prompt, we're done
+                if not prompt:
+                    break
+                    
+        finally:
+            # Cleanup: stop the containers
+            logger.debug(f'Stopping crash analyze containers: {self.gdb_tool.container_id}, {self.bash_tool.container_id}',
+                        trial=self.trial)
+            if self.gdb_tool:
+                self.gdb_tool.terminate()
+            if self.bash_tool:
+                self.bash_tool.terminate()
+        
+        # Return analysis result
         return {
             "crash_analysis": {
-                "root_cause": response,
-                "severity": "high",
-                "analyzed": True
+                "root_cause": crash_result.get("insight", "No analysis provided"),
+                "true_bug": crash_result.get("true_bug", False),
+                "severity": "high" if crash_result.get("true_bug") else "low",
+                "analyzed": True,
+                "gdb_used": self.gdb_tool_used
             }
         }
+    
+    def _extract_crash_function(self, stack_trace: str) -> str:
+        """Extract the crashing function from stack trace."""
+        if not stack_trace:
+            return ""
+        
+        # Try to find function name in stack trace
+        # Common patterns: "in functionName", "at functionName", "functionName()"
+        import re
+        patterns = [
+            r'in\s+(\w+)',
+            r'at\s+(\w+)',
+            r'(\w+)\s*\(',
+        ]
+        
+        for pattern in patterns:
+            match = re.search(pattern, stack_trace)
+            if match:
+                return match.group(1)
+        
+        return ""
+    
+    def _handle_response(self, cur_round: int, response: str, 
+                        crash_result: dict) -> Optional[Any]:
+        """Handle LLM response and determine next action."""
+        from llm_toolkit.prompts import Prompt
+        from llm_toolkit.prompt_builder import CrashAnalyzerTemplateBuilder
+        
+        # Create empty prompt for building response
+        prompt = CrashAnalyzerTemplateBuilder(self.llm, None).build([])
+        
+        # Check for hallucinated tool usage
+        if self._parse_tag(response, 'gdb output') or \
+           self._parse_tag(response, 'gdb command'):
+            extra_note = ('NOTE: It seems you have hallucinated interaction with the GDB tool. '
+                         'You MUST restart the GDB interaction again and erase the previous '
+                         'interaction from your memory.')
+            self.gdb_tool_used = False
+            return self._handle_invalid_tool_usage(
+                [self.gdb_tool, self.bash_tool], cur_round, response, 
+                prompt, extra_note)
+        
+        # Check for conclusion with tool commands
+        if self._parse_tag(response, 'conclusion') and \
+           (self._parse_tag(response, 'gdb') or self._parse_tag(response, 'bash')):
+            extra_note = 'NOTE: You cannot provide both tool commands and conclusion in the same response.'
+            return self._handle_invalid_tool_usage(
+                [self.gdb_tool, self.bash_tool], cur_round, response, 
+                prompt, extra_note)
+        
+        # Handle conclusion
+        if self._parse_tag(response, 'conclusion'):
+            if not self.gdb_tool_used:
+                extra_note = 'NOTE: You MUST use the provided GDB tool to analyze the crash before providing a conclusion.'
+                return self._handle_invalid_tool_usage(
+                    [self.gdb_tool, self.bash_tool], cur_round, response, 
+                    prompt, extra_note)
+            return self._handle_conclusion(cur_round, response, crash_result)
+        
+        # Handle GDB commands
+        if self._parse_tag(response, 'gdb'):
+            self.gdb_tool_used = True
+            return self._handle_gdb_command(response, self.gdb_tool, prompt)
+        
+        # Handle bash commands
+        if self._parse_tag(response, 'bash'):
+            return self._handle_bash_command(response, self.bash_tool, prompt)
+        
+        # Invalid response
+        return self._handle_invalid_tool_usage(
+            [self.gdb_tool, self.bash_tool], cur_round, response, prompt)
+    
+    def _handle_gdb_command(self, response: str, tool, prompt) -> Any:
+        """Handle GDB command execution."""
+        import subprocess as sp
+        
+        prompt_text = ''
+        for command in self._parse_tags(response, 'gdb'):
+            process = tool.execute_in_screen(command)
+            prompt_text += self._format_gdb_execution_result(
+                command, process, previous_prompt=prompt) + '\n'
+            prompt.append(prompt_text)
+        return prompt
+    
+    def _format_gdb_execution_result(self, gdb_command: str,
+                                    process: sp.CompletedProcess,
+                                    previous_prompt=None) -> str:
+        """Format GDB execution result for LLM."""
+        if previous_prompt:
+            previous_prompt_text = previous_prompt.get()
+        else:
+            previous_prompt_text = ''
+        
+        raw_lines = process.stdout.strip().splitlines()
+        if raw_lines and raw_lines[-1].strip().startswith("(gdb)"):
+            raw_lines.pop()
+        if raw_lines:
+            raw_lines[0] = f'(gdb) {raw_lines[0].strip()}'
+        processed_stdout = '\n'.join(raw_lines)
+        
+        stdout = self.llm.truncate_prompt(processed_stdout,
+                                         previous_prompt_text).strip()
+        stderr = self.llm.truncate_prompt(process.stderr,
+                                         stdout + previous_prompt_text).strip()
+        
+        return (f'<gdb command>\n{gdb_command.strip()}\n</gdb command>\n'
+               f'<gdb output>\n{stdout}\n</gdb output>\n'
+               f'<stderr>\n{stderr}\n</stderr>\n')
+    
+    def _handle_bash_command(self, response: str, tool, prompt) -> Any:
+        """Handle bash command execution."""
+        prompt_text = ''
+        for command in self._parse_tags(response, 'bash'):
+            process = tool.execute(command)
+            prompt_text += self._format_bash_execution_result(
+                process, previous_prompt=prompt) + '\n'
+            prompt.append(prompt_text)
+        return prompt
+    
+    def _format_bash_execution_result(self, process, previous_prompt=None) -> str:
+        """Format bash execution result for LLM."""
+        if previous_prompt:
+            previous_prompt_text = previous_prompt.get()
+        else:
+            previous_prompt_text = ''
+        
+        stdout = self.llm.truncate_prompt(process.stdout,
+                                         previous_prompt_text).strip()
+        stderr = self.llm.truncate_prompt(process.stderr,
+                                         stdout + previous_prompt_text).strip()
+        
+        return (f'<bash>\n{process.args}\n</bash>\n'
+               f'<return code>\n{process.returncode}\n</return code>\n'
+               f'<stdout>\n{stdout}\n</stdout>\n'
+               f'<stderr>\n{stderr}\n</stderr>\n')
+    
+    def _handle_conclusion(self, cur_round: int, response: str,
+                          crash_result: dict) -> None:
+        """Parse LLM conclusion and analysis."""
+        logger.info(f'----- ROUND {cur_round:02d} Received conclusion -----',
+                   trial=self.trial)
+        
+        conclusion = self._parse_tag(response, 'conclusion')
+        if conclusion == 'False':
+            crash_result['true_bug'] = False
+        elif conclusion == 'True':
+            crash_result['true_bug'] = True
+        else:
+            logger.error(f'***** Failed to match conclusion in {cur_round:02d} rounds *****',
+                        trial=self.trial)
+        
+        crash_result['insight'] = self._parse_tag(response, 'analysis and suggestion')
+        if not crash_result['insight']:
+            logger.error(f'Round {cur_round:02d} No analysis and suggestion in conclusion: {response}',
+                        trial=self.trial)
+        
+        # Return None to stop the loop
+        return None
+    
+    def _handle_invalid_tool_usage(self, tools, cur_round: int, 
+                                  response: str, prompt, extra: str = '') -> Any:
+        """Handle invalid tool usage by re-teaching the LLM."""
+        logger.warning(f'ROUND {cur_round:02d} Invalid response from LLM: {response}',
+                      trial=self.trial)
+        
+        prompt_text = ('No valid instruction received. Please follow the '
+                      'interaction protocols for available tools:\n\n')
+        for tool in tools:
+            prompt_text += f'{tool.tutorial()}\n\n'
+        prompt.append(prompt_text)
+        
+        if extra:
+            prompt.append(extra)
+        
+        return prompt
+    
+    def _parse_tag(self, response: str, tag: str) -> str:
+        """Parse XML-style tags from LLM response."""
+        import re
+        match = re.search(rf'<{tag}>(.*?)</{tag}>', response, re.DOTALL)
+        return match.group(1).strip() if match else ''
+    
+    def _parse_tags(self, response: str, tag: str) -> list[str]:
+        """Parse multiple XML-style tags from LLM response."""
+        import re
+        matches = re.findall(rf'<{tag}>(.*?)</{tag}>', response, re.DOTALL)
+        return [content.strip() for content in matches]
 
 
 class LangGraphCoverageAnalyzer(LangGraphAgent):
@@ -379,12 +723,16 @@ class LangGraphCoverageAnalyzer(LangGraphAgent):
     """
     
     def __init__(self, llm: LLM, trial: int, args: argparse.Namespace):
+        # Load system prompt from file
+        prompt_manager = get_prompt_manager()
+        system_message = prompt_manager.get_system_prompt("coverage_analyzer")
+        
         super().__init__(
             name="coverage_analyzer",
             llm=llm,
             trial=trial,
             args=args,
-            system_message=""  # Will use prompt builder instead
+            system_message=system_message
         )
         self.inspect_tool = None
     
@@ -394,8 +742,6 @@ class LangGraphCoverageAnalyzer(LangGraphAgent):
         
         Following the original CoverageAnalyzer logic from coverage_analyzer.py.
         """
-        from llm_toolkit import prompt_builder
-        from llm_toolkit.prompt_builder import CoverageAnalyzerTemplateBuilder
         from tool.container_tool import ProjectContainerTool
         from experiment.workdir import WorkDirs
         from experiment import benchmark as benchmarklib
@@ -420,32 +766,26 @@ class LangGraphCoverageAnalyzer(LangGraphAgent):
         # Get function requirements
         function_requirements = self._get_function_requirements(state)
         
-        # Build initial prompt using the original template builder
-        builder = CoverageAnalyzerTemplateBuilder(
-            self.llm, 
-            benchmark,
-            None  # We'll pass coverage data through state
-        )
+        # Get fuzzing log from state
+        fuzzing_log = state.get("run_log", "")
+        if not fuzzing_log:
+            # Try to get coverage summary as fallback
+            coverage_summary = state.get("coverage_summary", "")
+            fuzzing_log = f"Coverage: {state.get('coverage_percent', 0.0):.2f}%\n{coverage_summary}"
         
-        # Create a mock RunResult-like object for the builder
-        class CoverageData:
-            def __init__(self, state_data):
-                self.coverage_summary = state_data.get("coverage_summary", "")
-                self.coverage_percent = state_data.get("coverage_percent", 0.0)
-                self.line_coverage_diff = state_data.get("line_coverage_diff", 0.0)
-                self.cov_pcs = state_data.get("cov_pcs", 0)
-                self.total_pcs = state_data.get("total_pcs", 0)
-        
-        coverage_data = CoverageData(state)
-        builder_with_data = CoverageAnalyzerTemplateBuilder(
-            self.llm, benchmark, coverage_data
-        )
-        
-        prompt = builder_with_data.build(
-            example_pair=[],
-            tool_guides=self.inspect_tool.tutorial(),
+        # Build initial prompt using the new prompt_loader
+        prompt_manager = get_prompt_manager()
+        user_prompt = prompt_manager.build_user_prompt(
+            "coverage_analyzer",
+            project=benchmark.project,
+            function_signature=benchmark.function_signature,
+            language=benchmark.file_type.value,
+            project_language=benchmark.language,
             project_dir=self.inspect_tool.project_dir,
-            function_requirements=function_requirements
+            fuzz_target=fuzz_target_source,
+            fuzzing_log=fuzzing_log,
+            function_requirements=function_requirements,
+            additional_context=self.inspect_tool.tutorial()
         )
         
         # Multi-round interaction
@@ -454,20 +794,26 @@ class LangGraphCoverageAnalyzer(LangGraphAgent):
         max_round = self.args.max_round
         
         try:
-            client = self.llm.get_chat_client(model=self.llm.get_model())
-            while prompt and prompt.get() and cur_round < max_round:
-                # Chat with LLM
-                response = self.llm.chat_llm(client=client, prompt=prompt)
+            # Start with the initial user prompt
+            current_prompt = user_prompt
+            
+            while current_prompt and cur_round < max_round:
+                # Chat with LLM using the agent's chat_llm method
+                response = self.chat_llm(state, current_prompt)
                 
-                # Log the interaction
+                # Log the round
                 logger.info(
                     f'<COVERAGE ANALYZER ROUND {cur_round}>\n{response}\n</COVERAGE ANALYZER ROUND {cur_round}>',
                     trial=self.trial
                 )
                 
-                # Handle the response
-                prompt = self._handle_response(cur_round, response, coverage_result)
+                # Handle the response and get next prompt
+                current_prompt = self._handle_response(cur_round, response, coverage_result)
                 cur_round += 1
+                
+                # If no more prompts, we're done
+                if not current_prompt:
+                    break
                 
         finally:
             # Cleanup container
@@ -505,63 +851,71 @@ class LangGraphCoverageAnalyzer(LangGraphAgent):
         cur_round: int, 
         response: str, 
         coverage_result: Dict[str, Any]
-    ) -> Optional[Any]:
+    ) -> Optional[str]:
         """
         Handle LLM response - execute bash commands or extract conclusion.
         
         This follows the original _container_tool_reaction logic.
+        Returns a prompt string for the next round, or None if done.
         """
-        from llm_toolkit import prompt_builder
-        
-        prompt = prompt_builder.DefaultTemplateBuilder(self.llm, None).build([])
-        
         # First, try to handle bash commands
-        prompt = self._handle_bash_commands(response, prompt)
+        bash_results = self._handle_bash_commands(response)
         
-        # If no bash commands were executed, check for conclusion
-        if not prompt.gettext():
-            conclusion = parse_tag(response, 'conclusion')
-            if conclusion:
-                logger.info(
-                    f'----- ROUND {cur_round:02d} Received conclusion -----',
-                    trial=self.trial
-                )
-                coverage_result['improve_required'] = conclusion.strip().lower() == 'true'
-                coverage_result['insights'] = parse_tag(response, 'insights') or ""
-                coverage_result['suggestions'] = parse_tag(response, 'suggestions') or ""
-                coverage_result['analyzed'] = True
-                return None  # Done
-            else:
-                # No conclusion yet, prompt is still empty
-                prompt = prompt_builder.DefaultTemplateBuilder(self.llm, None).build([])
+        # If bash commands were executed, return their results for next round
+        if bash_results:
+            return bash_results
         
-        # Check for invalid responses
-        if not response or not prompt.get():
-            prompt.append('No valid instruction received. Please follow the '
-                         'interaction protocols for available tools:\n\n')
-            prompt.append(f'{self.inspect_tool.tutorial()}\n\n')
+        # If no bash commands, check for conclusion
+        conclusion = parse_tag(response, 'conclusion')
+        if conclusion:
+            logger.info(
+                f'----- ROUND {cur_round:02d} Received conclusion -----',
+                trial=self.trial
+            )
+            coverage_result['improve_required'] = conclusion.strip().lower() == 'true'
+            coverage_result['insights'] = parse_tag(response, 'insights') or ""
+            coverage_result['suggestions'] = parse_tag(response, 'suggestions') or ""
+            coverage_result['analyzed'] = True
+            return None  # Done
         
-        return prompt
+        # No valid instruction received
+        if not response:
+            return ('No valid instruction received. Please follow the '
+                   'interaction protocols for available tools:\n\n' +
+                   f'{self.inspect_tool.tutorial()}\n\n')
+        
+        return None
     
-    def _handle_bash_commands(self, response: str, prompt: Any) -> Any:
-        """Execute bash commands from LLM response."""
-        for command in parse_tags(response, 'bash'):
+    def _handle_bash_commands(self, response: str) -> Optional[str]:
+        """
+        Execute bash commands from LLM response.
+        Returns formatted command results, or None if no commands were found.
+        """
+        bash_commands = parse_tags(response, 'bash')
+        if not bash_commands:
+            return None
+        
+        results = []
+        for command in bash_commands:
             result = self.inspect_tool.execute(command)
-            prompt_text = self._format_bash_result(result, prompt)
-            prompt.append(prompt_text)
-        return prompt
+            result_text = self._format_bash_result(result)
+            results.append(result_text)
+        
+        return '\n'.join(results) if results else None
     
-    def _format_bash_result(self, process, previous_prompt=None) -> str:
+    def _format_bash_result(self, process) -> str:
         """Format bash execution result."""
-        if previous_prompt:
-            previous_prompt_text = previous_prompt.gettext()
-        else:
-            previous_prompt_text = ''
-        stdout = self.llm.truncate_prompt(process.stdout, previous_prompt_text).strip()
-        stderr = self.llm.truncate_prompt(
-            process.stderr, 
-            stdout + previous_prompt_text
-        ).strip()
+        # Truncate output if too long
+        stdout = process.stdout.strip()
+        stderr = process.stderr.strip()
+        
+        # Limit output size to avoid token overflow
+        max_output_len = 10000
+        if len(stdout) > max_output_len:
+            stdout = stdout[:max_output_len] + f'\n... (truncated {len(stdout) - max_output_len} chars)'
+        if len(stderr) > max_output_len:
+            stderr = stderr[:max_output_len] + f'\n... (truncated {len(stderr) - max_output_len} chars)'
+        
         return (f'<bash>\n{process.args}\n</bash>\n'
                 f'<return code>\n{process.returncode}\n</return code>\n'
                 f'<stdout>\n{stdout}\n</stdout>\n'
@@ -749,7 +1103,7 @@ class LangGraphContextAnalyzer(LangGraphAgent):
         if bash_commands:
             for command in bash_commands:
                 result = self.inspect_tool.execute(command)
-                prompt_text = self._format_bash_result(result, prompt)
+                prompt_text = self._format_bash_result(result)
                 new_prompt.append(prompt_text)
             return new_prompt
         
@@ -833,20 +1187,4 @@ class LangGraphContextAnalyzer(LangGraphAgent):
         prompt.append(builder.get_response_format().get() if hasattr(builder, 'get_response_format') else '')
         
         return prompt
-    
-    def _format_bash_result(self, process, previous_prompt=None) -> str:
-        """Format bash execution result."""
-        if previous_prompt:
-            previous_prompt_text = previous_prompt.gettext()
-        else:
-            previous_prompt_text = ''
-        stdout = self.llm.truncate_prompt(process.stdout, previous_prompt_text).strip()
-        stderr = self.llm.truncate_prompt(
-            process.stderr, 
-            stdout + previous_prompt_text
-        ).strip()
-        return (f'<bash>\n{process.args}\n</bash>\n'
-                f'<return code>\n{process.returncode}\n</return code>\n'
-                f'<stdout>\n{stdout}\n</stdout>\n'
-                f'<stderr>\n{stderr}\n</stderr>\n')
 

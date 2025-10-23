@@ -358,6 +358,75 @@ done
 
 ---
 
-**Last Updated**: 2025-10-23  
-**Status**: ✅ Production Ready  
-**Version**: 2.0
+## 🔍 CrashAnalyzer GDB Integration
+
+### Overview
+
+The CrashAnalyzer agent now has **complete GDB debugging support** in LangGraph mode, matching the traditional pipeline's capabilities.
+
+### Key Features
+
+✅ **Interactive GDB Debugging**: LLM can execute GDB commands in real-time  
+✅ **Multi-round Analysis**: Iterative debugging until root cause is identified  
+✅ **Tool Enforcement**: System requires GDB usage before accepting conclusions  
+✅ **Automatic Container Management**: GDB environment setup and cleanup  
+✅ **Hallucination Prevention**: Validates actual tool usage vs. pretended usage
+
+### How It Works
+
+When a crash is detected during execution:
+
+```
+1. execution_node detects crash → creates crash_info with artifact_path
+2. supervisor routes to crash_analyzer_node
+3. CrashAnalyzer creates GDB container and loads crash artifact
+4. Multi-round interaction:
+   - LLM analyzes crash and issues GDB commands
+   - System executes commands and returns output
+   - LLM continues debugging based on results
+5. LLM provides conclusion: True (project bug) or False (driver bug)
+6. Container cleanup
+```
+
+### Verification
+
+Run the verification script to confirm GDB integration:
+
+```bash
+python3 verify_gdb_integration.py
+```
+
+Expected output: `✅ All checks passed! GDB integration is complete.`
+
+### Log Indicators
+
+Successful GDB usage will show in logs:
+
+```
+[CrashAnalyzer] Setting up GDB environment
+[CrashAnalyzer] CRASH ANALYZER ROUND 00
+<gdb command>
+backtrace
+</gdb command>
+<gdb output>
+#0  0x... in function_name ()
+...
+</gdb output>
+[CrashAnalyzer] ----- ROUND 02 Received conclusion -----
+```
+
+### Result Format
+
+Crash analysis result includes GDB usage verification:
+
+```python
+{
+    "crash_analysis": {
+        "root_cause": "Analysis and suggestions...",
+        "true_bug": True,  # or False
+        "severity": "high",  # or "low"
+        "analyzed": True,
+        "gdb_used": True   # ✅ Confirms actual GDB usage
+    }
+}
+```

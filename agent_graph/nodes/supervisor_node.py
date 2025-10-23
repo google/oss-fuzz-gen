@@ -184,24 +184,45 @@ def _determine_next_action(state: FuzzingWorkflowState) -> str:
     current_iteration = state.get("current_iteration", 0)
     max_iterations = state.get("max_iterations", 5)
     
+    # Track consecutive iterations without coverage improvement
+    no_improvement_count = state.get("no_coverage_improvement_count", 0)
+    NO_IMPROVEMENT_THRESHOLD = 3  # If coverage doesn't improve for 3 consecutive checks, consider it done
+    
+    # Check if coverage improved significantly
+    IMPROVEMENT_THRESHOLD = 0.01  # At least 1% improvement
+    if coverage_diff > IMPROVEMENT_THRESHOLD:
+        # Coverage improved, reset the no-improvement counter
+        logger.debug(f'Coverage improved by {coverage_diff:.2%}, resetting no-improvement counter', 
+                    trial=state.get("trial", 0))
+        # Note: The counter will be reset in execution_node when it updates the state
+    
+    # Check if coverage has been stagnant for too long
+    if no_improvement_count >= NO_IMPROVEMENT_THRESHOLD:
+        logger.info(f'Coverage stagnant for {no_improvement_count} iterations ({coverage_percent:.2%}), '
+                   f'considering workflow complete and ready for delivery', 
+                   trial=state.get("trial", 0))
+        return "END"
+    
     # Check if we should analyze coverage (low coverage or no improvement)
     COVERAGE_THRESHOLD = 0.5  # 50% coverage threshold
-    if coverage_percent < COVERAGE_THRESHOLD or coverage_diff <= 0.01:
+    if coverage_percent < COVERAGE_THRESHOLD or coverage_diff <= IMPROVEMENT_THRESHOLD:
         coverage_analysis = state.get("coverage_analysis")
         if not coverage_analysis and current_iteration < max_iterations:
-            logger.debug(f'Low coverage ({coverage_percent:.2%}), routing to coverage_analyzer', 
+            logger.debug(f'Low coverage ({coverage_percent:.2%}) or no improvement (diff={coverage_diff:.2%}, '
+                        f'no_improvement_count={no_improvement_count}), routing to coverage_analyzer', 
                         trial=state.get("trial", 0))
             return "coverage_analyzer"
         
         # We have coverage analysis or reached max iterations
         if coverage_analysis and coverage_analysis.get("improve_required", False):
             # Coverage analyzer suggests improvement is possible
-            if current_iteration < max_iterations:
+            if current_iteration < max_iterations and no_improvement_count < NO_IMPROVEMENT_THRESHOLD:
                 logger.info('Coverage can be improved, enhancing target', trial=state.get("trial", 0))
                 return "enhancer"
     
     # Good coverage or max iterations reached - we're done
-    logger.info(f'Workflow complete: coverage={coverage_percent:.2%}, iterations={current_iteration}', 
+    logger.info(f'Workflow complete: coverage={coverage_percent:.2%}, iterations={current_iteration}, '
+               f'no_improvement_count={no_improvement_count}', 
                trial=state.get("trial", 0))
     return "END"
 

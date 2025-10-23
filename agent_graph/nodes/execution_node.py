@@ -141,15 +141,45 @@ def execution_node(state: FuzzingWorkflowState, config: Dict[str, Any]) -> Dict[
                 coverage_diff = run_result.coverage.covered_lines / total_lines
                 logger.info(f'Coverage diff: {coverage_diff:.2%}', trial=trial)
         
+        # Extract crash information if any
+        crash_info = {}
+        if run_result.crashes:
+            crash_info = {
+                "error_message": run_result.crash_info if hasattr(run_result, 'crash_info') else "",
+                "stack_trace": run_result.crash_info if hasattr(run_result, 'crash_info') else "",
+                "artifact_path": run_result.artifact_path if hasattr(run_result, 'artifact_path') else "",
+                "artifact_name": run_result.artifact_name if hasattr(run_result, 'artifact_name') else "",
+                "crash_func": run_result.semantic_check.crash_func if (hasattr(run_result, 'semantic_check') and run_result.semantic_check) else "",
+                "sanitizer": run_result.sanitizer if hasattr(run_result, 'sanitizer') else "",
+            }
+        
+        # Track consecutive iterations without coverage improvement
+        IMPROVEMENT_THRESHOLD = 0.01  # At least 1% improvement
+        prev_no_improvement_count = state.get("no_coverage_improvement_count", 0)
+        
+        if coverage_diff > IMPROVEMENT_THRESHOLD:
+            # Coverage improved, reset the counter
+            no_improvement_count = 0
+            logger.debug(f'Coverage improved by {coverage_diff:.2%}, resetting no_improvement_count', 
+                        trial=trial)
+        else:
+            # No significant improvement, increment counter
+            no_improvement_count = prev_no_improvement_count + 1
+            logger.debug(f'Coverage did not improve (diff={coverage_diff:.2%}), '
+                        f'no_improvement_count={no_improvement_count}', 
+                        trial=trial)
+        
         # Create state update
         state_update = {
             "run_success": run_result.succeeded if hasattr(run_result, 'succeeded') else True,
             "run_error": run_result.crash_info if hasattr(run_result, 'crash_info') else "",
             "crashes": run_result.crashes if hasattr(run_result, 'crashes') else False,
-            "crash_func": run_result.semantic_check.crash_func if hasattr(run_result, 'semantic_check') else "",
+            "crash_info": crash_info,
+            "crash_func": run_result.semantic_check.crash_func if (hasattr(run_result, 'semantic_check') and run_result.semantic_check) else "",
             "coverage_summary": run_result.coverage_summary,
             "coverage_percent": coverage_percent,
             "line_coverage_diff": coverage_diff,
+            "no_coverage_improvement_count": no_improvement_count,  # Track consecutive iterations without improvement
             "reproducer_path": run_result.reproducer_path if hasattr(run_result, 'reproducer_path') else "",
             "artifact_path": run_result.artifact_path if hasattr(run_result, 'artifact_path') else "",
             "coverage_report_path": run_result.coverage_report_path if hasattr(run_result, 'coverage_report_path') else "",
