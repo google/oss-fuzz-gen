@@ -6,15 +6,15 @@
 flowchart TD
     Start([开始]) --> Supervisor{Supervisor<br/>监督节点}
     
-    Supervisor -->|无函数分析| FunctionAnalyzer[Function Analyzer<br/>函数分析器]
-    Supervisor -->|无Fuzz Target| Prototyper[Prototyper<br/>原型生成器]
-    Supervisor -->|未构建| Build[Build<br/>构建节点]
-    Supervisor -->|构建失败<br/>且未超重试次数| Enhancer[Enhancer<br/>增强器]
-    Supervisor -->|构建成功<br/>但未运行| Execution[Execution<br/>执行节点]
-    Supervisor -->|发现崩溃<br/>未分析| CrashAnalyzer[Crash Analyzer<br/>崩溃分析器]
-    Supervisor -->|崩溃已分析<br/>未做上下文分析| ContextAnalyzer[Context Analyzer<br/>上下文分析器]
-    Supervisor -->|低覆盖率<br/>无显著改进| CoverageAnalyzer[Coverage Analyzer<br/>覆盖率分析器]
-    Supervisor -->|达到终止条件| End([结束])
+    Supervisor -->|1. 无函数分析| FunctionAnalyzer[Function Analyzer<br/>函数分析器]
+    Supervisor -->|2. 无Fuzz Target| Prototyper[Prototyper<br/>原型生成器]
+    Supervisor -->|3. 有Target但未构建| Build[Build<br/>构建节点]
+    Supervisor -->|4. 构建失败<br/>retry < max| Enhancer[Enhancer<br/>增强器]
+    Supervisor -->|5. 构建成功<br/>但未运行| Execution[Execution<br/>执行节点]
+    Supervisor -->|6. 崩溃未分析| CrashAnalyzer[Crash Analyzer<br/>崩溃分析器]
+    Supervisor -->|7. 崩溃已分析<br/>未做上下文分析| ContextAnalyzer[Context Analyzer<br/>上下文分析器]
+    Supervisor -->|8. 低覆盖率<br/>无显著改进| CoverageAnalyzer[Coverage Analyzer<br/>覆盖率分析器]
+    Supervisor -->|9. 达到终止条件| End([结束])
     
     FunctionAnalyzer --> Supervisor
     Prototyper --> Supervisor
@@ -37,6 +37,16 @@ flowchart TD
     style ContextAnalyzer fill:#FF6347
     style CoverageAnalyzer fill:#FF6347
 ```
+
+### 核心循环结构说明
+
+工作流是一个**中心化的星型结构**，所有节点执行后都返回Supervisor进行下一步决策：
+
+1. **FunctionAnalyzer** → Supervisor → **Prototyper** → Supervisor → **Build** → Supervisor
+2. Build成功 → **Execution** → Supervisor
+3. Build失败 → **Enhancer** → Supervisor → Build (重试循环)
+4. 发现崩溃 → **CrashAnalyzer** → Supervisor → **ContextAnalyzer** → Supervisor
+5. 低覆盖率 → **CoverageAnalyzer** → Supervisor → **Enhancer** → Supervisor (改进循环)
 
 ## 状态机详细说明
 
