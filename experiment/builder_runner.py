@@ -534,6 +534,11 @@ class BuilderRunner:
     run_result.coverage, run_result.coverage_summary = (self.get_coverage_local(
         generated_project, benchmark_target_name))
 
+    # Set the coverage report path to the local coverage report directory
+    coverage_report_dir = self.work_dirs.code_coverage_report(benchmark_target_name)
+    if os.path.exists(coverage_report_dir):
+      run_result.coverage_report_path = coverage_report_dir
+
     run_result.log_path = run_log_path
 
     # Parse libfuzzer logs to get fuzz target runtime details.

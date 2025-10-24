@@ -92,6 +92,18 @@ class LangGraphAgent(ABC):
         # Call LLM with this agent's messages only
         response = self.llm.chat_with_messages(messages)
         
+        # Track token usage
+        if hasattr(self.llm, 'last_token_usage') and self.llm.last_token_usage:
+            from agent_graph.state import update_token_usage
+            usage = self.llm.last_token_usage
+            update_token_usage(
+                state, 
+                self.name,
+                usage.get('prompt_tokens', 0),
+                usage.get('completion_tokens', 0),
+                usage.get('total_tokens', 0)
+            )
+        
         # Add assistant response
         add_agent_message(state, self.name, "assistant", response)
         
@@ -596,6 +608,18 @@ class LangGraphCrashAnalyzer(LangGraphAgent):
             while prompt and prompt.get() and cur_round < max_round:
                 # Chat with LLM
                 response = self.llm.chat_llm(client=client, prompt=prompt)
+                
+                # Track token usage
+                if hasattr(self.llm, 'last_token_usage') and self.llm.last_token_usage:
+                    from agent_graph.state import update_token_usage
+                    usage = self.llm.last_token_usage
+                    update_token_usage(
+                        state,
+                        self.name,
+                        usage.get('prompt_tokens', 0),
+                        usage.get('completion_tokens', 0),
+                        usage.get('total_tokens', 0)
+                    )
                 
                 # Log the interaction
                 logger.info(
