@@ -125,6 +125,9 @@ class FuzzingWorkflowState(TypedDict):
     workflow_status: NotRequired[str]  # Workflow status
     build_errors: NotRequired[List[str]]  # Build error list
     active_containers: NotRequired[List[str]]  # Active container list
+    
+    # === Token Usage Statistics ===
+    token_usage: NotRequired[Dict[str, Any]]  # Token consumption statistics
 
 class WorkerState(TypedDict):
     """State for worker nodes in parallel execution."""
@@ -182,7 +185,14 @@ def create_initial_state(
         run_timeout=run_timeout,
         build_errors=[],
         crash_results=[],
-        active_containers=[]
+        active_containers=[],
+        # Initialize token usage statistics
+        token_usage={
+            "total_prompt_tokens": 0,
+            "total_completion_tokens": 0,
+            "total_tokens": 0,
+            "by_agent": {}
+        }
     )
 
 def is_terminal_state(state: FuzzingWorkflowState) -> bool:
@@ -205,6 +215,76 @@ def is_terminal_state(state: FuzzingWorkflowState) -> bool:
         return True
     
     return False
+
+def update_token_usage(state: FuzzingWorkflowState, agent_name: str, 
+                       prompt_tokens: int, completion_tokens: int, total_tokens: int) -> None:
+    """
+    Update token usage statistics in state.
+    
+    Args:
+        state: The workflow state
+        agent_name: Name of the agent making the call
+        prompt_tokens: Number of prompt tokens used
+        completion_tokens: Number of completion tokens used
+        total_tokens: Total tokens used
+    """
+    if "token_usage" not in state:
+        state["token_usage"] = {
+            "total_prompt_tokens": 0,
+            "total_completion_tokens": 0,
+            "total_tokens": 0,
+            "by_agent": {}
+        }
+    
+    # Update totals
+    state["token_usage"]["total_prompt_tokens"] += prompt_tokens
+    state["token_usage"]["total_completion_tokens"] += completion_tokens
+    state["token_usage"]["total_tokens"] += total_tokens
+    
+    # Update per-agent statistics
+    if agent_name not in state["token_usage"]["by_agent"]:
+        state["token_usage"]["by_agent"][agent_name] = {
+            "prompt_tokens": 0,
+            "completion_tokens": 0,
+            "total_tokens": 0,
+            "call_count": 0
+        }
+    
+    agent_stats = state["token_usage"]["by_agent"][agent_name]
+    agent_stats["prompt_tokens"] += prompt_tokens
+    agent_stats["completion_tokens"] += completion_tokens
+    agent_stats["total_tokens"] += total_tokens
+    agent_stats["call_count"] += 1
+
+
+def get_token_usage_summary(state: FuzzingWorkflowState) -> str:
+    """Get a formatted summary of token usage."""
+    token_usage = state.get("token_usage", {})
+    if not token_usage:
+        return "No token usage data available"
+    
+    summary = f"\n{'='*60}\n"
+    summary += "Token Usage Summary\n"
+    summary += f"{'='*60}\n"
+    summary += f"Total Prompt Tokens:     {token_usage.get('total_prompt_tokens', 0):,}\n"
+    summary += f"Total Completion Tokens: {token_usage.get('total_completion_tokens', 0):,}\n"
+    summary += f"Total Tokens:            {token_usage.get('total_tokens', 0):,}\n"
+    
+    by_agent = token_usage.get("by_agent", {})
+    if by_agent:
+        summary += f"\n{'-'*60}\n"
+        summary += "By Agent:\n"
+        summary += f"{'-'*60}\n"
+        for agent_name, stats in sorted(by_agent.items()):
+            summary += f"\n{agent_name}:\n"
+            summary += f"  Calls:             {stats.get('call_count', 0)}\n"
+            summary += f"  Prompt Tokens:     {stats.get('prompt_tokens', 0):,}\n"
+            summary += f"  Completion Tokens: {stats.get('completion_tokens', 0):,}\n"
+            summary += f"  Total Tokens:      {stats.get('total_tokens', 0):,}\n"
+    
+    summary += f"{'='*60}\n"
+    return summary
+
 
 def get_state_summary(state: FuzzingWorkflowState) -> str:
     """Get a human-readable summary of the current state."""

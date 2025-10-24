@@ -103,7 +103,7 @@ class LangGraphAgent(ABC):
         
         return response
     
-    def ask_llm(self, prompt: str) -> str:
+    def ask_llm(self, prompt: str, state: Optional[FuzzingWorkflowState] = None) -> str:
         """
         Ask LLM a one-off question without conversation history.
         
@@ -111,6 +111,7 @@ class LangGraphAgent(ABC):
         
         Args:
             prompt: The question/prompt
+            state: Optional state for tracking token usage
         
         Returns:
             LLM response
@@ -123,6 +124,18 @@ class LangGraphAgent(ABC):
         )
         
         response = self.llm.chat_with_messages(messages)
+        
+        # Track token usage if state is provided
+        if state and hasattr(self.llm, 'last_token_usage') and self.llm.last_token_usage:
+            from agent_graph.state import update_token_usage
+            usage = self.llm.last_token_usage
+            update_token_usage(
+                state, 
+                self.name,
+                usage.get('prompt_tokens', 0),
+                usage.get('completion_tokens', 0),
+                usage.get('total_tokens', 0)
+            )
         
         logger.info(
             f'<AGENT {self.name} ONEOFF RESPONSE>\n{response}\n</AGENT {self.name} ONEOFF RESPONSE>',
@@ -1214,6 +1227,18 @@ class LangGraphContextAnalyzer(LangGraphAgent):
                 # Chat with LLM
                 client = None  # ADK agents use None for client
                 response = self.llm.ask_llm(prompt=prompt)
+                
+                # Track token usage
+                if hasattr(self.llm, 'last_token_usage') and self.llm.last_token_usage:
+                    from agent_graph.state import update_token_usage
+                    usage = self.llm.last_token_usage
+                    update_token_usage(
+                        state,
+                        self.name,
+                        usage.get('prompt_tokens', 0),
+                        usage.get('completion_tokens', 0),
+                        usage.get('total_tokens', 0)
+                    )
                 
                 # Log the interaction
                 logger.info(

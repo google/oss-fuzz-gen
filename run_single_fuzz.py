@@ -255,6 +255,10 @@ def _fuzzing_pipeline(benchmark: Benchmark, model: models.LLM,
     trial_logger.write_chat_history(best_result, cycle_count=0)
     trial_logger.info(f'Saved chat history to {work_dirs.status}')
   
+  # Save token usage to best_result
+  if best_result and 'token_usage' in final_state:
+    best_result.token_usage = final_state['token_usage']
+  
   # Create trial result to match expected return format
   trial_result = TrialResult(benchmark=benchmark,
                              trial=trial,

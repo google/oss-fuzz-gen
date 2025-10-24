@@ -341,6 +341,16 @@ class GPT(LLM):
                                                temperature=self.temperature),
         [openai.OpenAIError])
 
+    # Store token usage info for later retrieval
+    if hasattr(completion, 'usage') and completion.usage:
+      self.last_token_usage = {
+          'prompt_tokens': completion.usage.prompt_tokens,
+          'completion_tokens': completion.usage.completion_tokens,
+          'total_tokens': completion.usage.total_tokens
+      }
+    else:
+      self.last_token_usage = None
+
     llm_response = completion.choices[0].message.content
     self.messages.append({'role': 'assistant', 'content': llm_response})
 
@@ -380,6 +390,17 @@ class GPT(LLM):
                                                n=self.num_samples,
                                                temperature=self.temperature),
         [openai.OpenAIError])
+    
+    # Store token usage info for later retrieval
+    if hasattr(completion, 'usage') and completion.usage:
+      self.last_token_usage = {
+          'prompt_tokens': completion.usage.prompt_tokens,
+          'completion_tokens': completion.usage.completion_tokens,
+          'total_tokens': completion.usage.total_tokens
+      }
+    else:
+      self.last_token_usage = None
+    
     return completion.choices[0].message.content
 
   # ============================== Generation ============================== #

@@ -120,6 +120,12 @@ class WorkDirs:
     """Convert WorkDirs to a dictionary for serialization."""
     return {
         'base_dir': self._base_dir,
+        'requirements': self.requirements,
+        'status': self.status,
+        'build_logs': self.build_logs,
+        'run_logs': self.run_logs,
+        'fuzz_targets': self.fuzz_targets,
+        'dills': self.dills,
     }
   
   @classmethod

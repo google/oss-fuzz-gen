@@ -110,6 +110,12 @@ class FuzzingWorkflow:
         
         final_state = compiled_workflow.invoke(initial_state, config=config)
         
+        # Print token usage summary at the end
+        from agent_graph.state import get_token_usage_summary
+        import logger
+        token_summary = get_token_usage_summary(final_state)
+        logger.info(f"\n{token_summary}", trial=trial)
+        
         return final_state
     
     def _create_full_workflow(self) -> StateGraph:

@@ -40,6 +40,7 @@ class Result:
     self.chat_history = chat_history or {}
     self.default_success = default_success
     self.function_analysis = function_analysis
+    self.token_usage = None  # Will be set by workflow if available
 
   def __repr__(self) -> str:
     attributes = [
@@ -53,7 +54,7 @@ class Result:
     return self.default_success
 
   def to_dict(self) -> dict:
-    return {
+    result = {
         'function_signature': self.benchmark.function_signature,
         'project': self.benchmark.project,
         'project_commit': self.benchmark.commit,
@@ -64,6 +65,9 @@ class Result:
         'author': self.author.name if self.author else '',
         'chat_history': self.chat_history,
     }
+    if self.token_usage:
+      result['token_usage'] = self.token_usage
+    return result
 
 # TODO: Make this class an attribute of Result, avoid too many attributes in one
 # class.
