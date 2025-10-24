@@ -24,7 +24,7 @@ from llm_toolkit import models, prompt_builder
 
 logger = logging.getLogger(__name__)
 # log the debug and info
-logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.ERROR)
 # sys.setrecursionlimit(20000)
 
 # WARN: Avoid large NUM_EXP for local experiments.

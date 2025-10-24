@@ -489,6 +489,16 @@ class GPT5(GPT):
                                                n=self.num_samples),
         [openai.OpenAIError])
 
+    # Store token usage info for later retrieval
+    if hasattr(completion, 'usage') and completion.usage:
+      self.last_token_usage = {
+          'prompt_tokens': completion.usage.prompt_tokens,
+          'completion_tokens': completion.usage.completion_tokens,
+          'total_tokens': completion.usage.total_tokens
+      }
+    else:
+      self.last_token_usage = None
+
     llm_response = completion.choices[0].message.content
     self.messages.append({'role': 'assistant', 'content': llm_response})
 
@@ -509,6 +519,17 @@ class GPT5(GPT):
                                                model=self.name,
                                                n=self.num_samples),
         [openai.OpenAIError])
+    
+    # Store token usage info for later retrieval
+    if hasattr(completion, 'usage') and completion.usage:
+      self.last_token_usage = {
+          'prompt_tokens': completion.usage.prompt_tokens,
+          'completion_tokens': completion.usage.completion_tokens,
+          'total_tokens': completion.usage.total_tokens
+      }
+    else:
+      self.last_token_usage = None
+    
     return completion.choices[0].message.content
 
   def ask_llm_to_file(self, prompt: prompts.Prompt, response_dir: str) -> None:
@@ -526,6 +547,17 @@ class GPT5(GPT):
                                                model=self.name,
                                                n=self.num_samples),
         [openai.OpenAIError])
+    
+    # Store token usage info for later retrieval
+    if hasattr(completion, 'usage') and completion.usage:
+      self.last_token_usage = {
+          'prompt_tokens': completion.usage.prompt_tokens,
+          'completion_tokens': completion.usage.completion_tokens,
+          'total_tokens': completion.usage.total_tokens
+      }
+    else:
+      self.last_token_usage = None
+    
     for index, choice in enumerate(completion.choices):  # type: ignore
       content = choice.message.content
       response_file = os.path.join(response_dir, f'response_{index}.txt')
