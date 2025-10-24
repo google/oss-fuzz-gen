@@ -57,7 +57,8 @@ def _add_base_arguments(parser: argparse.ArgumentParser) -> None:
     parser.add_argument('-y',
                         '--benchmark-yaml',
                         type=str,
-                        required=True,
+                        required=False,
+                        default='',
                         help='A benchmark YAML file.')
     
     parser.add_argument('-f',

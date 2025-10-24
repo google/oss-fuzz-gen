@@ -59,9 +59,11 @@ def build_run_logicfuzz_command(args: argparse.Namespace) -> List[str]:
     
     # Agent mode is now the default, no need to specify --agent flag
     
-    # Required arguments
+    # Required arguments - either single YAML or directory
     if args.benchmark_yaml:
         cmd.extend(['-y', args.benchmark_yaml])
+    elif hasattr(args, 'benchmarks_directory') and args.benchmarks_directory:
+        cmd.extend(['-b', args.benchmarks_directory])
     
     if args.function_name:
         cmd.extend(['-f', args.function_name])
@@ -120,7 +122,10 @@ def run_via_wrapper(args: argparse.Namespace) -> bool:
     - No code duplication
     """
     logger.info("=== LangGraph Fuzzing Workflow (via run_logicfuzz.py) ===")
-    logger.info(f"Benchmark: {args.benchmark_yaml}")
+    if args.benchmark_yaml:
+        logger.info(f"Benchmark: {args.benchmark_yaml}")
+    elif args.benchmarks_directory:
+        logger.info(f"Benchmarks directory: {args.benchmarks_directory}")
     logger.info(f"Function: {args.function_name or 'auto-select from YAML'}")
     logger.info(f"Model: {args.model}")
     
@@ -209,16 +214,25 @@ def main() -> int:
     # Setup logging
     setup_logging(args.verbose)
     
-    # Validate required arguments
-    if not args.benchmark_yaml:
-        logger.error("Benchmark YAML file is required (-y/--benchmark-yaml)")
+    # Validate required arguments - need either YAML file or directory
+    if not args.benchmark_yaml and not args.benchmarks_directory:
+        logger.error("Either benchmark YAML file (-y/--benchmark-yaml) or "
+                    "benchmarks directory (-b/--benchmarks-directory) is required")
+        return 1
+    
+    if args.benchmark_yaml and args.benchmarks_directory:
+        logger.error("Cannot specify both -y/--benchmark-yaml and "
+                    "-b/--benchmarks-directory at the same time")
         return 1
         
     # Function name is optional - if not provided, process all functions in YAML
     if args.function_name:
         logger.info(f"Processing specific function: {args.function_name}")
     else:
-        logger.info("No specific function specified - will process first function in YAML")
+        if args.benchmark_yaml:
+            logger.info("No specific function specified - will process first function in YAML")
+        else:
+            logger.info("No specific function specified - will process all benchmarks in directory")
         
     if not args.model:
         logger.error("Model name is required (--model)")

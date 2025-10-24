@@ -24,7 +24,7 @@ from llm_toolkit import models, prompt_builder
 
 logger = logging.getLogger(__name__)
 # log the debug and info
-logger.setLevel(logging.ERROR)
+logger.setLevel(logging.INFO)
 # sys.setrecursionlimit(20000)
 
 # WARN: Avoid large NUM_EXP for local experiments.
@@ -45,7 +45,7 @@ TIME_STAMP_FMT = '%Y-%m-%d %H:%M:%S'
 
 WORK_DIR = ''
 
-LOG_LEVELS = ['debug', 'info']
+LOG_LEVELS = ['debug', 'info', 'error']
 LOG_FMT = ('%(asctime)s.%(msecs)03d %(levelname)s '
            '%(module)s - %(funcName)s: %(message)s')
 
