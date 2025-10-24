@@ -177,16 +177,76 @@ class LangGraphFunctionAnalyzer(LangGraphAgent):
     def execute(self, state: FuzzingWorkflowState) -> Dict[str, Any]:
         """Analyze the target function."""
         import os
+        from data_prep import introspector
+        
         benchmark = state["benchmark"]
+        project_name = benchmark.get('project', 'unknown')
+        function_signature = benchmark.get('function_signature', 'unknown')
+        
+        # Query FuzzIntrospector for function source code
+        logger.info(f'Querying FuzzIntrospector for source code of {function_signature}', trial=self.trial)
+        func_source = introspector.query_introspector_function_source(
+            project_name, function_signature
+        )
+        
+        if not func_source:
+            logger.warning(
+                f'No source code found in FuzzIntrospector for project: {project_name}, '
+                f'function: {function_signature}. Using fallback guidance.',
+                trial=self.trial
+            )
+            # Provide a structured fallback that guides the LLM
+            func_source = f"""// Source code not available in FuzzIntrospector database for:
+// Function: {function_signature}
+// Project: {project_name}
+//
+// NOTE: Please analyze this function conservatively based on:
+// 1. The function signature and parameter types
+// 2. Common patterns for similar functions in {project_name}
+// 3. Standard practices for the involved data types
+// 4. Typical constraints that real callers would respect
+//
+// Avoid making assumptions about internal implementation details.
+// Focus on what can be inferred from the signature and common usage patterns."""
+        else:
+            logger.info(f'Source code found ({len(func_source)} chars)', trial=self.trial)
+        
+        # Query FuzzIntrospector for cross-references (callers)
+        logger.info(f'Querying FuzzIntrospector for cross-references', trial=self.trial)
+        xrefs = introspector.query_introspector_cross_references(
+            project_name, function_signature
+        )
+        
+        if not xrefs:
+            logger.warning(
+                f'No cross-references found in FuzzIntrospector for {function_signature}',
+                trial=self.trial
+            )
+            function_references = "No cross-reference information available from FuzzIntrospector."
+        else:
+            logger.info(f'Found {len(xrefs)} cross-references', trial=self.trial)
+            # Format references similar to original implementation
+            references = [f'<reference>\n{xref}\n</reference>' for xref in xrefs]
+            function_references = '\n'.join(references)
+        
+        # Build additional context with source code and references
+        additional_context = f"""**Function Source Code:**
+```cpp
+{func_source}
+```
+
+**Function Callers (Cross-References):**
+{function_references}
+"""
         
         # Build prompt from template file
         prompt_manager = get_prompt_manager()
         prompt = prompt_manager.build_user_prompt(
             "function_analyzer",
-            project_name=benchmark.get('project', 'unknown'),
+            project_name=project_name,
             function_name=benchmark.get('function_name', 'unknown'),
-            function_signature=benchmark.get('function_signature', 'unknown'),
-            additional_context=""
+            function_signature=function_signature,
+            additional_context=additional_context
         )
         
         # Chat with LLM

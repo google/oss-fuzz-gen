@@ -5,12 +5,13 @@ Uses agent-specific messages for clean context management.
 """
 from typing import Dict, Any
 
+from langchain_core.runnables import RunnableConfig
 import logger
 from agent_graph.state import FuzzingWorkflowState
 from agent_graph.agents.langgraph_agent import LangGraphCrashAnalyzer
 
 
-def crash_analyzer_node(state: FuzzingWorkflowState, config: Dict[str, Any]) -> Dict[str, Any]:
+def crash_analyzer_node(state: FuzzingWorkflowState, config: RunnableConfig) -> Dict[str, Any]:
     """
     Analyze crash information.
     

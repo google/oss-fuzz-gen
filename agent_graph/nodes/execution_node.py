@@ -7,6 +7,7 @@ ExecutionStage functionality.
 import os
 from typing import Dict, Any
 
+from langchain_core.runnables import RunnableConfig
 import logger
 from agent_graph.adapters import StateAdapter
 from agent_graph.state import FuzzingWorkflowState
@@ -17,7 +18,7 @@ from experiment.benchmark import Benchmark
 from experiment.evaluator import Evaluator
 from experiment.workdir import WorkDirs
 
-def execution_node(state: FuzzingWorkflowState, config: Dict[str, Any]) -> Dict[str, Any]:
+def execution_node(state: FuzzingWorkflowState, config: RunnableConfig) -> Dict[str, Any]:
     """
     LangGraph node that wraps the original ExecutionStage functionality.
     
@@ -213,7 +214,7 @@ def execution_node(state: FuzzingWorkflowState, config: Dict[str, Any]) -> Dict[
             }]
         }
 
-def build_node(state: FuzzingWorkflowState, config: Dict[str, Any]) -> Dict[str, Any]:
+def build_node(state: FuzzingWorkflowState, config: RunnableConfig) -> Dict[str, Any]:
     """
     LangGraph node for building fuzz targets without execution.
     

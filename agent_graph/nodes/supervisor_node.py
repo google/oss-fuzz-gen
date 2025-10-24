@@ -6,10 +6,11 @@ determining which agents to execute next based on the current state.
 """
 from typing import Dict, Any, List
 
+from langchain_core.runnables import RunnableConfig
 import logger
 from agent_graph.state import FuzzingWorkflowState
 
-def supervisor_node(state: FuzzingWorkflowState, config: Dict[str, Any]) -> Dict[str, Any]:
+def supervisor_node(state: FuzzingWorkflowState, config: RunnableConfig) -> Dict[str, Any]:
     """
     Supervisor node that determines the next action in the workflow.
     
@@ -49,7 +50,9 @@ def supervisor_node(state: FuzzingWorkflowState, config: Dict[str, Any]) -> Dict
         
         # Check for errors that should terminate the workflow
         errors = state.get("errors", [])
-        if len(errors) >= config.get("max_errors", 5):
+        configurable = config.get("configurable", {})
+        max_errors = configurable.get("max_errors", 5)
+        if len(errors) >= max_errors:
             logger.warning('Too many errors, terminating workflow', trial=trial)
             return {
                 "next_action": "END",
@@ -63,7 +66,7 @@ def supervisor_node(state: FuzzingWorkflowState, config: Dict[str, Any]) -> Dict
         
         # Check retry count
         retry_count = state.get("retry_count", 0)
-        max_retries = state.get("max_retries", config.get("max_retries", 3))
+        max_retries = state.get("max_retries", configurable.get("max_retries", 3))
         
         if retry_count >= max_retries:
             logger.warning('Maximum retries reached, terminating workflow', trial=trial)
