@@ -1,10 +1,6 @@
 #!/usr/bin/env python3
 """
-LangGraph模式的正式入口点。
-
-这是运行LangGraph fuzzing workflow的主要命令行接口。
-此脚本是一个轻量级wrapper，调用标准流程 run_logicfuzz.py，
-确保单一数据源和一致的结果保存逻辑。
+LangGraph-based fuzzing workflow main entry point.
 
 Architecture:
   agent_graph/main.py  →  run_logicfuzz.py  →  run_single_fuzz.py
@@ -13,11 +9,7 @@ Architecture:
                                              ↓
                                        Standard result saving
 
-This ensures:
-- Single source of truth for workflow execution (run_single_fuzz.py)
-- Consistent result format across all entry points
-- No code duplication for result saving logic
-- Easy maintenance (only update run_single_fuzz.py)
+This ensures a single source of truth for workflow execution, consistent result format, and no code duplication for result saving logic.
 """
 
 import argparse
@@ -109,6 +101,57 @@ def build_run_logicfuzz_command(args: argparse.Namespace) -> List[str]:
     
     if hasattr(args, 'cloud_experiment_bucket') and args.cloud_experiment_bucket:
         cmd.extend(['--cloud-experiment-bucket', args.cloud_experiment_bucket])
+    
+    # Introspector endpoint configuration
+    if hasattr(args, 'introspector_endpoint') and args.introspector_endpoint:
+        cmd.extend(['-e', args.introspector_endpoint])
+    
+    # Infrastructure configuration
+    if hasattr(args, 'oss_fuzz_dir') and args.oss_fuzz_dir:
+        cmd.extend(['-of', args.oss_fuzz_dir])
+    
+    if hasattr(args, 'work_dir') and args.work_dir:
+        cmd.extend(['-w', args.work_dir])
+    
+    if hasattr(args, 'template_directory') and args.template_directory:
+        cmd.extend(['-td', args.template_directory])
+    
+    if hasattr(args, 'log_level') and args.log_level:
+        cmd.extend(['-lo', args.log_level])
+    
+    # Prompt and context configuration
+    if hasattr(args, 'prompt_file') and args.prompt_file:
+        cmd.extend(['-pf', args.prompt_file])
+    
+    if hasattr(args, 'no_prompt_file') and args.no_prompt_file:
+        cmd.append('-npf')
+    
+    if hasattr(args, 'additional_files_path') and args.additional_files_path:
+        cmd.extend(['-afp', args.additional_files_path])
+    
+    # Benchmark generation parameters
+    if hasattr(args, 'generate_benchmarks') and args.generate_benchmarks:
+        cmd.extend(['-g', args.generate_benchmarks])
+    
+    if hasattr(args, 'generate_benchmarks_projects') and args.generate_benchmarks_projects:
+        cmd.extend(['-gp', args.generate_benchmarks_projects])
+    
+    if hasattr(args, 'generate_benchmarks_max') and args.generate_benchmarks_max:
+        cmd.extend(['-gm', str(args.generate_benchmarks_max)])
+    
+    # Execution control
+    if hasattr(args, 'delay') and args.delay:
+        cmd.extend(['--delay', str(args.delay)])
+    
+    if hasattr(args, 'prompt_builder') and args.prompt_builder:
+        cmd.extend(['-p', args.prompt_builder])
+    
+    if hasattr(args, 'custom_pipeline') and args.custom_pipeline:
+        cmd.extend(['--custom-pipeline', args.custom_pipeline])
+    
+    # Model configuration
+    if hasattr(args, 'ai_binary') and args.ai_binary:
+        cmd.extend(['-a', args.ai_binary])
     
     return cmd
 

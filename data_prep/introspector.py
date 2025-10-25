@@ -402,34 +402,123 @@ def query_introspector_for_targets(project, target_oracle) -> list[Dict]:
     sys.exit(1)
   return query_func(project)
 
+def _extract_function_name_from_signature(func_sig: str) -> str:
+  """Extracts the function name from a function signature.
+  
+  Args:
+      func_sig: Function signature like "void LibRaw::crxLoadDecodeLoop(void *, int)"
+  
+  Returns:
+      Function name like "LibRaw::crxLoadDecodeLoop", or empty string if extraction fails.
+  """
+  import re
+  # Match pattern: [return_type] [namespace::]*function_name(params)
+  match = re.search(r'[\w:]+\([^)]*\)', func_sig)
+  if match:
+    func_name_with_params = match.group(0)
+    func_name = func_name_with_params.split('(')[0]
+    return func_name
+  return ''
+
 def query_introspector_cfg(project: str) -> dict:
   """Queries FuzzIntrospector API for CFG."""
   resp = _query_introspector(INTROSPECTOR_CFG, {'project': project})
   return _get_data(resp, 'project', {})
 
 def query_introspector_source_file_path(project: str, func_sig: str) -> str:
-  """Queries FuzzIntrospector API for file path of |func_sig|."""
+  """Queries FuzzIntrospector API for file path of |func_sig|.
+  
+  If the query fails with the provided signature, this function will attempt
+  to resolve the full signature from FuzzIntrospector and retry.
+  """
   resp = _query_introspector(INTROSPECTOR_FUNCTION_SOURCE, {
       'project': project,
       'function_signature': func_sig
   })
-  return _get_data(resp, 'filepath', '')
+  filepath = _get_data(resp, 'filepath', '')
+  
+  # If query failed, try to get the full signature from FuzzIntrospector
+  if not filepath:
+    logger.info('Failed to query filepath with signature: %s. Attempting to resolve full signature.', func_sig)
+    
+    func_name = _extract_function_name_from_signature(func_sig)
+    if func_name:
+      logger.info('Extracted function name: %s. Querying for full signature.', func_name)
+      full_sig = query_introspector_function_signature(project, func_name)
+      
+      if full_sig and full_sig != func_sig:
+        logger.info('Found full signature: %s. Retrying query.', full_sig)
+        resp = _query_introspector(INTROSPECTOR_FUNCTION_SOURCE, {
+            'project': project,
+            'function_signature': full_sig
+        })
+        filepath = _get_data(resp, 'filepath', '')
+  
+  return filepath
 
 def query_introspector_function_source(project: str, func_sig: str) -> str:
-  """Queries FuzzIntrospector API for source code of |func_sig|."""
+  """Queries FuzzIntrospector API for source code of |func_sig|.
+  
+  If the query fails with the provided signature, this function will attempt
+  to resolve the full signature from FuzzIntrospector and retry.
+  """
   resp = _query_introspector(INTROSPECTOR_FUNCTION_SOURCE, {
       'project': project,
       'function_signature': func_sig
   })
-  return _get_data(resp, 'source', '')
+  source = _get_data(resp, 'source', '')
+  
+  # If query failed, try to get the full signature from FuzzIntrospector
+  if not source:
+    logger.info('Failed to query with signature: %s. Attempting to resolve full signature.', func_sig)
+    
+    func_name = _extract_function_name_from_signature(func_sig)
+    if func_name:
+      logger.info('Extracted function name: %s. Querying for full signature.', func_name)
+      full_sig = query_introspector_function_signature(project, func_name)
+      
+      if full_sig and full_sig != func_sig:
+        logger.info('Found full signature: %s. Retrying query.', full_sig)
+        resp = _query_introspector(INTROSPECTOR_FUNCTION_SOURCE, {
+            'project': project,
+            'function_signature': full_sig
+        })
+        source = _get_data(resp, 'source', '')
+  
+  return source
 
 def query_introspector_function_line(project: str, func_sig: str) -> list:
-  """Queries FuzzIntrospector API for source line of |func_sig|."""
+  """Queries FuzzIntrospector API for source line of |func_sig|.
+  
+  If the query fails with the provided signature, this function will attempt
+  to resolve the full signature from FuzzIntrospector and retry.
+  """
   resp = _query_introspector(INTROSPECTOR_FUNCTION_SOURCE, {
       'project': project,
       'function_signature': func_sig
   })
-  return [_get_data(resp, 'src_begin', 0), _get_data(resp, 'src_end', 0)]
+  src_begin = _get_data(resp, 'src_begin', 0)
+  src_end = _get_data(resp, 'src_end', 0)
+  
+  # If query failed, try to get the full signature from FuzzIntrospector
+  if not src_begin and not src_end:
+    logger.info('Failed to query line info with signature: %s. Attempting to resolve full signature.', func_sig)
+    
+    func_name = _extract_function_name_from_signature(func_sig)
+    if func_name:
+      logger.info('Extracted function name: %s. Querying for full signature.', func_name)
+      full_sig = query_introspector_function_signature(project, func_name)
+      
+      if full_sig and full_sig != func_sig:
+        logger.info('Found full signature: %s. Retrying query.', full_sig)
+        resp = _query_introspector(INTROSPECTOR_FUNCTION_SOURCE, {
+            'project': project,
+            'function_signature': full_sig
+        })
+        src_begin = _get_data(resp, 'src_begin', 0)
+        src_end = _get_data(resp, 'src_end', 0)
+  
+  return [src_begin, src_end]
 
 def query_introspector_function_props(project: str, func_sig: str) -> dict:
   """Queries FuzzIntrospector API for additional properties of |func_sig|."""
@@ -482,12 +571,35 @@ def query_introspector_header_files(project: str) -> List[str]:
   return all_header_files
 
 def query_introspector_sample_xrefs(project: str, func_sig: str) -> List[str]:
-  """Queries for sample references in the form of source code."""
+  """Queries for sample references in the form of source code.
+  
+  If the query fails with the provided signature, this function will attempt
+  to resolve the full signature from FuzzIntrospector and retry.
+  """
   resp = _query_introspector(INTROSPECTOR_SAMPLE_XREFS, {
       'project': project,
       'function_signature': func_sig
   })
-  return _get_data(resp, 'source-code-refs', [])
+  refs = _get_data(resp, 'source-code-refs', [])
+  
+  # If query failed, try to get the full signature from FuzzIntrospector
+  if not refs:
+    logger.info('Failed to query xrefs with signature: %s. Attempting to resolve full signature.', func_sig)
+    
+    func_name = _extract_function_name_from_signature(func_sig)
+    if func_name:
+      logger.info('Extracted function name: %s. Querying for full signature.', func_name)
+      full_sig = query_introspector_function_signature(project, func_name)
+      
+      if full_sig and full_sig != func_sig:
+        logger.info('Found full signature: %s. Retrying query.', full_sig)
+        resp = _query_introspector(INTROSPECTOR_SAMPLE_XREFS, {
+            'project': project,
+            'function_signature': full_sig
+        })
+        refs = _get_data(resp, 'source-code-refs', [])
+  
+  return refs
 
 def query_introspector_jvm_source_path(project: str) -> List[str]:
   """Queries for all java source paths of a given project."""
