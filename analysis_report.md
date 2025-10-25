@@ -58,7 +58,7 @@ enhancer:
 2. **可能接近token limit**：虽然没有明确的"token exceeded"错误，但prompt长度已经非常可观
 3. **效率极低**：大量token消耗在反复修复编译错误上，而不是改进fuzzing逻辑
 
-### 3. **FuzzIntrospector信息严重缺失** ⚠️⚠️
+### 3. **FuzzIntrospector信息严重缺失** ⚠️⚠️ （已解决）
 
 从log中大量看到：
 

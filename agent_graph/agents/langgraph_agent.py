@@ -321,8 +321,21 @@ class LangGraphPrototyper(LangGraphAgent):
         # Determine language
         language = benchmark.get('language', 'C++')
         
+        # Check if this is a regeneration (after compilation failures)
+        is_regeneration = state.get("compile_success") == False and state.get("fuzz_target_source", "") != ""
+        
         # Build prompt from template file
         prompt_manager = get_prompt_manager()
+        
+        # If regenerating, add context about previous failures
+        additional_context = ""
+        if is_regeneration:
+            build_errors = state.get("build_errors", [])
+            if build_errors:
+                additional_context = f"\n**Note**: Previous code generation failed to compile. Key errors:\n"
+                additional_context += "\n".join(build_errors[:3])  # Show first 3 errors
+                additional_context += "\n\nPlease generate a completely new approach that avoids these issues."
+        
         prompt = prompt_manager.build_user_prompt(
             "prototyper",
             project_name=benchmark.get('project', 'unknown'),
@@ -330,7 +343,7 @@ class LangGraphPrototyper(LangGraphAgent):
             function_signature=benchmark.get('function_signature', 'unknown'),
             language=language,
             function_analysis=function_analysis.get('raw_analysis', 'No analysis available'),
-            additional_context=""
+            additional_context=additional_context
         )
         
         # Chat with LLM (using prototyper's own message history)
@@ -343,11 +356,23 @@ class LangGraphPrototyper(LangGraphAgent):
         if not fuzz_target_code:
             fuzz_target_code = response
         
-        return {
+        # Prepare state update
+        state_update = {
             "fuzz_target_source": fuzz_target_code,
             "compile_success": None,  # Reset to trigger build
+            "build_errors": [],  # Clear previous errors
             "retry_count": 0  # Reset retry count for new target
         }
+        
+        # If this is a regeneration, update regeneration counter and reset compilation retry count
+        if is_regeneration:
+            prototyper_regenerate_count = state.get("prototyper_regenerate_count", 0)
+            state_update["prototyper_regenerate_count"] = prototyper_regenerate_count + 1
+            state_update["compilation_retry_count"] = 0  # Reset enhancer retry count
+            logger.info(f'Prototyper regeneration #{prototyper_regenerate_count + 1}, '
+                       f'resetting compilation_retry_count', trial=self.trial)
+        
+        return state_update
 
 
 class LangGraphEnhancer(LangGraphAgent):
@@ -370,7 +395,9 @@ class LangGraphEnhancer(LangGraphAgent):
         """Fix compilation errors."""
         benchmark = state["benchmark"]
         current_code = state.get("fuzz_target_source", "")
+        previous_code = state.get("previous_fuzz_target_source", "")
         build_errors = state.get("build_errors", [])
+        workflow_phase = state.get("workflow_phase", "compilation")
         
         # Determine language
         language = benchmark.get('language', 'C++')
@@ -378,12 +405,15 @@ class LangGraphEnhancer(LangGraphAgent):
         # Format build errors
         error_text = "\n".join(build_errors[:10])
         
+        # Generate code context (diff or full code)
+        code_context = self._generate_code_context(current_code, previous_code, build_errors)
+        
         # Build prompt from template file
         prompt_manager = get_prompt_manager()
         prompt = prompt_manager.build_user_prompt(
             "enhancer",
             language=language,
-            current_code=current_code,
+            current_code=code_context,  # Use context instead of full code
             build_errors=error_text,
             additional_context=""
         )
@@ -398,12 +428,93 @@ class LangGraphEnhancer(LangGraphAgent):
         if not fuzz_target_code:
             fuzz_target_code = response
         
-        return {
+        # Prepare state update
+        state_update = {
             "fuzz_target_source": fuzz_target_code,
-            "retry_count": state.get("retry_count", 0) + 1,
+            "previous_fuzz_target_source": current_code,  # Save current as previous for next iteration
             "compile_success": None,  # Reset to trigger rebuild
             "build_errors": []  # Clear previous errors
         }
+        
+        # Update counters based on workflow phase
+        if workflow_phase == "compilation":
+            # In compilation phase, update compilation_retry_count
+            compilation_retry_count = state.get("compilation_retry_count", 0)
+            state_update["compilation_retry_count"] = compilation_retry_count + 1
+            logger.info(f'Compilation retry count: {compilation_retry_count + 1}', trial=self.trial)
+        else:
+            # In optimization phase, update regular retry_count
+            retry_count = state.get("retry_count", 0)
+            state_update["retry_count"] = retry_count + 1
+        
+        return state_update
+    
+    def _generate_code_context(self, current_code: str, previous_code: str, build_errors: list) -> str:
+        """
+        Generate code context for enhancer based on diff strategy.
+        
+        Strategy: Extract only the error-relevant parts of code to reduce token usage.
+        
+        Args:
+            current_code: Current fuzz target code
+            previous_code: Previous version (if any)
+            build_errors: List of build errors
+        
+        Returns:
+            Code context string (diff or relevant sections)
+        """
+        if not current_code:
+            return ""
+        
+        # Extract line numbers from errors
+        error_lines = set()
+        for error in build_errors:
+            # Parse error messages to extract line numbers
+            # Common formats: "file.cpp:123:45: error", "line 123:", etc.
+            import re
+            matches = re.findall(r':(\d+):', error) or re.findall(r'line (\d+)', error)
+            for match in matches:
+                try:
+                    line_num = int(match)
+                    # Add context: ±10 lines around error
+                    for i in range(max(1, line_num - 10), line_num + 11):
+                        error_lines.add(i)
+                except (ValueError, IndexError):
+                    continue
+        
+        # If we have specific error lines, extract only those sections
+        if error_lines:
+            code_lines = current_code.split('\n')
+            relevant_lines = []
+            last_included = -100  # Track for adding "..."
+            
+            for line_num in sorted(error_lines):
+                if line_num <= len(code_lines):
+                    # Add "..." if there's a gap
+                    if line_num - last_included > 1 and last_included != -100:
+                        relevant_lines.append("// ... (lines omitted) ...")
+                    
+                    relevant_lines.append(f"/* Line {line_num} */ {code_lines[line_num - 1]}")
+                    last_included = line_num
+            
+            if relevant_lines:
+                context = "**Code sections relevant to errors:**\n```cpp\n" + "\n".join(relevant_lines) + "\n```"
+                logger.debug(f'Extracted {len(relevant_lines)} relevant lines from {len(code_lines)} total lines', 
+                            trial=self.trial)
+                return context
+        
+        # Fallback: if no specific lines identified or code is small, return full code
+        if len(current_code) < 5000:  # Less than ~5KB, just send it all
+            return current_code
+        
+        # For large code without specific error lines, return first and last parts
+        code_lines = current_code.split('\n')
+        if len(code_lines) > 100:
+            first_50 = '\n'.join(code_lines[:50])
+            last_50 = '\n'.join(code_lines[-50:])
+            return f"{first_50}\n\n// ... (middle section omitted) ...\n\n{last_50}"
+        
+        return current_code
 
 
 class LangGraphCrashAnalyzer(LangGraphAgent):

@@ -1,80 +1,44 @@
-Analyze the target function `{FUNCTION_SIGNATURE}` in project {PROJECT_NAME} for fuzzing.
-
-Your goal is to identify the input and state requirements that the target function needs to:
-- Execute correctly
-- Achieve high coverage
-- Avoid false positive crashes
-
-False positive crashes occur when the function is called with input conditions or states that are not feasible from any of its real callers.
+Analyze `{FUNCTION_SIGNATURE}` in {PROJECT_NAME} to extract the core behavioral contract for generating a correct and effective fuzz driver.
 
 {ADDITIONAL_CONTEXT}
 
-**Analysis Steps:**
+**Output Format:**
 
-1. **Identify Input Parameters**
-   List all input parameters for the target function.
+## 1. Preconditions (What MUST hold before calling)
+- Object states: [required state] - Why: [crash/bug if violated] - Evidence: [cite]
+- Pointers: [NULL checks needed] - Why: [usage] - Evidence: [cite]
+- Values: [valid ranges] - Why: [assertion/overflow] - Evidence: [cite]
+- Relationships: [inter-param constraints] - Why: [OOB/crash] - Evidence: [cite]
+- Global: [initialization needed] - Why: [dependency] - Evidence: [cite]
 
-2. **Analyze Caller Patterns**
-   For each input parameter, determine:
-   - Is it always created/initialized using a specific function?
-   - Can it be user-controlled or contain invalid values?
-   - Are there clear relationships between input arguments?
+## 2. Setup Sequence (How to establish preconditions)
+**Step 1**: `func(args)` → Establishes [X], changes state [A→B] - Evidence: [cite]
+**Step 2**: `func(args)` → Establishes [Y], changes state [B→C] - Evidence: [cite]
+**Step N**: `{FUNCTION_SIGNATURE}` → Requires [preconditions from §1]
 
-3. **Identify Implicit Requirements**
-   Examples include:
-   - Pointer states (null pointer, function pointers, null-terminated strings)
-   - Integer variable or struct member ranges
-   - Number or types of variable arguments in variadic functions
+If direct call OK: state "No setup needed" + cite evidence.
 
-4. **Specify Initialization Methods**
-   For each parameter, specify how it should be initialized:
-   - Using a specific function (e.g., fopen)
-   - Using values from an array in the program
-   - Constrained to valid values based on what callers can provide
-   - Constrained based on the target function's implicit requirements
-   - Using fuzz inputs directly
+## 3. Parameters (For EACH parameter)
+### `param` (type)
+- Constraint: [must be X, cannot be Y] - Why: [crash type] - Evidence: [cite]
+- Construction: [how to create valid value]
+- Fuzzing: [can fuzz directly / must constrain to X]
 
-5. **Identify Setup Functions**
-   List any functions that should be called before the target function to:
-   - Set the correct state
-   - Allocate or free necessary resources
+## 4. Postconditions
+- Returns: [type] - Success=[values] Error=[values]
+- State changes: [object: before→after]
+- Cleanup: [who owns/frees resources]
+- Evidence: [cite]
 
-6. **Compile Requirements**
-   For each requirement:
-   - Keep it short and precise (2 sentences max: requirement + reason)
-   - Include constant values if relevant
-   - For struct parameters, specify how to initialize the whole struct or each member
-   - Provide a concise reason for including the requirement
+## 5. Crash Risks
+1. [Scenario] → Crash=[type] State=[invalid] - Evidence: [cite]
+2. [Invalid transition] → Why dangerous=[reason] - Evidence: [cite]
 
-**Response Format:**
+## 6. Driver Recipe (Priority order)
+1. Init: [exact call to establish global state]
+2. Setup: [exact calls to create valid objects]
+3. Constraints: [param bounds/relationships to enforce]
+4. Fuzz: [which params to fuzz, which to fix]
 
-Provide a clear, structured analysis with the following sections:
-
-## Function Summary
-[Brief description of what the function does - max 200 words]
-
-## Parameters
-For each parameter:
-- **Name**: [parameter name]
-- **Type**: [data type]
-- **Constraints**: [valid ranges, special requirements]
-- **Initialization**: [how to create/initialize this parameter]
-- **Reasoning**: [why this is important for fuzzing]
-
-## Return Value
-- **Type**: [return type]
-- **Possible Values**: [what the function can return]
-
-## Setup Requirements
-- [List any functions to call before the target function]
-- [Explain what state they set up]
-
-## Special Considerations
-- [Edge cases to test]
-- [Memory management concerns]
-- [Dependencies on global state]
-- [Callback requirements if applicable]
-
-## Key Requirements Summary
-[Numbered list of the most critical requirements for fuzzing this function]
-
+## 7. Summary
+[1-2 sentence function purpose and key behavior]

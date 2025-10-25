@@ -289,17 +289,24 @@ def build_node(state: FuzzingWorkflowState, config: RunnableConfig) -> Dict[str,
                    trial=trial)
         
         # Create state update based on build result
+        compile_success = build_result.get("success", False)
         state_update = {
-            "compile_success": build_result.get("success", False),
+            "compile_success": compile_success,
             "build_errors": build_result.get("errors", []),
             "compile_log": build_result.get("log", ""),
             "binary_exists": build_result.get("binary_exists", False),
             "is_function_referenced": True,  # Assume function is referenced; real check happens during execution
             "messages": [{
                 "role": "assistant",
-                "content": f"Build {'successful' if build_result.get('success') else 'failed'}"
+                "content": f"Build {'successful' if compile_success else 'failed'}"
             }]
         }
+        
+        # If compilation successful and we're in compilation phase, switch to optimization phase
+        if compile_success and state.get("workflow_phase") == "compilation":
+            logger.info('Compilation successful, switching workflow_phase to optimization', trial=trial)
+            state_update["workflow_phase"] = "optimization"
+            state_update["compilation_retry_count"] = 0  # Reset for potential future use
         
         logger.info('Build node completed', trial=trial)
         

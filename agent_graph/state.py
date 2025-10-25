@@ -110,6 +110,10 @@ class FuzzingWorkflowState(TypedDict):
     max_retries: NotRequired[int]
     supervisor_call_count: NotRequired[int]  # Global counter for supervisor invocations (loop prevention)
     node_visit_counts: NotRequired[Dict[str, int]]  # Per-node visit counter (loop prevention)
+    workflow_phase: NotRequired[str]  # Current workflow phase: "compilation" or "optimization"
+    compilation_retry_count: NotRequired[int]  # Separate counter for compilation retries
+    prototyper_regenerate_count: NotRequired[int]  # Counter for prototyper regenerations
+    previous_fuzz_target_source: NotRequired[str]  # Store previous version for diff generation
     
     # === Error Handling ===
     errors: NotRequired[List[Dict[str, Any]]]
@@ -177,6 +181,11 @@ def create_initial_state(
         # Loop prevention counters (similar to no_coverage_improvement_count)
         supervisor_call_count=0,
         node_visit_counts={},
+        # Workflow phase control
+        workflow_phase="compilation",  # Start with compilation phase
+        compilation_retry_count=0,  # Track compilation retries separately
+        prototyper_regenerate_count=0,  # Track prototyper regenerations
+        previous_fuzz_target_source="",  # For diff generation
         # Store additional configuration
         pipeline=pipeline or [],
         use_context=use_context,
