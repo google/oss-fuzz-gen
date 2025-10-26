@@ -40,7 +40,7 @@ from data_prep import introspector
 from llm_toolkit import models, prompt_builder
 
 # Constants
-RESULTS_DIR = f'./results-{datetime.now().strftime("%Y-%m-%d-%H-%M")}'
+RESULTS_DIR = './results'
 NUM_ANA = int(os.getenv('LLM_NUM_ANA', '2'))
 RUN_TIMEOUT: int = 300
 LOG_LEVELS = ['debug', 'info', 'error']

@@ -7,7 +7,7 @@ This directory help you prepare three kinds of data to benefit fuzz target gener
 
 ## Benchmark YAML
 A benchmark YAML file (e.g.,
-[`tinyxml2.yaml`](../benchmark-sets/all/tinyxml2.yaml)) is required
+[`tinyxml2.yaml`](../conti-benchmark/tinyxml2.yaml)) is required
 for fuzz target generation, it specifies `functions`, `project`, `target_path`,
   and optionally `target_name`:
 * `functions` lists the signatures of the function to generate fuzz targets.
@@ -17,14 +17,14 @@ that contains `functions`.
 * `target_path` is the path to an existing fuzz target in [the `project`'s `OSS-Fuzz` container](https://google.github.io/oss-fuzz/getting-started/new-project-guide/#dockerfile). It will be replaced with the LLM-generated target and built for fuzzing evaluation.
 * `target_name` is an *optional* field to specify the fuzz target binary name.
   It is required when the binary name is different from the basename of
-  `target_path`, e.g., in [`capnproto.yaml`](../benchmark-sets/all/capnproto.yaml#L44).
+  `target_path`, e.g., in [`capnproto.yaml`](../conti-benchmark/capnproto.yaml#L44).
 
 ### Generation
 Use [`introspector.py`](introspector.py) to generate a YAML file of a `C`/`C++` project in `OSS-Fuzz`:
 ```
 # In virtual env under root directory.
 python -m data_prep.introspector <project-name> -m <num_benchmark_per_project> -o <output_dir>
-# E.g., python -m data_prep.introspector tinyxml2 -m 5 -o benchmark-sets/new
+# E.g., python -m data_prep.introspector tinyxml2 -m 5 -o conti-benchmark/new
 ```
 
 Benchmark files generated in this way prioritize [far-reach-but-low-coverage](https://introspector.oss-fuzz.com/api#api-far-reach-but-low-coverage) functions in `OSS-Fuzz` production, hence easier to achieve higher [`max line coverage diff`](../README.md#Visualizing-Results).

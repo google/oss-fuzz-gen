@@ -1,52 +1,110 @@
 # LangGraph Agent State Machine
 
+## Two-Phase Workflow Architecture
+
+LogicFuzz implements a **two-phase workflow** to separate compilation concerns from optimization goals:
+
+### **Phase 1: COMPILATION** 
+Focus: Get the fuzz target to compile successfully
+- Function Analysis → Code Generation → Compilation Fixing
+- Dedicated retry counters and strategies
+- Prototyper regeneration with error context
+
+### **Phase 2: OPTIMIZATION**
+Focus: Maximize coverage and discover bugs
+- Execution → Analysis → Iterative Improvement
+- Coverage-driven enhancement
+- Crash analysis and feasibility checking
+
+---
+
 ## Complete Workflow Diagram
 
 ```mermaid
 flowchart TD
-    Start([Start]) --> Supervisor{Supervisor<br/>Node}
+    Start([Start]) --> Phase1{PHASE 1:<br/>COMPILATION}
     
-    Supervisor -->|1. No function analysis| FunctionAnalyzer[Function Analyzer]
-    Supervisor -->|2. No Fuzz Target| Prototyper[Prototyper]
-    Supervisor -->|3. Has Target but not built| Build[Build<br/>Node]
-    Supervisor -->|4. Build failed<br/>retry < max| Enhancer[Enhancer]
-    Supervisor -->|5. Build success<br/>but not run| Execution[Execution<br/>Node]
-    Supervisor -->|6. Crash not analyzed| CrashAnalyzer[Crash Analyzer]
-    Supervisor -->|7. Crash analyzed<br/>no context analysis| ContextAnalyzer[Context Analyzer]
-    Supervisor -->|8. Low coverage<br/>no significant improvement| CoverageAnalyzer[Coverage Analyzer]
-    Supervisor -->|9. Termination condition met| End([End])
+    Phase1 -->|Step 1| FunctionAnalyzer[Function Analyzer<br/>API Semantics]
+    FunctionAnalyzer --> Phase1Check1{Has Analysis?}
+    Phase1Check1 -->|Yes| Prototyper[Prototyper<br/>Generate Code]
     
-    FunctionAnalyzer --> Supervisor
-    Prototyper --> Supervisor
-    Build --> Supervisor
-    Enhancer --> Supervisor
-    Execution --> Supervisor
-    CrashAnalyzer --> Supervisor
-    ContextAnalyzer --> Supervisor
-    CoverageAnalyzer --> Supervisor
+    Prototyper --> Phase1Check2{Has Code?}
+    Phase1Check2 -->|Yes| Build[Build<br/>Compile Target]
+    
+    Build --> BuildResult{Build<br/>Success?}
+    BuildResult -->|Failed| CompileRetry{compilation_retry_count<br/>< 3?}
+    
+    CompileRetry -->|Yes| Enhancer1[Enhancer<br/>Fix w/ Error Context]
+    Enhancer1 --> Build
+    
+    CompileRetry -->|No| ProtoRegen{prototyper_regenerate_count<br/>< 1?}
+    ProtoRegen -->|Yes| PrototyperRegen[Prototyper<br/>Regenerate New Approach]
+    ProtoRegen -->|No| EndFail([END<br/>Compilation Failed])
+    
+    PrototyperRegen --> Build
+    
+    BuildResult -->|Success| PhaseSwitch[Switch to<br/>PHASE 2: OPTIMIZATION]
+    
+    PhaseSwitch --> Execution[Execution<br/>Run Fuzzer]
+    
+    Execution --> ExecResult{Result?}
+    
+    ExecResult -->|Crash| CrashAnalyzer[Crash Analyzer<br/>Analyze Crash Type]
+    CrashAnalyzer --> ContextAnalyzer[Context Analyzer<br/>Feasibility Check]
+    ContextAnalyzer --> IsFeasible{Real Bug?}
+    IsFeasible -->|Yes| EndBug([END<br/>Bug Found! ✓])
+    IsFeasible -->|No| Enhancer2[Enhancer<br/>Fix False Positive]
+    Enhancer2 --> Build
+    
+    ExecResult -->|Success| CheckCoverage{Coverage<br/>Good?}
+    
+    CheckCoverage -->|< 50% & diff < 5%| CoverageAnalyzer[Coverage Analyzer<br/>Suggest Improvements]
+    CoverageAnalyzer --> CheckIter{Iterations<br/>< Max?}
+    CheckIter -->|Yes| Enhancer3[Enhancer<br/>Improve Coverage]
+    CheckIter -->|No| EndMaxIter([END<br/>Max Iterations])
+    Enhancer3 --> Build
+    
+    CheckCoverage -->|>= 50% OR diff >= 5%| CheckStagnant{No Improvement<br/>Count >= 3?}
+    CheckStagnant -->|Yes| EndStable([END<br/>Coverage Stable ✓])
+    CheckStagnant -->|No| Execution
     
     style Start fill:#90EE90
-    style End fill:#FFB6C1
-    style Supervisor fill:#87CEEB
+    style Phase1 fill:#87CEEB
+    style PhaseSwitch fill:#FFA500
     style FunctionAnalyzer fill:#FFD700
     style Prototyper fill:#FFD700
-    style Enhancer fill:#FFD700
+    style PrototyperRegen fill:#FFD700
+    style Enhancer1 fill:#FFD700
+    style Enhancer2 fill:#FFD700
+    style Enhancer3 fill:#FFD700
     style Build fill:#DDA0DD
     style Execution fill:#DDA0DD
     style CrashAnalyzer fill:#FF6347
     style ContextAnalyzer fill:#FF6347
     style CoverageAnalyzer fill:#FF6347
+    style EndFail fill:#FFB6C1
+    style EndBug fill:#90EE90
+    style EndMaxIter fill:#FFB6C1
+    style EndStable fill:#90EE90
 ```
 
-### Core Loop Structure
+### Core Workflow Principles
 
-The workflow follows a **centralized star topology** where all nodes return to Supervisor for next-step decision making:
+The workflow follows a **two-phase centralized routing** where:
 
-1. **FunctionAnalyzer** → Supervisor → **Prototyper** → Supervisor → **Build** → Supervisor
-2. Build success → **Execution** → Supervisor
-3. Build failure → **Enhancer** → Supervisor → Build (retry loop)
-4. Crash detected → **CrashAnalyzer** → Supervisor → **ContextAnalyzer** → Supervisor
-5. Low coverage → **CoverageAnalyzer** → Supervisor → **Enhancer** → Supervisor (improvement loop)
+**Phase 1 (Compilation):**
+1. **FunctionAnalyzer** analyzes API semantics (preconditions, setup sequence, constraints)
+2. **Prototyper** generates initial fuzz target
+3. **Build** attempts compilation
+4. **Enhancer** fixes errors (max 3 retries with intelligent code context)
+5. **Prototyper Regeneration** if enhancer fails (completely new approach)
+
+**Phase 2 (Optimization):**
+1. **Execution** runs the fuzz target and collects metrics
+2. **CrashAnalyzer** + **ContextAnalyzer** validate crashes (feasibility checking)
+3. **CoverageAnalyzer** suggests improvements for low coverage
+4. **Enhancer** iteratively improves the target
+5. Loops until good coverage, bug found, or max iterations
 
 ## State Machine Details
 
@@ -69,77 +127,99 @@ The workflow follows a **centralized star topology** where all nodes return to S
 - **Build**: Compiles fuzz target
 - **Execution**: Runs fuzzer and collects results
 
-### 2. Routing Decision Tree
+### 2. Two-Phase Routing Logic
+
+The Supervisor implements **phase-aware routing** with different strategies for compilation vs optimization:
 
 ```mermaid
 flowchart TD
-    Start{Start Routing Decision} --> HasFuncAnalysis{Has<br/>Function Analysis?}
+    Start{Supervisor<br/>Routing} --> CheckPhase{workflow_phase?}
     
-    HasFuncAnalysis -->|No| FuncAnalyzer[→ function_analyzer]
-    HasFuncAnalysis -->|Yes| HasFuzzTarget{Has<br/>Fuzz Target?}
+    CheckPhase -->|"compilation"| Phase1[PHASE 1:<br/>COMPILATION]
+    CheckPhase -->|"optimization"| Phase2[PHASE 2:<br/>OPTIMIZATION]
     
-    HasFuzzTarget -->|No| Proto[→ prototyper]
-    HasFuzzTarget -->|Yes| HasBuilt{Built?}
+    Phase1 --> P1_HasAnalysis{Has<br/>Function Analysis?}
+    P1_HasAnalysis -->|No| P1_Analyzer[→ function_analyzer]
+    P1_HasAnalysis -->|Yes| P1_HasTarget{Has<br/>Fuzz Target?}
     
-    HasBuilt -->|Not Built| BuildNode[→ build]
-    HasBuilt -->|Build Failed| BuildFailed{Retry Count<br/>< Max?}
-    HasBuilt -->|Build Success| HasRun{Run?}
+    P1_HasTarget -->|No| P1_Proto[→ prototyper]
+    P1_HasTarget -->|Yes| P1_Built{Build Status?}
     
-    BuildFailed -->|Yes| Enhance1[→ enhancer]
-    BuildFailed -->|No| EndNode1[→ END]
+    P1_Built -->|Not Built| P1_Build[→ build]
+    P1_Built -->|Failed| P1_Retry{compilation_retry_count<br/>< 3?}
+    P1_Built -->|Success| P1_Switch[Switch to Phase 2]
     
-    HasRun -->|Not Run| ExecNode[→ execution]
-    HasRun -->|Run Failed| RunFailed{Crashed?}
-    HasRun -->|Run Success| CheckCov{Check Coverage}
+    P1_Retry -->|Yes| P1_Enhancer[→ enhancer<br/>code context extraction]
+    P1_Retry -->|No| P1_Regen{prototyper_regenerate_count<br/>< 1?}
     
-    RunFailed -->|Crashed| HasCrashAnalysis{Has<br/>Crash Analysis?}
-    RunFailed -->|No| Enhance2[→ enhancer]
+    P1_Regen -->|Yes| P1_ProtoRegen[→ prototyper<br/>add error context<br/>reset compilation_retry_count]
+    P1_Regen -->|No| P1_End[→ END<br/>Compilation Failed]
     
-    HasCrashAnalysis -->|No| CrashAna[→ crash_analyzer]
-    HasCrashAnalysis -->|Yes| HasContext{Has<br/>Context Analysis?}
+    P1_Switch --> P2_Exec
     
-    HasContext -->|No| ContextAna[→ context_analyzer]
-    HasContext -->|Yes| IsFeasible{Crash Feasible<br/>Real Bug?}
+    Phase2 --> P2_HasRun{Has Run?}
+    P2_HasRun -->|No| P2_Exec[→ execution]
+    P2_HasRun -->|Yes| P2_Result{Run Result?}
     
-    IsFeasible -->|Yes| EndNode2[→ END<br/>Real Bug Found!]
-    IsFeasible -->|No| Enhance3[→ enhancer<br/>False Positive]
+    P2_Result -->|Crashed| P2_CrashCheck{Has<br/>Crash Analysis?}
+    P2_Result -->|Success| P2_Coverage{Coverage Check}
     
-    CheckCov --> CovPercent{Coverage < 50%<br/>No Significant Improvement?}
+    P2_CrashCheck -->|No| P2_CrashAna[→ crash_analyzer]
+    P2_CrashCheck -->|Yes| P2_ContextCheck{Has<br/>Context Analysis?}
     
-    CovPercent -->|Yes| HasCovAnalysis{Has<br/>Coverage Analysis?}
-    CovPercent -->|No| CheckStagnant{Consecutive<br/>No Improvement<br/>>= 3?}
+    P2_ContextCheck -->|No| P2_ContextAna[→ context_analyzer]
+    P2_ContextCheck -->|Yes| P2_Feasible{Feasible<br/>Real Bug?}
     
-    HasCovAnalysis -->|No| CovAna[→ coverage_analyzer]
-    HasCovAnalysis -->|Yes| NeedImprove{Needs Improvement?}
+    P2_Feasible -->|Yes| P2_EndBug[→ END<br/>Bug Found!]
+    P2_Feasible -->|No| P2_EnhancerFP[→ enhancer<br/>False Positive]
     
-    NeedImprove -->|Yes| CheckIter{Iteration Count<br/>< Max?}
-    NeedImprove -->|No| EndNode3[→ END]
+    P2_Coverage --> P2_CovLow{Coverage < 50%<br/>OR<br/>diff < 5%?}
+    P2_CovLow -->|Yes| P2_CovCheck{Has<br/>Coverage Analysis?}
+    P2_CovLow -->|No| P2_Stagnant{no_improvement<br/>count >= 3?}
     
-    CheckIter -->|Yes| Enhance4[→ enhancer]
-    CheckIter -->|No| EndNode4[→ END]
+    P2_CovCheck -->|No| P2_CovAna[→ coverage_analyzer]
+    P2_CovCheck -->|Yes| P2_Iter{current_iteration<br/>< max_iterations?}
     
-    CheckStagnant -->|Yes| EndNode5[→ END<br/>Coverage Stable]
-    CheckStagnant -->|No| EndNode6[→ END<br/>Target Met or Iterations Complete]
+    P2_Iter -->|Yes| P2_EnhancerCov[→ enhancer<br/>retry_count++]
+    P2_Iter -->|No| P2_EndMaxIter[→ END<br/>Max Iterations]
+    
+    P2_Stagnant -->|Yes| P2_EndStable[→ END<br/>Coverage Stable]
+    P2_Stagnant -->|No| P2_Continue[Continue Loop]
     
     style Start fill:#87CEEB
-    style FuncAnalyzer fill:#FFD700
-    style Proto fill:#FFD700
-    style BuildNode fill:#DDA0DD
-    style Enhance1 fill:#FFD700
-    style Enhance2 fill:#FFD700
-    style Enhance3 fill:#FFD700
-    style Enhance4 fill:#FFD700
-    style ExecNode fill:#DDA0DD
-    style CrashAna fill:#FF6347
-    style ContextAna fill:#FF6347
-    style CovAna fill:#FF6347
-    style EndNode1 fill:#FFB6C1
-    style EndNode2 fill:#90EE90
-    style EndNode3 fill:#FFB6C1
-    style EndNode4 fill:#FFB6C1
-    style EndNode5 fill:#90EE90
-    style EndNode6 fill:#90EE90
+    style Phase1 fill:#B0E0E6
+    style Phase2 fill:#FFE4B5
+    style P1_Analyzer fill:#FFD700
+    style P1_Proto fill:#FFD700
+    style P1_ProtoRegen fill:#FFD700
+    style P1_Enhancer fill:#FFD700
+    style P1_Build fill:#DDA0DD
+    style P1_Switch fill:#FFA500
+    style P2_Exec fill:#DDA0DD
+    style P2_CrashAna fill:#FF6347
+    style P2_ContextAna fill:#FF6347
+    style P2_CovAna fill:#FF6347
+    style P2_EnhancerFP fill:#FFD700
+    style P2_EnhancerCov fill:#FFD700
+    style P1_End fill:#FFB6C1
+    style P2_EndBug fill:#90EE90
+    style P2_EndMaxIter fill:#FFB6C1
+    style P2_EndStable fill:#90EE90
 ```
+
+#### Key Routing Differences Between Phases:
+
+**COMPILATION Phase:**
+- Uses `compilation_retry_count` (max 3)
+- Enables Prototyper regeneration after retry exhaustion
+- Enhancer receives intelligent code context (error lines ±10)
+- Automatically switches to OPTIMIZATION on build success
+
+**OPTIMIZATION Phase:**
+- Uses `retry_count` for enhancement iterations
+- Tracks `no_coverage_improvement_count` for stagnation detection
+- Coverage-driven decision making (50% threshold, 5% diff)
+- Crash feasibility validation before termination
 
 ### 3. Loop Control Mechanism
 

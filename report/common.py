@@ -239,7 +239,7 @@ class Results:
 
   def __init__(self, results_dir='results', benchmark_set='all'):
     self._results_dir = results_dir
-    self._benchmark_dir = os.path.join('benchmark-sets', benchmark_set)
+    self._benchmark_dir = os.path.join('conti-benchmark', benchmark_set)
 
   def list_benchmark_ids(self) -> List[str]:
     return sorted(

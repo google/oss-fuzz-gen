@@ -360,7 +360,7 @@ def run_standard(cmd=None):
   # Prepare the command to run experiments
   run_cmd = [
       python_path, "run_logicfuzz.py", "--benchmarks-directory",
-      f"benchmark-sets/{args.benchmark_set}", "--run-timeout",
+      f"conti-benchmark/{args.benchmark_set}", "--run-timeout",
       str(args.run_timeout), "--cloud-experiment-name", experiment_name,
       "--cloud-experiment-bucket", "oss-fuzz-gcb-experiment-run-logs",
       "--template-directory", "prompts/template_xml", "--work-dir",
@@ -432,4 +432,4 @@ def run_standard(cmd=None):
 
 if __name__ == "__main__":
   sys.exit(main())
-# /venv/bin/python3 run_logicfuzz.py -l gpt-5 -y benchmark-sets/0-conti/cjson.yaml
+# /venv/bin/python3 run_logicfuzz.py -l gpt-5 -y conti-benchmark/cjson.yaml
