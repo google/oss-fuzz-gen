@@ -1,24 +1,60 @@
-# LangGraph Agent State Machine
+# LangGraph Agent Workflow
 
-## Two-Phase Workflow Architecture
+## Overview
 
-LogicFuzz implements a **two-phase workflow** to separate compilation concerns from optimization goals:
+LogicFuzz uses a **two-phase agentic workflow** powered by LangGraph to automatically generate high-quality fuzz targets:
 
-### **Phase 1: COMPILATION** 
-Focus: Get the fuzz target to compile successfully
-- Function Analysis → Code Generation → Compilation Fixing
-- Dedicated retry counters and strategies
-- Prototyper regeneration with error context
+### 🎯 Two-Phase Design
 
-### **Phase 2: OPTIMIZATION**
-Focus: Maximize coverage and discover bugs
-- Execution → Analysis → Iterative Improvement
-- Coverage-driven enhancement
-- Crash analysis and feasibility checking
+**Phase 1: COMPILATION** - Get it to build
+- Analyze target function semantics
+- Generate initial fuzz target
+- Fix compilation errors intelligently
+- Fallback to complete regeneration if needed
+
+**Phase 2: OPTIMIZATION** - Make it effective  
+- Execute and measure coverage
+- Analyze crashes for real bugs
+- Iteratively improve based on feedback
+- Terminate on success or stability
+
+### 🔄 High-Level Workflow
+
+```mermaid
+flowchart LR
+    A[Function<br/>Analyzer] --> B[Prototyper]
+    B --> C[Build]
+    C -->|Failed| D[Enhancer]
+    D --> C
+    C -->|Success| E[Execution]
+    E -->|Crash| F[Crash<br/>Analyzer]
+    E -->|Low Coverage| G[Coverage<br/>Analyzer]
+    F --> D
+    G --> D
+    E -->|Good| H([✓ Done])
+    F -->|Real Bug| H
+    
+    style A fill:#FFD700
+    style B fill:#FFD700
+    style D fill:#FFD700
+    style F fill:#FF6347
+    style G fill:#FF6347
+    style C fill:#DDA0DD
+    style E fill:#DDA0DD
+    style H fill:#90EE90
+```
+
+**Key Agents:**
+- 🟡 **Yellow**: LLM-powered agents (analysis & generation)
+- 🔴 **Red**: LLM-powered analyzers (crash & coverage)
+- 🟣 **Purple**: Build & execution (non-LLM)
+- 🟢 **Green**: Successful termination
 
 ---
 
-## Complete Workflow Diagram
+## Detailed Architecture
+
+### Complete Workflow Diagram
 
 ```mermaid
 flowchart TD
