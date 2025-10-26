@@ -2,6 +2,8 @@
 
 This repository is designed for quickly creating and testing new OSS-Fuzz projects. It includes standardized templates and automation scripts to help you rapidly integrate new projects into the OSS-Fuzz ecosystem.
 
+> 📘 **For comprehensive setup instructions** including private repositories, custom codebases, and automated generation, see **[docs/NEW_PROJECT_SETUP.md](docs/NEW_PROJECT_SETUP.md)**
+
 ## 📁 Project Structure
 
 ```

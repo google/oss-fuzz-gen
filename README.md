@@ -13,10 +13,20 @@ LogicFuzz is an intelligent fuzzing framework that leverages Large Language Mode
 - **🔄 Iterative Improvement**: Automatically optimizes coverage and discovers real bugs
 - **🛡️ Robust Workflow**: Two-phase design with multi-layer protection against failures
 - **⚡ Token Efficient**: Optimized prompts with 80% token reduction
+- **🔍 FI Integration**: Leverages Fuzz Introspector for enhanced context and better generation quality
 
 **Supported Models:**
 - OpenAI GPT (gpt-4, gpt-5)
 - Vertex AI Gemini (gemini-2-5-pro-chat)
+
+---
+
+## 📚 Documentation
+
+- **[NEW_PROJECT_SETUP.md](docs/NEW_PROJECT_SETUP.md)** - Complete guide for setting up new projects (private repos, custom codebases)
+- **[SIGNATURE_FIX_README.md](docs/SIGNATURE_FIX_README.md)** - Function signature extraction and fixing
+- **[Usage.md](Usage.md)** - OSS-Fuzz project quick setup guide
+- **[Data Preparation](data_prep/README.md)** - Benchmark YAML generation
 
 ---
 
@@ -31,6 +41,11 @@ python agent_graph/main.py -y conti-benchmark/cjson.yaml --model gpt-5
 # Run with specific function
 python agent_graph/main.py -y conti-benchmark/cjson.yaml \
   -f cJSON_Parse --model gpt-5
+
+# Run with Fuzz Introspector context (recommended for better results)
+# Note: First launch FI server in a separate terminal - see "With Local FI" section below
+python agent_graph/main.py -y conti-benchmark/cjson.yaml \
+  --model gpt-5 -n 5 --context -e http://0.0.0.0:8080/api
 
 # Run with custom options
 python agent_graph/main.py -y conti-benchmark/cjson.yaml \
@@ -115,19 +130,6 @@ flowchart LR
 
 ---
 
-## 📊 Performance Metrics
-
-Recent optimizations have significantly improved the framework's effectiveness:
-
-| Metric | Before | After | Status |
-|--------|--------|-------|--------|
-| **Compilation Success** | 35% | 70-85% | ✅ Implemented |
-| **Token Efficiency** | Baseline | -80% | ✅ Optimized |
-| **Coverage Gain** | Baseline | 5-10x | ✅ Enhanced |
-| **Workflow Robustness** | Basic | 5-layer protection | ✅ Hardened |
-
----
-
 ## 🔧 System Architecture
 
 ```
@@ -193,6 +195,53 @@ logic-fuzz/
 
 ## 🎓 Usage Examples
 
+### Testing a New Project (Not in OSS-Fuzz)
+
+Want to test your own project? See our comprehensive guide: **[NEW_PROJECT_SETUP.md](docs/NEW_PROJECT_SETUP.md)**
+
+Quick overview:
+
+```bash
+# 1. Create OSS-Fuzz project structure
+mkdir -p oss-fuzz/projects/my-project
+
+# 2. Create Dockerfile, build.sh, project.yaml
+# See docs/NEW_PROJECT_SETUP.md for templates
+
+# 3. Create benchmark YAML
+cat > conti-benchmark/my-project.yaml << 'EOF'
+"functions":
+- "name": "my_function"
+  "params":
+  - "name": "data"
+    "type": "uint8_t*"
+  - "name": "size"
+    "type": "size_t"
+  "return_type": "int"
+  "signature": "int my_function(uint8_t*, size_t)"
+"language": "c"
+"project": "my-project"
+"target_name": "my_fuzzer"
+"target_path": "/src/my-project/fuzzer.c"
+EOF
+
+# 4. Run LogicFuzz
+python agent_graph/main.py -y conti-benchmark/my-project.yaml --model gpt-5
+```
+
+**Automated setup from GitHub URL:**
+
+```bash
+# Generate OSS-Fuzz project from repository
+echo "https://github.com/your-org/your-project" > projects.txt
+
+python3 -m experimental.build_generator.runner \
+  -i projects.txt \
+  -o generated-builds \
+  -m gpt-5 \
+  --oss-fuzz oss-fuzz
+```
+
 ### Generate for Single Function
 ```bash
 python agent_graph/main.py \
@@ -213,11 +262,27 @@ python agent_graph/main.py \
 
 LogicFuzz can leverage **Fuzz Introspector** to provide rich context about target functions, including call graphs, complexity analysis, and reachability information. This significantly improves generation quality.
 
-**Prerequisites:**
-1. Set up local Fuzz Introspector server (see [FI documentation](https://github.com/ossf/fuzz-introspector))
-2. Ensure FI is running on `http://0.0.0.0:8080/api`
+#### Step 1: Launch Local FI Server
 
-**Run with FI context:**
+Open a **separate terminal window** and run our setup script:
+
+```bash
+# From the project root directory
+bash report/launch_local_introspector.sh
+```
+
+This script will:
+- Clone the Fuzz Introspector repository
+- Install required dependencies
+- Create a database for your benchmark projects
+- Start the FI web server on `http://0.0.0.0:8080`
+
+**Note:** Keep this terminal window open while running LogicFuzz. The FI server must remain active.
+
+#### Step 2: Run LogicFuzz with FI Context
+
+In your **main terminal window**, run LogicFuzz with FI integration:
+
 ```bash
 python agent_graph/main.py \
   -y conti-benchmark/conti-cmp/mosh.yaml \
@@ -230,17 +295,57 @@ python agent_graph/main.py \
 ```
 
 **Parameters explained:**
+- `-y conti-benchmark/conti-cmp/mosh.yaml` - Target project configuration
+- `--model gpt-5` - LLM model to use
 - `-n 5` - Generate 5 fuzz targets per function
-- `--context` - Enable Fuzz Introspector context retrieval
-- `-mr 5` - Maximum retry count (5 attempts)
-- `-e http://0.0.0.0:8080/api` - FI endpoint URL
-- `2>&1 | tee logicfuzz-output-1025-fi.log` - Log output to file while displaying
+- `--context` - **Enable Fuzz Introspector context retrieval**
+- `-mr 5` - Maximum retry attempts (5)
+- `-e http://0.0.0.0:8080/api` - **FI server endpoint**
+- `2>&1 | tee logicfuzz-output-1025-fi.log` - Save output to log file
+
+**💡 Tip:** The `--context` and `-e` flags work together to enable FI integration. Without these, LogicFuzz runs in standalone mode.
 
 **Benefits of using FI:**
 - 📊 **Better API Understanding** - Access to function signatures, parameters, and types
 - 🔗 **Call Graph Analysis** - Understand function dependencies and relationships
 - 🎯 **Targeted Generation** - Focus on complex, high-value functions
 - 📈 **Higher Success Rate** - Context-aware code generation reduces errors
+
+#### Workflow Diagram
+
+```
+Terminal Window 1              Terminal Window 2
+┌─────────────────┐           ┌──────────────────┐
+│  FI Server      │           │   LogicFuzz      │
+│  (Port 8080)    │◄─────────┤   Main Process   │
+└─────────────────┘  Context  └──────────────────┘
+        │             Queries
+        │
+   [Database]
+   - Call Graphs
+   - Function Info
+   - Complexity Data
+```
+
+#### Troubleshooting
+
+**FI server not responding?**
+```bash
+# Check if FI is running
+curl http://0.0.0.0:8080
+
+# If not running, restart the server
+bash report/launch_local_introspector.sh
+```
+
+**Port 8080 already in use?**
+```bash
+# Find and kill the process using port 8080
+lsof -ti:8080 | xargs kill -9
+
+# Restart FI server
+bash report/launch_local_introspector.sh
+```
 
 ### Batch Processing Multiple Projects
 ```bash
