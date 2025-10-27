@@ -1,0 +1,28 @@
+/*
+ * Copyright (C) 2020 Richard Hughes <richard@hughsie.com>
+ *
+ * SPDX-License-Identifier: LGPL-2.1+
+ */
+
+#include "config.h"
+
+#include "@INCLUDE@"
+
+int LLVMFuzzerTestOneInput(const guint8 *data, gsize size) {
+  g_autoptr(FuFirmware) firmware = FU_FIRMWARE(@FIRMWARENEW @);
+  g_autoptr(GBytes) fw = g_bytes_new(data, size);
+  gboolean ret;
+
+  (void)g_setenv("G_DEBUG", "fatal-criticals", TRUE);
+  (void)g_setenv("FWUPD_FUZZER_RUNNING", "1", TRUE);
+  ret = fu_firmware_parse(firmware, fw, FWUPD_INSTALL_FLAG_NONE, NULL);
+  if (!ret && fu_firmware_has_flag(firmware, FU_FIRMWARE_FLAG_HAS_CHECKSUM)) {
+    g_clear_object(&firmware);
+    firmware = FU_FIRMWARE(@FIRMWARENEW @);
+    ret = fu_firmware_parse(firmware, fw, FWUPD_INSTALL_FLAG_NO_SEARCH | FWUPD_INSTALL_FLAG_IGNORE_VID_PID | FWUPD_INSTALL_FLAG_IGNORE_CHECKSUM, NULL);
+  }
+  if (ret) {
+    g_autoptr(GBytes) fw2 = fu_firmware_write(firmware, NULL);
+  }
+  return 0;
+}
