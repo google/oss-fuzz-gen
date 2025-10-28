@@ -376,7 +376,7 @@ class Prototyper(BaseAgent):
     if rag_enabled:
       # Use RAG-based classifier to build a targeted prompt.
       error_classifier = BuildErrorClassifier("helper/error_patterns.yaml")
-      classification = error_classifier.classify(compile_log)
+      classification = error_classifier.classify_by_line(compile_log, trial=build_result.trial)
       logger.debug("=== Compilation Log Start ===\n%s\n=== Compilation Log End ===", compile_log, trial=build_result.trial)
 
       if classification:
