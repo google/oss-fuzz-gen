@@ -9,11 +9,10 @@ from typing import Dict, Optional
 
 
 # Base directory for agent_graph prompts
-PROMPT_DIR = os.path.join(
-    os.path.dirname(os.path.dirname(__file__)),
-    'prompts',
-    'agent_graph'
-)
+# LangGraph agents use this hardcoded path - not configurable via CLI
+PROMPT_DIR = os.path.normpath(
+    os.path.join(os.path.dirname(os.path.dirname(__file__)),
+                 'prompts', 'agent_graph'))
 
 
 def load_prompt_file(filename: str) -> str:

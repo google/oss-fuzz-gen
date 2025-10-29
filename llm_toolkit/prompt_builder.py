@@ -20,15 +20,15 @@ from results import (AnalysisResult, BuildResult, CoverageResult,
 
 logger = logging.getLogger(__name__)
 
-DEFAULT_TEMPLATE_DIR: str = os.path.join(os.path.dirname(__file__),
-                                         '../prompts/template_xml/')
-AGENT_TEMPLATE_DIR: str = os.path.join(os.path.dirname(__file__),
-                                       '../prompts/agent_graph/')
+DEFAULT_TEMPLATE_DIR: str = os.path.normpath(
+    os.path.join(os.path.dirname(__file__), '../prompts/template_xml/'))
+AGENT_TEMPLATE_DIR: str = os.path.normpath(
+    os.path.join(os.path.dirname(__file__), '../prompts/agent_graph/'))
 
 # TODO(Dongge): Refactor this tot avoid hard-coding.
 # Example files.
-EXAMPLE_PATH = os.path.join(os.path.dirname(__file__), '..', 'prompts',
-                            'example')
+EXAMPLE_PATH = os.path.normpath(
+    os.path.join(os.path.dirname(__file__), '..', 'prompts', 'example'))
 # Example with FuzzeDataProvider.
 FDP_EXAMPLE_1_PROBLEM = os.path.join(EXAMPLE_PATH, 'gdImageString-problem.txt')
 FDP_EXAMPLE_1_SOLUTION = os.path.join(EXAMPLE_PATH, 'gdImageString-solution.cc')

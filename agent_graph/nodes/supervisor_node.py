@@ -8,7 +8,7 @@ from typing import Dict, Any, List
 
 from langchain_core.runnables import RunnableConfig
 import logger
-from agent_graph.state import FuzzingWorkflowState
+from agent_graph.state import FuzzingWorkflowState, consolidate_session_memory
 
 def supervisor_node(state: FuzzingWorkflowState, config: RunnableConfig) -> Dict[str, Any]:
     """
@@ -108,10 +108,14 @@ def supervisor_node(state: FuzzingWorkflowState, config: RunnableConfig) -> Dict
                    f'(call #{supervisor_call_count}, node visits: {node_visit_counts.get(next_action, 0)})', 
                    trial=trial)
         
+        # 整理和清理session_memory，确保下游agent获得干净的共识约束
+        session_memory = consolidate_session_memory(state)
+        
         return {
             "next_action": next_action,
             "supervisor_call_count": supervisor_call_count,
             "node_visit_counts": node_visit_counts,
+            "session_memory": session_memory,  # 注入清理后的共识
             "messages": [{
                 "role": "assistant",
                 "content": f"Supervisor routing to: {next_action}"

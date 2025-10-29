@@ -1,0 +1,40 @@
+Here's usage example #{EXAMPLE_NUMBER} of the target API (you've analyzed {EXAMPLES_ANALYZED} so far):
+
+**Calling function**: `{CALLER_NAME}`
+**Location**: Line {CALL_LINE_NUMBER}
+
+**Code Context**:
+```c
+// Context before the call
+{CONTEXT_BEFORE}
+
+// >>> The API call <<<
+{CALL_STATEMENT}
+
+// Context after the call
+{CONTEXT_AFTER}
+```
+
+**Parameter Setup**:
+```
+{PARAMETER_SETUP}
+```
+
+**Return Value Usage**:
+```
+{RETURN_USAGE}
+```
+
+---
+
+**Analyze this example** and note any insights about:
+- Usage patterns (new or confirming previous observations)
+- Parameter construction and constraints
+- Return value handling
+- Error handling
+- Required preconditions or setup
+- Related functions (init/cleanup)
+
+Focus on **what's new or different** from previous examples. If this confirms existing patterns, briefly note that.
+If you see nothing notable, just say "No significant new insights" - that's fine.
+

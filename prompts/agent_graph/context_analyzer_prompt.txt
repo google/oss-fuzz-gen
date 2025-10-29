@@ -19,7 +19,7 @@ Determine if the following crash is feasible from the project's external entry p
 {ADDITIONAL_CONTEXT}
 
 **Your Task**:
-Work backwards from the functions called by the fuzz target to the project's entry points and determine if the crash is feasible. Provide detailed analysis and source code evidence.
+Work backwards from the functions called by the fuzz target to the project's entry points and determine if the crash is feasible. Use bash commands to investigate the source code and provide detailed analysis with evidence.
 
 **Analysis Steps**:
 
@@ -36,24 +36,27 @@ Work backwards from the functions called by the fuzz target to the project's ent
    - How are these conditions necessary for the crash?
    - Consider ALL variables involved and their relationships
 
-3. **Find Real Call Sites**:
-   - Locate all places in the project where the target function is called
-   - How do these call sites generate input arguments?
-   - What constraints do they enforce on inputs?
-   - What validations are performed?
+3. **Find Real Call Sites** (use bash commands):
+   - Use `grep -rn "target_function_name" /src/project/` to locate all places where the target function is called
+   - Read the source code at each call site to understand:
+     * How do these call sites generate input arguments?
+     * What constraints do they enforce on inputs?
+     * What validations are performed?
+   - Use `grep -A 10 -B 10` to get context around call sites
 
-4. **Trace from Entry Points**:
-   - Identify the project's public entry points (exported functions, API functions)
-   - Can you trace a path from any entry point to the target function?
-   - What path constraints must be satisfied?
-   - Can the crash conditions be achieved along this path?
+4. **Trace from Entry Points** (use bash commands):
+   - Use `grep` to identify the project's public entry points (exported functions, API functions, main functions)
+   - Trace backwards: Can you find a path from any entry point to the target function?
+   - Examine each function in the path to understand:
+     * What path constraints must be satisfied?
+     * Can the crash conditions be achieved along this path?
 
-5. **Provide Source Code Evidence**:
-   - Quote actual code showing constraints
+5. **Provide Source Code Evidence** (extracted via bash commands):
+   - Use bash commands to read and quote actual code showing constraints
    - Provide file names and line numbers
    - Show initialization patterns from real callers
    - Demonstrate why the crash is or isn't possible
-   - DO NOT speculate - use only actual source code
+   - DO NOT speculate - use bash commands to examine actual source code
 
 6. **Determine Feasibility**:
    - **Feasible (True)**: The crash can be triggered from entry points

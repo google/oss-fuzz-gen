@@ -44,12 +44,11 @@ python agent_graph/main.py -y conti-benchmark/cjson.yaml \
 
 # Run with Fuzz Introspector context (recommended for better results)
 # Note: First launch FI server in a separate terminal - see "With Local FI" section below
-python agent_graph/main.py -y conti-benchmark/cjson.yaml \
-  --model gpt-5 -n 5 --context -e http://0.0.0.0:8080/api
+python agent_graph/main.py -y conti-benchmark/conti-cmp/mosh.yaml -l gpt-5 -n 5 --context -e http://0.0.0.0:8080/api 2>&1 |tee logicfuzz-1029.log
 
 # Run with custom options
 python agent_graph/main.py -y conti-benchmark/cjson.yaml \
-  --model vertex_ai_gemini-2-5-pro-chat \
+  --model gpt-5 \
   --context --max-iterations 5 --run-timeout 600
 ```
 

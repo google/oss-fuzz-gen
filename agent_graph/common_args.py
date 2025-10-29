@@ -37,7 +37,7 @@ import argparse
 import os
 from datetime import datetime
 from data_prep import introspector
-from llm_toolkit import models, prompt_builder
+from llm_toolkit import models
 
 # Constants
 RESULTS_DIR = './results'
@@ -112,11 +112,9 @@ def _add_base_arguments(parser: argparse.ArgumentParser) -> None:
     
     parser.add_argument('-w', '--work-dir', default=RESULTS_DIR)
     
-    parser.add_argument('-td',
-                        '--template-directory',
-                        type=str,
-                        default=prompt_builder.AGENT_TEMPLATE_DIR,
-                        help='Directory containing prompt templates.')
+    # Note: LangGraph uses hardcoded prompt paths in agent_graph/prompt_loader.py
+    # The -td argument is kept for backward compatibility with legacy workflows
+    # but is not used by LangGraph agents
     
     parser.add_argument('-lo',
                         '--log-level',

@@ -185,15 +185,25 @@ class LangGraphFunctionAnalyzer(LangGraphAgent):
             args=args,
             system_message=system_message
         )
+        
+        # Configuration for iterative analysis
+        self.max_examples = getattr(args, 'max_function_examples', 20)
+        self.convergence_threshold = getattr(args, 'convergence_threshold', 3)
     
     def execute(self, state: FuzzingWorkflowState) -> Dict[str, Any]:
         """Analyze the target function."""
         import os
         from data_prep import introspector
+        from agent_graph.session_memory_injector import (
+            build_prompt_with_session_memory,
+            extract_session_memory_updates_from_response,
+            merge_session_memory_updates
+        )
         
         benchmark = state["benchmark"]
         project_name = benchmark.get('project', 'unknown')
         function_signature = benchmark.get('function_signature', 'unknown')
+        function_name = benchmark.get('function_name', 'unknown')
         
         # Query FuzzIntrospector for function source code
         logger.info(f'Querying FuzzIntrospector for source code of {function_signature}', trial=self.trial)
@@ -223,49 +233,23 @@ class LangGraphFunctionAnalyzer(LangGraphAgent):
         else:
             logger.info(f'Source code found ({len(func_source)} chars)', trial=self.trial)
         
-        # Query FuzzIntrospector for cross-references (callers)
-        logger.info(f'Querying FuzzIntrospector for cross-references', trial=self.trial)
-        xrefs = introspector.query_introspector_cross_references(
-            project_name, function_signature
+        # Use iterative analysis - LLM learns from examples through conversation
+        logger.info('Using iterative analysis approach', trial=self.trial)
+        response = self._execute_iterative_analysis(
+            state, project_name, function_signature, function_name, func_source
         )
         
-        if not xrefs:
-            logger.warning(
-                f'No cross-references found in FuzzIntrospector for {function_signature}',
-                trial=self.trial
-            )
-            function_references = "No cross-reference information available from FuzzIntrospector."
-        else:
-            logger.info(f'Found {len(xrefs)} cross-references', trial=self.trial)
-            # Format references similar to original implementation
-            references = [f'<reference>\n{xref}\n</reference>' for xref in xrefs]
-            function_references = '\n'.join(references)
-        
-        # Build additional context with source code and references
-        additional_context = f"""**Function Source Code:**
-```cpp
-{func_source}
-```
-
-**Function Callers (Cross-References):**
-{function_references}
-"""
-        
-        # Build prompt from template file
-        prompt_manager = get_prompt_manager()
-        prompt = prompt_manager.build_user_prompt(
-            "function_analyzer",
-            project_name=project_name,
-            function_name=benchmark.get('function_name', 'unknown'),
-            function_signature=function_signature,
-            additional_context=additional_context
+        # 从响应中提取session_memory更新（archetype、初始API约束等）
+        session_memory_updates = extract_session_memory_updates_from_response(
+            response,
+            agent_name=self.name,
+            current_iteration=state.get("current_iteration", 0)
         )
         
-        # Chat with LLM
-        response = self.chat_llm(state, prompt)
+        # 合并更新到session_memory
+        updated_session_memory = merge_session_memory_updates(state, session_memory_updates)
         
         # Parse response and create structured output
-        # TODO: Add proper parsing logic
         analysis_result = {
             "summary": response[:500],  # First 500 chars as summary
             "raw_analysis": response,
@@ -289,12 +273,250 @@ class LangGraphFunctionAnalyzer(LangGraphAgent):
                     
                     logger.info(f'Requirements written to {requirements_path}', trial=self.trial)
                     analysis_result["requirements_path"] = requirements_path
+                        
             except Exception as e:
                 logger.warning(f'Failed to write requirements file: {e}', trial=self.trial)
         
         return {
-            "function_analysis": analysis_result
+            "function_analysis": analysis_result,
+            "session_memory": updated_session_memory
         }
+    
+    def _execute_iterative_analysis(
+        self,
+        state: FuzzingWorkflowState,
+        project_name: str,
+        function_signature: str,
+        function_name: str,
+        func_source: str
+    ) -> str:
+        """
+        Execute iterative analysis of the function using cross-reference examples.
+        """
+        from agent_graph.prompt_loader import get_prompt_manager
+        from data_prep import introspector
+        
+        logger.info(f'Starting iterative analysis for {function_signature}', trial=self.trial)
+        
+        # Phase 1: Analyze the function itself to get basic understanding
+        logger.info('Phase 1: Analyzing function source code', trial=self.trial)
+        prompt_manager = get_prompt_manager()
+        initial_prompt = prompt_manager.build_user_prompt(
+            "function_analyzer_initial",
+            FUNCTION_SIGNATURE=function_signature,
+            FUNCTION_SOURCE=func_source
+        )
+        initial_analysis = self.chat_llm(state, initial_prompt)
+        logger.debug(f'Initial analysis: {initial_analysis[:200]}...', trial=self.trial)
+        
+        # Phase 2: Get call site metadata
+        logger.info('Phase 2: Querying call sites metadata', trial=self.trial)
+        call_sites = introspector.query_introspector_call_sites_metadata(project_name, function_signature)
+        
+        examples_analyzed = 0
+        no_new_insight_count = 0
+        
+        if call_sites:
+            logger.info(f'Found {len(call_sites)} call sites, processing up to {self.max_examples}', trial=self.trial)
+            call_sites = call_sites[:self.max_examples]
+            
+            # Phase 3: Iteratively learn from usage examples
+            for i, call_site in enumerate(call_sites, 1):
+                logger.info(f'Processing example {i}/{len(call_sites)}', trial=self.trial)
+                
+                # Extract context
+                context = self._extract_call_context(call_site, project_name)
+                if not context:
+                    logger.debug(f'Could not extract context for example {i}, skipping', trial=self.trial)
+                    continue
+                
+                # Build prompt - LLM maintains context through conversation
+                iteration_prompt = self._build_iteration_prompt(context, i, examples_analyzed)
+                
+                # Get LLM analysis
+                try:
+                    response = self.chat_llm(state, iteration_prompt)
+                    examples_analyzed += 1
+                    
+                    # Simple heuristic: if response is very short, might indicate no new insights
+                    if len(response.strip()) < 100:
+                        no_new_insight_count += 1
+                    else:
+                        no_new_insight_count = 0
+                    
+                    logger.info(f'Example {i}: Analyzed (response length: {len(response)})', trial=self.trial)
+                    
+                except Exception as e:
+                    logger.error(f'Error calling LLM for example {i}: {e}', trial=self.trial)
+                    continue
+                
+                # Check convergence: stop if no new insights for N consecutive examples
+                if no_new_insight_count >= self.convergence_threshold:
+                    logger.info(
+                        f'Converged after {examples_analyzed} examples '
+                        f'({no_new_insight_count} consecutive examples without significant insights)',
+            trial=self.trial
+        )
+                    break
+        else:
+            logger.warning(f'No call sites found for {function_signature}', trial=self.trial)
+        
+        # Phase 4: Generate final comprehensive analysis
+        logger.info(f'Analysis complete. Generating final summary based on {examples_analyzed} examples', trial=self.trial)
+        
+        prompt_manager = get_prompt_manager()
+        final_prompt = prompt_manager.build_user_prompt(
+            "function_analyzer_final_summary",
+            PROJECT_NAME=project_name,
+            FUNCTION_SIGNATURE=function_signature,
+            EXAMPLES_COUNT=examples_analyzed
+        )
+        
+        final_response = self.chat_llm(state, final_prompt)
+        
+        return final_response
+    
+    def _extract_call_context(
+        self,
+        call_site: dict,
+        project: str,
+        context_lines: int = 15
+    ) -> Optional[dict]:
+        """
+        Extract the context around a function call without loading the entire caller function.
+        
+        This is much more token-efficient than loading full source code.
+        """
+        from data_prep import introspector
+        
+        src_func = call_site.get('src_func')
+        if not src_func:
+            logger.debug('Call site has no src_func, skipping', trial=self.trial)
+            return None
+        
+        # Try to get the source code of the calling function
+        caller_sig = introspector.query_introspector_function_signature(project, src_func)
+        if not caller_sig:
+            logger.debug(f'Could not get signature for caller function: {src_func}', trial=self.trial)
+            return None
+        
+        # Get the full source of the calling function
+        caller_source = introspector.query_introspector_function_source(project, caller_sig)
+        if not caller_source:
+            logger.debug(f'Could not get source for caller function: {caller_sig}', trial=self.trial)
+            return None
+        
+        lines = caller_source.splitlines()
+        
+        # Try to find the call in the source code
+        call_line_idx = self._find_call_in_source(lines, src_func)
+        
+        if call_line_idx is None:
+            # Fallback: use the entire function but limit to first N lines
+            logger.debug(f'Could not find exact call location, using function start', trial=self.trial)
+            call_line_idx = min(10, len(lines) // 2)
+        
+        # Extract context
+        start_idx = max(0, call_line_idx - context_lines)
+        end_idx = min(len(lines), call_line_idx + context_lines + 1)
+        
+        context_before = '\n'.join(lines[start_idx:call_line_idx])
+        call_statement = lines[call_line_idx] if call_line_idx < len(lines) else ''
+        context_after = '\n'.join(lines[call_line_idx + 1:end_idx])
+        
+        # Extract parameter setup
+        parameter_setup = self._extract_parameter_setup(lines, call_line_idx, call_statement)
+        
+        # Extract return value usage
+        return_usage = self._extract_return_usage(lines, call_line_idx, call_statement)
+        
+        return {
+            'caller_name': src_func,
+            'caller_signature': caller_sig,
+            'call_line_number': call_line_idx + 1,  # 1-indexed for display
+            'context_before': context_before,
+            'call_statement': call_statement,
+            'context_after': context_after,
+            'parameter_setup': parameter_setup,
+            'return_usage': return_usage,
+            'full_context': f"{context_before}\n{call_statement}\n{context_after}",
+        }
+    
+    def _find_call_in_source(self, lines: List[str], func_name: str) -> Optional[int]:
+        """Try to find where a function is called in the source code."""
+        import re
+        # Extract just the function name without namespaces/classes
+        simple_name = func_name.split('::')[-1].split('.')[-1]
+        
+        for i, line in enumerate(lines):
+            # Look for function call patterns
+            if simple_name in line and '(' in line:
+                return i
+        
+        return None
+    
+    def _extract_parameter_setup(self, lines: List[str], call_idx: int, call_stmt: str) -> str:
+        """Extract code that sets up parameters for the call."""
+        import re
+        setup_lines = []
+        
+        # Try to find variable names in the call statement
+        if '(' in call_stmt:
+            param_part = call_stmt.split('(', 1)[1].split(')')[0]
+            # Look for identifiers
+            potential_vars = re.findall(r'\b[a-zA-Z_][a-zA-Z0-9_]*\b', param_part)
+            
+            # Search backwards for declarations of these variables
+            for i in range(max(0, call_idx - 20), call_idx):
+                line = lines[i]
+                for var in potential_vars:
+                    if var in line and ('=' in line or 'new' in line or 'malloc' in line):
+                        setup_lines.append(f"Line {i+1}: {line.strip()}")
+                        break
+        
+        return '\n'.join(setup_lines) if setup_lines else "No clear parameter setup found"
+    
+    def _extract_return_usage(self, lines: List[str], call_idx: int, call_stmt: str) -> str:
+        """Extract code that uses the return value from the call."""
+        usage_lines = []
+        
+        # Check if return value is assigned to a variable
+        if '=' in call_stmt:
+            var_name = call_stmt.split('=')[0].strip().split()[-1]
+            
+            # Search forward for usage of this variable
+            for i in range(call_idx + 1, min(len(lines), call_idx + 20)):
+                line = lines[i]
+                if var_name in line:
+                    usage_lines.append(f"Line {i+1}: {line.strip()}")
+                    # Stop after finding a few uses
+                    if len(usage_lines) >= 5:
+                        break
+        
+        return '\n'.join(usage_lines) if usage_lines else "No clear return value usage found"
+    
+    def _build_iteration_prompt(
+        self,
+        context: dict,
+        example_number: int,
+        examples_analyzed: int
+    ) -> str:
+        """Build prompt for analyzing a single usage example using template file."""
+        from agent_graph.prompt_loader import get_prompt_manager
+        
+        prompt_manager = get_prompt_manager()
+        return prompt_manager.build_user_prompt(
+            "function_analyzer_iteration",
+            EXAMPLE_NUMBER=example_number,
+            EXAMPLES_ANALYZED=examples_analyzed,
+            CALLER_NAME=context.get('caller_name', 'unknown'),
+            CALL_LINE_NUMBER=context.get('call_line_number', '?'),
+            CONTEXT_BEFORE=context.get('context_before', ''),
+            CALL_STATEMENT=context.get('call_statement', ''),
+            CONTEXT_AFTER=context.get('context_after', ''),
+            PARAMETER_SETUP=context.get('parameter_setup', 'N/A'),
+            RETURN_USAGE=context.get('return_usage', 'N/A')
+        )
 
 
 class LangGraphPrototyper(LangGraphAgent):
@@ -315,6 +537,12 @@ class LangGraphPrototyper(LangGraphAgent):
     
     def execute(self, state: FuzzingWorkflowState) -> Dict[str, Any]:
         """Generate fuzz target code."""
+        from agent_graph.session_memory_injector import (
+            build_prompt_with_session_memory,
+            extract_session_memory_updates_from_response,
+            merge_session_memory_updates
+        )
+        
         benchmark = state["benchmark"]
         function_analysis = state.get("function_analysis", {})
         
@@ -324,7 +552,7 @@ class LangGraphPrototyper(LangGraphAgent):
         # Check if this is a regeneration (after compilation failures)
         is_regeneration = state.get("compile_success") == False and state.get("fuzz_target_source", "") != ""
         
-        # Build prompt from template file
+        # Build base prompt from template file
         prompt_manager = get_prompt_manager()
         
         # If regenerating, add context about previous failures
@@ -336,7 +564,7 @@ class LangGraphPrototyper(LangGraphAgent):
                 additional_context += "\n".join(build_errors[:3])  # Show first 3 errors
                 additional_context += "\n\nPlease generate a completely new approach that avoids these issues."
         
-        prompt = prompt_manager.build_user_prompt(
+        base_prompt = prompt_manager.build_user_prompt(
             "prototyper",
             project_name=benchmark.get('project', 'unknown'),
             function_name=benchmark.get('function_name', 'unknown'),
@@ -346,8 +574,25 @@ class LangGraphPrototyper(LangGraphAgent):
             additional_context=additional_context
         )
         
+        # 注入session_memory，让Prototyper能看到archetype和API约束
+        prompt = build_prompt_with_session_memory(
+            state,
+            base_prompt,
+            agent_name=self.name
+        )
+        
         # Chat with LLM (using prototyper's own message history)
         response = self.chat_llm(state, prompt)
+        
+        # 从响应中提取session_memory更新
+        session_memory_updates = extract_session_memory_updates_from_response(
+            response,
+            agent_name=self.name,
+            current_iteration=state.get("current_iteration", 0)
+        )
+        
+        # 合并更新到session_memory
+        updated_session_memory = merge_session_memory_updates(state, session_memory_updates)
         
         # Extract code from <fuzz target> tags
         fuzz_target_code = parse_tag(response, 'fuzz target')
@@ -361,7 +606,8 @@ class LangGraphPrototyper(LangGraphAgent):
             "fuzz_target_source": fuzz_target_code,
             "compile_success": None,  # Reset to trigger build
             "build_errors": [],  # Clear previous errors
-            "retry_count": 0  # Reset retry count for new target
+            "retry_count": 0,  # Reset retry count for new target
+            "session_memory": updated_session_memory  # ✅ 返回更新
         }
         
         # If this is a regeneration, update regeneration counter and reset compilation retry count
@@ -393,6 +639,12 @@ class LangGraphEnhancer(LangGraphAgent):
     
     def execute(self, state: FuzzingWorkflowState) -> Dict[str, Any]:
         """Fix compilation errors."""
+        from agent_graph.session_memory_injector import (
+            build_prompt_with_session_memory,
+            extract_session_memory_updates_from_response,
+            merge_session_memory_updates
+        )
+        
         benchmark = state["benchmark"]
         current_code = state.get("fuzz_target_source", "")
         previous_code = state.get("previous_fuzz_target_source", "")
@@ -408,9 +660,9 @@ class LangGraphEnhancer(LangGraphAgent):
         # Generate code context (diff or full code)
         code_context = self._generate_code_context(current_code, previous_code, build_errors)
         
-        # Build prompt from template file
+        # Build base prompt from template file
         prompt_manager = get_prompt_manager()
-        prompt = prompt_manager.build_user_prompt(
+        base_prompt = prompt_manager.build_user_prompt(
             "enhancer",
             language=language,
             current_code=code_context,  # Use context instead of full code
@@ -418,8 +670,25 @@ class LangGraphEnhancer(LangGraphAgent):
             additional_context=""
         )
         
+        # 注入session_memory，让Enhancer能看到所有共识约束
+        prompt = build_prompt_with_session_memory(
+            state,
+            base_prompt,
+            agent_name=self.name
+        )
+        
         # Chat with LLM (using enhancer's own message history)
         response = self.chat_llm(state, prompt)
+        
+        # 从响应中提取session_memory更新
+        session_memory_updates = extract_session_memory_updates_from_response(
+            response,
+            agent_name=self.name,
+            current_iteration=state.get("current_iteration", 0)
+        )
+        
+        # 合并更新到session_memory
+        updated_session_memory = merge_session_memory_updates(state, session_memory_updates)
         
         # Extract code from <fuzz target> tags
         fuzz_target_code = parse_tag(response, 'fuzz target')
@@ -433,7 +702,8 @@ class LangGraphEnhancer(LangGraphAgent):
             "fuzz_target_source": fuzz_target_code,
             "previous_fuzz_target_source": current_code,  # Save current as previous for next iteration
             "compile_success": None,  # Reset to trigger rebuild
-            "build_errors": []  # Clear previous errors
+            "build_errors": [],  # Clear previous errors
+            "session_memory": updated_session_memory  # 更新session_memory
         }
         
         # Update counters based on workflow phase
@@ -529,12 +799,16 @@ class LangGraphCrashAnalyzer(LangGraphAgent):
     """
     
     def __init__(self, llm: LLM, trial: int, args: argparse.Namespace):
+        # Load system prompt from file
+        prompt_manager = get_prompt_manager()
+        system_message = prompt_manager.get_system_prompt("crash_analyzer")
+        
         super().__init__(
             name="crash_analyzer",
             llm=llm,
             trial=trial,
             args=args,
-            system_message=""  # Will use prompt builder instead
+            system_message=system_message
         )
         self.gdb_tool = None
         self.bash_tool = None
@@ -1161,6 +1435,11 @@ class LangGraphCoverageAnalyzer(LangGraphAgent):
         from tool.container_tool import ProjectContainerTool
         from experiment.workdir import WorkDirs
         from experiment import benchmark as benchmarklib
+        from agent_graph.session_memory_injector import (
+            build_prompt_with_session_memory,
+            extract_session_memory_updates_from_response,
+            merge_session_memory_updates
+        )
         
         # Get benchmark object (need to convert from dict)
         benchmark_dict = state["benchmark"]
@@ -1189,9 +1468,9 @@ class LangGraphCoverageAnalyzer(LangGraphAgent):
             coverage_summary = state.get("coverage_summary", "")
             fuzzing_log = f"Coverage: {state.get('coverage_percent', 0.0):.2f}%\n{coverage_summary}"
         
-        # Build initial prompt using the new prompt_loader
+        # Build base prompt using the new prompt_loader
         prompt_manager = get_prompt_manager()
-        user_prompt = prompt_manager.build_user_prompt(
+        base_prompt = prompt_manager.build_user_prompt(
             "coverage_analyzer",
             project=benchmark.project,
             function_signature=benchmark.function_signature,
@@ -1204,10 +1483,18 @@ class LangGraphCoverageAnalyzer(LangGraphAgent):
             additional_context=self.inspect_tool.tutorial()
         )
         
+        # 注入session_memory，让CoverageAnalyzer能看到已有的覆盖率策略
+        user_prompt = build_prompt_with_session_memory(
+            state,
+            base_prompt,
+            agent_name=self.name
+        )
+        
         # Multi-round interaction
         coverage_result = {}
         cur_round = 0
         max_round = self.args.max_round
+        all_responses = []  # 收集所有响应，用于提取session_memory更新
         
         try:
             # Start with the initial user prompt
@@ -1216,6 +1503,9 @@ class LangGraphCoverageAnalyzer(LangGraphAgent):
             while current_prompt and cur_round < max_round:
                 # Chat with LLM using the agent's chat_llm method
                 response = self.chat_llm(state, current_prompt)
+                
+                # 收集响应
+                all_responses.append(response)
                 
                 # Log the round
                 logger.info(
@@ -1240,8 +1530,20 @@ class LangGraphCoverageAnalyzer(LangGraphAgent):
                 )
                 self.inspect_tool.terminate()
         
+        # 从所有响应中提取session_memory更新（主要是覆盖率策略）
+        combined_response = "\n\n".join(all_responses)
+        session_memory_updates = extract_session_memory_updates_from_response(
+            combined_response,
+            agent_name=self.name,
+            current_iteration=state.get("current_iteration", 0)
+        )
+        
+        # 合并更新到session_memory
+        updated_session_memory = merge_session_memory_updates(state, session_memory_updates)
+        
         return {
-            "coverage_analysis": coverage_result
+            "coverage_analysis": coverage_result,
+            "session_memory": updated_session_memory  # ✅ 返回更新
         }
     
     def _get_function_requirements(self, state: FuzzingWorkflowState) -> str:
@@ -1349,12 +1651,16 @@ class LangGraphContextAnalyzer(LangGraphAgent):
     """
     
     def __init__(self, llm: LLM, trial: int, args: argparse.Namespace):
+        # Load system prompt from file
+        prompt_manager = get_prompt_manager()
+        system_message = prompt_manager.get_system_prompt("context_analyzer")
+        
         super().__init__(
             name="context_analyzer",
             llm=llm,
             trial=trial,
             args=args,
-            system_message=""  # Will use prompt builder instead
+            system_message=system_message
         )
         self.inspect_tool = None
         self.project_functions = None
@@ -1370,6 +1676,11 @@ class LangGraphContextAnalyzer(LangGraphAgent):
         from experiment.workdir import WorkDirs
         from experiment import benchmark as benchmarklib
         from data_prep import introspector
+        from agent_graph.session_memory_injector import (
+            build_prompt_with_session_memory,
+            extract_session_memory_updates_from_response,
+            merge_session_memory_updates
+        )
         
         # Get benchmark object
         benchmark_dict = state["benchmark"]
@@ -1397,8 +1708,8 @@ class LangGraphContextAnalyzer(LangGraphAgent):
         stack_trace = state.get("crash_info", {}).get("stack_trace", "")
         fuzz_target = state.get("fuzz_target_source", "")
         
-        # Build user prompt with context information
-        user_prompt = prompt_manager.build_user_prompt(
+        # Build base user prompt with context information
+        base_prompt = prompt_manager.build_user_prompt(
             "context_analyzer",
             PROJECT_NAME=benchmark.project,
             FUZZ_TARGET=fuzz_target,
@@ -1406,6 +1717,13 @@ class LangGraphContextAnalyzer(LangGraphAgent):
             CRASH_STACKTRACE=stack_trace,
             CRASH_ANALYSIS=crash_insight,
             ADDITIONAL_CONTEXT=f"**Available Tools**:\n\n{self.inspect_tool.tutorial()}\n\nProject directory: {self.inspect_tool.project_dir}"
+        )
+        
+        # 注入session_memory，让ContextAnalyzer能看到已有的决策和约束
+        user_prompt = build_prompt_with_session_memory(
+            state,
+            base_prompt,
+            agent_name=self.name
         )
         
         # Create prompt object
@@ -1416,12 +1734,16 @@ class LangGraphContextAnalyzer(LangGraphAgent):
         context_result = None
         cur_round = 0
         max_round = self.args.max_round
+        all_responses = []  # 收集所有响应，用于提取session_memory更新
         
         try:
             while cur_round < max_round:
                 # Chat with LLM
                 client = None  # ADK agents use None for client
                 response = self.llm.ask_llm(prompt=prompt)
+                
+                # 收集响应
+                all_responses.append(response)
                 
                 # Track token usage
                 if hasattr(self.llm, 'last_token_usage') and self.llm.last_token_usage:
@@ -1473,8 +1795,20 @@ class LangGraphContextAnalyzer(LangGraphAgent):
                 "analyzed": False
             }
         
+        # 从所有响应中提取session_memory更新（主要是关键决策）
+        combined_response = "\n\n".join(all_responses)
+        session_memory_updates = extract_session_memory_updates_from_response(
+            combined_response,
+            agent_name=self.name,
+            current_iteration=state.get("current_iteration", 0)
+        )
+        
+        # 合并更新到session_memory
+        updated_session_memory = merge_session_memory_updates(state, session_memory_updates)
+        
         return {
-            "context_analysis": context_result
+            "context_analysis": context_result,
+            "session_memory": updated_session_memory  # ✅ 返回更新
         }
     
     def _get_function_requirements(self, state: FuzzingWorkflowState) -> str:

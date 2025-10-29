@@ -186,6 +186,11 @@ def execution_node(state: FuzzingWorkflowState, config: RunnableConfig) -> Dict[
             "coverage_report_path": run_result.coverage_report_path if hasattr(run_result, 'coverage_report_path') else "",
             "cov_pcs": run_result.cov_pcs if hasattr(run_result, 'cov_pcs') else 0,
             "total_pcs": run_result.total_pcs if hasattr(run_result, 'total_pcs') else 0,
+            # Clear old analysis results to force re-analysis of new crashes/coverage
+            # This ensures each execution's results are analyzed fresh
+            "crash_analysis": None,
+            "context_analysis": None,
+            "coverage_analysis": None,
             "messages": [{
                 "role": "assistant",
                 "content": f"Execution {'successful' if run_result.succeeded else 'failed'}"

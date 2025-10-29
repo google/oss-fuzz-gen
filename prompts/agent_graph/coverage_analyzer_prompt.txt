@@ -20,7 +20,7 @@ Analyze the following fuzz target to determine why it has low coverage and how t
 {ADDITIONAL_CONTEXT}
 
 **Your Task**:
-Investigate the root cause of low coverage, identify uncovered code blocks reachable from the target function, and determine how to enhance the fuzz target to increase coverage.
+Investigate why coverage is low, identify uncovered code blocks reachable from the target function, and determine how to enhance the fuzz target. Use bash commands to examine the project source code when needed.
 
 **Analysis Steps**:
 
@@ -29,28 +29,25 @@ Investigate the root cause of low coverage, identify uncovered code blocks reach
    - Identify which code blocks or functions are NOT being executed
    - Determine which branches are always taking the same path
 
-2. **Analyze the Fuzz Target**:
+2. **Analyze the Fuzz Target** (use bash to read source if needed):
    - How are parameters extracted from fuzzer input?
    - What values are used (constants, naive values, processed input)?
    - Is the approach too narrow (single code path)?
    - Are inputs properly preprocessed?
 
-3. **Identify Coverage Gaps**:
+3. **Identify Coverage Gaps** (use bash to examine uncovered code):
    - Which conditionals or branches are never taken?
    - Which functions should be called but aren't?
    - What edge cases are not being tested?
    - Which error paths are never executed?
 
 4. **Determine Root Causes**:
-   Ask questions like:
    - Why does the fuzz target exercise only one narrow code path?
    - Is input too naive or unprocessed?
    - Are there missing preparation or setup functions?
    - Is parameter variation insufficient?
-   - Are complex types not being initialized properly?
 
 5. **Develop Improvement Solutions**:
-   Consider:
    - **Fine-grained Input Preprocessing**: Split raw input into multiple meaningful parameters
    - **Test Edge Cases**: Empty inputs, very short/long inputs, boundary values
    - **Call Preparation Functions**: Setup functions needed before the target function
@@ -60,103 +57,79 @@ Investigate the root cause of low coverage, identify uncovered code blocks reach
 6. **Validate Against Requirements**:
    - Ensure suggested changes DO NOT violate function requirements
    - Verify suggestions will actually increase coverage
-   - Check that suggestions are realistic and implementable
 
 **Output Format**:
 
-First, provide your determination as a single word:
-- **True** if coverage needs improvement
-- **False** if coverage is adequate
+Use these XML tags to provide your final analysis:
 
-Then provide your detailed analysis:
+<conclusion>True or False</conclusion>
 
+<insights>
 ## Coverage Assessment
-[Current coverage level and what's missing:
- - What percentage of code is covered
- - Which blocks/branches are uncovered
- - Which functions are not being reached]
+[Current coverage level and what's missing]
 
 ## Root Cause Analysis
-[Detailed analysis with source code evidence:
- - Why the fuzz target achieves low coverage
- - Specific limitations of current approach
- - Examples from code showing the problems]
+[Why the fuzz target achieves low coverage, with specific evidence]
 
-**Example structure**:
-The low coverage comes from the fact that the current fuzz target exercises only one very narrow code path. Specifically:
+Example:
+The low coverage stems from:
+* **Single Argument Limitation**: Fuzz target provides naive/unprocessed arguments (e.g., NULL, constant strings)
+* **Lack of Input Variation**: Input used verbatim without preprocessing
+* **Untested Functions**: Missing setup/initialization function calls
+* **Missing Edge Cases**: No testing of boundary conditions
+</insights>
 
-* **Single Argument Limitation**: The fuzz target provides naive/unprocessed arguments (e.g., NULL, constant strings, raw bytes without parsing). This misses branches that handle complex values, edge cases, etc.
-
-* **Lack of Input Variation**: The fuzzer input is used verbatim without preprocessing, so many conditional paths remain untested (e.g., different token contents, argument counts, numeric ranges).
-
-* **Untested Functions**: Only the target function is invoked. The project has preparation functions (e.g., `setup_function`, `init_context`) that should be called first to set up proper state, but they're not being used.
-
-* **Missing Edge Cases**: The fuzz target doesn't test edge cases like empty inputs, maximum sizes, special values, or boundary conditions.
-
+<suggestions>
 ## Improvement Recommendations
-[Specific, actionable suggestions with code evidence:
- - What changes to make
- - Why each change will increase coverage
- - How to implement changes (code snippets or descriptions)]
 
-**Example structure**:
-To increase coverage, I recommend the following improvements:
+Provide specific, actionable suggestions with code examples:
 
 1. **Fine-grained Input Preprocessing**:
-   Instead of using naive values or passing the entire input as a single argument, split it into multiple meaningful parameters:
-   ```
-   // Before: naive approach
-   target_function(NULL);
-   
-   // After: proper preprocessing
-   if (size < 4) return 0;
-   int param1 = data[0];
-   const uint8_t* param2 = &data[1];
-   size_t param2_len = size - 1;
-   target_function(param1, param2, param2_len);
-   ```
+```cpp
+// Before: naive approach
+target_function(NULL);
+
+// After: proper preprocessing
+if (size < 4) return 0;
+int param1 = data[0];
+const uint8_t* param2 = &data[1];
+size_t param2_len = size - 1;
+target_function(param1, param2, param2_len);
+```
 
 2. **Call Preparation Functions**:
-   Initialize necessary state before calling the target function:
-   ```
-   context_t* ctx = create_context();
-   init_context(ctx, config_value);
-   target_function(ctx, input);
-   cleanup_context(ctx);
-   ```
+```cpp
+context_t* ctx = create_context();
+init_context(ctx, config_value);
+target_function(ctx, input);
+cleanup_context(ctx);
+```
 
 3. **Test Edge Cases**:
-   Add handling for boundary conditions:
-   ```
-   // Test empty input
-   target_function(NULL, 0);
-   
-   // Test very short input
-   if (size >= 1) target_function(data, 1);
-   
-   // Test maximum size
-   if (size >= MAX_SIZE) target_function(data, MAX_SIZE);
-   ```
+```cpp
+// Test empty, short, and max size inputs
+target_function(NULL, 0);
+if (size >= 1) target_function(data, 1);
+if (size >= MAX_SIZE) target_function(data, MAX_SIZE);
+```
 
-4. **Improve Data Structure Initialization**:
-   Properly create complex types from fuzzer input:
-   ```
-   FuzzedDataProvider fdp(data, size);
-   struct param_t param;
-   param.field1 = fdp.ConsumeIntegral<int>();
-   param.field2 = fdp.ConsumeIntegral<uint32_t>();
-   param.buffer = fdp.ConsumeRemainingBytes<uint8_t>();
-   target_function(&param);
-   ```
+4. **Improve Data Structure Initialization** (for C++):
+```cpp
+FuzzedDataProvider fdp(data, size);
+struct param_t param;
+param.field1 = fdp.ConsumeIntegral<int>();
+param.field2 = fdp.ConsumeIntegral<uint32_t>();
+target_function(&param);
+```
 
-## Revised Fuzz Target
-[Optional: Provide a complete revised fuzz target if requested or if changes are extensive]
+[Optional: Provide complete revised fuzz target if changes are extensive]
+</suggestions>
 
 **Critical Requirements**:
-- Answer "True" or "False" for coverage improvement need (as the first word)
-- Provide detailed analysis with source code evidence
+- Use `<conclusion>True</conclusion>` or `<conclusion>False</conclusion>` to indicate if improvement is needed
+- Provide detailed analysis with source code evidence inside `<insights>` tags
+- Provide specific recommendations with code examples inside `<suggestions>` tags
 - Ensure suggestions DO NOT violate function requirements
-- Be specific with code examples and line references
-- Focus on achievable, realistic improvements
+- Use bash commands to investigate source code when needed
 
 

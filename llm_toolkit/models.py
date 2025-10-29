@@ -198,6 +198,74 @@ class LLM:
 
     return False
 
+  def _save_prompt_on_error(self, err: Exception, prompt_data: Any) -> None:
+    """Save prompt to file when encountering token limit or other errors."""
+    import json
+    from datetime import datetime
+    
+    # Check if it's a token limit error
+    is_token_error = False
+    error_str = str(err)
+    
+    if any(keyword in error_str.lower() for keyword in [
+        'context_length_exceeded', 'token', 'too long', 'max_tokens',
+        'input tokens exceed', 'context length'
+    ]):
+      is_token_error = True
+    
+    if not is_token_error:
+      return  # Only save for token errors
+    
+    # Create error_prompts directory if it doesn't exist
+    error_dir = os.path.join(os.getcwd(), 'error_prompts')
+    os.makedirs(error_dir, exist_ok=True)
+    
+    # Generate filename with timestamp
+    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+    filename = f'token_error_{timestamp}.json'
+    filepath = os.path.join(error_dir, filename)
+    
+    # Prepare data to save
+    save_data = {
+      'timestamp': timestamp,
+      'error_message': error_str,
+      'model_name': getattr(self, 'name', 'unknown'),
+      'prompt_data': prompt_data,
+    }
+    
+    # Try to extract token count from error message
+    import re
+    token_match = re.search(r'(\d+)\s*tokens', error_str)
+    if token_match:
+      save_data['token_count'] = int(token_match.group(1))
+    
+    limit_match = re.search(r'limit of (\d+)', error_str)
+    if limit_match:
+      save_data['token_limit'] = int(limit_match.group(1))
+    
+    try:
+      with open(filepath, 'w', encoding='utf-8') as f:
+        json.dump(save_data, f, indent=2, ensure_ascii=False)
+      
+      logging.error(
+          f'Token limit exceeded! Prompt saved to: {filepath}')
+      logging.error(
+          f'Token usage: {save_data.get("token_count", "unknown")} / '
+          f'{save_data.get("token_limit", "unknown")}')
+    except Exception as save_err:
+      logging.error(f'Failed to save prompt: {save_err}')
+
+  def _is_token_limit_error(self, err: Exception) -> bool:
+    """Check if the error is a token limit error."""
+    error_str = str(err).lower()
+    return any(keyword in error_str for keyword in [
+        'context_length_exceeded', 
+        'input tokens exceed',
+        'max_tokens',
+        'token limit',
+        'context length'
+    ])
+
   def with_retry_on_error(self, func: Callable,
                           api_errs: list[Type[Exception]]) -> Any:
     """
@@ -209,6 +277,33 @@ class LLM:
       except Exception as err:
         logging.warning('LLM API Error when responding (attempt %d): %s',
                         attempt, err)
+        
+        # Check if it's a token limit error
+        is_token_error = self._is_token_limit_error(err)
+        
+        # Save prompt on token limit error (first attempt only)
+        if attempt == 1 and is_token_error:
+          try:
+            # Try to get prompt data from self.messages or self.conversation_history
+            prompt_data = None
+            if hasattr(self, 'messages') and self.messages:
+              prompt_data = self.messages
+            elif hasattr(self, 'conversation_history') and self.conversation_history:
+              prompt_data = self.conversation_history
+            
+            if prompt_data:
+              self._save_prompt_on_error(err, prompt_data)
+          except Exception as save_err:
+            logging.warning(f'Failed to save error prompt: {save_err}')
+        
+        # Token limit errors are NOT retryable - fail immediately
+        if is_token_error:
+          logging.error(
+              'Token limit error is not retryable. Failing immediately.')
+          logging.error(
+              'Please check error_prompts/ directory for the saved prompt.')
+          raise err
+        
         tb = traceback.extract_tb(err.__traceback__)
         if (not self._is_retryable_error(err, api_errs, tb) or
             attempt == self._max_attempts):
@@ -332,10 +427,12 @@ class GPT(LLM):
       logger.info('OpenAI does not allow temperature list: %s',
                   self.temperature_list)
 
-    self.messages.extend(prompt.get())
+    # Fix: Use prompt messages directly instead of accumulating to self.messages
+    # This prevents infinite accumulation when called via chat_with_messages()
+    messages_to_send = prompt.get()
 
     completion = self.with_retry_on_error(
-        lambda: client.chat.completions.create(messages=self.messages,
+        lambda: client.chat.completions.create(messages=messages_to_send,
                                                model=self.name,
                                                n=self.num_samples,
                                                temperature=self.temperature),
@@ -352,7 +449,6 @@ class GPT(LLM):
       self.last_token_usage = None
 
     llm_response = completion.choices[0].message.content
-    self.messages.append({'role': 'assistant', 'content': llm_response})
 
     return llm_response
 
@@ -365,12 +461,12 @@ class GPT(LLM):
       logger.info('OpenAI does not allow temperature list: %s',
                   self.temperature_list)
 
-    if prompt:
-      self.messages.extend(prompt.get())
+    # Fix: Use prompt messages directly instead of accumulating to self.messages
+    messages_to_send = prompt.get() if prompt else []
 
     result = self.with_retry_on_error(
         lambda: client.responses.create(
-            model=self.name, input=self.messages, tools=tools),
+            model=self.name, input=messages_to_send, tools=tools),
         [openai.OpenAIError])
     return result
 
@@ -481,10 +577,12 @@ class GPT5(GPT):
       logger.info('GPT-5 does not allow temperature list: %s',
                   self.temperature_list)
 
-    self.messages.extend(prompt.get())
+    # Fix: Use prompt messages directly instead of accumulating to self.messages
+    # This prevents infinite accumulation when called via chat_with_messages()
+    messages_to_send = prompt.get()
 
     completion = self.with_retry_on_error(
-        lambda: client.chat.completions.create(messages=self.messages,
+        lambda: client.chat.completions.create(messages=messages_to_send,
                                                model=self.name,
                                                n=self.num_samples),
         [openai.OpenAIError])
@@ -500,7 +598,6 @@ class GPT5(GPT):
       self.last_token_usage = None
 
     llm_response = completion.choices[0].message.content
-    self.messages.append({'role': 'assistant', 'content': llm_response})
 
     return llm_response
 
@@ -616,11 +713,13 @@ class ChatGPT(GPT):
       logger.info('OpenAI does not allow temperature list: %s',
                   self.temperature_list)
 
-    self.conversation_history.extend(prompt.get())
+    # Fix: Use prompt messages directly instead of accumulating to self.conversation_history
+    # This prevents infinite accumulation when called via chat_with_messages()
+    messages_to_send = prompt.get()
 
     completion = self.with_retry_on_error(
         lambda: client.chat.completions.create(
-            messages=self.conversation_history,
+            messages=messages_to_send,
             model=self.name,
             n=self.num_samples,
             temperature=self.temperature), [openai.OpenAIError])
@@ -628,10 +727,6 @@ class ChatGPT(GPT):
     # Choose the longest response
     longest_response = max(
         (choice.message.content for choice in completion.choices), key=len)
-    self.conversation_history.append({
-        'role': 'assistant',
-        'content': longest_response
-    })
 
     return longest_response
 

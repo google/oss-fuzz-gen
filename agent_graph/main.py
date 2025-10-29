@@ -113,8 +113,8 @@ def build_run_logicfuzz_command(args: argparse.Namespace) -> List[str]:
     if hasattr(args, 'work_dir') and args.work_dir:
         cmd.extend(['-w', args.work_dir])
     
-    if hasattr(args, 'template_directory') and args.template_directory:
-        cmd.extend(['-td', args.template_directory])
+    # Note: -td (template_directory) is not passed because LangGraph
+    # uses hardcoded paths in prompt_loader.py
     
     if hasattr(args, 'log_level') and args.log_level:
         cmd.extend(['-lo', args.log_level])

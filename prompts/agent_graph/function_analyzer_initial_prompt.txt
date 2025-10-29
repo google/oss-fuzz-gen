@@ -1,0 +1,17 @@
+Analyze this target function to understand its basic purpose and signature.
+
+**Function**: {FUNCTION_SIGNATURE}
+
+**Source Code**:
+```c
+{FUNCTION_SOURCE}
+```
+
+**Task**: Provide a brief analysis covering:
+1. What this function does
+2. Key parameters and their purposes
+3. Return value semantics
+4. Any obvious constraints or requirements
+
+Keep it concise - we'll learn more from usage examples next.
+

@@ -108,7 +108,47 @@ class FuzzingWorkflow:
             "recursion_limit": getattr(self.args, 'max_iterations', 5) * 10  # Allow enough cycles
         }
         
-        final_state = compiled_workflow.invoke(initial_state, config=config)
+        try:
+            final_state = compiled_workflow.invoke(initial_state, config=config)
+        except Exception as e:
+            import logger
+            logger.error(f"Workflow execution failed: {e}", trial=trial)
+            logger.error("Returning partial state with error information", trial=trial)
+            
+            # Try to get the last state from checkpointer if available
+            if self.checkpointer:
+                try:
+                    # Get the last checkpoint
+                    from langgraph.checkpoint.base import CheckpointTuple
+                    config_for_checkpoint = {
+                        "configurable": {"thread_id": f"{benchmark.id}_trial_{trial}"}
+                    }
+                    checkpoint_tuple = self.checkpointer.get_tuple(config_for_checkpoint)
+                    if checkpoint_tuple and checkpoint_tuple.checkpoint:
+                        final_state = checkpoint_tuple.checkpoint.get('channel_values', initial_state)
+                        logger.info("Retrieved partial state from checkpointer", trial=trial)
+                    else:
+                        final_state = initial_state.copy()
+                except Exception as checkpoint_err:
+                    logger.warning(f"Failed to retrieve checkpoint: {checkpoint_err}", trial=trial)
+                    final_state = initial_state.copy()
+            else:
+                final_state = initial_state.copy()
+            
+            # Add error information to the state
+            if 'errors' not in final_state:
+                final_state['errors'] = []
+            final_state['errors'].append({
+                'node': 'workflow',
+                'message': str(e),
+                'type': type(e).__name__,
+                'fatal': True
+            })
+            final_state['termination_reason'] = 'fatal_error'
+            
+            # Re-raise if it's a keyboard interrupt
+            if isinstance(e, KeyboardInterrupt):
+                raise
         
         # Print token usage summary at the end
         from agent_graph.state import get_token_usage_summary

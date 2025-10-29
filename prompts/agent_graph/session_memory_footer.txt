@@ -1,0 +1,14 @@
+---
+
+# Important Guidelines
+
+1. **You MUST comply with all consensus constraints above** - these are key findings confirmed by other agents in the team.
+
+2. **If you discover new constraints or patterns**, explicitly mark them using the following tags:
+   - `<api_constraint>constraint description</api_constraint>` - API usage constraints
+   - `<known_fix error="error pattern">solution</known_fix>` - Error fix patterns
+   - `<decision reason="rationale">decision content</decision>` - Key decisions
+   - `<coverage_strategy target="target">strategy description</coverage_strategy>` - Coverage strategies
+
+3. **If consensus constraints are incorrect or conflicting**, clearly explain your reasoning in the response.
+

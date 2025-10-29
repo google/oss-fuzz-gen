@@ -31,13 +31,14 @@ def count_tokens(text: str, model: str = "gpt-4") -> int:
 def trim_messages_by_tokens(
     messages: List[Dict[str, Any]], 
     max_tokens: int = 50000,
-    keep_system: bool = True
+    keep_system: bool = True,
+    system_max_tokens: int = 10000
 ) -> List[Dict[str, Any]]:
     """
     Trim messages to fit within token limit.
     
     Strategy:
-    1. Always keep system message (if keep_system=True)
+    1. Always keep system message (if keep_system=True), truncate if too large
     2. Keep most recent messages that fit within max_tokens
     3. Remove oldest user/assistant pairs first
     
@@ -45,6 +46,7 @@ def trim_messages_by_tokens(
         messages: List of message dicts with 'role' and 'content'
         max_tokens: Maximum tokens to keep (default: 50k)
         keep_system: Whether to always keep system message
+        system_max_tokens: Maximum tokens for system message (default: 10k)
     
     Returns:
         Trimmed list of messages
@@ -65,17 +67,23 @@ def trim_messages_by_tokens(
     # Calculate tokens for system message
     system_tokens = 0
     if system_message:
-        system_tokens = count_tokens(system_message.get("content", ""))
+        content = system_message.get("content", "")
+        system_tokens = count_tokens(content)
+        
+        # Truncate system message if too large
+        if system_tokens > system_max_tokens:
+            encoding = tiktoken.get_encoding("cl100k_base")
+            tokens = encoding.encode(content)
+            truncated_tokens = tokens[:system_max_tokens]
+            system_message = {
+                "role": "system",
+                "content": encoding.decode(truncated_tokens) + "\n\n[... system message truncated ...]"
+            }
+            system_tokens = system_max_tokens
     
-    # If system message alone exceeds limit, truncate it
-    if system_tokens > max_tokens:
-        # Keep first part of system message
-        content = system_message["content"]
-        encoding = tiktoken.get_encoding("cl100k_base")
-        tokens = encoding.encode(content)
-        truncated_tokens = tokens[:max_tokens]
-        system_message["content"] = encoding.decode(truncated_tokens)
-        return [system_message]
+    # If system message alone exceeds total limit, return just system
+    if system_tokens >= max_tokens:
+        return [system_message] if system_message else []
     
     # Calculate tokens for other messages from newest to oldest
     remaining_tokens = max_tokens - system_tokens
@@ -87,12 +95,21 @@ def trim_messages_by_tokens(
         msg_content = msg.get("content", "")
         msg_tokens = count_tokens(msg_content)
         
-        if current_tokens + msg_tokens <= remaining_tokens:
-            kept_messages.insert(0, msg)  # Insert at beginning to maintain order
-            current_tokens += msg_tokens
-        else:
-            # No more space, stop
+        # If single message is too large, truncate it
+        if msg_tokens > remaining_tokens - current_tokens:
+            # Try to fit truncated version
+            tokens_available = remaining_tokens - current_tokens
+            if tokens_available > 1000:  # Only truncate if we have at least 1k tokens
+                encoding = tiktoken.get_encoding("cl100k_base")
+                tokens = encoding.encode(msg_content)
+                truncated_tokens = tokens[:tokens_available - 100]  # Leave some margin
+                truncated_msg = msg.copy()
+                truncated_msg["content"] = encoding.decode(truncated_tokens) + "\n\n[... truncated ...]"
+                kept_messages.insert(0, truncated_msg)
             break
+        
+        kept_messages.insert(0, msg)
+        current_tokens += msg_tokens
     
     # Combine system message (if any) with kept messages
     result = []
@@ -158,11 +175,12 @@ def add_agent_message(
         "content": content
     })
     
-    # Trim after adding
+    # Trim after adding - use larger limit to accommodate code and context
     state["agent_messages"][agent_name] = trim_messages_by_tokens(
         messages,
-        max_tokens=50000,
-        keep_system=True
+        max_tokens=100000,  # Increase to 100k tokens per agent
+        keep_system=True,
+        system_max_tokens=10000  # Limit system message to 10k
     )
 
 

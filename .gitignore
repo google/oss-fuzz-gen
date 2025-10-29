@@ -14,3 +14,4 @@ __pycache__/
 .vscode/
 .DS_Store
 .cursor/
+error_prompts/

@@ -462,6 +462,11 @@ def query_introspector_function_source(project: str, func_sig: str) -> str:
   If the query fails with the provided signature, this function will attempt
   to resolve the full signature from FuzzIntrospector and retry.
   """
+  # Don't query if signature is empty
+  if not func_sig or not func_sig.strip():
+    logger.error('Cannot query function source: empty function signature provided')
+    return ''
+  
   resp = _query_introspector(INTROSPECTOR_FUNCTION_SOURCE, {
       'project': project,
       'function_signature': func_sig
@@ -484,6 +489,8 @@ def query_introspector_function_source(project: str, func_sig: str) -> str:
             'function_signature': full_sig
         })
         source = _get_data(resp, 'source', '')
+      elif not full_sig:
+        logger.warning('Could not resolve full signature for function: %s', func_name)
   
   return source
 
@@ -576,6 +583,11 @@ def query_introspector_sample_xrefs(project: str, func_sig: str) -> List[str]:
   If the query fails with the provided signature, this function will attempt
   to resolve the full signature from FuzzIntrospector and retry.
   """
+  # Don't query if signature is empty
+  if not func_sig or not func_sig.strip():
+    logger.warning('Cannot query cross-references: empty function signature provided')
+    return []
+  
   resp = _query_introspector(INTROSPECTOR_SAMPLE_XREFS, {
       'project': project,
       'function_signature': func_sig
@@ -598,6 +610,8 @@ def query_introspector_sample_xrefs(project: str, func_sig: str) -> List[str]:
             'function_signature': full_sig
         })
         refs = _get_data(resp, 'source-code-refs', [])
+      elif not full_sig:
+        logger.warning('Could not resolve full signature for function: %s', func_name)
   
   return refs
 
@@ -677,22 +691,66 @@ def query_introspector_macro_block(project: str,
   result = _get_data(resp, 'project', {})
   return result.get('macro_block_info', [])
 
-def query_introspector_cross_references(project: str,
-                                        func_sig: str) -> list[str]:
-  """Queries FuzzIntrospector API for source code of functions
-  which reference |func_sig|."""
+def query_introspector_call_sites_metadata(project: str,
+                                            func_sig: str) -> list[dict]:
+  """Queries FuzzIntrospector API for call site metadata without fetching full source code.
+  
+  This is more efficient than query_introspector_cross_references when you only need
+  metadata about where a function is called, not the full source code of caller functions.
+  
+  Args:
+    project: Project name
+    func_sig: Function signature to query
+    
+  Returns:
+    List of call site metadata dictionaries with keys:
+    - src_func: Name of the calling function
+    - src_file: Source file path (if available)
+    - src_line: Line number where the call occurs (if available)
+  """
+  # Don't query if signature is empty
+  if not func_sig or not func_sig.strip():
+    logger.warning('Cannot query call sites: empty function signature provided')
+    return []
+  
   resp = _query_introspector(INTROSPECTOR_XREF, {
       'project': project,
       'function_signature': func_sig
   })
   call_sites = _get_data(resp, 'callsites', [])
+  
+  # Return the raw call site metadata
+  return call_sites
+
+
+def query_introspector_cross_references(project: str,
+                                        func_sig: str) -> list[str]:
+  """Queries FuzzIntrospector API for source code of functions
+  which reference |func_sig|."""
+  # Don't query if signature is empty
+  if not func_sig or not func_sig.strip():
+    logger.warning('Cannot query cross-references: empty function signature provided')
+    return []
+  
+  # Use the new metadata function
+  call_sites = query_introspector_call_sites_metadata(project, func_sig)
 
   xref_source = []
   for cs in call_sites:
     name = cs.get('src_func')
+    if not name:
+      continue
+    
     sig = query_introspector_function_signature(project, name)
+    if not sig:
+      # Skip if we can't get the signature
+      logger.debug('Skipping cross-reference %s: could not get signature', name)
+      continue
+    
     source = query_introspector_function_source(project, sig)
-    xref_source.append(source)
+    if source:  # Only append non-empty sources
+      xref_source.append(source)
+  
   return xref_source
 
 def query_introspector_language_stats() -> dict:
@@ -704,11 +762,20 @@ def query_introspector_language_stats() -> dict:
 def query_introspector_function_signature(project: str,
                                           function_name: str) -> str:
   """Queries FuzzIntrospector API for signature of |function_name|."""
+  if not function_name or not function_name.strip():
+    logger.error('Cannot query function signature: empty function name provided')
+    return ''
+  
   resp = _query_introspector(INTROSPECTOR_FUNC_SIG, {
       'project': project,
       'function': function_name
   })
-  return _get_data(resp, 'signature', '')
+  signature = _get_data(resp, 'signature', '')
+  
+  if not signature:
+    logger.warning('Could not find signature for function: %s in project: %s', function_name, project)
+  
+  return signature
 
 def query_introspector_addr_type_info(project: str, addr: str) -> str:
   """Queries FuzzIntrospector API for type information for a type
