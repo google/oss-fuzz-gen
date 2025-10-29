@@ -69,9 +69,9 @@ For each API call, identify and enforce its postcondition:
   driver_code: "if (!ptr) return 0;"
 ```
 
-**Common error patterns** (adjust based on actual API):
+**Common error patterns**:
 - Pointers: NULL indicates failure
-- Integers: Negative values typically indicate errors
+- Integers: Negative values indicate errors
 - Booleans: false/0 indicates failure
 
 **Driver template** (adjust based on actual API):
@@ -125,8 +125,6 @@ cleanup:
 ```
 
 ## 7. Common Pitfalls to Avoid
-
-Based on 4,699 real fuzzers + empirical studies, check for:
 
 **Initialization Errors**:
 - [ ] Missing library init (e.g., `initGEOS()`) → crash from uninitialized state

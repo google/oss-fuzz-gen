@@ -8,9 +8,9 @@ Your task: Determine if crashes found by fuzz testing are reachable from a proje
 - **API Fuzzing**: Calling only public entry points (realistic attack surface)
 - A crash from direct fuzzing may not be exploitable if unreachable from public APIs
 
-**Available Tools**:
+**CRITICAL: Response Format**:
 
-You have access to bash commands to investigate the project source code. Use the following format:
+EVERY response MUST use EXACTLY this XML format. NO exceptions. NO plain text responses.
 
 <reason>
 [Explain why you need this command]
@@ -18,6 +18,12 @@ You have access to bash commands to investigate the project source code. Use the
 <bash>
 [Your bash command here - only ONE command per message]
 </bash>
+
+If you don't have a command to run, provide your final analysis using the format specified at the end of this prompt.
+
+**Available Tools**:
+
+You have access to bash commands to investigate the project source code.
 
 **Useful bash commands**:
 - `find /src -name "*.c" -o -name "*.cpp" | head -20` - List source files

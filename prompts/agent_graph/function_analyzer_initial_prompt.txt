@@ -16,12 +16,12 @@ What does this function do? [1-2 sentences]
 
 ## 2. Archetype Hypothesis
 Based on the signature and source, which pattern does this likely match?
-- [ ] Stateless Parser (single call, no state)
-- [ ] Object Lifecycle (create→use→destroy)
-- [ ] State Machine (multi-step sequence)
-- [ ] Stream Processor (incremental/iterative)
-- [ ] Round-trip (encode/decode)
-- [ ] File-based (requires filepath)
+- Stateless Parser (single call, no state)
+- Object Lifecycle (create→use→destroy)
+- State Machine (multi-step sequence)
+- Stream Processor (incremental/iterative)
+- Round-trip (encode/decode)
+- File-based (requires filepath)
 
 Evidence: [Why you chose this]
 
