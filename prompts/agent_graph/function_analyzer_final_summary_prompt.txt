@@ -1,102 +1,60 @@
 Based on analyzing {EXAMPLES_COUNT} real usage examples of `{FUNCTION_SIGNATURE}` in {PROJECT_NAME}, synthesize a comprehensive behavioral model for fuzzing.
 
-**Accumulated Knowledge**:
-{API_MODEL_JSON}
-
 ---
 
-**Your Task**: Generate a final, structured analysis that will guide fuzz driver creation.
+**Your Task**: Provide a thorough analysis that will guide fuzz driver creation. Focus on:
 
-**Output Format:**
+1. **Function Purpose & Archetype** - What category does this function belong to? (parser/allocator/encoder/network handler/etc.)
 
-## 1. Function Purpose and Archetype
-- **Purpose**: [What this function does]
-- **Archetype**: [Category: parser/file_processor/network_handler/encoder/decoder/allocator/etc.]
-- **Complexity**: [Simple/Medium/Complex]
+2. **Critical Preconditions** - What MUST be true before calling this function?
+   - Object/pointer states
+   - Value ranges and constraints
+   - Global state dependencies
+   - What happens if violated? (crash/corruption/undefined behavior)
 
-## 2. Preconditions (Critical for Correct Calls)
-{FOR_EACH_PRECONDITION}
-- **Precondition**: [What must be true]
-- **Reason**: [Why it's required]
-- **Evidence**: [Seen in {N} examples: {pattern}]
-- **Violation Risk**: [crash/undefined_behavior/memory_corruption]
+3. **Setup Requirements** - Does this function need initialization? 
+   - If yes: Provide the exact setup sequence
+   - If no: Explain why direct calls are safe
 
-## 3. Setup Sequence
-{IF_SETUP_NEEDED}
-**Step 1**: `{function_call}` → Establishes: [state/resource]
-**Step 2**: `{function_call}` → Prepares: [precondition]
-**Step N**: `{FUNCTION_SIGNATURE}` → Ready to call
+4. **Parameter Patterns** - For each parameter:
+   - How is it typically constructed?
+   - What values are common?
+   - What constraints must be satisfied?
+   - Can it be fuzzed directly or needs constraints?
 
-{ELSE}
-**No setup needed** - Function can be called directly
-Evidence: {examples_showing_direct_calls}
+5. **Return Value & Error Handling** - How do callers use the result?
+   - Success/error indicators
+   - Common error handling patterns
 
-## 4. Parameter Analysis
-{FOR_EACH_PARAMETER}
-### `{param_name}` ({param_type})
-- **Typical Sources**: [{common_construction_patterns}]
-- **Typical Values**: [{values_seen_in_examples}]
-- **Constraints**: [{must_satisfy}]
-- **Fuzzing Strategy**: [fuzz_directly / constrain_to_{range} / use_valid_instance]
-- **Evidence**: Seen in {N} examples
+6. **Lifecycle & Dependencies** - Related functions and state management
+   - Init/cleanup functions
+   - Paired operations
+   - State transitions
 
-## 5. Return Value Semantics
-- **Type**: {return_type}
-- **Success Indicators**: [{values_patterns}]
-- **Error Indicators**: [{values_patterns}]
-- **Typical Usage**: [{how_callers_check_result}]
-- **Evidence**: Patterns from {N} examples
+7. **Fuzzing Recommendations** - Actionable guidance
+   - High-priority test scenarios
+   - Constraints to enforce
+   - Which parameters to fuzz vs. fix
 
-## 6. Usage Patterns (Top 3)
-{FOR_EACH_PATTERN}
-**Pattern {N}**: {pattern_description}
-- **Frequency**: Seen in {count}/{total} examples
-- **Code Example**:
-```c
-{representative_snippet}
-```
-- **Key Characteristics**: [{what_makes_this_pattern_unique}]
+**Important**: Mark key findings using these tags:
+- `<api_constraint type="precondition|parameter|lifecycle">constraint description</api_constraint>`
+- `<archetype category="parser|allocator|...">brief description</archetype>`
+- `<setup_sequence>step-by-step initialization</setup_sequence>`
+- `<fuzzing_recommendation priority="high|medium|low">specific recommendation</fuzzing_recommendation>`
 
-## 7. Error Handling
-{FOR_EACH_ERROR_PATTERN}
-- **Pattern**: {error_handling_approach}
-- **Frequency**: {count} examples
-- **Example**: {code_snippet}
-
-## 8. Lifecycle and Dependencies
-- **Init Functions** (call before): [{functions}]
-- **Cleanup Functions** (call after): [{functions}]
-- **Paired Functions**: [{function_pairs}]
-- **State Dependencies**: [{required_states}]
-
-## 9. Fuzzing Recommendations
-### High Priority
-1. {recommendation_1} - Based on: {evidence}
-2. {recommendation_2} - Based on: {evidence}
-
-### Constraints to Enforce
-1. {constraint_1} - Violation seen in: {counterexample}
-2. {constraint_2} - Required by: {precondition}
-
-### Parameters to Fuzz
-- **Direct Fuzzing**: [{params_safe_to_fuzz}]
-- **Constrained Fuzzing**: [{params_needing_constraints}]
-- **Fixed Values**: [{params_should_be_fixed}]
-
-## 10. Session Memory Updates
+**Session Memory Updates**: At the end, provide a JSON block with discovered patterns:
 ```json
 {
   "archetype": {
-    "category": "{archetype_category}",
-    "typical_setup": ["{function_calls}"],
-    "parameter_patterns": {"{param}": "{construction_pattern}"}
+    "category": "category_name",
+    "typical_setup": ["setup_step_1", "setup_step_2"],
+    "parameter_patterns": {"param_name": "construction_pattern"}
   },
   "api_constraints": {
-    "{constraint_id}": {
-      "type": "precondition/parameter/lifecycle",
-      "description": "{what}",
-      "enforcement": "{how}",
-      "evidence_count": {N}
+    "constraint_id": {
+      "type": "precondition|parameter|lifecycle",
+      "description": "what must be true",
+      "enforcement": "how it's enforced (assert/check/etc)"
     }
   }
 }
@@ -105,9 +63,9 @@ Evidence: {examples_showing_direct_calls}
 ---
 
 **Guidelines:**
-- Every claim must be supported by evidence from the analyzed examples
-- Prioritize insights that appeared in multiple examples (high confidence)
-- Flag low-confidence insights that only appeared once
+- Support every claim with evidence from analyzed examples or source code
+- Prioritize insights that appeared in multiple examples
+- Be concise but comprehensive
 - Focus on actionable information for fuzz driver generation
-- Keep it concise but comprehensive
+- Use natural language - no need to follow rigid formatting
 

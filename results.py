@@ -639,7 +639,7 @@ class TrialResult:
     return '-'
 
   def to_dict(self) -> dict:
-    return {
+    result = {
         'trial':
             self.trial,
         'function_signature':
@@ -685,6 +685,12 @@ class TrialResult:
         'semantic_error':
             self.semantic_error,
     }
+    
+    # Include token_usage if available
+    if self.best_result and hasattr(self.best_result, 'token_usage') and self.best_result.token_usage:
+      result['token_usage'] = self.best_result.token_usage
+    
+    return result
 
 class BenchmarkResult:
   """All trial results for a benchmark in an experiment."""

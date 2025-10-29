@@ -386,7 +386,120 @@ def add_to_json_report(outdir: str, key: str, value: Any) -> None:
 
   # Overwrite the new json file
   with open(json_report_path, 'w') as f:
-    f.write(json.dumps(json_report))
+    f.write(json.dumps(json_report, indent=2))
+
+def _collect_token_usage_stats() -> dict[str, Any]:
+  """Collects token usage statistics from all benchmark results."""
+  total_stats = {
+      'total_prompt_tokens': 0,
+      'total_completion_tokens': 0,
+      'total_tokens': 0,
+      'total_drivers': 0,
+      'successful_drivers': 0,
+      'by_agent': {},
+      'by_benchmark': {}
+  }
+  
+  # Iterate through all benchmark directories
+  for benchmark_dir in os.listdir(WORK_DIR):
+    benchmark_path = os.path.join(WORK_DIR, benchmark_dir)
+    if not os.path.isdir(benchmark_path):
+      continue
+    
+    # Skip non-benchmark directories
+    if not benchmark_dir.startswith('output-'):
+      continue
+    
+    benchmark_token_usage = {
+        'total_prompt_tokens': 0,
+        'total_completion_tokens': 0,
+        'total_tokens': 0,
+        'trials': 0
+    }
+    
+    # Check each trial's status directory for token usage
+    status_dir = os.path.join(benchmark_path, 'status')
+    if not os.path.isdir(status_dir):
+      continue
+    
+    # Look for result.json files for each trial
+    for status_file in os.listdir(status_dir):
+      if not status_file.endswith('-result.json'):
+        continue
+      
+      result_file_path = os.path.join(status_dir, status_file)
+      try:
+        with open(result_file_path, 'r') as f:
+          result_data = json.load(f)
+          
+        # Check if token_usage exists in the result
+        if 'token_usage' in result_data and result_data['token_usage']:
+          token_usage = result_data['token_usage']
+          
+          # Aggregate totals
+          prompt_tokens = token_usage.get('total_prompt_tokens', 0)
+          completion_tokens = token_usage.get('total_completion_tokens', 0)
+          total_tokens = token_usage.get('total_tokens', 0)
+          
+          total_stats['total_prompt_tokens'] += prompt_tokens
+          total_stats['total_completion_tokens'] += completion_tokens
+          total_stats['total_tokens'] += total_tokens
+          total_stats['total_drivers'] += 1
+          
+          # Add to benchmark stats
+          benchmark_token_usage['total_prompt_tokens'] += prompt_tokens
+          benchmark_token_usage['total_completion_tokens'] += completion_tokens
+          benchmark_token_usage['total_tokens'] += total_tokens
+          benchmark_token_usage['trials'] += 1
+          
+          # Check if this trial was successful (has code coverage or compiles)
+          if result_data.get('compiles', False):
+            total_stats['successful_drivers'] += 1
+          
+          # Aggregate by agent
+          by_agent = token_usage.get('by_agent', {})
+          for agent_name, agent_stats in by_agent.items():
+            if agent_name not in total_stats['by_agent']:
+              total_stats['by_agent'][agent_name] = {
+                  'prompt_tokens': 0,
+                  'completion_tokens': 0,
+                  'total_tokens': 0,
+                  'call_count': 0
+              }
+            
+            total_stats['by_agent'][agent_name]['prompt_tokens'] += agent_stats.get('prompt_tokens', 0)
+            total_stats['by_agent'][agent_name]['completion_tokens'] += agent_stats.get('completion_tokens', 0)
+            total_stats['by_agent'][agent_name]['total_tokens'] += agent_stats.get('total_tokens', 0)
+            total_stats['by_agent'][agent_name]['call_count'] += agent_stats.get('call_count', 0)
+      
+      except Exception as e:
+        logger.debug(f'Failed to read token usage from {result_file_path}: {e}')
+        continue
+    
+    # Store per-benchmark stats if there were any trials
+    if benchmark_token_usage['trials'] > 0:
+      total_stats['by_benchmark'][benchmark_dir] = benchmark_token_usage
+  
+  # Calculate averages
+  if total_stats['total_drivers'] > 0:
+    total_stats['avg_prompt_tokens_per_driver'] = round(
+        total_stats['total_prompt_tokens'] / total_stats['total_drivers'], 2)
+    total_stats['avg_completion_tokens_per_driver'] = round(
+        total_stats['total_completion_tokens'] / total_stats['total_drivers'], 2)
+    total_stats['avg_total_tokens_per_driver'] = round(
+        total_stats['total_tokens'] / total_stats['total_drivers'], 2)
+  else:
+    total_stats['avg_prompt_tokens_per_driver'] = 0
+    total_stats['avg_completion_tokens_per_driver'] = 0
+    total_stats['avg_total_tokens_per_driver'] = 0
+  
+  if total_stats['successful_drivers'] > 0:
+    total_stats['avg_tokens_per_successful_driver'] = round(
+        total_stats['total_tokens'] / total_stats['successful_drivers'], 2)
+  else:
+    total_stats['avg_tokens_per_successful_driver'] = 0
+  
+  return total_stats
 
 def _process_total_coverage_gain() -> dict[str, dict[str, Any]]:
   """Processes and calculates the total coverage gain for each project."""
@@ -570,6 +683,26 @@ def main():
                      time.strftime(TIME_STAMP_FMT, time.gmtime(end)))
   add_to_json_report(args.work_dir, 'total_run_time',
                      str(timedelta(seconds=end - start)))
+
+  # Collect and add token usage statistics
+  logger.info('Collecting token usage statistics...')
+  token_stats = _collect_token_usage_stats()
+  add_to_json_report(args.work_dir, 'token_usage_summary', token_stats)
+  
+  # Print token usage summary
+  if token_stats['total_drivers'] > 0:
+    logger.info('=' * 60)
+    logger.info('Token Usage Summary')
+    logger.info('=' * 60)
+    logger.info(f"Total Drivers Generated:     {token_stats['total_drivers']}")
+    logger.info(f"Successful Drivers:          {token_stats['successful_drivers']}")
+    logger.info(f"Total Prompt Tokens:         {token_stats['total_prompt_tokens']:,}")
+    logger.info(f"Total Completion Tokens:     {token_stats['total_completion_tokens']:,}")
+    logger.info(f"Total Tokens:                {token_stats['total_tokens']:,}")
+    logger.info('-' * 60)
+    logger.info(f"Avg Tokens per Driver:       {token_stats['avg_total_tokens_per_driver']:,.2f}")
+    logger.info(f"Avg Tokens per Success:      {token_stats['avg_tokens_per_successful_driver']:,.2f}")
+    logger.info('=' * 60)
 
   coverage_gain_dict = _process_total_coverage_gain()
   _print_experiment_results(experiment_results, coverage_gain_dict)
