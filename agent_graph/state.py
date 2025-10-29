@@ -135,9 +135,9 @@ class FuzzingWorkflowState(TypedDict):
     # === Token Usage Statistics ===
     token_usage: NotRequired[Dict[str, Any]]  # Token consumption statistics
     
-    # === Session Memory (共识约束) ===
-    # 本轮任务内，各agent已达成的"当前共识约束"
-    # Supervisor应始终往下游agent注入这个共识，而不是整个消息历史
+    # === Session Memory (Consensus Constraints) ===
+    # Current consensus constraints established by agents during this task
+    # Supervisor should always inject this consensus to downstream agents instead of full message history
     session_memory: NotRequired[Dict[str, Any]]
 
 class WorkerState(TypedDict):
@@ -209,13 +209,13 @@ def create_initial_state(
             "total_tokens": 0,
             "by_agent": {}
         },
-        # Initialize session memory (共识约束存储)
+        # Initialize session memory (consensus constraints storage)
         session_memory={
-            "api_constraints": [],      # API使用约束列表
-            "archetype": None,           # 已识别的架构模式
-            "known_fixes": [],           # 已知错误修复方案
-            "decisions": [],             # 关键决策记录
-            "coverage_strategies": []    # 覆盖率优化策略
+            "api_constraints": [],      # API usage constraints list
+            "archetype": None,           # Identified architecture pattern
+            "known_fixes": [],           # Known error fixes
+            "decisions": [],             # Key decision records
+            "coverage_strategies": []    # Coverage optimization strategies
         }
     )
 
@@ -354,14 +354,14 @@ def add_api_constraint(
     iteration: int = None
 ) -> None:
     """
-    添加API约束到session_memory。
+    Add API constraint to session_memory.
     
     Args:
-        state: 工作流状态
-        constraint: 约束描述
-        source: 来源agent名称
-        confidence: 置信度 (high/medium/low)
-        iteration: 发现该约束的迭代轮次
+        state: Workflow state
+        constraint: Constraint description
+        source: Source agent name
+        confidence: Confidence level (high/medium/low)
+        iteration: Iteration where this constraint was found
     """
     if "session_memory" not in state:
         state["session_memory"] = {
@@ -374,16 +374,16 @@ def add_api_constraint(
     
     api_constraints = state["session_memory"].get("api_constraints", [])
     
-    # 去重：检查是否已存在相同约束
+    # Deduplication: Check if the same constraint already exists
     for existing in api_constraints:
         if existing["constraint"] == constraint:
-            # 如果新约束的置信度更高，则更新
+            # Update if new constraint has higher confidence
             if confidence == "high" and existing["confidence"] != "high":
                 existing["confidence"] = "high"
                 existing["source"] = source
             return
     
-    # 添加新约束
+    # Add new constraint
     api_constraints.append({
         "constraint": constraint,
         "source": source,
@@ -402,14 +402,14 @@ def add_known_fix(
     iteration: int = None
 ) -> None:
     """
-    添加已知错误修复方案到session_memory。
+    Add known error fix to session_memory.
     
     Args:
-        state: 工作流状态
-        error_pattern: 错误模式描述
-        solution: 解决方案
-        source: 来源agent名称
-        iteration: 发现该修复的迭代轮次
+        state: Workflow state
+        error_pattern: Error pattern description
+        solution: Solution description
+        source: Source agent name
+        iteration: Iteration where this fix was discovered
     """
     if "session_memory" not in state:
         state["session_memory"] = {
@@ -422,16 +422,16 @@ def add_known_fix(
     
     known_fixes = state["session_memory"].get("known_fixes", [])
     
-    # 去重
+    # Deduplication
     for existing in known_fixes:
         if existing["error_pattern"] == error_pattern:
-            # 更新solution如果不同
+            # Update solution if different
             if existing["solution"] != solution:
                 existing["solution"] = solution
                 existing["source"] = source
             return
     
-    # 添加新修复
+    # Add new fix
     known_fixes.append({
         "error_pattern": error_pattern,
         "solution": solution,
@@ -450,14 +450,14 @@ def add_decision(
     iteration: int = None
 ) -> None:
     """
-    添加关键决策记录到session_memory。
+    Add key decision to session_memory.
     
     Args:
-        state: 工作流状态
-        decision: 决策内容
-        reason: 决策原因
-        source: 来源agent名称
-        iteration: 做出决策的迭代轮次
+        state: Workflow state
+        decision: Decision content
+        reason: Decision reason
+        source: Source agent name
+        iteration: Iteration where this decision was made
     """
     if "session_memory" not in state:
         state["session_memory"] = {
@@ -477,7 +477,7 @@ def add_decision(
         "iteration": iteration if iteration is not None else state.get("current_iteration", 0)
     })
     
-    # 限制decisions数量，只保留最近10条
+    # Limit decisions to keep only the most recent 10
     state["session_memory"]["decisions"] = decisions[-10:]
 
 
@@ -489,14 +489,14 @@ def set_archetype(
     iteration: int = None
 ) -> None:
     """
-    设置识别出的API架构模式。
+    Set the identified API archetype pattern.
     
     Args:
-        state: 工作流状态
-        archetype_type: 架构类型 (例如: "stateful_decoder", "simple_parser")
-        lifecycle_phases: 生命周期阶段列表
-        source: 来源agent名称
-        iteration: 识别该架构的迭代轮次
+        state: Workflow state
+        archetype_type: Archetype type (e.g., "stateful_decoder", "simple_parser")
+        lifecycle_phases: List of lifecycle phases
+        source: Source agent name
+        iteration: Iteration where this archetype was identified
     """
     if "session_memory" not in state:
         state["session_memory"] = {
@@ -523,14 +523,14 @@ def add_coverage_strategy(
     iteration: int = None
 ) -> None:
     """
-    添加覆盖率优化策略到session_memory。
+    Add coverage optimization strategy to session_memory.
     
     Args:
-        state: 工作流状态
-        strategy: 策略描述
-        target: 目标/预期效果
-        source: 来源agent名称
-        iteration: 提出该策略的迭代轮次
+        state: Workflow state
+        strategy: Strategy description
+        target: Target/expected effect
+        source: Source agent name
+        iteration: Iteration where this strategy was proposed
     """
     if "session_memory" not in state:
         state["session_memory"] = {
@@ -543,7 +543,7 @@ def add_coverage_strategy(
     
     strategies = state["session_memory"].get("coverage_strategies", [])
     
-    # 去重
+    # Deduplication
     for existing in strategies:
         if existing["strategy"] == strategy:
             return
@@ -555,30 +555,30 @@ def add_coverage_strategy(
         "iteration": iteration if iteration is not None else state.get("current_iteration", 0)
     })
     
-    # 限制strategies数量，只保留最近10条
+    # Limit strategies to keep only the most recent 10
     state["session_memory"]["coverage_strategies"] = strategies[-10:]
 
 
 def format_session_memory_for_prompt(state: FuzzingWorkflowState) -> str:
     """
-    将session_memory格式化为可读的文本，用于注入到agent提示中。
+    Format session_memory as readable text for injection into agent prompts.
     
     Args:
-        state: 工作流状态
+        state: Workflow state
     
     Returns:
-        格式化的session_memory文本
+        Formatted session_memory text
     """
     session_memory = state.get("session_memory", {})
     
     if not session_memory:
-        return "*本轮任务尚无共识约束*"
+        return "*No consensus constraints for this task yet*"
     
     parts = []
     
-    # 1. 格式化API约束
+    # 1. Format API constraints
     if api_constraints := session_memory.get("api_constraints", []):
-        parts.append("## API使用约束")
+        parts.append("## API Usage Constraints")
         for c in api_constraints:
             confidence_marker = {
                 "high": "🔴",
@@ -586,55 +586,55 @@ def format_session_memory_for_prompt(state: FuzzingWorkflowState) -> str:
                 "low": "🟢"
             }.get(c.get("confidence", "medium"), "")
             parts.append(f"- {confidence_marker} {c['constraint']}")
-            parts.append(f"  *来源: {c['source']}, 轮次: {c.get('iteration', 0)}*")
+            parts.append(f"  *source: {c['source']}, iteration: {c.get('iteration', 0)}*")
     
-    # 2. 格式化架构模式
+    # 2. Format archetype pattern
     if archetype := session_memory.get("archetype"):
-        parts.append("\n## 已识别架构模式")
-        parts.append(f"- **类型**: {archetype['type']}")
-        parts.append(f"- **生命周期**: {' → '.join(archetype['lifecycle_phases'])}")
-        parts.append(f"- *来源: {archetype['source']}, 轮次: {archetype.get('iteration', 0)}*")
+        parts.append("\n## Identified Architecture Pattern")
+        parts.append(f"- **Type**: {archetype['type']}")
+        parts.append(f"- **Lifecycle**: {' → '.join(archetype['lifecycle_phases'])}")
+        parts.append(f"- *source: {archetype['source']}, iteration: {archetype.get('iteration', 0)}*")
     
-    # 3. 格式化已知修复
+    # 3. Format known fixes
     if known_fixes := session_memory.get("known_fixes", []):
-        parts.append("\n## 已知错误修复方案")
-        for fix in known_fixes[-5:]:  # 只显示最近5条
-            parts.append(f"- **错误**: {fix['error_pattern']}")
-            parts.append(f"  **解决方案**: {fix['solution']}")
-            parts.append(f"  *来源: {fix['source']}, 轮次: {fix.get('iteration', 0)}*")
+        parts.append("\n## Known Error Fixes")
+        for fix in known_fixes[-5:]:  # Show only the most recent 5
+            parts.append(f"- **Error**: {fix['error_pattern']}")
+            parts.append(f"  **Solution**: {fix['solution']}")
+            parts.append(f"  *source: {fix['source']}, iteration: {fix.get('iteration', 0)}*")
     
-    # 4. 格式化决策记录
+    # 4. Format decision records
     if decisions := session_memory.get("decisions", []):
-        parts.append("\n## 关键决策记录")
-        for d in decisions[-3:]:  # 只显示最近3条
-            parts.append(f"- **决策**: {d['decision']}")
-            parts.append(f"  **原因**: {d['reason']}")
-            parts.append(f"  *来源: {d['source']}, 轮次: {d.get('iteration', 0)}*")
+        parts.append("\n## Key Decisions")
+        for d in decisions[-3:]:  # Show only the most recent 3
+            parts.append(f"- **Decision**: {d['decision']}")
+            parts.append(f"  **Reason**: {d['reason']}")
+            parts.append(f"  *source: {d['source']}, iteration: {d.get('iteration', 0)}*")
     
-    # 5. 格式化覆盖率策略
+    # 5. Format coverage strategies
     if strategies := session_memory.get("coverage_strategies", []):
-        parts.append("\n## 覆盖率优化策略")
-        for s in strategies[-5:]:  # 只显示最近5条
+        parts.append("\n## Coverage Optimization Strategies")
+        for s in strategies[-5:]:  # Show only the most recent 5
             parts.append(f"- {s['strategy']}")
-            parts.append(f"  *目标: {s['target']}, 来源: {s['source']}*")
+            parts.append(f"  *target: {s['target']}, source: {s['source']}*")
     
     if not parts:
-        return "*本轮任务尚无共识约束*"
+        return "*No consensus constraints for this task yet*"
     
     return "\n".join(parts)
 
 
 def consolidate_session_memory(state: FuzzingWorkflowState) -> Dict[str, Any]:
     """
-    整理和清理session_memory，去重、限制长度等。
+    Consolidate and clean session_memory with deduplication and length limits.
     
-    这个函数应该在Supervisor节点中调用，确保session_memory保持整洁。
+    This function should be called in the Supervisor node to keep session_memory tidy.
     
     Args:
-        state: 工作流状态
+        state: Workflow state
     
     Returns:
-        清理后的session_memory
+        Cleaned session_memory
     """
     session_memory = state.get("session_memory", {}).copy()
     
@@ -647,9 +647,9 @@ def consolidate_session_memory(state: FuzzingWorkflowState) -> Dict[str, Any]:
             "coverage_strategies": []
         }
     
-    # 1. 去重API约束
+    # 1. Deduplicate API constraints
     if api_constraints := session_memory.get("api_constraints", []):
-        # 按constraint内容去重，保留最高置信度的
+        # Deduplicate by constraint content, keep the one with highest confidence
         unique_constraints = {}
         for c in api_constraints:
             key = c["constraint"]
@@ -659,19 +659,19 @@ def consolidate_session_memory(state: FuzzingWorkflowState) -> Dict[str, Any]:
                 unique_constraints[key] = c
         session_memory["api_constraints"] = list(unique_constraints.values())
     
-    # 2. 去重known_fixes
+    # 2. Deduplicate known_fixes
     if known_fixes := session_memory.get("known_fixes", []):
         unique_fixes = {}
         for fix in known_fixes:
             key = fix["error_pattern"]
-            unique_fixes[key] = fix  # 后来的覆盖前面的
-        session_memory["known_fixes"] = list(unique_fixes.values())[-10:]  # 只保留最近10条
+            unique_fixes[key] = fix  # Later ones override earlier ones
+        session_memory["known_fixes"] = list(unique_fixes.values())[-10:]  # Keep only the most recent 10
     
-    # 3. 限制decisions长度
+    # 3. Limit decisions length
     if decisions := session_memory.get("decisions", []):
         session_memory["decisions"] = decisions[-10:]
     
-    # 4. 去重coverage_strategies
+    # 4. Deduplicate coverage_strategies
     if strategies := session_memory.get("coverage_strategies", []):
         unique_strategies = {}
         for s in strategies:
