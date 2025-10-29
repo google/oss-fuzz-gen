@@ -1,60 +1,174 @@
-Based on analyzing {EXAMPLES_COUNT} real usage examples of `{FUNCTION_SIGNATURE}` in {PROJECT_NAME}, synthesize a comprehensive behavioral model for fuzzing.
+Based on {EXAMPLES_COUNT} usage examples, generate a driver specification for `{FUNCTION_SIGNATURE}`.
+
+Accumulated analysis: {API_MODEL_JSON}
 
 ---
 
-**Your Task**: Provide a thorough analysis that will guide fuzz driver creation. Focus on:
+OUTPUT SPECIFICATION
 
-1. **Function Purpose & Archetype** - What category does this function belong to? (parser/allocator/encoder/network handler/etc.)
+## 1. Archetype & Reference Template
 
-2. **Critical Preconditions** - What MUST be true before calling this function?
-   - Object/pointer states
-   - Value ranges and constraints
-   - Global state dependencies
-   - What happens if violated? (crash/corruption/undefined behavior)
+Primary pattern: [Choose ONE: Stateless Parser | Object Lifecycle | State Machine | Stream Processor | Round-trip | File-based]
 
-3. **Setup Requirements** - Does this function need initialization? 
-   - If yes: Provide the exact setup sequence
-   - If no: Explain why direct calls are safe
+Reference: See FUZZER_COOKBOOK.md Scenario [X]
 
-4. **Parameter Patterns** - For each parameter:
-   - How is it typically constructed?
-   - What values are common?
-   - What constraints must be satisfied?
-   - Can it be fuzzed directly or needs constraints?
+Evidence: Pattern observed in {N}/{EXAMPLES_COUNT} examples
 
-5. **Return Value & Error Handling** - How do callers use the result?
-   - Success/error indicators
-   - Common error handling patterns
+## 2. Preconditions (CRITICAL - violations cause crashes)
 
-6. **Lifecycle & Dependencies** - Related functions and state management
-   - Init/cleanup functions
-   - Paired operations
-   - State transitions
+For each precondition:
+```
+MUST: {condition_description}
+Reason: {why_required}
+Evidence: Example #{N}, source code line {file:line}
+Violation → {crash_type: segfault/assertion/memory_corruption}
+Driver code: if (!{condition}) return 0;
+```
 
-7. **Fuzzing Recommendations** - Actionable guidance
-   - High-priority test scenarios
-   - Constraints to enforce
-   - Which parameters to fuzz vs. fix
+## 3. Setup Sequence
 
-**Important**: Mark key findings using these tags:
-- `<api_constraint type="precondition|parameter|lifecycle">constraint description</api_constraint>`
-- `<archetype category="parser|allocator|...">brief description</archetype>`
-- `<setup_sequence>step-by-step initialization</setup_sequence>`
-- `<fuzzing_recommendation priority="high|medium|low">specific recommendation</fuzzing_recommendation>`
+**Standard flow** (confidence: {N}/{EXAMPLES_COUNT} examples):
+```c
+step1: {init_function}();        // Establishes: {state/resource}
+step2: {config_function}();      // Configures: {what}
+step3: {FUNCTION_SIGNATURE}(...) // Main operation
+step4: {cleanup_function}();     // Prevents: {leak/corruption}
+```
 
-**Session Memory Updates**: At the end, provide a JSON block with discovered patterns:
+**Alternative flows**: [{describe_if_multiple_patterns}]
+
+## 4. Parameter Fuzzing Strategy
+
+For each parameter:
+```yaml
+{param_name}:
+  type: {type}
+  construction: [{how_real_callers_create_it}]
+  strategy: [DIRECT_FUZZ | CONSTRAIN | FIX]
+  constraints: [{if_CONSTRAIN}]
+  fixed_value: [{if_FIX}]
+  driver_code: |
+    {actual_C_code}
+```
+
+## 5. Postconditions & Error Handling
+
+**Return value semantics** (from examples):
+- Success pattern: [{how_indicated}]
+- Failure pattern: [{error_values}]
+- Evidence: Example #{N} checks `{code_snippet}`
+
+**Status checks required**:
+For each API call, identify and enforce its postcondition:
+
+```yaml
+{function_name}:
+  postcondition: "Returns NULL on allocation failure"
+  evidence: "Examples #1, #3 both check if (!ptr)"
+  violation_risk: "Segfault in subsequent use"
+  driver_code: "if (!ptr) return 0;"
+```
+
+**Common error patterns** (adjust based on actual API):
+- Pointers: NULL indicates failure
+- Integers: Negative values typically indicate errors
+- Booleans: false/0 indicates failure
+
+**Driver template** (adjust based on actual API):
+```c
+// Step 1: Create object
+ptr = api_create();
+if (!ptr) return 0;  // Postcondition: NULL on OOM
+
+// Step 2: Process data
+ret = api_process(ptr, data, size);
+if (ret < 0) goto cleanup;  // Postcondition: negative on error
+
+cleanup:
+  api_destroy(ptr);  // Precondition: ptr must be valid
+  return 0;
+```
+
+**Resource management**:
+- [ ] Stack buffer (< {size})
+- [ ] Heap allocation (malloc/free or RAII)
+- [ ] Temp file (use /tmp/fuzz_{pid})
+- [ ] Static buffer (performance optimization)
+
+## 6. Driver Skeleton
+
+```c
+#include <stddef.h>
+#include <stdint.h>
+#include "{header}.h"
+
+int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
+  // Input validation
+  if (size < {min} || size > {max}) return 0;
+  
+  // Resource allocation
+  {resource_declarations}
+  
+  // Setup sequence
+  {init_calls}
+  if ({check_failed}) return 0;  // Early exit on setup failure
+  
+  // Main API call
+  {ret} = {FUNCTION_SIGNATURE}({args});
+  if ({check_failed}) goto cleanup;  // Check return value
+  
+  // Cleanup
+cleanup:
+  {cleanup_calls_in_reverse_order}
+  return 0;
+}
+```
+
+## 7. Common Pitfalls to Avoid
+
+Based on 4,699 real fuzzers + empirical studies, check for:
+
+**Initialization Errors**:
+- [ ] Missing library init (e.g., `initGEOS()`) → crash from uninitialized state
+- [ ] Missing error handler setup → uncaught internal errors
+
+**Data & Argument Errors**:
+- [ ] Unchecked NULL pointers → segmentation fault
+- [ ] Missing bounds validation → buffer overflow
+- [ ] Modifying const input → copy data first
+
+**Call Sequence Errors**:
+- [ ] Double-free → object destroyed twice
+- [ ] Use-after-free → object used after destroy
+- [ ] Wrong cleanup order → dependency violation
+
+**Resource Management**:
+- [ ] Memory leak → missing free/destroy
+- [ ] Stack overflow → use heap for large buffers
+- [ ] Unbounded loop → add `max_iterations` limit
+
+## 8. Confidence Assessment
+
+High confidence (≥70% examples): [{list}]
+Medium confidence (30-70%): [{list}]
+Needs verification (<30%): [{list}]
+
+---
+
+**Session Memory Updates**:
 ```json
 {
   "archetype": {
-    "category": "category_name",
-    "typical_setup": ["setup_step_1", "setup_step_2"],
-    "parameter_patterns": {"param_name": "construction_pattern"}
+    "category": "{archetype_category}",
+    "typical_setup": ["{function_calls}"],
+    "parameter_patterns": {"{param}": "{construction_pattern}"}
   },
   "api_constraints": {
-    "constraint_id": {
+    "{constraint_id}": {
       "type": "precondition|parameter|lifecycle",
-      "description": "what must be true",
-      "enforcement": "how it's enforced (assert/check/etc)"
+      "description": "{what}",
+      "enforcement": "{how}",
+      "evidence_count": {N}
     }
   }
 }
@@ -62,10 +176,5 @@ Based on analyzing {EXAMPLES_COUNT} real usage examples of `{FUNCTION_SIGNATURE}
 
 ---
 
-**Guidelines:**
-- Support every claim with evidence from analyzed examples or source code
-- Prioritize insights that appeared in multiple examples
-- Be concise but comprehensive
-- Focus on actionable information for fuzz driver generation
-- Use natural language - no need to follow rigid formatting
+Format: Provide specification in sections above. Support every claim with evidence. Keep it concise and code-focused.
 

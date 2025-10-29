@@ -1,4 +1,4 @@
-Analyze this target function to understand its basic purpose and signature.
+Analyze this target function and provide an initial assessment.
 
 **Function**: {FUNCTION_SIGNATURE}
 
@@ -7,11 +7,29 @@ Analyze this target function to understand its basic purpose and signature.
 {FUNCTION_SOURCE}
 ```
 
-**Task**: Provide a brief analysis covering:
-1. What this function does
-2. Key parameters and their purposes
-3. Return value semantics
-4. Any obvious constraints or requirements
+---
 
-Keep it concise - we'll learn more from usage examples next.
+**Task**: Answer the following:
+
+## 1. Function Purpose
+What does this function do? [1-2 sentences]
+
+## 2. Archetype Hypothesis
+Based on the signature and source, which pattern does this likely match?
+- [ ] Stateless Parser (single call, no state)
+- [ ] Object Lifecycle (create→use→destroy)
+- [ ] State Machine (multi-step sequence)
+- [ ] Stream Processor (incremental/iterative)
+- [ ] Round-trip (encode/decode)
+- [ ] File-based (requires filepath)
+
+Evidence: [Why you chose this]
+
+## 3. Initial Observations
+- Key parameters: [{name}: {purpose}]
+- Return value: [what it indicates]
+- Obvious preconditions: [any visible checks or requirements]
+- Obvious postconditions: [what the return value means]
+
+Keep it brief - we'll refine this analysis through usage examples next.
 

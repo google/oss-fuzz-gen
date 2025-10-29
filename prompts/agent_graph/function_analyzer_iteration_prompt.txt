@@ -1,40 +1,59 @@
-Here's usage example #{EXAMPLE_NUMBER} of the target API (you've analyzed {EXAMPLES_ANALYZED} so far):
+Usage example #{EXAMPLE_NUMBER} of `{FUNCTION_SIGNATURE}` (analyzed {EXAMPLES_ANALYZED} so far)
 
-**Calling function**: `{CALLER_NAME}`
-**Location**: Line {CALL_LINE_NUMBER}
+**Caller**: `{CALLER_NAME}` at line {CALL_LINE_NUMBER}
 
 **Code Context**:
 ```c
-// Context before the call
 {CONTEXT_BEFORE}
-
-// >>> The API call <<<
-{CALL_STATEMENT}
-
-// Context after the call
+>>> {CALL_STATEMENT}  // Target call
 {CONTEXT_AFTER}
 ```
 
-**Parameter Setup**:
-```
-{PARAMETER_SETUP}
-```
-
-**Return Value Usage**:
-```
-{RETURN_USAGE}
-```
+**Parameter Setup**: {PARAMETER_SETUP}
+**Return Handling**: {RETURN_USAGE}
 
 ---
 
-**Analyze this example** and note any insights about:
-- Usage patterns (new or confirming previous observations)
-- Parameter construction and constraints
-- Return value handling
-- Error handling
-- Required preconditions or setup
-- Related functions (init/cleanup)
+EXTRACT (answer only relevant items):
 
-Focus on **what's new or different** from previous examples. If this confirms existing patterns, briefly note that.
-If you see nothing notable, just say "No significant new insights" - that's fine.
+## 1. PRECONDITIONS (what's checked BEFORE the call?)
+- Null checks: any `if (!ptr)` or `assert(ptr)`?
+- Range checks: any `if (size == 0)` or bounds validation?
+- State checks: does object need to be initialized first?
+
+Evidence: [quote specific lines]
+
+## 2. POSTCONDITIONS (what happens AFTER the call?)
+- Return value: how is success/failure determined? (`ret == 0`? `ret != NULL`?)
+- State change: does object enter a new state?
+- Resource ownership: who frees allocated memory?
+
+Evidence: [quote specific lines]
+
+## 3. SETUP SEQUENCE
+What functions were called BEFORE this one?
+```
+step1: [function]  // establishes what?
+step2: [function]  // prepares what?
+stepN: {FUNCTION_SIGNATURE}
+```
+
+Compare: does this match previous examples? If different, why?
+
+## 4. PARAMETER CONSTRUCTION
+For key parameters, how are they created?
+- `{param}`: [constant / user input / from another API / allocated]
+
+Fuzzing implication: [can fuzz directly / needs constraints / should fix to constant]
+
+## 5. ERROR HANDLING
+Pattern: [return code check / exception / goto cleanup]
+Cleanup: how are resources freed on failure?
+
+## 6. ARCHETYPE EVIDENCE
+Does this example suggest: [Stateless Parser / Object Lifecycle / State Machine / ...]?
+
+---
+
+SUMMARY: [1-2 sentences: what this example confirms or reveals]
 
