@@ -50,7 +50,6 @@ Classify APIs by behavioral patterns (from FUZZER_BEHAVIOR_TAXONOMY.md):
 **Added**:
 - ARCHETYPE RECOGNITION section with 6 pattern types
 - CRITICAL section emphasizing return value checks
-- Reference to FUZZER_COOKBOOK.md for common pitfalls
 
 **Kept**:
 - Core Hoare Logic framework (preconditions/postconditions)
@@ -116,10 +115,9 @@ Classify APIs by behavioral patterns (from FUZZER_BEHAVIOR_TAXONOMY.md):
 - Comments for each section
 - Explicit return value checks
 
-**Section 7: Common Pitfalls to Avoid** (NEW - from OGHarn study)
+**Section 7: Common Pitfalls to Avoid** (NEW)
 - 4 categories of errors
 - Checklist format
-- Based on 4,699 real fuzzers + empirical studies
 
 **Section 8: Confidence Assessment**
 - High/Medium/Low confidence levels
@@ -138,9 +136,8 @@ Classify APIs by behavioral patterns (from FUZZER_BEHAVIOR_TAXONOMY.md):
 - **Typestate**: Object state machines with valid/invalid transitions
 
 ### From Empirical Studies
-- **FUZZER_BEHAVIOR_TAXONOMY.md**: 5 dimensions of fuzzer behavior from 4,699 drivers
-- **FUZZER_COOKBOOK.md**: 11 concrete scenarios with code templates
-- **OGHarn Paper**: Common pitfalls and status check strategies
+- **FUZZER_BEHAVIOR_TAXONOMY.md**: 5 dimensions of fuzzer behavior
+- **FUZZER_COOKBOOK.md**: Concrete scenarios with code templates
 
 ---
 
@@ -187,7 +184,6 @@ Potential improvements for later iterations:
 
 - Hoare Logic: Hoare, C.A.R. (1969). "An axiomatic basis for computer programming"
 - Typestate: Strom & Yemini (1986). "Typestate: A programming language concept"
-- FUZZER_BEHAVIOR_TAXONOMY.md: Analysis of 4,699 OSS-Fuzz drivers
+- FUZZER_BEHAVIOR_TAXONOMY.md: Empirical analysis of OSS-Fuzz drivers
 - FUZZER_COOKBOOK.md: Practical templates from real-world fuzzers
-- OGHarn Paper: Sherman & Nagy (2024). "Oracle-guided Harnessing"
 

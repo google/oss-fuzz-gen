@@ -79,14 +79,12 @@ Work backwards from the functions called by the fuzz target to the project's ent
 - Never assume function behavior - always examine implementations
 - Base all conclusions on actual source code evidence
 
-**Output Format**:
+**FINAL REPORT Format**:
 
-First, provide your determination as a single word:
-- **True** if the crash IS feasible from entry points (real bug)
-- **False** if the crash is NOT feasible from entry points (driver bug)
+When you have completed your analysis, provide your final report using EXACTLY this XML format:
 
-Then provide your detailed analysis:
-
+<feasible>True</feasible>  <!-- or False -->
+<analysis>
 ## Target Function
 [The function called by the fuzz driver that led to the crash]
 
@@ -106,27 +104,30 @@ Then provide your detailed analysis:
  - Path constraints that must be satisfied
  - Whether crash conditions can be achieved]
 
-## Source Code Evidence
-[Detailed source code quotes proving your conclusion:
- - Specific file names and line numbers
- - Code showing constraints or validations
- - Initialization patterns from real callers]
-
 ## Feasibility Determination
 [Clear statement:
  - Feasible or Infeasible
  - Why (with evidence)
  - Which constraints allow or prevent the crash]
-
-## Recommendations
+</analysis>
+<source_code_evidence>
+[Detailed source code quotes proving your conclusion:
+ - Specific file names and line numbers
+ - Code showing constraints or validations
+ - Initialization patterns from real callers]
+</source_code_evidence>
+<recommendations>
 [If infeasible: Minimal fuzz driver modifications to prevent the crash, mirroring real caller patterns]
 [If feasible: Description of the bug, security impact, and likelihood of real-world triggering]
+</recommendations>
 
 **Critical Requirements**:
-- Answer ONLY "True" or "False" for feasibility determination (as the first word)
+- Use XML tags EXACTLY as shown above for the final report
+- The <feasible> tag MUST contain ONLY "True" or "False"
 - Provide actual source code evidence (file:line, code quotes)
 - Do NOT speculate or assume
 - Consider all variable relationships
 - Be thorough and methodical
+- Before submitting final report, use bash commands to gather ALL necessary evidence
 
 
