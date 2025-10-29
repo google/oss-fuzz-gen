@@ -580,12 +580,8 @@ def format_session_memory_for_prompt(state: FuzzingWorkflowState) -> str:
     if api_constraints := session_memory.get("api_constraints", []):
         parts.append("## API Usage Constraints")
         for c in api_constraints:
-            confidence_marker = {
-                "high": "🔴",
-                "medium": "🟡",
-                "low": "🟢"
-            }.get(c.get("confidence", "medium"), "")
-            parts.append(f"- {confidence_marker} {c['constraint']}")
+            confidence_level = c.get("confidence", "medium").upper()
+            parts.append(f"- [{confidence_level}] {c['constraint']}")
             parts.append(f"  *source: {c['source']}, iteration: {c.get('iteration', 0)}*")
     
     # 2. Format archetype pattern
