@@ -1,6 +1,6 @@
 Based on {EXAMPLES_COUNT} usage examples, generate a driver specification for `{FUNCTION_SIGNATURE}`.
 
-Accumulated analysis: {API_MODEL_JSON}
+{ARCHETYPE_KNOWLEDGE}
 
 ---
 

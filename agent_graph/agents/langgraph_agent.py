@@ -364,12 +364,15 @@ class LangGraphFunctionAnalyzer(LangGraphAgent):
         # Phase 4: Generate final comprehensive analysis
         logger.info(f'Analysis complete. Generating final summary based on {examples_analyzed} examples', trial=self.trial)
         
+        # Retrieve archetype knowledge from long-term memory
+        archetype_knowledge = self._retrieve_archetype_knowledge(state)
+        
         prompt_manager = get_prompt_manager()
         final_prompt = prompt_manager.build_user_prompt(
             "function_analyzer_final_summary",
-            PROJECT_NAME=project_name,
             FUNCTION_SIGNATURE=function_signature,
-            EXAMPLES_COUNT=examples_analyzed
+            EXAMPLES_COUNT=examples_analyzed,
+            ARCHETYPE_KNOWLEDGE=archetype_knowledge
         )
         
         final_response = self.chat_llm(state, final_prompt)
@@ -495,6 +498,87 @@ class LangGraphFunctionAnalyzer(LangGraphAgent):
         
         return '\n'.join(usage_lines) if usage_lines else "No clear return value usage found"
     
+    def _retrieve_archetype_knowledge(self, state: FuzzingWorkflowState) -> str:
+        """
+        Retrieve relevant archetype knowledge from long-term memory.
+        
+        Attempts to infer archetype from conversation history, or returns all archetypes
+        for reference.
+        """
+        try:
+            from long_term_memory.retrieval import KnowledgeRetriever
+            
+            retriever = KnowledgeRetriever()
+            
+            # Try to extract archetype from conversation history
+            archetype = self._infer_archetype_from_history(state)
+            
+            if archetype and archetype in retriever.list_archetypes():
+                logger.info(f'Inferred archetype: {archetype}, retrieving knowledge', trial=self.trial)
+                bundle = retriever.get_bundle(archetype)
+                
+                # Format knowledge for injection
+                knowledge = f"""
+# Relevant Pattern Knowledge
+
+## Archetype: {archetype}
+
+{bundle['archetype']}
+
+## Common Pitfalls
+"""
+                for pitfall_name, pitfall_content in bundle['pitfalls'].items():
+                    knowledge += f"\n### {pitfall_name}\n{pitfall_content[:500]}...\n"
+                
+                return knowledge
+            else:
+                # Return list of archetypes for reference
+                archetypes_list = retriever.list_archetypes()
+                logger.info(f'No archetype inferred, providing archetype list', trial=self.trial)
+                return f"""
+# Available Archetype Patterns
+
+Consider which pattern best matches this API:
+{', '.join(archetypes_list)}
+
+Use this knowledge to structure your analysis.
+"""
+        except Exception as e:
+            logger.warning(f'Failed to retrieve archetype knowledge: {e}', trial=self.trial)
+            return ""
+    
+    def _infer_archetype_from_history(self, state: FuzzingWorkflowState) -> Optional[str]:
+        """
+        Try to infer archetype from conversation history.
+        
+        Looks for archetype mentions in the conversation.
+        """
+        # Check conversation history for archetype mentions
+        agent_messages = state.get("agent_messages", {}).get(self.name, [])
+        
+        archetype_keywords = {
+            "stateless_parser": ["stateless", "parse", "single call", "no state"],
+            "object_lifecycle": ["create", "destroy", "lifecycle", "init", "free"],
+            "state_machine": ["state machine", "multi-step", "sequence", "configure"],
+            "stream_processor": ["stream", "chunk", "incremental", "loop"],
+            "round_trip": ["round-trip", "encode", "decode", "compress"],
+            "file_based": ["file path", "filename", "temp file"]
+        }
+        
+        # Count keyword matches
+        scores = {arch: 0 for arch in archetype_keywords}
+        
+        for message in agent_messages[-5:]:  # Check last 5 messages
+            content = message.get("content", "").lower()
+            for arch, keywords in archetype_keywords.items():
+                for keyword in keywords:
+                    if keyword in content:
+                        scores[arch] += 1
+        
+        # Return archetype with highest score (if > 0)
+        max_arch = max(scores, key=scores.get)
+        return max_arch if scores[max_arch] > 0 else None
+    
     def _build_iteration_prompt(
         self,
         context: dict,
@@ -564,14 +648,17 @@ class LangGraphPrototyper(LangGraphAgent):
                 additional_context += "\n".join(build_errors[:3])  # Show first 3 errors
                 additional_context += "\n\nPlease generate a completely new approach that avoids these issues."
         
+        # Retrieve skeleton from long-term memory based on archetype
+        skeleton_code = self._retrieve_skeleton(function_analysis)
+        
         base_prompt = prompt_manager.build_user_prompt(
             "prototyper",
             project_name=benchmark.get('project', 'unknown'),
             function_name=benchmark.get('function_name', 'unknown'),
             function_signature=benchmark.get('function_signature', 'unknown'),
-            language=language,
             function_analysis=function_analysis.get('raw_analysis', 'No analysis available'),
-            additional_context=additional_context
+            additional_context=additional_context,
+            skeleton_code=skeleton_code
         )
         
         # 注入session_memory，让Prototyper能看到archetype和API约束
@@ -619,6 +706,98 @@ class LangGraphPrototyper(LangGraphAgent):
                        f'resetting compilation_retry_count', trial=self.trial)
         
         return state_update
+    
+    def _retrieve_skeleton(self, function_analysis: dict) -> str:
+        """
+        Retrieve skeleton code from long-term memory based on archetype.
+        
+        Args:
+            function_analysis: Analysis containing archetype information
+            
+        Returns:
+            Skeleton code or empty string if not found
+        """
+        try:
+            from long_term_memory.retrieval import KnowledgeRetriever
+            
+            # Extract archetype from analysis
+            raw_analysis = function_analysis.get('raw_analysis', '')
+            archetype = self._extract_archetype_from_analysis(raw_analysis)
+            
+            if not archetype:
+                logger.info('No archetype found in analysis, skipping skeleton retrieval', trial=self.trial)
+                return ""
+            
+            retriever = KnowledgeRetriever()
+            
+            if archetype not in retriever.list_archetypes():
+                logger.warning(f'Unknown archetype: {archetype}, skipping skeleton retrieval', trial=self.trial)
+                return ""
+            
+            logger.info(f'Retrieving skeleton for archetype: {archetype}', trial=self.trial)
+            skeleton = retriever.get_skeleton(archetype)
+            
+            return f"""
+# Reference Skeleton (adapt this structure)
+
+```c
+{skeleton}
+```
+
+Adapt this skeleton according to the specification above.
+"""
+        except Exception as e:
+            logger.warning(f'Failed to retrieve skeleton: {e}', trial=self.trial)
+            return ""
+    
+    def _extract_archetype_from_analysis(self, analysis_text: str) -> Optional[str]:
+        """
+        Extract archetype from function analysis text.
+        
+        Looks for explicit archetype declarations or infers from keywords.
+        """
+        if not analysis_text:
+            return None
+        
+        # Look for explicit archetype declaration
+        import re
+        
+        # Pattern 1: "Primary pattern: {archetype}"
+        pattern1 = r"Primary pattern:\s*([A-Za-z\-\s]+)"
+        match = re.search(pattern1, analysis_text, re.IGNORECASE)
+        if match:
+            archetype_name = match.group(1).strip().lower()
+            # Normalize to our archetype names
+            mapping = {
+                "stateless parser": "stateless_parser",
+                "object lifecycle": "object_lifecycle",
+                "state machine": "state_machine",
+                "stream processor": "stream_processor",
+                "round-trip": "round_trip",
+                "round trip": "round_trip",
+                "file-based": "file_based",
+                "file based": "file_based"
+            }
+            return mapping.get(archetype_name)
+        
+        # Pattern 2: "Archetype: {archetype}"
+        pattern2 = r"Archetype:\s*([A-Za-z\-\s]+)"
+        match = re.search(pattern2, analysis_text, re.IGNORECASE)
+        if match:
+            archetype_name = match.group(1).strip().lower()
+            mapping = {
+                "stateless parser": "stateless_parser",
+                "object lifecycle": "object_lifecycle",
+                "state machine": "state_machine",
+                "stream processor": "stream_processor",
+                "round-trip": "round_trip",
+                "round trip": "round_trip",
+                "file-based": "file_based",
+                "file based": "file_based"
+            }
+            return mapping.get(archetype_name)
+        
+        return None
 
 
 class LangGraphEnhancer(LangGraphAgent):

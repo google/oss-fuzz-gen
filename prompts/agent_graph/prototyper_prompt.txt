@@ -7,6 +7,8 @@ Translate the following specification into a compilable fuzz target:
 **Specification**:
 {FUNCTION_ANALYSIS}
 
+{SKELETON_CODE}
+
 {ADDITIONAL_CONTEXT}
 
 **Task**: Generate the fuzz target by:
