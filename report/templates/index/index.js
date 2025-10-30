@@ -376,13 +376,88 @@ document.addEventListener('DOMContentLoaded', function() {
 		return true;
 	}
 
+	function durationScaled(valSec, unit) {
+		return unit === 'm' ? valSec / 60 : (unit === 'h' ? valSec / 3600 : valSec);
+	}
+
+	function unitLabel(unit) {
+		return unit === 'm' ? 'Minutes' : (unit === 'h' ? 'Hours' : 'Seconds');
+	}
+
+	function createDurationChart(containerEl, title, data, labelKey, valueKey, fillColor, heightConfig) {
+		containerEl.innerHTML = '';
+		const titleContainer = document.createElement('div');
+		titleContainer.style.display = 'flex';
+		titleContainer.style.alignItems = 'center';
+		titleContainer.style.gap = '16px';
+		titleContainer.style.marginBottom = '8px';
+		const titleEl = document.createElement('div');
+		titleEl.textContent = title;
+		titleEl.style.fontWeight = '600';
+		const select = document.createElement('select');
+		select.innerHTML = '<option value="s">Seconds</option><option value="m" selected>Minutes</option><option value="h">Hours</option>';
+		titleContainer.appendChild(titleEl);
+		titleContainer.appendChild(select);
+		containerEl.appendChild(titleContainer);
+		const plotContainer = document.createElement('div');
+		containerEl.appendChild(plotContainer);
+
+		function renderDuration(unit) {
+			plotContainer.innerHTML = '';
+			const { width } = containerSize(containerEl);
+			const transformedData = data.map(d => {
+				const result = { duration: durationScaled(d[valueKey], unit) };
+				result[labelKey] = d[labelKey];
+				result.fullLabel = d.fullLabel || d[labelKey];
+				return result;
+			});
+			setContainerHeight(containerEl, heightConfig.containerHeight);
+			const plot = Plot.plot({
+				title: null,
+				x: { label: unitLabel(unit) },
+				y: { label: heightConfig.yLabel, domain: data.map(d => d[labelKey]) },
+				marks: [Plot.barX(transformedData, {
+					y: labelKey,
+					x: 'duration',
+					fill: fillColor,
+					title: d => `${d.fullLabel}: ${d.duration.toFixed(2)} ${unitLabel(unit)}`
+				})],
+				width,
+				height: heightConfig.plotHeight,
+				marginLeft: heightConfig.marginLeft
+			});
+			plotContainer.appendChild(plot);
+		}
+
+		renderDuration('m');
+		select.addEventListener('change', () => renderDuration(select.value));
+	}
+
+	function createCyclesChart(containerEl, title, data, labelKey, valueKey, fillColor, heightConfig) {
+		containerEl.innerHTML = '';
+		appendTitle(containerEl, title);
+		const { width } = containerSize(containerEl);
+		setContainerHeight(containerEl, heightConfig.containerHeight);
+		const plot = Plot.plot({
+			title: null,
+			x: { label: 'Average Cycles' },
+			y: { label: heightConfig.yLabel, domain: data.map(d => d[labelKey]) },
+			marks: [Plot.barX(data, {
+				y: labelKey,
+				x: valueKey,
+				fill: fillColor,
+				title: d => `${d.fullLabel || d[labelKey]}: ${d[valueKey]}`
+			})],
+			width,
+			height: heightConfig.plotHeight,
+			marginLeft: heightConfig.marginLeft
+		});
+		containerEl.appendChild(plot);
+	}
+
 	function initializeCharts() {
 		const BarY = getBarY();
 		if (!BarY) return;
-
-		// duration helpers (shared)
-		function durationScaled(valSec, unit) { return unit === 'm' ? valSec / 60 : (unit === 'h' ? valSec / 3600 : valSec); }
-		function unitLabel(unit) { return unit === 'm' ? 'Minutes' : (unit === 'h' ? 'Hours' : 'Seconds'); }
 
 		addProjectBuildRateColumn();
 
@@ -393,9 +468,11 @@ document.addEventListener('DOMContentLoaded', function() {
 		const projectData = Array.from(document.querySelectorAll('#project-summary-table tbody tr.project-data-row')).map(row => {
 			const cells = row.querySelectorAll('td');
 			if (cells.length > Math.max(idxNew, idxExisting, idxTotalLines) && idxNew !== -1 && idxExisting !== -1 && idxTotalLines !== -1) {
+				const projectName = cells[1].dataset.sortValue;
 				return {
-					project: cells[1].dataset.sortValue,
-					projectLabel: truncateLabel(cells[1].dataset.sortValue),
+					project: projectName,
+					projectLabel: truncateLabel(projectName),
+					fullLabel: projectName,
 					new_lines: parseInt(cells[idxNew].dataset.sortValue) || 0,
 					existing_lines: parseInt(cells[idxExisting].dataset.sortValue) || 0,
 					total_lines: parseInt(cells[idxTotalLines].dataset.sortValue) || 0
@@ -534,15 +611,16 @@ document.addEventListener('DOMContentLoaded', function() {
 				}
 			}
 
-			const cyclesProject = '#3b82f6'; // blue-500
-			const durationProject = '#9ca3af'; // gray-400
-			const cyclesBench = '#1d4ed8'; // blue-700
-			const durationBench = '#6b7280'; // gray-500
+			const cyclesProject = '#3b82f6';
+			const durationProject = '#9ca3af';
+			const cyclesBench = '#1d4ed8';
+			const durationBench = '#6b7280';
 
 			try {
 				const projData = Object.entries(unified).map(([projectName, pdata]) => ({
 					project: projectName,
 					projectLabel: truncateLabel(projectName),
+					fullLabel: projectName,
 					cycles: Number(pdata.average_cycles_per_benchmark || 0),
 					durationSec: Number(pdata.average_trial_duration_sec || 0)
 				}));
@@ -551,58 +629,18 @@ document.addEventListener('DOMContentLoaded', function() {
 				if (projData.length && projCyclesEl && projDurEl) {
 					const sharedProjectHeight = Math.min(400, Math.max(240, projData.length * 30 + 80));
 					const sharedProjectContainerHeight = sharedProjectHeight + 60;
+					const projectHeightConfig = {
+						plotHeight: sharedProjectHeight,
+						containerHeight: sharedProjectContainerHeight,
+						marginLeft: 120,
+						yLabel: 'Project'
+					};
 
-					projCyclesEl.innerHTML = '';
-					appendTitle(projCyclesEl, 'Average Cycles per Benchmark (by Project)');
-					let { width, height } = containerSize(projCyclesEl);
-					setContainerHeight(projCyclesEl, sharedProjectContainerHeight);
-					let plot1 = Plot.plot({
-						title: null,
-						x: { label: 'Average Cycles' },
-						y: { label: 'Project', domain: projData.map(d=>d.projectLabel) },
-						marks: [Plot.barX(projData, { y: 'projectLabel', x: 'cycles', fill: cyclesProject, title: d => `${d.project}: ${d.cycles}` })],
-						width,
-						height: sharedProjectHeight,
-						marginLeft: 120
-					});
-					projCyclesEl.appendChild(plot1);
+					createCyclesChart(projCyclesEl, 'Average Cycles per Benchmark (by Project)',
+						projData, 'projectLabel', 'cycles', cyclesProject, projectHeightConfig);
 
-					projDurEl.innerHTML = '';
-					const titleContainer = document.createElement('div');
-					titleContainer.style.display = 'flex';
-					titleContainer.style.alignItems = 'center';
-					titleContainer.style.gap = '16px';
-					titleContainer.style.marginBottom = '8px';
-					const titleEl = document.createElement('div');
-					titleEl.textContent = 'Average Trial Duration (by Project)';
-					titleEl.style.fontWeight = '600';
-					const select = document.createElement('select');
-					select.innerHTML = '<option value="s">Seconds</option><option value="m" selected>Minutes</option><option value="h">Hours</option>';
-					titleContainer.appendChild(titleEl);
-					titleContainer.appendChild(select);
-					projDurEl.appendChild(titleContainer);
-					const plotContainer = document.createElement('div');
-					projDurEl.appendChild(plotContainer);
-
-					function renderProjDuration(unit) {
-						plotContainer.innerHTML = '';
-						({ width, height } = containerSize(projDurEl));
-						const data = projData.map(d => ({ projectLabel: d.projectLabel, project: d.project, duration: durationScaled(d.durationSec, unit) }));
-						setContainerHeight(projDurEl, sharedProjectContainerHeight);
-						const plot2 = Plot.plot({
-							title: null,
-							x: { label: unitLabel(unit) },
-							y: { label: 'Project', domain: data.map(d=>d.projectLabel) },
-							marks: [Plot.barX(data, { y: 'projectLabel', x: 'duration', fill: durationProject, title: d => `${d.project}: ${d.duration.toFixed(2)} ${unitLabel(unit)}` })],
-							width,
-							height: sharedProjectHeight,
-							marginLeft: 120
-						});
-						plotContainer.appendChild(plot2);
-					}
-
-					renderProjDuration('m');
-					select.addEventListener('change', () => renderProjDuration(select.value));
+					createDurationChart(projDurEl, 'Average Trial Duration (by Project)',
+						projData, 'projectLabel', 'durationSec', durationProject, projectHeightConfig);
 				}
 
 				const benchData = [];
@@ -612,10 +650,14 @@ document.addEventListener('DOMContentLoaded', function() {
 					for (const benchId in pdata.benchmarks) {
 						const b = pdata.benchmarks[benchId];
 						const prettyName = typeof prettifyBenchmarkName === 'function' ? prettifyBenchmarkName(benchId) : benchId;
-						benchData.push({ project: projectName, benchmark: benchId,
+						benchData.push({
+							project: projectName,
+							benchmark: benchId,
 							benchmarkLabel: truncateLabel(prettyName),
+							fullLabel: benchId,
 							cycles: Number(b.avg_cycles_per_sample || 0),
-							durationSec: Number(b.avg_trial_duration_sec || 0) });
+							durationSec: Number(b.avg_trial_duration_sec || 0)
+						});
 					}
 				}
 				const benchCyclesEl = document.getElementById('cycles-benchmarks-chart');
@@ -623,58 +665,18 @@ document.addEventListener('DOMContentLoaded', function() {
 				if (benchData.length && benchCyclesEl && benchDurEl) {
 					const sharedBenchHeight = Math.min(500, Math.max(300, benchData.length * 18 + 80));
 					const sharedBenchContainerHeight = sharedBenchHeight + 60;
-
-					benchCyclesEl.innerHTML = '';
-					appendTitle(benchCyclesEl, 'Average Cycles per Sample (by Benchmark)');
-					let { width, height } = containerSize(benchCyclesEl);
-					setContainerHeight(benchCyclesEl, sharedBenchContainerHeight);
-					let plot3 = Plot.plot({
-						title: null,
-						x: { label: 'Average Cycles' },
-						y: { label: 'Benchmark', domain: benchData.map(d=>d.benchmarkLabel) },
-						marks: [Plot.barX(benchData, { y: 'benchmarkLabel', x: 'cycles', fill: cyclesBench, title: d => `${d.benchmark}: ${d.cycles}` })],
+					const benchHeightConfig = {
+						plotHeight: sharedBenchHeight,
+						containerHeight: sharedBenchContainerHeight,
 						marginLeft: 140,
-						width,
-						height: sharedBenchHeight
-					});
-					benchCyclesEl.appendChild(plot3);
+						yLabel: 'Benchmark'
+					};
 
-					benchDurEl.innerHTML = '';
-					const titleContainerB = document.createElement('div');
-					titleContainerB.style.display = 'flex';
-					titleContainerB.style.alignItems = 'center';
-					titleContainerB.style.gap = '16px';
-					titleContainerB.style.marginBottom = '8px';
-					const titleElB = document.createElement('div');
-					titleElB.textContent = 'Average Trial Duration (by Benchmark)';
-					titleElB.style.fontWeight = '600';
-					const selectB = document.createElement('select');
-					selectB.innerHTML = '<option value="s">Seconds</option><option value="m" selected>Minutes</option><option value="h">Hours</option>';
-					titleContainerB.appendChild(titleElB);
-					titleContainerB.appendChild(selectB);
-					benchDurEl.appendChild(titleContainerB);
-					const plotContainerB = document.createElement('div');
-					benchDurEl.appendChild(plotContainerB);
+					createCyclesChart(benchCyclesEl, 'Average Cycles per Sample (by Benchmark)',
+						benchData, 'benchmarkLabel', 'cycles', cyclesBench, benchHeightConfig);
 
-					function renderBenchDuration(unit) {
-						plotContainerB.innerHTML = '';
-						({ width, height } = containerSize(benchDurEl));
-						const data = benchData.map(d => ({ benchmarkLabel: d.benchmarkLabel, benchmark: d.benchmark, duration: durationScaled(d.durationSec, unit) }));
-						setContainerHeight(benchDurEl, sharedBenchContainerHeight);
-						const plot4 = Plot.plot({
-							title: null,
-							x: { label: unitLabel(unit) },
-							y: { label: 'Benchmark', domain: data.map(d=>d.benchmarkLabel) },
-							marks: [Plot.barX(data, { y: 'benchmarkLabel', x: 'duration', fill: durationBench, title: d => `${d.benchmark}: ${d.duration.toFixed(2)} ${unitLabel(unit)}` })],
-							marginLeft: 140,
-							width,
-							height: sharedBenchHeight
-						});
-						plotContainerB.appendChild(plot4);
-					}
-
-					renderBenchDuration('m');
-					selectB.addEventListener('change', () => renderBenchDuration(selectB.value));
+					createDurationChart(benchDurEl, 'Average Trial Duration (by Benchmark)',
+						benchData, 'benchmarkLabel', 'durationSec', durationBench, benchHeightConfig);
 				}
 			} catch (_) {}
 		}
@@ -782,7 +784,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				// Calculate column index dynamically to account for any DOM changes
 				const currentTableHeaders = Array.from(table_element.querySelectorAll(':scope > thead > tr > th'));
 				const colindex = currentTableHeaders.indexOf(th);
-				
+
 				const sortAsc = th.dataset.sorted !== "asc";
 				const sortNumber = th.hasAttribute('data-sort-number');
 
@@ -797,6 +799,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				let nonsortableRows = [];
 
 				// Separate non-sortable rows (with data-nosort attribute or font-bold class)
+				// font-bold class is used for the average row in the tables
 				allRowsInBody = allRowsInBody.filter(row => {
 					if (row.hasAttribute('data-nosort') || row.classList.contains('font-bold')) {
 						nonsortableRows.push(row);
@@ -810,7 +813,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				while (i < allRowsInBody.length) {
 					const currentRow = allRowsInBody[i];
 					const nextRow = allRowsInBody[i + 1];
-					
+
 					// Check if current row has a companion row (container or detail row)
 					const hasCompanion = nextRow && (
 						(currentRow.classList.contains('project-data-row') && nextRow.classList.contains('project-benchmarks-container-row')) ||

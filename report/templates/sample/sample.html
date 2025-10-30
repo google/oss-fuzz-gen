@@ -57,14 +57,12 @@ limitations under the License.
                 <div class="flex items-center gap-2">
                   <span class="text-xs">GCS:</span>
                   <code class="text-sm break-all ml-1" id="gcs-url-text">{{ crash_info.artifact_folder.gs_url }}</code>
-                  <button 
-                    onclick="copyGcsUrl(this)" 
+                  <button
+                    onclick="copyGcsUrl(this)"
                     class="inline-flex items-center justify-center p-1.5 rounded"
                     title="Copy GCS URL"
                     aria-label="Copy GCS URL">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
-                    </svg>
+                    {{ macros.icon_copy('w-4 h-4') }}
                   </button>
                 </div>
               </div>
@@ -72,7 +70,7 @@ limitations under the License.
           </div>
         </div>
         {% endif %}
-        
+
 
         {% if sample.result.semantic_error or (crash_info is defined and crash_info) %}
         <div class="border rounded-lg p-6 shadow-sm">
@@ -213,11 +211,7 @@ limitations under the License.
             <button @click="toggleDetails()"
                     class="w-full p-4 flex justify-between items-center">
                 <span class="font-medium">Crash Details</span>
-                <svg class="w-4 h-4 transform transition-transform duration-200"
-                     :class="{'rotate-180': detailsOpen}"
-                     fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                </svg>
+                {{ macros.icon_chevron_down('w-4 h-4', 'detailsOpen') }}
             </button>
             <div x-show="detailsOpen" class="p-4 border-t">
               <pre id="crashDetailsPreview" class="p-4 rounded-md overflow-x-auto font-mono whitespace-pre-wrap">{{ crash_info.crash_details }}</pre>

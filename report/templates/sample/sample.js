@@ -35,25 +35,25 @@ function copyGcsUrl(button) {
     }
 
     const gcsUrl = gcsUrlElement.textContent;
-    
+
     navigator.clipboard.writeText(gcsUrl).then(() => {
         if (!button) {
             return;
         }
-        
+
         const svg = button.querySelector('svg');
         if (!svg) {
             return;
         }
-        
+
         const pathElement = svg.querySelector('path');
         if (!pathElement) {
             return;
         }
-        
+
         const originalPath = pathElement.getAttribute('d');
-        
-        pathElement.setAttribute('d', 'M5 13l4 4L19 7');     
+
+        pathElement.setAttribute('d', 'M5 13l4 4L19 7');
         setTimeout(() => {
             pathElement.setAttribute('d', originalPath);
         }, 2000);

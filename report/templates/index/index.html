@@ -118,11 +118,7 @@ limitations under the License.
             <span class="text-lg font-bold">
                 Benchmark summary
             </span>
-            <svg class="w-5 h-5 transform transition-transform duration-200"
-                 :class="{'rotate-180': benchmarkOpen}"
-                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-            </svg>
+            {{ macros.icon_chevron_down('w-5 h-5', 'benchmarkOpen') }}
         </button>
 
         <div x-show="benchmarkOpen"
@@ -173,11 +169,7 @@ limitations under the License.
             <span class="text-lg font-bold">
                 Project summary
             </span>
-            <svg class="w-5 h-5 transform transition-transform duration-200"
-                 :class="{'rotate-180': projectOpen}"
-                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-            </svg>
+            {{ macros.icon_chevron_down('w-5 h-5', 'projectOpen') }}
         </button>
         <div x-show="projectOpen"
              class="p-4 border-t">
@@ -221,9 +213,7 @@ limitations under the License.
                         <tr class="project-data-row">
                             <td class="table-index">
                                 <button class="w-5 h-5 flex items-center justify-center focus:outline-none" @click="$refs.benchmarks_{{ loop.index }}.classList.toggle('hidden')">
-                                    <svg class="w-4 h-4 transform transition-transform duration-200" :class="{'rotate-180': !$refs.benchmarks_{{ loop.index }}.classList.contains('hidden')}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                                    </svg>
+                                    {{ macros.icon_chevron_down('w-4 h-4', '!$refs.benchmarks_' ~ loop.index ~ '.classList.contains(\'hidden\')') }}
                                 </button>
                             </td>
                             <td data-sort-value="{{ project.name }}" class="w-full">
@@ -353,11 +343,7 @@ limitations under the License.
             <span class="text-lg font-bold">
                 Crashes found by generated fuzz harnesses
             </span>
-            <svg class="w-5 h-5 transform transition-transform duration-200"
-                 :class="{'rotate-180': crashesFoundOpen}"
-                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-            </svg>
+            {{ macros.icon_chevron_down('w-5 h-5', 'crashesFoundOpen') }}
         </button>
         <div x-show="crashesFoundOpen"
              class="p-4 border-t">
@@ -405,9 +391,7 @@ limitations under the License.
                     <tr class="project-data-row">
                         <td class="table-index">
                             <button class="w-5 h-5 flex items-center justify-center focus:outline-none" @click="$refs.project_{{ loop.index }}.classList.toggle('hidden')">
-                                <svg class="w-4 h-4 transform transition-transform duration-200" :class="{'rotate-180': !$refs.project_{{ loop.index }}.classList.contains('hidden')}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                                </svg>
+                                {{ macros.icon_chevron_down('w-4 h-4', '!$refs.project_' ~ loop.index ~ '.classList.contains(\'hidden\')') }}
                             </button>
                         </td>
                         <td data-sort-value="{{ project_name }}">
@@ -446,9 +430,7 @@ limitations under the License.
                                         <tr>
                                             <td class="table-index">
                                                 <button class="w-5 h-5 flex items-center justify-center focus:outline-none" @click="$refs.samples_{{ loop.index }}_{{ project_loop.index }}.classList.toggle('hidden')">
-                                                    <svg class="w-4 h-4 transform transition-transform duration-200" :class="{'rotate-180': $refs.samples_{{ loop.index }}_{{ project_loop.index }}.classList.contains('hidden')}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                                                    </svg>
+                                                    {{ macros.icon_chevron_down('w-4 h-4', '$refs.samples_' ~ loop.index ~ '_' ~ project_loop.index ~ '.classList.contains(\'hidden\')') }}
                                                 </button>
                                             </td>
                                             <td data-sort-value="{{ benchmark_id }}">
@@ -507,11 +489,7 @@ limitations under the License.
         <button @click="cyclesOpen = !cyclesOpen"
                 class="w-full p-4 flex justify-between items-center">
             <span class="text-lg font-bold">Cycles / Time</span>
-            <svg class="w-5 h-5 transform transition-transform duration-200"
-                 :class="{'rotate-180': cyclesOpen}"
-                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-            </svg>
+            {{ macros.icon_chevron_down('w-5 h-5', 'cyclesOpen') }}
         </button>
         <div x-show="cyclesOpen" class="p-4 border-t space-y-8">
             <div>
@@ -667,11 +645,7 @@ limitations under the License.
             <span class="text-lg font-bold">
                 Language coverage
             </span>
-            <svg class="w-5 h-5 transform transition-transform duration-200"
-                 :class="{'rotate-180': languageOpen}"
-                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-            </svg>
+            {{ macros.icon_chevron_down('w-5 h-5', 'languageOpen') }}
         </button>
 
         <div x-show="languageOpen"
@@ -708,11 +682,7 @@ limitations under the License.
                 <span class="text-lg font-bold">
                     Charts
                 </span>
-                <svg class="w-5 h-5 transform transition-transform duration-200"
-                     :class="{'rotate-180': chartsOpen}"
-                     fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                </svg>
+                {{ macros.icon_chevron_down('w-5 h-5', 'chartsOpen') }}
             </button>
             <div x-show="chartsOpen" class="p-4 border-t">
                 <div class="chart-row">
