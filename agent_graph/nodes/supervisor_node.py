@@ -191,33 +191,20 @@ def _determine_next_action(state: FuzzingWorkflowState) -> str:
         elif not compile_success:
             # Build failed - handle compilation retry logic
             compilation_retry_count = state.get("compilation_retry_count", 0)
-            prototyper_regenerate_count = state.get("prototyper_regenerate_count", 0)
             
-            logger.debug(f'Build failed, compilation_retry_count={compilation_retry_count}, '
-                        f'prototyper_regenerate_count={prototyper_regenerate_count}', trial=trial)
+            logger.debug(f'Build failed, compilation_retry_count={compilation_retry_count}', trial=trial)
             
-            # Strategy: Try enhancer up to 3 times, then regenerate with prototyper once
+            # Strategy: Try enhancer up to 3 times, then end
             MAX_COMPILATION_RETRIES = 3
-            MAX_PROTOTYPER_REGENERATIONS = 1
             
             if compilation_retry_count < MAX_COMPILATION_RETRIES:
                 # Try to fix with enhancer
                 logger.info(f'Compilation failed (attempt {compilation_retry_count + 1}/{MAX_COMPILATION_RETRIES}), '
                            f'routing to enhancer', trial=trial)
                 return "enhancer"
-            
-            elif prototyper_regenerate_count < MAX_PROTOTYPER_REGENERATIONS:
-                # Enhancer failed 3 times, try regenerating from scratch
-                logger.warning(f'Enhancer failed {MAX_COMPILATION_RETRIES} times, '
-                              f'regenerating code with prototyper (regeneration {prototyper_regenerate_count + 1})', 
-                              trial=trial)
-                # Note: prototyper_node should increment prototyper_regenerate_count and reset compilation_retry_count
-                return "prototyper"
-            
             else:
-                # Both strategies exhausted - give up
-                logger.error(f'Compilation failed after {MAX_COMPILATION_RETRIES} enhancer retries '
-                            f'and {MAX_PROTOTYPER_REGENERATIONS} prototyper regenerations. Ending workflow.', 
+                # Enhancer retries exhausted - give up
+                logger.error(f'Compilation failed after {MAX_COMPILATION_RETRIES} enhancer retries. Ending workflow.', 
                             trial=trial)
                 return "END"
         
