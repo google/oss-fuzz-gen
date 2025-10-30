@@ -24,6 +24,8 @@ Analyze the build errors and fix them while preserving the fuzzing logic and int
 
 2. **Identify Root Causes**:
    - Are headers missing or included incorrectly?
+     * If header information is provided above, use those EXACT paths
+     * Don't guess header paths or add __has_include fallbacks
    - Are there type mismatches or casting issues?
    - Are function signatures incorrect?
    - Are symbols undefined (linker errors)?
@@ -47,7 +49,10 @@ Analyze the build errors and fix them while preserving the fuzzing logic and int
 - Don't refactor unrelated code
 - Keep the code readable and maintainable
 - Follow the project's coding style
-- Ensure all includes use correct relative paths
+- **For header errors**: If header information is provided above, use those EXACT paths
+  * Don't add conditional includes with __has_include
+  * Don't guess alternative paths or capitalizations
+  * The provided paths are from actual project source files
 - Verify function signatures match their declarations
 
 **Output Format**:

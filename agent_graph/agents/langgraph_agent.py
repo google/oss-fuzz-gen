@@ -1186,6 +1186,11 @@ class LangGraphEnhancer(LangGraphAgent):
         # Generate code context (diff or full code)
         code_context = self._generate_code_context(current_code, previous_code, build_errors)
         
+        # Extract header information from function_analysis (if available)
+        function_analysis = state.get("function_analysis", {})
+        header_info = function_analysis.get("header_information", {})
+        additional_context = self._format_header_hints(header_info, build_errors)
+        
         # Build base prompt from template file
         prompt_manager = get_prompt_manager()
         base_prompt = prompt_manager.build_user_prompt(
@@ -1193,7 +1198,7 @@ class LangGraphEnhancer(LangGraphAgent):
             language=language,
             current_code=code_context,  # Use context instead of full code
             build_errors=error_text,
-            additional_context=""
+            additional_context=additional_context
         )
         
         # 注入session_memory，让Enhancer能看到所有共识约束
@@ -1311,6 +1316,97 @@ class LangGraphEnhancer(LangGraphAgent):
             return f"{first_50}\n\n// ... (middle section omitted) ...\n\n{last_50}"
         
         return current_code
+    
+    def _format_header_hints(self, header_info: dict, build_errors: list) -> str:
+        """
+        Format header information as hints for the Enhancer to fix header-related errors.
+        
+        This method provides the LLM with known correct header paths extracted by
+        FunctionAnalyzer, preventing it from blindly guessing incorrect paths.
+        
+        Args:
+            header_info: Dictionary containing header information from FunctionAnalyzer
+            build_errors: List of build errors to determine if header hints are needed
+        
+        Returns:
+            Formatted string with header hints, or empty string if not needed
+        """
+        if not header_info:
+            return ""
+        
+        # Check if there are header-related errors
+        has_header_errors = any(
+            'file not found' in error.lower() or 
+            'no such file' in error.lower() or
+            '#include' in error.lower()
+            for error in build_errors
+        )
+        
+        if not has_header_errors:
+            # No header errors, don't add unnecessary context
+            return ""
+        
+        hint_lines = [
+            "",
+            "## Known Header Information",
+            "",
+            "**IMPORTANT**: The following header paths were extracted from the project's actual source code.",
+            "If you see 'file not found' errors, use these EXACT paths instead of guessing:",
+            ""
+        ]
+        
+        # Priority 1: Headers from function definition file (HIGHEST PRIORITY)
+        definition_headers = header_info.get('definition_file_headers')
+        if definition_headers:
+            def_file = definition_headers.get('definition_file', 'unknown')
+            std_headers = definition_headers.get('standard_headers', [])
+            proj_headers = definition_headers.get('project_headers', [])
+            
+            if proj_headers or std_headers:
+                hint_lines.append("### Headers from Function Definition File (HIGHEST PRIORITY)")
+                hint_lines.append(f"Source file: `{def_file}`")
+                hint_lines.append("")
+                
+                if proj_headers:
+                    hint_lines.append("**Project headers (use these exact paths):**")
+                    for h in proj_headers:
+                        hint_lines.append(f"- {h}")
+                    hint_lines.append("")
+                
+                if std_headers:
+                    hint_lines.append("**Standard headers:**")
+                    for h in std_headers[:10]:  # Limit to 10
+                        hint_lines.append(f"- {h}")
+                    hint_lines.append("")
+        
+        # Priority 2: Headers from existing fuzzers (proven to work)
+        existing_headers = header_info.get('existing_fuzzer_headers', {})
+        existing_proj = existing_headers.get('project_headers', [])
+        if existing_proj:
+            hint_lines.append("### Headers from Existing Fuzzers (proven to compile)")
+            hint_lines.append("**Common project headers in working fuzzers:**")
+            for h in existing_proj[:8]:  # Top 8
+                hint_lines.append(f"- \"{h}\"")
+            hint_lines.append("")
+        
+        # Priority 3: FuzzIntrospector inferred headers
+        func_header = header_info.get('function_header')
+        if func_header:
+            hint_lines.append("### FuzzIntrospector Information")
+            hint_lines.append(f"**Primary header:** \"{func_header}\"")
+            hint_lines.append("")
+        
+        # Add guidance
+        hint_lines.extend([
+            "**How to use this information:**",
+            "1. If the error mentions a missing header, check if it's listed above",
+            "2. Use the EXACT path shown (don't modify capitalization or structure)",
+            "3. Prefer 'Definition File' headers over others (they're from the actual function source)",
+            "4. Don't add `__has_include` fallbacks - use the correct path directly",
+            ""
+        ])
+        
+        return "\n".join(hint_lines)
 
 
 class LangGraphCrashAnalyzer(LangGraphAgent):
