@@ -56,7 +56,8 @@ class HeaderExtractor:
             return {
                 'standard_headers': [],
                 'project_headers': [],
-                'raw_includes': []
+                'raw_includes': [],
+                'filtered_headers': []
             }
         
         try:
@@ -67,7 +68,8 @@ class HeaderExtractor:
             return {
                 'standard_headers': [],
                 'project_headers': [],
-                'raw_includes': []
+                'raw_includes': [],
+                'filtered_headers': []
             }
         
         return self._extract_headers_from_content(source_content, file_path)
@@ -94,12 +96,14 @@ class HeaderExtractor:
             return {
                 'standard_headers': [],
                 'project_headers': [],
-                'raw_includes': []
+                'raw_includes': [],
+                'filtered_headers': []
             }
         
         standard_headers: List[str] = []
         project_headers: List[str] = []
         raw_includes: List[str] = []
+        filtered_headers: List[Dict[str, str]] = []  # Track filtered headers with reasons
         
         # Find all preproc_include nodes
         includes = self._find_includes(root, source_content)
@@ -117,7 +121,23 @@ class HeaderExtractor:
                 # Project header: #include "header"
                 header = self._extract_header_name(include_text, '"', '"')
                 if header:
-                    project_headers.append(f'"{header}"')
+                    # 🔥 NEW: Filter internal/private headers
+                    is_internal, reason = self._is_internal_header(header)
+                    if is_internal:
+                        filtered_headers.append({
+                            'header': f'"{header}"',
+                            'reason': reason
+                        })
+                        logger.debug(
+                            f'Filtered internal header "{header}" from {file_path or "source"}: {reason}'
+                        )
+                    else:
+                        project_headers.append(f'"{header}"')
+        
+        if filtered_headers:
+            logger.info(
+                f'Filtered {len(filtered_headers)} internal/private headers from {file_path or "source"}'
+            )
         
         logger.info(
             f'Extracted {len(standard_headers)} standard headers and '
@@ -127,7 +147,8 @@ class HeaderExtractor:
         return {
             'standard_headers': standard_headers,
             'project_headers': project_headers,
-            'raw_includes': raw_includes
+            'raw_includes': raw_includes,
+            'filtered_headers': filtered_headers
         }
     
     def _find_includes(self, node: Node, source_content: bytes) -> List[str]:
@@ -179,6 +200,106 @@ class HeaderExtractor:
             logger.warning(f'Failed to extract header name from: {include_text}: {e}')
         
         return None
+    
+    def _is_internal_header(self, header_path: str) -> Tuple[bool, str]:
+        """Check if a header is internal/private and should be filtered.
+        
+        This method implements STRICT filtering to prevent compilation errors
+        from including internal implementation headers that are not accessible
+        from fuzz target locations.
+        
+        Args:
+            header_path: Header path without quotes (e.g., "../../internal/foo.h")
+        
+        Returns:
+            Tuple of (is_internal: bool, reason: str)
+            - is_internal: True if header should be filtered
+            - reason: Human-readable explanation of why it was filtered
+        
+        Examples:
+            >>> _is_internal_header("../../internal/libraw_cxx_defs.h")
+            (True, "contains 'internal/' directory")
+            
+            >>> _is_internal_header("libraw/libraw.h")
+            (False, "")
+            
+            >>> _is_internal_header("../../../src/utils_impl.h")
+            (True, "excessive relative path depth (>=3)")
+        """
+        # STRICT FILTERING PATTERNS (HIGH CONFIDENCE)
+        # These patterns indicate headers that are definitely internal/private
+        
+        # Pattern 1: internal/ or private/ directories
+        internal_dirs = [
+            'internal/',
+            '/internal/',
+            'private/',
+            '/private/',
+            '_internal/',
+            '_private/',
+        ]
+        for pattern in internal_dirs:
+            if pattern in header_path:
+                return True, f"contains '{pattern.strip('/')}/' directory"
+        
+        # Pattern 2: Relative paths to internal/private directories
+        relative_internal_patterns = [
+            '../internal/',
+            '../../internal/',
+            '../../../internal/',
+            '../private/',
+            '../../private/',
+            '../../../private/',
+        ]
+        for pattern in relative_internal_patterns:
+            if header_path.startswith(pattern):
+                return True, f"relative path to '{pattern.split('/')[1]}/' directory"
+        
+        # Pattern 3: detail/ or impl/ directories (C++ implementation details convention)
+        impl_dirs = [
+            '/detail/',
+            '/details/',
+            '/impl/',
+            '/implementation/',
+        ]
+        for pattern in impl_dirs:
+            if pattern in header_path:
+                return True, f"contains '{pattern.strip('/')}/' implementation directory"
+        
+        # Pattern 4: Header files with internal/implementation suffixes
+        internal_suffixes = [
+            '_impl.h',
+            '_impl.hpp',
+            '_detail.h',
+            '_detail.hpp',
+            '_internal.h',
+            '_internal.hpp',
+            '_private.h',
+            '_private.hpp',
+            '-impl.h',
+            '-detail.h',
+            '-internal.h',
+        ]
+        for suffix in internal_suffixes:
+            if header_path.endswith(suffix):
+                return True, f"has internal suffix '{suffix}'"
+        
+        # Pattern 5: Excessive relative path depth (>=3 levels)
+        # Using >=3 for LOOSE filtering - allows some cross-directory includes
+        # that might be valid (e.g., ../../include/api.h), while filtering
+        # obviously deep internal paths (e.g., ../../../internal/impl.h)
+        # If these cause build errors, Enhancer can fix them later
+        relative_depth = header_path.count('../')
+        if relative_depth >= 3:
+            return True, f"excessive relative path depth (>={relative_depth})"
+        
+        # Pattern 6: Headers in src/ directory with relative paths
+        # Public API headers are typically in include/, not src/
+        if '/src/' in header_path and '../' in header_path:
+            return True, "relative path into 'src/' implementation directory"
+        
+        # Not an internal header
+        return False, ""
     
     def categorize_headers(
         self,

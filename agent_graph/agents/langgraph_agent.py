@@ -971,6 +971,11 @@ Adapt this skeleton according to the specification above.
         # Start with LibFuzzer required headers
         header_lines = [
             "// === HEADER FILES ===",
+            "// IMPORTANT: These headers are carefully selected from the project's source code.",
+            "// Do NOT modify unless you encounter build errors (e.g., 'file not found').",
+            "// If you see errors about internal headers (../../internal/, _impl.h, etc.),",
+            "// remove them and use the public API headers instead.",
+            "//",
             "// LibFuzzer required headers",
             "#include <stddef.h>",
             "#include <stdint.h>"
@@ -1000,8 +1005,10 @@ Adapt this skeleton according to the specification above.
         
         if has_definition:
             header_lines.append("//")
-            header_lines.append("// HIGHEST PRIORITY: Headers from function definition file")
+            header_lines.append("// ✅ PUBLIC API HEADERS (from function definition file)")
             header_lines.append(f"// Source: {definition_headers.get('definition_file', 'unknown')}")
+            header_lines.append("// These are filtered to include ONLY public-facing headers.")
+            header_lines.append("// Internal implementation headers have been automatically removed.")
             header_lines.append("//")
             
             # Add standard library headers (from definition file)
@@ -1019,6 +1026,8 @@ Adapt this skeleton according to the specification above.
                 for proj_h in sorted(set(proj_headers)):
                     # Already includes " "
                     header_lines.append(f'#include {proj_h}')
+            else:
+                header_lines.append("// (No public API headers found - may need manual addition)")
             
             header_lines.append("//")
         # ============================================================================
@@ -1361,23 +1370,40 @@ class LangGraphEnhancer(LangGraphAgent):
             def_file = definition_headers.get('definition_file', 'unknown')
             std_headers = definition_headers.get('standard_headers', [])
             proj_headers = definition_headers.get('project_headers', [])
+            filtered_headers = definition_headers.get('filtered_headers', [])
             
             if proj_headers or std_headers:
-                hint_lines.append("### Headers from Function Definition File (HIGHEST PRIORITY)")
+                hint_lines.append("### Headers from Function Definition File")
                 hint_lines.append(f"Source file: `{def_file}`")
                 hint_lines.append("")
                 
                 if proj_headers:
-                    hint_lines.append("**Project headers (use these exact paths):**")
+                    hint_lines.append("**✅ Public API headers (safe to use in fuzz targets):**")
                     for h in proj_headers:
                         hint_lines.append(f"- {h}")
                     hint_lines.append("")
                 
                 if std_headers:
-                    hint_lines.append("**Standard headers:**")
+                    hint_lines.append("**Standard library headers:**")
                     for h in std_headers[:10]:  # Limit to 10
                         hint_lines.append(f"- {h}")
                     hint_lines.append("")
+            
+            # 🔥 NEW: Show filtered internal headers with explanation
+            if filtered_headers:
+                hint_lines.append("**⚠️ INTERNAL headers (filtered out - DO NOT use these):**")
+                hint_lines.append("The following headers were found in the source file but are INTERNAL implementation")
+                hint_lines.append("details. They use relative paths that only work within the library's source tree.")
+                hint_lines.append("DO NOT include them in your fuzz target:")
+                hint_lines.append("")
+                for item in filtered_headers[:5]:  # Show max 5 examples
+                    hint_lines.append(f"- ❌ {item['header']} ({item['reason']})")
+                hint_lines.append("")
+                hint_lines.append("If you see build errors about these headers, you should:")
+                hint_lines.append("1. Remove them from the fuzz target")
+                hint_lines.append("2. Use the PUBLIC API headers listed above instead")
+                hint_lines.append("3. The public headers typically expose all necessary functionality")
+                hint_lines.append("")
         
         # Priority 2: Headers from existing fuzzers (proven to work)
         existing_headers = header_info.get('existing_fuzzer_headers', {})
@@ -1399,10 +1425,28 @@ class LangGraphEnhancer(LangGraphAgent):
         # Add guidance
         hint_lines.extend([
             "**How to use this information:**",
-            "1. If the error mentions a missing header, check if it's listed above",
-            "2. Use the EXACT path shown (don't modify capitalization or structure)",
-            "3. Prefer 'Definition File' headers over others (they're from the actual function source)",
-            "4. Don't add `__has_include` fallbacks - use the correct path directly",
+            "",
+            "**General Rule**: Preserve the headers from the skeleton UNLESS there are build errors.",
+            "",
+            "**When to modify headers (fix unreasonable includes):**",
+            "",
+            "1. ❌ **Remove internal implementation headers** if you see 'file not found' errors:",
+            "   - Headers with paths like `../../internal/xxx.h` or `../../private/xxx.h`",
+            "   - Headers with `_impl.h`, `_detail.h`, `_internal.h` suffixes",
+            "   - These only work inside the library source tree, NOT in fuzz targets",
+            "   - **Action**: Remove them and use the ✅ public API headers instead",
+            "",
+            "2. ✅ **Use public API headers** (marked with ✅ above):",
+            "   - These are guaranteed to be accessible from fuzz targets",
+            "   - They typically expose all necessary functionality",
+            "",
+            "3. ⚠️ **For deep relative paths** (e.g., `../../../some/path.h`):",
+            "   - If you see 'file not found', try replacing with the public API equivalent",
+            "   - Example: `../../src/libraw.h` → `libraw/libraw.h`",
+            "",
+            "4. **Don't randomly change headers** just because they look unusual",
+            "   - Only modify when there's a clear build error",
+            "   - The skeleton may include valid but unconventional paths",
             ""
         ])
         
