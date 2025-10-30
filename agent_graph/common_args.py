@@ -94,7 +94,7 @@ def _add_base_arguments(parser: argparse.ArgumentParser) -> None:
     parser.add_argument('-mr',
                         '--max-round',
                         type=int,
-                        default=100,
+                        default=10,
                         help='Max trial round for agents.')
     
     parser.add_argument('-to', '--run-timeout', type=int, default=RUN_TIMEOUT)

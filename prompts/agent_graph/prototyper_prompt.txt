@@ -12,12 +12,14 @@ Translate the following specification into a compilable fuzz target:
 {ADDITIONAL_CONTEXT}
 
 **Task**: Generate the fuzz target by:
-1. Use the Driver Skeleton from the spec as base
+1. **CRITICAL**: Use ONLY the "Reference Skeleton" provided below (NOT any skeleton in the specification text)
+   - The Reference Skeleton contains the correct, validated header files
+   - DO NOT guess or modify header paths - use them exactly as provided in Reference Skeleton
 2. Follow the Setup Sequence exactly (call functions in specified order)
 3. Add Precondition checks before each call (as specified)
 4. Add Postcondition checks after each call (as specified)
 5. Construct parameters using the Parameter Strategy (DIRECT_FUZZ/CONSTRAIN/FIX)
-6. Study existing fuzz targets in the project for header paths and coding style
+6. Study existing fuzz targets in the project for coding style (but NOT for headers - use Reference Skeleton headers)
 
 **Output Format**:
 
@@ -38,5 +40,6 @@ Translate the following specification into a compilable fuzz target:
 - Do not add checks not specified
 - Do not omit checks that are specified
 - Use the exact setup sequence from the spec
+- **MUST use header files EXACTLY as provided in "Reference Skeleton" - do NOT guess or invent header paths**
 - Ensure code compiles without modifications
 

@@ -1,12 +1,6 @@
 // Round-trip Validator Skeleton
 // Pattern: encode → decode → verify
-
-#include <stddef.h>
-#include <stdint.h>
-#include <stdlib.h>
-#include <string.h>
-#include <assert.h>
-// Include target API headers here
+// NOTE: Headers are provided above this skeleton - DO NOT add additional headers
 
 int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
   // Input validation

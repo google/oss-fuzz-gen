@@ -215,6 +215,12 @@ class LangGraphFunctionAnalyzer(LangGraphAgent):
         logger.info(f'Querying FuzzIntrospector for header files of {function_signature}', trial=self.trial)
         header_info = self._extract_header_information(project_name, function_signature)
         
+        # Extract headers from existing fuzzers (proven to work)
+        existing_fuzzer_headers = self._extract_existing_fuzzer_headers(project_name)
+        header_info["existing_fuzzer_headers"] = existing_fuzzer_headers
+        
+        logger.info(f'Header information: {header_info}', trial=self.trial)
+        
         if not func_source:
             logger.warning(
                 f'No source code found in FuzzIntrospector for project: {project_name}, '
@@ -619,17 +625,38 @@ Use this knowledge to structure your analysis.
             dict with keys:
                 - function_header: Primary header file for the function
                 - related_headers: List of related project headers
+                - definition_file_headers: Headers extracted from function definition file (NEW)
         """
         from data_prep import introspector
+        from agent_graph.header_extractor import get_function_definition_headers
         
         header_info = {
             "function_header": None,
-            "related_headers": []
+            "related_headers": [],
+            "definition_file_headers": None
         }
         
         try:
-            # 1. Query FI for header files
-            logger.info(f'Querying header files for {function_signature}', trial=self.trial)
+            # ===== NEW: Extract headers from function definition file (HIGHEST PRIORITY) =====
+            logger.info(f'Extracting headers from function definition file', trial=self.trial)
+            definition_headers = get_function_definition_headers(
+                project_name, function_signature
+            )
+            
+            if definition_headers:
+                header_info["definition_file_headers"] = definition_headers
+                logger.info(
+                    f'Extracted {len(definition_headers.get("standard_headers", []))} standard '
+                    f'and {len(definition_headers.get("project_headers", []))} project headers '
+                    f'from definition file: {definition_headers.get("definition_file", "unknown")}',
+                    trial=self.trial
+                )
+            else:
+                logger.debug(f'No definition file headers found', trial=self.trial)
+            # =================================================================================
+            
+            # 1. Query FI for header files (now serves as backup)
+            logger.info(f'Querying FI header files for {function_signature}', trial=self.trial)
             all_headers = introspector.query_introspector_header_files_to_include(
                 project_name, function_signature
             )
@@ -651,7 +678,7 @@ Use this knowledge to structure your analysis.
                     # First header is usually the function's declaration
                     header_info["function_header"] = project_headers[0]
                     header_info["related_headers"] = project_headers[1:5]  # Up to 4 more
-                    logger.info(f'Primary header: {project_headers[0]}', trial=self.trial)
+                    logger.info(f'Primary header from FI: {project_headers[0]}', trial=self.trial)
             else:
                 logger.debug(f'No headers returned from FI for {function_signature}', trial=self.trial)
             
@@ -684,6 +711,86 @@ Use this knowledge to structure your analysis.
         
         # Last resort: return filename only
         return absolute_path.split('/')[-1]
+    
+    def _extract_existing_fuzzer_headers(
+        self,
+        project_name: str
+    ) -> dict:
+        """
+        Extract actual include statements from existing fuzzers.
+        These headers are proven to work and should be prioritized.
+        
+        Args:
+            project_name: Name of the project
+            
+        Returns:
+            dict with keys:
+                - standard_headers: List of standard library includes (e.g., ["cstddef", "cstdint"])
+                - project_headers: List of project-specific includes (e.g., ["src/terminal/parser.h"])
+        """
+        from data_prep import introspector
+        import re
+        
+        result = {
+            "standard_headers": [],
+            "project_headers": []
+        }
+        
+        try:
+            # 1. Get all fuzzers for the project
+            logger.info(f'Querying existing fuzzers for {project_name}', trial=self.trial)
+            harnesses = introspector.query_introspector_for_harness_intrinsics(project_name)
+            
+            if not harnesses:
+                logger.warning(f'No existing fuzzers found for {project_name}', trial=self.trial)
+                return result
+            
+            all_includes = {"standard": set(), "project": set()}
+            
+            # 2. Analyze each fuzzer (limit to first 10 for efficiency)
+            for harness in harnesses[:10]:
+                fuzzer_path = harness.get('source', '')
+                if not fuzzer_path:
+                    continue
+                
+                logger.debug(f'Analyzing fuzzer: {fuzzer_path}', trial=self.trial)
+                
+                # 3. Get fuzzer source code
+                fuzzer_source = introspector.query_introspector_source_code(
+                    project_name, fuzzer_path
+                )
+                
+                if not fuzzer_source:
+                    continue
+                
+                # 4. Parse includes from source
+                # Pattern for #include <...> (standard library)
+                standard_includes = re.findall(r'#include\s+<([^>]+)>', fuzzer_source)
+                for inc in standard_includes:
+                    # Filter common fuzzer-only headers
+                    if inc not in ['fuzzer/FuzzedDataProvider.h']:
+                        all_includes["standard"].add(inc)
+                
+                # Pattern for #include "..." (project headers)
+                project_includes = re.findall(r'#include\s+"([^"]+)"', fuzzer_source)
+                for inc in project_includes:
+                    # Filter out fuzzer-specific and test files
+                    inc_lower = inc.lower()
+                    if 'fuzzer' not in inc_lower and 'test' not in inc_lower and 'mock' not in inc_lower:
+                        all_includes["project"].add(inc)
+            
+            result["standard_headers"] = sorted(list(all_includes["standard"]))
+            result["project_headers"] = sorted(list(all_includes["project"]))
+            
+            total_count = len(result["standard_headers"]) + len(result["project_headers"])
+            logger.info(f'Extracted {total_count} includes from existing fuzzers '
+                       f'({len(result["standard_headers"])} standard, {len(result["project_headers"])} project)',
+                       trial=self.trial)
+            
+        except Exception as e:
+            logger.warning(f'Failed to extract existing fuzzer headers: {e}', trial=self.trial)
+        
+        return result
     
 
 
@@ -825,7 +932,7 @@ class LangGraphPrototyper(LangGraphAgent):
             
             # Inject header information into skeleton
             header_info = function_analysis.get('header_information', {})
-            header_section = self._format_header_section(header_info)
+            header_section = self._format_header_section(header_info, archetype)
             
             # Insert header info at the top of skeleton
             skeleton_with_headers = f"""{header_section}
@@ -845,26 +952,137 @@ Adapt this skeleton according to the specification above.
             logger.warning(f'Failed to retrieve skeleton: {e}', trial=self.trial)
             return ""
     
-    def _format_header_section(self, header_info: dict) -> str:
-        """Format header information as C/C++ comments for skeleton injection."""
+    def _format_header_section(self, header_info: dict, archetype: str = None) -> str:
+        """
+        Format header information as C/C++ comments for skeleton injection.
+        
+        Priority:
+        1. Definition file headers (most reliable - required for function compilation)
+        2. Existing fuzzer headers (proven to work in practice)
+        3. FuzzIntrospector inferred headers (backup)
+        
+        Args:
+            header_info: Dictionary containing header information
+            archetype: Archetype name (used to determine required standard headers)
+        """
         if not header_info:
             return "// NOTE: Header file information not available"
         
-        header_lines = ["// === HEADER FILES ==="]
+        # Start with LibFuzzer required headers
+        header_lines = [
+            "// === HEADER FILES ===",
+            "// LibFuzzer required headers",
+            "#include <stddef.h>",
+            "#include <stdint.h>"
+        ]
         
-        # Function header
-        func_header = header_info.get('function_header')
-        if func_header:
-            header_lines.append(f"// Function defined in: {func_header}")
-            header_lines.append(f'#include "{func_header}"  // Target function')
+        # Add archetype-specific standard headers
+        if archetype == "round_trip":
+            header_lines.extend([
+                "#include <stdlib.h>",
+                "#include <string.h>",
+                "#include <assert.h>"
+            ])
+        elif archetype == "file_based":
+            header_lines.extend([
+                "#include <stdio.h>",
+                "#include <unistd.h>"
+            ])
         
-        # Related headers
-        related = header_info.get('related_headers', [])
-        if related:
+        header_lines.append("")  # Blank line after standard headers
+        
+        # ===== PRIORITY 1: Headers from function definition file (HIGHEST PRIORITY) =====
+        definition_headers = header_info.get('definition_file_headers')
+        has_definition = definition_headers and (
+            definition_headers.get('standard_headers') or 
+            definition_headers.get('project_headers')
+        )
+        
+        if has_definition:
             header_lines.append("//")
-            header_lines.append("// Related headers (may be needed):")
-            for h in related[:5]:  # Limit to top 5
-                header_lines.append(f'// #include "{h}"')
+            header_lines.append("// HIGHEST PRIORITY: Headers from function definition file")
+            header_lines.append(f"// Source: {definition_headers.get('definition_file', 'unknown')}")
+            header_lines.append("//")
+            
+            # Add standard library headers (from definition file)
+            std_headers = definition_headers.get('standard_headers', [])
+            if std_headers:
+                for std_h in sorted(set(std_headers)):
+                    # Already includes < >
+                    header_lines.append(f'#include {std_h}')
+            
+            # Add project headers (from definition file)
+            proj_headers = definition_headers.get('project_headers', [])
+            if proj_headers:
+                if std_headers:
+                    header_lines.append("")  # Blank line between standard and project
+                for proj_h in sorted(set(proj_headers)):
+                    # Already includes " "
+                    header_lines.append(f'#include {proj_h}')
+            
+            header_lines.append("//")
+        # ============================================================================
+        
+        # PRIORITY 2: Headers from existing fuzzers (proven to work)
+        existing = header_info.get('existing_fuzzer_headers', {})
+        has_existing = existing.get('standard_headers') or existing.get('project_headers')
+        
+        if has_existing:
+            header_lines.append("//")
+            if has_definition:
+                header_lines.append("// RECOMMENDED: Additional headers from existing fuzzers")
+            else:
+                header_lines.append("// RECOMMENDED: Headers from existing fuzzers (proven to compile)")
+            header_lines.append("//")
+            
+            # Add standard library headers (avoid duplicates)
+            existing_std = existing.get('standard_headers', [])[:10]  # Top 10
+            if has_definition:
+                # Comment out existing headers that might duplicate definition headers
+                for std_h in existing_std:
+                    header_lines.append(f'// #include <{std_h}>  // Uncomment if needed')
+            else:
+                for std_h in existing_std:
+                    header_lines.append(f'#include <{std_h}>')
+            
+            # Add project headers (avoid duplicates)
+            existing_proj = existing.get('project_headers', [])[:8]  # Top 8
+            if existing_proj:
+                if has_definition:
+                    for proj_h in existing_proj:
+                        header_lines.append(f'// #include "{proj_h}"  // Uncomment if needed')
+                else:
+                    for proj_h in existing_proj:
+                        header_lines.append(f'#include "{proj_h}"')
+            
+            header_lines.append("//")
+        
+        # PRIORITY 3: FuzzIntrospector inferred headers (backup)
+        func_header = header_info.get('function_header')
+        related = header_info.get('related_headers', [])
+        
+        if func_header or related:
+            if has_definition or has_existing:
+                header_lines.append("// Additional headers from FuzzIntrospector (may need adjustment):")
+            else:
+                header_lines.append("// Headers from FuzzIntrospector:")
+            header_lines.append("//")
+            
+            if func_header:
+                header_lines.append(f'// Function defined in: {func_header}')
+                if has_definition or has_existing:
+                    header_lines.append(f'// #include "{func_header}"  // Uncomment if needed')
+                else:
+                    header_lines.append(f'#include "{func_header}"  // Target function')
+            
+            if related:
+                header_lines.append("//")
+                header_lines.append("// Related headers:")
+                for h in related[:5]:  # Limit to top 5
+                    if has_definition or has_existing:
+                        header_lines.append(f'// #include "{h}"  // Uncomment if needed')
+                    else:
+                        header_lines.append(f'// #include "{h}"')
         
         header_lines.append("// ====================")
         return "\n".join(header_lines)

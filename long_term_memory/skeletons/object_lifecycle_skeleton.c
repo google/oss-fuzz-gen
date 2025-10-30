@@ -1,9 +1,6 @@
 // Object Lifecycle Skeleton
 // Pattern: create → use → destroy
-
-#include <stddef.h>
-#include <stdint.h>
-// Include target API headers here
+// NOTE: Headers are provided above this skeleton - DO NOT add additional headers
 
 int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
   // Input validation

@@ -420,6 +420,44 @@ def _extract_function_name_from_signature(func_sig: str) -> str:
     return func_name
   return ''
 
+def _normalize_cpp_types(function_name: str) -> str:
+  """Normalizes C++ type names in a function signature or name.
+  
+  FuzzIntrospector APIs may return type names in different formats:
+  - Cross-references API: "unsignedlong", "unsignedint" (no spaces)
+  - Function signature API: "unsigned long", "unsigned int" (with spaces)
+  
+  This function standardizes type names to the format with spaces.
+  
+  Args:
+      function_name: Function name or signature like "resize(unsignedlong,unsignedlong)"
+  
+  Returns:
+      Normalized function name like "resize(unsigned long,unsigned long)"
+  """
+  import re
+  
+  # Map of common C++ type variations (without space -> with space)
+  type_mappings = [
+      (r'\bunsignedlong\b', 'unsigned long'),
+      (r'\bunsignedint\b', 'unsigned int'),
+      (r'\bunsignedshort\b', 'unsigned short'),
+      (r'\bunsignedchar\b', 'unsigned char'),
+      (r'\blonglong\b', 'long long'),
+      (r'\blongunsigned\b', 'unsigned long'),
+      (r'\blongdouble\b', 'long double'),
+      (r'\bsignedchar\b', 'signed char'),
+      (r'\bsignedint\b', 'signed int'),
+      (r'\bsignedshort\b', 'signed short'),
+      (r'\bsignedlong\b', 'signed long'),
+  ]
+  
+  normalized = function_name
+  for pattern, replacement in type_mappings:
+    normalized = re.sub(pattern, replacement, normalized)
+  
+  return normalized
+
 def query_introspector_cfg(project: str) -> dict:
   """Queries FuzzIntrospector API for CFG."""
   resp = _query_introspector(INTROSPECTOR_CFG, {'project': project})
@@ -761,16 +799,39 @@ def query_introspector_language_stats() -> dict:
 
 def query_introspector_function_signature(project: str,
                                           function_name: str) -> str:
-  """Queries FuzzIntrospector API for signature of |function_name|."""
+  """Queries FuzzIntrospector API for signature of |function_name|.
+  
+  Implements a fallback mechanism for C++ type name variations:
+  1. First tries to query with the provided function name
+  2. If query fails, normalizes C++ type names (e.g., "unsignedlong" -> "unsigned long")
+     and retries the query
+  
+  This handles cases where FuzzIntrospector's cross-references API returns type names
+  without spaces (e.g., "unsignedlong") but the function signature API expects type
+  names with spaces (e.g., "unsigned long").
+  """
   if not function_name or not function_name.strip():
     logger.error('Cannot query function signature: empty function name provided')
     return ''
   
+  # Try direct query first
   resp = _query_introspector(INTROSPECTOR_FUNC_SIG, {
       'project': project,
       'function': function_name
   })
   signature = _get_data(resp, 'signature', '')
+  
+  # If query failed, try with normalized C++ type names
+  if not signature:
+    normalized_name = _normalize_cpp_types(function_name)
+    if normalized_name != function_name:
+      logger.info('Retrying function signature query with normalized types: %s -> %s', 
+                  function_name, normalized_name)
+      resp = _query_introspector(INTROSPECTOR_FUNC_SIG, {
+          'project': project,
+          'function': normalized_name
+      })
+      signature = _get_data(resp, 'signature', '')
   
   if not signature:
     logger.warning('Could not find signature for function: %s in project: %s', function_name, project)

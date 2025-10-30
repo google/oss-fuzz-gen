@@ -600,7 +600,7 @@ def _add_base_harness_gen_arguments(parser):
   parser.add_argument('-mr',
                       '--max-round',
                       type=int,
-                      default=5,
+                      default=10,
                       help='Max trial round for agents.')
   parser.add_argument(
       '--benchmark-oracles',
@@ -624,7 +624,7 @@ def parse_commandline():
   fix_build_parser.add_argument('-mr',
                                 '--max-round',
                                 type=int,
-                                default=20,
+                                default=10,
                                 help='Max trial round for agents.')
 
   # Run build generation.
@@ -636,7 +636,7 @@ def parse_commandline():
                              help='Directory to store output.',
                              default='oss-fuzz-generated')
   run_build_gen.add_argument('-mr',
-                             '--max-round',
+                             '',
                              type=int,
                              default=5,
                              help='Max trial round for agents.')

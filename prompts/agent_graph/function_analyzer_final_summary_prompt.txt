@@ -95,34 +95,33 @@ cleanup:
 -  Temp file (use /tmp/fuzz_{pid})
 -  Static buffer (performance optimization)
 
-## 6. Driver Skeleton
+## 6. Driver Structure
 
-```c
-#include <stddef.h>
-#include <stdint.h>
-#include "{header}.h"
+**IMPORTANT**: Do NOT include actual code in this section. Describe the driver structure conceptually only.
 
-int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
-  // Input validation
-  if (size < {min} || size > {max}) return 0;
-  
-  // Resource allocation
-  {resource_declarations}
-  
-  // Setup sequence
-  {init_calls}
-  if ({check_failed}) return 0;  // Early exit on setup failure
-  
-  // Main API call
-  {ret} = {FUNCTION_SIGNATURE}({args});
-  if ({check_failed}) goto cleanup;  // Check return value
-  
-  // Cleanup
-cleanup:
-  {cleanup_calls_in_reverse_order}
-  return 0;
-}
-```
+The Prototyper will receive:
+- Correct header files (extracted from project)
+- Appropriate skeleton template (based on archetype)
+
+Your job is to describe WHAT the driver should do, not HOW (no code):
+
+**Input validation**: What size/format checks are needed?
+- Example: "Minimum 4 bytes for header, maximum 1MB"
+
+**Resource allocation**: What variables/buffers are needed?
+- Example: "Parser context, output buffer (size*2), error code variable"
+
+**Setup sequence**: What initialization calls in what order?
+- Example: "1) init_parser() 2) set_mode(STRICT) 3) allocate_buffer()"
+
+**Main API invocation**: How to call the target function?
+- Example: "Pass parser context, fuzz data as input buffer, size parameter"
+
+**Cleanup sequence**: What to free/destroy and in what order?
+- Example: "1) free_buffer() 2) destroy_parser() [reverse of setup]"
+
+**Error handling**: Where to check for failures?
+- Example: "Check init_parser() return; early exit if NULL"
 
 ## 7. Common Pitfalls to Avoid
 

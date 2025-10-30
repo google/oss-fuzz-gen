@@ -1,9 +1,6 @@
 // Stateless Parser Skeleton
 // Pattern: Direct call, no setup/cleanup needed
-
-#include <stddef.h>
-#include <stdint.h>
-// Include target API headers here
+// NOTE: Headers are provided above this skeleton - DO NOT add additional headers
 
 int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
   // Input validation

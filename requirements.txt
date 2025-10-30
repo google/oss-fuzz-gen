@@ -406,3 +406,7 @@ zipp==3.21.0
 langgraph>=0.2.74
 langgraph-checkpoint>=1.0.0
 langgraph-checkpoint-postgres>=1.0.0
+
+# Tree-sitter for header extraction (Header Fix V2)
+tree-sitter>=0.25.0
+tree-sitter-cpp>=0.23.0

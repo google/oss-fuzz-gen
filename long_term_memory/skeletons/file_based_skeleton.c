@@ -1,11 +1,6 @@
 // File-based API Skeleton
 // Pattern: write_temp → api_load_file → unlink
-
-#include <stddef.h>
-#include <stdint.h>
-#include <stdio.h>
-#include <unistd.h>
-// Include target API headers here
+// NOTE: Headers are provided above this skeleton - DO NOT add additional headers
 
 int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
   // Input validation

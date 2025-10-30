@@ -21,7 +21,7 @@ MODEL = 'gpt-5'
 DELAY = 0
 NUM_SAMPLES = 10
 LLM_FIX_LIMIT = 5
-MAX_ROUND = 100
+MAX_ROUND = 10
 DATA_DIR = '/experiment/data-dir/'
 
 def _parse_args(cmd) -> argparse.Namespace:
