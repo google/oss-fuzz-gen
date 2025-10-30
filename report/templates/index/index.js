@@ -90,7 +90,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		const refTh = ths[insertIdx] || null;
 		if (refTh) theadRow.insertBefore(newTh, refTh); else theadRow.appendChild(newTh);
 
-		const rows = Array.from(table.querySelectorAll('tbody tr'));
+		const rows = Array.from(table.querySelectorAll(':scope > tbody > tr'));
 		rows.forEach(row => {
 			if (row.classList.contains('project-data-row')) {
 				const cells = Array.from(row.querySelectorAll('td'));
@@ -772,70 +772,65 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	const tables = Array.from(document.querySelectorAll('table.sortable-table'));
 	tables.forEach(table_element => {
-		const headers = Array.from(table_element.querySelectorAll('th'));
-		headers.forEach((th, colindex) => {
-			if (th.innerText.trim() === '' && colindex === 0) {
+		const headers = Array.from(table_element.querySelectorAll(':scope > thead > tr > th'));
+		headers.forEach((th) => {
+			if (th.innerText.trim() === '' && Array.from(th.parentElement.children).indexOf(th) === 0) {
 				return;
 			}
 
 			th.addEventListener('click', () => {
+				// Calculate column index dynamically to account for any DOM changes
+				const currentTableHeaders = Array.from(table_element.querySelectorAll(':scope > thead > tr > th'));
+				const colindex = currentTableHeaders.indexOf(th);
+				
 				const sortAsc = th.dataset.sorted !== "asc";
 				const sortNumber = th.hasAttribute('data-sort-number');
 
-				const currentTableHeaders = Array.from(table_element.querySelectorAll('th'));
 				currentTableHeaders.forEach(innerTH => delete innerTH.dataset.sorted);
 				th.dataset.sorted = sortAsc ? "asc" : "desc";
 
-				const tbody = table_element.querySelector('tbody');
+				const tbody = table_element.querySelector(':scope > tbody');
 				if (!tbody) return;
 
 				let allRowsInBody = Array.from(tbody.children);
 				let sortableUnits = [];
-				let appendedRows = [];
+				let nonsortableRows = [];
 
-				if (table_element.id === 'project-summary-table') {
-					for (let i = 0; i < allRowsInBody.length; i += 2) {
-						if (allRowsInBody[i] && allRowsInBody[i+1] &&
-							allRowsInBody[i].classList.contains('project-data-row') &&
-							allRowsInBody[i+1].classList.contains('project-benchmarks-container-row')) {
-							sortableUnits.push({
-								representativeRow: allRowsInBody[i],
-								actualRows: [allRowsInBody[i], allRowsInBody[i+1]]
-							});
-						} else {
-							appendedRows.push(...allRowsInBody.slice(i));
-							break;
-						}
+				// Separate non-sortable rows (with data-nosort attribute or font-bold class)
+				allRowsInBody = allRowsInBody.filter(row => {
+					if (row.hasAttribute('data-nosort') || row.classList.contains('font-bold')) {
+						nonsortableRows.push(row);
+						return false;
 					}
-				} else if (table_element.id === 'crashes-table') {
-					for (let i = 0; i < allRowsInBody.length; i += 2) {
-						if (allRowsInBody[i] && allRowsInBody[i+1]) {
-							sortableUnits.push({
-								representativeRow: allRowsInBody[i],
-								actualRows: [allRowsInBody[i], allRowsInBody[i+1]]
-							});
-						}
-					}
-				} else if (table_element.closest('[x-ref^="project_"]')) {
-					for (let i = 0; i < allRowsInBody.length; i += 2) {
-						if (allRowsInBody[i] && allRowsInBody[i+1]) {
-							sortableUnits.push({
-								representativeRow: allRowsInBody[i],
-								actualRows: [allRowsInBody[i], allRowsInBody[i+1]]
-							});
-						}
-					}
-				} else {
-					const averageRows = allRowsInBody.filter(row => row.cells.length > 0 && row.cells[0].innerText.trim() === 'Average');
-					if (averageRows.length) {
-						averageRows.forEach(r => {
-							const idx = allRowsInBody.indexOf(r);
-							if (idx !== -1) appendedRows.push(allRowsInBody.splice(idx, 1)[0]);
+					return true;
+				});
+
+				// Group rows based on structure
+				let i = 0;
+				while (i < allRowsInBody.length) {
+					const currentRow = allRowsInBody[i];
+					const nextRow = allRowsInBody[i + 1];
+					
+					// Check if current row has a companion row (container or detail row)
+					const hasCompanion = nextRow && (
+						(currentRow.classList.contains('project-data-row') && nextRow.classList.contains('project-benchmarks-container-row')) ||
+						(currentRow.querySelector('button') && nextRow.querySelector('[x-ref]')) ||
+						(!currentRow.classList.contains('project-data-row') && !currentRow.classList.contains('project-benchmarks-container-row') && nextRow.querySelector('td[colspan]'))
+					);
+
+					if (hasCompanion) {
+						sortableUnits.push({
+							representativeRow: currentRow,
+							actualRows: [currentRow, nextRow]
 						});
+						i += 2;
+					} else {
+						sortableUnits.push({
+							representativeRow: currentRow,
+							actualRows: [currentRow]
+						});
+						i += 1;
 					}
-					allRowsInBody.forEach(row => {
-						sortableUnits.push({ representativeRow: row, actualRows: [row] });
-					});
 				}
 
 				sortableUnits.sort((unitA, unitB) => {
@@ -848,11 +843,11 @@ document.addEventListener('DOMContentLoaded', function() {
 				sortableUnits.forEach(unit => {
 					unit.actualRows.forEach(row => tbody.appendChild(row));
 				});
-				appendedRows.forEach(row => tbody.appendChild(row));
+				nonsortableRows.forEach(row => tbody.appendChild(row));
 
 				let visualIndex = 1;
 				Array.from(tbody.children).forEach(r => {
-					if (appendedRows.includes(r)) {
+					if (nonsortableRows.includes(r)) {
 						return;
 					}
 					const firstCell = r.children[0];

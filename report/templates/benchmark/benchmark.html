@@ -13,6 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 #}{% extends 'base.html' %}
+{% import 'macros.html' as macros %}
 
 {% block content %}
 
@@ -79,16 +80,7 @@ limitations under the License.
 <div class="toc-section">
     <h2 class="text-lg mt-8 mb-4">Initial prompt breakdown</h2>
 
-    <div class="flex justify-between mb-4">
-        <div class="controls flex gap-2">
-            <button id="prompts-expand-all" class="border rounded-lg p-2">
-                Expand All
-            </button>
-            <button id="prompts-collapse-all" class="border rounded-lg p-2">
-                Collapse All
-            </button>
-        </div>
-    </div>
+    {{ macros.expand_collapse_buttons('prompts-expand-all', 'prompts-collapse-all', 'Expand All', 'Collapse All') }}
 
     <div class="space-y-6">
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow" id="structured-prompt">

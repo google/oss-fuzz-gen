@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 #}{% extends 'base.html' %}
+{% import 'macros.html' as macros %}
 
 {% block content %}
 
@@ -181,16 +182,7 @@ limitations under the License.
         <div x-show="projectOpen"
              class="p-4 border-t">
 
-            <div class="flex justify-between">
-                <div class="controls flex gap-2">
-                    <button id="project-summary-expand-all" class="border rounded-lg p-5">
-                        Expand All
-                    </button>
-                    <button id="project-summary-collapse-all" class="border rounded-lg p-5">
-                        Collapse All
-                    </button>
-                </div>
-            </div>
+            {{ macros.expand_collapse_buttons('project-summary-expand-all', 'project-summary-collapse-all') }}
 
             <div class="overflow-x-auto">
                 <table class="sortable-table min-w-full" id="project-summary-table">
@@ -272,7 +264,8 @@ limitations under the License.
                         <tr class="project-benchmarks-container-row">
                             <td colspan="10" class="">
                                 <div x-ref="benchmarks_{{ loop.index }}" class="hidden">
-                                    <table class="sortable-table min-w-full ml-8" id="benchmarks-table-{{ loop.index }}">
+                                    <div class="overflow-x-auto">
+                                        <table class="sortable-table min-w-full ml-8" id="benchmarks-table-{{ loop.index }}">
                                         <thead>
                                             <tr>
                                                 <th></th>
@@ -309,8 +302,8 @@ limitations under the License.
                                             {% endif %}
                                             {% endfor %}
                                             <tr class="font-bold">
+                                                <td></td>
                                                 <td>Average</td>
-                                                <td>-</td>
                                                 <td>-</td>
                                                 <td>{{ (ns.aggregated_build_rate / project.count)|percent }}</td>
                                                 <td>{{ (ns.aggregated_crash_rate / project.count)|percent }}</td>
@@ -320,6 +313,7 @@ limitations under the License.
                                             </tr>
                                         </tbody>
                                     </table>
+                                    </div>
                                 </div>
                             </td>
                         </tr>
@@ -368,16 +362,7 @@ limitations under the License.
         <div x-show="crashesFoundOpen"
              class="p-4 border-t">
 
-            <div class="flex justify-between">
-                <div class="controls flex gap-2">
-                    <button id="crashes-expand-all" class="border rounded-lg p-5">
-                        Expand All
-                    </button>
-                    <button id="crashes-collapse-all" class="border rounded-lg p-5">
-                        Collapse All
-                    </button>
-                </div>
-            </div>
+            {{ macros.expand_collapse_buttons('crashes-expand-all', 'crashes-collapse-all') }}
 
              <table class="sortable-table min-w-full" id="crashes-table">
                 <thead>
@@ -442,17 +427,11 @@ limitations under the License.
                     <tr>
                         <td colspan="6">
                             <div x-ref="project_{{ loop.index }}" class="hidden">
-                                <div class="flex justify-between ml-8 mt-4">
-                                    <div class="controls flex gap-2">
-                                        <button id="project-expand-all-{{ loop.index }}" class="border rounded-lg p-3">
-                                            Expand All
-                                        </button>
-                                        <button id="project-collapse-all-{{ loop.index }}" class="border rounded-lg p-3">
-                                            Collapse All
-                                        </button>
-                                    </div>
+                                <div class="ml-8 mt-4">
+                                    {{ macros.expand_collapse_buttons('project-expand-all-' ~ loop.index, 'project-collapse-all-' ~ loop.index, 'Expand All', 'Collapse All') }}
                                 </div>
-                                <table class="sortable-table min-w-full ml-8">
+                                <div class="overflow-x-auto">
+                                    <table class="sortable-table min-w-full ml-8">
                                     <thead>
                                         <tr>
                                             <th></th>
@@ -506,6 +485,7 @@ limitations under the License.
                                         {% endfor %}
                                     </tbody>
                                 </table>
+                                </div>
                             </div>
                         </td>
                     </tr>

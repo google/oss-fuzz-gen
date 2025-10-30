@@ -21,6 +21,12 @@ limitations under the License.
 <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Overpass+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Overpass:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+{% set shared_css = '' %}
+{% if shared_css_content %}
+<style>
+{{ shared_css_content | safe }}
+</style>
+{% endif %}
 <style>
 * {
     box-sizing: border-box;
@@ -48,6 +54,58 @@ body.dark-mode {
 }
 table {
     border-collapse: collapse;
+    border-spacing: 0;
+    overflow-x:hidden;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+td, th {
+    border: 0;
+    padding: 5px;
+    text-align: left;
+}
+.dark-mode td, .dark-mode th {
+    border-right: 1px #3d3d3d solid;
+    border-bottom: 1px #3d3d3d solid;
+}
+td:first-child, th:first-child {
+    border-left: 1px #a0aec0 solid;
+}
+.dark-mode td:first-child, .dark-mode th:first-child {
+    border-left: 1px #3d3d3d solid;
+}
+th {
+    border-top: 1px #a0aec0 solid;
+}
+th:first-child {
+    border-top-left-radius: 8px;
+}
+th:last-child {
+    border-top-right-radius: 8px;
+}
+.dark-mode th {
+    border-top: 1px #3d3d3d solid;
+}
+tbody tr:nth-child(odd) {
+    background-color: #edf2f7;
+}
+.dark-mode select {
+    background-color: #3d3d3d;
+    color: #f7fafc;
+    border-color: #3d3d3d;
+}
+.dark-mode select:focus {
+    background-color: #3d3d3d;
+    color: #f7fafc;
+}
+.dark-mode option {
+    background-color: #3d3d3d;
+    color: #f7fafc;
+}
+
+.dark-mode tbody tr:nth-child(odd) {
+    background-color: #333333;
+}collapse: collapse;
     border-spacing: 0;
     overflow-x:hidden;
     margin-top: 15px;
