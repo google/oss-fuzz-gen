@@ -763,7 +763,8 @@ Adapt this skeleton according to the specification above.
         import re
         
         # Pattern 1: "Primary pattern: {archetype}"
-        pattern1 = r"Primary pattern:\s*([A-Za-z\-\s]+)"
+        # FIX: Use non-greedy match and stop at line end to avoid capturing next line
+        pattern1 = r"Primary pattern:\s*([A-Za-z\-\s]+?)(?:\n|$)"
         match = re.search(pattern1, analysis_text, re.IGNORECASE)
         if match:
             archetype_name = match.group(1).strip().lower()
@@ -778,10 +779,14 @@ Adapt this skeleton according to the specification above.
                 "file-based": "file_based",
                 "file based": "file_based"
             }
-            return mapping.get(archetype_name)
+            result = mapping.get(archetype_name)
+            if result:
+                logger.debug(f"Extracted archetype via Pattern 1: '{archetype_name}' -> '{result}'", trial=self.trial)
+                return result
         
         # Pattern 2: "Archetype: {archetype}"
-        pattern2 = r"Archetype:\s*([A-Za-z\-\s]+)"
+        # FIX: Use non-greedy match and stop at line end
+        pattern2 = r"Archetype:\s*([A-Za-z\-\s]+?)(?:\n|$)"
         match = re.search(pattern2, analysis_text, re.IGNORECASE)
         if match:
             archetype_name = match.group(1).strip().lower()
@@ -795,8 +800,12 @@ Adapt this skeleton according to the specification above.
                 "file-based": "file_based",
                 "file based": "file_based"
             }
-            return mapping.get(archetype_name)
+            result = mapping.get(archetype_name)
+            if result:
+                logger.debug(f"Extracted archetype via Pattern 2: '{archetype_name}' -> '{result}'", trial=self.trial)
+                return result
         
+        logger.debug(f"No archetype pattern matched in analysis text (length: {len(analysis_text)})", trial=self.trial)
         return None
 
 

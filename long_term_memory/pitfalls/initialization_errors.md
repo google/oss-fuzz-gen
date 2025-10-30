@@ -166,12 +166,12 @@ xmlDoc *doc = xmlReadMemory(data, size, NULL, NULL, 0);  // OK
 
 ## Prevention Checklist
 
-- [ ] Check API documentation for initialization functions
-- [ ] Look for function names with "init", "setup", "initialize"
-- [ ] Check if API has global state
-- [ ] Verify initialization order in specification
-- [ ] Add error handler setup if API supports it
-- [ ] Use LLVMFuzzerInitialize for one-time setup
+-  Check API documentation for initialization functions
+-  Look for function names with "init", "setup", "initialize"
+-  Check if API has global state
+-  Verify initialization order in specification
+-  Add error handler setup if API supports it
+-  Use LLVMFuzzerInitialize for one-time setup
 
 ---
 

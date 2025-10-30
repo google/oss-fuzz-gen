@@ -242,13 +242,13 @@ H5Dread(file, ...);
 
 ## Prevention Checklist
 
-- [ ] Check ALL pointer returns for NULL
-- [ ] Validate array indices and sizes
-- [ ] Ensure buffer sizes match actual data
-- [ ] Don't modify const input
-- [ ] Initialize all struct members
-- [ ] Use unsigned types for sizes
-- [ ] Constrain enum/index values to valid range
+-  Check ALL pointer returns for NULL
+-  Validate array indices and sizes
+-  Ensure buffer sizes match actual data
+-  Don't modify const input
+-  Initialize all struct members
+-  Use unsigned types for sizes
+-  Constrain enum/index values to valid range
 
 ---
 

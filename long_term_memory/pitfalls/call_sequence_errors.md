@@ -255,13 +255,13 @@ tidyParseBuffer(doc, &buf);         // Now safe
 
 ## Prevention Checklist
 
-- [ ] Cleanup in reverse order of creation
-- [ ] Don't use objects after destroy/close/free
-- [ ] Don't destroy same object twice
-- [ ] Complete all setup steps before use
-- [ ] Check for dependencies between objects
-- [ ] Follow state machine transitions
-- [ ] Ensure cleanup happens on all error paths
+-  Cleanup in reverse order of creation
+-  Don't use objects after destroy/close/free
+-  Don't destroy same object twice
+-  Complete all setup steps before use
+-  Check for dependencies between objects
+-  Follow state machine transitions
+-  Ensure cleanup happens on all error paths
 
 ---
 

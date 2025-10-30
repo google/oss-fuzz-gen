@@ -259,11 +259,11 @@ Extracted from:
 
 ## Future Enhancements
 
-- [ ] Semantic search (embedding-based retrieval)
-- [ ] Pattern combinations (multi-archetype support)
-- [ ] Language-specific variants (C++ RAII versions)
-- [ ] Learning loop (update knowledge from results)
-- [ ] Cross-references between patterns
+-  Semantic search (embedding-based retrieval)
+-  Pattern combinations (multi-archetype support)
+-  Language-specific variants (C++ RAII versions)
+-  Learning loop (update knowledge from results)
+-  Cross-references between patterns
 
 ---
 

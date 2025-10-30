@@ -90,10 +90,10 @@ cleanup:
 ```
 
 **Resource management**:
-- [ ] Stack buffer (< {size})
-- [ ] Heap allocation (malloc/free or RAII)
-- [ ] Temp file (use /tmp/fuzz_{pid})
-- [ ] Static buffer (performance optimization)
+-  Stack buffer (< {size})
+-  Heap allocation (malloc/free or RAII)
+-  Temp file (use /tmp/fuzz_{pid})
+-  Static buffer (performance optimization)
 
 ## 6. Driver Skeleton
 
@@ -127,23 +127,23 @@ cleanup:
 ## 7. Common Pitfalls to Avoid
 
 **Initialization Errors**:
-- [ ] Missing library init (e.g., `initGEOS()`) → crash from uninitialized state
-- [ ] Missing error handler setup → uncaught internal errors
+-  Missing library init (e.g., `initGEOS()`) → crash from uninitialized state
+-  Missing error handler setup → uncaught internal errors
 
 **Data & Argument Errors**:
-- [ ] Unchecked NULL pointers → segmentation fault
-- [ ] Missing bounds validation → buffer overflow
-- [ ] Modifying const input → copy data first
+-  Unchecked NULL pointers → segmentation fault
+-  Missing bounds validation → buffer overflow
+-  Modifying const input → copy data first
 
 **Call Sequence Errors**:
-- [ ] Double-free → object destroyed twice
-- [ ] Use-after-free → object used after destroy
-- [ ] Wrong cleanup order → dependency violation
+-  Double-free → object destroyed twice
+-  Use-after-free → object used after destroy
+-  Wrong cleanup order → dependency violation
 
 **Resource Management**:
-- [ ] Memory leak → missing free/destroy
-- [ ] Stack overflow → use heap for large buffers
-- [ ] Unbounded loop → add `max_iterations` limit
+-  Memory leak → missing free/destroy
+-  Stack overflow → use heap for large buffers
+-  Unbounded loop → add `max_iterations` limit
 
 ## 8. Confidence Assessment
 
@@ -153,26 +153,12 @@ Needs verification (<30%): [{list}]
 
 ---
 
-**Session Memory Updates**:
-```json
-{
-  "archetype": {
-    "category": "{archetype_category}",
-    "typical_setup": ["{function_calls}"],
-    "parameter_patterns": {"{param}": "{construction_pattern}"}
-  },
-  "api_constraints": {
-    "{constraint_id}": {
-      "type": "precondition|parameter|lifecycle",
-      "description": "{what}",
-      "enforcement": "{how}",
-      "evidence_count": {N}
-    }
-  }
-}
-```
-
----
-
 Format: Provide specification in sections above. Support every claim with evidence. Keep it concise and code-focused.
+
+**Note**: If you identify new API constraints, error patterns, or key decisions during your analysis, mark them using XML tags:
+- `<api_constraint>constraint description</api_constraint>` for API usage rules
+- `<known_fix error="error pattern">solution</known_fix>` for error fix patterns  
+- `<decision reason="rationale">decision content</decision>` for important decisions
+
+These will be extracted and shared with other agents to build consensus knowledge.
 

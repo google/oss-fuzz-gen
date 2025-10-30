@@ -318,14 +318,14 @@ while (sqlite3_step(stmt) == SQLITE_ROW && max_rows-- > 0) {
 
 ## Prevention Checklist
 
-- [ ] Free all allocated memory on all code paths
-- [ ] Close all file descriptors
-- [ ] Clean up temp files
-- [ ] Use heap for large buffers (>1MB)
-- [ ] Limit loop iterations
-- [ ] Free resources in loops per iteration
-- [ ] Use goto cleanup or RAII for complex cleanup
-- [ ] Check that cleanup happens on early returns
+-  Free all allocated memory on all code paths
+-  Close all file descriptors
+-  Clean up temp files
+-  Use heap for large buffers (>1MB)
+-  Limit loop iterations
+-  Free resources in loops per iteration
+-  Use goto cleanup or RAII for complex cleanup
+-  Check that cleanup happens on early returns
 
 ---
 
