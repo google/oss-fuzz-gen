@@ -86,3 +86,36 @@ Special Considerations:
 - When in doubt, check how the project's own code handles similar cases
 - Ensure the refined target respects all function requirements
 
+**🚨 CRITICAL RULE: NEVER GENERATE STUB IMPLEMENTATIONS**
+
+When fixing header/include errors, you must NEVER create fake stub classes or functions as workarounds. This defeats the purpose of fuzzing by testing fake code instead of the real project code.
+
+**If a header cannot be found:**
+1. ✅ DO: Try alternative header paths that might exist in the project
+2. ✅ DO: Look at how existing code in the project includes similar headers
+3. ✅ DO: Suggest that the build system may need adjustment
+4. ❌ DON'T: Create stub/mock implementations with empty methods
+5. ❌ DON'T: Use fallback namespaces with dummy classes
+6. ❌ DON'T: Add `#ifndef` guards that conditionally compile fake code
+
+**Example of FORBIDDEN stub pattern:**
+```cpp
+// ❌ NEVER DO THIS:
+#ifndef HAVE_REAL_HEADER
+namespace Fake {
+class StubClass {
+public:
+  StubClass() {}  // Empty stub
+};
+}
+#endif
+```
+
+**Why this matters:**
+- Stub code will compile successfully but test nothing
+- PC coverage will show 100% (of the stub) but line coverage diff will be 0%
+- The fuzzer becomes completely useless
+- Detection: If total_pcs < 10, it's likely testing only stub code
+
+If you genuinely cannot find the correct header after trying reasonable alternatives, report the issue clearly and request regeneration with better project context rather than creating workarounds.
+

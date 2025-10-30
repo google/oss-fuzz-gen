@@ -211,6 +211,10 @@ class LangGraphFunctionAnalyzer(LangGraphAgent):
             project_name, function_signature
         )
         
+        # Query FuzzIntrospector for header information
+        logger.info(f'Querying FuzzIntrospector for header files of {function_signature}', trial=self.trial)
+        header_info = self._extract_header_information(project_name, function_signature)
+        
         if not func_source:
             logger.warning(
                 f'No source code found in FuzzIntrospector for project: {project_name}, '
@@ -253,7 +257,8 @@ class LangGraphFunctionAnalyzer(LangGraphAgent):
         analysis_result = {
             "summary": response[:500],  # First 500 chars as summary
             "raw_analysis": response,
-            "analyzed": True
+            "analyzed": True,
+            "header_information": header_info  # Include header info for Prototyper
         }
         
         # Write requirements to file (matching original FunctionAnalyzer behavior)
@@ -601,6 +606,85 @@ Use this knowledge to structure your analysis.
             PARAMETER_SETUP=context.get('parameter_setup', 'N/A'),
             RETURN_USAGE=context.get('return_usage', 'N/A')
         )
+    
+    def _extract_header_information(
+        self,
+        project_name: str,
+        function_signature: str
+    ) -> dict:
+        """
+        Extract header information from FuzzIntrospector.
+        
+        Returns:
+            dict with keys:
+                - function_header: Primary header file for the function
+                - related_headers: List of related project headers
+        """
+        from data_prep import introspector
+        
+        header_info = {
+            "function_header": None,
+            "related_headers": []
+        }
+        
+        try:
+            # 1. Query FI for header files
+            logger.info(f'Querying header files for {function_signature}', trial=self.trial)
+            all_headers = introspector.query_introspector_header_files_to_include(
+                project_name, function_signature
+            )
+            
+            if all_headers:
+                logger.info(f'Found {len(all_headers)} headers from FI', trial=self.trial)
+                
+                # Filter project headers (exclude standard library)
+                project_headers = []
+                for header in all_headers:
+                    # Keep headers that are in project source (/src/PROJECT_NAME/...)
+                    if f'/src/{project_name}/' in header or '/src/' in header[:20]:
+                        # Convert to include format
+                        include_path = self._convert_to_include_path(header, project_name)
+                        if include_path:
+                            project_headers.append(include_path)
+                
+                if project_headers:
+                    # First header is usually the function's declaration
+                    header_info["function_header"] = project_headers[0]
+                    header_info["related_headers"] = project_headers[1:5]  # Up to 4 more
+                    logger.info(f'Primary header: {project_headers[0]}', trial=self.trial)
+            else:
+                logger.debug(f'No headers returned from FI for {function_signature}', trial=self.trial)
+            
+        except Exception as e:
+            logger.warning(f'Failed to extract header information: {e}', trial=self.trial)
+        
+        return header_info
+    
+    def _convert_to_include_path(self, absolute_path: str, project_name: str) -> str:
+        """
+        Convert absolute path to include format.
+        e.g., /src/mosh/src/terminal/terminal.h -> "src/terminal/terminal.h"
+        """
+        if not absolute_path:
+            return ""
+        
+        # Try to extract the part after /src/PROJECT_NAME/
+        if f'/src/{project_name}/' in absolute_path:
+            parts = absolute_path.split(f'/src/{project_name}/', 1)
+            if len(parts) > 1:
+                return parts[1]
+        
+        # Fallback: extract after any /src/
+        if '/src/' in absolute_path:
+            parts = absolute_path.split('/src/', 1)
+            if len(parts) > 1:
+                subparts = parts[1].split('/', 1)
+                if len(subparts) > 1:
+                    return subparts[1]
+        
+        # Last resort: return filename only
+        return absolute_path.split('/')[-1]
+    
 
 
 class LangGraphPrototyper(LangGraphAgent):
@@ -649,6 +733,7 @@ class LangGraphPrototyper(LangGraphAgent):
                 additional_context += "\n\nPlease generate a completely new approach that avoids these issues."
         
         # Retrieve skeleton from long-term memory based on archetype
+        # (skeleton already contains header information injected by Function Analyzer)
         skeleton_code = self._retrieve_skeleton(function_analysis)
         
         base_prompt = prompt_manager.build_user_prompt(
@@ -710,12 +795,13 @@ class LangGraphPrototyper(LangGraphAgent):
     def _retrieve_skeleton(self, function_analysis: dict) -> str:
         """
         Retrieve skeleton code from long-term memory based on archetype.
+        Injects header information into the skeleton.
         
         Args:
-            function_analysis: Analysis containing archetype information
+            function_analysis: Analysis containing archetype and header information
             
         Returns:
-            Skeleton code or empty string if not found
+            Skeleton code with header information or empty string if not found
         """
         try:
             from long_term_memory.retrieval import KnowledgeRetriever
@@ -737,11 +823,20 @@ class LangGraphPrototyper(LangGraphAgent):
             logger.info(f'Retrieving skeleton for archetype: {archetype}', trial=self.trial)
             skeleton = retriever.get_skeleton(archetype)
             
+            # Inject header information into skeleton
+            header_info = function_analysis.get('header_information', {})
+            header_section = self._format_header_section(header_info)
+            
+            # Insert header info at the top of skeleton
+            skeleton_with_headers = f"""{header_section}
+
+{skeleton}"""
+            
             return f"""
 # Reference Skeleton (adapt this structure)
 
 ```c
-{skeleton}
+{skeleton_with_headers}
 ```
 
 Adapt this skeleton according to the specification above.
@@ -749,6 +844,30 @@ Adapt this skeleton according to the specification above.
         except Exception as e:
             logger.warning(f'Failed to retrieve skeleton: {e}', trial=self.trial)
             return ""
+    
+    def _format_header_section(self, header_info: dict) -> str:
+        """Format header information as C/C++ comments for skeleton injection."""
+        if not header_info:
+            return "// NOTE: Header file information not available"
+        
+        header_lines = ["// === HEADER FILES ==="]
+        
+        # Function header
+        func_header = header_info.get('function_header')
+        if func_header:
+            header_lines.append(f"// Function defined in: {func_header}")
+            header_lines.append(f'#include "{func_header}"  // Target function')
+        
+        # Related headers
+        related = header_info.get('related_headers', [])
+        if related:
+            header_lines.append("//")
+            header_lines.append("// Related headers (may be needed):")
+            for h in related[:5]:  # Limit to top 5
+                header_lines.append(f'// #include "{h}"')
+        
+        header_lines.append("// ====================")
+        return "\n".join(header_lines)
     
     def _extract_archetype_from_analysis(self, analysis_text: str) -> Optional[str]:
         """
@@ -807,6 +926,7 @@ Adapt this skeleton according to the specification above.
         
         logger.debug(f"No archetype pattern matched in analysis text (length: {len(analysis_text)})", trial=self.trial)
         return None
+    
 
 
 class LangGraphEnhancer(LangGraphAgent):

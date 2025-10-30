@@ -272,9 +272,15 @@ def _determine_next_action(state: FuzzingWorkflowState) -> str:
             return "enhancer"
         
         # Execution succeeded, check coverage results
-        coverage_percent = state.get("coverage_percent", 0.0)
-        coverage_diff = state.get("line_coverage_diff", 0.0)
-        logger.debug(f'Execution succeeded: coverage={coverage_percent:.2%}, diff={coverage_diff:.2%}', 
+        # 🔧 FIXED: Use line_coverage_diff as primary quality metric, not PC coverage_percent
+        # PC coverage_percent (cov_pcs/total_pcs) represents internal fuzzer coverage
+        # line_coverage_diff represents real project code coverage increase - the true goal
+        coverage_percent = state.get("coverage_percent", 0.0)  # Keep for logging
+        coverage_diff = state.get("line_coverage_diff", 0.0)  # PRIMARY METRIC
+        total_pcs = state.get("total_pcs", 0)
+        
+        logger.debug(f'Execution succeeded: PC_coverage={coverage_percent:.2%} (internal), '
+                    f'line_diff={coverage_diff:.2%} (real project coverage), total_pcs={total_pcs}', 
                     trial=trial)
         
         # Check iteration count to avoid infinite loops
@@ -285,32 +291,36 @@ def _determine_next_action(state: FuzzingWorkflowState) -> str:
         no_improvement_count = state.get("no_coverage_improvement_count", 0)
         NO_IMPROVEMENT_THRESHOLD = 3  # If coverage doesn't improve for 3 consecutive checks, consider it done
         
-        # Check if coverage improved significantly
-        IMPROVEMENT_THRESHOLD = 0.01  # At least 1% improvement
+        # Check if coverage improved significantly (using REAL project coverage diff)
+        IMPROVEMENT_THRESHOLD = 0.01  # At least 1% improvement in real project code
         if coverage_diff > IMPROVEMENT_THRESHOLD:
             # Coverage improved, reset the no-improvement counter
-            logger.debug(f'Coverage improved by {coverage_diff:.2%}, resetting no-improvement counter', 
+            logger.debug(f'Real project coverage improved by {coverage_diff:.2%}, resetting no-improvement counter', 
                         trial=trial)
             # Note: The counter will be reset in execution_node when it updates the state
         
         # Check if coverage has been stagnant for too long
         if no_improvement_count >= NO_IMPROVEMENT_THRESHOLD:
-            logger.info(f'Coverage stagnant for {no_improvement_count} iterations ({coverage_percent:.2%}), '
+            logger.info(f'Real project coverage stagnant for {no_improvement_count} iterations '
+                       f'(line_diff={coverage_diff:.2%}, PC_coverage={coverage_percent:.2%}), '
                        f'considering workflow complete and ready for delivery', 
                        trial=trial)
             return "END"
         
-        # Check if we should analyze coverage (low coverage AND no improvement)
-        COVERAGE_THRESHOLD = 0.5  # 50% coverage threshold
+        # 🔧 FIXED: Use line_coverage_diff instead of PC coverage_percent for quality decisions
+        # PC coverage can be misleading (e.g., 100% of stub code = useless)
+        # Real project coverage diff is what matters
+        LINE_COVERAGE_THRESHOLD = 0.05  # At least 5% real project coverage increase
         SIGNIFICANT_IMPROVEMENT = 0.05  # 5% is considered significant improvement
         
-        # Only analyze if coverage is low AND there's no significant improvement
+        # Only analyze if real coverage is low AND there's no significant improvement
         # If there's significant improvement, continue the current strategy even if absolute coverage is low
-        if coverage_percent < COVERAGE_THRESHOLD and coverage_diff <= SIGNIFICANT_IMPROVEMENT:
+        if coverage_diff < LINE_COVERAGE_THRESHOLD and coverage_diff <= SIGNIFICANT_IMPROVEMENT:
             coverage_analysis = state.get("coverage_analysis")
             if not coverage_analysis and current_iteration < max_iterations:
-                logger.debug(f'Low coverage ({coverage_percent:.2%}) and no significant improvement (diff={coverage_diff:.2%}, '
-                            f'no_improvement_count={no_improvement_count}), routing to coverage_analyzer', 
+                logger.debug(f'Low real project coverage (line_diff={coverage_diff:.2%}) and '
+                            f'no significant improvement (no_improvement_count={no_improvement_count}), '
+                            f'routing to coverage_analyzer', 
                             trial=trial)
                 return "coverage_analyzer"
             
@@ -318,11 +328,12 @@ def _determine_next_action(state: FuzzingWorkflowState) -> str:
             if coverage_analysis and coverage_analysis.get("improve_required", False):
                 # Coverage analyzer suggests improvement is possible
                 if current_iteration < max_iterations and no_improvement_count < NO_IMPROVEMENT_THRESHOLD:
-                    logger.info('Coverage can be improved, enhancing target', trial=trial)
+                    logger.info('Real project coverage can be improved, enhancing target', trial=trial)
                     return "enhancer"
         
         # Good coverage or max iterations reached - we're done
-        logger.info(f'Workflow complete: coverage={coverage_percent:.2%}, iterations={current_iteration}, '
+        logger.info(f'Workflow complete: line_coverage_diff={coverage_diff:.2%}, '
+                   f'PC_coverage={coverage_percent:.2%}, iterations={current_iteration}, '
                    f'no_improvement_count={no_improvement_count}', 
                    trial=trial)
         return "END"

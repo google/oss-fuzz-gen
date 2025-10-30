@@ -123,6 +123,30 @@ def execution_node(state: FuzzingWorkflowState, config: RunnableConfig) -> Dict[
         coverage_percent = 0.0
         coverage_diff = 0.0
         
+        # 🚨 STUB DETECTION: Check if fuzzer is only testing stub code
+        MINIMUM_PCS_THRESHOLD = 10
+        if run_result.total_pcs and run_result.total_pcs < MINIMUM_PCS_THRESHOLD:
+            logger.warning(
+                f'⚠️  Suspiciously low PC count ({run_result.total_pcs}), '
+                f'fuzzer may be testing stub code only. Marking as compilation failure.',
+                trial=trial
+            )
+            # Return as compilation failure to trigger regeneration
+            return {
+                "compile_success": False,
+                "build_errors": [
+                    f"Stub code detected: total_pcs={run_result.total_pcs} < {MINIMUM_PCS_THRESHOLD}. "
+                    f"The fuzzer appears to be testing fake/stub implementations instead of real project code. "
+                    f"This usually happens when headers cannot be found and stub classes are generated as fallback. "
+                    f"Please ensure correct header paths are used and avoid generating stub implementations."
+                ],
+                "run_success": False,
+                "messages": [{
+                    "role": "assistant",
+                    "content": f"Detected stub-only fuzzer (total_pcs={run_result.total_pcs}), requesting regeneration"
+                }]
+            }
+        
         if run_result.total_pcs:
             coverage_percent = run_result.cov_pcs / run_result.total_pcs
             logger.info(f'Coverage: {coverage_percent:.2%} ({run_result.cov_pcs}/{run_result.total_pcs})', 
