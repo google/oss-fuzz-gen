@@ -1,0 +1,11 @@
+"functions":
+- "name": "mnt_new_table_from_dir"
+  "params":
+  - "name": "dirname"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "struct libmnt_table * mnt_new_table_from_dir(const char *)"
+"language": "c"
+"project": "util-linux"
+"target_name": "test_last_fuzz"
+"target_path": "/src/util-linux/login-utils/last.c"

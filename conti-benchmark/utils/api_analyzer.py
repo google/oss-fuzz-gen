@@ -43,6 +43,15 @@ VALUELESS_PATTERNS = {
     'private_internal': {
         'keywords': ['_internal', '_private', '__'],
         'description': 'Private/internal method'
+    },
+    'low_level_decoder': {
+        'keywords': ['loop', 'plane', 'block', 'tile', 'strip', 'chunk', 'slice', 'band'],
+        'description': 'Low-level decoder component (operates on sub-blocks, not full input)'
+    },
+    'requires_internal_state': {
+        'keywords': ['load', 'decode', 'unpack', 'decompress', 'parse'],
+        'void_ptr_param': True,
+        'description': 'Requires internal state/structures (void* param indicates internal data)'
     }
 }
 
@@ -94,8 +103,25 @@ def is_valueless_api(func_info: Dict) -> Tuple[bool, List[str]]:
             reasons.append(f"{VALUELESS_PATTERNS['private_internal']['description']} (keyword: {keyword})")
             break
     
-    # Check C++ methods with only 'this' parameter
+    # Check low-level decoder components (operates on sub-blocks)
+    for keyword in VALUELESS_PATTERNS['low_level_decoder']['keywords']:
+        if keyword.lower() in func_name_lower:
+            reasons.append(f"{VALUELESS_PATTERNS['low_level_decoder']['description']} (keyword: {keyword})")
+            break
+    
+    # Check for functions requiring internal state (void* parameter)
     params = func_info.get('params', [])
+    has_void_ptr = any('void *' in param.get('type', '') or 'void*' in param.get('type', '') 
+                       for param in params if param.get('name') != 'this')
+    
+    if has_void_ptr:
+        # Only flag if it also has state-dependent keywords
+        for keyword in VALUELESS_PATTERNS['requires_internal_state']['keywords']:
+            if keyword in func_name_lower:
+                reasons.append(f"{VALUELESS_PATTERNS['requires_internal_state']['description']} (has void* + keyword: {keyword})")
+                break
+    
+    # Check C++ methods with only 'this' parameter
     if len(params) == 1 and params[0].get('name') == 'this':
         reasons.append('C++ parameterless member method (likely internal state access)')
     
