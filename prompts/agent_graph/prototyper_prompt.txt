@@ -1,4 +1,4 @@
-Translate the following specification into a compilable fuzz target:
+Translate the following specification into a compilable and EFFECTIVE fuzz target:
 
 **Project**: {PROJECT_NAME}
 **Function**: {FUNCTION_NAME}

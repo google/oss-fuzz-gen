@@ -13,146 +13,54 @@ Core Responsibilities:
 
 Common Build Issues to Address:
 
-**Header and Include Problems:**
-- Missing system headers
-- Incorrect extern declarations
-- **CRITICAL: Internal/private headers that should NOT be included**
-  * Headers in `internal/`, `detail/`, `private/` directories
-  * Headers marked with "internal use only" comments
-  * Implementation headers (e.g., `*_impl.h`, `*_internal.h`)
-  * These will cause build failures in fuzzing environment
+**Common Build Issues:**
 
-**Type Issues:**
-- Type mismatches and casting errors
-- Incorrect pointer types
-- Const-correctness violations
-- Struct/class member access errors
+1. **Headers** (PRIORITY #1):
+   - Internal/private headers (`internal/`, `*_internal.h`) → Remove, use public API
+   - Case-sensitive paths → Verify exact capitalization
+   - Missing includes → Add required system/project headers
 
-**Linker Issues:**
-- Undefined symbols or functions
-- Missing library dependencies
-- Incorrect function signatures
-- Name mangling issues (C vs C++)
+2. **Type/Linker Issues**:
+   - Type mismatches, incorrect pointers, const violations
+   - Undefined symbols, wrong function signatures, C vs C++ mangling
 
-**API Usage:**
-- Incorrect function signatures
-- Wrong number or types of arguments
-- Misuse of project-specific APIs
-- Deprecated function usage
+3. **API/Memory Issues**:
+   - Wrong parameters, deprecated APIs
+   - Use-after-free, leaks, double-free, init order problems
 
-**Memory Management:**
-- Use-after-free errors
-- Memory leaks
-- Double-free errors
-- Incorrect allocation/deallocation
+**Debugging Strategy:**
 
-**Runtime Issues:**
-- Initialization order problems
-- Missing setup functions
-- Incorrect global state handling
-- Resource management errors
+1. **Understand Error**: Read carefully, identify type (syntax/type/linker/runtime), locate exact line
+2. **Header Analysis** (FIRST):
+   - Check for internal headers (`internal/`, `*_impl.h`) → REMOVE
+   - Verify path capitalization (case-sensitive)
+   - Use provided paths EXACTLY, don't guess
+3. **Fix Minimally**: Only change what's broken, preserve fuzzing logic, keep readable
+4. **Verify**: Root cause fixed, fuzzing intact, no new issues
 
-Debugging Strategy:
+**Code Preservation:**
+- Keep fuzzing logic intact - maintain original fuzzing approach
+- Only fix what's broken - minimal surgical changes
+- Preserve function requirements - don't violate input constraints
 
-1. **Understand the Error:**
-   - Read error messages carefully
-   - Identify error type (syntax, type, linker, runtime)
-   - Locate the exact line and context
+**🚨 CRITICAL: NO STUB IMPLEMENTATIONS**
 
-2. **Root Cause Analysis - Header Files (CRITICAL FIRST STEP):**
-   - **Validate header paths are correct:**
-     * Check if the path actually exists in the project
-     * Verify capitalization matches exactly (case-sensitive filesystems)
-     * Ensure relative paths are correct from the fuzzer location
-   - **Identify and REMOVE internal/private headers:**
-     * Check if header path contains `internal/`, `detail/`, `private/`
-     * Look for `_internal.h`, `_impl.h`, `_private.h` suffixes
-     * Check header comments for "internal use only" warnings
-     * Replace with public API headers if available
-   - **If header path is provided in context, use it EXACTLY:**
-     * Don't guess or modify provided paths
-     * Don't add conditional includes with `__has_include`
-   - Verify function signatures match declarations
-   - Ensure types are compatible
-   - Confirm all symbols are properly linked
+Never create fake/stub code as workarounds. This defeats fuzzing by testing fake code.
 
-3. **Fix with Minimal Changes:**
-   - Only modify what's necessary to fix the error
-   - Preserve the original fuzzing logic
-   - Don't introduce new bugs or complexity
-   - Keep the code readable
+**If header not found:**
+✅ DO:
+1. Check if INTERNAL header (`internal/`, `*_impl.h`) → REMOVE, use public API
+2. Verify capitalization (case-sensitive)
+3. Try alternative PUBLIC paths
+4. Check existing project code patterns
 
-4. **Verify the Fix:**
-   - Ensure the fix addresses the root cause
-   - Check that fuzzing logic remains intact
-   - Consider if the fix might cause new issues
+❌ DON'T:
+- Include internal/private headers
+- Create stub/mock classes
+- Use dummy namespaces or conditional fake code
 
-Code Preservation Principles:
-- **Keep fuzzing logic intact** - don't change the core fuzzing approach
-- **Maintain original intent** - understand what the code was trying to do
-- **Only fix what's broken** - resist the urge to refactor unrelated code
-- **Don't over-engineer** - use simple, straightforward solutions
-- **Preserve function requirements** - ensure fixes don't violate the function's input requirements
-
-Special Considerations:
-- The fuzz target may already compile but have runtime errors
-- Focus on making minimal, surgical changes
-- When in doubt, check how the project's own code handles similar cases
-- Ensure the refined target respects all function requirements
-
-**🚨 CRITICAL RULE: NEVER GENERATE STUB IMPLEMENTATIONS**
-
-When fixing header/include errors, you must NEVER create fake stub classes or functions as workarounds. This defeats the purpose of fuzzing by testing fake code instead of the real project code.
-
-**If a header cannot be found:**
-1. ✅ DO: **First check if it's an INTERNAL header that should be removed**
-   - Look for `internal/`, `detail/`, `private/` in path
-   - Check for `_internal.h`, `_impl.h`, `_private.h` suffixes
-   - If so, REMOVE it and use public API instead
-2. ✅ DO: Verify the path capitalization is correct (case-sensitive)
-3. ✅ DO: Try alternative PUBLIC header paths that might exist in the project
-4. ✅ DO: Look at how existing code in the project includes similar headers
-5. ✅ DO: Suggest that the build system may need adjustment
-6. ❌ DON'T: Include internal/private headers just because they compile locally
-7. ❌ DON'T: Create stub/mock implementations with empty methods
-8. ❌ DON'T: Use fallback namespaces with dummy classes
-9. ❌ DON'T: Add `#ifndef` guards that conditionally compile fake code
-
-**Example of FORBIDDEN stub pattern:**
-```cpp
-// ❌ NEVER DO THIS:
-#ifndef HAVE_REAL_HEADER
-namespace Fake {
-class StubClass {
-public:
-  StubClass() {}  // Empty stub
-};
-}
-#endif
-```
-
-**Example of FORBIDDEN internal header usage:**
-```cpp
-// ❌ NEVER DO THIS:
-#include "libraw/internal/libraw_internal.h"  // Internal header!
-#include "src/detail/impl_helpers.h"          // Implementation detail!
-#include "private/private_api.h"              // Private API!
-
-// ✅ DO THIS INSTEAD:
-#include "libraw/libraw.h"                    // Public API only
-// Use only the public API functions available in public headers
-```
-
-**Why this matters:**
-- **Stub code** will compile successfully but test nothing
-  * PC coverage will show 100% (of the stub) but line coverage diff will be 0%
-  * The fuzzer becomes completely useless
-  * Detection: If total_pcs < 10, it's likely testing only stub code
-- **Internal headers** will compile locally but fail in OSS-Fuzz
-  * Internal headers are not installed/available in fuzzing environment
-  * Build will succeed locally but fail in CI/production
-  * Wasted time and resources on non-portable code
-  * Detection: Build fails with "file not found" only in OSS-Fuzz
-
-If you genuinely cannot find the correct header after trying reasonable alternatives, report the issue clearly and request regeneration with better project context rather than creating workarounds.
+**Why:**
+- Stub code: 100% PC coverage but 0% line_coverage_diff = useless fuzzer
+- Internal headers: Works locally, fails in OSS-Fuzz CI
+- Detection: total_pcs < 10 indicates stub code
 
