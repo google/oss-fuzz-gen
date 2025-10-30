@@ -23,9 +23,13 @@ Analyze the build errors and fix them while preserving the fuzzing logic and int
    - Locate the exact line and context where the error occurs
 
 2. **Identify Root Causes**:
-   - Are headers missing or included incorrectly?
+   - **CRITICAL: Check headers FIRST before anything else:**
+     * Are any headers INTERNAL/PRIVATE headers? (containing `internal/`, `detail/`, `private/` or ending in `_internal.h`, `_impl.h`)
+       → If YES: REMOVE them immediately and find public API alternatives
+     * Are header paths correct? Check capitalization (case-sensitive!)
      * If header information is provided above, use those EXACT paths
      * Don't guess header paths or add __has_include fallbacks
+     * Verify the header actually exists in the project's public API
    - Are there type mismatches or casting issues?
    - Are function signatures incorrect?
    - Are symbols undefined (linker errors)?
@@ -49,9 +53,17 @@ Analyze the build errors and fix them while preserving the fuzzing logic and int
 - Don't refactor unrelated code
 - Keep the code readable and maintainable
 - Follow the project's coding style
-- **For header errors**: If header information is provided above, use those EXACT paths
-  * Don't add conditional includes with __has_include
-  * Don't guess alternative paths or capitalizations
+- **For header errors (PRIORITY #1)**: 
+  * **FIRST: Check if any headers are internal/private - REMOVE THEM**
+    - Paths containing: `internal/`, `detail/`, `private/`, `src/`, `impl/`
+    - Filenames like: `*_internal.h`, `*_impl.h`, `*_private.h`, `*_detail.h`
+    - These will compile locally but FAIL in OSS-Fuzz environment
+  * **SECOND: Verify path correctness:**
+    - Check capitalization matches exactly (case-sensitive)
+    - Ensure path exists in project's PUBLIC headers
+    - If header info is provided above, use those EXACT paths
+  * **Don't add conditional includes with __has_include**
+  * **Don't guess alternative paths or capitalizations**
   * The provided paths are from actual project source files
 - Verify function signatures match their declarations
 

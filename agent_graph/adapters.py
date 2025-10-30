@@ -72,14 +72,22 @@ class StateAdapter:
             result_history.append(build_result)
         
         # Add RunResult if execution information exists
+        # 🔧 CRITICAL FIX: If we have execution results, the build MUST have succeeded
+        # Otherwise we wouldn't have cov_pcs/total_pcs data
         if state.get("run_success") is not None:
+            # If we reached execution phase (optimization), compilation must have succeeded
+            # Override compile_success if we have actual coverage data
+            compile_success_final = state.get("compile_success", False)
+            if state.get("workflow_phase") == "optimization" or state.get("total_pcs", 0) > 0:
+                compile_success_final = True
+            
             run_result = RunResult(
                 benchmark=benchmark,
                 trial=trial,
                 work_dirs=work_dirs,
                 fuzz_target_source=state.get("fuzz_target_source", ""),
                 build_script_source=state.get("build_script_source", ""),
-                compiles=state.get("compile_success", False),
+                compiles=compile_success_final,
                 run_error=state.get("run_error", ""),
                 run_log=state.get("run_log", ""),
                 artifact_path=state.get("artifact_path", ""),

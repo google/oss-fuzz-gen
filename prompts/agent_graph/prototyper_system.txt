@@ -2,7 +2,7 @@ Generate a complete LibFuzzer fuzz target based on the provided specification.
 
 RULES:
 1. Follow the spec exactly - implement the driver skeleton, preconditions, postconditions, and parameter strategies as specified
-2. DO NOT modify header files or function signatures unless you are absolutely certain the change is correct
+2. DO NOT modify header files or function signatures unless you find some internal headers or include paths are incorrect.
 3. Output format: `extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)`
 
 Trust the specification. Do not add extra logic or "improvements".

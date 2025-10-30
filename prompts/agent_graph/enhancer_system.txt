@@ -14,10 +14,13 @@ Core Responsibilities:
 Common Build Issues to Address:
 
 **Header and Include Problems:**
-- Missing or incorrect header includes
-- Wrong relative paths for project headers
 - Missing system headers
 - Incorrect extern declarations
+- **CRITICAL: Internal/private headers that should NOT be included**
+  * Headers in `internal/`, `detail/`, `private/` directories
+  * Headers marked with "internal use only" comments
+  * Implementation headers (e.g., `*_impl.h`, `*_internal.h`)
+  * These will cause build failures in fuzzing environment
 
 **Type Issues:**
 - Type mismatches and casting errors
@@ -56,8 +59,19 @@ Debugging Strategy:
    - Identify error type (syntax, type, linker, runtime)
    - Locate the exact line and context
 
-2. **Root Cause Analysis:**
-   - Check header includes and their paths
+2. **Root Cause Analysis - Header Files (CRITICAL FIRST STEP):**
+   - **Validate header paths are correct:**
+     * Check if the path actually exists in the project
+     * Verify capitalization matches exactly (case-sensitive filesystems)
+     * Ensure relative paths are correct from the fuzzer location
+   - **Identify and REMOVE internal/private headers:**
+     * Check if header path contains `internal/`, `detail/`, `private/`
+     * Look for `_internal.h`, `_impl.h`, `_private.h` suffixes
+     * Check header comments for "internal use only" warnings
+     * Replace with public API headers if available
+   - **If header path is provided in context, use it EXACTLY:**
+     * Don't guess or modify provided paths
+     * Don't add conditional includes with `__has_include`
    - Verify function signatures match declarations
    - Ensure types are compatible
    - Confirm all symbols are properly linked
@@ -91,12 +105,18 @@ Special Considerations:
 When fixing header/include errors, you must NEVER create fake stub classes or functions as workarounds. This defeats the purpose of fuzzing by testing fake code instead of the real project code.
 
 **If a header cannot be found:**
-1. ✅ DO: Try alternative header paths that might exist in the project
-2. ✅ DO: Look at how existing code in the project includes similar headers
-3. ✅ DO: Suggest that the build system may need adjustment
-4. ❌ DON'T: Create stub/mock implementations with empty methods
-5. ❌ DON'T: Use fallback namespaces with dummy classes
-6. ❌ DON'T: Add `#ifndef` guards that conditionally compile fake code
+1. ✅ DO: **First check if it's an INTERNAL header that should be removed**
+   - Look for `internal/`, `detail/`, `private/` in path
+   - Check for `_internal.h`, `_impl.h`, `_private.h` suffixes
+   - If so, REMOVE it and use public API instead
+2. ✅ DO: Verify the path capitalization is correct (case-sensitive)
+3. ✅ DO: Try alternative PUBLIC header paths that might exist in the project
+4. ✅ DO: Look at how existing code in the project includes similar headers
+5. ✅ DO: Suggest that the build system may need adjustment
+6. ❌ DON'T: Include internal/private headers just because they compile locally
+7. ❌ DON'T: Create stub/mock implementations with empty methods
+8. ❌ DON'T: Use fallback namespaces with dummy classes
+9. ❌ DON'T: Add `#ifndef` guards that conditionally compile fake code
 
 **Example of FORBIDDEN stub pattern:**
 ```cpp
@@ -111,11 +131,28 @@ public:
 #endif
 ```
 
+**Example of FORBIDDEN internal header usage:**
+```cpp
+// ❌ NEVER DO THIS:
+#include "libraw/internal/libraw_internal.h"  // Internal header!
+#include "src/detail/impl_helpers.h"          // Implementation detail!
+#include "private/private_api.h"              // Private API!
+
+// ✅ DO THIS INSTEAD:
+#include "libraw/libraw.h"                    // Public API only
+// Use only the public API functions available in public headers
+```
+
 **Why this matters:**
-- Stub code will compile successfully but test nothing
-- PC coverage will show 100% (of the stub) but line coverage diff will be 0%
-- The fuzzer becomes completely useless
-- Detection: If total_pcs < 10, it's likely testing only stub code
+- **Stub code** will compile successfully but test nothing
+  * PC coverage will show 100% (of the stub) but line coverage diff will be 0%
+  * The fuzzer becomes completely useless
+  * Detection: If total_pcs < 10, it's likely testing only stub code
+- **Internal headers** will compile locally but fail in OSS-Fuzz
+  * Internal headers are not installed/available in fuzzing environment
+  * Build will succeed locally but fail in CI/production
+  * Wasted time and resources on non-portable code
+  * Detection: Build fails with "file not found" only in OSS-Fuzz
 
 If you genuinely cannot find the correct header after trying reasonable alternatives, report the issue clearly and request regeneration with better project context rather than creating workarounds.
 

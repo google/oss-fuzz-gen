@@ -40,6 +40,6 @@ Translate the following specification into a compilable fuzz target:
 - Do not add checks not specified
 - Do not omit checks that are specified
 - Use the exact setup sequence from the spec
-- **MUST use header files EXACTLY as provided in "Reference Skeleton" - do NOT guess or invent header paths**
+- **MUST use header files EXACTLY as provided in "Reference Skeleton", unless you find some headers or include paths are incorrect.
 - Ensure code compiles without modifications
 
