@@ -1,60 +1,12 @@
-# LangGraph Agent Workflow
+# LangGraph Agent Architecture
 
-## Overview
-
-LogicFuzz uses a **two-phase agentic workflow** powered by LangGraph to automatically generate high-quality fuzz targets:
-
-### 🎯 Two-Phase Design
-
-**Phase 1: COMPILATION** - Get it to build
-- Analyze target function semantics
-- Generate initial fuzz target
-- Fix compilation errors intelligently
-- Fallback to complete regeneration if needed
-
-**Phase 2: OPTIMIZATION** - Make it effective  
-- Execute and measure coverage
-- Analyze crashes for real bugs
-- Iteratively improve based on feedback
-- Terminate on success or stability
-
-### 🔄 High-Level Workflow
-
-```mermaid
-flowchart LR
-    A[Function<br/>Analyzer] --> B[Prototyper]
-    B --> C[Build]
-    C -->|Failed| D[Enhancer]
-    D --> C
-    C -->|Success| E[Execution]
-    E -->|Crash| F[Crash<br/>Analyzer]
-    E -->|Low Coverage| G[Coverage<br/>Analyzer]
-    F --> D
-    G --> D
-    E -->|Good| H([✓ Done])
-    F -->|Real Bug| H
-    
-    style A fill:#FFD700
-    style B fill:#FFD700
-    style D fill:#FFD700
-    style F fill:#FF6347
-    style G fill:#FF6347
-    style C fill:#DDA0DD
-    style E fill:#DDA0DD
-    style H fill:#90EE90
-```
-
-**Key Agents:**
-- 🟡 **Yellow**: LLM-powered agents (analysis & generation)
-- 🔴 **Red**: LLM-powered analyzers (crash & coverage)
-- 🟣 **Purple**: Build & execution (non-LLM)
-- 🟢 **Green**: Successful termination
+Technical documentation for LogicFuzz's multi-agent workflow system.
 
 ---
 
-## Detailed Architecture
+## Architecture Overview
 
-### Complete Workflow Diagram
+### Two-Phase Workflow Design
 
 ```mermaid
 flowchart TD
@@ -124,234 +76,506 @@ flowchart TD
     style EndStable fill:#90EE90
 ```
 
-### Core Workflow Principles
+**Phase 1 (Compilation)**: Analyze → Generate → Build → Fix (3 retries) → Regenerate (if needed)  
+**Phase 2 (Optimization)**: Execute → Analyze (crash/coverage) → Enhance → Repeat
 
-The workflow follows a **two-phase centralized routing** where:
+---
 
-**Phase 1 (Compilation):**
-1. **FunctionAnalyzer** analyzes API semantics (preconditions, setup sequence, constraints)
-2. **Prototyper** generates initial fuzz target
-3. **Build** attempts compilation
-4. **Enhancer** fixes errors (max 3 retries with intelligent code context)
-5. **Prototyper Regeneration** if enhancer fails (completely new approach)
+## Session Memory Mechanism
 
-**Phase 2 (Optimization):**
-1. **Execution** runs the fuzz target and collects metrics
-2. **CrashAnalyzer** + **ContextAnalyzer** validate crashes (feasibility checking)
-3. **CoverageAnalyzer** suggests improvements for low coverage
-4. **Enhancer** iteratively improves the target
-5. Loops until good coverage, bug found, or max iterations
+Cross-agent knowledge sharing system that prevents repeated mistakes and accelerates convergence.
 
-## State Machine Details
+### Memory Categories
 
-### 1. Node Types
+| Memory Type | Stored By | Used By | Purpose |
+|-------------|-----------|---------|---------|
+| **API Constraints** | Function Analyzer | Prototyper, Enhancer | API usage rules (e.g., "Must call init() before decode()") |
+| **Archetype** | Function Analyzer | Prototyper | Architectural pattern (e.g., "stateful_decoder") |
+| **Known Fixes** | Enhancer | Enhancer | Previously successful error fixes |
+| **Build Context** | Build | Enhancer | Compilation error details and code snippets |
+| **Coverage Insights** | Coverage Analyzer | Enhancer | Strategies to improve coverage |
+| **Crash Context** | Crash Analyzer | Context Analyzer | Crash details for feasibility validation |
 
-#### Supervisor Node
-- **Function**: Decides next action based on current state
-- **Input**: Current workflow state
-- **Output**: next_action (next node to execute)
-
-#### LLM-Driven Nodes (Using Large Language Models)
-- **Function Analyzer**: Analyzes target function, generates function signature and requirements
-- **Prototyper**: Generates initial fuzz target and build scripts
-- **Enhancer**: Improves fuzz target based on error feedback
-- **Crash Analyzer**: Analyzes crash information, determines if it's a real bug
-- **Coverage Analyzer**: Analyzes coverage reports, provides improvement suggestions
-- **Context Analyzer**: Analyzes crash context, determines feasibility
-
-#### Non-LLM Nodes
-- **Build**: Compiles fuzz target
-- **Execution**: Runs fuzzer and collects results
-
-### 2. Two-Phase Routing Logic
-
-The Supervisor implements **phase-aware routing** with different strategies for compilation vs optimization:
+### Memory Flow
 
 ```mermaid
 flowchart TD
-    Start{Supervisor<br/>Routing} --> CheckPhase{workflow_phase?}
+    FA[Function Analyzer] -->|API Constraints<br/>Archetype| SM[(Session Memory)]
+    Build[Build] -->|Error Context| SM
+    Enh[Enhancer] -->|Known Fixes| SM
+    CA[Coverage Analyzer] -->|Coverage Insights| SM
+    CrashA[Crash Analyzer] -->|Crash Details| SM
     
-    CheckPhase -->|"compilation"| Phase1[PHASE 1:<br/>COMPILATION]
-    CheckPhase -->|"optimization"| Phase2[PHASE 2:<br/>OPTIMIZATION]
+    SM -->|Constraints| Proto[Prototyper]
+    SM -->|Fixes + Context| Enh
+    SM -->|Crash Info| ContextA[Context Analyzer]
     
-    Phase1 --> P1_HasAnalysis{Has<br/>Function Analysis?}
-    P1_HasAnalysis -->|No| P1_Analyzer[→ function_analyzer]
-    P1_HasAnalysis -->|Yes| P1_HasTarget{Has<br/>Fuzz Target?}
+    style FA fill:#FFD700
+    style Proto fill:#FFD700
+    style Enh fill:#FFD700
+    style CA fill:#FF6347
+    style CrashA fill:#FF6347
+    style ContextA fill:#FF6347
+    style Build fill:#DDA0DD
+    style SM fill:#87CEEB
+```
+
+**Injection Strategy**: Supervisor injects relevant memory based on current phase, agent type, and iteration count.
+
+---
+
+## Agent Deep Dive
+
+### 1. Supervisor Agent (Central Router)
+
+**Role**: Decision-making hub that orchestrates the workflow
+
+**Key Responsibilities**:
+- Route to appropriate agent based on state (phase, counters, results)
+- Manage phase transitions (COMPILATION → OPTIMIZATION)
+- Enforce loop limits (50 supervisor calls, 10 visits per node)
+- Inject Session Memory into prompts
+
+**Routing Logic** (pseudocode):
+```python
+if workflow_phase == "compilation":
+    if not has_function_analysis: return "function_analyzer"
+    if not has_fuzz_target: return "prototyper"
+    if not built: return "build"
+    if build_failed and compilation_retry_count < 3: return "enhancer"
+    if build_failed and prototyper_regenerate_count < 1: return "prototyper"
+    if build_success: switch_to_optimization()
     
-    P1_HasTarget -->|No| P1_Proto[→ prototyper]
-    P1_HasTarget -->|Yes| P1_Built{Build Status?}
+elif workflow_phase == "optimization":
+    if has_crash and not analyzed: return "crash_analyzer" → "context_analyzer"
+    if crash_feasible: return "END"  # Bug found!
+    if coverage_low and not analyzed: return "coverage_analyzer"
+    if iteration < max_iterations: return "enhancer"
+    else: return "END"
+```
+
+---
+
+### 2. Function Analyzer Agent
+
+**Role**: Deep semantic analysis of target function
+
+**Input**:
+- Function signature + header files
+- Fuzz Introspector context (if available)
+
+**Output** (JSON):
+```json
+{
+  "api_constraints": ["Must call init() before use", "Return NULL on error"],
+  "archetype": "stateful_parser",
+  "preconditions": ["Input must be null-terminated"],
+  "setup_sequence": ["1. Allocate state", "2. Call parse", "3. Free resources"]
+}
+```
+
+**Analysis Focus**:
+- API semantics & calling conventions
+- Preconditions & error handling
+- Archetype identification (parser, codec, state machine)
+- Resource management patterns
+
+---
+
+### 3. Prototyper Agent
+
+**Role**: Generate complete fuzz target + build infrastructure
+
+**Input**: Function analysis + API constraints from Session Memory
+
+**Output**: Fuzz target source code + build.sh
+
+**Generation Strategy**:
+```c
+// First generation - follows archetype
+int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
+    if (size < MIN || size > MAX) return 0;  // Preconditions
     
-    P1_Built -->|Not Built| P1_Build[→ build]
-    P1_Built -->|Failed| P1_Retry{compilation_retry_count<br/>< 3?}
-    P1_Built -->|Success| P1_Switch[Switch to Phase 2]
+    init_library();                          // Setup sequence
+    result_t *r = target_function(data, size);
+    if (r) {
+        process_result(r);                   // Maximize coverage
+        cleanup_result(r);
+    }
+    cleanup_library();
+    return 0;
+}
+```
+
+**Regeneration** (after 3 failed fixes): Completely new approach using Session Memory errors.
+
+---
+
+### 4. Enhancer Agent
+
+**Role**: Intelligent error fixing and iterative improvement
+
+**Three Modes**:
+
+#### Mode 1: Compilation Error Fixing
+- **Input**: Build errors + intelligent code context (error line ±10)
+- **Strategy**: Targeted fix (not full regeneration) + store successful patterns
+- **Example**: `undefined reference to compress` → Add `-lz` to build script
+
+#### Mode 2: False Positive Crash Fixing
+- **Input**: Crash report (marked false positive by Context Analyzer)
+- **Strategy**: Add validation, fix memory management, add bounds checking
+
+#### Mode 3: Coverage Improvement
+- **Input**: Coverage report + Coverage Analyzer suggestions
+- **Strategy**: Add boundary tests, explore code paths, increase API surface
+- **Example**:
+```c
+// Before: Only normal size
+if (size > 0) target_function(data, size);
+
+// After: Multiple boundary conditions
+target_function(NULL, 0);                    // Empty input
+if (size >= 1) target_function(data, 1);     // Minimum
+if (size > MIN) target_function(data, size); // Normal
+if (size >= MAX) target_function(data, MAX); // Maximum
+```
+
+---
+
+### 5. Crash Analyzer Agent
+
+**Role**: Determine crash type and severity
+
+**Input**: Crash reproducer + stack trace + ASAN report
+
+**Output** (JSON):
+```json
+{
+  "crash_type": "heap-buffer-overflow",
+  "severity": "high",
+  "location": "parse_json:142",
+  "preliminary_analysis": "Write beyond allocated buffer",
+  "requires_context_analysis": true
+}
+```
+
+**Classification**: Real bugs (buffer overflow, UAF) vs false positives (OOM, timeout)
+
+---
+
+### 6. Context Analyzer Agent
+
+**Role**: Deep feasibility validation of crashes
+
+**Input**: Crash analysis + source code context + function semantics
+
+**Output** (JSON):
+```json
+{
+  "is_feasible": true,
+  "confidence": "high",
+  "reasoning": "Buffer overflow in production code path, not harness. Genuine memory safety violation.",
+  "recommendation": "REPORT_BUG"
+}
+```
+
+**Validation Criteria**:
+- Crash in target code or fuzzer harness?
+- Reachable in real-world usage?
+- Security-relevant?
+- Realistic input trigger?
+
+---
+
+### 7. Coverage Analyzer Agent
+
+**Role**: Identify uncovered code paths + suggest improvements
+
+**Input**: Coverage report + source code with annotations + fuzz target
+
+**Output** (JSON):
+```json
+{
+  "current_coverage": "45.2%",
+  "uncovered_critical_paths": [
+    "Error handling in parse_array() (lines 234-245)",
+    "Empty input edge case (lines 89-92)"
+  ],
+  "suggestions": [
+    "Add test case: empty array '[]'",
+    "Add deeply nested structures to trigger recursion"
+  ]
+}
+```
+
+**Strategy**: Identify high-value uncovered code → Determine why → Suggest specific changes
+
+---
+
+### 8. Build Node (Non-LLM)
+
+**Role**: Compile fuzz target in OSS-Fuzz Docker container
+
+**Process**:
+1. Execute build script
+2. Capture stdout/stderr
+3. Check binary generation
+4. Parse compilation errors
+
+**Output**: `compile_success`, `build_errors`, `binary_exists`
+
+---
+
+### 9. Execution Node (Non-LLM)
+
+**Role**: Run fuzzer + collect metrics
+
+**Process**:
+1. Execute libFuzzer with binary
+2. Monitor crashes/timeouts
+3. Collect LLVM source-based coverage
+4. Save crash reproducers
+
+**Config**: 60s timeout, ASAN enabled, line/branch coverage
+
+**Output**: `run_success`, `coverage_percent`, `crashes`, `crash_info`
+
+---
+
+## Supervisor Routing Logic
+
+### Phase-Aware Routing
+
+```mermaid
+flowchart TD
+    Start{Supervisor} --> CheckPhase{workflow_phase?}
     
-    P1_Retry -->|Yes| P1_Enhancer[→ enhancer<br/>code context extraction]
-    P1_Retry -->|No| P1_Regen{prototyper_regenerate_count<br/>< 1?}
+    CheckPhase -->|compilation| Phase1[Compilation Logic]
+    CheckPhase -->|optimization| Phase2[Optimization Logic]
     
-    P1_Regen -->|Yes| P1_ProtoRegen[→ prototyper<br/>add error context<br/>reset compilation_retry_count]
-    P1_Regen -->|No| P1_End[→ END<br/>Compilation Failed]
+    Phase1 --> P1_Check{State?}
+    P1_Check -->|No Analysis| P1_Analyzer[→ function_analyzer]
+    P1_Check -->|No Target| P1_Proto[→ prototyper]
+    P1_Check -->|Not Built| P1_Build[→ build]
+    P1_Check -->|Failed & retry<3| P1_Enhancer[→ enhancer + context]
+    P1_Check -->|Failed & regen<1| P1_Regen[→ prototyper regen]
+    P1_Check -->|Success| P1_Switch[→ Switch to Phase 2]
     
-    P1_Switch --> P2_Exec
-    
-    Phase2 --> P2_HasRun{Has Run?}
-    P2_HasRun -->|No| P2_Exec[→ execution]
-    P2_HasRun -->|Yes| P2_Result{Run Result?}
-    
-    P2_Result -->|Crashed| P2_CrashCheck{Has<br/>Crash Analysis?}
-    P2_Result -->|Success| P2_Coverage{Coverage Check}
-    
-    P2_CrashCheck -->|No| P2_CrashAna[→ crash_analyzer]
-    P2_CrashCheck -->|Yes| P2_ContextCheck{Has<br/>Context Analysis?}
-    
-    P2_ContextCheck -->|No| P2_ContextAna[→ context_analyzer]
-    P2_ContextCheck -->|Yes| P2_Feasible{Feasible<br/>Real Bug?}
-    
-    P2_Feasible -->|Yes| P2_EndBug[→ END<br/>Bug Found!]
-    P2_Feasible -->|No| P2_EnhancerFP[→ enhancer<br/>False Positive]
-    
-    P2_Coverage --> P2_CovLow{Coverage < 50%<br/>OR<br/>diff < 5%?}
-    P2_CovLow -->|Yes| P2_CovCheck{Has<br/>Coverage Analysis?}
-    P2_CovLow -->|No| P2_Stagnant{no_improvement<br/>count >= 3?}
-    
-    P2_CovCheck -->|No| P2_CovAna[→ coverage_analyzer]
-    P2_CovCheck -->|Yes| P2_Iter{current_iteration<br/>< max_iterations?}
-    
-    P2_Iter -->|Yes| P2_EnhancerCov[→ enhancer<br/>retry_count++]
-    P2_Iter -->|No| P2_EndMaxIter[→ END<br/>Max Iterations]
-    
-    P2_Stagnant -->|Yes| P2_EndStable[→ END<br/>Coverage Stable]
-    P2_Stagnant -->|No| P2_Continue[Continue Loop]
+    Phase2 --> P2_Check{State?}
+    P2_Check -->|Crash & not analyzed| P2_Crash[→ crash_analyzer]
+    P2_Check -->|Crash analyzed| P2_Context[→ context_analyzer]
+    P2_Check -->|Real bug| P2_End[→ END]
+    P2_Check -->|Low coverage| P2_CovAnalyzer[→ coverage_analyzer]
+    P2_Check -->|iter < max| P2_Enhancer[→ enhancer]
+    P2_Check -->|Stable| P2_EndStable[→ END]
     
     style Start fill:#87CEEB
     style Phase1 fill:#B0E0E6
     style Phase2 fill:#FFE4B5
     style P1_Analyzer fill:#FFD700
     style P1_Proto fill:#FFD700
-    style P1_ProtoRegen fill:#FFD700
     style P1_Enhancer fill:#FFD700
-    style P1_Build fill:#DDA0DD
-    style P1_Switch fill:#FFA500
-    style P2_Exec fill:#DDA0DD
-    style P2_CrashAna fill:#FF6347
-    style P2_ContextAna fill:#FF6347
-    style P2_CovAna fill:#FF6347
-    style P2_EnhancerFP fill:#FFD700
-    style P2_EnhancerCov fill:#FFD700
-    style P1_End fill:#FFB6C1
-    style P2_EndBug fill:#90EE90
-    style P2_EndMaxIter fill:#FFB6C1
-    style P2_EndStable fill:#90EE90
+    style P2_Crash fill:#FF6347
+    style P2_CovAnalyzer fill:#FF6347
+    style P2_Enhancer fill:#FFD700
 ```
 
-#### Key Routing Differences Between Phases:
+**Key Differences**:
+- **COMPILATION**: `compilation_retry_count` (max 3), intelligent code context, Prototyper regeneration
+- **OPTIMIZATION**: `retry_count`, coverage thresholds (50%, 5% diff), crash feasibility validation
 
-**COMPILATION Phase:**
-- Uses `compilation_retry_count` (max 3)
-- Enables Prototyper regeneration after retry exhaustion
-- Enhancer receives intelligent code context (error lines ±10)
-- Automatically switches to OPTIMIZATION on build success
+---
 
-**OPTIMIZATION Phase:**
-- Uses `retry_count` for enhancement iterations
-- Tracks `no_coverage_improvement_count` for stagnation detection
-- Coverage-driven decision making (50% threshold, 5% diff)
-- Crash feasibility validation before termination
-
-### 3. Loop Control Mechanism
+## Loop Control & Termination
 
 ```mermaid
 flowchart TD
-    Check{Loop Check} --> GlobalCount{supervisor_call_count<br/>> 50?}
+    Check{Loop Check} --> GlobalCount{supervisor_call_count > 50?}
     GlobalCount -->|Yes| Term1[Terminate: global_loop_limit]
-    GlobalCount -->|No| ErrorCount{Error Count<br/>> max_errors?}
-    
+    GlobalCount -->|No| ErrorCount{error_count > max?}
     ErrorCount -->|Yes| Term2[Terminate: too_many_errors]
-    ErrorCount -->|No| RetryCount{retry_count<br/>> max_retries?}
-    
-    RetryCount -->|Yes| Term3[Terminate: max_retries_reached]
-    RetryCount -->|No| NodeVisit{Single Node Visit Count<br/>> 10?}
-    
-    NodeVisit -->|Yes| Term4[Terminate: node_loop_detected]
-    NodeVisit -->|No| NoImprov{No Coverage Improvement<br/>Count >= 3?}
-    
-    NoImprov -->|Yes| Term5[Normal End: Coverage Stable]
-    NoImprov -->|No| Continue[Continue Execution]
+    ErrorCount -->|No| NodeVisit{node_visit_count > 10?}
+    NodeVisit -->|Yes| Term3[Terminate: node_loop_detected]
+    NodeVisit -->|No| NoImprov{no_improvement >= 3?}
+    NoImprov -->|Yes| Term4[Normal End: Coverage Stable]
+    NoImprov -->|No| Continue[Continue]
     
     style Check fill:#87CEEB
     style Term1 fill:#FFB6C1
     style Term2 fill:#FFB6C1
     style Term3 fill:#FFB6C1
-    style Term4 fill:#FFB6C1
-    style Term5 fill:#90EE90
+    style Term4 fill:#90EE90
     style Continue fill:#90EE90
 ```
 
-### 4. State Data Flow
-
-```mermaid
-flowchart LR
-    State[(FuzzingWorkflowState)]
-    
-    State -->|Basic Info| Basic[benchmark<br/>trial<br/>work_dirs]
-    State -->|Analysis Results| Analysis[function_analysis<br/>context_analysis<br/>crash_analysis<br/>coverage_analysis]
-    State -->|Build Results| Build[compile_success<br/>build_errors<br/>binary_exists]
-    State -->|Execution Results| Exec[run_success<br/>coverage_percent<br/>crashes<br/>crash_info]
-    State -->|Workflow Control| Control[next_action<br/>retry_count<br/>supervisor_call_count<br/>node_visit_counts]
-    State -->|Message History| Messages[agent_messages<br/>per agent]
-    
-    style State fill:#87CEEB
-    style Basic fill:#FFD700
-    style Analysis fill:#FF6347
-    style Build fill:#DDA0DD
-    style Exec fill:#DDA0DD
-    style Control fill:#90EE90
-    style Messages fill:#FFA500
-```
-
-### 5. Typical Execution Paths
-
-#### Path 1: Real Bug Successfully Found
-```
-Start → Supervisor → FunctionAnalyzer → Supervisor → Prototyper → 
-Supervisor → Build → Supervisor → Execution → Supervisor → 
-CrashAnalyzer → Supervisor → ContextAnalyzer → Supervisor → END (Real Bug!)
-```
-
-#### Path 2: Good Coverage Achieved
-```
-Start → Supervisor → FunctionAnalyzer → Supervisor → Prototyper → 
-Supervisor → Build → Supervisor → Execution → Supervisor → 
-CoverageAnalyzer → Supervisor → Enhancer → Supervisor → Build → 
-Supervisor → Execution → Supervisor → END (Coverage Target Met)
-```
-
-#### Path 3: Build Failure then Fixed
-```
-Start → Supervisor → FunctionAnalyzer → Supervisor → Prototyper → 
-Supervisor → Build (Failed) → Supervisor → Enhancer → Supervisor → 
-Build → Supervisor → Execution → Supervisor → END
-```
-
-### 6. Key Configuration Parameters
+**Configuration**:
 
 | Parameter | Default | Description |
-|------|--------|------|
-| MAX_SUPERVISOR_CALLS | 50 | Global supervisor call count limit |
-| MAX_NODE_VISITS | 10 | Maximum visits per node |
-| max_retries | 3 | Maximum retry count |
-| max_errors | 5 | Maximum error count |
-| NO_IMPROVEMENT_THRESHOLD | 3 | Threshold for consecutive no-improvement iterations |
-| COVERAGE_THRESHOLD | 0.5 | Low coverage threshold (50%) |
-| IMPROVEMENT_THRESHOLD | 0.01 | Minimum improvement threshold (1%) |
-| SIGNIFICANT_IMPROVEMENT | 0.05 | Significant improvement threshold (5%) |
-| max_iterations | 5 | Maximum iteration count |
+|-----------|---------|-------------|
+| MAX_SUPERVISOR_CALLS | 50 | Global call limit |
+| MAX_NODE_VISITS | 10 | Per-node visit limit |
+| NO_IMPROVEMENT_THRESHOLD | 3 | Stagnation detection |
+| COVERAGE_THRESHOLD | 0.5 | Low coverage (50%) |
+| SIGNIFICANT_IMPROVEMENT | 0.05 | Improvement threshold (5%) |
+| max_iterations | 5 | Optimization iterations |
+
+---
+
+## Implementation Patterns
+
+### 1. LangGraph State Machine
+
+```python
+# workflow.py
+from langgraph.graph import StateGraph, END
+
+workflow = StateGraph(FuzzingWorkflowState)
+
+# Add nodes
+workflow.add_node("supervisor", supervisor_node)
+workflow.add_node("function_analyzer", function_analyzer_node)
+# ... more nodes
+
+# Conditional edges from supervisor
+workflow.add_conditional_edges(
+    "supervisor",
+    lambda state: state["next_action"],
+    {
+        "function_analyzer": "function_analyzer",
+        "prototyper": "prototyper",
+        "build": "build",
+        "END": END
+    }
+)
+
+# All nodes return to supervisor
+workflow.add_edge("function_analyzer", "supervisor")
+workflow.add_edge("prototyper", "supervisor")
+```
+
+### 2. Structured LLM Agent
+
+```python
+# agents/langgraph_agent.py
+class LLMAgent:
+    def __init__(self, model_name: str, system_prompt: str):
+        self.model = get_llm_model(model_name)
+        self.system_prompt = system_prompt
+    
+    def invoke(self, user_prompt: str, output_schema: dict = None):
+        """Invoke LLM with structured output"""
+        if output_schema:
+            response = self.model.with_structured_output(output_schema).invoke(messages)
+        else:
+            response = self.model.invoke(messages)
+        return response
+```
+
+### 3. Intelligent Code Context Extraction
+
+```python
+# agents/utils.py
+def extract_error_context(source_code: str, error_line: int, context_lines: int = 10) -> str:
+    """Extract ±N lines around error for focused fixing"""
+    lines = source_code.split('\n')
+    start = max(0, error_line - context_lines)
+    end = min(len(lines), error_line + context_lines + 1)
+    
+    context = []
+    for i in range(start, end):
+        marker = " >>> " if i == error_line else "     "
+        context.append(f"{marker}{i+1:4d} | {lines[i]}")
+    
+    return "\n".join(context)
+```
+
+### 4. Session Memory Injection
+
+```python
+# session_memory_injector.py
+def inject_session_memory(prompt: str, state: FuzzingWorkflowState, agent_type: str) -> str:
+    memory = state.get("session_memory", {})
+    
+    if agent_type == "enhancer":
+        known_fixes = memory.get("known_fixes", [])
+        api_constraints = memory.get("api_constraints", [])
+        
+        memory_section = "\n\n## Session Memory\n"
+        if known_fixes:
+            memory_section += "### Known Fixes:\n" + "\n".join(f"- {fix}" for fix in known_fixes)
+        if api_constraints:
+            memory_section += "\n### API Constraints:\n" + "\n".join(f"- {c}" for c in api_constraints)
+        
+        return prompt + memory_section
+    
+    return prompt
+```
+
+---
+
+## File Structure
+
+```
+agent_graph/
+├── workflow.py              # LangGraph workflow definition
+├── state.py                 # FuzzingWorkflowState schema
+├── main.py                  # Entry point with CLI
+│
+├── nodes/                   # Agent implementations
+│   ├── supervisor_node.py   # Central routing logic
+│   ├── function_analyzer_node.py
+│   ├── prototyper_node.py
+│   ├── enhancer_node.py
+│   ├── crash_analyzer_node.py
+│   ├── context_analyzer_node.py
+│   ├── coverage_analyzer_node.py
+│   └── execution_node.py
+│
+├── agents/                  # Base classes & utilities
+│   ├── langgraph_agent.py   # LLMAgent base class
+│   └── utils.py             # Helper functions
+│
+├── prompt_loader.py         # Loads prompts from prompts/
+├── memory.py                # SessionMemory class
+└── session_memory_injector.py
+```
+
+---
+
+## Prompt Engineering Strategy
+
+All system prompts stored in `prompts/` directory:
+
+- `function_analyzer.txt` - Semantic analysis instructions
+- `prototyper.txt` - Code generation guidelines + examples
+- `enhancer.txt` - Error fixing & optimization strategies
+- `crash_analyzer.txt` - Crash classification instructions
+- `context_analyzer.txt` - Feasibility validation criteria
+- `coverage_analyzer.txt` - Coverage improvement strategies
+
+**Techniques**:
+- Few-shot examples for code generation
+- Structured output schemas (JSON)
+- Chain-of-thought reasoning
+- Phase-specific instructions
+- Token optimization (80% reduction)
+
+---
 
 ## Legend
 
-- 🟢 **Green**: Start/Successful End
-- 🔵 **Blue**: Supervisor Node
-- 🟡 **Yellow**: LLM-Driven Analysis/Generation Nodes
-- 🟣 **Purple**: Build/Execution Nodes (Non-LLM)
-- 🔴 **Red**: Analysis Nodes (Crash/Coverage)
-- 🔴 **Pink**: Abnormal Termination
+- 🟢 **Green**: Start/Success
+- 🔵 **Blue**: Supervisor
+- 🟡 **Yellow**: LLM-Driven Agents
+- 🟣 **Purple**: Build/Execution
+- 🔴 **Red**: Analyzers
+- 🔴 **Pink**: Termination
 
+---
+
+## Further Reading
+
+- [Main README](../README.md) - Project overview
+- [NEW_PROJECT_SETUP.md](../docs/NEW_PROJECT_SETUP.md) - Setup guide
+- [FUNCTION_ANALYZER_REDESIGN.md](../FUNCTION_ANALYZER_REDESIGN.md) - Function Analyzer evolution
