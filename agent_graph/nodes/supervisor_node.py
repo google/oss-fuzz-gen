@@ -31,23 +31,6 @@ def supervisor_node(state: FuzzingWorkflowState, config: RunnableConfig) -> Dict
         trial = state["trial"]
         logger.info('Starting Supervisor node', trial=trial)
         
-        # Increment and check global supervisor call count (similar to no_coverage_improvement_count)
-        supervisor_call_count = state.get("supervisor_call_count", 0) + 1
-        MAX_SUPERVISOR_CALLS = 50  # Absolute upper bound to prevent infinite loops
-        
-        if supervisor_call_count > MAX_SUPERVISOR_CALLS:
-            logger.warning(f'Global loop limit reached: supervisor called {supervisor_call_count} times', 
-                          trial=trial)
-            return {
-                "next_action": "END",
-                "termination_reason": "global_loop_limit",
-                "supervisor_call_count": supervisor_call_count,
-                "messages": [{
-                    "role": "assistant",
-                    "content": f"Workflow terminated: supervisor called {supervisor_call_count} times (safety limit)"
-                }]
-            }
-        
         # Check for errors that should terminate the workflow
         errors = state.get("errors", [])
         configurable = config.get("configurable", {})
@@ -57,7 +40,6 @@ def supervisor_node(state: FuzzingWorkflowState, config: RunnableConfig) -> Dict
             return {
                 "next_action": "END",
                 "termination_reason": "too_many_errors",
-                "supervisor_call_count": supervisor_call_count,
                 "messages": [{
                     "role": "assistant",
                     "content": f"Workflow terminated due to {len(errors)} errors"
@@ -73,7 +55,6 @@ def supervisor_node(state: FuzzingWorkflowState, config: RunnableConfig) -> Dict
             return {
                 "next_action": "END",
                 "termination_reason": "max_retries_reached",
-                "supervisor_call_count": supervisor_call_count,
                 "messages": [{
                     "role": "assistant",
                     "content": f"Workflow terminated after {retry_count} retries"
@@ -96,7 +77,6 @@ def supervisor_node(state: FuzzingWorkflowState, config: RunnableConfig) -> Dict
                 return {
                     "next_action": "END",
                     "termination_reason": "node_loop_detected",
-                    "supervisor_call_count": supervisor_call_count,
                     "node_visit_counts": node_visit_counts,
                     "messages": [{
                         "role": "assistant",
@@ -105,7 +85,7 @@ def supervisor_node(state: FuzzingWorkflowState, config: RunnableConfig) -> Dict
                 }
         
         logger.info(f'Supervisor determined next action: {next_action} '
-                   f'(call #{supervisor_call_count}, node visits: {node_visit_counts.get(next_action, 0)})', 
+                   f'(node visits: {node_visit_counts.get(next_action, 0)})', 
                    trial=trial)
         
         # 整理和清理session_memory，确保下游agent获得干净的共识约束
@@ -113,7 +93,6 @@ def supervisor_node(state: FuzzingWorkflowState, config: RunnableConfig) -> Dict
         
         return {
             "next_action": next_action,
-            "supervisor_call_count": supervisor_call_count,
             "node_visit_counts": node_visit_counts,
             "session_memory": session_memory,  # 注入清理后的共识
             "messages": [{

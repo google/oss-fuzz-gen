@@ -133,7 +133,7 @@ flowchart TD
 **Key Responsibilities**:
 - Route to appropriate agent based on state (phase, counters, results)
 - Manage phase transitions (COMPILATION → OPTIMIZATION)
-- Enforce loop limits (50 supervisor calls, 10 visits per node)
+- Enforce loop limits (per-node visit counts to prevent infinite loops)
 - Inject Session Memory into prompts
 
 **Routing Logic** (pseudocode):
@@ -391,11 +391,11 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    Check{Loop Check} --> GlobalCount{supervisor_call_count > 50?}
-    GlobalCount -->|Yes| Term1[Terminate: global_loop_limit]
-    GlobalCount -->|No| ErrorCount{error_count > max?}
-    ErrorCount -->|Yes| Term2[Terminate: too_many_errors]
-    ErrorCount -->|No| NodeVisit{node_visit_count > 10?}
+    Check{Loop Check} --> ErrorCount{error_count > max?}
+    ErrorCount -->|Yes| Term1[Terminate: too_many_errors]
+    ErrorCount -->|No| RetryCount{retry_count > max?}
+    RetryCount -->|Yes| Term2[Terminate: max_retries_reached]
+    RetryCount -->|No| NodeVisit{node_visit_count > 10?}
     NodeVisit -->|Yes| Term3[Terminate: node_loop_detected]
     NodeVisit -->|No| NoImprov{no_improvement >= 3?}
     NoImprov -->|Yes| Term4[Normal End: Coverage Stable]
@@ -413,12 +413,13 @@ flowchart TD
 
 | Parameter | Default | Description |
 |-----------|---------|-------------|
-| MAX_SUPERVISOR_CALLS | 50 | Global call limit |
-| MAX_NODE_VISITS | 10 | Per-node visit limit |
-| NO_IMPROVEMENT_THRESHOLD | 3 | Stagnation detection |
-| COVERAGE_THRESHOLD | 0.5 | Low coverage (50%) |
+| MAX_NODE_VISITS | 10 | Per-node visit limit (prevents infinite loops) |
+| max_retries | 3 | Maximum retry count |
+| max_errors | 5 | Maximum error count |
+| NO_IMPROVEMENT_THRESHOLD | 3 | Stagnation detection (consecutive no-improvement iterations) |
+| COVERAGE_THRESHOLD | 0.5 | Low coverage threshold (50%) |
 | SIGNIFICANT_IMPROVEMENT | 0.05 | Improvement threshold (5%) |
-| max_iterations | 5 | Optimization iterations |
+| max_iterations | 5 | Optimization phase iterations |
 
 ---
 
