@@ -156,6 +156,15 @@ class FuzzingWorkflow:
         token_summary = get_token_usage_summary(final_state)
         logger.info(f"\n{token_summary}", trial=trial)
         
+        # Finalize all agent logs before returning
+        from agent_graph.logger import LangGraphLogger
+        workflow_logger = LangGraphLogger.get_logger(
+            workflow_id="fuzzing_workflow", 
+            trial=trial, 
+            base_dir=str(self.args.work_dirs.base) if hasattr(self.args, 'work_dirs') and self.args.work_dirs else None
+        )
+        workflow_logger.finalize()
+        
         return final_state
     
     def _create_full_workflow(self) -> StateGraph:

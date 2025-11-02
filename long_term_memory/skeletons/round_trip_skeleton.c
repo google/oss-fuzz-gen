@@ -1,17 +1,13 @@
-// Round-trip Validator Skeleton
-// Pattern: encode → decode → verify
-// NOTE: Headers are provided above this skeleton - DO NOT add additional headers
+// Round-trip Validator Pattern: encode → decode → verify
 
 int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
-  // Input validation
   if (size < 1 || size > MAX_INPUT_SIZE) return 0;
   
-  // Allocate encode buffer
+  // Allocate buffers
   size_t encoded_size = ENCODE_BOUND(size);
   uint8_t *encoded = malloc(encoded_size);
   if (!encoded) return 0;
   
-  // Allocate decode buffer
   uint8_t *decoded = malloc(size);
   if (!decoded) {
     free(encoded);
@@ -36,4 +32,3 @@ cleanup:
   free(encoded);
   return 0;
 }
-

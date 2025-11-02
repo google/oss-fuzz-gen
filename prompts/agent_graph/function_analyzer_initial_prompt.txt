@@ -2,10 +2,14 @@ Analyze this target function and provide an initial assessment.
 
 **Function**: {FUNCTION_SIGNATURE}
 
-**Source Code**:
+**Reference: Source Code (for understanding behavior)**:
 ```c
 {FUNCTION_SOURCE}
 ```
+
+*Note: This shows internal implementation. Extract the API's behavior pattern, not specific internal calls.*
+
+{API_CONTEXT}
 
 ---
 
@@ -30,6 +34,4 @@ Evidence: [Why you chose this]
 - Return value: [what it indicates]
 - Obvious preconditions: [any visible checks or requirements]
 - Obvious postconditions: [what the return value means]
-
-Keep it brief - we'll refine this analysis through usage examples next.
 

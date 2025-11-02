@@ -66,6 +66,182 @@ cleanup:
 
 ---
 
+### 1.1. Goto Cleanup in C++ (Variable Initialization Constraint)
+
+**Error (C++ specific)**:
+```cpp
+int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
+  if (size < 10) return 0;
+  
+  igraph_t graph;
+  igraph_vector_t vec;
+  
+  // ERROR: Cannot jump from here...
+  if (igraph_init() != SUCCESS) {
+    goto cleanup;  // Error: jumps over initialization of 'vec'
+  }
+  
+  // ... to here (crosses initialization)
+  if (igraph_vector_init(&vec, 10) != SUCCESS) {
+    goto cleanup;
+  }
+  
+  if (igraph_create(&graph, &vec) != SUCCESS) {
+    goto cleanup;
+  }
+  
+cleanup:
+  igraph_vector_destroy(&vec);  // May be uninitialized!
+  igraph_destroy(&graph);
+  return 0;
+}
+```
+
+**Compiler Error**:
+```
+error: cannot jump from this goto statement to its label
+note: jump bypasses variable initialization
+```
+
+**Root Cause**: 
+- C++ forbids `goto` that jumps over variable declarations/initializations
+- Even struct/POD types count as "initialized" when declared
+- Jumping to `cleanup` may execute destroy on uninitialized memory
+
+**Fix Option 1: Declare All Variables at Function Start**:
+```cpp
+int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
+  // Declare ALL variables BEFORE any goto source
+  igraph_t graph;
+  igraph_vector_t vec;
+  bool vec_initialized = false;
+  bool graph_initialized = false;
+  
+  if (size < 10) return 0;
+  
+  if (igraph_vector_init(&vec, 10) != SUCCESS) {
+    goto cleanup;
+  }
+  vec_initialized = true;  // Track state
+  
+  if (igraph_create(&graph, &vec) != SUCCESS) {
+    goto cleanup;
+  }
+  graph_initialized = true;
+  
+  // ... use graph and vec ...
+  
+cleanup:
+  if (graph_initialized) igraph_destroy(&graph);
+  if (vec_initialized) igraph_vector_destroy(&vec);
+  return 0;
+}
+```
+
+**Fix Option 2: Use Nested Blocks to Limit Scope**:
+```cpp
+int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
+  if (size < 10) return 0;
+  
+  igraph_vector_t vec;
+  if (igraph_vector_init(&vec, 10) != SUCCESS) {
+    return 0;
+  }
+  
+  {  // New scope - no goto crosses this boundary
+    igraph_t graph;
+    if (igraph_create(&graph, &vec) != SUCCESS) {
+      igraph_vector_destroy(&vec);
+      return 0;
+    }
+    
+    // ... use graph ...
+    
+    igraph_destroy(&graph);
+  }
+  
+  igraph_vector_destroy(&vec);
+  return 0;
+}
+```
+
+**Fix Option 3: No Goto - Nested If Statements**:
+```cpp
+int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
+  if (size < 10) return 0;
+  
+  igraph_vector_t vec;
+  if (igraph_vector_init(&vec, 10) == SUCCESS) {
+    igraph_t graph;
+    if (igraph_create(&graph, &vec) == SUCCESS) {
+      // ... use graph ...
+      igraph_destroy(&graph);
+    }
+    igraph_vector_destroy(&vec);
+  }
+  
+  return 0;
+}
+```
+
+**Fix Option 4: C++ RAII (Best Practice)**:
+```cpp
+// Define RAII wrapper
+struct IGraphVector {
+  igraph_vector_t vec;
+  bool initialized = false;
+  
+  IGraphVector() { initialized = (igraph_vector_init(&vec, 10) == SUCCESS); }
+  ~IGraphVector() { if (initialized) igraph_vector_destroy(&vec); }
+  bool ok() const { return initialized; }
+  operator igraph_vector_t*() { return &vec; }
+};
+
+int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
+  if (size < 10) return 0;
+  
+  IGraphVector vec;
+  if (!vec.ok()) return 0;
+  
+  igraph_t graph;
+  if (igraph_create(&graph, vec) != SUCCESS) {
+    return 0;  // vec auto-cleaned
+  }
+  
+  // ... use graph ...
+  
+  igraph_destroy(&graph);
+  return 0;  // vec auto-cleaned
+}
+```
+
+**Detection Rules**:
+1. C++ file extension (.cpp, .cc, .cxx)
+2. Variables declared between goto source and target
+3. Compiler error message: "cannot jump" / "bypasses initialization"
+
+**Best Practices**:
+- ✅ **Preferred**: Declare all variables at function start (C-style)
+- ✅ **Better**: Use RAII wrappers for C APIs in C++ (modern C++)
+- ⚠️ **Acceptable**: Nested scopes/if statements (less readable for complex cleanup)
+- ❌ **Avoid**: Mixing goto with variable declarations in C++
+
+**Specification Mark**:
+```yaml
+language_constraint:
+  when: "C++ (.cpp extension)"
+  goto_limitation:
+    rule: "Cannot jump over variable declarations/initializations"
+    solution_priority:
+      1. "Declare all variables at function start before any goto"
+      2. "Use boolean flags to track initialization state"
+      3. "Use RAII wrappers for C API cleanup"
+      4. "Avoid goto entirely (nested if or scoped blocks)"
+  detection: "Compiler error: 'cannot jump from this goto statement to its label'"
+```
+
+---
+
 ### 2. File Descriptor Leak
 
 **Error**:
@@ -357,5 +533,44 @@ loop_limits:
   max_entries: 100
   max_reads_per_entry: 1000
   max_buffer_size: 10MB
+```
+
+---
+
+## Quick Reference: Error Detection
+
+| Error Message Pattern | Root Cause | Section | Quick Fix |
+|----------------------|------------|---------|-----------|
+| `cannot jump from this goto statement to its label` | C++ goto over variable init | §1.1 | Declare all vars at function start |
+| `jump bypasses variable initialization` | C++ goto over variable init | §1.1 | Use boolean flags to track init state |
+| `memory leak detected` | Missing cleanup on error path | §1 | Use goto cleanup pattern |
+| `use after free` | Wrong cleanup order | §3 | Review call sequence errors |
+| `stack overflow` | Large stack array | §3 | Move to heap or static |
+| `timeout` | Unbounded loop | §4 | Add max_iterations counter |
+| `too many open files` | FD leak | §2 | Ensure close() on all paths |
+
+---
+
+## Language-Specific Guidelines
+
+### C (.c extension)
+- ✅ Use `goto cleanup` freely
+- ✅ Declare variables anywhere
+- ✅ Simple cleanup logic
+
+### C++ (.cpp, .cc, .cxx extension)
+- ⚠️ `goto` cannot jump over variable declarations
+- ✅ **Option 1**: Declare all variables at function start (C-style)
+- ✅ **Option 2**: Use RAII wrappers (modern C++)
+- ✅ **Option 3**: Nested scopes/if statements
+
+### Detection Script
+```bash
+# Detect C++ with goto over variable declarations
+if [[ "$FILE" == *.cpp ]] || [[ "$FILE" == *.cc ]]; then
+  if grep -q "goto cleanup" "$FILE"; then
+    echo "WARNING: C++ file using goto - check variable declarations"
+  fi
+fi
 ```
 

@@ -130,41 +130,13 @@ class BuilderRunner:
     function_name = match.group(1).strip()
     return function_name.removeprefix('operator')
 
-  def _contains_target_jvm_method(self, target_path: str) -> bool:
-    """Validates if the LLM-generated code contains the target jvm methods."""
-    signature = self.benchmark.function_signature
-
-    # For test to harness approach, the target signature does not
-    # exist, no need to do this pre-check
-    if not signature or not '].' in signature:
-      return True
-
-    with open(target_path) as generated_code_file:
-      code = generated_code_file.read()
-
-    # This regex is used to identify legitimate Java variable names
-    # or instance method calls (which could return a needed variable).
-    # This is necessary because the method name of a Java method also
-    # includes its parameter list in order to distinguish between
-    # overloaded methods. Thus it need to use the regex to identify
-    # if there are method calls with unknown variable names that match
-    # the target method.
-    base_arg_regex = r'[\s]*[a-zA-Z_$][a-zA-Z_$0-9(),.]*'
-    name = signature.split('].')[1].split('(')[0]
-    arg_count = len(signature.split('(')[1].split(')')[0].split(','))
-
-    if '<init>' in name:
-      # Always return true for Java constructors because it is not possible
-      # to match all possible ways to call the constructors
-      return True
-
-    pattern = rf'({name}\({", ".join([base_arg_regex] * arg_count)}\))'
-    match = re.search(pattern, ''.join(code.splitlines()).replace(' ', ''))
-
-    return bool(match)
 
   def _contains_target_function(self, target_path: str) -> bool:
-    """Validates if the LLM-generated code contains the target function."""
+    """Validates if the LLM-generated code contains the target function.
+    
+    This is a legacy method kept for compatibility. For C/C++, use
+    _contains_target_cpp_function() instead.
+    """
     with open(target_path) as generated_code_file:
       generated_code = generated_code_file.read()
 
@@ -173,45 +145,185 @@ class BuilderRunner:
 
     return min_func_name in generated_code
 
-  def _contains_target_python_function(self, target_path: str) -> bool:
-    """Validates if the LLM-generated code contains the target function for
-    python projects."""
-    with open(target_path) as generated_code_file:
-      generated_code = generated_code_file.read()
+  def _remove_comments_and_strings(self, code: str) -> str:
+    """Remove C/C++ comments and string literals from code for validation.
+    
+    This helps ensure we're checking for actual function calls, not just
+    mentions in comments or string literals.
+    """
+    # Remove single-line comments
+    code = re.sub(r'//.*?$', '', code, flags=re.MULTILINE)
+    # Remove multi-line comments
+    code = re.sub(r'/\*.*?\*/', '', code, flags=re.DOTALL)
+    # Remove string literals (basic handling)
+    code = re.sub(r'"(?:[^"\\]|\\.)*"', '""', code)
+    code = re.sub(r"'(?:[^'\\]|\\.)*'", "''", code)
+    return code
 
-    min_func_name = self.benchmark.function_signature.rsplit('.', 1)[-1]
-
-    return min_func_name in generated_code
-
-  def _contains_target_rust_function(self, target_path: str) -> bool:
-    """Validates if the LLM-generated code contains the target function for
-    rust projects."""
+  def _contains_target_cpp_function(self, target_path: str) -> bool:
+    """Validates if the LLM-generated C/C++ code contains the target function.
+    
+    This performs multi-level validation:
+    1. Check if function name exists in code
+    2. Check if it's called (has opening parenthesis)
+    3. Check it's not only in comments/strings
+    4. Warn if not in LLVMFuzzerTestOneInput body (but don't fail)
+    
+    Returns:
+      True if target function is properly called, False otherwise.
+    """
     with open(target_path) as generated_code_file:
       generated_code = generated_code_file.read()
 
     min_func_name = self._get_minimum_func_name(
         self.benchmark.function_signature)
 
-    # Retrieve function name only with crate, triat, impl or mod tag
-    min_func_name = min_func_name.rsplit('::', 1)[-1]
-    min_func_name = min_func_name.rsplit('.', 1)[-1]
+    # Level 1: Simple presence check
+    if min_func_name not in generated_code:
+      logger.warning(
+          'Target function "%s" not found in generated code at %s',
+          min_func_name, target_path)
+      return False
 
-    return min_func_name in generated_code
+    # Level 2: Function call pattern - check for function call syntax
+    # Allow for various C/C++ call patterns:
+    # - Direct call: func(...)
+    # - Member call: obj.func(...) or obj->func(...)
+    # - Namespace call: namespace::func(...)
+    
+    # Clean code first (remove comments/strings)
+    cleaned_code = self._remove_comments_and_strings(generated_code)
+    
+    # Check for function call patterns
+    # We look for the function name followed by '(' but try to exclude declarations
+    # A declaration typically has return type before it and ends with ';'
+    # A call typically appears after '=' or inside another function body
+    
+    call_patterns = [
+        # Direct function call (not a declaration)
+        # Match: identifier(, not: type identifier(
+        r'(?<![a-zA-Z0-9_])' + re.escape(min_func_name) + r'\s*\(',
+        # Member function call with dot
+        r'\.\s*' + re.escape(min_func_name) + r'\s*\(',
+        # Member function call with arrow
+        r'->\s*' + re.escape(min_func_name) + r'\s*\(',
+    ]
+    
+    # Find all matches
+    matches = []
+    for pattern in call_patterns:
+      matches.extend(re.finditer(pattern, cleaned_code))
+    
+    if not matches:
+      logger.warning(
+          'Target function "%s" found but not called (no call pattern) in %s',
+          min_func_name, target_path)
+      return False
+    
+    # Filter out forward declarations (heuristic: line ends with semicolon)
+    # We check if the match is likely a declaration vs a call
+    # Simplified approach: if ANY match looks like a call, we're good
+    has_real_call = False
+    for match in matches:
+      # Get the line containing this match
+      start_pos = match.start()
+      # Find line start
+      line_start = cleaned_code.rfind('\n', 0, start_pos) + 1
+      # Find line end  
+      line_end = cleaned_code.find('\n', start_pos)
+      if line_end == -1:
+        line_end = len(cleaned_code)
+      line = cleaned_code[line_start:line_end].strip()
+      
+      # Simple heuristic: forward declarations end with ");", function calls don't
+      # Also, declarations usually have return type at the start of the line
+      if line.endswith(');'):
+        # Could be a declaration - check if it looks like one
+        # Declaration: [return_type] [namespace::]function_name(params);
+        # Call: something.function_name(params); or function_name(params);
+        func_pos = line.find(min_func_name)
+        before_func = line[:func_pos].strip() if func_pos > 0 else ''
+        
+        # If nothing before function name or only return type keyword, likely declaration
+        # If there's . -> = or :: (namespace), likely a call
+        if any(marker in before_func for marker in ['.', '->', '=', '(', ')', ',']):
+          # Has markers indicating it's a call
+          has_real_call = True
+          break
+        # Check for common return type keywords that indicate declaration
+        elif before_func and any(before_func.startswith(kw) for kw in ['void', 'int', 'char', 'bool', 'float', 'double', 'auto', 'const', 'static', 'extern']):
+          # Looks like a declaration, skip this match
+          continue
+        # If namespace::function pattern, it's likely a call
+        elif '::' + min_func_name in line:
+          has_real_call = True
+          break
+        # Ambiguous case - be permissive and treat as call
+        else:
+          has_real_call = True
+          break
+      else:
+        # Line doesn't end with ");", so it's not a simple declaration
+        # Treat as a call
+        has_real_call = True
+        break
+    
+    if not has_real_call:
+      logger.warning(
+          'Target function "%s" found but only as declaration, not called in %s',
+          min_func_name, target_path)
+      return False
+
+    # Level 3: Not only in comments/strings (already cleaned above)
+    if min_func_name not in cleaned_code:
+      logger.warning(
+          'Target function "%s" only appears in comments/strings in %s',
+          min_func_name, target_path)
+      return False
+
+    # Level 4: Check if in LLVMFuzzerTestOneInput (warning only)
+    # This is a heuristic - we look for the function in the fuzzer body
+    if 'LLVMFuzzerTestOneInput' in generated_code:
+      # Extract the fuzzer function body (simple heuristic)
+      fuzzer_match = re.search(
+          r'LLVMFuzzerTestOneInput\s*\([^)]*\)\s*\{',
+          generated_code)
+      if fuzzer_match:
+        # Find the matching closing brace (simplified - doesn't handle nested braces perfectly)
+        start_pos = fuzzer_match.end()
+        brace_count = 1
+        end_pos = start_pos
+        
+        for i in range(start_pos, len(generated_code)):
+          if generated_code[i] == '{':
+            brace_count += 1
+          elif generated_code[i] == '}':
+            brace_count -= 1
+            if brace_count == 0:
+              end_pos = i
+              break
+        
+        fuzzer_body = generated_code[start_pos:end_pos]
+        if min_func_name not in fuzzer_body:
+          logger.warning(
+              'Target function "%s" not found in LLVMFuzzerTestOneInput body '
+              '(might be in helper function) in %s',
+              min_func_name, target_path)
+          # Don't fail - it might be called through a helper function
+
+    logger.info(
+        'Target function "%s" validation passed for %s',
+        min_func_name, target_path)
+    return True
+
+
 
   def _pre_build_check(self, target_path: str,
                        build_result: BuildResult) -> bool:
-    """Checks the generated target before building and running it."""
+    """Checks the generated C/C++ target before building and running it."""
     # No need to build the fuzz target if it does not contain the target
-    # function.
-    if self.benchmark.language == 'jvm':
-      result = self._contains_target_jvm_method(target_path)
-    elif self.benchmark.language == 'python':
-      result = self._contains_target_python_function(target_path)
-    elif self.benchmark.language == 'rust':
-      result = self._contains_target_rust_function(target_path)
-    else:
-      # C/C++ pre-build check is done in agents.
-      return True
+    # function. Only C/C++ is supported.
+    result = self._contains_target_cpp_function(target_path)
 
     if not result:
       build_result.errors = [
@@ -543,15 +655,11 @@ class BuilderRunner:
 
     # Parse libfuzzer logs to get fuzz target runtime details.
     with open(run_log_path, 'rb') as f:
-      # In many case JVM/python projects won't have much cov
-      # difference in short running. Adding the flag for JVM/python
-      # projects to temporary skip the checking of coverage change.
-      # Also skipping for rust projects in initial implementation.
-      flag = not self.benchmark.language in ['jvm', 'python', 'rust']
+      # For C/C++, we always check coverage change
       run_result.cov_pcs, run_result.total_pcs, \
         run_result.crashes, run_result.crash_info, \
           run_result.artifact_name, run_result.semantic_check = \
-            self._parse_libfuzzer_logs(f, project_name, flag)
+            self._parse_libfuzzer_logs(f, project_name, check_cov_increase=True)
 
     return build_result, run_result
 
@@ -600,9 +708,10 @@ class BuilderRunner:
 
     logger.info('Building %s with %s', generated_project, sanitizer)
 
-    if oss_fuzz_checkout.ENABLE_CACHING and oss_fuzz_checkout.is_image_cached(
-        self.benchmark.project, sanitizer):
-      logger.info('We should use cached instance.')
+    if not oss_fuzz_checkout.ENABLE_CACHING:
+      logger.debug('Caching disabled for %s', self.benchmark.project)
+    elif oss_fuzz_checkout.is_image_cached(self.benchmark.project, sanitizer):
+      logger.info('Using cached instance for %s', self.benchmark.project)
       # Rewrite for caching.
       oss_fuzz_checkout.rewrite_project_to_cached_project(
           self.benchmark.project, generated_project, sanitizer)
@@ -610,9 +719,9 @@ class BuilderRunner:
       # Prepare build
       oss_fuzz_checkout.prepare_build(self.benchmark.project, sanitizer,
                                       generated_project)
-
     else:
-      logger.info('The project does not have any cache')
+      logger.debug('No cached image found for %s with %s sanitizer', 
+                   self.benchmark.project, sanitizer)
 
     # Build the image
     command = [
@@ -702,47 +811,23 @@ class BuilderRunner:
     return True
 
   def _get_coverage_text_filename(self, project_name: str) -> str:
-    """Get the filename of the text coverage file. This is language
-    dependent."""
-    lang_to_textcov_basename = {
-        'jvm': 'jacoco.xml',
-        'python': 'all_cov.json',
-        'c++': f'{self.benchmark.target_name}.covreport',
-        'c': f'{self.benchmark.target_name}.covreport',
-        'rust': f'{self.benchmark.target_name}.covreport',
-    }
-
-    return os.path.join(get_build_artifact_dir(project_name,
-                                               'out'), 'textcov_reports',
-                        lang_to_textcov_basename[self.benchmark.language])
+    """Get the filename of the text coverage file for C/C++."""
+    textcov_basename = f'{self.benchmark.target_name}.covreport'
+    return os.path.join(get_build_artifact_dir(project_name, 'out'),
+                        'textcov_reports', textcov_basename)
 
   def _extract_local_textcoverage_data(self,
                                        project_name: str) -> textcov.Textcov:
-    """Returns the textcoverage from a local coverage run."""
+    """Returns the textcoverage from a local coverage run for C/C++."""
     local_textcov_location = self._get_coverage_text_filename(project_name)
-    language_modes = {
-        'jvm': 'r',
-        'python': 'r',
-        'c': 'rb',
-        'c++': 'rb',
-        'rust': 'rb',
-    }
-    with open(local_textcov_location,
-              language_modes.get(self.benchmark.language, 'rb')) as f:
-      if self.benchmark.language == 'jvm':
-        new_textcov = textcov.Textcov.from_jvm_file(f)
-      elif self.benchmark.language == 'python':
-        new_textcov = textcov.Textcov.from_python_file(f)
-      elif self.benchmark.language == 'rust':
-        new_textcov = textcov.Textcov.from_rust_file(f)
-      else:
-        target_basename = os.path.basename(self.benchmark.target_path)
-        new_textcov = textcov.Textcov.from_file(
-            f,
-            ignore_function_patterns=[
-                # Don't include other functions defined in the target code.
-                re.compile(r'^' + re.escape(target_basename) + ':')
-            ])
+    with open(local_textcov_location, 'rb') as f:
+      target_basename = os.path.basename(self.benchmark.target_path)
+      new_textcov = textcov.Textcov.from_file(
+          f,
+          ignore_function_patterns=[
+              # Don't include other functions defined in the target code.
+              re.compile(r'^' + re.escape(target_basename) + ':')
+          ])
       return new_textcov
 
   def get_coverage_local(
@@ -1077,42 +1162,19 @@ class CloudBuilderRunner(BuilderRunner):
 
     target_basename = os.path.basename(self.benchmark.target_path)
 
-    # Load coverage reports.
+    # Load coverage reports for C/C++.
     textcov_blob_path = self._get_cloud_textcov_path(coverage_name)
-    if self.benchmark.language == 'jvm':
-      blob = bucket.blob(textcov_blob_path)
-      if blob.exists():
-        with blob.open() as f:
-          run_result.coverage = textcov.Textcov.from_jvm_file(f)
-        self._copy_textcov_to_workdir(bucket, textcov_blob_path,
-                                      generated_target_name)
-    elif self.benchmark.language == 'python':
-      blob = bucket.blob(textcov_blob_path)
-      if blob.exists():
-        with blob.open() as f:
-          run_result.coverage = textcov.Textcov.from_python_file(f)
-        self._copy_textcov_to_workdir(bucket, textcov_blob_path,
-                                      generated_target_name)
-    elif self.benchmark.language == 'rust':
-      blob = bucket.blob(textcov_blob_path)
-      if blob.exists():
-        with blob.open() as f:
-          run_result.coverage = textcov.Textcov.from_rust_file(f)
-        self._copy_textcov_to_workdir(bucket, textcov_blob_path,
-                                      generated_target_name)
-    else:
-      # C/C++
-      blob = bucket.blob(textcov_blob_path)
-      if blob.exists():
-        with blob.open('rb') as f:
-          run_result.coverage = textcov.Textcov.from_file(
-              f,
-              ignore_function_patterns=[
-                  # Don't include other functions defined in the target code.
-                  re.compile(r'^' + re.escape(target_basename) + ':')
-              ])
-        self._copy_textcov_to_workdir(bucket, textcov_blob_path,
-                                      generated_target_name)
+    blob = bucket.blob(textcov_blob_path)
+    if blob.exists():
+      with blob.open('rb') as f:
+        run_result.coverage = textcov.Textcov.from_file(
+            f,
+            ignore_function_patterns=[
+                # Don't include other functions defined in the target code.
+                re.compile(r'^' + re.escape(target_basename) + ':')
+            ])
+      self._copy_textcov_to_workdir(bucket, textcov_blob_path,
+                                    generated_target_name)
 
     # Parse libfuzzer logs to get fuzz target runtime details.
     with open(run_log_path, 'rb') as f:
@@ -1149,13 +1211,7 @@ class CloudBuilderRunner(BuilderRunner):
       blob.download_to_file(f)
 
   def _get_cloud_textcov_path(self, coverage_name: str) -> str:
-    """Extracts textcov blob path for this benchmark."""
-    if self.benchmark.language == 'jvm':
-      return f'{coverage_name}/textcov_reports/jacoco.xml'
-    if self.benchmark.language == 'python':
-      return f'{coverage_name}/textcov_reports/all_cov.json'
-
-    # For C/C++/Rust
+    """Extracts textcov blob path for C/C++ benchmark."""
     return (f'{coverage_name}/textcov_reports/{self.benchmark.target_name}'
             '.covreport')
 

@@ -2,9 +2,33 @@
 
 Welcome to the LogicFuzz documentation hub! This directory contains comprehensive guides for using LogicFuzz with various types of projects.
 
-## 📚 Documentation Index
+**最后更新**: 2025-11-01
 
-### 🆕 [NEW_PROJECT_SETUP.md](NEW_PROJECT_SETUP.md) - **Complete Guide for New Projects**
+---
+
+## 📚 文档分类
+
+### 🎯 实现状态文档
+
+#### [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md) - **当前实现状态** ⭐
+**推荐优先阅读**
+
+全面记录 LogicFuzz v2.0 的实现状态：
+- ✅ **已实现功能**: LangGraph 工作流、Session Memory、SRS 格式等
+- 🔴 **设计方案**: 知识库、Skeleton Refinement 等未实现特性
+- 📊 **功能对比**: 清晰区分实现和设计
+- 🗺️ **架构总览**: 11个核心功能模块详解
+
+**适合**:
+- 想了解当前系统能力
+- 需要区分已实现和设计中的功能
+- 计划贡献代码前的参考
+
+---
+
+### 🚀 使用指南
+
+#### 🆕 [NEW_PROJECT_SETUP.md](NEW_PROJECT_SETUP.md) - **新项目设置完整指南**
 **Best for:** Private repositories, custom codebases, non-OSS-Fuzz projects
 
 Comprehensive 770+ line guide covering:
@@ -22,9 +46,7 @@ Comprehensive 770+ line guide covering:
 - 🛠️ Need complete setup instructions from scratch
 - 🤖 Want automated build script generation
 
----
-
-### 🔧 [SIGNATURE_FIX_README.md](SIGNATURE_FIX_README.md) - Function Signature Handling
+#### 🔧 [SIGNATURE_FIX_README.md](SIGNATURE_FIX_README.md) - **函数签名处理**
 **Best for:** Understanding signature extraction and fixing
 
 Detailed guide on:
@@ -41,14 +63,102 @@ Detailed guide on:
 
 ---
 
-### 📖 Additional Documentation
+### 📚 Fuzzer 编写参考文档
 
-#### [../README.md](../README.md) - **Main Project Overview**
+这些是独立的参考/教学文档，基于 4699 个真实 OSS-Fuzz fuzzer 的分析：
+
+#### [README_FUZZING.md](README_FUZZING.md) - **Fuzzer 编写总目录**
+- 文档导航和索引
+- 快速开始指南
+- 按场景选择文档
+
+#### [FUZZER_COOKBOOK.md](FUZZER_COOKBOOK.md) - **实战手册** 🔥
+- 11 种典型场景的完整代码模板
+- 可直接复制粘贴使用
+- 包含真实项目参考
+- 常见问题解决方案
+
+#### [FUZZER_BEHAVIOR_TAXONOMY.md](FUZZER_BEHAVIOR_TAXONOMY.md) - **行为分类体系**
+- 系统化的 5 维度分类框架
+- 8 个典型组合模式
+- 决策流程图
+- 深入学习材料
+
+#### [FUZZING_CHEATSHEET.md](FUZZING_CHEATSHEET.md) - **速查表**
+- 一页纸快速参考
+- 3 个标准模板
+- 常见错误和解决方案
+- 命令行参考
+
+---
+
+### 🏗️ 架构文档
+
+#### [../agent_graph/README.md](../agent_graph/README.md) - **Workflow 架构详解**
+- Two-phase agentic workflow (Compilation + Optimization)
+- 8 个 agent/node 详细说明
+- Session Memory 机制
+- State machine 流程图
+- Loop control 和终止条件
+- 实现模式和代码示例
+
+#### [../README.md](../README.md) - **项目总览**
 - Key features and capabilities
 - Quick start examples
 - Installation instructions
 - FI integration setup
-- Performance metrics
+- Architecture overview
+
+#### [../SRS_IMPLEMENTATION_SUMMARY.md](../SRS_IMPLEMENTATION_SUMMARY.md) - **SRS 格式实施总结**
+- 结构化需求规范（SRS）实施细节
+- Function Analyzer → Prototyper 数据格式
+- JSON schema 定义
+- 测试结果和预期效果
+
+#### [../long_term_memory/README.md](../long_term_memory/README.md) - **Long-term Memory 指南**
+- Archetypes (6种行为模式)
+- Skeletons (代码模板)
+- Pitfalls (通用错误模式)
+- 检索和使用方式
+
+---
+
+### 🔬 设计方案文档（未完全实现）
+
+⚠️ **注意**: 这些文档描述的是**设计理念**和**未来方向**，不是当前实现状态。
+
+#### [KNOWLEDGE_DATABASE_DESIGN.md](KNOWLEDGE_DATABASE_DESIGN.md) - **知识库设计**
+**状态**: 🔴 设计方案（未实现）
+
+- 持久化知识库设计（SQLite + Chroma）
+- 历史 driver 学习和检索
+- 错误模式和修复转换
+- **当前替代**: Session Memory + Long-term Memory
+
+#### [SKELETON_REFINEMENT_DESIGN.md](SKELETON_REFINEMENT_DESIGN.md) - **Skeleton 精炼设计**
+**状态**: 🟡 部分理念已实现
+
+- Skeleton 精炼过程设计
+- 多源信息融合策略
+- **当前实现**: Function Analyzer 选择 archetype + Prototyper 生成代码
+
+#### [HYBRID_SPEC_WITH_SESSION_MEMORY.md](HYBRID_SPEC_WITH_SESSION_MEMORY.md) - **混合规范设计**
+**状态**: 🟡 Session Memory 已实现，扩展策略是设计
+
+- Session Memory 驱动的 Skeleton Refinement
+- Skeleton 组件的增量构建
+- **当前实现**: Session Memory + SRS 规范
+
+#### [HEADER_POST_INJECTION_ANALYSIS.md](HEADER_POST_INJECTION_ANALYSIS.md) - **Header 后处理方案**
+**状态**: 🔴 设计方案（未实现）
+
+- LLM 生成后强制注入正确 headers
+- 防止 LLM 修改 header 路径
+- **当前实现**: Header 提取 + Prompt 注入
+
+---
+
+### 📖 其他文档
 
 #### [../Usage.md](../Usage.md) - **OSS-Fuzz Quick Setup**
 - OSS-Fuzz project templates
@@ -62,12 +172,6 @@ Detailed guide on:
 - Using introspector for function discovery
 - Fuzz target examples
 - Training data generation
-
-#### [../agent_graph/README.md](../agent_graph/README.md) - **Workflow Architecture**
-- Two-phase agentic workflow
-- State machine diagrams
-- Node definitions
-- Error handling strategies
 
 ---
 

@@ -16,6 +16,7 @@ from typing import Dict, List, Tuple
 
 # Define patterns for identifying valueless APIs
 VALUELESS_PATTERNS = {
+    # ===== High-confidence filters (100% should be filtered) =====
     'anonymous_namespace': {
         'pattern': r'_GLOBAL__N_',
         'description': 'C++ anonymous namespace internal function'
@@ -24,34 +25,35 @@ VALUELESS_PATTERNS = {
         'pattern': r'\$_\d+',
         'description': 'C++ lambda expression'
     },
-    'memory_management': {
-        'keywords': ['alloc', 'free', 'finalize', 'destroy', 'cleanup', 'delete', 'release', 'dispose'],
-        'description': 'Internal memory management function'
-    },
-    'internal_helper': {
-        'keywords': ['append', '_init', 'reset', 'clear', '_copy', '_clone'],
-        'description': 'Internal helper/utility function'
+    'destructor': {
+        'pattern': r'~\w+|_ZN.*D[012]E',
+        'description': 'Destructor function'
     },
     'mock_test': {
         'keywords': ['mock', 'stub', 'test_', 'fake', 'dummy'],
         'description': 'Mock/Test/Stub function'
     },
-    'destructor': {
-        'pattern': r'~\w+|_ZN.*D[012]E',
-        'description': 'Destructor function'
+    
+    # ===== Medium-confidence filters (require careful checking) =====
+    'memory_management': {
+        'keywords': ['_alloc', '_free', 'finalize', 'destroy', '_cleanup', '_release', '_dispose'],
+        'description': 'Internal memory management function',
+        'exceptions': ['freeze']  # "freeze" is not "free"
+    },
+    'internal_helper': {
+        'keywords': ['_init', '_copy', '_clone', '_reset'],
+        'description': 'Internal helper/utility function'
     },
     'private_internal': {
-        'keywords': ['_internal', '_private', '__'],
+        'keywords': ['_internal', '_private', '_impl', '_priv'],
         'description': 'Private/internal method'
     },
-    'low_level_decoder': {
-        'keywords': ['loop', 'plane', 'block', 'tile', 'strip', 'chunk', 'slice', 'band'],
-        'description': 'Low-level decoder component (operates on sub-blocks, not full input)'
-    },
-    'requires_internal_state': {
-        'keywords': ['load', 'decode', 'unpack', 'decompress', 'parse'],
-        'void_ptr_param': True,
-        'description': 'Requires internal state/structures (void* param indicates internal data)'
+    
+    # ===== Requires void* + specific patterns =====
+    'opaque_state_handler': {
+        'state_indicators': ['state', 'context', 'ctx', 'handle', 'priv', 'internal', 'opaque'],
+        'sub_component_indicators': ['plane', 'iteration', 'band'],
+        'description': 'Requires opaque internal state or processes sub-components'
     }
 }
 
@@ -65,69 +67,100 @@ def is_valueless_api(func_info: Dict) -> Tuple[bool, List[str]]:
     reasons = []
     func_name = func_info.get('name', '')
     signature = func_info.get('signature', '')
+    func_name_lower = func_name.lower()
+    params = func_info.get('params', [])
     
-    # Check anonymous namespace
+    # ===== High-confidence filters (immediate return) =====
+    
+    # 1. Anonymous namespace (100% filter)
     if re.search(VALUELESS_PATTERNS['anonymous_namespace']['pattern'], func_name):
         reasons.append(VALUELESS_PATTERNS['anonymous_namespace']['description'])
+        return True, reasons
     
-    # Check lambda expression
+    # 2. Lambda expression (100% filter)
     if re.search(VALUELESS_PATTERNS['lambda_expression']['pattern'], func_name):
         reasons.append(VALUELESS_PATTERNS['lambda_expression']['description'])
+        return True, reasons
     
-    # Check destructor
+    # 3. Destructor (100% filter)
     if re.search(VALUELESS_PATTERNS['destructor']['pattern'], func_name):
         reasons.append(VALUELESS_PATTERNS['destructor']['description'])
+        return True, reasons
     
-    # Check memory management functions
-    func_name_lower = func_name.lower()
+    # 4. No parameters (100% filter)
+    if len(params) == 0:
+        reasons.append('Function with no parameters (cannot fuzz input space)')
+        return True, reasons
+    
+    # 5. C++ parameterless member method (only 'this')
+    if len(params) == 1 and params[0].get('name') == 'this':
+        reasons.append('C++ parameterless member method (likely internal state access)')
+        return True, reasons
+    
+    # 6. Mock/test functions (100% filter)
+    for keyword in VALUELESS_PATTERNS['mock_test']['keywords']:
+        if keyword in func_name_lower:
+            reasons.append(f"{VALUELESS_PATTERNS['mock_test']['description']} (keyword: {keyword})")
+            return True, reasons
+    
+    # ===== Medium-confidence filters (collect reasons, return at end) =====
+    
+    # 7. Single underscore prefix (C private convention)
+    if func_name.startswith('_') and len(func_name) > 1 and func_name[1] != '_':
+        # Avoid false positives like __attribute__
+        reasons.append('Single underscore prefix (private convention)')
+    
+    # 8. Private/internal keywords (but not "public_internal" type names)
+    if not func_name_lower.startswith('public'):
+        for keyword in VALUELESS_PATTERNS['private_internal']['keywords']:
+            if keyword in func_name_lower:
+                reasons.append(f"{VALUELESS_PATTERNS['private_internal']['description']} (keyword: {keyword})")
+                break
+    
+    # 9. Memory management functions with exceptions
+    exceptions = VALUELESS_PATTERNS['memory_management'].get('exceptions', [])
     for keyword in VALUELESS_PATTERNS['memory_management']['keywords']:
         if keyword in func_name_lower:
-            reasons.append(f"{VALUELESS_PATTERNS['memory_management']['description']} (keyword: {keyword})")
-            break
+            # Check exceptions (e.g., "freeze" contains "free")
+            is_exception = any(exc in func_name_lower for exc in exceptions)
+            if not is_exception:
+                # Additional check: if function has many parameters (>2), might be main function
+                if len(params) <= 2:
+                    reasons.append(f"{VALUELESS_PATTERNS['memory_management']['description']} (keyword: {keyword})")
+                    break
     
-    # Check internal helper functions
+    # 10. Internal helper functions
     for keyword in VALUELESS_PATTERNS['internal_helper']['keywords']:
         if keyword in func_name_lower:
             reasons.append(f"{VALUELESS_PATTERNS['internal_helper']['description']} (keyword: {keyword})")
             break
     
-    # Check mock/test functions
-    for keyword in VALUELESS_PATTERNS['mock_test']['keywords']:
-        if keyword in func_name_lower:
-            reasons.append(f"{VALUELESS_PATTERNS['mock_test']['description']} (keyword: {keyword})")
-            break
-    
-    # Check private/internal methods
-    for keyword in VALUELESS_PATTERNS['private_internal']['keywords']:
-        if keyword in func_name_lower:
-            reasons.append(f"{VALUELESS_PATTERNS['private_internal']['description']} (keyword: {keyword})")
-            break
-    
-    # Check low-level decoder components (operates on sub-blocks)
-    for keyword in VALUELESS_PATTERNS['low_level_decoder']['keywords']:
-        if keyword.lower() in func_name_lower:
-            reasons.append(f"{VALUELESS_PATTERNS['low_level_decoder']['description']} (keyword: {keyword})")
-            break
-    
-    # Check for functions requiring internal state (void* parameter)
-    params = func_info.get('params', [])
+    # 11. Opaque state handler (requires void* + specific patterns)
     has_void_ptr = any('void *' in param.get('type', '') or 'void*' in param.get('type', '') 
                        for param in params if param.get('name') != 'this')
     
     if has_void_ptr:
-        # Only flag if it also has state-dependent keywords
-        for keyword in VALUELESS_PATTERNS['requires_internal_state']['keywords']:
-            if keyword in func_name_lower:
-                reasons.append(f"{VALUELESS_PATTERNS['requires_internal_state']['description']} (has void* + keyword: {keyword})")
-                break
-    
-    # Check C++ methods with only 'this' parameter
-    if len(params) == 1 and params[0].get('name') == 'this':
-        reasons.append('C++ parameterless member method (likely internal state access)')
-    
-    # Check functions with no parameters
-    if len(params) == 0:
-        reasons.append('Function with no parameters (likely internal state management)')
+        # Check if void* parameter name indicates internal state
+        state_indicators = VALUELESS_PATTERNS['opaque_state_handler']['state_indicators']
+        sub_component_indicators = VALUELESS_PATTERNS['opaque_state_handler']['sub_component_indicators']
+        
+        for param in params:
+            param_type = param.get('type', '')
+            param_name = param.get('name', '').lower()
+            
+            if 'void' in param_type and param_name != 'this':
+                # Check if parameter name suggests internal state
+                if any(indicator in param_name for indicator in state_indicators):
+                    reasons.append(f"{VALUELESS_PATTERNS['opaque_state_handler']['description']} (void* param: {param_name})")
+                    break
+                
+                # Check if function name + void* suggests sub-component processing
+                for indicator in sub_component_indicators:
+                    if indicator in func_name_lower:
+                        reasons.append(f"{VALUELESS_PATTERNS['opaque_state_handler']['description']} (void* + keyword: {indicator})")
+                        break
+                if reasons:  # If we found a match in inner loop
+                    break
     
     return len(reasons) > 0, reasons
 

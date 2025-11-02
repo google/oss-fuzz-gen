@@ -55,10 +55,12 @@ The tool identifies the following types of APIs as valueless for fuzzing:
 
 ### 2. Memory Management Functions
 
-**Keywords**: `alloc`, `free`, `finalize`, `destroy`, `cleanup`, `delete`, `release`, `dispose`
+**Keywords**: `_alloc`, `_free`, `finalize`, `destroy`, `_cleanup`, `_release`, `_dispose`
 
 - **Reason**: Low-level memory operations that require specific calling contexts
 - **Risk**: Calling in isolation often leads to crashes or undefined behavior
+- **Note**: Keywords now use underscore prefix to avoid false positives
+- **Exceptions**: Functions containing "freeze" are not filtered (e.g., `FreezeImage`)
 - **Examples**:
   - `af_gb_alloc_data` - internal allocation
   - `argon2_finalize` - cleanup function
@@ -66,12 +68,12 @@ The tool identifies the following types of APIs as valueless for fuzzing:
 
 ### 3. Internal Helper Functions
 
-**Keywords**: `append`, `_init`, `reset`, `clear`, `_copy`, `_clone`
+**Keywords**: `_init`, `_copy`, `_clone`, `_reset`
 
 - **Reason**: Auxiliary functions meant to be called by other public APIs
 - **Risk**: May require specific pre-conditions or object states
+- **Note**: Reduced keyword list to avoid filtering legitimate APIs
 - **Examples**:
-  - `buffer_append_internal` - internal buffer operation
   - `_init_context` - initialization helper
   - `_copy_metadata` - internal copy operation
 
@@ -87,11 +89,13 @@ The tool identifies the following types of APIs as valueless for fuzzing:
 
 ### 5. Private/Internal APIs
 
-**Keywords**: `_internal`, `_private`, `__` (double underscore prefix)
+**Keywords**: `_internal`, `_private`, `_impl`, `_priv`
 
 - **Reason**: Explicitly marked as internal implementation details
+- **Note**: Double underscore (`__`) removed to avoid false positives with compiler attributes
+- **Additional Check**: Single underscore prefix (`_functionName`) also filtered
 - **Examples**:
-  - `__parse_internal` - double underscore prefix
+  - `_parse_internal` - single underscore prefix
   - `process_data_internal` - internal API
   - `_private_validate` - private method
 
@@ -108,6 +112,23 @@ The tool identifies the following types of APIs as valueless for fuzzing:
 - **Reason**: Usually stateless utilities or state management functions
 - **Risk**: Cannot fuzz input space
 - **Example**: `initialize_global_state()`
+
+### 7. Opaque State Handlers (NEW - Replaces low_level_decoder)
+
+**Pattern**: Functions with `void*` parameter AND specific indicators
+
+**State Indicators in Parameter Name**: `state`, `context`, `ctx`, `handle`, `priv`, `internal`, `opaque`
+- **Example**: `process_data(void *state, uint8_t *data, size_t size)`
+- **Reason**: `void* state` indicates internal opaque state structure
+
+**Sub-Component Indicators in Function Name**: `plane`, `iteration`, `band`
+- **Example**: `LibRaw::crxDecodePlane(void *plane, uint32_t idx)`
+- **Reason**: Processes internal sub-components, not full input
+
+**Key Improvement**: 
+- ❌ OLD: Filtered all functions with keywords like `block`, `chunk`, `decode`, `parse`
+- ✅ NEW: Only filters when `void*` parameter suggests opaque internal state
+- ✅ **Preserves**: `jpeg_decode_block()`, `png_read_chunk()`, `WebPDecode()` - these are excellent fuzzing targets!
 
 ## Output Format
 
@@ -260,17 +281,26 @@ for project, apis in report['valueless_apis_by_project'].items():
 
 Some APIs may require human judgment:
 
-1. **Functions containing "free" that aren't memory deallocation**
+1. **Functions containing "free" that aren't memory deallocation** ✅ FIXED
    - Example: `FreezeRequestHandler` (handles freeze requests, not memory)
-   - **Action**: Manually review and adjust rules if needed
+   - **Fix Applied**: Added "freeze" to exceptions list
+   - **Status**: Now automatically handled
 
 2. **Parameterless but public APIs**
    - Example: `getVersion()` might be a legitimate public API
    - **Action**: Consider fuzzing value on case-by-case basis
+   - **Note**: These have minimal fuzzing value since they can't vary inputs
 
 3. **Internal-looking but actually public interfaces**
    - Example: Some projects use `_internal` for public internal modules
    - **Action**: Check project documentation
+   - **Mitigation**: Excluded "public_internal" patterns from filtering
+
+4. **Decoder/parser functions with descriptive names** ✅ FIXED
+   - Example: `jpeg_decode_block()`, `png_read_chunk()`, `WebPDecode()`
+   - **Old Behavior**: Incorrectly filtered due to keywords
+   - **Fix Applied**: Removed overly broad keyword matching
+   - **Status**: These excellent targets are now preserved!
 
 ## Troubleshooting
 
@@ -324,8 +354,6 @@ python3 api_analyzer.py --analyze --remove
 This tool follows the original project's license.
 
 ---
-
-**Generated**: 2025-10-30  
 **Tool Version**: 2.0  
 **Dataset**: conti-benchmark (comparison + conti-cmp)
 

@@ -1,9 +1,49 @@
 Generate a complete LibFuzzer fuzz target based on the provided specification.
 
-RULES:
-1. Follow the spec exactly - implement the driver skeleton, preconditions, postconditions, and parameter strategies as specified
-2. DO NOT modify header files or function signatures unless you find some internal headers or include paths are incorrect.
-3. Output format: `extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)`
+# Information Sources (in priority order)
 
-Trust the specification. Do not add extra logic or "improvements".
+## 1. Existing Fuzzer Patterns (HIGHEST TRUST)
+Copy patterns directly from working fuzzers:
+- API initialization (e.g., `igraph_empty(&graph, 10, IGRAPH_UNDIRECTED)`)
+- Struct setup (e.g., `igraph_arpack_options_init(&options)`)
+- Cleanup sequences
+- Header includes
 
+These are proven to compile in OSS-Fuzz.
+
+## 2. Reference Skeleton Headers (SAFE)
+Use ONLY headers listed in "Reference Skeleton" section.
+These have been filtered to exclude internal/private APIs.
+
+## 3. Function Analysis (GUIDE)
+Use to understand:
+- Function behavior and purpose
+- Preconditions and postconditions
+- Parameter constraints
+- Lifecycle patterns (init → use → destroy)
+
+Do NOT copy specific API calls from analysis—refer to existing fuzzers instead.
+
+## 4. Source Code (REFERENCE ONLY)
+Shows implementation details. Use to understand behavior, NOT for specific API calls.
+
+# Key Principles
+
+**Pattern Matching**: If existing fuzzers show a pattern, follow it exactly.
+
+**Header Safety**: Stick to Reference Skeleton headers. Avoid:
+- Internal paths (`internal/`, `detail/`, `private/`)
+- Third-party deps (`<cs/cs.h>`, `<boost/...>`)
+
+**API Safety**: Prefer functions seen in existing fuzzers. Avoid:
+- Functions with `_internal`, `_impl`, `_get_default` suffixes
+- Direct struct member access (use public init/setter functions)
+
+# Output Format
+```c
+extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
+  // Your implementation
+}
+```
+
+Trust existing fuzzers for HOW to call APIs. Trust analysis for WHAT the function does.

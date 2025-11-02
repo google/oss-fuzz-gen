@@ -22,11 +22,26 @@ def parse_tag(response: str, tag: str) -> str:
     Examples:
         >>> parse_tag("<code>hello</code>", "code")
         'hello'
-        >>> parse_tag("<fuzz target>int main() {}</fuzz target>", "fuzz target")
+        >>> parse_tag("<fuzz_target>int main() {}</fuzz_target>", "fuzz_target")
         'int main() {}'
     """
     match = re.search(rf'<{tag}>(.*?)</{tag}>', response, re.DOTALL)
-    return match.group(1).strip() if match else ''
+    if not match:
+        return ''
+    
+    content = match.group(1).strip()
+    
+    # Remove markdown code block markers if present
+    # LLMs sometimes wrap code in ```language ... ``` inside XML tags
+    # Match: ```<optional_language>\n<code>\n```
+    if content.startswith('```'):
+        # Remove opening marker: ```c, ```cpp, ```python, etc.
+        content = re.sub(r'^```\w*\n?', '', content)
+        # Remove closing marker: ```
+        content = re.sub(r'\n?```$', '', content)
+        content = content.strip()
+    
+    return content
 
 
 def parse_tags(response: str, tag: str) -> List[str]:

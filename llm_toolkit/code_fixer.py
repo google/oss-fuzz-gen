@@ -429,24 +429,19 @@ def apply_llm_fix(ai_binary: str,
       temperature=temperature,
   )
 
-  if language == 'jvm':
-    builder = prompt_builder.JvmFixingBuilder(fixer_model, benchmark,
-                                              fuzz_target_source_code, errors)
-    prompt = builder.build([], None, None)
-    prompt.save(prompt_path)
-  else:
-    builder = prompt_builder.DefaultTemplateBuilder(fixer_model)
+  # For C/C++
+  builder = prompt_builder.DefaultTemplateBuilder(fixer_model)
 
-    context = collect_context(benchmark, errors)
-    instruction = collect_instructions(benchmark, errors,
-                                       fuzz_target_source_code)
-    prompt = builder.build_fixer_prompt(benchmark,
-                                        fuzz_target_source_code,
-                                        error_desc,
-                                        errors,
-                                        context=context,
-                                        instruction=instruction)
-    prompt.save(prompt_path)
+  context = collect_context(benchmark, errors)
+  instruction = collect_instructions(benchmark, errors,
+                                     fuzz_target_source_code)
+  prompt = builder.build_fixer_prompt(benchmark,
+                                      fuzz_target_source_code,
+                                      error_desc,
+                                      errors,
+                                      context=context,
+                                      instruction=instruction)
+  prompt.save(prompt_path)
 
   fixer_model.query_llm(prompt, response_dir)
 

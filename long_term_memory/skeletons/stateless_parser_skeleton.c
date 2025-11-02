@@ -1,24 +1,20 @@
-// Stateless Parser Skeleton
-// Pattern: Direct call, no setup/cleanup needed
-// NOTE: Headers are provided above this skeleton - DO NOT add additional headers
+// Stateless Parser Pattern: Direct call, no setup/cleanup
 
 int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
   // Input validation
   if (size < MIN_SIZE) return 0;
   if (size > MAX_SIZE) return 0;
   
-  // Direct API call - no setup needed
+  // Direct API call
   RESULT_TYPE *result = PARSE_FUNCTION(data, size);
   
-  // Optional: check result and use it
+  // Check and use result
   if (result != NULL) {
     // Access result fields if needed
-    // ...
     
-    // Free result if necessary
+    // Cleanup
     FREE_FUNCTION(result);
   }
   
   return 0;
 }
-

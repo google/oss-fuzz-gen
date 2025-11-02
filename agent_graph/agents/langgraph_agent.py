@@ -5,8 +5,9 @@ This module provides a clean agent interface designed specifically for LangGraph
 without the legacy ADK/session baggage.
 """
 from abc import ABC, abstractmethod
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 import argparse
+import os
 import subprocess as sp
 
 import logger
@@ -15,6 +16,7 @@ from agent_graph.state import FuzzingWorkflowState
 from agent_graph.memory import get_agent_messages, add_agent_message
 from agent_graph.prompt_loader import get_prompt_manager
 from agent_graph.agents.utils import parse_tag, parse_tags
+from agent_graph.logger import LangGraphLogger, NullLogger
 
 
 class LangGraphAgent(ABC):
@@ -34,7 +36,8 @@ class LangGraphAgent(ABC):
         llm: LLM,
         trial: int,
         args: argparse.Namespace,
-        system_message: str = ""
+        system_message: str = "",
+        enable_detailed_logging: bool = True
     ):
         """
         Initialize a LangGraph agent.
@@ -45,12 +48,28 @@ class LangGraphAgent(ABC):
             trial: Trial number
             args: Command line arguments
             system_message: System instruction for this agent
+            enable_detailed_logging: If True, log all LLM interactions to files
         """
         self.name = name
         self.llm = llm
         self.trial = trial
         self.args = args
         self.system_message = system_message
+        
+        # Initialize detailed logging system (uses NullLogger pattern to avoid None checks)
+        self.enable_detailed_logging = enable_detailed_logging
+        
+        # Get base_dir from work_dirs if available
+        base_dir = None
+        if hasattr(args, 'work_dirs') and args.work_dirs:
+            base_dir = str(args.work_dirs.base)
+        
+        self._langgraph_logger = (
+            LangGraphLogger.get_logger(workflow_id="fuzzing_workflow", trial=trial, base_dir=base_dir)
+            if enable_detailed_logging
+            else NullLogger()
+        )
+        self._round = 0
     
     def chat_llm(
         self,
@@ -66,6 +85,7 @@ class LangGraphAgent(ABC):
         3. Calls LLM with the agent's messages
         4. Adds the response as an assistant message
         5. Trims messages to 50k tokens
+        6. Logs interaction to detailed log files
         
         Args:
             state: The workflow state
@@ -83,19 +103,38 @@ class LangGraphAgent(ABC):
         # Get updated messages for LLM call
         messages = state["agent_messages"][self.name]
         
-        # Log the prompt
+        # Increment round counter for detailed logging
+        self._round += 1
+        
+        # Log the prompt (both standard and detailed)
         logger.info(
             f'<AGENT {self.name} PROMPT>\n{prompt}\n</AGENT {self.name} PROMPT>',
             trial=self.trial
         )
         
+        # Detailed logging: log prompt with metadata
+        prompt_metadata = {
+                'model': getattr(self.llm, 'model', 'unknown'),
+                'temperature': getattr(self.args, 'temperature', None),
+                'num_messages': len(messages)
+            }
+        self._langgraph_logger.log_interaction(
+                agent_name=self.name,
+                interaction_type='prompt',
+                content=prompt,
+                round_num=self._round,
+                metadata=prompt_metadata
+            )
+        
         # Call LLM with this agent's messages only
         response = self.llm.chat_with_messages(messages)
         
         # Track token usage
+        token_usage = None
         if hasattr(self.llm, 'last_token_usage') and self.llm.last_token_usage:
             from agent_graph.state import update_token_usage
             usage = self.llm.last_token_usage
+            token_usage = usage.copy()
             update_token_usage(
                 state, 
                 self.name,
@@ -107,11 +146,24 @@ class LangGraphAgent(ABC):
         # Add assistant response
         add_agent_message(state, self.name, "assistant", response)
         
-        # Log the response
+        # Log the response (both standard and detailed)
         logger.info(
             f'<AGENT {self.name} RESPONSE>\n{response}\n</AGENT {self.name} RESPONSE>',
             trial=self.trial
         )
+        
+        # Detailed logging: log response with metadata
+        response_metadata = {
+                'model': getattr(self.llm, 'model', 'unknown'),
+                'tokens': token_usage
+            }
+        self._langgraph_logger.log_interaction(
+                agent_name=self.name,
+                interaction_type='response',
+                content=response,
+                round_num=self._round,
+                metadata=response_metadata
+            )
         
         return response
     
@@ -130,23 +182,58 @@ class LangGraphAgent(ABC):
         """
         messages = [{"role": "user", "content": prompt}]
         
+        # Increment round counter for detailed logging
+        self._round += 1
+        
         logger.info(
             f'<AGENT {self.name} ONEOFF>\n{prompt}\n</AGENT {self.name} ONEOFF>',
             trial=self.trial
         )
         
+        # Detailed logging: log one-off prompt
+        if self._langgraph_logger:
+            prompt_metadata = {
+                'model': getattr(self.llm, 'model', 'unknown'),
+                'temperature': getattr(self.args, 'temperature', None),
+                'type': 'one-off (no history)'
+            }
+        self._langgraph_logger.log_interaction(
+                agent_name=self.name,
+                interaction_type='prompt',
+                content=prompt,
+                round_num=self._round,
+                metadata=prompt_metadata
+            )
+        
         response = self.llm.chat_with_messages(messages)
         
         # Track token usage if state is provided
+        token_usage = None
         if state and hasattr(self.llm, 'last_token_usage') and self.llm.last_token_usage:
             from agent_graph.state import update_token_usage
             usage = self.llm.last_token_usage
+            token_usage = usage.copy()
             update_token_usage(
                 state, 
                 self.name,
                 usage.get('prompt_tokens', 0),
                 usage.get('completion_tokens', 0),
                 usage.get('total_tokens', 0)
+            )
+        
+        # Detailed logging: log one-off response
+        if self._langgraph_logger:
+            response_metadata = {
+                'model': getattr(self.llm, 'model', 'unknown'),
+                'tokens': token_usage,
+                'type': 'one-off (no history)'
+            }
+        self._langgraph_logger.log_interaction(
+                agent_name=self.name,
+                interaction_type='response',
+                content=response,
+                round_num=self._round,
+                metadata=response_metadata
             )
         
         logger.info(
@@ -199,6 +286,7 @@ class LangGraphFunctionAnalyzer(LangGraphAgent):
             extract_session_memory_updates_from_response,
             merge_session_memory_updates
         )
+        from agent_graph.api_context_extractor import get_api_context, format_api_context_for_prompt
         
         benchmark = state["benchmark"]
         project_name = benchmark.get('project', 'unknown')
@@ -211,6 +299,48 @@ class LangGraphFunctionAnalyzer(LangGraphAgent):
             project_name, function_signature
         )
         
+        # Extract API context using APIContextExtractor (integrated)
+        logger.info(f'🔍 Extracting API context for {function_signature}', trial=self.trial)
+        api_context = get_api_context(project_name, function_signature)
+        if api_context:
+            param_count = len(api_context.get('parameters', []))
+            init_pattern_count = len(api_context.get('initialization_patterns', []))
+            example_count = len(api_context.get('usage_examples', []))
+            related_func_count = len(api_context.get('related_functions', []))
+            typedef_count = len(api_context.get('type_definitions', {}))
+            
+            logger.info(
+                f'✅ API context extracted: {param_count} parameters, '
+                f'{init_pattern_count} init patterns, {example_count} usage examples',
+                trial=self.trial
+            )
+            
+            # Log detailed context information
+            logger.info(
+                f'📊 Detailed API Context Information:\n'
+                f'  ├─ Parameters ({param_count}):\n' +
+                '\n'.join([f'  │   • {p.get("name", "?")} ({p.get("type", "?")})' 
+                          for p in api_context.get('parameters', [])[:10]]) +
+                ('\n  │   • ... (more parameters)' if param_count > 10 else '') +
+                f'\n  ├─ Type Definitions ({typedef_count}):\n' +
+                '\n'.join([f'  │   • {name}' 
+                          for name in list(api_context.get('type_definitions', {}).keys())[:5]]) +
+                ('\n  │   • ... (more types)' if typedef_count > 5 else '') +
+                f'\n  ├─ Initialization Patterns ({init_pattern_count}):\n' +
+                '\n'.join([f'  │   • {p.get("parameter", "?")} ({p.get("type", "?")}) -> {p.get("method", "?")[:50]}...' 
+                          for p in api_context.get('initialization_patterns', [])]) +
+                f'\n  ├─ Related Functions ({related_func_count}):\n' +
+                '\n'.join([f'  │   • {f.get("name", "?")} [{f.get("type", "?")}]' 
+                          for f in api_context.get('related_functions', [])[:10]]) +
+                ('\n  │   • ... (more functions)' if related_func_count > 10 else '') +
+                f'\n  └─ Usage Examples ({example_count}):\n' +
+                '\n'.join([f'  │   • {e.get("function", "?")} @ {e.get("file", "?")[:50]}...' 
+                          for e in api_context.get('usage_examples', [])]),
+                trial=self.trial
+            )
+        else:
+            logger.warning(f'⚠️ No API context extracted for {function_signature}', trial=self.trial)
+        
         # Query FuzzIntrospector for header information
         logger.info(f'Querying FuzzIntrospector for header files of {function_signature}', trial=self.trial)
         header_info = self._extract_header_information(project_name, function_signature)
@@ -219,7 +349,17 @@ class LangGraphFunctionAnalyzer(LangGraphAgent):
         existing_fuzzer_headers = self._extract_existing_fuzzer_headers(project_name)
         header_info["existing_fuzzer_headers"] = existing_fuzzer_headers
         
-        logger.info(f'Header information: {header_info}', trial=self.trial)
+        # Log detailed header information
+        # existing_fuzzer_headers is a dict with 'standard_headers' and 'project_headers' keys
+        std_count = len(existing_fuzzer_headers.get('standard_headers', []))
+        proj_count = len(existing_fuzzer_headers.get('project_headers', []))
+        logger.info(
+            f'📚 Header information extracted from FuzzIntrospector:\n'
+            f'  Definition headers: {header_info.get("definition_headers", [])}\n'
+            f'  Required type headers: {header_info.get("required_type_headers", [])}\n'
+            f'  Existing fuzzer headers: {std_count} standard, {proj_count} project headers',
+            trial=self.trial
+        )
         
         if not func_source:
             logger.warning(
@@ -246,7 +386,7 @@ class LangGraphFunctionAnalyzer(LangGraphAgent):
         # Use iterative analysis - LLM learns from examples through conversation
         logger.info('Using iterative analysis approach', trial=self.trial)
         response = self._execute_iterative_analysis(
-            state, project_name, function_signature, function_name, func_source
+            state, project_name, function_signature, function_name, func_source, api_context
         )
         
         # 从响应中提取session_memory更新（archetype、初始API约束等）
@@ -259,12 +399,17 @@ class LangGraphFunctionAnalyzer(LangGraphAgent):
         # 合并更新到session_memory
         updated_session_memory = merge_session_memory_updates(state, session_memory_updates)
         
+        # Extract SRS JSON from response
+        srs_data = self._extract_srs_json(response)
+        
         # Parse response and create structured output
         analysis_result = {
             "summary": response[:500],  # First 500 chars as summary
             "raw_analysis": response,
             "analyzed": True,
-            "header_information": header_info  # Include header info for Prototyper
+            "header_information": header_info,  # Include header info for Prototyper
+            "srs_data": srs_data,  # Include structured SRS data
+            "api_context": api_context  # Include API context for downstream agents
         }
         
         # Write requirements to file (matching original FunctionAnalyzer behavior)
@@ -288,6 +433,9 @@ class LangGraphFunctionAnalyzer(LangGraphAgent):
             except Exception as e:
                 logger.warning(f'Failed to write requirements file: {e}', trial=self.trial)
         
+        # Flush logs for this agent after completing execution
+        self._langgraph_logger.flush_agent_logs(self.name)
+        
         return {
             "function_analysis": analysis_result,
             "session_memory": updated_session_memory
@@ -299,7 +447,8 @@ class LangGraphFunctionAnalyzer(LangGraphAgent):
         project_name: str,
         function_signature: str,
         function_name: str,
-        func_source: str
+        func_source: str,
+        api_context: Optional[Dict] = None
     ) -> str:
         """
         Execute iterative analysis of the function using cross-reference examples.
@@ -310,39 +459,89 @@ class LangGraphFunctionAnalyzer(LangGraphAgent):
         logger.info(f'Starting iterative analysis for {function_signature}', trial=self.trial)
         
         # Phase 1: Analyze the function itself to get basic understanding
-        logger.info('Phase 1: Analyzing function source code', trial=self.trial)
+        logger.info('=' * 80, trial=self.trial)
+        logger.info('🔬 Phase 1: Analyzing function source code', trial=self.trial)
+        logger.info('=' * 80, trial=self.trial)
         prompt_manager = get_prompt_manager()
+        
+        # Build initial prompt with API context if available
+        from agent_graph.api_context_extractor import format_api_context_for_prompt
+        api_context_text = ""
+        if api_context:
+            api_context_text = format_api_context_for_prompt(api_context)
+            logger.info(f'📝 Injecting API context into initial prompt ({len(api_context_text)} chars)', trial=self.trial)
+            logger.debug(f'API context preview:\n{api_context_text[:500]}...', trial=self.trial)
+        else:
+            logger.info('📝 No API context available for initial prompt', trial=self.trial)
+        
+        logger.info(f'📄 Function source code length: {len(func_source)} chars', trial=self.trial)
+        logger.debug(f'Function source preview:\n{func_source[:300]}...', trial=self.trial)
+        
         initial_prompt = prompt_manager.build_user_prompt(
             "function_analyzer_initial",
             FUNCTION_SIGNATURE=function_signature,
-            FUNCTION_SOURCE=func_source
+            FUNCTION_SOURCE=func_source,
+            API_CONTEXT=api_context_text
         )
+        logger.info(f'📤 Sending initial prompt to LLM (total length: {len(initial_prompt)} chars)', trial=self.trial)
         initial_analysis = self.chat_llm(state, initial_prompt)
-        logger.debug(f'Initial analysis: {initial_analysis[:200]}...', trial=self.trial)
+        logger.info(f'📥 Received initial analysis (length: {len(initial_analysis)} chars)', trial=self.trial)
+        logger.debug(f'Initial analysis preview:\n{initial_analysis[:200]}...', trial=self.trial)
         
         # Phase 2: Get call site metadata
-        logger.info('Phase 2: Querying call sites metadata', trial=self.trial)
+        logger.info('=' * 80, trial=self.trial)
+        logger.info('🔬 Phase 2: Querying call sites metadata from FuzzIntrospector', trial=self.trial)
+        logger.info('=' * 80, trial=self.trial)
         call_sites = introspector.query_introspector_call_sites_metadata(project_name, function_signature)
         
         examples_analyzed = 0
         no_new_insight_count = 0
         
         if call_sites:
-            logger.info(f'Found {len(call_sites)} call sites, processing up to {self.max_examples}', trial=self.trial)
+            logger.info(
+                f'🔍 FuzzIntrospector found {len(call_sites)} call sites for {function_name}. '
+                f'Will process up to {self.max_examples} examples to extract API behavior semantics.',
+                trial=self.trial
+            )
+            
+            # Log overview of call sites
+            logger.info(
+                f'📋 Call sites overview:\n' +
+                '\n'.join([f'  {idx+1}. {cs.get("src_func", "?")} @ {cs.get("src_file", "?")[:50]}...:L{cs.get("src_line", "?")}'
+                          for idx, cs in enumerate(call_sites[:min(10, len(call_sites))])]) +
+                (f'\n  ... and {len(call_sites) - 10} more' if len(call_sites) > 10 else ''),
+                trial=self.trial
+            )
+            
             call_sites = call_sites[:self.max_examples]
             
             # Phase 3: Iteratively learn from usage examples
+            logger.info('=' * 80, trial=self.trial)
+            logger.info('🔬 Phase 3: Iteratively analyzing API usage examples', trial=self.trial)
+            logger.info('=' * 80, trial=self.trial)
             for i, call_site in enumerate(call_sites, 1):
-                logger.info(f'Processing example {i}/{len(call_sites)}', trial=self.trial)
+                logger.info(f'📍 Processing example {i}/{len(call_sites)}:', trial=self.trial)
+                logger.info(f'   Source: {call_site.get("src_func", "unknown")}', trial=self.trial)
+                logger.info(f'   File: {call_site.get("src_file", "unknown")}', trial=self.trial)
+                logger.info(f'   Line: {call_site.get("src_line", "?")}', trial=self.trial)
                 
                 # Extract context
+                logger.info(f'   ⏳ Extracting call context...', trial=self.trial)
                 context = self._extract_call_context(call_site, project_name)
                 if not context:
-                    logger.debug(f'Could not extract context for example {i}, skipping', trial=self.trial)
+                    logger.warning(f'   ⚠️ Could not extract context for example {i}, skipping', trial=self.trial)
                     continue
                 
+                logger.info(f'   ✅ Context extracted:', trial=self.trial)
+                logger.info(f'      Caller: {context.get("caller_name", "?")}', trial=self.trial)
+                logger.info(f'      Call line: {context.get("call_line_number", "?")}', trial=self.trial)
+                logger.info(f'      Context size: {len(context.get("full_context", ""))} chars', trial=self.trial)
+                logger.debug(f'      Call statement: {context.get("call_statement", "?")[:100]}...', trial=self.trial)
+                
                 # Build prompt - LLM maintains context through conversation
+                logger.info(f'   📝 Building iteration prompt for example {i}...', trial=self.trial)
                 iteration_prompt = self._build_iteration_prompt(context, i, examples_analyzed)
+                logger.info(f'   📤 Sending iteration prompt to LLM (length: {len(iteration_prompt)} chars)...', trial=self.trial)
                 
                 # Get LLM analysis
                 try:
@@ -352,31 +551,51 @@ class LangGraphFunctionAnalyzer(LangGraphAgent):
                     # Simple heuristic: if response is very short, might indicate no new insights
                     if len(response.strip()) < 100:
                         no_new_insight_count += 1
+                        logger.info(f'   📥 Response received (length: {len(response)} chars) - appears brief, may indicate convergence', trial=self.trial)
                     else:
                         no_new_insight_count = 0
+                        logger.info(f'   📥 Response received (length: {len(response)} chars) - contains new insights', trial=self.trial)
                     
-                    logger.info(f'Example {i}: Analyzed (response length: {len(response)})', trial=self.trial)
+                    logger.debug(f'   Response preview: {response[:150]}...', trial=self.trial)
                     
                 except Exception as e:
-                    logger.error(f'Error calling LLM for example {i}: {e}', trial=self.trial)
+                    logger.error(f'   ❌ Error calling LLM for example {i}: {e}', trial=self.trial)
                     continue
                 
                 # Check convergence: stop if no new insights for N consecutive examples
                 if no_new_insight_count >= self.convergence_threshold:
                     logger.info(
-                        f'Converged after {examples_analyzed} examples '
+                        f'🎯 Converged after {examples_analyzed} examples '
                         f'({no_new_insight_count} consecutive examples without significant insights)',
-            trial=self.trial
-        )
+                        trial=self.trial
+                    )
                     break
+            
+            # Log summary of extraction
+            logger.info(
+                f'✅ Successfully extracted and analyzed {examples_analyzed} API usage examples from FuzzIntrospector. '
+                f'These examples provide real-world behavioral semantics for {function_name}.',
+                trial=self.trial
+            )
         else:
-            logger.warning(f'No call sites found for {function_signature}', trial=self.trial)
+            logger.warning(f'⚠️  No call sites found in FuzzIntrospector for {function_signature}. '
+                          f'Analysis will rely on function signature and source code only.',
+                          trial=self.trial)
         
         # Phase 4: Generate final comprehensive analysis
-        logger.info(f'Analysis complete. Generating final summary based on {examples_analyzed} examples', trial=self.trial)
+        logger.info('=' * 80, trial=self.trial)
+        logger.info('🔬 Phase 4: Generating final comprehensive analysis', trial=self.trial)
+        logger.info('=' * 80, trial=self.trial)
+        logger.info(f'📊 Summary: Analyzed {examples_analyzed} API usage examples from real code', trial=self.trial)
         
         # Retrieve archetype knowledge from long-term memory
+        logger.info('🧠 Retrieving archetype knowledge from long-term memory...', trial=self.trial)
         archetype_knowledge = self._retrieve_archetype_knowledge(state)
+        logger.info(f'   Archetype knowledge length: {len(archetype_knowledge)} chars', trial=self.trial)
+        if archetype_knowledge and len(archetype_knowledge) > 0:
+            logger.debug(f'   Archetype knowledge preview: {archetype_knowledge[:200]}...', trial=self.trial)
+        else:
+            logger.info('   No archetype knowledge available', trial=self.trial)
         
         prompt_manager = get_prompt_manager()
         final_prompt = prompt_manager.build_user_prompt(
@@ -386,9 +605,81 @@ class LangGraphFunctionAnalyzer(LangGraphAgent):
             ARCHETYPE_KNOWLEDGE=archetype_knowledge
         )
         
+        logger.info(f'📤 Sending final summary request to LLM (prompt length: {len(final_prompt)} chars)...', trial=self.trial)
         final_response = self.chat_llm(state, final_prompt)
+        logger.info(f'📥 Received final analysis (length: {len(final_response)} chars)', trial=self.trial)
+        
+        # Validate output structure and extract metadata
+        is_valid, missing, metadata = self._validate_and_extract_metadata(final_response, function_name)
+        
+        if not is_valid:
+            logger.warning(
+                f"Function analysis output incomplete. Missing: {missing}",
+                trial=self.trial
+            )
+        else:
+            logger.info("✓ Function analysis structure validated successfully", trial=self.trial)
+        
+        # If @must_call_target is extracted, add to session memory
+        if metadata.get("must_call_target") == "yes":
+            from agent_graph.state import add_api_constraint
+            add_api_constraint(
+                state,
+                f"CRITICAL: Must call {metadata.get('target_function', function_name)} in fuzz driver",
+                source="function_analyzer",
+                confidence="high"
+            )
+        
+        # Store extracted target function name in state
+        if metadata.get("target_function"):
+            state["target_function_name"] = metadata["target_function"]
         
         return final_response
+    
+    def _validate_and_extract_metadata(
+        self,
+        analysis_output: str,
+        function_name: str
+    ) -> tuple[bool, list[str], dict]:
+        """
+        Validate function analysis output and extract metadata.
+        
+        Returns:
+            (is_valid, missing_items, extracted_metadata)
+        """
+        import re
+        
+        required_tags = [
+            "@target_function:",
+            "@must_call_target:",
+            "@category:",
+            "@complexity:",
+            "@state_model:",
+            "@recommended_approach:"
+        ]
+        
+        missing = []
+        metadata = {}
+        
+        # Check for required tags
+        for tag in required_tags:
+            if tag not in analysis_output:
+                missing.append(f"Missing tag: {tag}")
+            else:
+                # Extract value
+                tag_clean = tag.rstrip(":")
+                pattern = rf"{re.escape(tag)}\s*[`]?([^`\n]+)[`]?"
+                match = re.search(pattern, analysis_output)
+                if match:
+                    value = match.group(1).strip()
+                    metadata[tag_clean.lstrip("@")] = value
+        
+        # Check for "Recommended Test Vectors" section
+        if "Recommended Test Vectors" not in analysis_output and "**Recommended Test Vectors**" not in analysis_output:
+            missing.append("Missing section: Recommended Test Vectors")
+        
+        is_valid = len(missing) == 0
+        return is_valid, missing, metadata
     
     def _extract_call_context(
         self,
@@ -444,7 +735,7 @@ class LangGraphFunctionAnalyzer(LangGraphAgent):
         # Extract return value usage
         return_usage = self._extract_return_usage(lines, call_line_idx, call_statement)
         
-        return {
+        context_dict = {
             'caller_name': src_func,
             'caller_signature': caller_sig,
             'call_line_number': call_line_idx + 1,  # 1-indexed for display
@@ -455,6 +746,31 @@ class LangGraphFunctionAnalyzer(LangGraphAgent):
             'return_usage': return_usage,
             'full_context': f"{context_before}\n{call_statement}\n{context_after}",
         }
+        
+        # Log extracted context for debugging and analysis
+        logger.info(
+            f"📋 Extracted API usage context from FuzzIntrospector:\n"
+            f"  Caller: {src_func}\n"
+            f"  Line: {call_line_idx + 1}\n"
+            f"  Call statement: {call_statement.strip()}\n"
+            f"  Parameter setup: {parameter_setup[:100]}{'...' if len(parameter_setup) > 100 else ''}\n"
+            f"  Return usage: {return_usage[:100]}{'...' if len(return_usage) > 100 else ''}",
+            trial=self.trial
+        )
+        
+        # Log the full context in debug mode
+        logger.debug(
+            f"Full context extracted:\n"
+            f"--- Context Before ({len(context_before)} chars) ---\n"
+            f"{context_before}\n"
+            f"--- Call Statement ---\n"
+            f"{call_statement}\n"
+            f"--- Context After ({len(context_after)} chars) ---\n"
+            f"{context_after}",
+            trial=self.trial
+        )
+        
+        return context_dict
     
     def _find_call_in_source(self, lines: List[str], func_name: str) -> Optional[int]:
         """Try to find where a function is called in the source code."""
@@ -626,6 +942,7 @@ Use this knowledge to structure your analysis.
                 - function_header: Primary header file for the function
                 - related_headers: List of related project headers
                 - definition_file_headers: Headers extracted from function definition file (NEW)
+                - is_c_api: Whether the function is a C API (based on naming convention)
         """
         from data_prep import introspector
         from agent_graph.header_extractor import get_function_definition_headers
@@ -633,29 +950,28 @@ Use this knowledge to structure your analysis.
         header_info = {
             "function_header": None,
             "related_headers": [],
-            "definition_file_headers": None
+            "definition_file_headers": None,
+            "is_c_api": False
         }
         
         try:
-            # ===== NEW: Extract headers from function definition file (HIGHEST PRIORITY) =====
-            logger.info(f'Extracting headers from function definition file', trial=self.trial)
-            definition_headers = get_function_definition_headers(
-                project_name, function_signature
-            )
+            # ===== STEP 0: Detect if this is a C API function =====
+            # C API characteristics:
+            # 1. Function name uses underscore_style (e.g., ada_can_parse_with_base)
+            # 2. No namespace prefix (e.g., no ada::parse)
+            # 3. Often has C-style types (char*, size_t) without std::
+            function_name = function_signature.split('(')[0].strip().split()[-1]
+            is_c_api = self._detect_c_api(function_name, function_signature)
+            header_info["is_c_api"] = is_c_api
             
-            if definition_headers:
-                header_info["definition_file_headers"] = definition_headers
+            if is_c_api:
                 logger.info(
-                    f'Extracted {len(definition_headers.get("standard_headers", []))} standard '
-                    f'and {len(definition_headers.get("project_headers", []))} project headers '
-                    f'from definition file: {definition_headers.get("definition_file", "unknown")}',
+                    f'Detected C API function (underscore naming): {function_name}',
                     trial=self.trial
                 )
-            else:
-                logger.debug(f'No definition file headers found', trial=self.trial)
-            # =================================================================================
+            # ======================================================
             
-            # 1. Query FI for header files (now serves as backup)
+            # ===== STEP 1: Query FI for header files (HIGHEST PRIORITY for C APIs) =====
             logger.info(f'Querying FI header files for {function_signature}', trial=self.trial)
             all_headers = introspector.query_introspector_header_files_to_include(
                 project_name, function_signature
@@ -681,11 +997,66 @@ Use this knowledge to structure your analysis.
                     logger.info(f'Primary header from FI: {project_headers[0]}', trial=self.trial)
             else:
                 logger.debug(f'No headers returned from FI for {function_signature}', trial=self.trial)
+            # ==========================================================================
+            
+            # ===== STEP 2: Extract headers from function definition file (fallback for C++) =====
+            logger.info(f'Extracting headers from function definition file', trial=self.trial)
+            definition_headers = get_function_definition_headers(
+                project_name, function_signature
+            )
+            
+            if definition_headers:
+                header_info["definition_file_headers"] = definition_headers
+                logger.info(
+                    f'Extracted {len(definition_headers.get("standard_headers", []))} standard '
+                    f'and {len(definition_headers.get("project_headers", []))} project headers '
+                    f'from definition file: {definition_headers.get("definition_file", "unknown")}',
+                    trial=self.trial
+                )
+            else:
+                logger.debug(f'No definition file headers found', trial=self.trial)
+            # ==================================================================================
             
         except Exception as e:
             logger.warning(f'Failed to extract header information: {e}', trial=self.trial)
         
         return header_info
+    
+    def _detect_c_api(self, function_name: str, function_signature: str) -> bool:
+        """
+        Detect if a function is a C API based on naming conventions.
+        
+        C API characteristics:
+        - Underscore naming (e.g., ada_can_parse, json_parse_string)
+        - No namespace prefix (no ::)
+        - Typically 2+ underscores in name
+        
+        Args:
+            function_name: Extracted function name (e.g., 'ada_can_parse_with_base')
+            function_signature: Full signature for additional context
+        
+        Returns:
+            True if likely a C API function
+        """
+        # C++ API indicators (negative signals)
+        if '::' in function_name:
+            return False  # C++ namespace
+        
+        # Remove common prefixes to get pure name
+        name_parts = function_name.split('::')[-1]  # Get last part after ::
+        
+        # C API naming pattern: lowercase_with_underscores
+        # Require at least 2 underscores and all lowercase (except for specific prefixes)
+        underscore_count = name_parts.count('_')
+        
+        if underscore_count >= 2:
+            # Check if it's all lowercase (C API convention)
+            # Allow numbers and underscores
+            clean_name = name_parts.replace('_', '').replace('0', '').replace('1', '').replace('2', '').replace('3', '').replace('4', '').replace('5', '').replace('6', '').replace('7', '').replace('8', '').replace('9', '')
+            if clean_name.islower():
+                return True
+        
+        return False
     
     def _convert_to_include_path(self, absolute_path: str, project_name: str) -> str:
         """
@@ -792,6 +1163,35 @@ Use this knowledge to structure your analysis.
         
         return result
     
+    def _extract_srs_json(self, response: str) -> Optional[Dict[str, Any]]:
+        """Extract and parse SRS JSON from the response.
+        
+        Args:
+            response: The LLM response containing SRS specification
+            
+        Returns:
+            Parsed SRS JSON data or None if not found/invalid
+        """
+        import json
+        import re
+        
+        try:
+            # Look for <srs_json>...</srs_json> tags
+            match = re.search(r'<srs_json>\s*(\{.*?\})\s*</srs_json>', response, re.DOTALL)
+            if match:
+                json_str = match.group(1)
+                srs_data = json.loads(json_str)
+                logger.info(f'Successfully extracted SRS JSON data', trial=self.trial)
+                return srs_data
+            else:
+                logger.warning(f'No <srs_json> tags found in response', trial=self.trial)
+                return None
+        except json.JSONDecodeError as e:
+            logger.warning(f'Failed to parse SRS JSON: {e}', trial=self.trial)
+            return None
+        except Exception as e:
+            logger.warning(f'Error extracting SRS JSON: {e}', trial=self.trial)
+            return None
 
 
 class LangGraphPrototyper(LangGraphAgent):
@@ -843,12 +1243,15 @@ class LangGraphPrototyper(LangGraphAgent):
         # (skeleton already contains header information injected by Function Analyzer)
         skeleton_code = self._retrieve_skeleton(function_analysis)
         
+        # Format SRS specification (use structured data if available, otherwise raw analysis)
+        srs_specification = self._format_srs_specification(function_analysis)
+        
         base_prompt = prompt_manager.build_user_prompt(
             "prototyper",
             project_name=benchmark.get('project', 'unknown'),
             function_name=benchmark.get('function_name', 'unknown'),
             function_signature=benchmark.get('function_signature', 'unknown'),
-            function_analysis=function_analysis.get('raw_analysis', 'No analysis available'),
+            srs_specification=srs_specification,
             additional_context=additional_context,
             skeleton_code=skeleton_code
         )
@@ -873,12 +1276,18 @@ class LangGraphPrototyper(LangGraphAgent):
         # 合并更新到session_memory
         updated_session_memory = merge_session_memory_updates(state, session_memory_updates)
         
-        # Extract code from <fuzz target> tags
-        fuzz_target_code = parse_tag(response, 'fuzz target')
+        # Extract code from <fuzz_target> tags
+        fuzz_target_code = parse_tag(response, 'fuzz_target')
         
         # If no tags found, use the whole response as fallback
         if not fuzz_target_code:
             fuzz_target_code = response
+        
+        # 🔥 NEW: Validate generated code for internal API usage
+        validation_warnings = self._validate_api_usage(
+            fuzz_target_code,
+            benchmark.get('project', 'unknown')
+        )
         
         # Prepare state update
         state_update = {
@@ -886,7 +1295,8 @@ class LangGraphPrototyper(LangGraphAgent):
             "compile_success": None,  # Reset to trigger build
             "build_errors": [],  # Clear previous errors
             "retry_count": 0,  # Reset retry count for new target
-            "session_memory": updated_session_memory  # ✅ 返回更新
+            "session_memory": updated_session_memory,  # ✅ 返回更新
+            "api_validation_warnings": validation_warnings  # Store for Enhancer to see
         }
         
         # If this is a regeneration, update regeneration counter and reset compilation retry count
@@ -897,7 +1307,169 @@ class LangGraphPrototyper(LangGraphAgent):
             logger.info(f'Prototyper regeneration #{prototyper_regenerate_count + 1}, '
                        f'resetting compilation_retry_count', trial=self.trial)
         
+        # Flush logs for this agent after completing execution
+        self._langgraph_logger.flush_agent_logs(self.name)
+        
         return state_update
+    
+    def _validate_api_usage(self, code: str, project_name: str) -> str:
+        """
+        Validate generated code for internal/private API usage.
+        
+        Args:
+            code: Generated fuzz target code
+            project_name: Project name
+        
+        Returns:
+            Formatted validation warnings (empty string if no issues)
+        """
+        try:
+            from agent_graph.api_validator import validate_fuzz_target
+            
+            is_valid, report = validate_fuzz_target(code, project_name)
+            
+            if not is_valid:
+                logger.warning(
+                    f'Generated code contains internal API usage - validation failed',
+                    trial=self.trial
+                )
+                logger.info(f'Validation report:\n{report}', trial=self.trial)
+                return report
+            else:
+                logger.info('Generated code passed API validation', trial=self.trial)
+                return ""
+        
+        except Exception as e:
+            logger.warning(f'API validation failed with error: {e}', trial=self.trial)
+            return ""
+    
+    def _format_srs_specification(self, function_analysis: dict) -> str:
+        """
+        Format SRS specification for the Prototyper prompt.
+        
+        Args:
+            function_analysis: Analysis containing SRS data
+            
+        Returns:
+            Formatted SRS specification string
+        """
+        srs_data = function_analysis.get('srs_data')
+        
+        # If no structured SRS data, fall back to raw analysis
+        if not srs_data:
+            return function_analysis.get('raw_analysis', 'No analysis available')
+        
+        # Build formatted SRS specification
+        output = []
+        
+        # Add archetype information
+        archetype = srs_data.get('archetype', {})
+        output.append("### Archetype Pattern")
+        output.append(f"**Primary Pattern**: {archetype.get('primary_pattern', 'Unknown')}")
+        output.append(f"**Reference**: {archetype.get('reference', 'N/A')}")
+        output.append(f"**Confidence**: {archetype.get('confidence', 'Unknown')}")
+        output.append(f"**Evidence**: {archetype.get('evidence_count', 'N/A')}")
+        output.append("")
+        
+        # Add functional requirements
+        frs = srs_data.get('functional_requirements', [])
+        if frs:
+            output.append("### Functional Requirements")
+            for fr in frs:
+                output.append(f"**{fr.get('id', 'FR-?')}** [{fr.get('priority', 'MANDATORY')}]")
+                output.append(f"- **Requirement**: {fr.get('requirement', 'N/A')}")
+                if fr.get('parameter'):
+                    output.append(f"- **Parameter**: {fr['parameter']}")
+                output.append(f"- **Rationale**: {fr.get('rationale', 'N/A')}")
+                impl = fr.get('implementation', {})
+                if impl.get('code'):
+                    output.append(f"- **Implementation**:")
+                    output.append(f"```{impl.get('language', 'c')}")
+                    output.append(impl['code'])
+                    output.append("```")
+                output.append(f"- **Failure Mode**: {fr.get('failure_mode', 'Unknown')}")
+                output.append("")
+        
+        # Add preconditions
+        pres = srs_data.get('preconditions', [])
+        if pres:
+            output.append("### Preconditions")
+            for pre in pres:
+                output.append(f"**{pre.get('id', 'PRE-?')}** [{pre.get('priority', 'MANDATORY')}]")
+                output.append(f"- **Requirement**: {pre.get('requirement', 'N/A')}")
+                output.append(f"- **Check Method**: {pre.get('check_method', 'N/A')}")
+                output.append(f"- **Rationale**: {pre.get('rationale', 'N/A')}")
+                output.append(f"- **Violation → {pre.get('violation_consequence', 'Unknown')}**")
+                output.append("")
+        
+        # Add postconditions
+        posts = srs_data.get('postconditions', [])
+        if posts:
+            output.append("### Postconditions")
+            for post in posts:
+                output.append(f"**{post.get('id', 'POST-?')}** [{post.get('priority', 'MANDATORY')}]")
+                output.append(f"- **Requirement**: {post.get('requirement', 'N/A')}")
+                output.append(f"- **Check Method**: {post.get('check_method', 'N/A')}")
+                output.append(f"- **Rationale**: {post.get('rationale', 'N/A')}")
+                output.append("")
+        
+        # Add constraints
+        cons = srs_data.get('constraints', [])
+        if cons:
+            output.append("### Constraints")
+            for con in cons:
+                output.append(f"**{con.get('id', 'CON-?')}** [Type: {con.get('type', 'Unknown')}]")
+                output.append(f"- **Requirement**: {con.get('requirement', 'N/A')}")
+                if con.get('parameter'):
+                    output.append(f"- **Parameter**: {con['parameter']}")
+                output.append(f"- **Valid Range/Sequence**: {con.get('valid_range_or_sequence', 'N/A')}")
+                output.append(f"- **Rationale**: {con.get('rationale', 'N/A')}")
+                
+                # Add execution sequence if available
+                impl = con.get('implementation', {})
+                sequence = impl.get('sequence', [])
+                if sequence:
+                    output.append("- **Execution Sequence**:")
+                    for step in sequence:
+                        output.append(f"  {step.get('step', '?')}. {step.get('description', 'N/A')}")
+                        if step.get('code'):
+                            output.append(f"     ```c")
+                            output.append(f"     {step['code']}")
+                            output.append(f"     ```")
+                output.append("")
+        
+        # Add parameter strategies
+        params = srs_data.get('parameter_strategies', [])
+        if params:
+            output.append("### Parameter Strategies")
+            for param in params:
+                output.append(f"**Parameter**: `{param.get('parameter', 'unknown')}`")
+                output.append(f"- **Type**: {param.get('type', 'unknown')}")
+                output.append(f"- **Strategy**: {param.get('strategy', 'DIRECT_FUZZ')}")
+                output.append(f"- **Construction**: {param.get('construction_method', 'N/A')}")
+                if param.get('constraints'):
+                    output.append(f"- **Constraints**: {param['constraints']}")
+                if param.get('fixed_value'):
+                    output.append(f"- **Fixed Value**: {param['fixed_value']}")
+                if param.get('driver_code'):
+                    output.append(f"- **Driver Code**:")
+                    output.append(f"```c")
+                    output.append(param['driver_code'])
+                    output.append("```")
+                output.append("")
+        
+        # Add metadata
+        metadata = srs_data.get('metadata', {})
+        if metadata:
+            output.append("### Metadata")
+            output.append(f"- **Category**: {metadata.get('category', 'Unknown')}")
+            output.append(f"- **Complexity**: {metadata.get('complexity', 'Unknown')}")
+            output.append(f"- **State Model**: {metadata.get('state_model', 'Unknown')}")
+            output.append(f"- **Recommended Approach**: {metadata.get('recommended_approach', 'direct_call')}")
+            output.append(f"- **Purpose**: {metadata.get('purpose', 'N/A')}")
+            output.append("")
+        
+        return "\n".join(output)
     
     def _retrieve_skeleton(self, function_analysis: dict) -> str:
         """
@@ -914,8 +1486,15 @@ class LangGraphPrototyper(LangGraphAgent):
             from long_term_memory.retrieval import KnowledgeRetriever
             
             # Extract archetype from analysis
-            raw_analysis = function_analysis.get('raw_analysis', '')
-            archetype = self._extract_archetype_from_analysis(raw_analysis)
+            # Priority 1: Check SRS JSON data (most reliable)
+            srs_data = function_analysis.get('srs_data', {})
+            archetype_info = srs_data.get('archetype', {})
+            archetype = archetype_info.get('primary_pattern')
+            
+            # Priority 2: Fallback to raw analysis text
+            if not archetype:
+                raw_analysis = function_analysis.get('raw_analysis', '')
+                archetype = self._extract_archetype_from_analysis(raw_analysis)
             
             if not archetype:
                 logger.info('No archetype found in analysis, skipping skeleton retrieval', trial=self.trial)
@@ -940,13 +1519,20 @@ class LangGraphPrototyper(LangGraphAgent):
 {skeleton}"""
             
             return f"""
-# Reference Skeleton (adapt this structure)
+# Reference Skeleton
+
+**⚠️ CRITICAL: This is a TEMPLATE showing the PATTERN, NOT code to copy literally!**
+
+**How to use:**
+1. 🥇 **COPY patterns from EXISTING FUZZERS** (highest priority - proven to compile)
+2. 🥈 **Replace PLACEHOLDERS** with actual function calls from the public API
+3. 🥉 **Keep the STRUCTURE** (error handling, cleanup order) but adapt the content
+
+**Placeholders** like `PARSE_FUNCTION()`, `RESULT_TYPE`, `MIN_SIZE` are NOT real identifiers - replace them with actual API calls!
 
 ```c
 {skeleton_with_headers}
 ```
-
-Adapt this skeleton according to the specification above.
 """
         except Exception as e:
             logger.warning(f'Failed to retrieve skeleton: {e}', trial=self.trial)
@@ -956,10 +1542,13 @@ Adapt this skeleton according to the specification above.
         """
         Format header information as C/C++ comments for skeleton injection.
         
-        Priority:
-        1. Definition file headers (most reliable - required for function compilation)
-        2. Existing fuzzer headers (proven to work in practice)
-        3. FuzzIntrospector inferred headers (backup)
+        Priority (NEW - API-aware):
+        - For C APIs: FuzzIntrospector headers > Definition file headers
+        - For C++ APIs: Definition file headers > FuzzIntrospector headers
+        
+        Rationale:
+        - C APIs often have separate declaration headers (e.g., ada_c.h vs ada.cpp)
+        - C++ APIs usually declare in the same header they include (e.g., ada.h)
         
         Args:
             header_info: Dictionary containing header information
@@ -967,6 +1556,9 @@ Adapt this skeleton according to the specification above.
         """
         if not header_info:
             return "// NOTE: Header file information not available"
+        
+        # Detect API type
+        is_c_api = header_info.get('is_c_api', False)
         
         # Start with LibFuzzer required headers
         header_lines = [
@@ -996,102 +1588,154 @@ Adapt this skeleton according to the specification above.
         
         header_lines.append("")  # Blank line after standard headers
         
-        # ===== PRIORITY 1: Headers from function definition file (HIGHEST PRIORITY) =====
+        # ===== HEADER PRIORITY: EXISTING FUZZERS FIRST =====
+        # RATIONALE: Existing fuzzer headers are PROVEN to compile in OSS-Fuzz
+        # They are the ONLY source that guarantees correct paths and availability
+        
+        func_header = header_info.get('function_header')
+        related_headers = header_info.get('related_headers', [])
         definition_headers = header_info.get('definition_file_headers')
+        existing = header_info.get('existing_fuzzer_headers', {})
+        
+        has_fi_headers = func_header or related_headers
         has_definition = definition_headers and (
             definition_headers.get('standard_headers') or 
             definition_headers.get('project_headers')
         )
+        has_existing = existing.get('standard_headers') or existing.get('project_headers')
         
-        if has_definition:
+        # PRIORITY 1 (HIGHEST): Headers from existing fuzzers
+        if has_existing:
             header_lines.append("//")
-            header_lines.append("// ✅ PUBLIC API HEADERS (from function definition file)")
-            header_lines.append(f"// Source: {definition_headers.get('definition_file', 'unknown')}")
-            header_lines.append("// These are filtered to include ONLY public-facing headers.")
-            header_lines.append("// Internal implementation headers have been automatically removed.")
+            header_lines.append("// PRIMARY HEADERS (from working fuzzers - COPY THESE):")
+            header_lines.append("// ⚠️ THESE ARE PROVEN TO COMPILE - use exactly as shown")
             header_lines.append("//")
             
-            # Add standard library headers (from definition file)
-            std_headers = definition_headers.get('standard_headers', [])
-            if std_headers:
-                for std_h in sorted(set(std_headers)):
-                    # Already includes < >
-                    header_lines.append(f'#include {std_h}')
+            # Add project headers from existing fuzzers (highest confidence)
+            existing_proj = existing.get('project_headers', [])[:5]  # Top 5 most common
+            if existing_proj:
+                # CRITICAL FILTER: Remove inappropriate headers
+                filtered_headers = []
+                for proj_h in existing_proj:
+                    # Skip .cpp/.cc implementation files (should never be included)
+                    if proj_h.endswith('.cpp') or proj_h.endswith('.cc') or proj_h.endswith('.cxx'):
+                        logger.debug(f'Skipping implementation file from existing headers: {proj_h}', trial=self.trial)
+                        continue
+                    
+                    # For C API functions: skip C++ API headers
+                    if is_c_api:
+                        # Skip pure C++ headers (ada.h, ada.hpp, etc) when targeting C API
+                        # Keep only C-compatible headers (ada_c.h, etc)
+                        base_name = proj_h.lower()
+                        if '_c.h' in base_name or base_name.endswith('_c.h'):
+                            # This is a C API header - keep it
+                            filtered_headers.append(proj_h)
+                        elif base_name.endswith('.h') and not any(cpp_indicator in base_name for cpp_indicator in ['.hpp', 'xx']):
+                            # Generic .h file for C API - keep it (might be C-compatible)
+                            filtered_headers.append(proj_h)
+                        else:
+                            # Skip C++ headers for C API
+                            logger.debug(f'Skipping C++ header for C API function: {proj_h}', trial=self.trial)
+                    else:
+                        # For C++ API: keep all headers (including both C++ and C headers)
+                        filtered_headers.append(proj_h)
+                
+                if filtered_headers:
+                    header_lines.append("// Project headers (copy these first):")
+                    for proj_h in filtered_headers:
+                        header_lines.append(f'#include "{proj_h}"')
+                    header_lines.append("")
+                else:
+                    logger.warning(f'All existing project headers were filtered out for {"C" if is_c_api else "C++"} API', trial=self.trial)
             
-            # Add project headers (from definition file)
+            # Add standard headers from existing fuzzers (as comments - uncomment if needed)
+            existing_std = existing.get('standard_headers', [])[:8]
+            if existing_std:
+                header_lines.append("// Standard headers from working fuzzers (uncomment if needed):")
+                for std_h in existing_std:
+                    header_lines.append(f'// #include <{std_h}>')
+                header_lines.append("")
+        
+        # PRIORITY 2: API-specific headers (FI or Definition) - AS FALLBACK/REFERENCE
+        # CASE 1: C API - FuzzIntrospector headers as SECONDARY/REFERENCE
+        if is_c_api and has_fi_headers:
+            header_lines.append("//")
+            header_lines.append("// SECONDARY: FuzzIntrospector headers (C API - uncomment if needed):")
+            header_lines.append("// NOTE: Existing fuzzer headers above are higher priority")
+            header_lines.append("//")
+            
+            # Add FI's primary header as COMMENT (not directly included)
+            if func_header:
+                header_lines.append(f'// #include "{func_header}"  // FI suggestion')
+                logger.info(f'FI header for C API (as reference): {func_header}', trial=self.trial)
+            
+            # Add related FI headers as comments (optional)
+            if related_headers:
+                for h in related_headers[:3]:
+                    header_lines.append(f'// #include "{h}"')
+            
+            header_lines.append("")
+            
+            # Definition file headers become TERTIARY (supplementary standard headers only)
+            if has_definition:
+                std_headers = definition_headers.get('standard_headers', [])[:10]  # Limit to top 10
+                if std_headers:
+                    header_lines.append("// Supplementary standard headers (from definition file):")
+                    for std_h in sorted(set(std_headers)):
+                        header_lines.append(f'// #include {std_h}  // Uncomment if needed')
+                    header_lines.append("")
+        
+        # CASE 2: C++ API OR No FI headers - Definition file headers as SECONDARY
+        elif has_definition and not has_existing:
+            # Only use definition headers if NO existing fuzzer headers are available
+            header_lines.append("//")
+            if is_c_api:
+                header_lines.append("// SECONDARY: Headers from definition file (C API fallback):")
+            else:
+                header_lines.append("// SECONDARY: Headers from definition file (C++ API):")
+            header_lines.append("//")
+            
+            # Add project headers (from definition file) - most important
             proj_headers = definition_headers.get('project_headers', [])
             if proj_headers:
-                if std_headers:
-                    header_lines.append("")  # Blank line between standard and project
                 for proj_h in sorted(set(proj_headers)):
                     # Already includes " "
                     header_lines.append(f'#include {proj_h}')
-            else:
-                header_lines.append("// (No public API headers found - may need manual addition)")
+                header_lines.append("")
             
-            header_lines.append("//")
-        # ============================================================================
-        
-        # PRIORITY 2: Headers from existing fuzzers (proven to work)
-        existing = header_info.get('existing_fuzzer_headers', {})
-        has_existing = existing.get('standard_headers') or existing.get('project_headers')
-        
-        if has_existing:
-            header_lines.append("//")
-            if has_definition:
-                header_lines.append("// RECOMMENDED: Additional headers from existing fuzzers")
-            else:
-                header_lines.append("// RECOMMENDED: Headers from existing fuzzers (proven to compile)")
-            header_lines.append("//")
+            # Add standard library headers (from definition file) as comments
+            std_headers = definition_headers.get('standard_headers', [])[:10]
+            if std_headers:
+                header_lines.append("// Standard headers from definition (uncomment if needed):")
+                for std_h in sorted(set(std_headers)):
+                    # Already includes < >
+                    header_lines.append(f'// #include {std_h}')
+                header_lines.append("")
             
-            # Add standard library headers (avoid duplicates)
-            existing_std = existing.get('standard_headers', [])[:10]  # Top 10
-            if has_definition:
-                # Comment out existing headers that might duplicate definition headers
-                for std_h in existing_std:
-                    header_lines.append(f'// #include <{std_h}>  // Uncomment if needed')
-            else:
-                for std_h in existing_std:
-                    header_lines.append(f'#include <{std_h}>')
-            
-            # Add project headers (avoid duplicates)
-            existing_proj = existing.get('project_headers', [])[:8]  # Top 8
-            if existing_proj:
-                if has_definition:
-                    for proj_h in existing_proj:
-                        header_lines.append(f'// #include "{proj_h}"  // Uncomment if needed')
-                else:
-                    for proj_h in existing_proj:
-                        header_lines.append(f'#include "{proj_h}"')
-            
+            # FI headers become TERTIARY (as comments)
+            if has_fi_headers:
+                header_lines.append("// FuzzIntrospector headers (uncomment if needed):")
+                if func_header:
+                    header_lines.append(f'// #include "{func_header}"')
+                for h in related_headers[:3]:
+                    header_lines.append(f'// #include "{h}"')
+                header_lines.append("")
+        
+        # CASE 3: Fallback - only FI headers available (lowest priority)
+        elif has_fi_headers and not has_existing:
             header_lines.append("//")
-        
-        # PRIORITY 3: FuzzIntrospector inferred headers (backup)
-        func_header = header_info.get('function_header')
-        related = header_info.get('related_headers', [])
-        
-        if func_header or related:
-            if has_definition or has_existing:
-                header_lines.append("// Additional headers from FuzzIntrospector (may need adjustment):")
-            else:
-                header_lines.append("// Headers from FuzzIntrospector:")
+            header_lines.append("// Headers from FuzzIntrospector (use with caution):")
             header_lines.append("//")
             
             if func_header:
-                header_lines.append(f'// Function defined in: {func_header}')
-                if has_definition or has_existing:
-                    header_lines.append(f'// #include "{func_header}"  // Uncomment if needed')
-                else:
-                    header_lines.append(f'#include "{func_header}"  // Target function')
+                header_lines.append(f'// #include "{func_header}"  // May need path adjustment')
             
-            if related:
-                header_lines.append("//")
-                header_lines.append("// Related headers:")
-                for h in related[:5]:  # Limit to top 5
-                    if has_definition or has_existing:
-                        header_lines.append(f'// #include "{h}"  // Uncomment if needed')
-                    else:
-                        header_lines.append(f'// #include "{h}"')
+            if related_headers:
+                for h in related_headers[:3]:
+                    header_lines.append(f'// #include "{h}"')
+            
+            header_lines.append("")
+        # ===============================================
         
         header_lines.append("// ====================")
         return "\n".join(header_lines)
@@ -1198,13 +1842,26 @@ class LangGraphEnhancer(LangGraphAgent):
         # Extract header information from function_analysis (if available)
         function_analysis = state.get("function_analysis", {})
         header_info = function_analysis.get("header_information", {})
-        additional_context = self._format_header_hints(header_info, build_errors)
+        header_hints = self._format_header_hints(header_info, build_errors)
+        
+        # 🔥 NEW: Add API validation warnings if available
+        api_warnings = state.get("api_validation_warnings", "")
+        
+        # Combine all additional context
+        additional_context_parts = []
+        if header_hints:
+            additional_context_parts.append(header_hints)
+        if api_warnings:
+            additional_context_parts.append("\n---\n\n# ⚠️  API Validation Warnings\n\n" + api_warnings)
+        
+        additional_context = "\n".join(additional_context_parts)
         
         # Build base prompt from template file
         prompt_manager = get_prompt_manager()
         base_prompt = prompt_manager.build_user_prompt(
             "enhancer",
             language=language,
+            function_name=benchmark.get('function_name', 'unknown'),
             current_code=code_context,  # Use context instead of full code
             build_errors=error_text,
             additional_context=additional_context
@@ -1230,12 +1887,52 @@ class LangGraphEnhancer(LangGraphAgent):
         # 合并更新到session_memory
         updated_session_memory = merge_session_memory_updates(state, session_memory_updates)
         
-        # Extract code from <fuzz target> tags
-        fuzz_target_code = parse_tag(response, 'fuzz target')
+        # Extract code from <fuzz_target> tags
+        fuzz_target_code = parse_tag(response, 'fuzz_target')
         
         # If no tags found, use the whole response as fallback
         if not fuzz_target_code:
             fuzz_target_code = response
+        
+        # 🔥 CRITICAL VALIDATION: Check if target function name was changed
+        target_function_name = benchmark.get('function_name', '')
+        if target_function_name:
+            violation_detected, violation_msg = self._validate_target_function_preserved(
+                fuzz_target_code, 
+                target_function_name
+            )
+            
+            if violation_detected:
+                logger.error(
+                    f'❌ CRITICAL VIOLATION: Target function was changed! {violation_msg}',
+                    trial=self.trial
+                )
+                # Force rebuild with error message explaining the violation
+                state_update = {
+                    "compile_success": False,
+                    "build_errors": [
+                        f"❌ VALIDATION ERROR: {violation_msg}",
+                        f"",
+                        f"YOU MUST CALL FUNCTION: {target_function_name}",
+                        f"",
+                        f"The target function name MUST remain exactly as specified.",
+                        f"DO NOT replace it with similar-named functions.",
+                        f"",
+                        f"Add a direct call to {target_function_name}() inside LLVMFuzzerTestOneInput.",
+                    ],
+                    "session_memory": updated_session_memory
+                }
+                
+                # Update retry counter
+                if workflow_phase == "compilation":
+                    compilation_retry_count = state.get("compilation_retry_count", 0)
+                    state_update["compilation_retry_count"] = compilation_retry_count + 1
+                else:
+                    retry_count = state.get("retry_count", 0)
+                    state_update["retry_count"] = retry_count + 1
+                
+                self._langgraph_logger.flush_agent_logs(self.name)
+                return state_update
         
         # Prepare state update
         state_update = {
@@ -1256,6 +1953,9 @@ class LangGraphEnhancer(LangGraphAgent):
             # In optimization phase, update regular retry_count
             retry_count = state.get("retry_count", 0)
             state_update["retry_count"] = retry_count + 1
+        
+        # Flush logs for this agent after completing execution
+        self._langgraph_logger.flush_agent_logs(self.name)
         
         return state_update
     
@@ -1333,6 +2033,9 @@ class LangGraphEnhancer(LangGraphAgent):
         This method provides the LLM with known correct header paths extracted by
         FunctionAnalyzer, preventing it from blindly guessing incorrect paths.
         
+        CRITICAL: This method now provides EXPLICIT PRIORITY GUIDANCE to prevent
+        LLM from using internal headers extracted from source code.
+        
         Args:
             header_info: Dictionary containing header information from FunctionAnalyzer
             build_errors: List of build errors to determine if header hints are needed
@@ -1357,100 +2060,307 @@ class LangGraphEnhancer(LangGraphAgent):
         
         hint_lines = [
             "",
-            "## Known Header Information",
+            "# ⚡ Known Header Information (STRICT PRIORITY ORDER)",
             "",
-            "**IMPORTANT**: The following header paths were extracted from the project's actual source code.",
-            "If you see 'file not found' errors, use these EXACT paths instead of guessing:",
+            "⚠️  **CRITICAL**: Use headers in this STRICT priority order. Lower priority sources may contain",
+            "INTERNAL implementation headers that WILL FAIL to compile in OSS-Fuzz fuzz targets.",
             ""
         ]
         
-        # Priority 1: Headers from function definition file (HIGHEST PRIORITY)
-        definition_headers = header_info.get('definition_file_headers')
+        # ANTI-PATTERN: Show what was FILTERED OUT first (negative examples)
+        definition_headers = header_info.get('definition_file_headers', {})
+        filtered_headers = definition_headers.get('filtered_headers', [])
+        
+        if filtered_headers:
+            hint_lines.extend([
+                "## ⛔ FILTERED HEADERS (DO NOT USE - WILL FAIL)",
+                "",
+                "The following headers were REMOVED because they cause compilation errors in fuzz targets.",
+                "These are INTERNAL implementation details, NOT public API:",
+                ""
+            ])
+            for item in filtered_headers[:10]:  # Show up to 10 examples
+                hint_lines.append(f"  ❌ `{item['header']:40}` ← {item['reason']}")
+            hint_lines.extend([
+                "",
+                "**If you see build errors mentioning these headers:**",
+                "  1. ❌ DO NOT add them back - they are internal-only",
+                "  2. ✅ Use the PUBLIC headers below instead",
+                "  3. ✅ Public headers expose all necessary functionality",
+                "",
+                "---",
+                ""
+            ])
+        
+        # Priority 0: Headers from existing fuzzers (HIGHEST PRIORITY - PROVEN)
+        existing_headers = header_info.get('existing_fuzzer_headers', {})
+        existing_standard = existing_headers.get('standard_headers', [])
+        existing_proj = existing_headers.get('project_headers', [])
+        
+        if existing_standard or existing_proj:
+            hint_lines.extend([
+                "## 🥇 PRIORITY 1: Headers from Working Fuzzers (COPY THESE)",
+                "",
+                "✅ **These headers are PROVEN to compile in OSS-Fuzz. USE EXACTLY AS SHOWN:**",
+                ""
+            ])
+            
+            if existing_standard:
+                hint_lines.append("**Standard headers (from working fuzzers):**")
+                for h in sorted(set(existing_standard))[:12]:
+                    hint_lines.append(f"  #include <{h}>")
+                hint_lines.append("")
+            
+            if existing_proj:
+                hint_lines.append("**Project headers (from working fuzzers):**")
+                for h in sorted(set(existing_proj))[:12]:
+                    hint_lines.append(f'  #include "{h}"')
+                hint_lines.append("")
+            
+            hint_lines.extend([
+                "**WHY THIS IS PRIORITY 1**: These patterns are extracted from existing fuzzers that",
+                "successfully compile in OSS-Fuzz. Copy these patterns for maximum success rate.",
+                "",
+                "---",
+                ""
+            ])
+        
+        # Priority 1: Public API headers from definition file
         if definition_headers:
             def_file = definition_headers.get('definition_file', 'unknown')
             std_headers = definition_headers.get('standard_headers', [])
             proj_headers = definition_headers.get('project_headers', [])
-            filtered_headers = definition_headers.get('filtered_headers', [])
             
             if proj_headers or std_headers:
-                hint_lines.append("### Headers from Function Definition File")
-                hint_lines.append(f"Source file: `{def_file}`")
-                hint_lines.append("")
+                hint_lines.extend([
+                    "## 🥈 PRIORITY 2: Public API Headers (SAFE TO USE)",
+                    "",
+                    f"✅ From function definition file: `{def_file}`",
+                    "✅ These passed internal/third-party filtering - safe for fuzz targets",
+                    ""
+                ])
                 
                 if proj_headers:
-                    hint_lines.append("**✅ Public API headers (safe to use in fuzz targets):**")
-                    for h in proj_headers:
-                        hint_lines.append(f"- {h}")
+                    hint_lines.append("**Project public API headers:**")
+                    for h in sorted(set(proj_headers))[:12]:
+                        hint_lines.append(f"  {h}")
                     hint_lines.append("")
                 
                 if std_headers:
                     hint_lines.append("**Standard library headers:**")
-                    for h in std_headers[:10]:  # Limit to 10
-                        hint_lines.append(f"- {h}")
+                    for h in sorted(set(std_headers))[:12]:
+                        hint_lines.append(f"  {h}")
                     hint_lines.append("")
-            
-            # 🔥 NEW: Show filtered internal headers with explanation
-            if filtered_headers:
-                hint_lines.append("**⚠️ INTERNAL headers (filtered out - DO NOT use these):**")
-                hint_lines.append("The following headers were found in the source file but are INTERNAL implementation")
-                hint_lines.append("details. They use relative paths that only work within the library's source tree.")
-                hint_lines.append("DO NOT include them in your fuzz target:")
-                hint_lines.append("")
-                for item in filtered_headers[:5]:  # Show max 5 examples
-                    hint_lines.append(f"- ❌ {item['header']} ({item['reason']})")
-                hint_lines.append("")
-                hint_lines.append("If you see build errors about these headers, you should:")
-                hint_lines.append("1. Remove them from the fuzz target")
-                hint_lines.append("2. Use the PUBLIC API headers listed above instead")
-                hint_lines.append("3. The public headers typically expose all necessary functionality")
-                hint_lines.append("")
+                
+                hint_lines.extend([
+                    "---",
+                    ""
+                ])
         
-        # Priority 2: Headers from existing fuzzers (proven to work)
-        existing_headers = header_info.get('existing_fuzzer_headers', {})
-        existing_proj = existing_headers.get('project_headers', [])
-        if existing_proj:
-            hint_lines.append("### Headers from Existing Fuzzers (proven to compile)")
-            hint_lines.append("**Common project headers in working fuzzers:**")
-            for h in existing_proj[:8]:  # Top 8
-                hint_lines.append(f"- \"{h}\"")
-            hint_lines.append("")
-        
-        # Priority 3: FuzzIntrospector inferred headers
+        # Priority 2: FuzzIntrospector inferred headers (LOWEST PRIORITY)
         func_header = header_info.get('function_header')
-        if func_header:
-            hint_lines.append("### FuzzIntrospector Information")
-            hint_lines.append(f"**Primary header:** \"{func_header}\"")
-            hint_lines.append("")
+        related_headers = header_info.get('related_headers', [])
         
-        # Add guidance
+        if func_header or related_headers:
+            hint_lines.extend([
+                "## 🥉 PRIORITY 3: FuzzIntrospector Suggestions (USE WITH CAUTION)",
+                "",
+                "⚠️  These are inferred by static analysis and may not always be correct.",
+                ""
+            ])
+            
+            if func_header:
+                hint_lines.append(f"**Primary header:** `{func_header}`")
+                hint_lines.append("")
+            
+            if related_headers:
+                hint_lines.append("**Related headers:**")
+                for h in related_headers[:8]:
+                    hint_lines.append(f"  - {h}")
+                hint_lines.append("")
+            
+            hint_lines.extend([
+                "---",
+                ""
+            ])
+        
+        # Add explicit usage guidance
         hint_lines.extend([
-            "**How to use this information:**",
+            "## ⚡ How to Fix Header Errors (STRICT RULES)",
             "",
-            "**General Rule**: Preserve the headers from the skeleton UNLESS there are build errors.",
+            "### Rule 1: Start with existing fuzzer headers (🥇 Priority 1)",
+            "```c",
+            "// ✅ CORRECT: Copy exact patterns from working fuzzers",
+            "#include <igraph/igraph.h>",
+            "#include <stdio.h>",
+            "```",
             "",
-            "**When to modify headers (fix unreasonable includes):**",
+            "### Rule 2: Add public API headers (🥈 Priority 2) if needed",
+            "```c",
+            '// ✅ CORRECT: Use filtered public headers',
+            '#include "libraw/libraw.h"',
+            "```",
             "",
-            "1. ❌ **Remove internal implementation headers** if you see 'file not found' errors:",
-            "   - Headers with paths like `../../internal/xxx.h` or `../../private/xxx.h`",
-            "   - Headers with `_impl.h`, `_detail.h`, `_internal.h` suffixes",
-            "   - These only work inside the library source tree, NOT in fuzz targets",
-            "   - **Action**: Remove them and use the ✅ public API headers instead",
+            "### Rule 3: NEVER add filtered headers",
+            "```c",
+            "// ❌ WRONG: Filtered headers will fail!",
+            '#include "../../internal/libraw_cxx_defs.h"  // FILTERED!',
+            "#include <cs/cs.h>                           // THIRD-PARTY!",
+            "```",
             "",
-            "2. ✅ **Use public API headers** (marked with ✅ above):",
-            "   - These are guaranteed to be accessible from fuzz targets",
-            "   - They typically expose all necessary functionality",
+            "### Rule 4: When you see 'file not found' errors",
             "",
-            "3. ⚠️ **For deep relative paths** (e.g., `../../../some/path.h`):",
-            "   - If you see 'file not found', try replacing with the public API equivalent",
-            "   - Example: `../../src/libraw.h` → `libraw/libraw.h`",
+            "**DO:**",
+            "  ✅ Check if the missing header is in FILTERED list → Remove it",
+            "  ✅ Replace with equivalent from PUBLIC headers (Priority 1 or 2)",
+            "  ✅ Use headers that match working fuzzer patterns",
             "",
-            "4. **Don't randomly change headers** just because they look unusual",
-            "   - Only modify when there's a clear build error",
-            "   - The skeleton may include valid but unconventional paths",
+            "**DON'T:**",
+            "  ❌ Add headers from error messages without checking if they're filtered",
+            "  ❌ Try variations like `internal/xxx.h`, `../private/xxx.h`, etc.",
+            "  ❌ Add third-party dependency headers (`<cs/cs.h>`, `<boost/...>`, etc.)",
+            "",
+            "### Common Mistakes to Avoid:",
+            "",
+            "```c",
+            "// ❌ WRONG (blindly adding from error messages):",
+            '#include "internal/libraw_cxx_defs.h"',
+            "",
+            "// ✅ CORRECT (using public API):",
+            '#include "libraw/libraw.h"',
+            "```",
+            "",
+            "```c",
+            "// ❌ WRONG (using internal dependency):",
+            "#include <cs/cs.h>",
+            "",
+            "// ✅ CORRECT (use project's public API instead):",
+            "#include <igraph/igraph.h>",
+            "```",
             ""
         ])
         
         return "\n".join(hint_lines)
+    
+    def _validate_target_function_preserved(
+        self, 
+        code: str, 
+        expected_function_name: str
+    ) -> Tuple[bool, str]:
+        """
+        Validate that the target function name is preserved in the generated code.
+        
+        This is a CRITICAL constraint - the LLM must NOT change the target function
+        to a similar-sounding function, even if it seems reasonable.
+        
+        Args:
+            code: Generated fuzz target code
+            expected_function_name: The required target function name
+        
+        Returns:
+            (violation_detected, violation_message)
+            - violation_detected: True if function was changed/missing
+            - violation_message: Human-readable description of violation
+        """
+        import re
+        
+        # Remove comments and strings to avoid false positives
+        code_no_comments = re.sub(r'//.*', '', code)
+        code_no_comments = re.sub(r'/\*.*?\*/', '', code_no_comments, flags=re.DOTALL)
+        code_no_strings = re.sub(r'"[^"]*"', '', code_no_comments)
+        code_no_strings = re.sub(r"'[^']*'", '', code_no_strings)
+        
+        # Check 1: Is the target function called? (not just mentioned)
+        # Look for function_name( or function_name ( with possible whitespace
+        function_call_pattern = rf'\b{re.escape(expected_function_name)}\s*\('
+        
+        if not re.search(function_call_pattern, code_no_strings):
+            # Function not called - check if a similar function is called instead
+            similar_functions = self._find_similar_function_calls(code_no_strings, expected_function_name)
+            
+            if similar_functions:
+                similar_list = ', '.join(f'`{f}`' for f in similar_functions[:3])
+                return (
+                    True,
+                    f"Target function `{expected_function_name}()` was replaced with similar function(s): {similar_list}"
+                )
+            else:
+                return (
+                    True,
+                    f"Target function `{expected_function_name}()` is not called in the fuzz target"
+                )
+        
+        # Check 2: Ensure it's called in LLVMFuzzerTestOneInput (not just a helper function)
+        # Extract LLVMFuzzerTestOneInput body
+        llvm_fuzzer_pattern = r'int\s+LLVMFuzzerTestOneInput\s*\([^)]*\)\s*\{([^}]*(?:\{[^}]*\}[^}]*)*)\}'
+        llvm_match = re.search(llvm_fuzzer_pattern, code_no_strings, re.DOTALL)
+        
+        if llvm_match:
+            fuzzer_body = llvm_match.group(1)
+            
+            # Check if target function is called in the fuzzer body (or nested blocks)
+            # Allow for calls through helper functions, but warn if it's too indirect
+            if not re.search(function_call_pattern, fuzzer_body):
+                # Not directly in fuzzer body - might be in a helper function
+                # This is OK, but worth noting in logs
+                logger.info(
+                    f'Target function {expected_function_name}() may be called indirectly (through helper function)',
+                    trial=self.trial
+                )
+        
+        # All checks passed
+        return (False, "")
+    
+    def _find_similar_function_calls(self, code: str, target_function: str) -> List[str]:
+        """
+        Find function calls that are similar to the target function name.
+        
+        This helps detect when LLM substitutes the target function with a
+        similar-named function (e.g., ada_parse → ada_can_parse).
+        
+        Args:
+            code: Code to search (should have comments/strings removed)
+            target_function: The expected function name
+        
+        Returns:
+            List of similar function names found in the code
+        """
+        import re
+        from difflib import SequenceMatcher
+        
+        # Extract all function calls from code
+        function_calls = re.findall(r'\b([a-zA-Z_][a-zA-Z0-9_]*)\s*\(', code)
+        
+        # Filter to only functions that are "similar" to target
+        similar = []
+        target_lower = target_function.lower()
+        
+        for func in set(function_calls):
+            func_lower = func.lower()
+            
+            # Skip if it's the target function itself
+            if func == target_function:
+                continue
+            
+            # Check similarity criteria:
+            # 1. Shares a common prefix/suffix
+            # 2. Contains the target as substring or vice versa
+            # 3. High edit distance similarity (>0.7)
+            
+            similarity = SequenceMatcher(None, target_lower, func_lower).ratio()
+            
+            if similarity > 0.7:
+                similar.append(func)
+            elif target_lower in func_lower or func_lower in target_lower:
+                similar.append(func)
+            elif len(target_function) > 3 and len(func) > 3:
+                # Check common prefix (at least 60% of shorter name)
+                common_prefix_len = len(os.path.commonprefix([target_lower, func_lower]))
+                min_len = min(len(target_lower), len(func_lower))
+                if common_prefix_len >= int(0.6 * min_len):
+                    similar.append(func)
+        
+        return similar
 
 
 class LangGraphCrashAnalyzer(LangGraphAgent):
@@ -1694,6 +2604,9 @@ class LangGraphCrashAnalyzer(LangGraphAgent):
                 self.gdb_tool.terminate()
             if self.bash_tool:
                 self.bash_tool.terminate()
+        
+        # Flush logs for this agent after completing execution
+        self._langgraph_logger.flush_agent_logs(self.name)
         
         # Return analysis result
         return {
@@ -2207,6 +3120,9 @@ class LangGraphCoverageAnalyzer(LangGraphAgent):
         # 合并更新到session_memory
         updated_session_memory = merge_session_memory_updates(state, session_memory_updates)
         
+        # Flush logs for this agent after completing execution
+        self._langgraph_logger.flush_agent_logs(self.name)
+        
         return {
             "coverage_analysis": coverage_result,
             "session_memory": updated_session_memory  # ✅ 返回更新
@@ -2471,6 +3387,9 @@ class LangGraphContextAnalyzer(LangGraphAgent):
         
         # 合并更新到session_memory
         updated_session_memory = merge_session_memory_updates(state, session_memory_updates)
+        
+        # Flush logs for this agent after completing execution
+        self._langgraph_logger.flush_agent_logs(self.name)
         
         return {
             "context_analysis": context_result,

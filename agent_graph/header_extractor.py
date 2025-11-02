@@ -116,7 +116,18 @@ class HeaderExtractor:
                 # System header: #include <header>
                 header = self._extract_header_name(include_text, '<', '>')
                 if header:
-                    standard_headers.append(f'<{header}>')
+                    # 🔥 NEW: Filter third-party dependencies
+                    is_third_party, reason = self._is_third_party_dependency(header)
+                    if is_third_party:
+                        filtered_headers.append({
+                            'header': f'<{header}>',
+                            'reason': reason
+                        })
+                        logger.debug(
+                            f'Filtered third-party dependency <{header}> from {file_path or "source"}: {reason}'
+                        )
+                    else:
+                        standard_headers.append(f'<{header}>')
             elif '"' in include_text:
                 # Project header: #include "header"
                 header = self._extract_header_name(include_text, '"', '"')
@@ -299,6 +310,121 @@ class HeaderExtractor:
             return True, "relative path into 'src/' implementation directory"
         
         # Not an internal header
+        return False, ""
+    
+    def _is_third_party_dependency(self, header: str) -> Tuple[bool, str]:
+        """Check if a system header is actually a third-party dependency.
+        
+        Third-party dependencies often cause compilation errors in fuzz targets
+        because they are not available in the OSS-Fuzz build environment, or
+        they are internal dependencies not meant to be used directly.
+        
+        Args:
+            header: System header path without brackets (e.g., "cs/cs.h")
+        
+        Returns:
+            Tuple of (is_third_party: bool, reason: str)
+            - is_third_party: True if header should be filtered
+            - reason: Human-readable explanation of why it was filtered
+        
+        Examples:
+            >>> _is_third_party_dependency("cs/cs.h")
+            (True, "third-party math library (CSparse)")
+            
+            >>> _is_third_party_dependency("stdio.h")
+            (False, "")
+            
+            >>> _is_third_party_dependency("gtest/gtest.h")
+            (True, "testing framework (not for fuzz targets)")
+        """
+        header_lower = header.lower()
+        
+        # Math/Scientific computing libraries (often internal dependencies)
+        math_libs = [
+            ('cs/cs.h', 'third-party math library (CSparse)'),
+            ('cs.h', 'third-party math library (CSparse)'),
+            ('suitesparse/', 'third-party sparse matrix library'),
+            ('cholmod', 'third-party sparse matrix library (CHOLMOD)'),
+            ('umfpack', 'third-party sparse matrix library (UMFPACK)'),
+            ('lapack', 'third-party linear algebra library'),
+            ('blas', 'third-party linear algebra library'),
+            ('arpack', 'third-party eigenvalue library'),
+            ('eigen/', 'third-party linear algebra library (Eigen)'),
+            ('armadillo', 'third-party linear algebra library'),
+        ]
+        
+        for pattern, reason in math_libs:
+            if pattern in header_lower:
+                return True, reason
+        
+        # Boost (usually means internal/advanced usage)
+        if 'boost/' in header_lower:
+            return True, "third-party C++ library (Boost)"
+        
+        # Testing frameworks (should never be in fuzz targets)
+        test_frameworks = [
+            ('gtest/', 'testing framework (not for fuzz targets)'),
+            ('gmock/', 'mocking framework (not for fuzz targets)'),
+            ('catch2/', 'testing framework (not for fuzz targets)'),
+            ('doctest/', 'testing framework (not for fuzz targets)'),
+            ('bandit/', 'testing framework (not for fuzz targets)'),
+            ('cppunit/', 'testing framework (not for fuzz targets)'),
+        ]
+        
+        for pattern, reason in test_frameworks:
+            if pattern in header_lower:
+                return True, reason
+        
+        # Benchmarking libraries
+        benchmark_libs = [
+            ('benchmark/', 'benchmarking library (not for fuzz targets)'),
+            ('celero/', 'benchmarking library (not for fuzz targets)'),
+            ('hayai/', 'benchmarking library (not for fuzz targets)'),
+        ]
+        
+        for pattern, reason in benchmark_libs:
+            if pattern in header_lower:
+                return True, reason
+        
+        # Build system / configuration headers (project-specific, not portable)
+        config_headers = [
+            ('config.h', 'build-system generated config (not portable)'),
+            ('autoconfig.h', 'build-system generated config (not portable)'),
+            ('version.h', 'build-system generated version (not portable)'),
+        ]
+        
+        # Only filter exact matches for config headers (avoid false positives)
+        for pattern, reason in config_headers:
+            if header_lower == pattern:
+                return True, reason
+        
+        # XML/JSON parsing libraries (often internal dependencies)
+        parsing_libs = [
+            ('tinyxml', 'third-party XML library'),
+            ('rapidxml', 'third-party XML library'),
+            ('pugixml', 'third-party XML library'),
+            ('jsoncpp/', 'third-party JSON library'),
+            ('rapidjson/', 'third-party JSON library'),
+            ('nlohmann/', 'third-party JSON library'),
+        ]
+        
+        for pattern, reason in parsing_libs:
+            if pattern in header_lower:
+                return True, reason
+        
+        # Image processing libraries (commonly used but not always available)
+        image_libs = [
+            ('opencv', 'third-party computer vision library'),
+            ('imagemagick', 'third-party image processing library'),
+            ('devil/', 'third-party image library'),
+            ('freeimage', 'third-party image library'),
+        ]
+        
+        for pattern, reason in image_libs:
+            if pattern in header_lower:
+                return True, reason
+        
+        # Not a known third-party dependency
         return False, ""
     
     def categorize_headers(

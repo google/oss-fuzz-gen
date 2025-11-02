@@ -188,8 +188,44 @@ def _determine_next_action(state: FuzzingWorkflowState) -> str:
                 return "END"
         
         else:
-            # Compilation succeeded! Switch to optimization phase
-            logger.info(f'✓ Compilation successful! Switching to OPTIMIZATION phase', trial=trial)
+            # Compilation succeeded - check validation
+            # Note: BuilderRunner's _pre_build_check validates target function call
+            # If validation fails, it sets build_errors with specific message
+            
+            # Check build_errors for validation failure
+            build_errors = state.get("build_errors", [])
+            has_validation_error = any(
+                "was not called by the fuzz target" in str(err) 
+                for err in build_errors
+            )
+            
+            if has_validation_error:
+                # Validation failed - target function not called
+                validation_failure_count = state.get("validation_failure_count", 0) + 1
+                MAX_VALIDATION_RETRIES = 2  # Allow 2 retries for validation fixes
+                
+                logger.warning(
+                    f"🚨 Validation failed: target function not called in driver "
+                    f"(attempt {validation_failure_count}/{MAX_VALIDATION_RETRIES})"
+                )
+                
+                if validation_failure_count < MAX_VALIDATION_RETRIES:
+                    logger.info(
+                        f"Routing to enhancer to fix validation error (attempt {validation_failure_count}/{MAX_VALIDATION_RETRIES})",
+                        trial=trial
+                    )
+                    # Return enhancer, let enhancer node handle the validation error
+                    return "enhancer"
+                else:
+                    logger.error(
+                        f"Validation failed after {MAX_VALIDATION_RETRIES} retries. "
+                        f"Driver does not call target function. Ending workflow.",
+                        trial=trial
+                    )
+                    return "END"
+            
+            # Validation passed - switch to optimization phase
+            logger.info(f'✓ Compilation and validation successful! Switching to OPTIMIZATION phase', trial=trial)
             # Note: The phase switch will be handled by build_node when it updates state
             return "execution"
     

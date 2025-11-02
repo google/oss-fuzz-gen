@@ -117,9 +117,11 @@ Four categories of common errors:
    - Wrong cleanup order
 
 4. **Resource Management**
-   - Memory leaks
-   - Stack overflow
-   - Unbounded loops
+   - Memory leaks on error paths
+   - C++ goto limitations (cannot jump over variable initialization)
+   - Stack overflow (large stack arrays)
+   - Unbounded loops (timeout prevention)
+   - File descriptor/temp file leaks
 
 Each pitfall file contains:
 - Error examples (what NOT to do)
@@ -229,6 +231,10 @@ Current knowledge base:
 - **6** archetypes (covers 95%+ of APIs)
 - **6** code skeletons (ready-to-use templates)
 - **4** pitfall categories (prevents most false positives)
+  - 4 initialization error patterns
+  - 4 data/argument error patterns
+  - 3 call sequence error patterns
+  - 7 resource management patterns (including C++ goto constraints)
 - **50+** real-world examples cited
 
 Extracted from:

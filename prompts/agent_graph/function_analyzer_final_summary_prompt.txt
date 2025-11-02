@@ -1,163 +1,65 @@
-Based on {EXAMPLES_COUNT} usage examples, generate a driver specification for `{FUNCTION_SIGNATURE}`.
+Based on {EXAMPLES_COUNT} usage examples, generate a machine-readable API specification for `{FUNCTION_SIGNATURE}`.
 
 {ARCHETYPE_KNOWLEDGE}
 
 ---
 
-OUTPUT SPECIFICATION
+# OUTPUT: JSON Specification in `<srs_json>` tags
 
-## 1. Archetype & Reference Template
-
-Primary pattern: [Choose ONE: Stateless Parser | Object Lifecycle | State Machine | Stream Processor | Round-trip | File-based]
-
-Reference: See FUZZER_COOKBOOK.md Scenario [X]
-
-Evidence: Pattern observed in {N}/{EXAMPLES_COUNT} examples
-
-## 2. Preconditions (CRITICAL - violations cause crashes)
-
-For each precondition:
-```
-MUST: {condition_description}
-Reason: {why_required}
-Evidence: Example #{N}, source code line {file:line}
-Violation → {crash_type: segfault/assertion/memory_corruption}
-Driver code: if (!{condition}) return 0;
-```
-
-## 3. Setup Sequence
-
-**Standard flow** (confidence: {N}/{EXAMPLES_COUNT} examples):
-```c
-step1: {init_function}();        // Establishes: {state/resource}
-step2: {config_function}();      // Configures: {what}
-step3: {FUNCTION_SIGNATURE}(...) // Main operation
-step4: {cleanup_function}();     // Prevents: {leak/corruption}
-```
-
-**Alternative flows**: [{describe_if_multiple_patterns}]
-
-## 4. Parameter Fuzzing Strategy
-
-For each parameter:
-```yaml
-{param_name}:
-  type: {type}
-  construction: [{how_real_callers_create_it}]
-  strategy: [DIRECT_FUZZ | CONSTRAIN | FIX]
-  constraints: [{if_CONSTRAIN}]
-  fixed_value: [{if_FIX}]
-  driver_code: |
-    {actual_C_code}
-```
-
-## 5. Postconditions & Error Handling
-
-**Return value semantics** (from examples):
-- Success pattern: [{how_indicated}]
-- Failure pattern: [{error_values}]
-- Evidence: Example #{N} checks `{code_snippet}`
-
-**Status checks required**:
-For each API call, identify and enforce its postcondition:
-
-```yaml
-{function_name}:
-  postcondition: "Returns NULL on allocation failure"
-  evidence: "Examples #1, #3 both check if (!ptr)"
-  violation_risk: "Segfault in subsequent use"
-  driver_code: "if (!ptr) return 0;"
-```
-
-**Common error patterns**:
-- Pointers: NULL indicates failure
-- Integers: Negative values indicate errors
-- Booleans: false/0 indicates failure
-
-**Driver template** (adjust based on actual API):
-```c
-// Step 1: Create object
-ptr = api_create();
-if (!ptr) return 0;  // Postcondition: NULL on OOM
-
-// Step 2: Process data
-ret = api_process(ptr, data, size);
-if (ret < 0) goto cleanup;  // Postcondition: negative on error
-
-cleanup:
-  api_destroy(ptr);  // Precondition: ptr must be valid
-  return 0;
-```
-
-**Resource management**:
--  Stack buffer (< {size})
--  Heap allocation (malloc/free or RAII)
--  Temp file (use /tmp/fuzz_{pid})
--  Static buffer (performance optimization)
-
-## 6. Driver Structure
-
-**IMPORTANT**: Do NOT include actual code in this section. Describe the driver structure conceptually only.
-
-The Prototyper will receive:
-- Correct header files (extracted from project)
-- Appropriate skeleton template (based on archetype)
-
-Your job is to describe WHAT the driver should do, not HOW (no code):
-
-**Input validation**: What size/format checks are needed?
-- Example: "Minimum 4 bytes for header, maximum 1MB"
-
-**Resource allocation**: What variables/buffers are needed?
-- Example: "Parser context, output buffer (size*2), error code variable"
-
-**Setup sequence**: What initialization calls in what order?
-- Example: "1) init_parser() 2) set_mode(STRICT) 3) allocate_buffer()"
-
-**Main API invocation**: How to call the target function?
-- Example: "Pass parser context, fuzz data as input buffer, size parameter"
-
-**Cleanup sequence**: What to free/destroy and in what order?
-- Example: "1) free_buffer() 2) destroy_parser() [reverse of setup]"
-
-**Error handling**: Where to check for failures?
-- Example: "Check init_parser() return; early exit if NULL"
-
-## 7. Common Pitfalls to Avoid
-
-**Initialization Errors**:
--  Missing library init (e.g., `initGEOS()`) → crash from uninitialized state
--  Missing error handler setup → uncaught internal errors
-
-**Data & Argument Errors**:
--  Unchecked NULL pointers → segmentation fault
--  Missing bounds validation → buffer overflow
--  Modifying const input → copy data first
-
-**Call Sequence Errors**:
--  Double-free → object destroyed twice
--  Use-after-free → object used after destroy
--  Wrong cleanup order → dependency violation
-
-**Resource Management**:
--  Memory leak → missing free/destroy
--  Stack overflow → use heap for large buffers
--  Unbounded loop → add `max_iterations` limit
-
-## 8. Confidence Assessment
-
-High confidence (≥70% examples): [{list}]
-Medium confidence (30-70%): [{list}]
-Needs verification (<30%): [{list}]
+<srs_json>
+{
+  "srs_version": "1.0",
+  "target_function": "{exact_function_name}",
+  "archetype": {
+    "primary_pattern": "...",
+    "reference": "FUZZER_COOKBOOK.md Scenario X",
+    "confidence": "HIGH | MEDIUM | LOW",
+    "evidence_count": "{N}/{EXAMPLES_COUNT}"
+  },
+  "functional_requirements": [
+    {"id": "FR-1", "priority": "MANDATORY | RECOMMENDED | OPTIONAL", "requirement": "...", "parameter": "...", "rationale": "...", "verification": {"method": "...", "confidence": "...", "evidence": "..."}, "implementation": {"code": "...", "language": "C"}, "failure_mode": "..."}
+  ],
+  "preconditions": [
+    {"id": "PRE-1", "priority": "...", "requirement": "...", "check_method": "...", "rationale": "...", "evidence": "...", "violation_consequence": "segfault | assertion | memory_corruption"}
+  ],
+  "postconditions": [
+    {"id": "POST-1", "priority": "...", "requirement": "...", "check_method": "...", "rationale": "...", "evidence": "..."}
+  ],
+  "constraints": [
+    {"id": "CON-1", "type": "execution_order | parameter_range | resource_limit", "requirement": "...", "parameter": "...", "valid_range_or_sequence": "...", "rationale": "...", "evidence": "...", "implementation": {"sequence": [{"step": 1, "description": "...", "code": "..."}]}}
+  ],
+  "parameter_strategies": [
+    {"parameter": "...", "type": "...", "strategy": "DIRECT_FUZZ | CONSTRAIN | FIX", "construction_method": "...", "constraints": "...", "fixed_value": "...", "driver_code": "..."}
+  ],
+  "quality_attributes": {
+    "high_confidence_items": [...],
+    "medium_confidence_items": [...],
+    "low_confidence_items": [...],
+    "evidence_quality": "Complete | Partial | Limited",
+    "gaps_and_uncertainties": [...]
+  },
+  "metadata": {
+    "must_call_target": "yes",
+    "category": "format_parser | state_machine | stateless_function | object_lifecycle | validator | transformer",
+    "complexity": "trivial | simple | moderate | complex",
+    "state_model": "stateless | global_state_dependent | object_state_dependent",
+    "recommended_approach": "direct_call | via_entry_point",
+    "purpose": "...",
+    "recommended_test_vectors": [{"name": "...", "description": "..."}]
+  }
+}
+</srs_json>
 
 ---
 
-Format: Provide specification in sections above. Support every claim with evidence. Keep it concise and code-focused.
+## Field Guidelines:
+- **functional_requirements**: Use RFC 2119 keywords (SHALL=mandatory, SHOULD=recommended, MAY=optional)
+- **preconditions**: Conditions BEFORE calling target (with violation consequences)
+- **postconditions**: Checks AFTER calling target (e.g., return value validation)
+- **constraints**: execution_order (call sequence), parameter_range (valid values), resource_limit
+- **parameter_strategies**: DIRECT_FUZZ (libFuzzer input) | CONSTRAIN (with rules) | FIX (constant)
+- **metadata.must_call_target**: MUST be "yes"
+- **metadata.recommended_test_vectors**: At least 3 test scenarios
 
-**Note**: If you identify new API constraints, error patterns, or key decisions during your analysis, mark them using XML tags:
-- `<api_constraint>constraint description</api_constraint>` for API usage rules
-- `<known_fix error="error pattern">solution</known_fix>` for error fix patterns  
-- `<decision reason="rationale">decision content</decision>` for important decisions
-
-These will be extracted and shared with other agents to build consensus knowledge.
-
+## Knowledge Sharing Tags (optional):
+`<api_constraint>...</api_constraint>` | `<known_fix error="...">...</known_fix>` | `<decision reason="...">...</decision>`

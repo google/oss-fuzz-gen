@@ -234,18 +234,14 @@ def get_target_benchmark_for_source(
 
 def construct_fuzz_prompt(model, benchmark, context,
                           language) -> prompts.Prompt:
-  """Local benchmarker"""
-  if language in ['c', 'c++']:
-    builder = prompt_builder.DefaultTemplateBuilder(model, benchmark=benchmark)
-  elif language == 'rust':
-    builder = prompt_builder.DefaultRustTemplateBuilder(model,
-                                                        benchmark=benchmark)
-  else:
+  """Local benchmarker for C/C++."""
+  if language not in ['c', 'c++']:
     raise NotImplementedError(
         f"Language '{language}' is not supported. "
-        "JVM/Java support has been removed from LogicFuzz."
+        "LogicFuzz only supports C/C++."
     )
 
+  builder = prompt_builder.DefaultTemplateBuilder(model, benchmark=benchmark)
   fuzz_prompt = builder.build([], project_context_content=context)
   return fuzz_prompt
 

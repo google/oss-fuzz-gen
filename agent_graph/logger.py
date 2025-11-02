@@ -1,9 +1,16 @@
 """
 Unified logging system for LangGraph workflows.
 Eliminates duplicate logging and provides clean, structured logs.
+
+This system provides:
+1. Human-readable text logs for easy review
+2. Structured JSON logs for programmatic analysis
+3. Token usage tracking
+4. Metadata capture (model, temperature, etc.)
 """
 
 import os
+import json
 import threading
 from datetime import datetime
 from typing import Optional, Dict, Any, List
@@ -25,81 +32,182 @@ class LangGraphLogger:
     _instances: Dict[str, 'LangGraphLogger'] = {}
     _lock = threading.Lock()
     
-    def __init__(self, workflow_id: str, trial: int, base_dir: str = "logs"):
+    def __init__(self, workflow_id: str, trial: int, base_dir: Optional[str] = None):
         self.workflow_id = workflow_id
         self.trial = trial
-        self.base_dir = Path(base_dir)
-        self.log_dir = self.base_dir / f"trial_{trial:02d}"
+        
+        # If base_dir is provided, use it directly (e.g., output-xxx directory)
+        # Otherwise, use the old default for backward compatibility
+        if base_dir:
+            self.base_dir = Path(base_dir)
+            self.log_dir = self.base_dir / "logs" / f"trial_{trial:02d}"
+        else:
+            # Fallback for backward compatibility
+            self.base_dir = Path("results/logs")
+            self.log_dir = self.base_dir / f"trial_{trial:02d}"
         
         # Ensure directory exists
         self.log_dir.mkdir(parents=True, exist_ok=True)
         
         # Per-agent log buffers to batch writes
         self._buffers: Dict[str, List[str]] = {}
+        self._json_buffers: Dict[str, List[Dict[str, Any]]] = {}
         self._buffer_lock = threading.Lock()
         
-        logger.info(f'LangGraph logger initialized: {self.log_dir}', trial=trial)
+        # Token usage tracking
+        self._token_stats: Dict[str, Dict[str, int]] = {}
+        
+        logger.info(
+            f'📁 LangGraph logger initialized:\n'
+            f'   Base dir: {self.base_dir}\n'
+            f'   Log dir: {self.log_dir}\n'
+            f'   Directory created: {self.log_dir.exists()}',
+            trial=trial
+        )
     
     @classmethod 
-    def get_logger(cls, workflow_id: str, trial: int) -> 'LangGraphLogger':
-        """Get or create logger instance for this workflow."""
+    def get_logger(cls, workflow_id: str, trial: int, base_dir: Optional[str] = None) -> 'LangGraphLogger':
+        """
+        Get or create logger instance for this workflow.
+        
+        Args:
+            workflow_id: Unique workflow identifier
+            trial: Trial number
+            base_dir: Base directory for logs (e.g., output-xxx directory).
+                     If provided, logs will be stored in base_dir/logs/trial_XX/
+                     If not provided, uses results/logs/trial_XX/ for backward compatibility
+        """
         key = f"{workflow_id}_{trial}"
         
         with cls._lock:
             if key not in cls._instances:
-                cls._instances[key] = cls(workflow_id, trial)
+                cls._instances[key] = cls(workflow_id, trial, base_dir)
             return cls._instances[key]
     
-    def log_interaction(self, agent_name: str, interaction_type: str, 
-                       content: str, round_num: int = 1) -> None:
+    def log_interaction(
+        self, 
+        agent_name: str, 
+        interaction_type: str, 
+        content: str, 
+        round_num: int = 1,
+        metadata: Optional[Dict[str, Any]] = None
+    ) -> None:
         """
-        Log a single LLM interaction.
+        Log a single LLM interaction in both text and JSON formats.
         
         Args:
             agent_name: Name of the agent (e.g., 'FunctionAnalyzer')
             interaction_type: Type of interaction ('prompt', 'response', 'tool_call')
             content: The actual content to log
             round_num: Round number for this interaction
+            metadata: Optional metadata (model, temperature, tokens, etc.)
         """
         if not content or not content.strip():
             return
             
-        # Create log entry
-        timestamp = datetime.now().strftime("%H:%M:%S")
-        entry = (
-            f"=== {interaction_type.upper()} ROUND {round_num:02d} [{timestamp}] ===\n"
-            f"{content}\n"
-            f"{'=' * 60}\n\n"
+        timestamp = datetime.now()
+        timestamp_str = timestamp.strftime("%H:%M:%S")
+        iso_timestamp = timestamp.isoformat()
+        
+        # Create human-readable text entry
+        text_entry = (
+            f"=== {interaction_type.upper()} ROUND {round_num:02d} [{timestamp_str}] ===\n"
         )
         
-        # Add to buffer
+        # Add metadata if present
+        if metadata:
+            text_entry += f"Metadata: {json.dumps(metadata, indent=2)}\n"
+            text_entry += "-" * 60 + "\n"
+        
+        text_entry += f"{content}\n"
+        text_entry += f"{'=' * 80}\n\n"
+        
+        # Create structured JSON entry
+        json_entry = {
+            "timestamp": iso_timestamp,
+            "agent": agent_name,
+            "round": round_num,
+            "type": interaction_type,
+            "content": content,
+            "metadata": metadata or {}
+        }
+        
+        # Add to buffers
         with self._buffer_lock:
             if agent_name not in self._buffers:
                 self._buffers[agent_name] = []
-            self._buffers[agent_name].append(entry)
+                self._json_buffers[agent_name] = []
+            
+            self._buffers[agent_name].append(text_entry)
+            self._json_buffers[agent_name].append(json_entry)
+            
+            # Track token usage if present
+            if metadata and 'tokens' in metadata:
+                if agent_name not in self._token_stats:
+                    self._token_stats[agent_name] = {
+                        'prompt_tokens': 0,
+                        'completion_tokens': 0,
+                        'total_tokens': 0,
+                        'num_calls': 0
+                    }
+                
+                tokens = metadata['tokens']
+                self._token_stats[agent_name]['prompt_tokens'] += tokens.get('prompt_tokens', 0)
+                self._token_stats[agent_name]['completion_tokens'] += tokens.get('completion_tokens', 0)
+                self._token_stats[agent_name]['total_tokens'] += tokens.get('total_tokens', 0)
+                self._token_stats[agent_name]['num_calls'] += 1
     
     def flush_agent_logs(self, agent_name: str) -> None:
-        """Flush all buffered logs for an agent to disk."""
+        """Flush all buffered logs for an agent to disk (both text and JSON)."""
         with self._buffer_lock:
             if agent_name not in self._buffers or not self._buffers[agent_name]:
+                logger.debug(f'No logs to flush for {agent_name} (buffer empty or doesn\'t exist)', 
+                           trial=self.trial)
                 return
-                
-            # Write all buffered entries to a single file
-            agent_log_file = self.log_dir / f"{agent_name.lower()}.log"
             
+            num_entries = len(self._buffers[agent_name])
+            logger.info(f'💾 Flushing {num_entries} log entries for {agent_name}...', trial=self.trial)
+                
+            # Write text log
+            agent_log_file = self.log_dir / f"{agent_name.lower()}.log"
             try:
                 with open(agent_log_file, 'a', encoding='utf-8') as f:
                     f.writelines(self._buffers[agent_name])
                 
-                # Clear the buffer
-                self._buffers[agent_name] = []
-                
-                logger.debug(f'Flushed logs for {agent_name} to {agent_log_file}', 
-                           trial=self.trial)
-                           
+                logger.info(
+                    f'✅ Saved text logs for {agent_name}:\n'
+                    f'   File: {agent_log_file}\n'
+                    f'   Size: {agent_log_file.stat().st_size} bytes\n'
+                    f'   Entries: {num_entries}', 
+                    trial=self.trial
+                )
             except Exception as e:
-                logger.warning(f'Failed to flush logs for {agent_name}: {e}', 
+                logger.error(f'❌ Failed to flush text logs for {agent_name}: {e}', 
                              trial=self.trial)
+            
+            # Write JSON log (one JSON object per line for easy parsing)
+            json_log_file = self.log_dir / f"{agent_name.lower()}.jsonl"
+            try:
+                num_json_entries = len(self._json_buffers.get(agent_name, []))
+                with open(json_log_file, 'a', encoding='utf-8') as f:
+                    for entry in self._json_buffers.get(agent_name, []):
+                        f.write(json.dumps(entry) + '\n')
+                
+                logger.info(
+                    f'✅ Saved JSON logs for {agent_name}:\n'
+                    f'   File: {json_log_file}\n'
+                    f'   Size: {json_log_file.stat().st_size} bytes\n'
+                    f'   Entries: {num_json_entries}', 
+                    trial=self.trial
+                )
+            except Exception as e:
+                logger.error(f'❌ Failed to flush JSON logs for {agent_name}: {e}', 
+                             trial=self.trial)
+            
+            # Clear the buffers
+            self._buffers[agent_name] = []
+            if agent_name in self._json_buffers:
+                self._json_buffers[agent_name] = []
     
     def log_workflow_event(self, event_type: str, message: str, 
                           metadata: Optional[Dict[str, Any]] = None) -> None:
@@ -117,39 +225,107 @@ class LangGraphLogger:
         except Exception as e:
             logger.warning(f'Failed to log workflow event: {e}', trial=self.trial)
     
-    def finalize(self) -> None:
-        """Flush all remaining logs and clean up."""
+    def get_token_stats(self, agent_name: Optional[str] = None) -> Dict[str, Any]:
+        """
+        Get token usage statistics.
+        
+        Args:
+            agent_name: If provided, return stats for specific agent. 
+                       Otherwise return all stats.
+        
+        Returns:
+            Dictionary of token statistics
+        """
         with self._buffer_lock:
-            for agent_name in list(self._buffers.keys()):
+            if agent_name:
+                return self._token_stats.get(agent_name, {})
+            return self._token_stats.copy()
+    
+    def finalize(self) -> None:
+        """Flush all remaining logs, write summary stats, and clean up."""
+        logger.info('🔚 Finalizing LangGraph logger - flushing all remaining logs...', trial=self.trial)
+        with self._buffer_lock:
+            # Flush all agent logs
+            agents_to_flush = list(self._buffers.keys())
+            logger.info(f'   Agents to flush: {", ".join(agents_to_flush) if agents_to_flush else "none"}', trial=self.trial)
+            for agent_name in agents_to_flush:
                 self.flush_agent_logs(agent_name)
+            
+            # Write token usage summary
+            if self._token_stats:
+                stats_file = self.log_dir / "token_stats.json"
+                try:
+                    with open(stats_file, 'w', encoding='utf-8') as f:
+                        json.dump(self._token_stats, f, indent=2)
+                    logger.info(f'Wrote token stats to {stats_file}', trial=self.trial)
+                except Exception as e:
+                    logger.warning(f'Failed to write token stats: {e}', trial=self.trial)
         
         logger.info(f'LangGraph logger finalized: {self.log_dir}', trial=self.trial)
 
+class NullLogger:
+    """
+    Null object pattern for logging - avoids checking if logger exists.
+    
+    Implements same interface as LangGraphLogger but does nothing.
+    Used when enable_detailed_logging=False.
+    """
+    def log_interaction(self, *args, **kwargs) -> None:
+        pass
+    
+    def log_token_usage(self, *args, **kwargs) -> None:
+        pass
+    
+    def flush_agent_logs(self, *args, **kwargs) -> None:
+        pass
+    
+    def finalize(self) -> None:
+        pass
+
+
 class LoggingMixin:
     """
-    Mixin for agents to use unified logging.
+    ⚠️ DEPRECATED: LangGraphAgent already has built-in logging.
     
-    Usage:
+    This mixin is only kept for backward compatibility with legacy code
+    that doesn't inherit from LangGraphAgent.
+    
+    For new code, please inherit from LangGraphAgent directly instead.
+    
+    Usage (legacy only):
     class MyAgent(LoggingMixin, BaseAgent):
         def __init__(self, ...):
             super().__init__(...)
             self.setup_logging("MyAgent")
     """
     
-    def setup_logging(self, agent_name: str) -> None:
-        """Setup unified logging for this agent."""
+    def setup_logging(self, agent_name: str, base_dir: Optional[str] = None) -> None:
+        """
+        Setup unified logging for this agent.
+        
+        Args:
+            agent_name: Name of the agent
+            base_dir: Optional base directory for logs (e.g., output-xxx directory)
+        """
         if not hasattr(self, 'trial'):
             raise ValueError("Agent must have 'trial' attribute for logging")
             
         self._langgraph_logger = LangGraphLogger.get_logger(
             workflow_id="fuzzing_workflow", 
-            trial=self.trial
+            trial=self.trial,
+            base_dir=base_dir
         )
         self._agent_name = agent_name
         self._round = 0
     
-    def log_llm_prompt(self, prompt: str) -> None:
-        """Log LLM prompt using unified logger."""
+    def log_llm_prompt(self, prompt: str, metadata: Optional[Dict[str, Any]] = None) -> None:
+        """
+        Log LLM prompt using unified logger.
+        
+        Args:
+            prompt: The prompt text
+            metadata: Optional metadata (model, temperature, etc.)
+        """
         if not hasattr(self, '_langgraph_logger'):
             # Fallback to original logging
             logger.info('<PROMPT>%s</PROMPT>', prompt, trial=getattr(self, 'trial', 0))
@@ -165,11 +341,18 @@ class LoggingMixin:
             agent_name=self._agent_name,
             interaction_type='prompt', 
             content=prompt,
-            round_num=self._round
+            round_num=self._round,
+            metadata=metadata
         )
     
-    def log_llm_response(self, response: str) -> None:
-        """Log LLM response using unified logger."""
+    def log_llm_response(self, response: str, metadata: Optional[Dict[str, Any]] = None) -> None:
+        """
+        Log LLM response using unified logger.
+        
+        Args:
+            response: The response text
+            metadata: Optional metadata (tokens, model info, etc.)
+        """
         if not hasattr(self, '_langgraph_logger'):
             # Fallback to original logging
             logger.info('<RESPONSE>%s</RESPONSE>', response, trial=getattr(self, 'trial', 0))
@@ -183,7 +366,8 @@ class LoggingMixin:
             agent_name=self._agent_name,
             interaction_type='response',
             content=response, 
-            round_num=self._round
+            round_num=self._round,
+            metadata=metadata
         )
     
     def finalize_logging(self) -> None:

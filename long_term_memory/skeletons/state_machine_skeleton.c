@@ -1,9 +1,6 @@
-// State Machine Skeleton
-// Pattern: init → configure → process → finalize → cleanup
-// NOTE: Headers are provided above this skeleton - DO NOT add additional headers
+// State Machine Pattern: init → configure → process → finalize → cleanup
 
 int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
-  // Input validation
   if (size < MIN_SIZE) return 0;
   
   // Step 1: Initialize
@@ -15,8 +12,6 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
   BUFFER_INIT(&err_buf);
   
   if (SET_ERROR_BUFFER(doc, &err_buf) < 0) goto cleanup;
-  
-  // Set options
   SET_OPTION(doc, OPTION_NAME, value);
   
   // Step 3: Parse/Load
@@ -37,11 +32,10 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
   SAVE(doc, &output_buf);
   BUFFER_FREE(&output_buf);
   
-  // Cleanup (in reverse order)
+  // Cleanup (reverse order)
 cleanup:
   BUFFER_FREE(&err_buf);
   BUFFER_DETACH(&input_buf);
   DOC_RELEASE(doc);
   return 0;
 }
-

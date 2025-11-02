@@ -81,6 +81,12 @@ class FuzzingWorkflowState(TypedDict):
     binary_exists: NotRequired[bool]
     is_function_referenced: NotRequired[bool]
     
+    # === NEW: Target Function Validation ===
+    target_function_name: NotRequired[str]  # Extracted from function signature
+    target_function_called: NotRequired[bool]  # Whether target function is called (validated)
+    validation_error: NotRequired[str]  # Validation error message
+    validation_failure_count: NotRequired[int]  # Number of validation failures
+    
     # === Execution Results (from ExecutionStage) ===
     run_success: NotRequired[bool]
     run_error: NotRequired[str]
@@ -214,7 +220,12 @@ def create_initial_state(
             "known_fixes": [],           # Known error fixes
             "decisions": [],             # Key decision records
             "coverage_strategies": []    # Coverage optimization strategies
-        }
+        },
+        # Initialize validation fields
+        target_function_name="",
+        target_function_called=False,
+        validation_error="",
+        validation_failure_count=0,
     )
 
 def is_terminal_state(state: FuzzingWorkflowState) -> bool:

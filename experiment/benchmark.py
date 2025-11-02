@@ -160,40 +160,7 @@ class Benchmark:
     self.cppify_headers = cppify_headers
     self.commit = commit
     self.test_file_path = test_file_path
-
-    if self.language == 'jvm':
-      # For java projects, in order to differentiate between overloaded methods
-      # the full signature is being used as function_name. The full signature
-      # is following the format of:
-      # [<Full_Class_Name].<Method_Name>(<Parameter_List>)
-      # The benchmark id uses the function_signature directly and is used as
-      # the name of the result directory. In order to avoid confusion in the
-      # directory name remove special characters in the id coming from the
-      # function signature. Additional special characters exist for
-      # constructors which will be shown as <init> because constructors do not
-      # have names.
-      self.function_signature = self.function_name
-      self.id = self.id.replace('<', '').replace('>', '')
-      self.id = self.id.replace('[', '').replace(']', '')
-      self.id = self.id.replace('(', '_').replace(')', '').replace(',', '_')
-
-    if self.language == 'python':
-      # For python projects, classes and methods name could begins with
-      # underscore character. This could affect the benchmark_id and cause
-      # OSS-Fuzz build failed if dot and underscore character is put together.
-      # Special handling of benchmark_id is needed to avoid this situation.
-      # For example, zipp._difference in zip project will have benchmark id of
-      # zipp-zipp._difference and the pattern '._' cause OSS-Fuzz failed to
-      # recognise the project name and needed to be replaced by
-      # zipp-zipp.difference.
-      self.id = self.id.replace('._', '.')
-
-    if self.language == 'rust':
-      # For rust projects, double colon (::) is sometime used to identify
-      # crate, impl or trait name of a function. This could affect the
-      # benchmark_id and cause OSS-Fuzz build failed.
-      # Special handling of benchmark_id is needed to avoid this situation.
-      self.id = self.id.replace('::', '-')
+    # Note: Only C/C++ projects are supported
 
   def __repr__(self):
     return (f'Benchmark<id={self.id}, project={self.project}, '
@@ -241,11 +208,6 @@ class Benchmark:
   def is_cpp_project(self) -> bool:
     """Validates if the project is written in C++."""
     return self.language.lower() == 'c++'
-
-  @property
-  def is_java_project(self) -> bool:
-    """Validates if the project is written in Java."""
-    return self.language.lower() == 'jvm'
   
   def to_dict(self) -> dict:
     """Convert benchmark to a dictionary for serialization."""

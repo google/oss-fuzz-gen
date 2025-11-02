@@ -90,82 +90,6 @@ def load_existing_textcov(project: str) -> textcov.Textcov:
 
   return existing_textcov
 
-def load_existing_jvm_textcov(project: str) -> textcov.Textcov:
-  """Loads existing textcovs for JVM project."""
-  storage_client = storage.Client.create_anonymous_client()
-  bucket = storage_client.bucket(OSS_FUZZ_COVERAGE_BUCKET)
-  blobs = storage_client.list_blobs(bucket,
-                                    prefix=f'{project}/reports/',
-                                    delimiter='/')
-  # Iterate through all blobs first to get the prefixes (i.e. "subdirectories").
-  for blob in blobs:
-    continue
-
-  if not blobs.prefixes:  # type: ignore
-    # No existing coverage reports.
-    logger.info('No existing coverage report. Using empty.')
-    return textcov.Textcov()
-
-  latest_dir = sorted(blobs.prefixes)[-1]  # type: ignore
-  blob = bucket.blob(f'{latest_dir}linux/jacoco.xml')
-  logger.info('Loading existing jacoco.xml textcov from %s', blob.name)
-  with blob.open() as f:
-    return textcov.Textcov.from_jvm_file(f)
-
-def load_existing_python_textcov(project: str) -> textcov.Textcov:
-  """Loads existing textcovs for python project."""
-  storage_client = storage.Client.create_anonymous_client()
-  bucket = storage_client.bucket(OSS_FUZZ_INTROSPECTOR_BUCKET)
-  blobs = storage_client.list_blobs(bucket,
-                                    prefix=f'{project}/inspector-report/',
-                                    delimiter='/')
-  # Iterate through all blobs first to get the prefixes (i.e. "subdirectories").
-  for blob in blobs:
-    continue
-
-  if not blobs.prefixes:  # type: ignore
-    # No existing coverage reports.
-    logger.info('No existing coverage report. Using empty.')
-    return textcov.Textcov()
-
-  latest_dir = sorted(blobs.prefixes)[-1]  # type: ignore
-  blob = bucket.blob(f'{latest_dir}all_cov.json')
-  logger.info('Loading existing all_cov.json textcov from %s', blob.name)
-  with blob.open() as f:
-    return textcov.Textcov.from_python_file(f)
-
-def load_existing_rust_textcov(project: str) -> textcov.Textcov:
-  """Loads existing textcovs for rust project."""
-  storage_client = storage.Client.create_anonymous_client()
-  bucket = storage_client.bucket(OSS_FUZZ_INTROSPECTOR_BUCKET)
-  blobs = storage_client.list_blobs(bucket,
-                                    prefix=f'{project}/inspector-report/',
-                                    delimiter='/')
-  # Iterate through all blobs first to get the prefixes (i.e. "subdirectories").
-  for blob in blobs:
-    continue
-
-  if not blobs.prefixes:  # type: ignore
-    # No existing coverage reports.
-    logger.info('No existing coverage report. Using empty.')
-    return textcov.Textcov()
-
-  # Find the latest generated textcov date.
-  latest_dir = sorted(blobs.prefixes)[-1]  # type: ignore
-  blobs = storage_client.list_blobs(bucket, prefix=latest_dir)
-
-  # Download and merge them.
-  existing_textcov = textcov.Textcov()
-  for blob in blobs:
-    if not blob.name.endswith('.covreport'):
-      continue
-
-    logger.info('Loading existing textcov from %s', blob.name)
-    with blob.open('rb') as f:
-      existing_textcov.merge(textcov.Textcov.from_rust_file(f))
-
-  return existing_textcov
-
 def load_existing_coverage_summary(project: str) -> dict:
   """Load existing summary.json."""
   storage_client = storage.Client.create_anonymous_client()
@@ -369,14 +293,14 @@ class Evaluator:
                                  build_result: BuildResult,
                                  run_result: Optional[RunResult],
                                  dual_logger: _Logger, language: str):
-    """Fixes the generated fuzz target."""
+    """Fixes the generated fuzz target for C/C++."""
     error_desc, errors = '', []
     if build_result.succeeded:
-      if language != 'jvm':
-        if run_result:
-          error_desc, errors = run_result.semantic_check.get_error_info()
-        else:
-          dual_logger.log(f'Warning: Build succeed but no run_result in '
+      # For C/C++
+      if run_result:
+        error_desc, errors = run_result.semantic_check.get_error_info()
+      else:
+        dual_logger.log(f'Warning: Build succeed but no run_result in '
                           f'{generated_oss_fuzz_project}.')
     else:
       error_desc, errors = None, build_result.errors
@@ -485,21 +409,10 @@ class Evaluator:
       coverage_percent = 0.0
       coverage_diff = 0.0
       if run_result:
-        # Gets line coverage (diff) details.
+        # Gets line coverage (diff) details for C/C++.
         coverage_summary = self._load_existing_coverage_summary()
 
-        if self.benchmark.language in ['python', 'jvm'] and run_result.coverage:
-          # The Jacoco.xml coverage report used to generate summary.json on
-          # OSS-Fuzz for JVM projects does not trace the source file location.
-          # Thus the conversion may miss some classes because they are not
-          # present during coverage report generation. This fix gets the total
-          # line calculation from the jacoco.xml report of the current run
-          # directly and compares it with the total_lines retrieved from
-          # summary.json. Then the larger total_lines is used which is assumed
-          # to be more accurate. This is the same case for python project which
-          # the total line is determined from the all_cov.json file.
-          total_lines = run_result.coverage.total_lines
-        elif coverage_summary:
+        if coverage_summary:
           total_lines = compute_total_lines_without_fuzz_targets(
               coverage_summary, generated_target_name)
         else:

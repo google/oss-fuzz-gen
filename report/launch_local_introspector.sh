@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# lsof -i :8080 || netstat -tlnp | grep 8080
+# kill -9 $(lsof -i :8080 | awk '{print $2}')
+
 BENCHMARK_SET=conti-cmp
 PYTHON=python
 

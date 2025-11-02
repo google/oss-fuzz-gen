@@ -1,45 +1,204 @@
-Translate the following specification into a compilable and EFFECTIVE fuzz target:
+Translate the following SRS specification into a compilable and EFFECTIVE fuzz target:
 
 **Project**: {PROJECT_NAME}
 **Function**: {FUNCTION_NAME}
 **Signature**: {FUNCTION_SIGNATURE}
 
-**Specification**:
-{FUNCTION_ANALYSIS}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+## 📋 SRS SPECIFICATION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+{SRS_SPECIFICATION}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+## 🏗️ REFERENCE SKELETON (USE THIS FOR HEADERS)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 {SKELETON_CODE}
 
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+## 📝 IMPLEMENTATION REQUIREMENTS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+### CRITICAL REQUIREMENTS (MUST FOLLOW)
+
+1. **MANDATORY - MUST CALL TARGET FUNCTION**
+   - The fuzz driver MUST directly call the target function `{FUNCTION_NAME}`
+   - This is NON-NEGOTIABLE: The entire purpose is to fuzz THIS specific function
+   - The call must be inside LLVMFuzzerTestOneInput, not in helper functions only
+   - ✅ Validation: Before submitting, verify the code contains a direct call to `{FUNCTION_NAME}`
+
+2. **USE REFERENCE SKELETON HEADERS**
+   - Use ONLY the header files provided in "Reference Skeleton" above
+   - DO NOT guess or modify header paths - use them exactly as provided
+   - The Reference Skeleton contains validated, correct header files
+
+3. **IMPLEMENT ALL MANDATORY REQUIREMENTS**
+   - Implement ALL functional requirements marked as [MANDATORY] in the SRS
+   - Satisfy ALL preconditions marked as [MANDATORY] before calling the target function
+   - Check ALL postconditions marked as [MANDATORY] after function calls
+   - Follow execution order constraints exactly as specified
+
+4. **PARAMETER CONSTRUCTION**
+   - Use the parameter strategies specified in the SRS
+   - For DIRECT_FUZZ: Pass fuzzer data directly
+   - For CONSTRAIN: Apply specified constraints before passing
+   - For FIX: Use the fixed value specified
+
+5. **ERROR HANDLING**
+   - Add proper error checks as specified in postconditions
+   - Handle failure cases gracefully
+   - Clean up resources in reverse order of allocation
+
 {ADDITIONAL_CONTEXT}
 
-**Task**: Generate the fuzz target by:
-1. **CRITICAL**: Use ONLY the "Reference Skeleton" provided below (NOT any skeleton in the specification text)
-   - The Reference Skeleton contains the correct, validated header files
-   - DO NOT guess or modify header paths - use them exactly as provided in Reference Skeleton
-2. Follow the Setup Sequence exactly (call functions in specified order)
-3. Add Precondition checks before each call (as specified)
-4. Add Postcondition checks after each call (as specified)
-5. Construct parameters using the Parameter Strategy (DIRECT_FUZZ/CONSTRAIN/FIX)
-6. Study existing fuzz targets in the project for coding style (but NOT for headers - use Reference Skeleton headers)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+## 🎯 IMPLEMENTATION GUIDANCE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-**Output Format**:
+### Step-by-Step Implementation Process
+
+**Step 1: Understand the SRS**
+- Read the functional requirements (FR-*) to understand what must be done
+- Read the preconditions (PRE-*) to understand what must be checked before calling the target
+- Read the postconditions (POST-*) to understand what must be checked after calling the target
+- Read the constraints (CON-*) to understand execution order and parameter ranges
+
+**Step 2: Follow the Reference Skeleton**
+- Start with the skeleton structure provided above
+- Keep all header files exactly as specified
+- Use the skeleton as the foundation for your implementation
+
+**Step 3: Implement Functional Requirements**
+- For each FR marked [MANDATORY]:
+  - Add the implementation code specified
+  - Ensure the requirement is satisfied before calling the target function
+  - Add comments referencing the FR-ID for traceability
+
+**Step 4: Add Precondition Checks**
+- For each PRE marked [MANDATORY]:
+  - Add the check method specified
+  - If check fails, return 0 or handle gracefully
+  - Add comments referencing the PRE-ID
+
+**Step 5: Call the Target Function**
+- Construct parameters according to parameter strategies
+- Call `{FUNCTION_NAME}` with the constructed parameters
+- This is the MOST IMPORTANT step - the target MUST be called
+
+**Step 6: Add Postcondition Checks**
+- For each POST marked [MANDATORY]:
+  - Check the condition specified
+  - Handle errors appropriately
+  - Add comments referencing the POST-ID
+
+**Step 7: Clean Up Resources**
+- Follow the cleanup sequence specified in constraints
+- Free resources in reverse order of allocation
+- Check return values of cleanup functions
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+## 📤 OUTPUT FORMAT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 <conclusion>
-[One paragraph: Which archetype skeleton you used, what checks you added, any project-specific adaptations]
+[One paragraph summarizing:
+- Which archetype skeleton you used
+- Which mandatory requirements you implemented (list FR-IDs, PRE-IDs, POST-IDs)
+- Any project-specific adaptations you made
+- Confirmation that the target function `{FUNCTION_NAME}` is called]
 </conclusion>
 
-<fuzz target>
+<fuzz_target>
 [Complete C/C++ code, ready to compile]
-</fuzz target>
+</fuzz_target>
 
-<build script>
-[Only if modifications needed]
-</build script>
+<build_script>
+[Only if modifications to build script are needed]
+</build_script>
 
-**Rules**:
-- Follow the specification exactly
-- Do not add checks not specified
-- Do not omit checks that are specified
-- Use the exact setup sequence from the spec
-- **MUST use header files EXACTLY as provided in "Reference Skeleton", unless you find some headers or include paths are incorrect.
-- Ensure code compiles without modifications
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+## ⚠️ VALIDATION CHECKLIST
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
+Before submitting, verify:
+
+✓ **Target Function Call**: Does LLVMFuzzerTestOneInput contain a direct call to `{FUNCTION_NAME}`?
+  - If NO, ADD IT NOW - this is the PRIMARY requirement
+
+✓ **Mandatory Requirements**: Are ALL [MANDATORY] functional requirements implemented?
+  - Check each FR-* marked [MANDATORY]
+
+✓ **Preconditions**: Are ALL [MANDATORY] preconditions checked?
+  - Check each PRE-* marked [MANDATORY]
+
+✓ **Postconditions**: Are ALL [MANDATORY] postconditions checked?
+  - Check each POST-* marked [MANDATORY]
+
+✓ **Execution Order**: Is the execution order from constraints followed?
+  - Check CON-* with type: execution_order
+
+✓ **Headers**: Are headers used exactly as provided in Reference Skeleton?
+  - No modifications to header paths
+
+✓ **Compilation**: Will the code compile without modifications?
+  - All required headers included
+  - All functions properly declared
+  - No syntax errors
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+## 💡 BEST PRACTICES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. **Traceability**: Add comments linking code to SRS requirements
+   ```c
+   // FR-1: Initialize storage structure
+   memset(&storage, 0, sizeof(storage));
+   
+   // PRE-1: Check size is sufficient
+   if (size < 4) return 0;
+   
+   // Call target function
+   int result = {FUNCTION_NAME}(...);
+   
+   // POST-1: Check return value
+   if (result != 0) {
+       // Handle error
+   }
+   ```
+
+2. **Error Handling**: Use goto for cleanup on error paths
+   ```c
+   if (init_failed) goto cleanup;
+   // ... more code ...
+   cleanup:
+       free_resources();
+       return 0;
+   ```
+
+3. **Resource Management**: Always clean up in reverse order
+   ```c
+   // Setup
+   init_a();
+   init_b();
+   init_c();
+   
+   // Cleanup (reverse order)
+   cleanup_c();
+   cleanup_b();
+   cleanup_a();
+   ```
+
+4. **Input Validation**: Check fuzzer input early
+   ```c
+   if (size < MIN_SIZE || size > MAX_SIZE) return 0;
+   if (data == NULL) return 0;
+   ```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+**FINAL REMINDER**: The generated fuzz driver MUST call the target function `{FUNCTION_NAME}`. 
+Drivers that compile but don't call the target are 100% useless (coverage = 0%). 
+Your code will be automatically validated for this requirement.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
