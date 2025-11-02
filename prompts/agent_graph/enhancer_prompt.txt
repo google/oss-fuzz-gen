@@ -1,135 +1,108 @@
-╔═══════════════════════════════════════════════════════════════════════════════╗
-║                         🚨 CRITICAL CONSTRAINT 🚨                            ║
-║                                                                               ║
-║  THE TARGET FUNCTION NAME MUST NEVER BE CHANGED UNDER ANY CIRCUMSTANCES!     ║
-║                                                                               ║
-║  Target Function: {FUNCTION_NAME}                                            ║
-║                                                                               ║
-║  ❌ ABSOLUTELY FORBIDDEN - Common Mistakes:                                   ║
-║  • Replacing with similar-named functions (e.g., ada_parse → ada_can_parse)  ║
-║  • Adding/removing prefixes (e.g., parse → my_parse, ada_parse → ada::parse) ║
-║  • Using "equivalent" functions from the same library                        ║
-║  • Changing return type interpretation (e.g., treating void* as bool)        ║
-║                                                                               ║
-║  📚 EXAMPLE - ada-url library has many similar functions:                    ║
-║     ada_parse()              ← Target function (returns ada_url/void*)       ║
-║     ada_can_parse()          ← Different function (returns bool)             ║
-║     ada_parse_with_base()    ← Different function (takes base URL)           ║
-║     ada_parse_search_params()← Different function (parses query params)      ║
-║                                                                               ║
-║  ⚠️  IF YOU SEE LINKER ERROR "undefined reference to {FUNCTION_NAME}":       ║
-║  • The function does NOT exist in the compiled library                       ║
-║  • You CANNOT fix this by changing to a similar function name                ║
-║  • You MUST respond: "UNABLE_TO_FIX: function does not exist in library"     ║
-║                                                                               ║
-║  ✅ VALIDATION - Your response will be automatically checked:                 ║
-║  • Function name {FUNCTION_NAME} must appear in final code                   ║
-║  • Function must be called (not just mentioned in comments)                  ║
-║  • Violation = immediate rejection + retry penalty                           ║
-╚═══════════════════════════════════════════════════════════════════════════════╝
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📝 TASK: Fix Compilation Errors
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Fix the compilation errors in the following fuzz target:
-
+**Target Function**: {FUNCTION_NAME}
 **Language**: {LANGUAGE}
 
-**Current Fuzz Target Code**:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📄 CURRENT CODE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
 ```
 {CURRENT_CODE}
 ```
 
-**Compilation Errors**:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+❌ BUILD ERRORS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
 {BUILD_ERRORS}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📋 ADDITIONAL CONTEXT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 {ADDITIONAL_CONTEXT}
 
-**Your Task**:
-Analyze the build errors and fix them while preserving the fuzzing logic and intent.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔍 ANALYSIS STEPS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-**SPECIAL CASE - Validation Errors**:
-If the error message states "was not called by the fuzz target" or "YOU MUST CALL FUNCTION":
-- This is a VALIDATION ERROR, not a compilation error
-- The code compiles, but does NOT call the target function
-- **FIX**: Add a direct call to the target function inside LLVMFuzzerTestOneInput
-- This is CRITICAL - the entire purpose of the fuzzer is to test THIS specific function
-- Do not just call it in a helper function - it must be in LLVMFuzzerTestOneInput itself
+Step 1: **Classify Error Type**
 
-**Analysis Steps**:
+   Check for these common patterns:
+   
+   • "was not called" / "YOU MUST CALL"
+     → Target function {FUNCTION_NAME} missing from LLVMFuzzerTestOneInput
+     → Add the call (don't replace with similar functions!)
+   
+   • "undefined reference to {FUNCTION_NAME}"
+     → Linker error: Add .cpp include (NOT forward declaration)
+     → Check existing fuzzers for pattern
+   
+   • "internal/..." or "*_impl.h" or "*_internal.h"
+     → Remove internal/private headers, use public API only
+   
+   • "typedef redefinition" or "templates must have C++ linkage"
+     → Header conflict: Both C++ and C headers included
+     → For C API: Keep ONLY impl.cpp + api_c.h (remove api.h)
+   
+   • "No such file or directory"
+     → Case-sensitive path issue or missing include
+     → Verify exact capitalization
+   
+   • Type mismatch / conversion errors
+     → Fix function signatures and type casts
 
-1. **Understand Each Error**:
-   - **FIRST: Check if this is a validation error** (function not called)
-     * If error contains "was not called by the fuzz target" → VALIDATION ERROR
-     * If error contains "YOU MUST CALL FUNCTION" → VALIDATION ERROR
-     * Skip to step 3 with plan: add target function call
-   - Read each error message carefully
-   - Identify the error type (syntax, type mismatch, linker, validation, etc.)
-   - Locate the exact line and context where the error occurs
+Step 2: **Plan Minimal Fix**
 
-2. **Identify Root Causes**:
-   - **VALIDATION ERROR**: Target function not called? → Add direct call, go to step 3
-   - **HEADERS (PRIORITY #1)**: Remove internal/private headers (`internal/`, `*_impl.h`), verify exact capitalization (case-sensitive), use provided paths EXACTLY
-   - **OTHER**: Type mismatches, wrong signatures, undefined symbols, API misuse
+   • Identify the specific line(s) causing the error
+   • Determine the minimal change needed
+   • Verify {FUNCTION_NAME} stays unchanged in your plan
+   • Check that fuzzing logic is preserved
 
-3. **Plan Your Fixes**:
-   - Determine the minimal changes needed to fix each error
-   - Ensure fixes don't break the fuzzing logic
-   - Consider if fixes might introduce new errors
-   - Check if the fixes respect function requirements
-   - **CRITICAL**: Verify your plan does NOT change the target function name `{FUNCTION_NAME}`
+Step 3: **Apply Fix**
 
-4. **Verify Your Solution**:
-   - Mentally test that the fixes address all errors
-   - Ensure the fuzzing logic remains intact
-   - Confirm all includes are correct and complete
-   - Verify type compatibility throughout
-   - **FINAL CHECK**: Confirm the code still calls `{FUNCTION_NAME}` (not a similar function)
+   • Make surgical changes only to broken parts
+   • Preserve all fuzzing logic and intent
+   • Keep code structure and readability
+   • Ensure {FUNCTION_NAME} is still called
 
-**Fix Guidelines**:
-- Minimal necessary changes only; preserve fuzzing logic; keep readable
-- **Target Function (PRIORITY #0 - MOST CRITICAL)**:
-  * NEVER change `{FUNCTION_NAME}` to ANY other function, even if names are similar
-  * Libraries often have function families with similar names (e.g., `parse`, `can_parse`, `parse_with_base`)
-  * Each function has DIFFERENT signatures and purposes - they are NOT interchangeable
-  * If linker cannot find `{FUNCTION_NAME}`, report "UNABLE_TO_FIX" - do NOT substitute
-  * Before finalizing: grep for `{FUNCTION_NAME}(` to ensure it's still called
-- **Headers (PRIORITY #1)**: Remove internal/private, verify case-sensitive paths, use provided paths exactly, no conditional includes, no guessing
-- Verify signatures match declarations
-- If error is "undefined reference to {FUNCTION_NAME}" and you cannot find the function definition, this means the function doesn't exist - report UNABLE_TO_FIX
+Step 4: **Validate**
 
-**Output Format**:
+   • Grep for "{FUNCTION_NAME}(" to verify it's called
+   • Check that no internal headers remain
+   • Ensure no stub/mock code was introduced
+   • Confirm fuzzing logic is intact
 
-Provide your complete solution in the following format:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+⚠️ SPECIAL CASES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+**If the function truly doesn't exist:**
+   Add this to your conclusion:
+   "UNABLE_TO_FIX: function {FUNCTION_NAME} does not exist in the project"
+
+**If you need to modify the build script:**
+   Include the modified build script in your output.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📤 OUTPUT FORMAT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 <conclusion>
-[Brief explanation covering:
- - What errors were present
- - Root causes you identified
- - How you fixed each issue
- - Any important considerations]
+[Brief explanation of:
+ • What errors were found
+ • Root causes identified
+ • How you fixed them
+ • Confirmation that {FUNCTION_NAME} is still called]
 </conclusion>
 
 <fuzz_target>
-[Complete corrected fuzz target code - do NOT omit any existing code]
+[Complete corrected fuzz target code]
 </fuzz_target>
 
 <build_script>
-[Modified build script if needed, otherwise omit this section]
+[Modified build script - ONLY if changes were needed, otherwise omit this section]
 </build_script>
-
-**Critical Requirements**:
-- **PRESERVE TARGET FUNCTION CALL**: The target function `{FUNCTION_NAME}` MUST remain called with its exact signature. DO NOT replace it with similar-named functions.
-  * ❌ WRONG: Replacing `ada_parse` with `ada_can_parse` (different return types!)
-  * ❌ WRONG: Replacing `parse_url` with `can_parse_url` (different purposes!)
-  * ❌ WRONG: Using wrapper functions or "equivalent" alternatives
-  * ✅ CORRECT: Keep calling `{FUNCTION_NAME}` exactly as specified
-- **VALIDATE TARGET CALL**: Before submitting, verify `{FUNCTION_NAME}` IS called in LLVMFuzzerTestOneInput
-  * Search your final code for the exact string `{FUNCTION_NAME}(`
-  * Ensure it's a function call, not just a comment or string
-- **HANDLE UNFIXABLE ERRORS**: If `{FUNCTION_NAME}` truly doesn't exist in the library:
-  * Add to <conclusion>: "UNABLE_TO_FIX: function {FUNCTION_NAME} does not exist in library"
-  * Do NOT attempt to substitute with similar functions
-- Provide the FULL corrected code (not just the changed parts)
-- Do not use triple backticks (```) inside the XML tags
-- Ensure all resources are properly managed
-- Maintain the original fuzzing intent
-- Keep changes minimal and focused
-

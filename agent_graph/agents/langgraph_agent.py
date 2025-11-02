@@ -1617,24 +1617,29 @@ class LangGraphPrototyper(LangGraphAgent):
                 # CRITICAL FILTER: Remove inappropriate headers
                 filtered_headers = []
                 for proj_h in existing_proj:
-                    # Skip .cpp/.cc implementation files (should never be included)
-                    if proj_h.endswith('.cpp') or proj_h.endswith('.cc') or proj_h.endswith('.cxx'):
-                        logger.debug(f'Skipping implementation file from existing headers: {proj_h}', trial=self.trial)
-                        continue
+                    # ⚠️ KEEP .cpp/.cc files if they appear in existing fuzzers!
+                    # Some projects (e.g., ada-url, header-only libs) explicitly include
+                    # implementation files. If existing fuzzers use them, they're valid.
+                    # DO NOT filter them out - trust the existing fuzzer patterns.
+                    # (Previously we skipped .cpp files, but this broke single-header patterns)
                     
-                    # For C API functions: skip C++ API headers
+                    # For C API functions: prioritize C headers but keep .cpp if used by existing fuzzers
                     if is_c_api:
-                        # Skip pure C++ headers (ada.h, ada.hpp, etc) when targeting C API
-                        # Keep only C-compatible headers (ada_c.h, etc)
                         base_name = proj_h.lower()
-                        if '_c.h' in base_name or base_name.endswith('_c.h'):
-                            # This is a C API header - keep it
+                        
+                        # ALWAYS keep .cpp/.cc/.cxx files (implementation includes)
+                        # Even C API fuzzers may need them (e.g., ada_c.c needs ada.cpp)
+                        if proj_h.endswith('.cpp') or proj_h.endswith('.cc') or proj_h.endswith('.cxx'):
                             filtered_headers.append(proj_h)
+                            logger.debug(f'Keeping implementation file for C API (from existing fuzzers): {proj_h}', trial=self.trial)
+                        # Keep C API headers (e.g., ada_c.h)
+                        elif '_c.h' in base_name or base_name.endswith('_c.h'):
+                            filtered_headers.append(proj_h)
+                        # Keep generic .h files (might be C-compatible)
                         elif base_name.endswith('.h') and not any(cpp_indicator in base_name for cpp_indicator in ['.hpp', 'xx']):
-                            # Generic .h file for C API - keep it (might be C-compatible)
                             filtered_headers.append(proj_h)
                         else:
-                            # Skip C++ headers for C API
+                            # Skip pure C++ headers (ada.h, ada.hpp) for C API
                             logger.debug(f'Skipping C++ header for C API function: {proj_h}', trial=self.trial)
                     else:
                         # For C++ API: keep all headers (including both C++ and C headers)
