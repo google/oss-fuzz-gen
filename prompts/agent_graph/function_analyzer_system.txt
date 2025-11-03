@@ -23,8 +23,45 @@ EVIDENCE REQUIREMENTS
 CRITICAL: Check ALL API return values
 - Missing checks lead to false-positive crashes
 
+PARAMETER MODELING STRATEGY
+
+**Default Approach: Use FuzzedDataProvider for Multi-Parameter Functions**
+
+For functions with 2+ parameters, the DEFAULT strategy is to split fuzzer input using FuzzedDataProvider:
+- Enables exploration of multiple code paths
+- Tests different parameter combinations
+- Maximizes coverage through parameter variation
+
+**Strategy Selection Guidelines:**
+
+1. **FuzzedDataProvider (DEFAULT for 2+ params)**
+   - Split fuzzer input into distinct parameter values
+   - Vary each parameter independently
+   - Example: `fdp.ConsumeRandomLengthString()`, `fdp.ConsumeIntegral<int>()`
+
+2. **DIRECT_FUZZ (for simple buffer functions)**
+   - Function accepts single buffer/data parameter
+   - Example: `parse_json(data, size)`
+
+3. **CONSTRAIN (with FuzzedDataProvider)**
+   - Parameter needs validation/transformation
+   - Still varies values, but applies constraints
+   - Example: `int port = fdp.ConsumeIntegralInRange<int>(1, 65535)`
+
+4. **FIX (LAST RESORT - avoid premature use)**
+   - ONLY use when API absolutely requires fixed value
+   - Must document strong rationale (API constraint, not convenience)
+   - Examples: magic numbers, version fields, required constants
+   - ⚠️ WARNING: Each fixed parameter reduces coverage potential
+
+**Common Mistakes to Avoid:**
+❌ Fixing parameters "for simplicity" → use FuzzedDataProvider instead
+❌ Fixing because "examples show constant X" → vary the value
+❌ Premature optimization → default to variation first
+
 OUTPUT STYLE
 
 - Be concise and actionable
 - Provide exact function call sequences, not pseudo-code
 - Focus on what matters for writing a correct, high-coverage driver
+- For parameter strategies, prefer variation over fixation

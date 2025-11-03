@@ -690,7 +690,31 @@ class BuilderRunner:
       try:
         proc.wait(timeout=self.run_timeout + 5)
       except sp.TimeoutExpired:
-        logger.info('%s timed out during fuzzing.', generated_project)
+        logger.warning('%s timed out during fuzzing (timeout=%ds). Terminating process and cleaning up Docker containers.', 
+                      generated_project, self.run_timeout + 5)
+        
+        # Terminate the helper.py process
+        proc.terminate()
+        try:
+          proc.wait(timeout=5)
+        except sp.TimeoutExpired:
+          logger.warning('Process did not terminate gracefully, killing it.')
+          proc.kill()
+          proc.wait()
+        
+        # Clean up any lingering Docker containers for this project
+        try:
+          cleanup_cmd = ['docker', 'ps', '-q', '--filter', f'ancestor=gcr.io/oss-fuzz/{generated_project}']
+          result = sp.run(cleanup_cmd, capture_output=True, text=True, timeout=10)
+          container_ids = result.stdout.strip().split('\n')
+          
+          for container_id in container_ids:
+            if container_id:  # Skip empty strings
+              logger.info('Stopping timed-out Docker container: %s', container_id)
+              sp.run(['docker', 'stop', container_id], timeout=30, check=False)
+        except Exception as e:
+          logger.error('Failed to clean up Docker containers: %s', e)
+        
         # Try continuing and parsing the logs even in case of timeout.
 
     if proc.returncode != 0:

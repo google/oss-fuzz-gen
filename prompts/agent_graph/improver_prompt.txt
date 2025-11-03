@@ -1,0 +1,56 @@
+📝 TASK: Improve Fuzz Driver Coverage
+Target: {FUNCTION_NAME} ({LANGUAGE})
+
+📊 CURRENT STATUS
+
+**Coverage Metrics**:
+- PC Coverage: {COVERAGE_PERCENT}
+- Line Coverage Diff: {LINE_COVERAGE_DIFF}
+
+**Current Driver**:
+```
+{CURRENT_CODE}
+```
+
+🚨 Coverage too low! Rewrite needed.
+
+🔍 COVERAGE ANALYZER DIAGNOSIS
+
+**Root Cause**:
+{COVERAGE_INSIGHTS}
+
+**Recommended Actions**:
+{IMPROVEMENT_SUGGESTIONS}
+
+🎯 YOUR TASK
+Rewrite driver to maximize coverage by addressing the diagnosis above.
+
+**Requirements**:
+1. Implement coverage analyzer's recommended actions
+2. Use FuzzedDataProvider for multi-parameter functions
+3. Replace fixed/constant parameters with varied inputs
+4. Test edge cases (NULL, empty, boundary values)
+5. MUST call {FUNCTION_NAME} (exact function name)
+
+**Output**: 
+<conclusion>Root cause, changes, expected improvement, confirm {FUNCTION_NAME} called</conclusion>
+<fuzz_target>[Complete improved code]</fuzz_target>
+<decision reason="...">Optional: if overriding decisions</decision>
+<coverage_strategy target="{FUNCTION_NAME}">New paths, edge cases, why better</coverage_strategy>
+
+**Quick Reference**
+
+**Common Issues**: Fixed params → Use FuzzedDataProvider | Naive input → Split into multiple params | No edge cases → Test NULL/empty/boundary
+
+**Template**:
+```cpp
+#include <fuzzer/FuzzedDataProvider.h>
+extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
+  FuzzedDataProvider fdp(data, size);
+  std::string p1 = fdp.ConsumeRandomLengthString(256);
+  int p2 = fdp.ConsumeIntegral<int>();
+  {FUNCTION_NAME}(p1.c_str(), p2);
+  return 0;
+}
+```
+

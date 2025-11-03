@@ -200,89 +200,191 @@ def _fuzzing_pipeline(benchmark: Benchmark, model: models.LLM,
   """Runs the LangGraph-based fuzzing workflow for one trial."""
   trial_logger = logger.get_trial_logger(trial=trial, level=logging.DEBUG)
   trial_logger.info('Trial Starts')
-
-  # Use the LangGraph-based agent system
-  trial_logger.info('Using LangGraph-based agent workflow')
   
-  # Update args with work_dirs for compatibility
-  args.work_dirs = work_dirs
+  # Note: signal-based timeout is disabled because signal.signal() only works in main thread
+  # ThreadPool workers run in separate threads, so signal.SIGALRM cannot be used here
+  # If timeout protection is needed, consider using multiprocessing.Pool instead of ThreadPool
+  TRIAL_TIMEOUT = getattr(args, 'trial_timeout', 7200)  # 2 hours default
+  trial_logger.info(f'⏰ Trial timeout configured: {TRIAL_TIMEOUT} seconds ({TRIAL_TIMEOUT/3600:.1f} hours)')
+  trial_logger.info('⏰ Note: signal-based timeout disabled (running in ThreadPool, not main thread)')
   
-  # Create and run the LangGraph workflow
-  workflow = FuzzingWorkflow(model, args)
-  
-  # Run the full supervisor-based workflow
-  final_state = workflow.run(
-      benchmark=benchmark,
-      trial=trial,
-      workflow_type='full'
-  )
-  
-  # Convert LangGraph state back to legacy result format using StateAdapter
-  from agent_graph.adapters import StateAdapter
-  
-  # Use StateAdapter to properly convert state to result_history
-  # This creates a complete result_history with BaseResult, BuildResult, RunResult, etc.
-  result_history = StateAdapter.state_to_result_history(final_state)
-  
-  trial_logger.info('LangGraph workflow completed')
-  
-  # Get the best result for saving files
-  # The last result should be the most complete one (RunResult or AnalysisResult)
-  best_result = result_history[-1] if result_history else None
-  
-  # Save fuzz target and build script to disk (matching WritingStage behavior)
-  if best_result and best_result.fuzz_target_source:
-    trial_logger.write_fuzz_target(best_result)
-    trial_logger.info(f'Saved fuzz target to {work_dirs.fuzz_targets}')
-  if best_result and best_result.build_script_source:
-    trial_logger.write_build_script(best_result)
-    trial_logger.info(f'Saved build script to {work_dirs.fuzz_targets}')
-  
-  # Convert agent_messages to chat_history format
-  if best_result and 'agent_messages' in final_state:
-    chat_history = {}
-    for agent_name, messages in final_state['agent_messages'].items():
-      # Convert message list to string format
-      history_str = '\n'.join([
-          f"{msg.get('role', 'unknown').upper()}: {msg.get('content', '')}"
-          for msg in messages
-      ])
-      chat_history[agent_name] = history_str
-    best_result.chat_history = chat_history
-  
-  # Save chat history
-  if best_result and best_result.chat_history:
-    trial_logger.write_chat_history(best_result, cycle_count=0)
-    trial_logger.info(f'Saved chat history to {work_dirs.status}')
-  
-  # Save token usage to best_result
-  if best_result and 'token_usage' in final_state:
-    best_result.token_usage = final_state['token_usage']
-  
-  # Create trial result to match expected return format
-  trial_result = TrialResult(benchmark=benchmark,
-                             trial=trial,
-                             work_dirs=work_dirs,
-                             result_history=result_history)
-  trial_logger.write_result(
-      result_status_dir=trial_result.best_result.work_dirs.status,
-      result=trial_result,
-      finished=True)
-  return trial_result
+  try:
+    # Use the LangGraph-based agent system
+    trial_logger.info('Using LangGraph-based agent workflow')
+    
+    # Update args with work_dirs for compatibility
+    args.work_dirs = work_dirs
+    
+    # Create and run the LangGraph workflow
+    trial_logger.info('🔧 Creating FuzzingWorkflow instance...')
+    workflow = FuzzingWorkflow(model, args)
+    trial_logger.info('✅ FuzzingWorkflow instance created')
+    
+    # Run the full supervisor-based workflow
+    trial_logger.info('🚀 Starting workflow.run()...')
+    trial_logger.info(f'   Benchmark: {benchmark.id}')
+    trial_logger.info(f'   Trial: {trial}')
+    trial_logger.info(f'   Workflow type: full')
+    
+    import time
+    workflow_start_time = time.time()
+    
+    try:
+      final_state = workflow.run(
+          benchmark=benchmark,
+          trial=trial,
+          workflow_type='full'
+      )
+      workflow_end_time = time.time()
+      workflow_duration = workflow_end_time - workflow_start_time
+      trial_logger.info(f'✅ workflow.run() completed in {workflow_duration:.2f} seconds')
+    except Exception as e:
+      workflow_end_time = time.time()
+      workflow_duration = workflow_end_time - workflow_start_time
+      trial_logger.error(f'❌ workflow.run() failed after {workflow_duration:.2f} seconds: {e}')
+      raise
+    
+    # Convert LangGraph state back to legacy result format using StateAdapter
+    trial_logger.info('🔄 Converting state to result_history...')
+    from agent_graph.adapters import StateAdapter
+    
+    # Use StateAdapter to properly convert state to result_history
+    # This creates a complete result_history with BaseResult, BuildResult, RunResult, etc.
+    result_history = StateAdapter.state_to_result_history(final_state)
+    trial_logger.info(f'✅ Converted to result_history ({len(result_history)} results)')
+    
+    trial_logger.info('🎉 LangGraph workflow completed successfully')
+    
+    # Get the best result for saving files
+    # The last result should be the most complete one (RunResult or AnalysisResult)
+    trial_logger.info('📍 Getting best result from result_history...')
+    best_result = result_history[-1] if result_history else None
+    trial_logger.info(f'📍 Best result: {type(best_result).__name__ if best_result else "None"}')
+    
+    # Save fuzz target and build script to disk (matching WritingStage behavior)
+    if best_result and best_result.fuzz_target_source:
+      trial_logger.info('📍 Writing fuzz target to disk...')
+      write_start = time.time()
+      trial_logger.write_fuzz_target(best_result)
+      write_duration = time.time() - write_start
+      trial_logger.info(f'📍 Fuzz target written in {write_duration:.3f}s to {work_dirs.fuzz_targets}')
+    else:
+      trial_logger.info('📍 No fuzz target to write')
+      
+    if best_result and best_result.build_script_source:
+      trial_logger.info('📍 Writing build script to disk...')
+      write_start = time.time()
+      trial_logger.write_build_script(best_result)
+      write_duration = time.time() - write_start
+      trial_logger.info(f'📍 Build script written in {write_duration:.3f}s to {work_dirs.fuzz_targets}')
+    else:
+      trial_logger.info('📍 No build script to write')
+    
+    # Convert agent_messages to chat_history format
+    trial_logger.info('📍 Converting agent_messages to chat_history...')
+    if best_result and 'agent_messages' in final_state:
+      chat_history = {}
+      for agent_name, messages in final_state['agent_messages'].items():
+        # Convert message list to string format
+        history_str = '\n'.join([
+            f"{msg.get('role', 'unknown').upper()}: {msg.get('content', '')}"
+            for msg in messages
+        ])
+        chat_history[agent_name] = history_str
+      best_result.chat_history = chat_history
+      trial_logger.info(f'📍 Converted {len(chat_history)} agent message histories')
+    else:
+      trial_logger.info('📍 No agent_messages to convert')
+    
+    # Save chat history
+    if best_result and best_result.chat_history:
+      trial_logger.info('📍 Writing chat history to disk...')
+      write_start = time.time()
+      trial_logger.write_chat_history(best_result, cycle_count=0)
+      write_duration = time.time() - write_start
+      trial_logger.info(f'📍 Chat history written in {write_duration:.3f}s to {work_dirs.status}')
+    else:
+      trial_logger.info('📍 No chat history to write')
+    
+    # Save token usage to best_result
+    if best_result and 'token_usage' in final_state:
+      trial_logger.info('📍 Saving token usage to best_result...')
+      best_result.token_usage = final_state['token_usage']
+      trial_logger.info('📍 Token usage saved')
+    
+    # Create trial result to match expected return format
+    trial_logger.info('📍 Creating TrialResult...')
+    trial_result = TrialResult(benchmark=benchmark,
+                               trial=trial,
+                               work_dirs=work_dirs,
+                               result_history=result_history)
+    trial_logger.info('📍 TrialResult created')
+    
+    trial_logger.info('📍 Writing trial result to disk...')
+    write_start = time.time()
+    trial_logger.write_result(
+        result_status_dir=trial_result.best_result.work_dirs.status,
+        result=trial_result,
+        finished=True)
+    write_duration = time.time() - write_start
+    trial_logger.info(f'📍 Trial result written in {write_duration:.3f}s')
+    
+    trial_logger.info('✅ _fuzzing_pipeline completed, returning trial_result')
+    return trial_result
+    
+  except TimeoutError as e:
+    trial_logger.error(f'⏰ Trial timed out: {e}')
+    trial_logger.error('⏰ Returning empty result due to timeout')
+    # Return a minimal failed result
+    return TrialResult(
+        benchmark=benchmark,
+        trial=trial,
+        work_dirs=work_dirs,
+        result_history=[]
+    )
+  finally:
+    # Note: signal.alarm(0) removed because we disabled signal-based timeout
+    trial_logger.info('⏰ Trial cleanup complete')
 
 def _fuzzing_pipelines(benchmark: Benchmark, model: models.LLM,
                        args: argparse.Namespace,
                        work_dirs: WorkDirs) -> BenchmarkResult:
   """Runs all trial experiments in their pipelines."""
+  import time
+  
+  # Use trial=0 for global/non-trial-specific logs
+  logger.info(f'📍 [_fuzzing_pipelines] Starting with {args.num_samples} trial(s)', trial=0)
+  logger.info(f'📍 [_fuzzing_pipelines] ThreadPool size: {NUM_EVA}', trial=0)
+  
   # Create a pool of worker processes
+  logger.info('📍 [_fuzzing_pipelines] Creating ThreadPool...', trial=0)
+  pool_start = time.time()
+  
   with pool.ThreadPool(processes=NUM_EVA) as p:
+    pool_create_duration = time.time() - pool_start
+    logger.info(f'📍 [_fuzzing_pipelines] ThreadPool created in {pool_create_duration:.2f}s', trial=0)
+    
     # Initialize thread-local storage in each worker before processing
     task_args = [(benchmark, model, args, work_dirs, trial)
                  for trial in range(1, args.num_samples + 1)]
+    logger.info(f'📍 [_fuzzing_pipelines] Starting {len(task_args)} trial(s) via starmap...', trial=0)
+    
+    starmap_start = time.time()
     trial_results = p.starmap(_fuzzing_pipeline, task_args)
-  return BenchmarkResult(benchmark=benchmark,
-                         work_dirs=work_dirs,
-                         trial_results=trial_results)
+    starmap_duration = time.time() - starmap_start
+    logger.info(f'📍 [_fuzzing_pipelines] All trials completed in {starmap_duration:.2f}s', trial=0)
+    
+    logger.info('📍 [_fuzzing_pipelines] Exiting ThreadPool context (will wait for cleanup)...', trial=0)
+  
+  cleanup_duration = time.time() - starmap_start - starmap_duration
+  logger.info(f'📍 [_fuzzing_pipelines] ThreadPool cleanup completed in {cleanup_duration:.2f}s', trial=0)
+  
+  logger.info('📍 [_fuzzing_pipelines] Creating BenchmarkResult...', trial=0)
+  result = BenchmarkResult(benchmark=benchmark,
+                          work_dirs=work_dirs,
+                          trial_results=trial_results)
+  logger.info('📍 [_fuzzing_pipelines] BenchmarkResult created, returning', trial=0)
+  return result
 
 def run(benchmark: Benchmark, model: models.LLM, args: argparse.Namespace,
         work_dirs: WorkDirs) -> Optional[AggregatedResult]:

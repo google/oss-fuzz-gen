@@ -79,23 +79,37 @@ class FuzzingWorkflow:
         Returns:
             Final workflow state
         """
+        import logger
+        import time
+        
+        logger.info('📍 [workflow.run] Entry point', trial=trial)
+        
         # Create workflow if not already created
         if not self.workflow_graph:
+            logger.info('📍 [workflow.run] Creating workflow graph...', trial=trial)
             self.create_workflow(workflow_type)
+            logger.info('📍 [workflow.run] Workflow graph created', trial=trial)
         
         # Create initial state (objects will be converted internally)
+        logger.info('📍 [workflow.run] Creating initial state...', trial=trial)
         initial_state = create_initial_state(
             benchmark=benchmark,
             trial=trial,
             work_dirs=self.args.work_dirs
         )
+        logger.info('📍 [workflow.run] Initial state created', trial=trial)
         
         # Compile and run the workflow with checkpointer
         compile_kwargs = {}
         if self.checkpointer:
             compile_kwargs['checkpointer'] = self.checkpointer
+            logger.info('📍 [workflow.run] Using memory checkpointer', trial=trial)
         
+        logger.info('📍 [workflow.run] Compiling workflow...', trial=trial)
+        compile_start = time.time()
         compiled_workflow = self.workflow_graph.compile(**compile_kwargs)
+        compile_duration = time.time() - compile_start
+        logger.info(f'📍 [workflow.run] Workflow compiled in {compile_duration:.2f}s', trial=trial)
         
         # Execute the workflow with configurable parameters
         # Use thread_id for conversation persistence
@@ -108,8 +122,14 @@ class FuzzingWorkflow:
             "recursion_limit": getattr(self.args, 'max_iterations', 5) * 10  # Allow enough cycles
         }
         
+        logger.info('📍 [workflow.run] Starting workflow.invoke()...', trial=trial)
+        logger.info(f'📍 [workflow.run]   Recursion limit: {config["recursion_limit"]}', trial=trial)
+        
         try:
+            invoke_start = time.time()
             final_state = compiled_workflow.invoke(initial_state, config=config)
+            invoke_duration = time.time() - invoke_start
+            logger.info(f'📍 [workflow.run] Workflow.invoke() completed in {invoke_duration:.2f}s', trial=trial)
         except Exception as e:
             import logger
             logger.error(f"Workflow execution failed: {e}", trial=trial)
@@ -151,26 +171,36 @@ class FuzzingWorkflow:
                 raise
         
         # Print token usage summary at the end
+        logger.info('📍 [workflow.run] Getting token usage summary...', trial=trial)
         from agent_graph.state import get_token_usage_summary
-        import logger
         token_summary = get_token_usage_summary(final_state)
         logger.info(f"\n{token_summary}", trial=trial)
+        logger.info('📍 [workflow.run] Token usage summary printed', trial=trial)
         
         # Finalize all agent logs before returning
+        logger.info('📍 [workflow.run] Starting logger finalization...', trial=trial)
         from agent_graph.logger import LangGraphLogger
         workflow_logger = LangGraphLogger.get_logger(
             workflow_id="fuzzing_workflow", 
             trial=trial, 
             base_dir=str(self.args.work_dirs.base) if hasattr(self.args, 'work_dirs') and self.args.work_dirs else None
         )
-        workflow_logger.finalize()
+        logger.info('📍 [workflow.run] Got workflow logger instance', trial=trial)
         
+        finalize_start = time.time()
+        logger.info('📍 [workflow.run] Calling workflow_logger.finalize()...', trial=trial)
+        workflow_logger.finalize()
+        finalize_duration = time.time() - finalize_start
+        logger.info(f'📍 [workflow.run] Logger finalized in {finalize_duration:.2f}s', trial=trial)
+        
+        logger.info('📍 [workflow.run] Returning final_state', trial=trial)
         return final_state
     
     def _create_full_workflow(self) -> StateGraph:
         """Create the full supervisor-based workflow."""
         from agent_graph.nodes.coverage_analyzer_node import coverage_analyzer_node
         from agent_graph.nodes.context_analyzer_node import context_analyzer_node
+        from agent_graph.nodes.improver_node import improver_node
         
         workflow = StateGraph(FuzzingWorkflowState)
         
@@ -179,6 +209,7 @@ class FuzzingWorkflow:
         workflow.add_node("function_analyzer", function_analyzer_node)
         workflow.add_node("prototyper", prototyper_node)
         workflow.add_node("enhancer", enhancer_node)
+        workflow.add_node("improver", improver_node)
         workflow.add_node("build", build_node)
         workflow.add_node("execution", execution_node)
         workflow.add_node("crash_analyzer", crash_analyzer_node)
@@ -196,6 +227,7 @@ class FuzzingWorkflow:
                 "function_analyzer": "function_analyzer",
                 "prototyper": "prototyper",
                 "enhancer": "enhancer",
+                "improver": "improver",
                 "build": "build",
                 "execution": "execution",
                 "crash_analyzer": "crash_analyzer",
@@ -209,6 +241,7 @@ class FuzzingWorkflow:
         workflow.add_edge("function_analyzer", "supervisor")
         workflow.add_edge("prototyper", "supervisor")
         workflow.add_edge("enhancer", "supervisor")
+        workflow.add_edge("improver", "supervisor")
         workflow.add_edge("build", "supervisor")
         workflow.add_edge("execution", "supervisor")
         workflow.add_edge("crash_analyzer", "supervisor")

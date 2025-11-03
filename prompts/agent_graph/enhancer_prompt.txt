@@ -1,108 +1,34 @@
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 📝 TASK: Fix Compilation Errors
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Target: {FUNCTION_NAME} ({LANGUAGE})
 
-**Target Function**: {FUNCTION_NAME}
-**Language**: {LANGUAGE}
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 📄 CURRENT CODE
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ```
 {CURRENT_CODE}
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ❌ BUILD ERRORS
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
 {BUILD_ERRORS}
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 📋 ADDITIONAL CONTEXT
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
 {ADDITIONAL_CONTEXT}
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🔍 ANALYSIS STEPS
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔍 COMMON ERROR PATTERNS
 
-Step 1: **Classify Error Type**
+• "was not called" → Add {FUNCTION_NAME} call (exact name!)
+• "undefined reference" → Add .cpp include (not forward declaration)
+• "internal/..." headers → Remove, use public API only
+• "typedef redefinition" → Header conflict, keep only one
+• "No such file" → Check capitalization
+• Type mismatch → Fix signatures/casts
 
-   Check for these common patterns:
-   
-   • "was not called" / "YOU MUST CALL"
-     → Target function {FUNCTION_NAME} missing from LLVMFuzzerTestOneInput
-     → Add the call (don't replace with similar functions!)
-   
-   • "undefined reference to {FUNCTION_NAME}"
-     → Linker error: Add .cpp include (NOT forward declaration)
-     → Check existing fuzzers for pattern
-   
-   • "internal/..." or "*_impl.h" or "*_internal.h"
-     → Remove internal/private headers, use public API only
-   
-   • "typedef redefinition" or "templates must have C++ linkage"
-     → Header conflict: Both C++ and C headers included
-     → For C API: Keep ONLY impl.cpp + api_c.h (remove api.h)
-   
-   • "No such file or directory"
-     → Case-sensitive path issue or missing include
-     → Verify exact capitalization
-   
-   • Type mismatch / conversion errors
-     → Fix function signatures and type casts
+**Fix Strategy**: Make minimal surgical changes, preserve fuzzing logic, verify {FUNCTION_NAME} is still called.
 
-Step 2: **Plan Minimal Fix**
-
-   • Identify the specific line(s) causing the error
-   • Determine the minimal change needed
-   • Verify {FUNCTION_NAME} stays unchanged in your plan
-   • Check that fuzzing logic is preserved
-
-Step 3: **Apply Fix**
-
-   • Make surgical changes only to broken parts
-   • Preserve all fuzzing logic and intent
-   • Keep code structure and readability
-   • Ensure {FUNCTION_NAME} is still called
-
-Step 4: **Validate**
-
-   • Grep for "{FUNCTION_NAME}(" to verify it's called
-   • Check that no internal headers remain
-   • Ensure no stub/mock code was introduced
-   • Confirm fuzzing logic is intact
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ⚠️ SPECIAL CASES
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-**If the function truly doesn't exist:**
-   Add this to your conclusion:
-   "UNABLE_TO_FIX: function {FUNCTION_NAME} does not exist in the project"
+If function doesn't exist: Add "UNABLE_TO_FIX: function {FUNCTION_NAME} does not exist"
 
-**If you need to modify the build script:**
-   Include the modified build script in your output.
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-📤 OUTPUT FORMAT
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-<conclusion>
-[Brief explanation of:
- • What errors were found
- • Root causes identified
- • How you fixed them
- • Confirmation that {FUNCTION_NAME} is still called]
-</conclusion>
-
-<fuzz_target>
-[Complete corrected fuzz target code]
-</fuzz_target>
-
-<build_script>
-[Modified build script - ONLY if changes were needed, otherwise omit this section]
-</build_script>
+**Output**:
+<conclusion>Errors found, root causes, fixes applied, confirm {FUNCTION_NAME} called</conclusion>
+<fuzz_target>[Complete corrected code]</fuzz_target>
+<build_script>[Only if modified, otherwise omit]</build_script>

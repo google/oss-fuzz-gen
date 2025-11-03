@@ -39,11 +39,14 @@ Translate the following SRS specification into a compilable and EFFECTIVE fuzz t
    - Check ALL postconditions marked as [MANDATORY] after function calls
    - Follow execution order constraints exactly as specified
 
-4. **PARAMETER CONSTRUCTION**
-   - Use the parameter strategies specified in the SRS
-   - For DIRECT_FUZZ: Pass fuzzer data directly
-   - For CONSTRAIN: Apply specified constraints before passing
-   - For FIX: Use the fixed value specified
+4. **PARAMETER CONSTRUCTION** (⚠️ CRITICAL FOR COVERAGE)
+   - **DEFAULT**: For multi-parameter functions, use FuzzedDataProvider to split fuzzer input
+   - Include header: `#include <fuzzer/FuzzedDataProvider.h>`
+   - Initialize: `FuzzedDataProvider fdp(data, size);`
+   - For DIRECT_FUZZ: Pass fuzzer data directly (simple 1-2 param functions)
+   - For CONSTRAIN: Use FuzzedDataProvider with constraints (e.g., ConsumeIntegralInRange)
+   - For FIX: Use fixed value ONLY if SRS documents strong API requirement
+   - ⚠️ **Avoid premature FIX**: Each fixed parameter limits code path exploration
 
 5. **ERROR HANDLING**
    - Add proper error checks as specified in postconditions
@@ -51,6 +54,66 @@ Translate the following SRS specification into a compilable and EFFECTIVE fuzz t
    - Clean up resources in reverse order of allocation
 
 {ADDITIONAL_CONTEXT}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+## 🎯 PARAMETER CONSTRUCTION EXAMPLES (READ THIS FIRST!)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+### Example 1: Multi-Parameter Function (USE FuzzedDataProvider)
+```cpp
+// Target: int parse_url(const char* url, size_t len, const char* base, int flags)
+
+// ✅ GOOD: Split fuzzer input using FuzzedDataProvider
+#include <fuzzer/FuzzedDataProvider.h>
+
+extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
+  FuzzedDataProvider fdp(data, size);
+  
+  // Generate varied parameters from fuzzer input
+  std::string url = fdp.ConsumeRandomLengthString(1024);
+  std::string base = fdp.ConsumeRandomLengthString(256);
+  int flags = fdp.ConsumeIntegral<int>();
+  
+  // Call target with varied parameters
+  parse_url(url.c_str(), url.length(), base.c_str(), flags);
+  return 0;
+}
+
+// ❌ BAD: Fixed base parameter (limits coverage)
+extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
+  const char* base = "https://example.com/";  // FIXED - tests only one code path!
+  parse_url((char*)data, size, base, 0);      // Misses error handling, edge cases
+  return 0;
+}
+```
+
+### Example 2: Testing Edge Cases
+```cpp
+// ✅ GOOD: Use FuzzedDataProvider to test edge cases
+FuzzedDataProvider fdp(data, size);
+
+// Test NULL pointers, empty strings, boundary values
+bool use_null = fdp.ConsumeBool();
+const char* ptr = use_null ? nullptr : fdp.ConsumeRandomLengthString(256).c_str();
+
+// Test different code branches
+int mode = fdp.ConsumeIntegralInRange<int>(0, 3);
+switch (mode) {
+  case 0: target_func(ptr, 0); break;           // empty input
+  case 1: target_func(ptr, 1); break;           // single byte
+  case 2: target_func(ptr, SIZE_MAX); break;    // max value
+  case 3: target_func(ptr, fdp.ConsumeIntegral<size_t>()); break;  // random
+}
+```
+
+### Example 3: Constrained Parameters
+```cpp
+// SRS says: port must be in range 1-65535
+FuzzedDataProvider fdp(data, size);
+int port = fdp.ConsumeIntegralInRange<int>(1, 65535);  // Still varies, but constrained
+std::string host = fdp.ConsumeRandomLengthString(256);
+connect_to_host(host.c_str(), port);
+```
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ## 🎯 IMPLEMENTATION GUIDANCE

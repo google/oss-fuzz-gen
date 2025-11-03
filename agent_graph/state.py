@@ -568,12 +568,13 @@ def add_coverage_strategy(
     state["session_memory"]["coverage_strategies"] = strategies[-10:]
 
 
-def format_session_memory_for_prompt(state: FuzzingWorkflowState) -> str:
+def format_session_memory_for_prompt(state: FuzzingWorkflowState, max_items_per_category: int = 3) -> str:
     """
     Format session_memory as readable text for injection into agent prompts.
-    
+        
     Args:
         state: Workflow state
+        max_items_per_category: Maximum items to show per category (default: 3)
     
     Returns:
         Formatted session_memory text
@@ -585,43 +586,65 @@ def format_session_memory_for_prompt(state: FuzzingWorkflowState) -> str:
     
     parts = []
     
-    # 1. Format API constraints
-    if api_constraints := session_memory.get("api_constraints", []):
-        parts.append("## API Usage Constraints")
-        for c in api_constraints:
-            confidence_level = c.get("confidence", "medium").upper()
-            parts.append(f"- [{confidence_level}] {c['constraint']}")
-            parts.append(f"  *source: {c['source']}, iteration: {c.get('iteration', 0)}*")
+    # Helper function to prioritize and limit items
+    def get_top_items(items, max_count):
+        """Get top items based on priority (HIGH > MEDIUM > LOW) and recency."""
+        if not items:
+            return []
+        
+        # Sort by confidence/priority (if exists) and iteration (recency)
+        def sort_key(item):
+            confidence = item.get('confidence', 'medium').lower()
+            priority_score = {'high': 3, 'medium': 2, 'low': 1}.get(confidence, 2)
+            iteration = item.get('iteration', 0)
+            return (-priority_score, -iteration)  # Negative for descending order
+        
+        sorted_items = sorted(items, key=sort_key)
+        return sorted_items[:max_count]
     
-    # 2. Format archetype pattern
+    # 1. Format API constraints (top N by priority)
+    if api_constraints := session_memory.get("api_constraints", []):
+        top_constraints = get_top_items(api_constraints, max_items_per_category)
+        if top_constraints:
+            parts.append("## API Usage Constraints")
+            for c in top_constraints:
+                confidence_level = c.get("confidence", "medium").upper()
+                # Compact format: one line per constraint
+                parts.append(f"- [{confidence_level}] {c['constraint']}")
+    
+    # 2. Format archetype pattern (always show if exists)
     if archetype := session_memory.get("archetype"):
         parts.append("\n## Identified Architecture Pattern")
         parts.append(f"- **Type**: {archetype['type']}")
         parts.append(f"- **Lifecycle**: {' → '.join(archetype['lifecycle_phases'])}")
-        parts.append(f"- *source: {archetype['source']}, iteration: {archetype.get('iteration', 0)}*")
     
-    # 3. Format known fixes
+    # 3. Format known fixes (top N most recent)
     if known_fixes := session_memory.get("known_fixes", []):
-        parts.append("\n## Known Error Fixes")
-        for fix in known_fixes[-5:]:  # Show only the most recent 5
-            parts.append(f"- **Error**: {fix['error_pattern']}")
-            parts.append(f"  **Solution**: {fix['solution']}")
-            parts.append(f"  *source: {fix['source']}, iteration: {fix.get('iteration', 0)}*")
+        top_fixes = known_fixes[-max_items_per_category:]  # Most recent N
+        if top_fixes:
+            parts.append("\n## Known Error Fixes")
+            for fix in top_fixes:
+                # Compact format: combine error and solution on fewer lines
+                parts.append(f"- **Error**: {fix['error_pattern']}")
+                parts.append(f"  **Solution**: {fix['solution']}")
     
-    # 4. Format decision records
+    # 4. Format decision records (top N most recent)
     if decisions := session_memory.get("decisions", []):
-        parts.append("\n## Key Decisions")
-        for d in decisions[-3:]:  # Show only the most recent 3
-            parts.append(f"- **Decision**: {d['decision']}")
-            parts.append(f"  **Reason**: {d['reason']}")
-            parts.append(f"  *source: {d['source']}, iteration: {d.get('iteration', 0)}*")
+        top_decisions = decisions[-max_items_per_category:]  # Most recent N
+        if top_decisions:
+            parts.append("\n## Key Decisions")
+            for d in top_decisions:
+                # Compact format: one line per decision
+                parts.append(f"- {d['decision']} (Reason: {d['reason']})")
     
-    # 5. Format coverage strategies
+    # 5. Format coverage strategies (top N most recent)
     if strategies := session_memory.get("coverage_strategies", []):
-        parts.append("\n## Coverage Optimization Strategies")
-        for s in strategies[-5:]:  # Show only the most recent 5
-            parts.append(f"- {s['strategy']}")
-            parts.append(f"  *target: {s['target']}, source: {s['source']}*")
+        top_strategies = strategies[-max_items_per_category:]  # Most recent N
+        if top_strategies:
+            parts.append("\n## Coverage Optimization Strategies")
+            for s in top_strategies:
+                # Compact format: one line per strategy
+                parts.append(f"- {s['strategy']}")
     
     if not parts:
         return "*No consensus constraints for this task yet*"

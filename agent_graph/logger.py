@@ -52,7 +52,9 @@ class LangGraphLogger:
         # Per-agent log buffers to batch writes
         self._buffers: Dict[str, List[str]] = {}
         self._json_buffers: Dict[str, List[Dict[str, Any]]] = {}
-        self._buffer_lock = threading.Lock()
+        # Use RLock (reentrant lock) instead of Lock to allow same thread to acquire it multiple times
+        # This fixes deadlock in finalize() -> flush_agent_logs() where both try to acquire the lock
+        self._buffer_lock = threading.RLock()
         
         # Token usage tracking
         self._token_stats: Dict[str, Dict[str, int]] = {}
@@ -243,25 +245,45 @@ class LangGraphLogger:
     
     def finalize(self) -> None:
         """Flush all remaining logs, write summary stats, and clean up."""
+        import time
+        
         logger.info('🔚 Finalizing LangGraph logger - flushing all remaining logs...', trial=self.trial)
+        finalize_start = time.time()
+        
+        logger.info('📍 [finalize] Acquiring buffer lock...', trial=self.trial)
+        lock_start = time.time()
         with self._buffer_lock:
+            lock_duration = time.time() - lock_start
+            logger.info(f'📍 [finalize] Buffer lock acquired in {lock_duration:.3f}s', trial=self.trial)
+            
             # Flush all agent logs
             agents_to_flush = list(self._buffers.keys())
-            logger.info(f'   Agents to flush: {", ".join(agents_to_flush) if agents_to_flush else "none"}', trial=self.trial)
-            for agent_name in agents_to_flush:
+            logger.info(f'📍 [finalize] Agents to flush: {", ".join(agents_to_flush) if agents_to_flush else "none"}', trial=self.trial)
+            
+            for i, agent_name in enumerate(agents_to_flush, 1):
+                logger.info(f'📍 [finalize] Flushing agent {i}/{len(agents_to_flush)}: {agent_name}...', trial=self.trial)
+                flush_start = time.time()
                 self.flush_agent_logs(agent_name)
+                flush_duration = time.time() - flush_start
+                logger.info(f'📍 [finalize] Agent {agent_name} flushed in {flush_duration:.3f}s', trial=self.trial)
             
             # Write token usage summary
             if self._token_stats:
+                logger.info('📍 [finalize] Writing token stats...', trial=self.trial)
                 stats_file = self.log_dir / "token_stats.json"
                 try:
+                    write_start = time.time()
                     with open(stats_file, 'w', encoding='utf-8') as f:
                         json.dump(self._token_stats, f, indent=2)
-                    logger.info(f'Wrote token stats to {stats_file}', trial=self.trial)
+                    write_duration = time.time() - write_start
+                    logger.info(f'📍 [finalize] Token stats written in {write_duration:.3f}s: {stats_file}', trial=self.trial)
                 except Exception as e:
-                    logger.warning(f'Failed to write token stats: {e}', trial=self.trial)
+                    logger.warning(f'📍 [finalize] Failed to write token stats: {e}', trial=self.trial)
+            else:
+                logger.info('📍 [finalize] No token stats to write', trial=self.trial)
         
-        logger.info(f'LangGraph logger finalized: {self.log_dir}', trial=self.trial)
+        finalize_duration = time.time() - finalize_start
+        logger.info(f'✅ LangGraph logger finalized in {finalize_duration:.3f}s: {self.log_dir}', trial=self.trial)
 
 class NullLogger:
     """

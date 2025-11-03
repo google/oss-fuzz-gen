@@ -57,9 +57,44 @@ Based on {EXAMPLES_COUNT} usage examples, generate a machine-readable API specif
 - **preconditions**: Conditions BEFORE calling target (with violation consequences)
 - **postconditions**: Checks AFTER calling target (e.g., return value validation)
 - **constraints**: execution_order (call sequence), parameter_range (valid values), resource_limit
-- **parameter_strategies**: DIRECT_FUZZ (libFuzzer input) | CONSTRAIN (with rules) | FIX (constant)
+- **parameter_strategies**: 
+  * **DEFAULT STRATEGY**: For multi-parameter functions, use **FuzzedDataProvider** to split fuzzer input
+  * DIRECT_FUZZ: Simple functions with 1-2 parameters that accept raw buffers
+  * CONSTRAIN: Parameters need validation/transformation (with FuzzedDataProvider)
+  * FIX: **ONLY if absolutely required** (e.g., API precondition violation, documented requirement)
+  * **CRITICAL**: Avoid premature use of FIX strategy - it severely limits coverage
 - **metadata.must_call_target**: MUST be "yes"
 - **metadata.recommended_test_vectors**: At least 3 test scenarios
+
+## Parameter Strategy Decision Guide:
+
+**When to use FuzzedDataProvider (PREFERRED for multi-parameter functions):**
+```c
+// Example: Function with 3+ parameters
+int target_func(const char* input, size_t len, const char* base, int flags);
+
+// GOOD: Split fuzzer input using FuzzedDataProvider
+FuzzedDataProvider fdp(data, size);
+std::string input_str = fdp.ConsumeRandomLengthString(1024);
+std::string base_str = fdp.ConsumeRandomLengthString(256);
+int flags = fdp.ConsumeIntegral<int>();
+target_func(input_str.c_str(), input_str.length(), base_str.c_str(), flags);
+```
+
+**When FIX strategy is acceptable:**
+1. API absolutely requires specific values (e.g., magic numbers, version fields)
+2. Parameter must be from a small enum set (use ConsumeEnum instead!)
+3. Documented constraint that cannot be violated
+4. **Document the reason in the rationale field**
+
+**Common ANTI-PATTERNS to avoid:**
+❌ BAD: Fixing parameters "for simplicity" → limits coverage
+❌ BAD: Fixing because "most examples use constant X" → copy pattern, not value
+❌ BAD: Fixing "to avoid errors" → test error paths too!
+
+✅ GOOD: Use FuzzedDataProvider to vary all parameters
+✅ GOOD: Test edge cases (empty strings, NULL, max values)
+✅ GOOD: Explore multiple code paths through parameter variation
 
 ## Knowledge Sharing Tags (optional):
 `<api_constraint>...</api_constraint>` | `<known_fix error="...">...</known_fix>` | `<decision reason="...">...</decision>`

@@ -330,8 +330,8 @@ def _determine_next_action(state: FuzzingWorkflowState) -> str:
             if coverage_analysis and coverage_analysis.get("improve_required", False):
                 # Coverage analyzer suggests improvement is possible
                 if current_iteration < max_iterations and no_improvement_count < NO_IMPROVEMENT_THRESHOLD:
-                    logger.info('Real project coverage can be improved, enhancing target', trial=trial)
-                    return "enhancer"
+                    logger.info('Real project coverage can be improved, routing to improver', trial=trial)
+                    return "improver"
         
         # Good coverage or max iterations reached - we're done
         logger.info(f'Workflow complete: line_coverage_diff={coverage_diff:.2%}, '
@@ -364,6 +364,7 @@ def route_condition(state: FuzzingWorkflowState) -> str:
         "function_analyzer": "function_analyzer",
         "prototyper": "prototyper", 
         "enhancer": "enhancer",
+        "improver": "improver",
         "build": "build",
         "execution": "execution",
         "crash_analyzer": "crash_analyzer",
