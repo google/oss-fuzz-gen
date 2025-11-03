@@ -42,7 +42,7 @@ Rewrite driver to maximize coverage by addressing the diagnosis above.
 
 **Common Issues**: Fixed params → Use FuzzedDataProvider | Naive input → Split into multiple params | No edge cases → Test NULL/empty/boundary
 
-**Template**:
+**Template 1: Multi-parameter function**:
 ```cpp
 #include <fuzzer/FuzzedDataProvider.h>
 extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
@@ -52,5 +52,15 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
   {FUNCTION_NAME}(p1.c_str(), p2);
   return 0;
 }
+```
+
+**Template 2: Struct parameter**:
+```cpp
+FuzzedDataProvider fdp(data, size);
+struct Config cfg;
+memset(&cfg, 0, sizeof(cfg));
+cfg.field1 = fdp.ConsumeIntegral<int>();  // Vary fields, not fixed!
+cfg.field2 = fdp.ConsumeIntegralInRange<uint32_t>(0, 100);
+{FUNCTION_NAME}(&cfg);
 ```
 

@@ -17,258 +17,57 @@ Translate the following SRS specification into a compilable and EFFECTIVE fuzz t
 {SKELETON_CODE}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-## 📝 IMPLEMENTATION REQUIREMENTS
+## 📝 REQUIREMENTS
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-### CRITICAL REQUIREMENTS (MUST FOLLOW)
-
-1. **MANDATORY - MUST CALL TARGET FUNCTION**
-   - The fuzz driver MUST directly call the target function `{FUNCTION_NAME}`
-   - This is NON-NEGOTIABLE: The entire purpose is to fuzz THIS specific function
-   - The call must be inside LLVMFuzzerTestOneInput, not in helper functions only
-   - ✅ Validation: Before submitting, verify the code contains a direct call to `{FUNCTION_NAME}`
-
-2. **USE REFERENCE SKELETON HEADERS**
-   - Use ONLY the header files provided in "Reference Skeleton" above
-   - DO NOT guess or modify header paths - use them exactly as provided
-   - The Reference Skeleton contains validated, correct header files
-
-3. **IMPLEMENT ALL MANDATORY REQUIREMENTS**
-   - Implement ALL functional requirements marked as [MANDATORY] in the SRS
-   - Satisfy ALL preconditions marked as [MANDATORY] before calling the target function
-   - Check ALL postconditions marked as [MANDATORY] after function calls
-   - Follow execution order constraints exactly as specified
-
-4. **PARAMETER CONSTRUCTION** (⚠️ CRITICAL FOR COVERAGE)
-   - **DEFAULT**: For multi-parameter functions, use FuzzedDataProvider to split fuzzer input
-   - Include header: `#include <fuzzer/FuzzedDataProvider.h>`
-   - Initialize: `FuzzedDataProvider fdp(data, size);`
-   - For DIRECT_FUZZ: Pass fuzzer data directly (simple 1-2 param functions)
-   - For CONSTRAIN: Use FuzzedDataProvider with constraints (e.g., ConsumeIntegralInRange)
-   - For FIX: Use fixed value ONLY if SRS documents strong API requirement
-   - ⚠️ **Avoid premature FIX**: Each fixed parameter limits code path exploration
-
-5. **ERROR HANDLING**
-   - Add proper error checks as specified in postconditions
-   - Handle failure cases gracefully
-   - Clean up resources in reverse order of allocation
-
-6. **API DEPENDENCIES & INITIALIZATION ORDER** (🔗 IMPORTANT)
-   - Follow the API dependency graph to ensure correct initialization sequence
-   - Call prerequisite functions (init/create/new) BEFORE the target function
-   - Respect data flow dependencies (produce data before consumption)
-   - Use the provided call sequence to avoid runtime errors
-   - See "API Dependency Analysis" section below for details
+1. **MUST call `{FUNCTION_NAME}` directly in LLVMFuzzerTestOneInput**
+2. **Use ONLY headers from Reference Skeleton** (exact paths)
+3. **Implement ALL [MANDATORY] requirements** from SRS (FR/PRE/POST/CON)
+4. **Follow API dependencies** (init before use, cleanup in reverse order)
 
 {ADDITIONAL_CONTEXT}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-## 🎯 PARAMETER CONSTRUCTION EXAMPLES (READ THIS FIRST!)
+## 🎯 PARAMETER CONSTRUCTION (FuzzedDataProvider)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-### Example 1: Multi-Parameter Function (USE FuzzedDataProvider)
 ```cpp
-// Target: int parse_url(const char* url, size_t len, const char* base, int flags)
-
-// ✅ GOOD: Split fuzzer input using FuzzedDataProvider
 #include <fuzzer/FuzzedDataProvider.h>
 
 extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
   FuzzedDataProvider fdp(data, size);
   
-  // Generate varied parameters from fuzzer input
-  std::string url = fdp.ConsumeRandomLengthString(1024);
-  std::string base = fdp.ConsumeRandomLengthString(256);
-  int flags = fdp.ConsumeIntegral<int>();
+  // DIRECT_FUZZ: simple pass-through
+  target_func(data, size);
   
-  // Call target with varied parameters
-  parse_url(url.c_str(), url.length(), base.c_str(), flags);
+  // CONSTRAIN: bounded range
+  int port = fdp.ConsumeIntegralInRange<int>(1, 65535);
+  
+  // CONSTRUCT: struct fields
+  std::string str = fdp.ConsumeRandomLengthString(1024);
+  int flags = fdp.ConsumeIntegral<uint32_t>();
+  
+  // Call target
+  target_func(str.c_str(), str.length(), flags);
   return 0;
 }
-
-// ❌ BAD: Fixed base parameter (limits coverage)
-extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
-  const char* base = "https://example.com/";  // FIXED - tests only one code path!
-  parse_url((char*)data, size, base, 0);      // Misses error handling, edge cases
-  return 0;
-}
-```
-
-### Example 2: Testing Edge Cases
-```cpp
-// ✅ GOOD: Use FuzzedDataProvider to test edge cases
-FuzzedDataProvider fdp(data, size);
-
-// Test NULL pointers, empty strings, boundary values
-bool use_null = fdp.ConsumeBool();
-const char* ptr = use_null ? nullptr : fdp.ConsumeRandomLengthString(256).c_str();
-
-// Test different code branches
-int mode = fdp.ConsumeIntegralInRange<int>(0, 3);
-switch (mode) {
-  case 0: target_func(ptr, 0); break;           // empty input
-  case 1: target_func(ptr, 1); break;           // single byte
-  case 2: target_func(ptr, SIZE_MAX); break;    // max value
-  case 3: target_func(ptr, fdp.ConsumeIntegral<size_t>()); break;  // random
-}
-```
-
-### Example 3: Constrained Parameters
-```cpp
-// SRS says: port must be in range 1-65535
-FuzzedDataProvider fdp(data, size);
-int port = fdp.ConsumeIntegralInRange<int>(1, 65535);  // Still varies, but constrained
-std::string host = fdp.ConsumeRandomLengthString(256);
-connect_to_host(host.c_str(), port);
 ```
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-## 🎯 IMPLEMENTATION GUIDANCE
+## 🎯 IMPLEMENTATION STEPS
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-### Step-by-Step Implementation Process
-
-**Step 1: Understand the SRS**
-- Read the functional requirements (FR-*) to understand what must be done
-- Read the preconditions (PRE-*) to understand what must be checked before calling the target
-- Read the postconditions (POST-*) to understand what must be checked after calling the target
-- Read the constraints (CON-*) to understand execution order and parameter ranges
-
-**Step 2: Follow the Reference Skeleton**
-- Start with the skeleton structure provided above
-- Keep all header files exactly as specified
-- Use the skeleton as the foundation for your implementation
-
-**Step 3: Implement Functional Requirements**
-- For each FR marked [MANDATORY]:
-  - Add the implementation code specified
-  - Ensure the requirement is satisfied before calling the target function
-  - Add comments referencing the FR-ID for traceability
-
-**Step 4: Add Precondition Checks**
-- For each PRE marked [MANDATORY]:
-  - Add the check method specified
-  - If check fails, return 0 or handle gracefully
-  - Add comments referencing the PRE-ID
-
-**Step 5: Call the Target Function**
-- Construct parameters according to parameter strategies
-- Call `{FUNCTION_NAME}` with the constructed parameters
-- This is the MOST IMPORTANT step - the target MUST be called
-
-**Step 6: Add Postcondition Checks**
-- For each POST marked [MANDATORY]:
-  - Check the condition specified
-  - Handle errors appropriately
-  - Add comments referencing the POST-ID
-
-**Step 7: Clean Up Resources**
-- Follow the cleanup sequence specified in constraints
-- Free resources in reverse order of allocation
-- Check return values of cleanup functions
+1. Use Reference Skeleton headers
+2. Check PRE-* conditions → return 0 if fail
+3. Construct parameters using SRS strategy (DIRECT_FUZZ/CONSTRAIN/FIX/CONSTRUCT)
+4. Call `{FUNCTION_NAME}`
+5. Check POST-* conditions
+6. Cleanup (reverse order)
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-## 📤 OUTPUT FORMAT
+## 📤 OUTPUT
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-<conclusion>
-[One paragraph summarizing:
-- Which archetype skeleton you used
-- Which mandatory requirements you implemented (list FR-IDs, PRE-IDs, POST-IDs)
-- Any project-specific adaptations you made
-- Confirmation that the target function `{FUNCTION_NAME}` is called]
-</conclusion>
-
-<fuzz_target>
-[Complete C/C++ code, ready to compile]
-</fuzz_target>
-
-<build_script>
-[Only if modifications to build script are needed]
-</build_script>
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-## ⚠️ VALIDATION CHECKLIST
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-Before submitting, verify:
-
-✓ **Target Function Call**: Does LLVMFuzzerTestOneInput contain a direct call to `{FUNCTION_NAME}`?
-  - If NO, ADD IT NOW - this is the PRIMARY requirement
-
-✓ **Mandatory Requirements**: Are ALL [MANDATORY] functional requirements implemented?
-  - Check each FR-* marked [MANDATORY]
-
-✓ **Preconditions**: Are ALL [MANDATORY] preconditions checked?
-  - Check each PRE-* marked [MANDATORY]
-
-✓ **Postconditions**: Are ALL [MANDATORY] postconditions checked?
-  - Check each POST-* marked [MANDATORY]
-
-✓ **Execution Order**: Is the execution order from constraints followed?
-  - Check CON-* with type: execution_order
-
-✓ **Headers**: Are headers used exactly as provided in Reference Skeleton?
-  - No modifications to header paths
-
-✓ **Compilation**: Will the code compile without modifications?
-  - All required headers included
-  - All functions properly declared
-  - No syntax errors
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-## 💡 BEST PRACTICES
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-1. **Traceability**: Add comments linking code to SRS requirements
-   ```c
-   // FR-1: Initialize storage structure
-   memset(&storage, 0, sizeof(storage));
-   
-   // PRE-1: Check size is sufficient
-   if (size < 4) return 0;
-   
-   // Call target function
-   int result = {FUNCTION_NAME}(...);
-   
-   // POST-1: Check return value
-   if (result != 0) {
-       // Handle error
-   }
-   ```
-
-2. **Error Handling**: Use goto for cleanup on error paths
-   ```c
-   if (init_failed) goto cleanup;
-   // ... more code ...
-   cleanup:
-       free_resources();
-       return 0;
-   ```
-
-3. **Resource Management**: Always clean up in reverse order
-   ```c
-   // Setup
-   init_a();
-   init_b();
-   init_c();
-   
-   // Cleanup (reverse order)
-   cleanup_c();
-   cleanup_b();
-   cleanup_a();
-   ```
-
-4. **Input Validation**: Check fuzzer input early
-   ```c
-   if (size < MIN_SIZE || size > MAX_SIZE) return 0;
-   if (data == NULL) return 0;
-   ```
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-**FINAL REMINDER**: The generated fuzz driver MUST call the target function `{FUNCTION_NAME}`. 
-Drivers that compile but don't call the target are 100% useless (coverage = 0%). 
-Your code will be automatically validated for this requirement.
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+<conclusion>Summary: skeleton used, [MANDATORY] items implemented, confirm `{FUNCTION_NAME}` called</conclusion>
+<fuzz_target>[Complete C/C++ code]</fuzz_target>
+<build_script>[Only if needed]</build_script>

@@ -29,7 +29,21 @@ Based on {EXAMPLES_COUNT} usage examples, generate a machine-readable API specif
     {"id": "CON-1", "type": "execution_order | parameter_range | resource_limit", "requirement": "...", "parameter": "...", "valid_range_or_sequence": "...", "rationale": "...", "evidence": "...", "implementation": {"sequence": [{"step": 1, "description": "...", "code": "..."}]}}
   ],
   "parameter_strategies": [
-    {"parameter": "...", "type": "...", "strategy": "DIRECT_FUZZ | CONSTRAIN | FIX", "construction_method": "...", "constraints": "...", "fixed_value": "...", "driver_code": "..."}
+    {
+      "parameter": "...", 
+      "type": "...", 
+      "strategy": "DIRECT_FUZZ | CONSTRAIN | FIX | CONSTRUCT", 
+      "construction_method": "...", 
+      "constraints": "...", 
+      "fixed_value": "...", 
+      "driver_code": "...",
+      "field_breakdown": {
+        "is_complex_type": false,
+        "primitive_fields": [
+          {"field_path": "...", "field_type": "...", "strategy": "...", "construction": "...", "rationale": "..."}
+        ]
+      }
+    }
   ],
   "quality_attributes": {
     "high_confidence_items": [...],
@@ -62,7 +76,13 @@ Based on {EXAMPLES_COUNT} usage examples, generate a machine-readable API specif
   * DIRECT_FUZZ: Simple functions with 1-2 parameters that accept raw buffers
   * CONSTRAIN: Parameters need validation/transformation (with FuzzedDataProvider)
   * FIX: **ONLY if absolutely required** (e.g., API precondition violation, documented requirement)
+  * CONSTRUCT: For complex struct/class parameters - breakdown to primitive fields
   * **CRITICAL**: Avoid premature use of FIX strategy - it severely limits coverage
+  * **field_breakdown**: 
+    - Set `is_complex_type: true` for struct/class/union parameters
+    - Use FuzzIntrospector API to extract struct field definitions
+    - For each primitive field, specify individual fuzzing strategy
+    - This enables fine-grained coverage of struct member combinations
 - **metadata.must_call_target**: MUST be "yes"
 - **metadata.recommended_test_vectors**: At least 3 test scenarios
 
@@ -95,6 +115,12 @@ target_func(input_str.c_str(), input_str.length(), base_str.c_str(), flags);
 ✅ GOOD: Use FuzzedDataProvider to vary all parameters
 ✅ GOOD: Test edge cases (empty strings, NULL, max values)
 ✅ GOOD: Explore multiple code paths through parameter variation
+
+**CONSTRUCT strategy (struct parameters):**
+- Breakdown struct to primitive fields with individual strategies
+- Query FuzzIntrospector for type definition if available
+- Schema: Add `field_breakdown` with `primitive_fields` array
+- Each field: `field_path`, `field_type`, `strategy`, `construction`, `rationale`
 
 ## Knowledge Sharing Tags (optional):
 `<api_constraint>...</api_constraint>` | `<known_fix error="...">...</known_fix>` | `<decision reason="...">...</decision>`

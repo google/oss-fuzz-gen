@@ -48,16 +48,18 @@ For functions with 2+ parameters, the DEFAULT strategy is to split fuzzer input 
    - Still varies values, but applies constraints
    - Example: `int port = fdp.ConsumeIntegralInRange<int>(1, 65535)`
 
-4. **FIX (LAST RESORT - avoid premature use)**
-   - ONLY use when API absolutely requires fixed value
-   - Must document strong rationale (API constraint, not convenience)
-   - Examples: magic numbers, version fields, required constants
-   - ⚠️ WARNING: Each fixed parameter reduces coverage potential
+4. **CONSTRUCT (for struct/class parameters)**
+   - For struct/class/union types, breakdown into primitive fields
+   - Specify strategy per field (enables field-level variation)
 
-**Common Mistakes to Avoid:**
-❌ Fixing parameters "for simplicity" → use FuzzedDataProvider instead
-❌ Fixing because "examples show constant X" → vary the value
-❌ Premature optimization → default to variation first
+5. **FIX (LAST RESORT)**
+   - Only when API requires fixed value (magic numbers, version fields)
+   - Document strong rationale
+
+**CONSTRUCT Strategy Process:**
+1. Recognize struct types: `struct Config *`, `TypeName *` (non-primitive)
+2. Query FuzzIntrospector for type definition (if available)
+3. List primitive fields + strategy for each (see final_summary_prompt for schema)
 
 OUTPUT STYLE
 
@@ -65,3 +67,4 @@ OUTPUT STYLE
 - Provide exact function call sequences, not pseudo-code
 - Focus on what matters for writing a correct, high-coverage driver
 - For parameter strategies, prefer variation over fixation
+- For complex types, always provide field breakdown when possible

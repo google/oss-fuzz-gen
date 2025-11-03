@@ -23,21 +23,19 @@ Key distinction:
 💡 COVERAGE IMPROVEMENT STRATEGIES
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-**Priority 1: Use FuzzedDataProvider** (DEFAULT for multi-parameter functions)
-- Split fuzzer input into multiple varied parameters
-- Avoid fixed/constant parameters unless API requires them
-- Override previous FIX decisions if coverage is low
+**Priority 1: Use FuzzedDataProvider**
+- Split fuzzer input → vary all parameters
+- Override fixed values if coverage is low
 
-**Priority 2: Increase Code Path Diversity**
-- Test edge cases: NULL, empty strings, boundary values
-- Exercise both success and error paths
-- Use ConsumeIntegral/ConsumeBool to vary control flow
+**Priority 2: Test Edge Cases**
+- NULL, empty, boundary values
+- Both success and error paths
 
-**Priority 3: Override Authority**
-When coverage is low due to premature FIX strategy:
-✅ Override even if SRS/prototyper used FIX
-✅ Change fixed parameters to FuzzedDataProvider-generated ones
-✅ Document the override with reasoning in <decision> tag
+**Priority 3: Vary Struct Fields**
+- If fixed struct fields → use FuzzedDataProvider per field
+- Check coverage for field-dependent branches (e.g., `if (cfg->timeout > 0)`)
+
+**Override Authority**: Change FIX → varied when coverage is low
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 📋 OUTPUT REQUIREMENTS

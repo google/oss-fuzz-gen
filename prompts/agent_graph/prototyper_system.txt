@@ -57,6 +57,16 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
 }
 ```
 
+**CONSTRUCT Strategy (struct parameters):**
+When SRS has `field_breakdown`, initialize each field using its `construction` code:
+```cpp
+struct Config cfg;
+memset(&cfg, 0, sizeof(cfg));
+cfg.field1 = fdp.ConsumeIntegral<int>();  // from SRS construction
+cfg.field2 = fdp.ConsumeRandomLengthString(256).c_str();
+target_function(&cfg);
+```
+
 **When to deviate from FuzzedDataProvider:**
 - Single-parameter buffer functions (DIRECT_FUZZ)
 - SRS explicitly documents API constraint requiring fixed value (rare!)
@@ -66,6 +76,7 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
 ❌ Don't fix parameters just because examples show constants
 ❌ Don't fix to "avoid errors" - test error paths too!
 ✅ Use FuzzedDataProvider to explore multiple code paths
+✅ For structs, vary each field independently using field_breakdown
 
 # Output Format
 ```c
