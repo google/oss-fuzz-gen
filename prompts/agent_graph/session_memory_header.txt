@@ -1,9 +1,7 @@
 # Current Consensus Constraints
 
 {CONSENSUS_CONTEXT}
-
 ---
-
 # Your Specific Task
 
 

@@ -1,9 +1,15 @@
 #!/bin/bash
 
-# lsof -i :8080 || netstat -tlnp | grep 8080
-# kill -9 $(lsof -i :8080 | awk '{print $2}')
+# Check if port 8080 is in use:
+# lsof -i :8080 || netstat -tlnp 2>/dev/null | grep 8080
 
-BENCHMARK_SET=conti-cmp
+# Kill process using port 8080 (if any):
+# PID=$(lsof -t -i :8080 2>/dev/null); [ -n "$PID" ] && kill -9 $PID || echo "No process on port 8080"
+
+# Alternative one-liner:
+# pkill -9 -f "port.*8080" 2>/dev/null || lsof -t -i :8080 2>/dev/null | xargs -r kill -9
+
+BENCHMARK_SET=comparison
 PYTHON=python
 
 set -x

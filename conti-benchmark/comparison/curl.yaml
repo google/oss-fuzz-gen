@@ -1,0 +1,93 @@
+"functions":
+- "name": "curl_easy_perform_ev"
+  "params":
+  - "name": "data"
+    "type": "struct Curl_easy*"
+  "return_type": "CURLcode"
+  "signature": "curl_easy_perform_ev(struct Curl_easy *data)"
+- "name": "pull_one_url"
+  "params":
+  - "name": "NaN"
+    "type": "void*"
+  "return_type": "void"
+  "signature": "*pull_one_url(void *NaN)"
+- "name": "curl_multi_socket"
+  "params":
+  - "name": "m"
+    "type": "CURLM*"
+  - "name": "s"
+    "type": "curl_socket_t"
+  - "name": "running_handles"
+    "type": "int*"
+  "return_type": "CURLMcode"
+  "signature": "curl_multi_socket(CURLM *m, curl_socket_t s, int *running_handles)"
+- "name": "test_thread"
+  "params":
+  - "name": "ptr"
+    "type": "void*"
+  "return_type": "unsigned int"
+  "signature": "test_thread(void *ptr)"
+- "name": "test"
+  "params":
+  - "name": "URL"
+    "type": "char*"
+  "return_type": "CURLcode"
+  "signature": "test(char *URL)"
+- "name": "curl_multi_socket_all"
+  "params":
+  - "name": "m"
+    "type": "CURLM*"
+  - "name": "running_handles"
+    "type": "int*"
+  "return_type": "CURLMcode"
+  "signature": "curl_multi_socket_all(CURLM *m, int *running_handles)"
+- "name": "operate"
+  "params":
+  - "name": "global"
+    "type": "struct GlobalConfig*"
+  - "name": "argc"
+    "type": "int"
+  - "name": "argv"
+    "type": "argv_item_t[]"
+  "return_type": "CURLcode"
+  "signature": "operate(struct GlobalConfig *global, int argc, argv_item_t argv[])"
+- "name": "Curl_http_proxy_create_CONNECT"
+  "params":
+  - "name": "preq"
+    "type": "struct httpreq**"
+  - "name": "cf"
+    "type": "struct Curl_cfilter*"
+  - "name": "data"
+    "type": "struct Curl_easy*"
+  - "name": "http_version_major"
+    "type": "int"
+  "return_type": "CURLcode"
+  "signature": |-
+    Curl_http_proxy_create_CONNECT(struct httpreq **preq,
+                                            struct Curl_cfilter *cf,
+                                            struct Curl_easy *data,
+                                            int http_version_major)
+- "name": "curl_easy_perform"
+  "params":
+  - "name": "data"
+    "type": "CURL*"
+  "return_type": "CURLcode"
+  "signature": "curl_easy_perform(CURL *data)"
+- "name": "curl_multi_socket_action"
+  "params":
+  - "name": "m"
+    "type": "CURLM*"
+  - "name": "s"
+    "type": "curl_socket_t"
+  - "name": "ev_bitmask"
+    "type": "int"
+  - "name": "running_handles"
+    "type": "int*"
+  "return_type": "CURLMcode"
+  "signature": |-
+    curl_multi_socket_action(CURLM *m, curl_socket_t s,
+                                       int ev_bitmask, int *running_handles)
+"language": "c++"
+"project": "curl"
+"target_name": "fuzz_url"
+"target_path": "/src/curl_fuzzer/fuzz_url.cc"

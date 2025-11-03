@@ -410,3 +410,6 @@ langgraph-checkpoint-postgres>=1.0.0
 # Tree-sitter for header extraction (Header Fix V2)
 tree-sitter>=0.25.0
 tree-sitter-cpp>=0.23.0
+
+# NetworkX for API dependency graph construction
+networkx>=3.0

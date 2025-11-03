@@ -341,6 +341,44 @@ class LangGraphFunctionAnalyzer(LangGraphAgent):
         else:
             logger.warning(f'⚠️ No API context extracted for {function_signature}', trial=self.trial)
         
+        # Build API dependency graph using tree-sitter + FuzzIntrospector
+        logger.info(f'🔗 Building API dependency graph for {function_signature}', trial=self.trial)
+        api_dependencies = None
+        try:
+            from agent_graph.api_dependency_analyzer import APIDependencyAnalyzer
+            analyzer = APIDependencyAnalyzer(project_name)
+            api_dependencies = analyzer.build_dependency_graph(function_signature)
+            
+            if api_dependencies and api_dependencies.get('call_sequence'):
+                prereq_count = len(api_dependencies.get('prerequisites', []))
+                data_dep_count = len(api_dependencies.get('data_dependencies', []))
+                call_seq_len = len(api_dependencies.get('call_sequence', []))
+                
+                logger.info(
+                    f'✅ API dependency graph built: {prereq_count} prerequisites, '
+                    f'{data_dep_count} data deps, call sequence length: {call_seq_len}',
+                    trial=self.trial
+                )
+                
+                # Log detailed dependency information
+                logger.info(
+                    f'🔗 Detailed API Dependency Information:\n'
+                    f'  ├─ Call Sequence ({call_seq_len}):\n' +
+                    '\n'.join([f'  │   {i+1}. {func}{"" if func != function_signature else " ← TARGET"}' 
+                              for i, func in enumerate(api_dependencies.get('call_sequence', []))]) +
+                    f'\n  ├─ Prerequisites ({prereq_count}):\n' +
+                    '\n'.join([f'  │   • {prereq}()' 
+                              for prereq in api_dependencies.get('prerequisites', [])]) +
+                    f'\n  └─ Data Dependencies ({data_dep_count}):\n' +
+                    '\n'.join([f'  │   • {src} → {dst}' 
+                              for src, dst in api_dependencies.get('data_dependencies', [])]),
+                    trial=self.trial
+                )
+            else:
+                logger.warning(f'⚠️ No API dependencies extracted for {function_signature}', trial=self.trial)
+        except Exception as e:
+            logger.warning(f'⚠️ Failed to build API dependency graph: {e}', trial=self.trial)
+        
         # Query FuzzIntrospector for header information
         logger.info(f'Querying FuzzIntrospector for header files of {function_signature}', trial=self.trial)
         header_info = self._extract_header_information(project_name, function_signature)
@@ -409,7 +447,8 @@ class LangGraphFunctionAnalyzer(LangGraphAgent):
             "analyzed": True,
             "header_information": header_info,  # Include header info for Prototyper
             "srs_data": srs_data,  # Include structured SRS data
-            "api_context": api_context  # Include API context for downstream agents
+            "api_context": api_context,  # Include API context for downstream agents
+            "api_dependencies": api_dependencies  # Include API dependency graph
         }
         
         # Write requirements to file (matching original FunctionAnalyzer behavior)
@@ -1468,6 +1507,50 @@ class LangGraphPrototyper(LangGraphAgent):
             output.append(f"- **Recommended Approach**: {metadata.get('recommended_approach', 'direct_call')}")
             output.append(f"- **Purpose**: {metadata.get('purpose', 'N/A')}")
             output.append("")
+        
+        # Add API Dependency Graph Information
+        api_dependencies = function_analysis.get('api_dependencies')
+        if api_dependencies and api_dependencies.get('call_sequence'):
+            output.append("### 🔗 API Dependency Analysis")
+            output.append("")
+            output.append("**CRITICAL**: Follow this dependency graph to ensure correct initialization sequence!")
+            output.append("")
+            
+            # Call sequence
+            call_seq = api_dependencies.get('call_sequence', [])
+            if call_seq:
+                output.append("#### ✅ Recommended Call Sequence")
+                output.append("Follow this order to ensure correct initialization:")
+                for i, func in enumerate(call_seq, 1):
+                    marker = " ← **TARGET FUNCTION**" if i == len(call_seq) else ""
+                    output.append(f"{i}. `{func}`{marker}")
+                output.append("")
+            
+            # Prerequisites
+            prereqs = api_dependencies.get('prerequisites', [])
+            if prereqs:
+                output.append("#### ⚠️ Prerequisites (MUST call before target)")
+                output.append("These initialization functions **MUST** be called before the target function:")
+                for prereq in prereqs:
+                    output.append(f"- `{prereq}()` - Initialization function")
+                output.append("")
+            
+            # Data dependencies
+            data_deps = api_dependencies.get('data_dependencies', [])
+            if data_deps:
+                output.append("#### 📊 Data Flow Dependencies")
+                for src, dst in data_deps:
+                    output.append(f"- `{src}` produces data consumed by `{dst}`")
+                output.append("")
+            
+            # Initialization code template
+            init_code = api_dependencies.get('initialization_code', [])
+            if init_code:
+                output.append("#### 💡 Initialization Code Template")
+                output.append("```c")
+                output.extend(init_code)
+                output.append("```")
+                output.append("")
         
         return "\n".join(output)
     

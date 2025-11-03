@@ -53,6 +53,13 @@ Translate the following SRS specification into a compilable and EFFECTIVE fuzz t
    - Handle failure cases gracefully
    - Clean up resources in reverse order of allocation
 
+6. **API DEPENDENCIES & INITIALIZATION ORDER** (🔗 IMPORTANT)
+   - Follow the API dependency graph to ensure correct initialization sequence
+   - Call prerequisite functions (init/create/new) BEFORE the target function
+   - Respect data flow dependencies (produce data before consumption)
+   - Use the provided call sequence to avoid runtime errors
+   - See "API Dependency Analysis" section below for details
+
 {ADDITIONAL_CONTEXT}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
