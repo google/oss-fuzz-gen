@@ -71,7 +71,8 @@ class APIContextExtractor:
             'type_definitions': {},
             'usage_examples': [],
             'initialization_patterns': [],
-            'related_functions': []
+            'related_functions': [],
+            'side_effects': {}  # NEW: 副作用分析
         }
         
         try:
@@ -90,11 +91,15 @@ class APIContextExtractor:
             # 5. 查找相关函数
             self._find_related_functions(context)
             
+            # 6. 识别副作用 (NEW)
+            self._identify_side_effects(function_signature, context)
+            
             logger.info(f"Successfully extracted API context for {function_signature}")
             logger.info(f"  - Parameters: {len(context['parameters'])}")
             logger.info(f"  - Type definitions: {len(context['type_definitions'])}")
             logger.info(f"  - Usage examples: {len(context['usage_examples'])}")
             logger.info(f"  - Initialization patterns: {len(context['initialization_patterns'])}")
+            logger.info(f"  - Side effects identified: {bool(context['side_effects'])}")
             
         except Exception as e:
             logger.error(f"Failed to extract API context: {e}", exc_info=True)
@@ -105,10 +110,29 @@ class APIContextExtractor:
         """提取函数签名信息"""
         logger.debug(f"Extracting function info for {func_sig}")
         
-        # 方法 1: 尝试从 FuzzIntrospector 获取函数签名
-        # 注意：FuzzIntrospector 可能没有直接的 "get function signature" API
-        # 我们需要从函数源码中解析
+        # 方法 1 (NEW): 使用 Debug Types API（更准确）
+        try:
+            arg_types = introspector.query_introspector_function_debug_arg_types(
+                self.project_name, func_sig
+            )
+            if arg_types:
+                # Debug types 返回参数类型列表
+                context['parameters'] = [
+                    {
+                        'name': f'param{i}',
+                        'type': arg_type
+                    }
+                    for i, arg_type in enumerate(arg_types)
+                ]
+                logger.debug(f"Extracted {len(arg_types)} parameters from debug types")
+                
+                # 尝试获取返回类型（从函数签名推断）
+                context['return_type'] = self._infer_return_type_from_signature(func_sig)
+                return
+        except Exception as e:
+            logger.debug(f"Could not get debug types: {e}")
         
+        # 方法 2 (Fallback): 从源码解析
         func_source = introspector.query_introspector_function_source(
             self.project_name, func_sig
         )
@@ -122,10 +146,26 @@ class APIContextExtractor:
                 logger.debug(f"Parsed {len(context['parameters'])} parameters from source")
                 return
         
-        # 方法 2: 从函数名推断（fallback）
-        logger.warning(f"Could not get function source for {func_sig}, using fallback")
+        # 方法 3: 使用默认值（最后手段）
+        logger.warning(f"Could not get function info for {func_sig}, using defaults")
         context['parameters'] = []
         context['return_type'] = 'int'  # 默认
+    
+    def _infer_return_type_from_signature(self, func_sig: str) -> str:
+        """从函数签名推断返回类型"""
+        # 简单启发式规则
+        if func_sig.startswith('void '):
+            return 'void'
+        elif func_sig.startswith('int '):
+            return 'int'
+        elif func_sig.startswith('char '):
+            return 'char'
+        elif func_sig.startswith('bool '):
+            return 'bool'
+        elif '*' in func_sig.split('(')[0]:
+            return 'pointer'
+        else:
+            return 'int'  # 默认
     
     def _parse_function_signature_from_source(self, source: str) -> Optional[Dict]:
         """从源码中解析函数签名"""
@@ -198,19 +238,45 @@ class APIContextExtractor:
                 logger.debug(f"Found type definition for {param_type}")
     
     def _extract_usage_examples(self, func_sig: str, context: Dict):
-        """从现有代码中提取用法示例"""
+        """从现有代码中提取用法示例（优化采样策略）"""
         logger.debug(f"Extracting usage examples for {func_sig}")
         
+        # 方法 1 (NEW): 使用 Sample XRefs API（预处理的高质量示例）
         try:
-            # 查询调用点
+            sample_xrefs = introspector.query_introspector_sample_xrefs(
+                self.project_name, func_sig
+            )
+            if sample_xrefs:
+                logger.debug(f"Found {len(sample_xrefs)} sample cross-references")
+                
+                # Sample xrefs 已经是预处理的代码片段
+                for i, source_code in enumerate(sample_xrefs[:3]):  # 限制3个
+                    context['usage_examples'].append({
+                        'source': source_code,
+                        'file': '',  # Sample xrefs 不包含文件信息
+                        'function': f'example_{i+1}',
+                        'line': 0,
+                        'source_type': 'sample_xref'
+                    })
+                logger.debug(f"Added {len(context['usage_examples'])} sample xref examples")
+                return  # 如果有 sample xrefs，优先使用
+        except Exception as e:
+            logger.debug(f"Could not get sample xrefs: {e}")
+        
+        # 方法 2 (Fallback): 使用 Call Sites Metadata（需要优先级排序）
+        try:
             call_sites = introspector.query_introspector_call_sites_metadata(
                 self.project_name, func_sig
             )
             
             logger.debug(f"Found {len(call_sites)} call sites")
             
+            # 优化：按优先级排序 call sites
+            # 优先选择：1) 测试文件 2) 示例文件 3) 其他源文件
+            prioritized_call_sites = self._prioritize_call_sites(call_sites)
+            
             # 限制数量，避免过多
-            for call_site in call_sites[:3]:
+            for call_site in prioritized_call_sites[:3]:
                 try:
                     caller_func = call_site.get('src_func', '')
                     if not caller_func:
@@ -232,7 +298,9 @@ class APIContextExtractor:
                             'source': snippet or caller_source[:1000],  # 限制长度
                             'file': call_site.get('src_file', ''),
                             'function': caller_func,
-                            'line': call_site.get('src_line', 0)
+                            'line': call_site.get('src_line', 0),
+                            'source_type': 'call_site',
+                            'priority': call_site.get('priority', 0)
                         })
                         
                         logger.debug(f"Added usage example from {caller_func}")
@@ -241,6 +309,41 @@ class APIContextExtractor:
         
         except Exception as e:
             logger.debug(f"Could not query call sites: {e}")
+    
+    def _prioritize_call_sites(self, call_sites: List[Dict]) -> List[Dict]:
+        """优先级排序 call sites，优先选择高质量示例"""
+        def get_priority(call_site: Dict) -> int:
+            """计算 call site 的优先级（值越大优先级越高）"""
+            src_file = call_site.get('src_file', '').lower()
+            priority = 0
+            
+            # 优先级1: 测试文件（最有价值的示例）
+            if 'test' in src_file or 'example' in src_file:
+                priority += 100
+            
+            # 优先级2: Fuzzer文件（实际fuzzing用法）
+            if 'fuzz' in src_file or 'harness' in src_file:
+                priority += 80
+            
+            # 优先级3: 示例/demo文件
+            if 'demo' in src_file or 'sample' in src_file:
+                priority += 60
+            
+            # 优先级4: 避免内部/私有实现
+            if 'internal' in src_file or 'private' in src_file:
+                priority -= 50
+            
+            # 添加随机性，避免总是选择同一个
+            priority += hash(src_file) % 10
+            
+            return priority
+        
+        # 为每个 call site 添加优先级
+        for cs in call_sites:
+            cs['priority'] = get_priority(cs)
+        
+        # 按优先级排序（降序）
+        return sorted(call_sites, key=lambda x: x.get('priority', 0), reverse=True)
     
     def _extract_relevant_snippet(self, source: str, func_name: str) -> Optional[str]:
         """提取包含函数调用的相关代码片段"""
@@ -343,6 +446,116 @@ class APIContextExtractor:
                         'for_type': param_type
                     })
     
+    def _identify_side_effects(self, func_sig: str, context: Dict):
+        """识别函数的副作用
+        
+        使用两种方法：
+        1. 分析函数源代码中的关键词（快速但可能不完整）
+        2. 分析函数调用的其他函数（functions_reached）（更准确）
+        """
+        logger.debug(f"Identifying side effects for {func_sig}")
+        
+        side_effects = {
+            'modifies_global_state': False,
+            'performs_io': False,
+            'allocates_memory': False,
+            'frees_memory': False,
+            'has_output_params': False,
+            'indicators': []
+        }
+        
+        try:
+            # 方法1: 从函数源码推断副作用（原有方法）
+            func_source = introspector.query_introspector_function_source(
+                self.project_name, func_sig
+            )
+            
+            if func_source:
+                source_lower = func_source.lower()
+                
+                # 检查I/O操作
+                io_keywords = ['printf', 'fprintf', 'write', 'read', 'fwrite', 'fread', 
+                               'fopen', 'fclose', 'open(', 'close(']
+                if any(kw in source_lower for kw in io_keywords):
+                    side_effects['performs_io'] = True
+                    side_effects['indicators'].append('Contains I/O operations (source)')
+                
+                # 检查内存分配
+                alloc_keywords = ['malloc', 'calloc', 'realloc', 'new ', 'alloc']
+                if any(kw in source_lower for kw in alloc_keywords):
+                    side_effects['allocates_memory'] = True
+                    side_effects['indicators'].append('Allocates memory (source)')
+                
+                # 检查内存释放
+                free_keywords = ['free(', 'delete ', 'release']
+                if any(kw in source_lower for kw in free_keywords):
+                    side_effects['frees_memory'] = True
+                    side_effects['indicators'].append('Frees memory (source)')
+                
+                # 检查全局变量访问
+                if 'static ' in source_lower or 'global' in source_lower:
+                    side_effects['modifies_global_state'] = True
+                    side_effects['indicators'].append('May modify global state (source)')
+            
+            # 方法2: 从 functions_reached 推断副作用（新增）
+            try:
+                functions_reached = introspector.query_introspector_functions_reached(
+                    self.project_name, func_sig
+                )
+                
+                if functions_reached:
+                    logger.debug(f"Analyzing {len(functions_reached)} functions reached")
+                    
+                    for called_func in functions_reached:
+                        func_lower = called_func.lower()
+                        
+                        # I/O 函数
+                        io_funcs = ['printf', 'fprintf', 'scanf', 'fscanf', 'fopen', 
+                                   'fclose', 'fread', 'fwrite', 'write', 'read', 
+                                   'open', 'close', 'puts', 'fputs', 'gets', 'fgets']
+                        if any(io_func in func_lower for io_func in io_funcs):
+                            if not side_effects['performs_io']:
+                                side_effects['performs_io'] = True
+                                side_effects['indicators'].append(
+                                    f'Calls I/O function: {called_func[:50]}'
+                                )
+                        
+                        # 内存管理函数
+                        alloc_funcs = ['malloc', 'calloc', 'realloc', 'operator new']
+                        if any(alloc_func in func_lower for alloc_func in alloc_funcs):
+                            if not side_effects['allocates_memory']:
+                                side_effects['allocates_memory'] = True
+                                side_effects['indicators'].append(
+                                    f'Calls allocation: {called_func[:50]}'
+                                )
+                        
+                        free_funcs = ['free', 'delete', 'operator delete']
+                        if any(free_func in func_lower for free_func in free_funcs):
+                            if not side_effects['frees_memory']:
+                                side_effects['frees_memory'] = True
+                                side_effects['indicators'].append(
+                                    f'Calls free: {called_func[:50]}'
+                                )
+            
+            except Exception as e:
+                logger.debug(f"Could not analyze functions_reached: {e}")
+            
+            # 从参数推断副作用
+            for param in context.get('parameters', []):
+                param_type = param.get('type', '')
+                # 输出参数（非const指针）
+                if '*' in param_type and 'const' not in param_type.lower():
+                    side_effects['has_output_params'] = True
+                    side_effects['indicators'].append(f'Has output parameter: {param["name"]}')
+                    break
+            
+            context['side_effects'] = side_effects
+            logger.debug(f"Identified {len(side_effects['indicators'])} side effect indicators")
+            
+        except Exception as e:
+            logger.debug(f"Could not identify side effects: {e}")
+            context['side_effects'] = side_effects
+    
     def _function_exists(self, func_name: str) -> bool:
         """检查函数是否存在"""
         # 懒加载：第一次调用时获取所有函数列表
@@ -404,7 +617,7 @@ def get_api_context(project_name: str, function_signature: str) -> Optional[Dict
 
 def format_api_context_for_prompt(context: Dict) -> str:
     """
-    将 API 上下文格式化为适合注入 prompt 的文本
+    将 API 上下文格式化为适合注入 prompt 的文本（优化版）
     
     Args:
         context: API 上下文字典
@@ -424,7 +637,15 @@ def format_api_context_for_prompt(context: Dict) -> str:
             sections.append(f"- `{param['name']}` ({param['type']})")
         sections.append("")
     
-    # 2. 初始化要求（重要！）
+    # 2. 副作用信息（NEW - 重要！）
+    if context.get('side_effects') and context['side_effects'].get('indicators'):
+        sections.append("### ⚠️ Side Effects & Behavior\n")
+        side_effects = context['side_effects']
+        for indicator in side_effects['indicators']:
+            sections.append(f"- {indicator}")
+        sections.append("")
+    
+    # 3. 初始化要求（重要！）
     if context.get('initialization_patterns'):
         sections.append("### ⚠️ Initialization Requirements\n")
         for pattern in context['initialization_patterns']:
@@ -435,7 +656,7 @@ def format_api_context_for_prompt(context: Dict) -> str:
             sections.append(f"  Reason: {pattern['reason']}")
         sections.append("")
     
-    # 3. 相关函数
+    # 4. 相关函数
     if context.get('related_functions'):
         init_funcs = [f for f in context['related_functions'] if f['type'] == 'initialization']
         cleanup_funcs = [f for f in context['related_functions'] if f['type'] == 'cleanup']
@@ -452,11 +673,14 @@ def format_api_context_for_prompt(context: Dict) -> str:
                 sections.append(f"- `{func['name']}` for `{func['for_type']}`")
             sections.append("")
     
-    # 4. 用法示例
+    # 5. 用法示例（优化：区分 sample xref 和 call site）
     if context.get('usage_examples'):
         sections.append("### Usage Examples from Existing Code\n")
         for i, example in enumerate(context['usage_examples'][:2], 1):
-            sections.append(f"#### Example {i}: {example['function']}")
+            source_type = example.get('source_type', 'unknown')
+            quality_indicator = "✓ High-quality" if source_type == 'sample_xref' else ""
+            
+            sections.append(f"#### Example {i}: {example['function']} {quality_indicator}")
             if example.get('file'):
                 sections.append(f"Source: {example['file']}")
             sections.append(f"```c\n{example['source']}\n```\n")

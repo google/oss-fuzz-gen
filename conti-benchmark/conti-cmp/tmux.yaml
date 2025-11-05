@@ -18,7 +18,8 @@
   - "name": "fflag"
     "type": "bool "
   "return_type": "int"
-  "signature": "DW_TAG_enumeration_typecmd_retval cmd_attach_session(struct cmdq_item *, const char *, int, int, int, const char *, int, const char *)"
+  "signature": "enum cmd_retval cmd_attach_session(struct cmdq_item *item, const char *tflag, int dflag,
+    int xflag, int rflag, const char *cflag, int Eflag, const char *fflag)"
 "language": "c"
 "project": "tmux"
 "target_name": "input-fuzzer"

@@ -1,5 +1,0 @@
-"functions":
-"language": "c++"
-"project": "brpc"
-"target_name": "fuzz_butil"
-"target_path": "/src/brpc/test/fuzzing/fuzz_butil.cpp"

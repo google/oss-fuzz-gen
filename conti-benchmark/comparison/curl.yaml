@@ -4,13 +4,13 @@
   - "name": "data"
     "type": "struct Curl_easy*"
   "return_type": "CURLcode"
-  "signature": "curl_easy_perform_ev(struct Curl_easy *data)"
+  "signature": "CURLcode curl_easy_perform_ev(struct Curl_easy *data)"
 - "name": "pull_one_url"
   "params":
   - "name": "NaN"
     "type": "void*"
   "return_type": "void"
-  "signature": "*pull_one_url(void *NaN)"
+  "signature": "void *pull_one_url(void *NaN)"
 - "name": "curl_multi_socket"
   "params":
   - "name": "m"
@@ -20,19 +20,13 @@
   - "name": "running_handles"
     "type": "int*"
   "return_type": "CURLMcode"
-  "signature": "curl_multi_socket(CURLM *m, curl_socket_t s, int *running_handles)"
+  "signature": "CURLMcode curl_multi_socket(CURLM *m, curl_socket_t s, int *running_handles)"
 - "name": "test_thread"
   "params":
   - "name": "ptr"
     "type": "void*"
   "return_type": "unsigned int"
-  "signature": "test_thread(void *ptr)"
-- "name": "test"
-  "params":
-  - "name": "URL"
-    "type": "char*"
-  "return_type": "CURLcode"
-  "signature": "test(char *URL)"
+  "signature": "unsigned int test_thread(void *ptr)"
 - "name": "curl_multi_socket_all"
   "params":
   - "name": "m"
@@ -40,7 +34,7 @@
   - "name": "running_handles"
     "type": "int*"
   "return_type": "CURLMcode"
-  "signature": "curl_multi_socket_all(CURLM *m, int *running_handles)"
+  "signature": "CURLMcode curl_multi_socket_all(CURLM *m, int *running_handles)"
 - "name": "operate"
   "params":
   - "name": "global"
@@ -50,7 +44,7 @@
   - "name": "argv"
     "type": "argv_item_t[]"
   "return_type": "CURLcode"
-  "signature": "operate(struct GlobalConfig *global, int argc, argv_item_t argv[])"
+  "signature": "CURLcode operate(int argc, argv_item_t argv[])"
 - "name": "Curl_http_proxy_create_CONNECT"
   "params":
   - "name": "preq"
@@ -63,7 +57,7 @@
     "type": "int"
   "return_type": "CURLcode"
   "signature": |-
-    Curl_http_proxy_create_CONNECT(struct httpreq **preq,
+    CURLcode Curl_http_proxy_create_CONNECT(struct httpreq **preq,
                                             struct Curl_cfilter *cf,
                                             struct Curl_easy *data,
                                             int http_version_major)
@@ -72,7 +66,7 @@
   - "name": "data"
     "type": "CURL*"
   "return_type": "CURLcode"
-  "signature": "curl_easy_perform(CURL *data)"
+  "signature": "CURLcode curl_easy_perform(CURL *data)"
 - "name": "curl_multi_socket_action"
   "params":
   - "name": "m"
@@ -85,7 +79,7 @@
     "type": "int*"
   "return_type": "CURLMcode"
   "signature": |-
-    curl_multi_socket_action(CURLM *m, curl_socket_t s,
+    CURLMcode curl_multi_socket_action(CURLM *m, curl_socket_t s,
                                        int ev_bitmask, int *running_handles)
 "language": "c++"
 "project": "curl"

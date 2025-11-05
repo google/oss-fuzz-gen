@@ -873,6 +873,25 @@ def query_introspector_target_function(project: str, function: str) -> dict:
 
   return _get_data(resp, 'function', {})
 
+def query_introspector_functions_reached(project: str, func_sig: str) -> list[str]:
+  """Queries FuzzIntrospector API for functions reached by |func_sig|.
+  
+  Returns a list of function names that are statically reachable from func_sig.
+  This is useful for analyzing side effects by examining what functions are called.
+  
+  Args:
+    project: The project name
+    func_sig: The function signature
+    
+  Returns:
+    List of function names reached by this function (empty list if not found)
+  """
+  target_func = query_introspector_target_function(project, func_sig)
+  
+  # The target function dict should contain 'functions_reached' field
+  # If not present, return empty list
+  return target_func.get('functions_reached', [])
+
 def query_introspector_for_far_reach_low_cov(project):
   functions = query_introspector_oracle(project, INTROSPECTOR_ORACLE_FAR_REACH)
   return functions

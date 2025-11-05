@@ -2633,11 +2633,6 @@ class LangGraphCrashAnalyzer(LangGraphAgent):
             ADDITIONAL_CONTEXT=f"Project: {benchmark.project}\nFunction: {benchmark.function_name}"
         )
         
-        # Add tool tutorials
-        user_prompt += "\n\n**Available Tools**:\n\n"
-        user_prompt += self.gdb_tool.tutorial() + "\n\n"
-        user_prompt += self.bash_tool.tutorial()
-        
         # Create prompt object
         prompt = self.llm.prompt_type()(None)
         prompt.add_priming(user_prompt)
@@ -2864,14 +2859,11 @@ class LangGraphCrashAnalyzer(LangGraphAgent):
     
     def _handle_invalid_tool_usage(self, tools, cur_round: int, 
                                   response: str, prompt, extra: str = '') -> Any:
-        """Handle invalid tool usage by re-teaching the LLM."""
+        """Handle invalid tool usage."""
         logger.warning(f'ROUND {cur_round:02d} Invalid response from LLM: {response}',
                       trial=self.trial)
         
-        prompt_text = ('No valid instruction received. Please follow the '
-                      'interaction protocols for available tools:\n\n')
-        for tool in tools:
-            prompt_text += f'{tool.tutorial()}\n\n'
+        prompt_text = 'No valid instruction received. Please use the available tools properly.\n\n'
         prompt.append(prompt_text)
         
         if extra:
@@ -3147,7 +3139,7 @@ class LangGraphCoverageAnalyzer(LangGraphAgent):
             fuzz_target=fuzz_target_source,
             fuzzing_log=fuzzing_log,
             function_requirements=function_requirements,
-            additional_context=self.inspect_tool.tutorial()
+            additional_context=""
         )
         
         # 注入session_memory，让CoverageAnalyzer能看到已有的覆盖率策略
@@ -3268,9 +3260,7 @@ class LangGraphCoverageAnalyzer(LangGraphAgent):
         
         # No valid instruction received
         if not response:
-            return ('No valid instruction received. Please follow the '
-                   'interaction protocols for available tools:\n\n' +
-                   f'{self.inspect_tool.tutorial()}\n\n')
+            return 'No valid instruction received. Please use the available tools properly.\n\n'
         
         return None
     
@@ -3386,7 +3376,7 @@ class LangGraphContextAnalyzer(LangGraphAgent):
             FUNCTION_REQUIREMENTS=function_requirements,
             CRASH_STACKTRACE=stack_trace,
             CRASH_ANALYSIS=crash_insight,
-            ADDITIONAL_CONTEXT=f"**Available Tools**:\n\n{self.inspect_tool.tutorial()}\n\nProject directory: {self.inspect_tool.project_dir}"
+            ADDITIONAL_CONTEXT=f"Project directory: {self.inspect_tool.project_dir}"
         )
         
         # 注入session_memory，让ContextAnalyzer能看到已有的决策和约束
@@ -3645,7 +3635,6 @@ class LangGraphContextAnalyzer(LangGraphAgent):
         # Create a simple error correction prompt
         prompt = self.llm.prompt_type()(None)
         prompt.add_problem('No valid instruction received. Please follow the interaction protocols.\n\n')
-        prompt.add_problem(self.inspect_tool.tutorial())
         prompt.add_problem('\n\nPlease provide a valid analysis following the requested format.')
         
         return prompt
