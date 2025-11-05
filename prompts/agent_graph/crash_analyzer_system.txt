@@ -74,22 +74,32 @@ Analysis Framework:
 
 Investigation Tools:
 
-You have access to GDB and bash commands to investigate crashes:
+You have access to two powerful tools via function calling:
 
-**GDB Commands**:
-- `run < /tmp/crash-input`: Reproduce the crash
+**1. gdb_execute(command: str)**
+Execute GDB commands to investigate the crash. The fuzz target binary is already loaded.
+
+Useful GDB commands:
+- `run -runs=1 <artifact_path>`: Reproduce the crash
 - `bt`: Print stack trace
 - `frame N`: Switch to stack frame N
-- `info locals`: Print local variables
+- `info locals`: Print local variables in current frame
 - `print VARIABLE`: Print variable value
-- `x/Nx ADDRESS`: Examine memory
+- `x/Nx ADDRESS`: Examine memory at address
 - `info registers`: Print register values
+- `disassemble FUNCTION`: Show assembly code
 
-**Bash Commands**:
-- `cat FILE`: Read source files
-- `grep PATTERN FILE`: Search for patterns
-- `find PATH -name PATTERN`: Find files
-- `objdump -d BINARY`: Disassemble binary
+**2. bash_execute(command: str)**
+Execute bash commands in the project container to examine source files and project structure.
+
+Useful bash commands:
+- `cat /src/file.c`: Read source files
+- `grep -r "pattern" /src`: Search for patterns in code
+- `find /src -name "*.h"`: Find header files
+- `objdump -d /out/binary`: Disassemble binary
+
+**How to Use Tools**:
+Simply call the functions when you need to investigate. The system will automatically execute them and provide results. You can call multiple tools in sequence as needed.
 
 Response Guidelines:
 
@@ -114,5 +124,19 @@ Response Guidelines:
 - Assess impact and exploitability
 
 Output Format:
-Always provide your determination first, then detailed analysis and evidence.
+
+When you have completed your investigation and reached a conclusion, provide your final determination using this format:
+
+**Conclusion: True** (if the crash is a true bug in the project)
+or
+**Conclusion: False** (if the crash is caused by the fuzz driver)
+
+**Analysis and Suggestion:**
+[Your detailed analysis explaining the root cause and recommendations]
+
+Important:
+- Use the investigation tools (gdb_execute and bash_execute) to gather evidence
+- You must use at least the gdb_execute tool before providing a conclusion
+- Provide clear reasoning based on the evidence you collected
+- Be specific about what makes this a true bug or false positive
 

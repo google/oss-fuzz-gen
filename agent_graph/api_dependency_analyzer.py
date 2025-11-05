@@ -28,6 +28,13 @@ import re
 from typing import Dict, List, Optional, Set, Tuple
 from data_prep import introspector
 from agent_graph.api_context_extractor import APIContextExtractor
+from agent_graph.api_heuristics import (
+    INIT_SUFFIXES,
+    CLEANUP_SUFFIXES,
+    clean_type_name,
+    is_primitive_type,
+    get_base_name_from_type
+)
 
 # 尝试导入 networkx
 try:
@@ -85,13 +92,6 @@ class APIDependencyAnalyzer:
     """
     基于现有的 tree-sitter + FuzzIntrospector 构建依赖图
     """
-    
-    # 初始化函数后缀
-    INIT_SUFFIXES = ['_init', '_create', '_new', '_alloc', '_setup', '_open']
-    
-    # 清理函数后缀
-    CLEANUP_SUFFIXES = ['_destroy', '_free', '_delete', '_cleanup', '_close', 
-                        '_release', '_deinit', '_fini']
     
     def __init__(self, project_name: str, project_dir: str = ""):
         self.project_name = project_name
@@ -188,10 +188,10 @@ class APIDependencyAnalyzer:
         # 从 initialization_patterns 中提取
         for pattern in context.get('initialization_patterns', []):
             param_type = pattern['type']
-            base_name = param_type.replace('_t', '').replace('struct ', '').strip()
+            base_name = get_base_name_from_type(param_type)
             
             # 检查是否存在 base_name_init/create/new
-            for suffix in self.INIT_SUFFIXES:
+            for suffix in INIT_SUFFIXES:
                 init_func = base_name + suffix
                 if self._function_exists(init_func):
                     prerequisites.append(init_func)
@@ -222,11 +222,11 @@ class APIDependencyAnalyzer:
         deps = []
         
         for param in context.get('parameters', []):
-            param_type = self.extractor._clean_type(param['type'])
+            param_type = clean_type_name(param['type'])
             param_name = param['name']
             
             # 跳过基本类型
-            if self.extractor._is_primitive_type(param_type):
+            if is_primitive_type(param_type):
                 continue
             
             # 查找生产者函数（返回该类型的函数）
@@ -245,10 +245,10 @@ class APIDependencyAnalyzer:
         1. base_name_create/new/alloc
         2. 查询 FuzzIntrospector 获取返回该类型的函数
         """
-        base = type_name.replace('_t', '').replace('struct ', '').strip()
+        base = get_base_name_from_type(type_name)
         
         # 规则 1: 常见的构造器命名模式
-        for suffix in self.INIT_SUFFIXES:
+        for suffix in INIT_SUFFIXES:
             candidate = base + suffix
             if self._function_exists(candidate):
                 return candidate

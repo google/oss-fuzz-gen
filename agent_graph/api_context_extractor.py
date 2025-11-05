@@ -24,24 +24,21 @@ import logging
 import re
 from typing import Dict, List, Optional, Set
 from data_prep import introspector
+from agent_graph.api_heuristics import (
+    INIT_SUFFIXES,
+    CLEANUP_SUFFIXES,
+    INIT_REQUIRED_KEYWORDS,
+    clean_type_name,
+    is_primitive_type,
+    requires_initialization as check_requires_initialization,
+    get_base_name_from_type
+)
 
 logger = logging.getLogger(__name__)
 
 
 class APIContextExtractor:
     """从 FuzzIntrospector 提取 API 上下文"""
-    
-    # 需要初始化的类型关键词
-    INIT_REQUIRED_KEYWORDS = [
-        'storage', 'context', 'state', 'buffer', 
-        'data', 'cache', 'pool', 'arena'
-    ]
-    
-    # 初始化函数后缀
-    INIT_SUFFIXES = ['_init', '_create', '_new', '_alloc', '_setup']
-    
-    # 清理函数后缀
-    CLEANUP_SUFFIXES = ['_destroy', '_free', '_delete', '_cleanup', '_close', '_release']
     
     def __init__(self, project_name: str):
         self.project_name = project_name
@@ -226,10 +223,10 @@ class APIContextExtractor:
         
         # 为每个参数查找类型定义
         for param in context['parameters']:
-            param_type = self._clean_type(param['type'])
+            param_type = clean_type_name(param['type'])
             
             # 跳过基本类型
-            if self._is_primitive_type(param_type):
+            if is_primitive_type(param_type):
                 continue
             
             # 查找类型定义
@@ -364,11 +361,11 @@ class APIContextExtractor:
         logger.debug("Identifying initialization patterns")
         
         for param in context['parameters']:
-            param_type = self._clean_type(param['type'])
+            param_type = clean_type_name(param['type'])
             param_name = param['name']
             
             # 检查是否需要初始化
-            if self._requires_initialization(param_type, param):
+            if check_requires_initialization(param_type, param):
                 # 推断初始化方法
                 init_method = self._infer_initialization_method(param_type)
                 
@@ -381,27 +378,13 @@ class APIContextExtractor:
                 
                 logger.debug(f"Identified initialization pattern for {param_type}")
     
-    def _requires_initialization(self, param_type: str, param: Dict) -> bool:
-        """判断参数是否需要初始化"""
-        # 规则 1: 类型名包含特定关键词
-        type_lower = param_type.lower()
-        if any(kw in type_lower for kw in self.INIT_REQUIRED_KEYWORDS):
-            return True
-        
-        # 规则 2: 是输出参数（指针类型）且不是 const
-        if '*' in param['type'] and 'const' not in param['type']:
-            # 进一步检查：如果是结构体类型
-            if not self._is_primitive_type(param_type):
-                return True
-        
-        return False
     
     def _infer_initialization_method(self, param_type: str) -> str:
         """推断初始化方法"""
-        base_name = param_type.replace('_t', '').replace('struct ', '')
+        base_name = get_base_name_from_type(param_type)
         
         # 检查是否存在初始化函数
-        for suffix in self.INIT_SUFFIXES:
+        for suffix in INIT_SUFFIXES:
             init_func = base_name + suffix
             if self._function_exists(init_func):
                 return f"{init_func}(&var)"
@@ -413,7 +396,7 @@ class APIContextExtractor:
         """获取需要初始化的原因"""
         type_lower = param_type.lower()
         
-        for kw in self.INIT_REQUIRED_KEYWORDS:
+        for kw in INIT_REQUIRED_KEYWORDS:
             if kw in type_lower:
                 return f"Type name contains '{kw}', typically requires initialization"
         
@@ -424,10 +407,10 @@ class APIContextExtractor:
         logger.debug("Finding related functions")
         
         for param_type in context['type_definitions'].keys():
-            base_name = param_type.replace('_t', '').replace('struct ', '')
+            base_name = get_base_name_from_type(param_type)
             
             # 查找初始化函数
-            for suffix in self.INIT_SUFFIXES:
+            for suffix in INIT_SUFFIXES:
                 func_name = base_name + suffix
                 if self._function_exists(func_name):
                     context['related_functions'].append({
@@ -437,7 +420,7 @@ class APIContextExtractor:
                     })
             
             # 查找清理函数
-            for suffix in self.CLEANUP_SUFFIXES:
+            for suffix in CLEANUP_SUFFIXES:
                 func_name = base_name + suffix
                 if self._function_exists(func_name):
                     context['related_functions'].append({
@@ -574,25 +557,6 @@ class APIContextExtractor:
                 self._all_functions_cache = set()
         
         return func_name in self._all_functions_cache
-    
-    @staticmethod
-    def _clean_type(type_str: str) -> str:
-        """清理类型字符串（去掉指针、const 等）"""
-        cleaned = type_str.replace('const', '').replace('*', '').replace('&', '').strip()
-        # 去掉 struct/enum 前缀
-        cleaned = re.sub(r'^(struct|enum|union)\s+', '', cleaned)
-        return cleaned
-    
-    @staticmethod
-    def _is_primitive_type(type_name: str) -> bool:
-        """判断是否是基本类型"""
-        primitives = {
-            'int', 'char', 'short', 'long', 'float', 'double', 
-            'void', 'bool', 'size_t', 'uint8_t', 'uint16_t', 
-            'uint32_t', 'uint64_t', 'int8_t', 'int16_t', 
-            'int32_t', 'int64_t'
-        }
-        return type_name in primitives
 
 
 def get_api_context(project_name: str, function_signature: str) -> Optional[Dict]:

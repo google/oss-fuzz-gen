@@ -160,6 +160,58 @@ class LLM:
     
     # Call the existing chat_llm method
     return self.chat_llm(client, prompt)
+  
+  def chat_with_tools(
+      self,
+      messages: list[dict[str, str]],
+      tools: list[dict[str, Any]]
+  ) -> dict[str, Any]:
+    """
+    Chat with LLM and provide tool definitions for function calling.
+    
+    This method enables LLM to call tools (functions) as needed. The LLM
+    will return either a text response or tool calls.
+    
+    Args:
+        messages: List of message dicts with 'role' and 'content' keys
+        tools: List of tool definitions in OpenAI function calling format:
+            [{
+                "type": "function",
+                "function": {
+                    "name": "tool_name",
+                    "description": "Tool description",
+                    "parameters": {
+                        "type": "object",
+                        "properties": {
+                            "param_name": {
+                                "type": "string",
+                                "description": "Parameter description"
+                            }
+                        },
+                        "required": ["param_name"]
+                    }
+                }
+            }]
+    
+    Returns:
+        Dictionary containing:
+        {
+            "content": str,  # LLM response text (may be None if only tool calls)
+            "tool_calls": [  # List of tool calls (empty if no tools called)
+                {
+                    "id": str,  # Unique call ID
+                    "name": str,  # Tool name
+                    "arguments": dict  # Tool arguments as dict
+                }
+            ]
+        }
+    """
+    # Default implementation raises NotImplementedError
+    # Subclasses should override this if they support tool calling
+    raise NotImplementedError(
+        f"{self.__class__.__name__} does not support tool calling. "
+        "Please use a model that supports function calling (e.g., GPT-4, GPT-4o)."
+    )
 
   @abstractmethod
   def get_model(self) -> Any:
@@ -454,7 +506,7 @@ class GPT(LLM):
 
   def chat_llm_with_tools(self, client: Any, prompt: Optional[prompts.Prompt],
                           tools) -> Any:
-    """Queries LLM in a chat session with tools."""
+    """Queries LLM in a chat session with tools (legacy method)."""
     if self.ai_binary:
       raise ValueError(f'OpenAI does not use local AI binary: {self.ai_binary}')
     if self.temperature_list:
@@ -469,6 +521,71 @@ class GPT(LLM):
             model=self.name, input=messages_to_send, tools=tools),
         [openai.OpenAIError])
     return result
+  
+  def chat_with_tools(
+      self,
+      messages: list[dict[str, str]],
+      tools: list[dict[str, Any]]
+  ) -> dict[str, Any]:
+    """
+    Chat with LLM using OpenAI function calling.
+    
+    Args:
+        messages: List of message dicts with 'role' and 'content' keys
+        tools: List of tool definitions in OpenAI function calling format
+    
+    Returns:
+        Dictionary with 'content' (str) and 'tool_calls' (list) keys
+    """
+    if self.ai_binary:
+      raise ValueError(f'OpenAI does not use local AI binary: {self.ai_binary}')
+    if self.temperature_list:
+      logger.info('OpenAI does not allow temperature list: %s',
+                  self.temperature_list)
+
+    client = self._get_client()
+
+    completion = self.with_retry_on_error(
+        lambda: client.chat.completions.create(
+            messages=messages,
+            model=self.name,
+            tools=tools,
+            n=self.num_samples,
+            temperature=self.temperature
+        ),
+        [openai.OpenAIError]
+    )
+
+    # Store token usage info
+    if hasattr(completion, 'usage') and completion.usage:
+      self.last_token_usage = {
+          'prompt_tokens': completion.usage.prompt_tokens,
+          'completion_tokens': completion.usage.completion_tokens,
+          'total_tokens': completion.usage.total_tokens
+      }
+    else:
+      self.last_token_usage = None
+
+    message = completion.choices[0].message
+    
+    # Extract content
+    content = message.content if message.content else ""
+    
+    # Extract tool calls
+    tool_calls = []
+    if message.tool_calls:
+      import json
+      for tool_call in message.tool_calls:
+        tool_calls.append({
+            "id": tool_call.id,
+            "name": tool_call.function.name,
+            "arguments": json.loads(tool_call.function.arguments)
+        })
+    
+    return {
+        "content": content,
+        "tool_calls": tool_calls
+    }
 
   def ask_llm(self, prompt: prompts.Prompt) -> str:
     """Queries LLM a single prompt and returns its response."""
@@ -600,6 +717,71 @@ class GPT5(GPT):
     llm_response = completion.choices[0].message.content
 
     return llm_response
+  
+  def chat_with_tools(
+      self,
+      messages: list[dict[str, str]],
+      tools: list[dict[str, Any]]
+  ) -> dict[str, Any]:
+    """
+    Chat with LLM using OpenAI function calling (no temperature).
+    
+    Args:
+        messages: List of message dicts with 'role' and 'content' keys
+        tools: List of tool definitions in OpenAI function calling format
+    
+    Returns:
+        Dictionary with 'content' (str) and 'tool_calls' (list) keys
+    """
+    if self.ai_binary:
+      raise ValueError(f'OpenAI does not use local AI binary: {self.ai_binary}')
+    if self.temperature_list:
+      logger.info('GPT-5 does not allow temperature list: %s',
+                  self.temperature_list)
+
+    client = self._get_client()
+
+    completion = self.with_retry_on_error(
+        lambda: client.chat.completions.create(
+            messages=messages,
+            model=self.name,
+            tools=tools,
+            n=self.num_samples
+            # No temperature parameter for GPT-5
+        ),
+        [openai.OpenAIError]
+    )
+
+    # Store token usage info
+    if hasattr(completion, 'usage') and completion.usage:
+      self.last_token_usage = {
+          'prompt_tokens': completion.usage.prompt_tokens,
+          'completion_tokens': completion.usage.completion_tokens,
+          'total_tokens': completion.usage.total_tokens
+      }
+    else:
+      self.last_token_usage = None
+
+    message = completion.choices[0].message
+    
+    # Extract content
+    content = message.content if message.content else ""
+    
+    # Extract tool calls
+    tool_calls = []
+    if message.tool_calls:
+      import json
+      for tool_call in message.tool_calls:
+        tool_calls.append({
+            "id": tool_call.id,
+            "name": tool_call.function.name,
+            "arguments": json.loads(tool_call.function.arguments)
+        })
+    
+    return {
+        "content": content,
+        "tool_calls": tool_calls
+    }
 
   def ask_llm(self, prompt: prompts.Prompt) -> str:
     """Queries LLM a single prompt and returns its response (no temperature)."""

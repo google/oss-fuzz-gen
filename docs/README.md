@@ -2,7 +2,7 @@
 
 Welcome to the LogicFuzz documentation hub! This directory contains comprehensive guides for using LogicFuzz with various types of projects.
 
-**最后更新**: 2025-11-01
+**最后更新**: 2025-11-05
 
 ---
 
@@ -23,6 +23,47 @@ Welcome to the LogicFuzz documentation hub! This directory contains comprehensiv
 - 想了解当前系统能力
 - 需要区分已实现和设计中的功能
 - 计划贡献代码前的参考
+
+#### [MEMORY_ARCHITECTURE.md](MEMORY_ARCHITECTURE.md) - **记忆系统架构**
+
+LogicFuzz 的三层记忆架构设计：
+- 📚 **Long-term Memory**: 静态知识库（Archetypes、Skeletons、Pitfalls）
+- 💾 **Session Memory**: 任务级共识（API约束、已知修复、决策记录）
+- 💬 **Agent Messages**: Agent级对话历史
+
+**适合**:
+- 理解系统的知识管理机制
+- 了解不同层次记忆的用途和生命周期
+- 扩展或优化记忆系统
+
+---
+
+### 🔧 技术实现文档
+
+#### [API_DEPENDENCY_GRAPH.md](API_DEPENDENCY_GRAPH.md) - **API 依赖图系统**
+
+基于 tree-sitter 和 FuzzIntrospector 的 API 依赖分析：
+- ✅ **前置依赖识别**: 自动识别初始化函数
+- ✅ **数据流分析**: 参数的生产者-消费者关系
+- ✅ **调用序列生成**: 拓扑排序生成正确调用顺序
+- ✅ **初始化代码模板**: 自动生成初始化片段
+
+**适合**:
+- 理解如何自动推断 API 调用依赖
+- 了解如何利用 FuzzIntrospector API
+- 扩展启发式规则
+
+#### [FINE_GRAINED_PARAMETER_MODELING.md](FINE_GRAINED_PARAMETER_MODELING.md) - **细粒度参数建模**
+
+从类型级别到字段级别的参数建模升级：
+- ✅ **CONSTRUCT 策略**: 复杂结构体的字段级建模
+- ✅ **field_breakdown**: 为每个字段指定独立 fuzzing 策略
+- ✅ **覆盖率提升**: 通过字段组合探索提升覆盖率
+
+**适合**:
+- 理解参数建模策略的设计
+- 了解如何处理复杂结构体参数
+- 优化参数约束和变化策略
 
 ---
 
@@ -46,43 +87,17 @@ Comprehensive 770+ line guide covering:
 - 🛠️ Need complete setup instructions from scratch
 - 🤖 Want automated build script generation
 
-#### 🔧 [SIGNATURE_FIX_README.md](SIGNATURE_FIX_README.md) - **函数签名处理**
-**Best for:** Understanding signature extraction and fixing
-
-Detailed guide on:
-- Function signature extraction from C/C++ code
-- Parsing and fixing malformed signatures
-- Type resolution and parameter handling
-- Integration with LogicFuzz workflow
-
-**When to use:**
-- 🔍 Debugging signature parsing errors
-- 🛠️ Manual signature extraction needed
-- 📝 Creating custom benchmark YAMLs
-- 🐛 Fixing signature-related generation issues
-
 ---
 
 ### 📚 Fuzzer 编写参考文档
 
-这些是独立的参考/教学文档，基于 4699 个真实 OSS-Fuzz fuzzer 的分析：
-
-#### [README_FUZZING.md](README_FUZZING.md) - **Fuzzer 编写总目录**
-- 文档导航和索引
-- 快速开始指南
-- 按场景选择文档
+这些是独立的参考/教学文档，基于真实 OSS-Fuzz fuzzer 的分析：
 
 #### [FUZZER_COOKBOOK.md](FUZZER_COOKBOOK.md) - **实战手册** 🔥
 - 11 种典型场景的完整代码模板
 - 可直接复制粘贴使用
 - 包含真实项目参考
 - 常见问题解决方案
-
-#### [FUZZER_BEHAVIOR_TAXONOMY.md](FUZZER_BEHAVIOR_TAXONOMY.md) - **行为分类体系**
-- 系统化的 5 维度分类框架
-- 8 个典型组合模式
-- 决策流程图
-- 深入学习材料
 
 #### [FUZZING_CHEATSHEET.md](FUZZING_CHEATSHEET.md) - **速查表**
 - 一页纸快速参考
@@ -123,40 +138,6 @@ Detailed guide on:
 
 ---
 
-### 🔬 设计方案文档（未完全实现）
-
-⚠️ **注意**: 这些文档描述的是**设计理念**和**未来方向**，不是当前实现状态。
-
-#### [KNOWLEDGE_DATABASE_DESIGN.md](KNOWLEDGE_DATABASE_DESIGN.md) - **知识库设计**
-**状态**: 🔴 设计方案（未实现）
-
-- 持久化知识库设计（SQLite + Chroma）
-- 历史 driver 学习和检索
-- 错误模式和修复转换
-- **当前替代**: Session Memory + Long-term Memory
-
-#### [SKELETON_REFINEMENT_DESIGN.md](SKELETON_REFINEMENT_DESIGN.md) - **Skeleton 精炼设计**
-**状态**: 🟡 部分理念已实现
-
-- Skeleton 精炼过程设计
-- 多源信息融合策略
-- **当前实现**: Function Analyzer 选择 archetype + Prototyper 生成代码
-
-#### [HYBRID_SPEC_WITH_SESSION_MEMORY.md](HYBRID_SPEC_WITH_SESSION_MEMORY.md) - **混合规范设计**
-**状态**: 🟡 Session Memory 已实现，扩展策略是设计
-
-- Session Memory 驱动的 Skeleton Refinement
-- Skeleton 组件的增量构建
-- **当前实现**: Session Memory + SRS 规范
-
-#### [HEADER_POST_INJECTION_ANALYSIS.md](HEADER_POST_INJECTION_ANALYSIS.md) - **Header 后处理方案**
-**状态**: 🔴 设计方案（未实现）
-
-- LLM 生成后强制注入正确 headers
-- 防止 LLM 修改 header 路径
-- **当前实现**: Header 提取 + Prompt 注入
-
----
 
 ### 📖 其他文档
 
@@ -213,13 +194,6 @@ python -m data_prep.introspector my-project -m 5 -o conti-benchmark/
 - [NEW_PROJECT_SETUP.md](NEW_PROJECT_SETUP.md) → Configuration Files
 - [../data_prep/README.md](../data_prep/README.md)
 
-#### Fix function signature issues
-```bash
-# Use signature fixing tools
-python -m llm_toolkit.signature_fixer <signature>
-```
-📖 **Read:** [SIGNATURE_FIX_README.md](SIGNATURE_FIX_README.md)
-
 #### Integrate with Fuzz Introspector
 ```bash
 # Terminal 1: Start FI server
@@ -239,7 +213,6 @@ python agent_graph/main.py \
 | Document | Focus | Length | Best For |
 |----------|-------|--------|----------|
 | [NEW_PROJECT_SETUP.md](NEW_PROJECT_SETUP.md) | Complete new project setup | 770+ lines | Private repos, custom projects, step-by-step |
-| [SIGNATURE_FIX_README.md](SIGNATURE_FIX_README.md) | Function signature handling | 160+ lines | Debugging signatures, manual extraction |
 | [../README.md](../README.md) | Project overview & quick start | 360+ lines | First-time users, feature overview |
 | [../Usage.md](../Usage.md) | OSS-Fuzz templates | 280+ lines | Standard OSS-Fuzz project setup |
 | [../data_prep/README.md](../data_prep/README.md) | Benchmark generation | Short | Automated YAML creation |
@@ -256,12 +229,11 @@ python agent_graph/main.py \
 ### For Custom/Private Projects
 1. [../README.md](../README.md) - Understand LogicFuzz capabilities
 2. **[NEW_PROJECT_SETUP.md](NEW_PROJECT_SETUP.md)** - Complete setup guide ⭐
-3. [SIGNATURE_FIX_README.md](SIGNATURE_FIX_README.md) - Handle signature issues
 
 ### For Advanced Users
 1. [../agent_graph/README.md](../agent_graph/README.md) - Workflow internals
-2. [SIGNATURE_FIX_README.md](SIGNATURE_FIX_README.md) - Advanced debugging
-3. [NEW_PROJECT_SETUP.md](NEW_PROJECT_SETUP.md) - Build automation
+2. [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md) - Current implementation status
+3. [MEMORY_ARCHITECTURE.md](MEMORY_ARCHITECTURE.md) - Memory system design
 
 ---
 

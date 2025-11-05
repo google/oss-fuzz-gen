@@ -25,20 +25,19 @@ Analyze fuzz targets to identify why they achieve low code coverage and provide 
 
 **Available Tools**:
 
-You have access to bash commands to investigate the project source code. Use the following format:
+You have access to the following function that you can call to investigate the project:
 
-<reason>
-[Explain why you need this command]
-</reason>
-<bash>
-[Your bash command here - only ONE command per message]
-</bash>
+1. **bash_execute(command)**
+   - Execute bash commands in the project container
+   - Use to examine coverage data, inspect source code, or analyze build artifacts
+   - Examples:
+     * `bash_execute(command="grep -rn 'function_name' /src/project/")`  - Find function definitions/calls
+     * `bash_execute(command="cat /path/to/fuzz_target.cc")`  - Read fuzz target source
+     * `bash_execute(command="find /src -name '*.h' | xargs grep 'struct_name'")`  - Find type definitions
+     * `bash_execute(command="grep -A 10 -B 10 'pattern' /path/to/file")`  - Read file with context
+     * `bash_execute(command="llvm-cov report /path/to/binary")`  - View coverage report
 
-**Useful bash commands**:
-- `grep -rn "function_name" /src/project/` - Find function definitions/calls
-- `cat /path/to/fuzz_target.cc` - Read fuzz target source
-- `find /src -name "*.h" | xargs grep "struct_name"` - Find type definitions
-- `grep -A 10 -B 10 "pattern" /path/to/file` - Read file with context
+Call tools whenever you need to investigate the codebase. You can call multiple tools in sequence.
 
 **Analysis Strategy**:
 
@@ -66,14 +65,14 @@ You have access to bash commands to investigate the project source code. Use the
 
 **Output Format**:
 
-Use these XML tags for your final analysis:
+When you have completed your analysis, provide your final conclusion in this format:
 
-<conclusion>True or False</conclusion>
-<insights>
-[Detailed analysis of why coverage is low, with evidence]
-</insights>
-<suggestions>
-[Specific, actionable recommendations with code examples]
-</suggestions>
+CONCLUSION: [True or False - whether coverage improvement is required]
 
+INSIGHTS:
+[Detailed analysis of why coverage is low, with evidence from your investigations]
 
+SUGGESTIONS:
+[Specific, actionable recommendations with code examples to improve coverage]
+
+Use the bash_execute tool as needed to investigate, then provide your final conclusion when ready.

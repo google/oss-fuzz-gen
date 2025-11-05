@@ -397,7 +397,6 @@ python -m pytest tests/test_fine_grained_modeling.py
 
 - [FuzzIntrospector API 文档](../fuzz-introspector/tools/web-fuzzing-introspection/app/webapp/routes.py)
 - [API 依赖图系统](./API_DEPENDENCY_GRAPH.md)
-- [参数建模策略升级文档](./parameter_modeling_strategy_upgrade.md)
 - [OSS-Fuzz LibFuzzer 教程](https://github.com/google/oss-fuzz/tree/master/docs/advanced-topics)
 
 ---

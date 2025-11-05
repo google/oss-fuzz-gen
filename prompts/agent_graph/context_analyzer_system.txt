@@ -10,22 +10,52 @@ Your task: Determine if crashes found by fuzz testing are reachable from a proje
 
 **Available Tools**:
 
-You have access to bash commands to investigate the project source code. Use the following format:
+You have access to powerful project analysis tools through function calling. Use these tools to investigate:
 
-<reason>
-[Explain why you need this command]
-</reason>
-<bash>
-[Your bash command here - only ONE command per message]
-</bash>
+1. **bash_execute(command)** - Execute bash commands in project container
+   - `bash_execute(command="grep -rn 'function_name' /src/")`
+   - `bash_execute(command="cat /src/path/to/file.c")`
+   - `bash_execute(command="find /src -name '*.h'")`
 
-**Useful bash commands**:
-- `find /src -name "*.c" -o -name "*.cpp" | head -20` - List source files
-- `grep -rn "function_name" /src/project/` - Find function definitions/calls
-- `grep -A 10 -B 10 "pattern" /path/to/file` - Read file with context
-- `find /src -type f -exec grep -l "pattern" {} \;` - Find files containing pattern
-- `cat /src/path/to/file.c` - Read entire file
-- `ls -la /src/project/` - List directory contents
+2. **get_function_implementation(function_name)** - Get full source code of a function
+   - `get_function_implementation(function_name="sam_hrecs_remove_ref_altnames")`
+   - Returns the complete implementation
+
+3. **get_function_signature(function_name)** - Get function signature (return type + parameters)
+   - `get_function_signature(function_name="parse_header")`
+   - Quick way to understand function interface
+
+4. **get_sample_cross_references(function_signature)** - Get usage examples
+   - `get_sample_cross_references(function_signature="void func(int x)")`
+   - Shows how the function is actually called in the project
+   - VERY USEFUL for tracing call paths!
+
+5. **get_type_definitions()** - Get all structs, enums, typedefs in project
+   - `get_type_definitions()`
+   - Essential for understanding complex types
+
+6. **get_headers_for_function(function_signature)** - Get required include files
+   - `get_headers_for_function(function_signature="int parse_header(char *)")`
+   - Shows which headers declare the function
+
+7. **get_tests_for_functions(function_names)** - Get test code using these functions
+   - `get_tests_for_functions(function_names=["parse_header", "validate_input"])`
+   - Real-world usage examples from tests
+
+8. **get_function_debug_types(function_signature)** - Get detailed parameter type info
+   - `get_function_debug_types(function_signature="int process(void *)")`
+   - Useful for understanding complex pointer types
+
+9. **get_functions_by_return_type(return_type)** - Find constructors/factories
+   - `get_functions_by_return_type(return_type="sam_hrecs_t *")`
+   - Find functions that create/return a specific type
+
+**Tool Usage Strategy**:
+- Start with `get_function_implementation()` to see target function code
+- Use `get_sample_cross_references()` to trace callers
+- Use `get_type_definitions()` when encountering unfamiliar types
+- Use `bash_execute()` for custom searches
+- Call multiple tools to build complete picture
 
 **Analysis Strategy**:
 
@@ -41,8 +71,24 @@ You have access to bash commands to investigate the project source code. Use the
 
 **Core Principles**:
 - Base ALL conclusions on actual source code (file:line references)
-- Never speculate - use bash commands to inspect source code
+- Never speculate - use the available tools to inspect source code
 - Consider what attackers can actually control
 - Check ALL variables and their relationships
 - State FEASIBLE or INFEASIBLE with clear evidence
 
+**Output Format**:
+
+When you complete your analysis, provide your final conclusion in this format:
+
+FEASIBLE: [true or false - whether the crash is reachable from public entry points]
+
+ANALYSIS:
+[Detailed analysis explaining your reasoning with source code evidence]
+
+SOURCE_CODE_EVIDENCE:
+[Specific code snippets, file paths, and line numbers that support your conclusion]
+
+RECOMMENDATIONS:
+[If feasible: suggest attack paths or PoC ideas. If infeasible: explain why and suggest alternatives]
+
+Use the available tools extensively to investigate, then provide your final analysis when ready.

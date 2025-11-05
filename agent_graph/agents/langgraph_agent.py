@@ -15,7 +15,7 @@ from llm_toolkit.models import LLM
 from agent_graph.state import FuzzingWorkflowState
 from agent_graph.memory import get_agent_messages, add_agent_message
 from agent_graph.prompt_loader import get_prompt_manager
-from agent_graph.agents.utils import parse_tag, parse_tags
+# Note: parse_tag and parse_tags have been removed in favor of Function Calling
 from agent_graph.logger import LangGraphLogger, NullLogger
 
 
@@ -2637,6 +2637,15 @@ class LangGraphCrashAnalyzer(LangGraphAgent):
         prompt = self.llm.prompt_type()(None)
         prompt.add_priming(user_prompt)
         
+        # Define tool specifications for function calling
+        tools = self._get_tool_definitions()
+        
+        # Initialize message list for tool calling
+        messages = [
+            {"role": "system", "content": self.system_message},
+            {"role": "user", "content": user_prompt}
+        ]
+        
         # Multi-round interaction
         crash_result = {
             "true_bug": None,
@@ -2648,10 +2657,9 @@ class LangGraphCrashAnalyzer(LangGraphAgent):
         max_round = self.args.max_round
         
         try:
-            client = self.llm.get_chat_client(model=self.llm.get_model())
-            while prompt and prompt.get() and cur_round < max_round:
-                # Chat with LLM
-                response = self.llm.chat_llm(client=client, prompt=prompt)
+            while cur_round < max_round:
+                # Chat with LLM using tool calling
+                response = self.llm.chat_with_tools(messages, tools)
                 
                 # Track token usage
                 if hasattr(self.llm, 'last_token_usage') and self.llm.last_token_usage:
@@ -2665,19 +2673,58 @@ class LangGraphCrashAnalyzer(LangGraphAgent):
                         usage.get('total_tokens', 0)
                     )
                 
-                # Log the interaction
+                # Log the LLM response
+                content = response.get("content", "")
+                tool_calls = response.get("tool_calls", [])
+                
                 logger.info(
-                    f'<CRASH ANALYZER ROUND {cur_round}>\n{response}\n</CRASH ANALYZER ROUND {cur_round}>',
+                    f'<CRASH ANALYZER ROUND {cur_round}>\n'
+                    f'Content: {content}\n'
+                    f'Tool calls: {len(tool_calls)}\n'
+                    f'</CRASH ANALYZER ROUND {cur_round}>',
                     trial=self.trial
                 )
                 
-                # Handle the response
-                prompt = self._handle_response(cur_round, response, crash_result)
-                cur_round += 1
+                # Add assistant message to conversation
+                messages.append({
+                    "role": "assistant",
+                    "content": content if content else "I will use tools to investigate."
+                })
                 
-                # If no more prompt, we're done
-                if not prompt:
+                # Check if LLM provided a conclusion
+                if self._has_conclusion(content):
+                    self._parse_conclusion(content, crash_result)
                     break
+                
+                # Execute tool calls if any
+                if tool_calls:
+                    for tool_call in tool_calls:
+                        result = self._execute_tool(tool_call)
+                        
+                        # Add tool result to messages
+                        messages.append({
+                            "role": "tool",
+                            "tool_call_id": tool_call["id"],
+                            "content": result
+                        })
+                        
+                        # Mark GDB as used if gdb_execute was called
+                        if tool_call["name"] == "gdb_execute":
+                            self.gdb_tool_used = True
+                    
+                    # Continue to next round with tool results
+                    cur_round += 1
+                    continue
+                
+                # If no tool calls and no conclusion, something is wrong
+                if not tool_calls and not content:
+                    logger.warning(
+                        f'ROUND {cur_round} No tool calls or content from LLM',
+                        trial=self.trial
+                    )
+                    break
+                
+                cur_round += 1
                     
         finally:
             # Cleanup: stop the containers
@@ -2702,6 +2749,226 @@ class LangGraphCrashAnalyzer(LangGraphAgent):
             }
         }
     
+    def _get_tool_definitions(self) -> list[dict]:
+        """
+        Get tool definitions for OpenAI function calling.
+        
+        Returns:
+            List of tool definitions in OpenAI format
+        """
+        return [
+            {
+                "type": "function",
+                "function": {
+                    "name": "gdb_execute",
+                    "description": (
+                        "Execute a GDB command in the debugging session. "
+                        "The fuzz target binary is already loaded. "
+                        "Use this to investigate the crash."
+                    ),
+                    "parameters": {
+                        "type": "object",
+                        "properties": {
+                            "command": {
+                                "type": "string",
+                                "description": (
+                                    "GDB command to execute. Examples: "
+                                    "'run -runs=1 <artifact_path>' to reproduce crash, "
+                                    "'bt' for backtrace, "
+                                    "'frame N' to switch frames, "
+                                    "'info locals' to see local variables, "
+                                    "'print variable' to inspect values"
+                                )
+                            }
+                        },
+                        "required": ["command"]
+                    }
+                }
+            },
+            {
+                "type": "function",
+                "function": {
+                    "name": "bash_execute",
+                    "description": (
+                        "Execute a bash command in the project container. "
+                        "Use this to examine source files, search for patterns, etc."
+                    ),
+                    "parameters": {
+                        "type": "object",
+                        "properties": {
+                            "command": {
+                                "type": "string",
+                                "description": (
+                                    "Bash command to execute. Examples: "
+                                    "'cat /src/file.c' to read files, "
+                                    "'grep -r pattern /src' to search code, "
+                                    "'find /src -name \"*.h\"' to find files"
+                                )
+                            }
+                        },
+                        "required": ["command"]
+                    }
+                }
+            }
+        ]
+    
+    def _execute_tool(self, tool_call: dict) -> str:
+        """
+        Execute a tool call from the LLM.
+        
+        Args:
+            tool_call: Dictionary with 'name', 'arguments', and 'id' keys
+        
+        Returns:
+            Tool execution result as string
+        """
+        tool_name = tool_call["name"]
+        arguments = tool_call["arguments"]
+        
+        try:
+            if tool_name == "gdb_execute":
+                command = arguments.get("command", "")
+                if not command:
+                    return "Error: No command provided"
+                
+                # Execute GDB command
+                process = self.gdb_tool.execute_in_screen(command)
+                return self._format_gdb_result(command, process)
+            
+            elif tool_name == "bash_execute":
+                command = arguments.get("command", "")
+                if not command:
+                    return "Error: No command provided"
+                
+                # Execute bash command
+                process = self.bash_tool.execute(command)
+                return self._format_bash_result(command, process)
+            
+            else:
+                return f"Error: Unknown tool '{tool_name}'"
+        
+        except Exception as e:
+            logger.error(f'Tool execution error: {e}', trial=self.trial)
+            return f"Error executing {tool_name}: {str(e)}"
+    
+    def _format_gdb_result(self, command: str, process) -> str:
+        """Format GDB execution result for LLM."""
+        raw_lines = process.stdout.strip().splitlines()
+        
+        # Remove trailing (gdb) prompt
+        if raw_lines and raw_lines[-1].strip().startswith("(gdb)"):
+            raw_lines.pop()
+        
+        # Add (gdb) prefix to first line
+        if raw_lines:
+            raw_lines[0] = f'(gdb) {raw_lines[0].strip()}'
+        
+        stdout = '\n'.join(raw_lines)
+        stderr = process.stderr.strip() if process.stderr else ""
+        
+        result = f"GDB Command: {command}\n\nOutput:\n{stdout}"
+        if stderr:
+            result += f"\n\nStderr:\n{stderr}"
+        
+        return result
+    
+    def _format_bash_result(self, command: str, process) -> str:
+        """Format bash execution result for LLM."""
+        stdout = process.stdout.strip() if process.stdout else ""
+        stderr = process.stderr.strip() if process.stderr else ""
+        returncode = process.returncode
+        
+        result = f"Bash Command: {command}\nReturn Code: {returncode}"
+        if stdout:
+            result += f"\n\nStdout:\n{stdout}"
+        if stderr:
+            result += f"\n\nStderr:\n{stderr}"
+        
+        return result
+    
+    def _has_conclusion(self, content: str) -> bool:
+        """
+        Check if LLM response contains a conclusion.
+        
+        Args:
+            content: LLM response content
+        
+        Returns:
+            True if conclusion is present
+        """
+        if not content:
+            return False
+        
+        # Look for conclusion markers
+        import re
+        
+        # Pattern 1: "Conclusion: True/False"
+        if re.search(r'conclusion:\s*(true|false)', content, re.IGNORECASE):
+            return True
+        
+        # Pattern 2: Structured conclusion with "True Bug:" or "False Positive:"
+        if re.search(r'(true bug|false positive):', content, re.IGNORECASE):
+            return True
+        
+        # Pattern 3: Final determination
+        if re.search(r'(final (determination|analysis)|root cause):', content, re.IGNORECASE):
+            return True
+        
+        return False
+    
+    def _parse_conclusion(self, content: str, crash_result: dict) -> None:
+        """
+        Parse conclusion from LLM response.
+        
+        Args:
+            content: LLM response content
+            crash_result: Dictionary to store parsed results
+        """
+        import re
+        
+        # Try to extract True/False determination
+        conclusion_match = re.search(
+            r'conclusion:\s*(true|false)',
+            content,
+            re.IGNORECASE
+        )
+        
+        if conclusion_match:
+            conclusion = conclusion_match.group(1).lower()
+            crash_result['true_bug'] = (conclusion == 'true')
+        else:
+            # Try alternative patterns
+            if re.search(r'true bug', content, re.IGNORECASE):
+                crash_result['true_bug'] = True
+            elif re.search(r'false positive', content, re.IGNORECASE):
+                crash_result['true_bug'] = False
+            else:
+                logger.warning(
+                    f'Could not determine true/false from conclusion',
+                    trial=self.trial
+                )
+                crash_result['true_bug'] = None
+        
+        # Extract analysis/insight
+        # Try to find analysis section
+        analysis_match = re.search(
+            r'(analysis and suggestion|root cause analysis|analysis):\s*(.+)',
+            content,
+            re.IGNORECASE | re.DOTALL
+        )
+        
+        if analysis_match:
+            crash_result['insight'] = analysis_match.group(2).strip()
+        else:
+            # Use the entire content as insight
+            crash_result['insight'] = content
+        
+        logger.info(
+            f'Conclusion parsed: true_bug={crash_result["true_bug"]}, '
+            f'insight_length={len(crash_result.get("insight", ""))}',
+            trial=self.trial
+        )
+    
     def _extract_crash_function(self, stack_trace: str) -> str:
         """Extract the crashing function from stack trace."""
         if not stack_trace:
@@ -2723,165 +2990,8 @@ class LangGraphCrashAnalyzer(LangGraphAgent):
         
         return ""
     
-    def _handle_response(self, cur_round: int, response: str, 
-                        crash_result: dict) -> Optional[Any]:
-        """Handle LLM response and determine next action."""
-        # Create empty prompt for building response
-        prompt = self.llm.prompt_type()(None)
-        
-        # Check for hallucinated tool usage
-        if self._parse_tag(response, 'gdb output') or \
-           self._parse_tag(response, 'gdb command'):
-            extra_note = ('NOTE: It seems you have hallucinated interaction with the GDB tool. '
-                         'You MUST restart the GDB interaction again and erase the previous '
-                         'interaction from your memory.')
-            self.gdb_tool_used = False
-            return self._handle_invalid_tool_usage(
-                [self.gdb_tool, self.bash_tool], cur_round, response, 
-                prompt, extra_note)
-        
-        # Check for conclusion with tool commands
-        if self._parse_tag(response, 'conclusion') and \
-           (self._parse_tag(response, 'gdb') or self._parse_tag(response, 'bash')):
-            extra_note = 'NOTE: You cannot provide both tool commands and conclusion in the same response.'
-            return self._handle_invalid_tool_usage(
-                [self.gdb_tool, self.bash_tool], cur_round, response, 
-                prompt, extra_note)
-        
-        # Handle conclusion
-        if self._parse_tag(response, 'conclusion'):
-            if not self.gdb_tool_used:
-                extra_note = 'NOTE: You MUST use the provided GDB tool to analyze the crash before providing a conclusion.'
-                return self._handle_invalid_tool_usage(
-                    [self.gdb_tool, self.bash_tool], cur_round, response, 
-                    prompt, extra_note)
-            return self._handle_conclusion(cur_round, response, crash_result)
-        
-        # Handle GDB commands
-        if self._parse_tag(response, 'gdb'):
-            self.gdb_tool_used = True
-            return self._handle_gdb_command(response, self.gdb_tool, prompt)
-        
-        # Handle bash commands
-        if self._parse_tag(response, 'bash'):
-            return self._handle_bash_command(response, self.bash_tool, prompt)
-        
-        # Invalid response
-        return self._handle_invalid_tool_usage(
-            [self.gdb_tool, self.bash_tool], cur_round, response, prompt)
-    
-    def _handle_gdb_command(self, response: str, tool, prompt) -> Any:
-        """Handle GDB command execution."""
-        import subprocess as sp
-        
-        prompt_text = ''
-        for command in self._parse_tags(response, 'gdb'):
-            process = tool.execute_in_screen(command)
-            prompt_text += self._format_gdb_execution_result(
-                command, process, previous_prompt=prompt) + '\n'
-            prompt.append(prompt_text)
-        return prompt
-    
-    def _format_gdb_execution_result(self, gdb_command: str,
-                                    process: sp.CompletedProcess,
-                                    previous_prompt=None) -> str:
-        """Format GDB execution result for LLM."""
-        if previous_prompt:
-            previous_prompt_text = previous_prompt.get()
-        else:
-            previous_prompt_text = ''
-        
-        raw_lines = process.stdout.strip().splitlines()
-        if raw_lines and raw_lines[-1].strip().startswith("(gdb)"):
-            raw_lines.pop()
-        if raw_lines:
-            raw_lines[0] = f'(gdb) {raw_lines[0].strip()}'
-        processed_stdout = '\n'.join(raw_lines)
-        
-        stdout = self.llm.truncate_prompt(processed_stdout,
-                                         previous_prompt_text).strip()
-        stderr = self.llm.truncate_prompt(process.stderr,
-                                         stdout + previous_prompt_text).strip()
-        
-        return (f'<gdb command>\n{gdb_command.strip()}\n</gdb command>\n'
-               f'<gdb output>\n{stdout}\n</gdb output>\n'
-               f'<stderr>\n{stderr}\n</stderr>\n')
-    
-    def _handle_bash_command(self, response: str, tool, prompt) -> Any:
-        """Handle bash command execution."""
-        prompt_text = ''
-        for command in self._parse_tags(response, 'bash'):
-            process = tool.execute(command)
-            prompt_text += self._format_bash_execution_result(
-                process, previous_prompt=prompt) + '\n'
-            prompt.append(prompt_text)
-        return prompt
-    
-    def _format_bash_execution_result(self, process, previous_prompt=None) -> str:
-        """Format bash execution result for LLM."""
-        if previous_prompt:
-            previous_prompt_text = previous_prompt.get()
-        else:
-            previous_prompt_text = ''
-        
-        stdout = self.llm.truncate_prompt(process.stdout,
-                                         previous_prompt_text).strip()
-        stderr = self.llm.truncate_prompt(process.stderr,
-                                         stdout + previous_prompt_text).strip()
-        
-        return (f'<bash>\n{process.args}\n</bash>\n'
-               f'<return code>\n{process.returncode}\n</return code>\n'
-               f'<stdout>\n{stdout}\n</stdout>\n'
-               f'<stderr>\n{stderr}\n</stderr>\n')
-    
-    def _handle_conclusion(self, cur_round: int, response: str,
-                          crash_result: dict) -> None:
-        """Parse LLM conclusion and analysis."""
-        logger.info(f'----- ROUND {cur_round:02d} Received conclusion -----',
-                   trial=self.trial)
-        
-        conclusion = self._parse_tag(response, 'conclusion')
-        if conclusion == 'False':
-            crash_result['true_bug'] = False
-        elif conclusion == 'True':
-            crash_result['true_bug'] = True
-        else:
-            logger.error(f'***** Failed to match conclusion in {cur_round:02d} rounds *****',
-                        trial=self.trial)
-        
-        crash_result['insight'] = self._parse_tag(response, 'analysis and suggestion')
-        if not crash_result['insight']:
-            logger.error(f'Round {cur_round:02d} No analysis and suggestion in conclusion: {response}',
-                        trial=self.trial)
-        
-        # Return None to stop the loop
-        return None
-    
-    def _handle_invalid_tool_usage(self, tools, cur_round: int, 
-                                  response: str, prompt, extra: str = '') -> Any:
-        """Handle invalid tool usage."""
-        logger.warning(f'ROUND {cur_round:02d} Invalid response from LLM: {response}',
-                      trial=self.trial)
-        
-        prompt_text = 'No valid instruction received. Please use the available tools properly.\n\n'
-        prompt.append(prompt_text)
-        
-        if extra:
-            prompt.append(extra)
-        
-        return prompt
-    
-    def _parse_tag(self, response: str, tag: str) -> str:
-        """Parse XML-style tags from LLM response."""
-        import re
-        match = re.search(rf'<{tag}>(.*?)</{tag}>', response, re.DOTALL)
-        return match.group(1).strip() if match else ''
-    
-    def _parse_tags(self, response: str, tag: str) -> list[str]:
-        """Parse multiple XML-style tags from LLM response."""
-        import re
-        matches = re.findall(rf'<{tag}>(.*?)</{tag}>', response, re.DOTALL)
-        return [content.strip() for content in matches]
+    # All deprecated XML-based methods have been removed in favor of OpenAI Function Calling.
+    # The agent now uses chat_with_tools() for all tool interactions.
     
     def _check_false_positive(self, run_log: str, project_name: str, 
                              stack_trace: str) -> Dict[str, Any]:
@@ -3065,10 +3175,8 @@ class LangGraphCoverageAnalyzer(LangGraphAgent):
     """
     Coverage analyzer agent for LangGraph.
     
-    This agent follows the original CoverageAnalyzer's approach:
-    - Uses ProjectContainerTool for bash command execution
-    - Multi-round interaction until conclusion is reached
-    - Parses insights, suggestions, and conclusion tags
+    Uses OpenAI Function Calling to execute bash commands via bash_execute tool.
+    Multi-round interaction until conclusion is detected in text response.
     """
     
     def __init__(self, llm: LLM, trial: int, args: argparse.Namespace):
@@ -3084,6 +3192,142 @@ class LangGraphCoverageAnalyzer(LangGraphAgent):
             system_message=system_message
         )
         self.inspect_tool = None
+    
+    def _get_tool_definitions(self) -> list[dict]:
+        """Define tools available to CoverageAnalyzer."""
+        return [
+            {
+                "type": "function",
+                "function": {
+                    "name": "bash_execute",
+                    "description": (
+                        "Execute bash command in the project container to examine coverage data, "
+                        "inspect source code, or analyze build artifacts. "
+                        "Use this to investigate why coverage is low."
+                    ),
+                    "parameters": {
+                        "type": "object",
+                        "properties": {
+                            "command": {
+                                "type": "string",
+                                "description": "Bash command to execute (e.g., 'cat file.c', 'grep pattern *.c', 'llvm-cov report')"
+                            }
+                        },
+                        "required": ["command"]
+                    }
+                }
+            }
+        ]
+    
+    def _execute_tool(self, tool_call: dict) -> str:
+        """Execute a tool call and return the result."""
+        tool_name = tool_call.get("name", "")
+        arguments = tool_call.get("arguments", {})
+        
+        if tool_name == "bash_execute":
+            command = arguments.get("command", "")
+            if not command:
+                return "Error: bash_execute requires 'command' argument"
+            
+            # Execute via ProjectContainerTool
+            result = self.inspect_tool.execute(command)
+            return self._format_bash_result(result)
+        
+        return f"Error: Unknown tool '{tool_name}'"
+    
+    def _format_bash_result(self, process) -> str:
+        """Format bash execution result."""
+        stdout = process.stdout.strip()
+        stderr = process.stderr.strip()
+        
+        # Limit output size to avoid token overflow
+        max_output_len = 10000
+        if len(stdout) > max_output_len:
+            stdout = stdout[:max_output_len] + f'\n... (truncated {len(stdout) - max_output_len} chars)'
+        if len(stderr) > max_output_len:
+            stderr = stderr[:max_output_len] + f'\n... (truncated {len(stderr) - max_output_len} chars)'
+        
+        result_parts = [f"Command: {process.args}"]
+        result_parts.append(f"Return code: {process.returncode}")
+        
+        if stdout:
+            result_parts.append(f"STDOUT:\n{stdout}")
+        if stderr:
+            result_parts.append(f"STDERR:\n{stderr}")
+        
+        return "\n".join(result_parts)
+    
+    def _has_conclusion(self, text: str) -> bool:
+        """Check if the response contains a conclusion."""
+        # Look for conclusion markers in the text
+        conclusion_markers = [
+            "CONCLUSION:",
+            "Final conclusion:",
+            "My conclusion:",
+            "In conclusion",
+            "improve_required:",
+            "Coverage improvement required:",
+        ]
+        text_lower = text.lower()
+        return any(marker.lower() in text_lower for marker in conclusion_markers)
+    
+    def _parse_conclusion(self, text: str) -> dict:
+        """
+        Parse conclusion from LLM text response.
+        
+        Expected format (flexible):
+        CONCLUSION: true/false
+        INSIGHTS: ...
+        SUGGESTIONS: ...
+        """
+        result = {
+            'improve_required': False,
+            'insights': '',
+            'suggestions': '',
+            'analyzed': True
+        }
+        
+        # Simple parsing - look for key sections
+        lines = text.split('\n')
+        current_section = None
+        content_buffer = []
+        
+        for line in lines:
+            line_lower = line.lower().strip()
+            
+            # Check for section headers
+            if 'conclusion:' in line_lower or 'improve_required:' in line_lower:
+                if content_buffer and current_section:
+                    result[current_section] = '\n'.join(content_buffer).strip()
+                    content_buffer = []
+                
+                # Extract true/false value
+                if 'true' in line_lower:
+                    result['improve_required'] = True
+                elif 'false' in line_lower:
+                    result['improve_required'] = False
+                current_section = None
+                
+            elif 'insights:' in line_lower:
+                if content_buffer and current_section:
+                    result[current_section] = '\n'.join(content_buffer).strip()
+                    content_buffer = []
+                current_section = 'insights'
+                
+            elif 'suggestions:' in line_lower or 'recommendations:' in line_lower:
+                if content_buffer and current_section:
+                    result[current_section] = '\n'.join(content_buffer).strip()
+                    content_buffer = []
+                current_section = 'suggestions'
+                
+            elif current_section:
+                content_buffer.append(line)
+        
+        # Save last section
+        if content_buffer and current_section:
+            result[current_section] = '\n'.join(content_buffer).strip()
+        
+        return result
     
     def execute(self, state: FuzzingWorkflowState) -> Dict[str, Any]:
         """
@@ -3149,36 +3393,89 @@ class LangGraphCoverageAnalyzer(LangGraphAgent):
             agent_name=self.name
         )
         
-        # Multi-round interaction
+        # Multi-round interaction with Function Calling
         coverage_result = {}
         cur_round = 0
         max_round = self.args.max_round
         all_responses = []  # 收集所有响应，用于提取session_memory更新
         
+        # Get tool definitions
+        tools = self._get_tool_definitions()
+        
+        # Initialize conversation messages
+        messages = get_agent_messages(state, self.name)
+        messages.append({"role": "user", "content": user_prompt})
+        
         try:
-            # Start with the initial user prompt
-            current_prompt = user_prompt
-            
-            while current_prompt and cur_round < max_round:
-                # Chat with LLM using the agent's chat_llm method
-                response = self.chat_llm(state, current_prompt)
+            while cur_round < max_round:
+                # Call LLM with tools
+                response_data = self.llm.chat_with_tools(
+                    messages=messages,
+                    tools=tools,
+                    state=state
+                )
                 
-                # 收集响应
-                all_responses.append(response)
+                assistant_message = response_data["message"]
+                text_response = assistant_message.get("content", "") or ""
+                tool_calls = assistant_message.get("tool_calls", [])
+                
+                # Add assistant message to conversation
+                messages.append(assistant_message)
+                add_agent_message(state, self.name, assistant_message)
+                
+                # Collect text responses for session memory
+                if text_response:
+                    all_responses.append(text_response)
                 
                 # Log the round
                 logger.info(
-                    f'<COVERAGE ANALYZER ROUND {cur_round}>\n{response}\n</COVERAGE ANALYZER ROUND {cur_round}>',
+                    f'<COVERAGE ANALYZER ROUND {cur_round}>\n{text_response}\n</COVERAGE ANALYZER ROUND {cur_round}>',
                     trial=self.trial
                 )
                 
-                # Handle the response and get next prompt
-                current_prompt = self._handle_response(cur_round, response, coverage_result)
-                cur_round += 1
-                
-                # If no more prompts, we're done
-                if not current_prompt:
+                # Check if we have a conclusion
+                if text_response and self._has_conclusion(text_response):
+                    logger.info(
+                        f'----- ROUND {cur_round:02d} Received conclusion -----',
+                        trial=self.trial
+                    )
+                    coverage_result.update(self._parse_conclusion(text_response))
                     break
+                
+                # Execute any tool calls
+                if tool_calls:
+                    for tool_call in tool_calls:
+                        tool_result = self._execute_tool(tool_call)
+                        
+                        # Add tool result to conversation
+                        tool_message = {
+                            "role": "tool",
+                            "tool_call_id": tool_call.get("id", ""),
+                            "content": tool_result
+                        }
+                        messages.append(tool_message)
+                        add_agent_message(state, self.name, tool_message)
+                    
+                    # Continue to next round with tool results
+                cur_round += 1
+                    continue
+                
+                # If no tool calls and no conclusion, we might be stuck
+                if not tool_calls and not text_response:
+                    logger.warning(
+                        f"Round {cur_round}: No tool calls and no text response. Breaking.",
+                        trial=self.trial
+                    )
+                    break
+                
+                # If we have text but no conclusion and no tool calls, prompt for conclusion
+                if text_response and not tool_calls:
+                    messages.append({
+                        "role": "user",
+                        "content": "Please provide your final conclusion with CONCLUSION, INSIGHTS, and SUGGESTIONS."
+                    })
+                
+                cur_round += 1
                 
         finally:
             # Cleanup container
@@ -3226,88 +3523,13 @@ class LangGraphCoverageAnalyzer(LangGraphAgent):
         function_analysis = state.get("function_analysis", {})
         return function_analysis.get("raw_analysis", "")
     
-    def _handle_response(
-        self, 
-        cur_round: int, 
-        response: str, 
-        coverage_result: Dict[str, Any]
-    ) -> Optional[str]:
-        """
-        Handle LLM response - execute bash commands or extract conclusion.
-        
-        This follows the original _container_tool_reaction logic.
-        Returns a prompt string for the next round, or None if done.
-        """
-        # First, try to handle bash commands
-        bash_results = self._handle_bash_commands(response)
-        
-        # If bash commands were executed, return their results for next round
-        if bash_results:
-            return bash_results
-        
-        # If no bash commands, check for conclusion
-        conclusion = parse_tag(response, 'conclusion')
-        if conclusion:
-            logger.info(
-                f'----- ROUND {cur_round:02d} Received conclusion -----',
-                trial=self.trial
-            )
-            coverage_result['improve_required'] = conclusion.strip().lower() == 'true'
-            coverage_result['insights'] = parse_tag(response, 'insights') or ""
-            coverage_result['suggestions'] = parse_tag(response, 'suggestions') or ""
-            coverage_result['analyzed'] = True
-            return None  # Done
-        
-        # No valid instruction received
-        if not response:
-            return 'No valid instruction received. Please use the available tools properly.\n\n'
-        
-        return None
-    
-    def _handle_bash_commands(self, response: str) -> Optional[str]:
-        """
-        Execute bash commands from LLM response.
-        Returns formatted command results, or None if no commands were found.
-        """
-        bash_commands = parse_tags(response, 'bash')
-        if not bash_commands:
-            return None
-        
-        results = []
-        for command in bash_commands:
-            result = self.inspect_tool.execute(command)
-            result_text = self._format_bash_result(result)
-            results.append(result_text)
-        
-        return '\n'.join(results) if results else None
-    
-    def _format_bash_result(self, process) -> str:
-        """Format bash execution result."""
-        # Truncate output if too long
-        stdout = process.stdout.strip()
-        stderr = process.stderr.strip()
-        
-        # Limit output size to avoid token overflow
-        max_output_len = 10000
-        if len(stdout) > max_output_len:
-            stdout = stdout[:max_output_len] + f'\n... (truncated {len(stdout) - max_output_len} chars)'
-        if len(stderr) > max_output_len:
-            stderr = stderr[:max_output_len] + f'\n... (truncated {len(stderr) - max_output_len} chars)'
-        
-        return (f'<bash>\n{process.args}\n</bash>\n'
-                f'<return code>\n{process.returncode}\n</return code>\n'
-                f'<stdout>\n{stdout}\n</stdout>\n'
-                f'<stderr>\n{stderr}\n</stderr>\n')
-
 
 class LangGraphContextAnalyzer(LangGraphAgent):
     """
     Context analyzer agent for LangGraph - analyzes crash feasibility.
     
-    This agent follows the original ContextAnalyzer's approach:
-    - Uses ADK-style tools (but implemented for LangGraph)
-    - Tools: get_function_implementation, search_project_files, report_final_result
-    - Multi-round interaction until final result is reported
+    Uses OpenAI Function Calling with comprehensive FuzzIntrospector API tools.
+    Provides 8+ tools for deep project analysis: functions, types, headers, tests, etc.
     """
     
     def __init__(self, llm: LLM, trial: int, args: argparse.Namespace):
@@ -3323,7 +3545,406 @@ class LangGraphContextAnalyzer(LangGraphAgent):
             system_message=system_message
         )
         self.inspect_tool = None
-        self.project_functions = None
+        self.fi_tool = None  # FuzzIntrospector tool
+        self.project_name = None
+    
+    def _get_tool_definitions(self) -> list[dict]:
+        """
+        Define comprehensive FuzzIntrospector API tools for ContextAnalyzer.
+        
+        Provides 9 tools covering function analysis, types, headers, tests, and bash execution.
+        """
+        return [
+            {
+                "type": "function",
+                "function": {
+                    "name": "bash_execute",
+                    "description": "Execute bash command in the project container to search files or examine source code",
+                    "parameters": {
+                        "type": "object",
+                        "properties": {
+                            "command": {
+                                "type": "string",
+                                "description": "Bash command (e.g., 'grep -rn pattern /src', 'cat /path/to/file.c')"
+                            }
+                        },
+                        "required": ["command"]
+                    }
+                }
+            },
+            {
+                "type": "function",
+                "function": {
+                    "name": "get_function_implementation",
+                    "description": "Get the full source code implementation of a function by its name",
+                    "parameters": {
+                        "type": "object",
+                        "properties": {
+                            "function_name": {
+                                "type": "string",
+                                "description": "Name of the function (e.g., 'sam_hrecs_remove_ref_altnames')"
+                            }
+                        },
+                        "required": ["function_name"]
+                    }
+                }
+            },
+            {
+                "type": "function",
+                "function": {
+                    "name": "get_function_signature",
+                    "description": "Get the full signature of a function (return type + name + parameters)",
+                    "parameters": {
+                        "type": "object",
+                        "properties": {
+                            "function_name": {
+                                "type": "string",
+                                "description": "Name of the function"
+                            }
+                        },
+                        "required": ["function_name"]
+                    }
+                }
+            },
+            {
+                "type": "function",
+                "function": {
+                    "name": "get_sample_cross_references",
+                    "description": "Get sample code snippets showing how a function is called/used in the project",
+                    "parameters": {
+                        "type": "object",
+                        "properties": {
+                            "function_signature": {
+                                "type": "string",
+                                "description": "Full function signature (e.g., 'void func(int x)')"
+                            }
+                        },
+                        "required": ["function_signature"]
+                    }
+                }
+            },
+            {
+                "type": "function",
+                "function": {
+                    "name": "get_type_definitions",
+                    "description": "Get all type definitions (structs, enums, typedefs) in the project",
+                    "parameters": {
+                        "type": "object",
+                        "properties": {},
+                        "required": []
+                    }
+                }
+            },
+            {
+                "type": "function",
+                "function": {
+                    "name": "get_headers_for_function",
+                    "description": "Get the list of header files that need to be included to use a function",
+                    "parameters": {
+                        "type": "object",
+                        "properties": {
+                            "function_signature": {
+                                "type": "string",
+                                "description": "Full function signature"
+                            }
+                        },
+                        "required": ["function_signature"]
+                    }
+                }
+            },
+            {
+                "type": "function",
+                "function": {
+                    "name": "get_tests_for_functions",
+                    "description": "Get test code that uses specific functions, showing real-world usage examples",
+                    "parameters": {
+                        "type": "object",
+                        "properties": {
+                            "function_names": {
+                                "type": "array",
+                                "items": {"type": "string"},
+                                "description": "List of function names to search for in tests"
+                            }
+                        },
+                        "required": ["function_names"]
+                    }
+                }
+            },
+            {
+                "type": "function",
+                "function": {
+                    "name": "get_function_debug_types",
+                    "description": "Get detailed type information for function parameters (useful for understanding complex types)",
+                    "parameters": {
+                        "type": "object",
+                        "properties": {
+                            "function_signature": {
+                                "type": "string",
+                                "description": "Full function signature"
+                            }
+                        },
+                        "required": ["function_signature"]
+                    }
+                }
+            },
+            {
+                "type": "function",
+                "function": {
+                    "name": "get_functions_by_return_type",
+                    "description": "Find functions that return a specific type (useful for finding constructors/factories)",
+                    "parameters": {
+                        "type": "object",
+                        "properties": {
+                            "return_type": {
+                                "type": "string",
+                                "description": "Type to search for (e.g., 'sam_hrecs_t *', 'int')"
+                            }
+                        },
+                        "required": ["return_type"]
+                    }
+                }
+            }
+        ]
+    
+    def _init_fi_tool(self, project_name: str):
+        """Initialize FuzzIntrospector tool for the project."""
+        if self.fi_tool is None or self.project_name != project_name:
+            from data_prep.introspector import FuzzIntrospectorTool
+            logger.info(f"Initializing FuzzIntrospector for project: {project_name}", trial=self.trial)
+            self.fi_tool = FuzzIntrospectorTool(project_name)
+            self.project_name = project_name
+    
+    def _execute_tool(self, tool_call: dict) -> str:
+        """Execute a tool call and return the result."""
+        tool_name = tool_call.get("name", "")
+        arguments = tool_call.get("arguments", {})
+        
+        try:
+            if tool_name == "bash_execute":
+                command = arguments.get("command", "")
+                if not command:
+                    return "Error: bash_execute requires 'command' argument"
+                
+            result = self.inspect_tool.execute(command)
+                return self._format_bash_result(result)
+            
+            elif tool_name == "get_function_implementation":
+                function_name = arguments.get("function_name", "")
+                if not function_name:
+                    return "Error: get_function_implementation requires 'function_name' argument"
+                
+                impl = self.fi_tool.get_function_implementation(self.project_name, function_name)
+                if impl:
+                    return f"Function implementation for '{function_name}':\n```c\n{impl}\n```"
+                return f"Error: Could not find implementation for function '{function_name}'"
+            
+            elif tool_name == "get_function_signature":
+                function_name = arguments.get("function_name", "")
+                if not function_name:
+                    return "Error: get_function_signature requires 'function_name' argument"
+                
+                signature = self.fi_tool.get_function_signature(function_name)
+                if signature:
+                    return f"Function signature: {signature}"
+                return f"Error: Could not find signature for function '{function_name}'"
+            
+            elif tool_name == "get_sample_cross_references":
+                function_signature = arguments.get("function_signature", "")
+                if not function_signature:
+                    return "Error: get_sample_cross_references requires 'function_signature' argument"
+                
+                cross_refs = self.fi_tool.get_sample_cross_references(function_signature)
+                if cross_refs:
+                    result = f"Sample usage examples for '{function_signature}':\n\n"
+                    for i, ref in enumerate(cross_refs[:5], 1):  # Limit to 5 examples
+                        result += f"Example {i}:\n```c\n{ref}\n```\n\n"
+                    return result
+                return f"No cross-references found for '{function_signature}'"
+            
+            elif tool_name == "get_type_definitions":
+                type_defs = self.fi_tool.get_type_definitions()
+                if type_defs:
+                    result = "Type definitions in project:\n\n"
+                    for typedef in type_defs[:20]:  # Limit to 20 to avoid token overflow
+                        name = typedef.get("name", "Unknown")
+                        kind = typedef.get("kind", "Unknown")
+                        defn = typedef.get("definition", "")
+                        result += f"- {name} ({kind})\n"
+                        if defn:
+                            result += f"  ```c\n  {defn}\n  ```\n"
+                    if len(type_defs) > 20:
+                        result += f"\n... and {len(type_defs) - 20} more type definitions"
+                    return result
+                return "No type definitions found"
+            
+            elif tool_name == "get_headers_for_function":
+                function_signature = arguments.get("function_signature", "")
+                if not function_signature:
+                    return "Error: get_headers_for_function requires 'function_signature' argument"
+                
+                headers = self.fi_tool.get_headers_for_function(function_signature)
+                if headers:
+                    result = f"Required headers for '{function_signature}':\n"
+                    for header in headers:
+                        result += f"  #include <{header}>\n"
+                    return result
+                return f"No header information found for '{function_signature}'"
+            
+            elif tool_name == "get_tests_for_functions":
+                function_names = arguments.get("function_names", [])
+                if not function_names:
+                    return "Error: get_tests_for_functions requires 'function_names' array argument"
+                
+                tests = self.fi_tool.get_tests_for_functions(function_names)
+                if tests:
+                    result = f"Test examples for functions: {', '.join(function_names)}\n\n"
+                    for func, test_code in tests.items():
+                        if test_code:
+                            result += f"Tests for '{func}':\n```c\n{test_code}\n```\n\n"
+                    return result
+                return f"No tests found for functions: {', '.join(function_names)}"
+            
+            elif tool_name == "get_function_debug_types":
+                function_signature = arguments.get("function_signature", "")
+                if not function_signature:
+                    return "Error: get_function_debug_types requires 'function_signature' argument"
+                
+                debug_types = self.fi_tool.get_function_debug_types(function_signature)
+                if debug_types:
+                    result = f"Debug type information for '{function_signature}':\n"
+                    for i, dtype in enumerate(debug_types, 1):
+                        result += f"  Parameter {i}: {dtype}\n"
+                    return result
+                return f"No debug type information found for '{function_signature}'"
+            
+            elif tool_name == "get_functions_by_return_type":
+                return_type = arguments.get("return_type", "")
+                if not return_type:
+                    return "Error: get_functions_by_return_type requires 'return_type' argument"
+                
+                functions = self.fi_tool.get_functions_by_return_type(return_type)
+                if functions:
+                    result = f"Functions returning '{return_type}':\n"
+                    for func in functions[:10]:  # Limit to 10
+                        func_name = func.get("function_name", "Unknown")
+                        func_sig = func.get("function_signature", "")
+                        result += f"  - {func_name}\n"
+                        if func_sig:
+                            result += f"    Signature: {func_sig}\n"
+                    if len(functions) > 10:
+                        result += f"\n... and {len(functions) - 10} more functions"
+                    return result
+                return f"No functions found returning '{return_type}'"
+            
+            else:
+                return f"Error: Unknown tool '{tool_name}'"
+                
+        except Exception as e:
+            logger.error(f"Error executing tool '{tool_name}': {e}", trial=self.trial)
+            return f"Error executing {tool_name}: {str(e)}"
+    
+    def _format_bash_result(self, result: Any) -> str:
+        """Format bash execution result."""
+        if hasattr(result, 'stdout'):
+            # Result is a subprocess.CompletedProcess-like object
+            stdout = result.stdout.strip() if result.stdout else ""
+            stderr = result.stderr.strip() if result.stderr else ""
+            
+            # Limit output size
+        max_output_len = 10000
+        if len(stdout) > max_output_len:
+            stdout = stdout[:max_output_len] + f'\n... (truncated {len(stdout) - max_output_len} chars)'
+        if len(stderr) > max_output_len:
+            stderr = stderr[:max_output_len] + f'\n... (truncated {len(stderr) - max_output_len} chars)'
+        
+            result_parts = [f"Command: {result.args}"]
+            result_parts.append(f"Return code: {result.returncode}")
+            
+            if stdout:
+                result_parts.append(f"STDOUT:\n{stdout}")
+            if stderr:
+                result_parts.append(f"STDERR:\n{stderr}")
+            
+            return "\n".join(result_parts)
+        
+        # Fallback for dict or other types
+        return str(result)
+    
+    def _has_conclusion(self, text: str) -> bool:
+        """Check if the response contains a final conclusion."""
+        conclusion_markers = [
+            "FEASIBLE:",
+            "ANALYSIS:",
+            "Final analysis:",
+            "My conclusion:",
+            "feasibility:",
+        ]
+        text_lower = text.lower()
+        return any(marker.lower() in text_lower for marker in conclusion_markers)
+    
+    def _parse_conclusion(self, text: str) -> dict:
+        """
+        Parse conclusion from LLM text response.
+        
+        Expected format:
+        FEASIBLE: true/false
+        ANALYSIS: ...
+        SOURCE_CODE_EVIDENCE: ...
+        RECOMMENDATIONS: ...
+        """
+        result = {
+            'feasible': False,
+            'analysis': '',
+            'source_code_evidence': '',
+            'recommendations': '',
+            'analyzed': True
+        }
+        
+        lines = text.split('\n')
+        current_section = None
+        content_buffer = []
+        
+        for line in lines:
+            line_lower = line.lower().strip()
+            
+            if 'feasible:' in line_lower:
+                if content_buffer and current_section:
+                    result[current_section] = '\n'.join(content_buffer).strip()
+                    content_buffer = []
+                
+                # Extract true/false value
+                if 'true' in line_lower or 'yes' in line_lower:
+                    result['feasible'] = True
+                elif 'false' in line_lower or 'no' in line_lower:
+                    result['feasible'] = False
+                current_section = None
+                
+            elif 'analysis:' in line_lower:
+                if content_buffer and current_section:
+                    result[current_section] = '\n'.join(content_buffer).strip()
+                    content_buffer = []
+                current_section = 'analysis'
+                
+            elif 'source_code_evidence:' in line_lower or 'evidence:' in line_lower:
+                if content_buffer and current_section:
+                    result[current_section] = '\n'.join(content_buffer).strip()
+                    content_buffer = []
+                current_section = 'source_code_evidence'
+                
+            elif 'recommendations:' in line_lower or 'suggestions:' in line_lower:
+                if content_buffer and current_section:
+                    result[current_section] = '\n'.join(content_buffer).strip()
+                    content_buffer = []
+                current_section = 'recommendations'
+                
+            elif current_section:
+                content_buffer.append(line)
+        
+        # Save last section
+        if content_buffer and current_section:
+            result[current_section] = '\n'.join(content_buffer).strip()
+        
+        return result
     
     def execute(self, state: FuzzingWorkflowState) -> Dict[str, Any]:
         """
@@ -3352,9 +3973,12 @@ class LangGraphContextAnalyzer(LangGraphAgent):
             logger.error('No crash_analysis in state', trial=self.trial)
             return {"errors": [{"message": "No crash analysis found"}]}
         
-        # Initialize inspect_tool for project file search
+        # Initialize inspect_tool for bash command execution
         self.inspect_tool = ProjectContainerTool(benchmark)
         self.inspect_tool.compile(extra_commands=' && rm -rf /out/* > /dev/null')
+        
+        # Initialize FuzzIntrospector tool for API calls
+        self._init_fi_tool(benchmark.project)
         
         # Get function requirements
         function_requirements = self._get_function_requirements(state)
@@ -3386,54 +4010,79 @@ class LangGraphContextAnalyzer(LangGraphAgent):
             agent_name=self.name
         )
         
-        # Create prompt object
-        prompt = self.llm.prompt_type()(None)
-        prompt.add_priming(user_prompt)
-        
-        # Multi-round interaction - simulating ADK tool calling
+        # Multi-round interaction with Function Calling
         context_result = None
         cur_round = 0
         max_round = self.args.max_round
         all_responses = []  # 收集所有响应，用于提取session_memory更新
         
+        # Get tool definitions
+        tools = self._get_tool_definitions()
+        
+        # Initialize conversation messages
+        messages = get_agent_messages(state, self.name)
+        messages.append({"role": "user", "content": user_prompt})
+        
         try:
             while cur_round < max_round:
-                # Chat with LLM
-                client = None  # ADK agents use None for client
-                response = self.llm.ask_llm(prompt=prompt)
+                # Call LLM with tools
+                response_data = self.llm.chat_with_tools(
+                    messages=messages,
+                    tools=tools,
+                    state=state
+                )
                 
-                # 收集响应
-                all_responses.append(response)
+                assistant_message = response_data["message"]
+                text_response = assistant_message.get("content", "") or ""
+                tool_calls = assistant_message.get("tool_calls", [])
                 
-                # Track token usage
-                if hasattr(self.llm, 'last_token_usage') and self.llm.last_token_usage:
-                    from agent_graph.state import update_token_usage
-                    usage = self.llm.last_token_usage
-                    update_token_usage(
-                        state,
-                        self.name,
-                        usage.get('prompt_tokens', 0),
-                        usage.get('completion_tokens', 0),
-                        usage.get('total_tokens', 0)
-                    )
+                # Add assistant message to conversation
+                messages.append(assistant_message)
+                add_agent_message(state, self.name, assistant_message)
                 
-                # Log the interaction
+                # Collect text responses for session memory
+                if text_response:
+                    all_responses.append(text_response)
+                
+                # Log the round
                 logger.info(
-                    f'<CONTEXT ANALYZER ROUND {cur_round}>\n{response}\n</CONTEXT ANALYZER ROUND {cur_round}>',
+                    f'<CONTEXT ANALYZER ROUND {cur_round}>\n{text_response}\n</CONTEXT ANALYZER ROUND {cur_round}>',
                     trial=self.trial
                 )
                 
-                # Try to parse result from response (simulating report_final_result tool)
-                context_result = self._try_parse_final_result(response)
-                if context_result:
+                # Check if we have a conclusion
+                if text_response and self._has_conclusion(text_response):
+                    logger.info(
+                        f'----- ROUND {cur_round:02d} Received conclusion -----',
+                        trial=self.trial
+                    )
+                    context_result = self._parse_conclusion(text_response)
                     break
                 
-                # Handle tool calls (bash commands)
-                prompt = self._handle_tool_calls(response, prompt)
+                # Execute any tool calls
+                if tool_calls:
+                    for tool_call in tool_calls:
+                        tool_result = self._execute_tool(tool_call)
+                        
+                        # Add tool result to conversation
+                        tool_message = {
+                            "role": "tool",
+                            "tool_call_id": tool_call.get("id", ""),
+                            "content": tool_result
+                        }
+                        messages.append(tool_message)
+                        add_agent_message(state, self.name, tool_message)
+                    
+                    # Continue to next round with tool results
+                    cur_round += 1
+                    continue
                 
-                if not prompt or not prompt.get():
-                    # Invalid response, ask for correction
-                    prompt = self._handle_invalid_response(response)
+                # If no tool calls and no conclusion, prompt for conclusion
+                if not tool_calls and text_response:
+                    messages.append({
+                        "role": "user",
+                        "content": "Please provide your final analysis with FEASIBLE, ANALYSIS, SOURCE_CODE_EVIDENCE, and RECOMMENDATIONS."
+                    })
                 
                 cur_round += 1
                 
@@ -3491,153 +4140,6 @@ class LangGraphContextAnalyzer(LangGraphAgent):
         # Fallback to state
         function_analysis = state.get("function_analysis", {})
         return function_analysis.get("raw_analysis", "")
-    
-    def _try_parse_final_result(self, response: str) -> Optional[Dict[str, Any]]:
-        """
-        Try to parse final result from response.
-        
-        Looks for structured output similar to report_final_result tool.
-        """
-        # Look for the structured result tags
-        feasible_str = parse_tag(response, 'feasible')
-        analysis = parse_tag(response, 'analysis')
-        evidence = parse_tag(response, 'source_code_evidence')
-        recommendations = parse_tag(response, 'recommendations')
-        
-        # Only consider it a final result if we have the key fields
-        if feasible_str and analysis:
-            return {
-                "feasible": feasible_str.strip().lower() in ['true', 'yes', '1'],
-                "analysis": analysis,
-                "source_code_evidence": evidence,
-                "recommendations": recommendations,
-                "analyzed": True
-            }
-        
-        return None
-    
-    def _handle_tool_calls(self, response: str, prompt: Any) -> Any:
-        """
-        Handle tool calls from LLM response.
-        
-        Simulates ADK tools: search_project_files, get_function_implementation
-        """
-        new_prompt = self.llm.prompt_type()(None)
-        
-        # Handle bash commands for search_project_files
-        bash_commands = parse_tags(response, 'bash')
-        if bash_commands:
-            for command in bash_commands:
-                result = self.inspect_tool.execute(command)
-                prompt_text = self._format_bash_result(result)
-                new_prompt.append(prompt_text)
-            return new_prompt
-        
-        # Handle get_function_implementation requests
-        # Look for patterns like "get_function_implementation(project, function)"
-        func_impl_match = parse_tag(response, 'get_function_implementation')
-        if func_impl_match:
-            # Parse project and function names from the request
-            impl_response = self._get_function_implementation_from_text(func_impl_match)
-            new_prompt.append(impl_response)
-            return new_prompt
-        
-        return new_prompt
-    
-    def _format_bash_result(self, result: Any) -> str:
-        """
-        Format bash tool result for prompt.
-        
-        Args:
-            result: Result from inspect_tool.execute()
-            
-        Returns:
-            Formatted string for prompt
-        """
-        if isinstance(result, dict):
-            stdout = result.get('stdout', '')
-            stderr = result.get('stderr', '')
-            returncode = result.get('returncode', 0)
-            
-            formatted = ""
-            if stdout:
-                formatted += f"<stdout>\n{stdout}\n</stdout>\n"
-            if stderr:
-                formatted += f"<stderr>\n{stderr}\n</stderr>\n"
-            if returncode != 0:
-                formatted += f"<returncode>{returncode}</returncode>\n"
-            
-            return formatted if formatted else "No output"
-        
-        # Fallback for string or other types
-        return str(result)
-    
-    def _get_function_implementation_from_text(self, request: str) -> str:
-        """
-        Get function implementation from introspector.
-        
-        This simulates the get_function_implementation tool.
-        """
-        from data_prep import introspector
-        import re
-        
-        # Try to extract project and function names
-        # Simple pattern matching - might need refinement
-        match = re.search(r'project[:\s]+(\w+).*?function[:\s]+(\w+)', request, re.IGNORECASE | re.DOTALL)
-        if not match:
-            return "Error: Could not parse project and function names from request"
-        
-        project_name = match.group(1)
-        function_name = match.group(2)
-        
-        # Initialize project functions if needed
-        if self.project_functions is None:
-            logger.info(
-                f'Initializing project functions for "{project_name}"',
-                trial=self.trial
-            )
-            functions_list = introspector.query_introspector_all_functions(project_name)
-            
-            if functions_list:
-                self.project_functions = {
-                    func['debug_summary']['name']: func
-                    for func in functions_list
-                    if isinstance(func.get('debug_summary'), dict) and
-                    isinstance(func['debug_summary'].get('name'), str) and
-                    func['debug_summary']['name'].strip()
-                }
-            else:
-                self.project_functions = {}
-        
-        # Get function source
-        response = f"Project name: {project_name}\nFunction name: {function_name}\n"
-        function_source = ''
-        
-        if self.project_functions:
-            function_dict = self.project_functions.get(function_name, {})
-            function_signature = function_dict.get('function_signature', '')
-            
-            function_source = introspector.query_introspector_function_source(
-                project_name, function_signature
-            )
-        
-        if function_source.strip():
-            response += f"\nFunction source code:\n{function_source}\n"
-        else:
-            response += f'\nError: Function "{function_name}" not found in project "{project_name}"\n'
-        
-        return response
-    
-    def _handle_invalid_response(self, response: str) -> Any:
-        """Handle invalid LLM response."""
-        logger.warning(f'Invalid response from LLM: {response[:200]}...', trial=self.trial)
-        
-        # Create a simple error correction prompt
-        prompt = self.llm.prompt_type()(None)
-        prompt.add_problem('No valid instruction received. Please follow the interaction protocols.\n\n')
-        prompt.add_problem('\n\nPlease provide a valid analysis following the requested format.')
-        
-        return prompt
 
 
 class LangGraphImprover(LangGraphAgent):

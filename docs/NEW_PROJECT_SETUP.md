@@ -685,7 +685,6 @@ python main.py --rebuild
 - [Main README](../README.md) - LogicFuzz overview
 - [Usage Guide](../Usage.md) - OSS-Fuzz project quick setup
 - [Data Preparation](../data_prep/README.md) - Benchmark YAML generation
-- [Signature Fix Guide](SIGNATURE_FIX_README.md) - Function signature handling
 
 ### OSS-Fuzz Resources
 
