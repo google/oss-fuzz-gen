@@ -1,65 +1,47 @@
-# Stateless Parser Archetype
+# Stateless Parser (Single-Call Pattern)
 
-## Pattern Signature
-```
-parse(data, size) → result
-```
-
-## Characteristics
-- Single function call, no state maintained
-- No initialization or cleanup needed
-- Each invocation is independent
-- Pure function behavior (same input → same output)
-
-## Typical APIs
-- JSON/XML/YAML parsers
-- Image decoders (from memory buffer)
-- Text format parsers
-- Checksum/hash functions
-
-## Preconditions
-1. Input buffer valid (or NULL with size 0)
-2. Size parameter accurate
-
-## Postconditions
-1. Returns result or error code
-2. No side effects on global state
-3. Output independent of previous calls
-
-## Driver Pattern
+## Pattern
 ```c
-int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
-  if (size < MIN_SIZE || size > MAX_SIZE) return 0;
-  
-  // Direct call, no setup
-  result = parse_function(data, size);
-  
-  // Optional: verify result
-  if (result != NULL) {
-    // Use result
-    free_result(result);
-  }
-  
-  return 0;
-}
+result = parse_function(data, size);
 ```
 
-## Parameter Strategy
-- Input buffer: DIRECT_FUZZ (use fuzzer data directly)
-- Size parameter: DIRECT_FUZZ (use fuzzer size)
-- Options/flags: CONSTRAIN (extract from first bytes)
+Single function, no state, no setup/cleanup needed.
 
-## Common Pitfalls
-- Assuming minimum input size without checking
-- Not handling size=0 case
-- Modifying const input buffer
+---
+
+## OSS-Fuzz Notes
+
+### ✅ What Makes It "Stateless"
+- No `LLVMFuzzerInitialize` needed (usually)
+- No object creation/destruction
+- Direct `data` → `parse()` → `result`
+
+### ⚠️ Common Pitfalls
+
+**1. Not all "parsers" are stateless**
+```c
+// ❌ Looks stateless, but needs parser object
+yaml_parser_t parser;
+yaml_parser_initialize(&parser);  // ← NOT stateless!
+yaml_parser_parse(&parser, event);
+```
+
+**2. Size validation**
+```c
+// ❌ Wrong - no size check
+result = parse(data, size);  // Crashes on size=0
+
+// ✅ Right
+if (size < MIN_SIZE) return 0;  // Check first
+result = parse(data, size);
+```
+
+---
 
 ## Real Examples
-- `json_parse(data, size)` - cJSON
-- `yaml_parser_parse()` - libyaml
-- `wasm_decode()` - wabt
-- `png_decode()` - libpng (memory variant)
 
-## Reference
-See FUZZER_COOKBOOK.md Scenario 1
+- **cJSON**: `json_parse(data, size)` - truly stateless
+- **libpng** (memory variant): `png_decode()` - stateless
+- **libyaml**: `yaml_parser_parse()` - NOT stateless (needs parser object)
+- **protobuf-c**: `message__unpack(data, size)` - stateless
 

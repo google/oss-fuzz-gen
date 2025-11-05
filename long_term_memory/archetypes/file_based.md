@@ -1,186 +1,69 @@
-# File-based API Archetype
+# File-based API (Requires File Path)
 
-## Pattern Signature
-```
+## Pattern
+```c
 write_temp_file(data) → api_load_file(path) → unlink(path)
 ```
 
-## Characteristics
-- API requires file path, not memory buffer
-- Temp file creation necessary
-- File cleanup critical
-- Process isolation via filesystem
+API needs filename, not memory buffer.
 
-## Typical APIs
-- Image loaders (imread, not imdecode)
-- Document processors (PDF, Office)
-- Archive extractors
-- File format validators
+---
 
-## Preconditions
-1. Temp file writable
-2. Unique filename (avoid collision)
-3. Data written completely
-4. File closed before API call
+## OSS-Fuzz Notes
 
-## Postconditions
-1. API reads from file
-2. File can be deleted after
-3. Cleanup happens even on crash
-4. No file descriptor leaks
+### ⚠️ Must Use Unique Filename
 
-## Driver Pattern
+**❌ Wrong - race condition**:
 ```c
-int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
-  if (size < 1) return 0;
-  
-  // Create unique temp file
-  char filename[256];
-  snprintf(filename, sizeof(filename), "/tmp/fuzz_%d_%p", 
-           getpid(), (void*)data);
-  
-  // Write data
-  FILE *fp = fopen(filename, "wb");
-  if (!fp) return 0;
-  
-  fwrite(data, 1, size, fp);
-  fclose(fp);
-  
-  // Call API
-  result_t *result = api_load_file(filename);
-  
-  if (result) {
-    // Use result
-    api_free_result(result);
-  }
-  
-  // Cleanup
-  unlink(filename);
-  return 0;
-}
+char filename[] = "/tmp/fuzz.dat";  // Fixed name - multiple instances collide
 ```
 
-## C++ RAII Version
-```cpp
-class TempFile {
-  char path_[256];
-  
-public:
-  TempFile(const uint8_t *data, size_t size) {
-    snprintf(path_, sizeof(path_), "/tmp/fuzz_%d_%p", 
-             getpid(), (void*)this);
-    
-    FILE *fp = fopen(path_, "wb");
-    if (fp) {
-      fwrite(data, size, 1, fp);
-      fclose(fp);
-    }
-  }
-  
-  ~TempFile() { unlink(path_); }
-  
-  const char* path() const { return path_; }
-};
-
-extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
-  if (size < 1) return 0;
-  
-  TempFile tmp(data, size);
-  api_load_file(tmp.path());
-  
-  return 0;  // Auto cleanup
-}
-```
-
-## Parameter Strategy
-- File data: DIRECT_FUZZ
-- Filename: FIX (unique temp path)
-- Options: CONSTRAIN or FIX
-
-## Filename Uniqueness
-
-**WRONG**: Fixed name (race condition)
+**✅ Right - unique per process**:
 ```c
-char filename[] = "/tmp/fuzz.dat";  // Multiple instances collide
+char filename[256];
+snprintf(filename, sizeof(filename), "/tmp/fuzz_%d_%p", getpid(), (void*)data);
 ```
 
-**RIGHT**: PID + pointer (unique)
-```c
-snprintf(filename, sizeof(filename), "/tmp/fuzz_%d_%p", 
-         getpid(), (void*)data);
-```
-
-**BETTER**: Use mkstemp (atomic)
+**✅ Better - atomic creation**:
 ```c
 char template[] = "/tmp/fuzzXXXXXX";
-int fd = mkstemp(template);
+int fd = mkstemp(template);  // Atomic, unique
 write(fd, data, size);
 close(fd);
-// use template as filename
+api_load_file(template);
 unlink(template);
 ```
 
-## Common Pitfalls
-- Fixed filename (collision)
-- Not closing file before API call
-- Forgetting to unlink (disk fills)
-- File descriptor leak
-- Path traversal in API (use absolute path)
+### ⚠️ Must Close File Before API Call
 
-## Cleanup Guarantees
-
-**Problem**: Crash before unlink
+**❌ Wrong**:
 ```c
-api_load_file(filename);  // Crashes here
-unlink(filename);         // Never reached
+FILE *fp = fopen(filename, "wb");
+fwrite(data, size, 1, fp);
+// Missing fclose(fp)
+api_load_file(filename);  // Might not see all data
 ```
 
-**Solution 1**: OS cleans /tmp on reboot (acceptable for fuzzing)
-
-**Solution 2**: RAII (C++)
-```cpp
-{
-  TempFile tmp(data, size);
-  api_load_file(tmp.path());
-}  // Destructor called even on exception
-```
-
-**Solution 3**: Signal handler (complex, not recommended)
-
-## Multiple Files
-
-Some APIs need multiple files:
+**✅ Right**:
 ```c
-char file1[256], file2[256];
-snprintf(file1, sizeof(file1), "/tmp/fuzz1_%d", getpid());
-snprintf(file2, sizeof(file2), "/tmp/fuzz2_%d", getpid());
-
-// Split input data
-size_t split = data[0];  // First byte determines split
-if (split > size) split = size / 2;
-
-write_file(file1, data, split);
-write_file(file2, data + split, size - split);
-
-api_process_two_files(file1, file2);
-
-unlink(file1);
-unlink(file2);
+FILE *fp = fopen(filename, "wb");
+fwrite(data, size, 1, fp);
+fclose(fp);  // Close before loading
+api_load_file(filename);
 ```
+
+### ⚠️ Always Cleanup Temp File
+
+```c
+api_load_file(filename);
+unlink(filename);  // Always cleanup (even if API crashes)
+```
+
+---
 
 ## Real Examples
-- OpenCV: `cv::imread(filename)` (not `cv::imdecode()`)
-- HDF5: `H5Fopen(filename, ...)`
-- Many image/video libraries
 
-## Disk Space Considerations
-
-Some fuzzing environments have small /tmp:
-```c
-// Check input size
-if (size > 10 * 1024 * 1024) return 0;  // Limit 10MB
-```
-
-## Reference
-See FUZZER_COOKBOOK.md Scenario 2
-
+- **OpenCV**: `cv::imread(filename)` - needs file path
+- **HDF5**: `H5Fopen(filename, ...)` - file-based
+- **ImageMagick**: Many image loaders require file path
+- **libarchive**: `archive_read_open_filename()`

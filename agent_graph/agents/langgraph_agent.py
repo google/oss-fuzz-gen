@@ -3457,7 +3457,7 @@ class LangGraphCoverageAnalyzer(LangGraphAgent):
                         add_agent_message(state, self.name, tool_message)
                     
                     # Continue to next round with tool results
-                cur_round += 1
+                    cur_round += 1
                     continue
                 
                 # If no tool calls and no conclusion, we might be stuck
@@ -3725,7 +3725,7 @@ class LangGraphContextAnalyzer(LangGraphAgent):
                 if not command:
                     return "Error: bash_execute requires 'command' argument"
                 
-            result = self.inspect_tool.execute(command)
+                result = self.inspect_tool.execute(command)
                 return self._format_bash_result(result)
             
             elif tool_name == "get_function_implementation":

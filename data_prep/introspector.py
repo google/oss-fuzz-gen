@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 
 T = TypeVar('T', str, list, dict, int)  # Generic type.
 
-TIMEOUT = 45
+TIMEOUT = 120
 MAX_RETRY = 5
 
 BENCHMARK_ROOT: str = './conti-benchmark'
