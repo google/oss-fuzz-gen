@@ -120,7 +120,10 @@ class APIDependencyAnalyzer:
             - data_dependencies: 参数依赖关系 [(producer, consumer), ...]
             - call_sequence: 推荐的调用顺序
             - initialization_code: 建议的初始化代码模板
-            - graph: 图对象（用于调试）
+            
+        Note: 
+            The internal DiGraph object is not included in the result to avoid
+            serialization issues with LangGraph's msgpack checkpointer.
         """
         logger.info(f"Building dependency graph for {target_function}")
         
@@ -128,8 +131,7 @@ class APIDependencyAnalyzer:
             'prerequisites': [],
             'data_dependencies': [],
             'call_sequence': [],
-            'initialization_code': [],
-            'graph': self.graph
+            'initialization_code': []
         }
         
         try:

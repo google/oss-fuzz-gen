@@ -15,7 +15,7 @@ from llm_toolkit.models import LLM
 from agent_graph.state import FuzzingWorkflowState
 from agent_graph.memory import get_agent_messages, add_agent_message
 from agent_graph.prompt_loader import get_prompt_manager
-# Note: parse_tag and parse_tags have been removed in favor of Function Calling
+from agent_graph.agents.utils import parse_tag
 from agent_graph.logger import LangGraphLogger, NullLogger
 
 

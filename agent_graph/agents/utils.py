@@ -3,9 +3,31 @@ Shared utility functions for agents.
 
 This module provides common utilities used by both BaseAgent
 and LangGraphAgent hierarchies.
-
-Note: The XML tag parsing functions (parse_tag and parse_tags) have been removed
-in favor of OpenAI Function Calling. All agents now use chat_with_tools() for
-structured tool interactions.
 """
+
+import re
+
+
+def parse_tag(response: str, tag: str) -> str:
+    """
+    Parse XML-style or code block-style tags from LLM response.
+    
+    Args:
+        response: LLM response text
+        tag: Tag name to extract (e.g., 'fuzz_target', 'solution')
+        
+    Returns:
+        Content within the tag, or empty string if not found
+    """
+    patterns = [
+        rf'<{tag}>(.*?)</{tag}>',  # XML style: <tag>...</tag>
+        rf'```{tag}(.*?)```'       # Code block style: ```tag...```
+    ]
+    
+    for pattern in patterns:
+        match = re.search(pattern, response, re.DOTALL)
+        if match:
+            return match.group(1).strip()
+    
+    return ''
 
