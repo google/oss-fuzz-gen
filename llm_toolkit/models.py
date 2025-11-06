@@ -27,7 +27,11 @@ from vertexai.preview.generative_models import (ChatSession, GenerationResponse,
                                                 GenerativeModel)
 from vertexai.preview.language_models import CodeGenerationModel
 
-from llm_toolkit import prompts
+# Note: prompts module has been removed in LangGraph migration
+# Legacy methods (ask_llm, query_llm, chat_llm) are kept for backward compatibility
+# with non-LangGraph code but type hints are simplified to Any
+from typing import TYPE_CHECKING
+
 from utils import retryable
 
 logger = logging.getLogger(__name__)
@@ -123,21 +127,21 @@ class LLM:
 
   # ============================== Generation ============================== #
   @abstractmethod
-  def query_llm(self, prompt: prompts.Prompt, response_dir: str) -> None:
+  def query_llm(self, prompt: Any, response_dir: str) -> None:
     """Queries the LLM and stores responses in |response_dir|."""
 
-  def ask_llm(self, prompt: prompts.Prompt) -> str:
+  def ask_llm(self, prompt: Any) -> str:
     """Queries LLM a single prompt and returns its response."""
     del prompt
     return ''
 
   @abstractmethod
-  def chat_llm_with_tools(self, client: Any, prompt: Optional[prompts.Prompt],
+  def chat_llm_with_tools(self, client: Any, prompt: Optional[Any],
                           tools) -> Any:
     """Queries the LLM in the given chat session with tools."""
 
   @abstractmethod
-  def chat_llm(self, client: Any, prompt: prompts.Prompt) -> str:
+  def chat_llm(self, client: Any, prompt: Any) -> str:
     """Queries the LLM in the given chat session and returns the response."""
 
   def chat_with_messages(self, messages: list[dict[str, str]]) -> str:
@@ -218,7 +222,7 @@ class LLM:
     """Returns the underlying model instance."""
 
   @abstractmethod
-  def prompt_type(self) -> type[prompts.Prompt]:
+  def prompt_type(self) -> type[Any]:
     """Returns the expected prompt type."""
 
   def _delay_for_retry(self, attempt_count: int) -> None:
@@ -467,11 +471,11 @@ class GPT(LLM):
 
     return num_tokens
 
-  def prompt_type(self) -> type[prompts.Prompt]:
+  def prompt_type(self) -> type[Any]:
     """Returns the expected prompt type."""
-    return prompts.OpenAIPrompt
+    return Any  # Legacy: prompts.OpenAIPrompt
 
-  def chat_llm(self, client: Any, prompt: prompts.Prompt) -> str:
+  def chat_llm(self, client: Any, prompt: Any) -> str:
     """Queries LLM in a chat session and returns its response."""
     if self.ai_binary:
       raise ValueError(f'OpenAI does not use local AI binary: {self.ai_binary}')
@@ -504,7 +508,7 @@ class GPT(LLM):
 
     return llm_response
 
-  def chat_llm_with_tools(self, client: Any, prompt: Optional[prompts.Prompt],
+  def chat_llm_with_tools(self, client: Any, prompt: Optional[Any],
                           tools) -> Any:
     """Queries LLM in a chat session with tools (legacy method)."""
     if self.ai_binary:
@@ -587,7 +591,7 @@ class GPT(LLM):
         "tool_calls": tool_calls
     }
 
-  def ask_llm(self, prompt: prompts.Prompt) -> str:
+  def ask_llm(self, prompt: Any) -> str:
     """Queries LLM a single prompt and returns its response."""
     if self.ai_binary:
       raise ValueError(f'OpenAI does not use local AI binary: {self.ai_binary}')
@@ -617,7 +621,7 @@ class GPT(LLM):
     return completion.choices[0].message.content
 
   # ============================== Generation ============================== #
-  def query_llm(self, prompt: prompts.Prompt, response_dir: str) -> None:
+  def query_llm(self, prompt: Any, response_dir: str) -> None:
     """Queries OpenAI's API and stores response in |response_dir|."""
     if self.ai_binary:
       raise ValueError(f'OpenAI does not use local AI binary: {self.ai_binary}')
@@ -686,7 +690,7 @@ class GPT5(GPT):
 
   name = 'gpt-5'
 
-  def chat_llm(self, client: Any, prompt: prompts.Prompt) -> str:
+  def chat_llm(self, client: Any, prompt: Any) -> str:
     """Queries LLM in a chat session and returns its response (no temperature)."""
     if self.ai_binary:
       raise ValueError(f'OpenAI does not use local AI binary: {self.ai_binary}')
@@ -783,7 +787,7 @@ class GPT5(GPT):
         "tool_calls": tool_calls
     }
 
-  def ask_llm(self, prompt: prompts.Prompt) -> str:
+  def ask_llm(self, prompt: Any) -> str:
     """Queries LLM a single prompt and returns its response (no temperature)."""
     if self.ai_binary:
       raise ValueError(f'OpenAI does not use local AI binary: {self.ai_binary}')
@@ -811,7 +815,7 @@ class GPT5(GPT):
     
     return completion.choices[0].message.content
 
-  def ask_llm_to_file(self, prompt: prompts.Prompt, response_dir: str) -> None:
+  def ask_llm_to_file(self, prompt: Any, response_dir: str) -> None:
     """Queries OpenAI's API and stores response in |response_dir| (no temperature)."""
     if self.ai_binary:
       raise ValueError(f'OpenAI does not use local AI binary: {self.ai_binary}')
@@ -887,7 +891,7 @@ class ChatGPT(GPT):
                      temperature_list)
     self.conversation_history = []
 
-  def chat_llm(self, client: Any, prompt: prompts.Prompt) -> str:
+  def chat_llm(self, client: Any, prompt: Any) -> str:
     """Queries the LLM in the given chat session and returns the response."""
     if self.ai_binary:
       raise ValueError(f'OpenAI does not use local AI binary: {self.ai_binary}')
@@ -972,15 +976,15 @@ class Claude(LLM):
     client = anthropic.Client()
     return client.count_tokens(text)
 
-  def prompt_type(self) -> type[prompts.Prompt]:
+  def prompt_type(self) -> type[Any]:
     """Returns the expected prompt type."""
-    return prompts.ClaudePrompt
+    return Any  # Legacy: prompts.ClaudePrompt
 
   def get_model(self) -> str:
     return self._vertex_ai_model
 
   # ============================== Generation ============================== #
-  def query_llm(self, prompt: prompts.Prompt, response_dir: str) -> None:
+  def query_llm(self, prompt: Any, response_dir: str) -> None:
     """Queries Claude's API and stores response in |response_dir|."""
     if self.ai_binary:
       raise ValueError(f'Claude does not use local AI binary: {self.ai_binary}')
@@ -1009,12 +1013,12 @@ class Claude(LLM):
     del model
     # Placeholder: To Be Implemented.
 
-  def chat_llm(self, client: Any, prompt: prompts.Prompt) -> Any:
+  def chat_llm(self, client: Any, prompt: Any) -> Any:
     """Queries the LLM in the given chat session and returns the response."""
     del client, prompt
     # Placeholder: To Be Implemented.
 
-  def chat_llm_with_tools(self, client: Any, prompt: Optional[prompts.Prompt],
+  def chat_llm_with_tools(self, client: Any, prompt: Optional[Any],
                           tools) -> Any:
     """Queries the LLM in the given chat session with tools."""
     # Placeholder: To Be Implemented.
@@ -1041,9 +1045,9 @@ class ClaudeSonnetV3D5(Claude):
 class GoogleModel(LLM):
   """Generic Google model."""
 
-  def prompt_type(self) -> type[prompts.Prompt]:
+  def prompt_type(self) -> type[Any]:
     """Returns the expected prompt type."""
-    return prompts.TextPrompt
+    return Any  # Legacy: prompts.TextPrompt
 
   def estimate_token_num(self, text) -> int:
     """Estimates the number of tokens in |text|."""
@@ -1071,7 +1075,7 @@ class GoogleModel(LLM):
     return int(len(text) * token_target / total_tokens)
 
   # ============================== Generation ============================== #
-  def query_llm(self, prompt: prompts.Prompt, response_dir: str) -> None:
+  def query_llm(self, prompt: Any, response_dir: str) -> None:
     """Queries a Google LLM and stores results in |response_dir|."""
     if not self.ai_binary:
       logger.info('Error: This model requires a local AI binary: %s',
@@ -1120,12 +1124,12 @@ class GoogleModel(LLM):
     del model
     raise NotImplementedError
 
-  def chat_llm(self, client: Any, prompt: prompts.Prompt) -> Any:
+  def chat_llm(self, client: Any, prompt: Any) -> Any:
     """Queries the LLM in the given chat session and returns the response."""
     del client, prompt
     raise NotImplementedError
 
-  def chat_llm_with_tools(self, client: Any, prompt: Optional[prompts.Prompt],
+  def chat_llm_with_tools(self, client: Any, prompt: Optional[Any],
                           tools) -> Any:
     """Queries the LLM in the given chat session with tools."""
     # Placeholder: To Be Implemented.
@@ -1162,7 +1166,7 @@ class VertexAIModel(GoogleModel):
             self._max_output_tokens
     } for index in range(self.num_samples)]
 
-  def query_llm(self, prompt: prompts.Prompt, response_dir: str) -> None:
+  def query_llm(self, prompt: Any, response_dir: str) -> None:
     if self.ai_binary:
       logger.info('VertexAI does not use local AI binary: %s', self.ai_binary)
 
@@ -1176,7 +1180,7 @@ class VertexAIModel(GoogleModel):
           [GoogleAPICallError, ValueError]) or ''
       self._save_output(i, response, response_dir)
 
-  def ask_llm(self, prompt: prompts.Prompt) -> str:
+  def ask_llm(self, prompt: Any) -> str:
     if self.ai_binary:
       logger.info('VertexAI does not use local AI binary: %s', self.ai_binary)
 
@@ -1392,7 +1396,7 @@ class GeminiV1D5Chat(GeminiV1D5):
                 len(raw_prompt_text), len(truncated_prompt))
     return self.truncate_prompt(truncated_prompt, extra_text)
 
-  def chat_llm(self, client: ChatSession, prompt: prompts.Prompt) -> str:
+  def chat_llm(self, client: ChatSession, prompt: Any) -> str:
     if self.ai_binary:
       logger.info('VertexAI does not use local AI binary: %s', self.ai_binary)
 
@@ -1401,7 +1405,7 @@ class GeminiV1D5Chat(GeminiV1D5):
     response = self._do_generate(client, prompt.get(), parameters_list) or ''
     return response
 
-  def chat_llm_with_tools(self, client: Any, prompt: Optional[prompts.Prompt],
+  def chat_llm_with_tools(self, client: Any, prompt: Optional[Any],
                           tools) -> Any:
     """Queries the LLM in the given chat session with tools."""
     # Placeholder: To Be Implemented.
@@ -1454,12 +1458,12 @@ class AIBinaryModel(GoogleModel):
     del model
     # Placeholder: To Be Implemented.
 
-  def chat_llm(self, client: Any, prompt: prompts.Prompt) -> Any:
+  def chat_llm(self, client: Any, prompt: Any) -> Any:
     """Queries the LLM in the given chat session and returns the response."""
     del client, prompt
     # Placeholder: To Be Implemented.
 
-  def chat_llm_with_tools(self, client: Any, prompt: Optional[prompts.Prompt],
+  def chat_llm_with_tools(self, client: Any, prompt: Optional[Any],
                           tools) -> Any:
     """Queries the LLM in the given chat session with tools."""
     # Placeholder: To Be Implemented.

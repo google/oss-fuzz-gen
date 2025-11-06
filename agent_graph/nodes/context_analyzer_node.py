@@ -8,7 +8,7 @@ from typing import Dict, Any
 from langchain_core.runnables import RunnableConfig
 import logger
 from agent_graph.state import FuzzingWorkflowState
-from agent_graph.agents.langgraph_agent import LangGraphContextAnalyzer
+from agent_graph.agents import LangGraphContextAnalyzer
 
 
 def context_analyzer_node(state: FuzzingWorkflowState, config: RunnableConfig) -> Dict[str, Any]:

@@ -10,7 +10,7 @@ from typing import Dict, Any
 from langchain_core.runnables import RunnableConfig
 import logger
 from agent_graph.state import FuzzingWorkflowState
-from agent_graph.agents.langgraph_agent import LangGraphImprover
+from agent_graph.agents import LangGraphImprover
 
 
 def improver_node(state: FuzzingWorkflowState, config: RunnableConfig) -> Dict[str, Any]:

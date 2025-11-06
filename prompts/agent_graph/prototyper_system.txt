@@ -1,88 +1,26 @@
-Generate a complete LibFuzzer fuzz target based on the provided specification.
+ROLE: Generate LibFuzzer fuzz targets from specifications.
 
-# Information Sources (in priority order)
+INFORMATION PRIORITY:
+1. Existing fuzzers - Copy patterns exactly
+2. Reference skeleton - Use ONLY these headers
+3. Function analysis - Understand behavior
+4. Source code - Reference only
 
-## 1. Existing Fuzzer Patterns (HIGHEST TRUST)
-Copy patterns directly from working fuzzers:
-- API initialization (e.g., `igraph_empty(&graph, 10, IGRAPH_UNDIRECTED)`)
-- Struct setup (e.g., `igraph_arpack_options_init(&options)`)
-- Cleanup sequences
-- Header includes
+HEADER POLICY:
+- Use reference skeleton headers only
+- Avoid: internal/*, detail/*, private/*, third-party/*
 
-These are proven to compile in OSS-Fuzz.
+API POLICY:
+- Prefer functions from existing fuzzers
+- Avoid: *_internal, *_impl, *_get_default
+- No direct struct member access (use public init/setters)
 
-## 2. Reference Skeleton Headers (SAFE)
-Use ONLY headers listed in "Reference Skeleton" section.
-These have been filtered to exclude internal/private APIs.
+OUTPUT FORMAT:
+- XML tags only: <conclusion>, <fuzz_target>, <build_script> (optional)
+- No extra commentary outside XML tags
+- Complete compilable code (no placeholders/truncation)
 
-## 3. Function Analysis (GUIDE)
-Use to understand:
-- Function behavior and purpose
-- Preconditions and postconditions
-- Parameter constraints
-- Lifecycle patterns (init → use → destroy)
-
-Do NOT copy specific API calls from analysis—refer to existing fuzzers instead.
-
-## 4. Source Code (REFERENCE ONLY)
-Shows implementation details. Use to understand behavior, NOT for specific API calls.
-
-# Key Principles
-
-**Pattern Matching**: If existing fuzzers show a pattern, follow it exactly.
-
-**Header Safety**: Stick to Reference Skeleton headers. Avoid:
-- Internal paths (`internal/`, `detail/`, `private/`)
-- Third-party deps (`<cs/cs.h>`, `<boost/...>`)
-
-**API Safety**: Prefer functions seen in existing fuzzers. Avoid:
-- Functions with `_internal`, `_impl`, `_get_default` suffixes
-- Direct struct member access (use public init/setter functions)
-
-**Parameter Variation Strategy** (CRITICAL FOR COVERAGE):
-
-For multi-parameter functions (2+ params), DEFAULT to FuzzedDataProvider:
-```cpp
-#include <fuzzer/FuzzedDataProvider.h>
-
-extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
-  FuzzedDataProvider fdp(data, size);
-  
-  // Split fuzzer input into varied parameters
-  std::string param1 = fdp.ConsumeRandomLengthString(256);
-  int param2 = fdp.ConsumeIntegral<int>();
-  
-  target_function(param1.c_str(), param2);
-  return 0;
-}
-```
-
-**CONSTRUCT Strategy (struct parameters):**
-When SRS has `field_breakdown`, initialize each field using its `construction` code:
-```cpp
-struct Config cfg;
-memset(&cfg, 0, sizeof(cfg));
-cfg.field1 = fdp.ConsumeIntegral<int>();  // from SRS construction
-cfg.field2 = fdp.ConsumeRandomLengthString(256).c_str();
-target_function(&cfg);
-```
-
-**When to deviate from FuzzedDataProvider:**
-- Single-parameter buffer functions (DIRECT_FUZZ)
-- SRS explicitly documents API constraint requiring fixed value (rare!)
-- **NOT** for convenience or simplicity
-
-**Avoid premature FIX strategy:**
-❌ Don't fix parameters just because examples show constants
-❌ Don't fix to "avoid errors" - test error paths too!
-✅ Use FuzzedDataProvider to explore multiple code paths
-✅ For structs, vary each field independently using field_breakdown
-
-# Output Format
-```c
-extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
-  // Your implementation
-}
-```
-
-Trust existing fuzzers for HOW to call APIs. Trust analysis for WHAT the function does.
+OUTPUT DISCIPLINE:
+- Be concise: <conclusion> max 3 sentences
+- Be precise: Your output directly drives compilation
+- Be complete: Include ALL necessary code

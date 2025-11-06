@@ -21,9 +21,15 @@ from experiment import oss_fuzz_checkout, textcov
 from experiment.benchmark import Benchmark
 from experiment.fuzz_target_error import SemanticCheckResult
 from experiment.workdir import WorkDirs
-from llm_toolkit import code_fixer
-from llm_toolkit.crash_triager import TriageResult
 from llm_toolkit.models import DefaultModel
+
+# Simplified TriageResult constants (replacing removed llm_toolkit.crash_triager)
+class TriageResult:
+  """Crash triage result constants."""
+  NOT_APPLICABLE = 'NOT_APPLICABLE'
+  DRIVER_BUG = 'DRIVER_BUG'
+  PROJECT_BUG = 'PROJECT_BUG'
+  UNKNOWN = 'UNKNOWN'
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -51,6 +57,62 @@ ParseResult = namedtuple('ParseResult', [
     'cov_pcs', 'total_pcs', 'crashes', 'crash_info', 'artifact_name',
     'semantic_check_result'
 ])
+
+def extract_error_message(log_path: str, project_target_basename: str,
+                         language: str) -> list[str]:
+  """
+  Simplified error message extraction from build logs.
+  
+  This is a replacement for the removed llm_toolkit.code_fixer.extract_error_message.
+  It extracts relevant error messages from compilation logs.
+  
+  Args:
+    log_path: Path to the build log file
+    project_target_basename: Base name of the target being built
+    language: Programming language (C++, C, jvm, rust, etc.)
+  
+  Returns:
+    List of error message strings
+  """
+  if not os.path.exists(log_path):
+    logger.warning(f'Log file not found: {log_path}')
+    return [f'Build failed (log file not found: {log_path})']
+  
+  try:
+    with open(log_path, 'r', errors='ignore') as f:
+      log_lines = f.readlines()
+  except Exception as e:
+    logger.warning(f'Failed to read log file {log_path}: {e}')
+    return [f'Build failed (error reading log: {str(e)})']
+  
+  errors = []
+  
+  # Extract error lines based on common patterns
+  for i, line in enumerate(log_lines):
+    # Common error patterns
+    if any(pattern in line for pattern in [
+        ': error:', 'error:', 'ERROR:', 
+        'undefined reference to', 
+        'multiple definition of',
+        'fatal error:',
+        'error[E',  # Rust errors
+    ]):
+      # Include some context (up to 3 lines before and after)
+      start_idx = max(0, i - 1)
+      end_idx = min(len(log_lines), i + 3)
+      context = ''.join(log_lines[start_idx:end_idx]).strip()
+      if context and context not in errors:
+        errors.append(context)
+      
+      # Limit to first 10 error blocks to avoid overwhelming the LLM
+      if len(errors) >= 10:
+        break
+  
+  if not errors:
+    # If no specific errors found, return the last 20 lines of the log
+    errors = [''.join(log_lines[-20:]).strip() if log_lines else 'Build failed (no error details)']
+  
+  return errors
 
 @dataclasses.dataclass
 class BuildResult:
@@ -624,8 +686,8 @@ class BuilderRunner:
     build_result.succeeded = self.build_target_local(generated_project,
                                                      benchmark_log_path)
     if not build_result.succeeded:
-      errors = code_fixer.extract_error_message(benchmark_log_path,
-                                                project_target_name, language)
+      errors = extract_error_message(benchmark_log_path,
+                                     project_target_name, language)
       build_result.errors = errors
       return build_result, None
 
@@ -1120,7 +1182,7 @@ class CloudBuilderRunner(BuilderRunner):
                        os.path.realpath(target_path), run_log_name)
 
     if not build_result.succeeded:
-      errors = code_fixer.extract_error_message(
+      errors = extract_error_message(
           self.work_dirs.build_logs_target(generated_target_name, iteration,
                                            trial),
           os.path.basename(self.benchmark.target_path), language)

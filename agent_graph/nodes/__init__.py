@@ -7,7 +7,7 @@ This module provides LangGraph-compatible node functions using agent-specific me
 # LLM-based nodes with agent-specific messages
 from .function_analyzer_node import function_analyzer_node
 from .prototyper_node import prototyper_node
-from .enhancer_node import enhancer_node
+from .fixer_node import enhancer_node  # Note: file is fixer_node.py, function is enhancer_node
 from .improver_node import improver_node
 from .crash_analyzer_node import crash_analyzer_node
 from .coverage_analyzer_node import coverage_analyzer_node

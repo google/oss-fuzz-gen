@@ -1,0 +1,109 @@
+Analyze the API dependencies for the target function: **{function_signature}**
+
+# Target Function Information
+
+**Function Signature**: `{function_signature}`
+**Project**: {project_name}
+
+## Function Parameters
+
+{parameters}
+
+## Function Source Code
+
+```c
+{function_source}
+```
+
+{cross_references_section}
+
+{related_functions_section}
+
+{sample_xrefs_section}
+
+# Your Task
+
+Analyze the above information and identify all API functions that should be called together with `{function_signature}` in a comprehensive fuzz driver.
+
+ANALYSIS STRATEGY:
+
+Use the following information sources (in order of priority):
+
+1. **Cross-references (xrefs)**: Real usage examples showing how the target is called in practice
+2. **Function signature**: Parameter types reveal dependencies (e.g., `CURL*` suggests `curl_easy_init`)
+3. **Naming patterns**: Common patterns like `*_init`, `*_setopt`, `*_perform`, `*_cleanup`
+4. **Related functions list**: Functions with similar prefixes or operating on the same types
+5. **Source code**: Implementation details showing internal dependencies
+
+FOCUS AREAS:
+
+1. **Prerequisites**: Functions that MUST be called BEFORE the target (initialization, setup, allocation)
+2. **Configuration**: Functions that configure or set options for objects used by the target
+3. **Complementary**: Functions often called AFTER the target (getters, queries, post-processing)
+4. **Cleanup**: Functions that should be called to free resources (cleanup, destroy, free)
+5. **Data Dependencies**: Which functions produce values consumed by other functions
+
+CONFIDENCE GUIDELINES:
+
+- **high**: Found in xrefs or explicitly shown in examples
+- **medium**: Inferred from naming patterns and parameter types
+- **low**: Speculative based on common practices
+
+KEY PRINCIPLES:
+
+1. **Evidence-based**: Prioritize functions you see in cross-references
+2. **Type-driven**: If target needs a `Foo*`, find functions returning `Foo*`
+3. **Lifecycle-aware**: Most object-oriented C APIs follow init → configure → use → cleanup
+4. **Conservative**: Only include functions you're confident about (medium+ confidence)
+5. **Practical**: Focus on what a fuzzer needs, not exhaustive documentation
+
+EXAMPLE ANALYSIS:
+
+Given target: `curl_easy_perform(CURL *curl)`
+
+Good analysis:
+- Prerequisites: `curl_easy_init` (returns CURL*, always in xrefs) - HIGH
+- Configuration: `curl_easy_setopt` (seen in all xrefs configuring curl) - HIGH
+- Complementary: `curl_easy_getinfo` (often called after perform to check status) - MEDIUM
+- Cleanup: `curl_easy_cleanup` (always in xrefs, frees CURL*) - HIGH
+
+Bad analysis:
+- Prerequisites: `curl_global_init` - Rarely needed in fuzzers, over-engineering
+- Configuration: `curl_easy_setopt_long`, `curl_easy_setopt_string` - Too specific, just use `curl_easy_setopt`
+
+Remember: The fuzzer needs to exercise diverse code paths, not be perfect API usage.
+
+OUTPUT FORMAT:
+
+You MUST respond with VALID JSON ONLY. No markdown, no explanations, just the JSON object.
+
+REQUIRED structure (all fields MUST be present):
+
+```json
+{
+  "prerequisites": [
+    {"function": "name", "reason": "why", "confidence": "high|medium|low"}
+  ],
+  "configuration": [
+    {"function": "name", "reason": "why", "confidence": "high|medium|low"}
+  ],
+  "complementary": [
+    {"function": "name", "reason": "why", "confidence": "high|medium|low"}
+  ],
+  "cleanup": [
+    {"function": "name", "reason": "why", "confidence": "high|medium|low"}
+  ],
+  "data_dependencies": [
+    {"producer": "func1", "consumer": "func2", "type": "Foo*", "reason": "why"}
+  ],
+  "call_pattern_example": "CURL *curl = curl_easy_init();\ncurl_easy_perform(curl);\ncurl_easy_cleanup(curl);",
+  "confidence_note": "Brief note"
+}
+```
+
+CRITICAL RULES:
+1. Return JSON ONLY - no markdown code blocks, no extra text
+2. ALL fields are required - use empty arrays [] if no items
+3. Each function entry MUST have all three fields: function, reason, confidence
+4. Each data_dependency MUST have all four fields: producer, consumer, type, reason
+5. Confidence MUST be exactly "high", "medium", or "low"

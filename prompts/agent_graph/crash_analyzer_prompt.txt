@@ -1,99 +1,84 @@
-Analyze the following crash from fuzzing to determine if it's caused by a bug in the fuzz driver or the target project code.
+Analyze crash: driver bug or project bug?
 
-**Crash Report**:
+CRASH:
 {CRASH_INFO}
 
-**Stack Trace**:
+STACK:
 {STACK_TRACE}
 
-**Fuzz Driver Code**:
+DRIVER:
 ```
 {FUZZ_TARGET_CODE}
 ```
 
 {ADDITIONAL_CONTEXT}
 
-**Your Task**:
-Perform a thorough analysis to determine whether this crash represents a true bug in the project code or a false positive caused by the fuzz driver.
+ANALYSIS PROCESS:
 
-**Analysis Steps**:
+1. Parse stack trace:
+   - Find crashing function/instruction
+   - Locate first non-fuzzer frame
+   - Identify call chain
+   - Determine if crash in driver or project code
 
-1. **Examine the Stack Trace**:
-   - Read the stack trace from top to bottom
-   - Identify the function where the crash occurred
-   - Locate the first frame that is NOT part of the fuzzer infrastructure
-   - Determine if the crash is in LLVMFuzzerTestOneInput (driver) or in project code
+2. Identify crash type:
+   - Memory error (segfault, overflow, UAF, double-free)
+   - Assertion failure
+   - Abort/termination
+   - Other
 
-2. **Identify the Crash Type**:
-   - Memory error (heap/stack overflow, use-after-free, buffer overflow)?
-   - Assertion failure?
-   - Null pointer dereference?
-   - Segmentation fault?
-   - Other error type?
+3. Root cause analysis:
+   - What triggered the crash?
+   - What input values/state were involved?
+   - Is this reachable in normal usage?
+   - Did driver violate requirements?
+   - Is project missing validation?
 
-3. **Analyze the Root Cause**:
-   - What specific condition triggered the crash?
-   - What variables or values were involved?
-   - Is this condition possible in real usage of the project?
-   - Did the fuzz driver violate any function requirements?
+4. Determine bug type:
 
-4. **Make Your Determination**:
-   - Is this a **driver bug** (False)?
-     * Incorrect parameter initialization
-     * Missing null checks in driver
-     * Invalid input that violates function requirements
-     * Wrong function call order
-   
-   - Is this a **project bug** (True)?
-     * Memory corruption in project code
-     * Logic error in project code
-     * Missing validation in project code
-     * Security vulnerability
+   Driver bug indicators:
+   - Crash in LLVMFuzzerTestOneInput
+   - Preconditions violated (null pointer, invalid ranges, uninitialized)
+   - Missing setup/initialization
+   - Wrong call order or lifecycle
+   - Invalid parameter combinations
 
-5. **Assess Severity** (if project bug):
-   - Critical: Memory corruption with potential exploitability
-   - High: Security-relevant bugs
-   - Medium: Logic errors, assertion failures
-   - Low: Minor issues
+   Project bug indicators:
+   - Crash deep in project code (not in driver)
+   - Preconditions satisfied
+   - Missing input validation
+   - Memory corruption in project logic
+   - Security vulnerability
+
+5. Severity (if project bug):
+   - Critical: Exploitable memory corruption
+   - High: Security vulnerabilities, DoS
+   - Medium: Logic errors, assertions
+   - Low: Minor edge cases
    - Info: Expected behavior
 
-**Output Format**:
+TOOLS AVAILABLE:
+- gdb_execute(cmd) - Debug crash (bt, frame N, print VAR, x/Nx ADDR)
+- bash_execute(cmd) - Examine source (cat, grep, find)
 
-First, provide your determination as a single word on its own line:
-- **True** if the crash is caused by a bug in PROJECT code
-- **False** if the crash is caused by a bug in FUZZ DRIVER code
+Must use gdb_execute before conclusion.
 
-Then provide your detailed analysis:
+OUTPUT FORMAT:
 
-## Root Cause Analysis
-[Explain:
- - What exactly caused the crash
- - Which function and line number
- - What condition triggered it
- - Evidence from the stack trace]
+True/False
 
-## Determination
-[State clearly:
- - Driver bug OR Project bug
- - Why you made this determination
- - Evidence supporting your conclusion]
+Root Cause: [what, where, why, evidence]
 
-## Severity Assessment
-[If project bug:
- - Severity level (Critical/High/Medium/Low/Info)
- - Security impact
- - Exploitability assessment]
+Determination: [driver/project bug, why, evidence]
 
-## Recommendations
-[Provide specific, actionable recommendations:
- - If driver bug: How to fix the fuzz driver
- - If project bug: What needs to be fixed in the project
- - Should fuzzing continue or should this be fixed first?]
+Severity: [Critical/High/Medium/Low/Info - if project bug]
 
-**Critical Requirements**:
-- Answer ONLY "True" or "False" for the determination (as the first word)
-- Provide evidence from the actual stack trace and crash report
-- Do NOT speculate or make assumptions
-- Use specific line numbers and function names
-- Base conclusions on the provided information only
+Recommendations: [how to fix]
 
+CRITICAL REQUIREMENTS:
+✅ First word MUST be "True" or "False"
+✅ Keep each section brief (2-3 sentences max)
+✅ Provide specific evidence (file:line, code quotes)
+✅ Use gdb_execute before final output
+❌ No extra commentary outside format
+❌ No speculation without evidence

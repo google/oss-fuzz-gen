@@ -13,11 +13,11 @@ from google.cloud import storage
 import results
 from experiment import builder_runner, oss_fuzz_checkout, textcov
 from experiment.benchmark import Benchmark
-from experiment.builder_runner import BuildResult, RunResult
+from experiment.builder_runner import BuildResult, RunResult, TriageResult  # TriageResult moved to builder_runner
 from experiment.fuzz_target_error import SemanticCheckResult
 from experiment.workdir import WorkDirs
-from llm_toolkit import code_fixer, corpus_generator, crash_triager
-from llm_toolkit.crash_triager import TriageResult
+# Note: corpus_generator and crash_triager removed in LangGraph migration
+# These are only used in legacy triage/corpus generation code (not in LangGraph workflow)
 
 logger = logging.getLogger(__name__)
 
@@ -566,13 +566,5 @@ class Evaluator:
 
   def load_existing_textcov(self) -> textcov.Textcov:
     """Loads existing textcovs."""
-    if self.benchmark.language == 'jvm':
-      return load_existing_jvm_textcov(self.benchmark.project)
-
-    if self.benchmark.language == 'python':
-      return load_existing_python_textcov(self.benchmark.project)
-
-    if self.benchmark.language == 'rust':
-      return load_existing_rust_textcov(self.benchmark.project)
 
     return load_existing_textcov(self.benchmark.project)

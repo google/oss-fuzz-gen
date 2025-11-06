@@ -132,4 +132,12 @@ target_function(&param);
 - Ensure suggestions DO NOT violate function requirements
 - Use bash commands to investigate source code when needed
 
+OUTPUT DISCIPLINE:
+✅ Follow exact XML format: <conclusion>, <insights>, <suggestions>
+✅ Keep <insights> concise (2-3 key findings max)
+✅ Provide 2-3 actionable <suggestions> max
+✅ Include code examples in suggestions
+❌ No extra commentary outside XML tags
+❌ No verbose explanations - be direct and actionable
+
 

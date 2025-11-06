@@ -1,34 +1,61 @@
-📝 TASK: Fix Compilation Errors
-Target: {FUNCTION_NAME} ({LANGUAGE})
+Fix compilation for {FUNCTION_NAME} ({LANGUAGE})
 
-📄 CURRENT CODE
-
+CODE:
 ```
 {CURRENT_CODE}
 ```
 
-❌ BUILD ERRORS
+ERRORS:
 {BUILD_ERRORS}
 
-📋 ADDITIONAL CONTEXT
+CONTEXT:
 {ADDITIONAL_CONTEXT}
 
-🔍 COMMON ERROR PATTERNS
+DEBUG PROCESS:
 
-• "was not called" → Add {FUNCTION_NAME} call (exact name!)
-• "undefined reference" → Add .cpp include (not forward declaration)
-• "internal/..." headers → Remove, use public API only
-• "typedef redefinition" → Header conflict, keep only one
-• "No such file" → Check capitalization
-• Type mismatch → Fix signatures/casts
+1. Read error → identify error type
+2. Check headers → internal paths? conflicts?
+3. Apply minimal fix
+4. Verify target function still called
 
-**Fix Strategy**: Make minimal surgical changes, preserve fuzzing logic, verify {FUNCTION_NAME} is still called.
+COMMON ERROR PATTERNS & FIXES:
 
-⚠️ SPECIAL CASES
+1. Headers (check first):
+   - "No such file" → Check case-sensitive paths
+   - "internal/*" paths → Remove, use public API only
+   - C API conflicts → Keep *_c.h, remove *.h
+   - "typedef redefinition" → Header conflict, keep only one
 
-If function doesn't exist: Add "UNABLE_TO_FIX: function {FUNCTION_NAME} does not exist"
+2. Linker errors:
+   - "undefined reference to {FUNCTION_NAME}" → Add #include "impl.cpp" (not forward declare)
+   - Check existing fuzzers: grep '#include.*\.cpp' for pattern
+   - If no .cpp pattern exists → Report UNABLE_TO_FIX
 
-**Output**:
+3. Function call errors:
+   - "{FUNCTION_NAME} was not called" → Add {FUNCTION_NAME} call (exact name!)
+   - Type mismatch → Fix signatures/casts
+   - Const violations → Add/remove const qualifiers
+
+4. Types/API:
+   - Deprecated APIs → Update to current API
+   - Uninitialized variables → Initialize before use
+   - Missing includes → Add required headers
+
+SPECIAL CASES:
+
+- If function doesn't exist: UNABLE_TO_FIX: function {FUNCTION_NAME} does not exist
+- If linker error but no .cpp available: Check existing fuzzers for pattern, or UNABLE_TO_FIX
+
+OUTPUT FORMAT:
+
 <conclusion>Errors found, root causes, fixes applied, confirm {FUNCTION_NAME} called</conclusion>
 <fuzz_target>[Complete corrected code]</fuzz_target>
 <build_script>[Only if modified, otherwise omit]</build_script>
+
+CRITICAL REQUIREMENTS:
+✅ Follow exact XML format above
+✅ Keep <conclusion> brief (max 3 sentences)
+✅ Include complete, compilable code in <fuzz_target> - NO placeholders like "// ... unchanged ..."
+✅ Confirm {FUNCTION_NAME} is called
+❌ No extra commentary outside XML tags
+❌ No markdown formatting around XML tags

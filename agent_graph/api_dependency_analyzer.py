@@ -91,11 +91,23 @@ logger = logging.getLogger(__name__)
 class APIDependencyAnalyzer:
     """
     基于现有的 tree-sitter + FuzzIntrospector 构建依赖图
+    
+    支持两种模式：
+    1. Heuristic mode (默认): 使用启发式规则快速分析
+    2. LLM mode: 使用 LLM 进行深度分析（需要提供 llm 参数）
     """
     
-    def __init__(self, project_name: str, project_dir: str = ""):
+    def __init__(
+        self, 
+        project_name: str, 
+        project_dir: str = "",
+        llm: Optional[any] = None,
+        use_llm: bool = False
+    ):
         self.project_name = project_name
         self.project_dir = project_dir
+        self.llm = llm
+        self.use_llm = use_llm and llm is not None
         
         # 使用 networkx 或 fallback
         if HAS_NETWORKX:
@@ -106,6 +118,28 @@ class APIDependencyAnalyzer:
         
         self.extractor = APIContextExtractor(project_name)
         self._all_functions_cache: Optional[Set[str]] = None
+        
+        # Initialize LLM analyzer if requested
+        self._llm_analyzer = None
+        if self.use_llm:
+            self._initialize_llm_analyzer()
+    
+    def _initialize_llm_analyzer(self):
+        """初始化 LLM 分析器"""
+        try:
+            from agent_graph.llm_api_analyzer import LLMAPIDependencyAnalyzer, load_prompts
+            
+            system_prompt, user_prompt_template = load_prompts()
+            self._llm_analyzer = LLMAPIDependencyAnalyzer(
+                project_name=self.project_name,
+                llm=self.llm,
+                system_prompt=system_prompt,
+                user_prompt_template=user_prompt_template
+            )
+            logger.info(f"✨ LLM-based API dependency analysis enabled")
+        except Exception as e:
+            logger.warning(f"Failed to initialize LLM analyzer: {e}. Falling back to heuristics.")
+            self.use_llm = False
     
     def build_dependency_graph(self, target_function: str) -> Dict:
         """
@@ -120,6 +154,7 @@ class APIDependencyAnalyzer:
             - data_dependencies: 参数依赖关系 [(producer, consumer), ...]
             - call_sequence: 推荐的调用顺序
             - initialization_code: 建议的初始化代码模板
+            - llm_metadata: (if LLM mode) 额外的 LLM 分析信息
             
         Note: 
             The internal DiGraph object is not included in the result to avoid
@@ -127,53 +162,79 @@ class APIDependencyAnalyzer:
         """
         logger.info(f"Building dependency graph for {target_function}")
         
-        result = {
-            'prerequisites': [],
-            'data_dependencies': [],
-            'call_sequence': [],
-            'initialization_code': []
-        }
+        # Use LLM analysis if enabled
+        if self.use_llm and self._llm_analyzer:
+            return self._build_with_llm(target_function)
         
-        try:
-            # 1. 使用 FuzzIntrospector 获取函数上下文
-            context = self.extractor.extract(target_function)
-            if not context:
-                logger.warning(f"Could not extract context for {target_function}")
-                return result
-            
-            # 2. 识别前置依赖（init 函数）
-            prerequisites = self._find_prerequisite_functions(target_function, context)
-            result['prerequisites'] = prerequisites
-            
-            # 3. 识别数据流依赖（参数来源）
-            data_deps = self._analyze_data_dependencies(target_function, context)
-            result['data_dependencies'] = data_deps
-            
-            # 4. 构建图
-            self.graph.add_node(target_function, type='target', context=context)
-            for prereq in prerequisites:
-                self.graph.add_node(prereq, type='prerequisite')
-                self.graph.add_edge(prereq, target_function, type='control')
-            
-            for src, dst in data_deps:
-                self.graph.add_node(src, type='producer')
-                self.graph.add_edge(src, dst, type='data')
-            
-            # 5. 生成调用顺序
-            result['call_sequence'] = self._generate_call_sequence()
-            
-            # 6. 生成初始化代码模板
-            result['initialization_code'] = self._generate_initialization_code(
-                target_function, context, prerequisites
-            )
-            
-            logger.info(f"Dependency graph built successfully:")
-            logger.info(f"  - Prerequisites: {len(prerequisites)}")
-            logger.info(f"  - Data dependencies: {len(data_deps)}")
-            logger.info(f"  - Call sequence: {result['call_sequence']}")
-            
-        except Exception as e:
-            logger.error(f"Failed to build dependency graph: {e}", exc_info=True)
+        # Otherwise use heuristic approach
+        # 1. 使用 FuzzIntrospector 获取函数上下文
+        context = self.extractor.extract(target_function)
+        if not context:
+            logger.warning(f"Could not extract context for {target_function}")
+            return {
+                'prerequisites': [],
+                'data_dependencies': [],
+                'call_sequence': [],
+                'initialization_code': []
+            }
+        
+        # 2. 识别前置依赖（init 函数）
+        prerequisites = self._find_prerequisite_functions(target_function, context)
+        
+        # 3. 识别数据流依赖（参数来源）
+        data_deps = self._analyze_data_dependencies(target_function, context)
+        
+        # 4. 构建图
+        self.graph.add_node(target_function, type='target', context=context)
+        for prereq in prerequisites:
+            self.graph.add_node(prereq, type='prerequisite')
+            self.graph.add_edge(prereq, target_function, type='control')
+        
+        for src, dst in data_deps:
+            self.graph.add_node(src, type='producer')
+            self.graph.add_edge(src, dst, type='data')
+        
+        # 5. 生成调用顺序
+        call_sequence = self._generate_call_sequence()
+        
+        # 6. 生成初始化代码模板
+        init_code = self._generate_initialization_code(target_function, context, prerequisites)
+        
+        logger.info(
+            f"Dependency graph built: {len(prerequisites)} prerequisites, "
+            f"{len(data_deps)} data deps, sequence: {call_sequence}"
+        )
+        
+        return {
+            'prerequisites': prerequisites,
+            'data_dependencies': data_deps,
+            'call_sequence': call_sequence,
+            'initialization_code': init_code
+        }
+    
+    def _build_with_llm(self, target_function: str) -> Dict:
+        """
+        使用 LLM 构建依赖图（增强模式）
+        
+        This provides richer, more context-aware dependency analysis
+        by leveraging LLM reasoning over cross-references and usage patterns.
+        """
+        logger.info(f"🤖 Using LLM-based analysis for {target_function}")
+        
+        # Get LLM analysis (may return None on failure)
+        llm_analysis = self._llm_analyzer.analyze_dependencies(target_function)
+        
+        if not llm_analysis:
+            logger.warning("LLM analysis failed, falling back to heuristics")
+            self.use_llm = False  # Disable for subsequent calls
+            return self.build_dependency_graph(target_function)
+        
+        # Convert to legacy format
+        result = self._llm_analyzer.convert_to_legacy_format(llm_analysis, target_function)
+        
+        # Log confidence note if available
+        if confidence_note := result.get('llm_metadata', {}).get('confidence_note'):
+            logger.info(f"🔍 {confidence_note}")
         
         return result
     
@@ -323,49 +384,35 @@ class APIDependencyAnalyzer:
         
         return code_lines
     
-    def _function_exists(self, func_name: str) -> bool:
-        """检查函数是否存在（使用缓存）"""
-        # 懒加载：第一次调用时获取所有函数列表
-        if self._all_functions_cache is None:
-            try:
-                all_funcs = introspector.query_introspector_all_functions(
-                    self.project_name
-                )
-                self._all_functions_cache = set()
-                for f in all_funcs:
-                    # 添加多个可能的名称格式
-                    func_sig = f.get('function_signature', '')
-                    func_name_from_sig = f.get('function-name', '')
-                    raw_name = f.get('raw_function_name', '')
-                    
-                    if func_sig:
-                        self._all_functions_cache.add(func_sig)
-                        # 提取简单名称
-                        simple_name = self._extract_function_name(func_sig)
-                        if simple_name:
-                            self._all_functions_cache.add(simple_name)
-                    
-                    if func_name_from_sig:
-                        self._all_functions_cache.add(func_name_from_sig)
-                    
-                    if raw_name:
-                        self._all_functions_cache.add(raw_name)
-                
-                logger.debug(f"Cached {len(self._all_functions_cache)} function names")
-            except Exception as e:
-                logger.debug(f"Could not get all functions: {e}")
-                self._all_functions_cache = set()
+    def _ensure_function_cache(self):
+        """Lazy load function cache once"""
+        if self._all_functions_cache is not None:
+            return
         
-        return func_name in self._all_functions_cache
+        try:
+            all_funcs = introspector.query_introspector_all_functions(self.project_name)
+            # Collect all possible name variations
+            names = set()
+            for f in all_funcs:
+                for key in ['function_signature', 'function-name', 'raw_function_name']:
+                    if name := f.get(key):
+                        names.add(name)
+                        # Also add simple name extracted from signature
+                        if '(' in name:
+                            simple = re.search(r'\b([a-zA-Z_]\w*)\s*\(', name)
+                            if simple:
+                                names.add(simple.group(1))
+            
+            self._all_functions_cache = names
+            logger.debug(f"Cached {len(names)} function names")
+        except Exception as e:
+            logger.debug(f"Could not load function cache: {e}")
+            self._all_functions_cache = set()
     
-    @staticmethod
-    def _extract_function_name(signature: str) -> Optional[str]:
-        """从函数签名中提取函数名"""
-        # 匹配: return_type function_name(params)
-        match = re.search(r'\b([a-zA-Z_]\w*)\s*\(', signature)
-        if match:
-            return match.group(1)
-        return None
+    def _function_exists(self, func_name: str) -> bool:
+        """Check if function exists (cached)"""
+        self._ensure_function_cache()
+        return func_name in self._all_functions_cache
 
 
 def format_dependency_graph_for_prompt(dep_graph: Dict, target_function: str) -> str:
@@ -385,10 +432,19 @@ def format_dependency_graph_for_prompt(dep_graph: Dict, target_function: str) ->
     sections = []
     sections.append("## 🔗 API Dependency Analysis\n")
     
+    # Check if this is LLM-enhanced analysis
+    llm_metadata = dep_graph.get('llm_metadata', {})
+    is_llm_enhanced = bool(llm_metadata)
+    
+    if is_llm_enhanced:
+        sections.append("**Source**: LLM-enhanced analysis (high confidence)\n")
+        if llm_metadata.get('confidence_note'):
+            sections.append(f"**Note**: {llm_metadata['confidence_note']}\n")
+    
     # 1. 调用顺序
     if dep_graph.get('call_sequence'):
         sections.append("### ✅ Recommended Call Sequence\n")
-        sections.append("**IMPORTANT**: Follow this order to ensure correct initialization:\n")
+        sections.append("**IMPORTANT**: Follow this order to ensure correct API usage:\n")
         for i, func in enumerate(dep_graph['call_sequence'], 1):
             if func == target_function:
                 sections.append(f"{i}. **`{func}`** ← TARGET FUNCTION")
@@ -396,26 +452,60 @@ def format_dependency_graph_for_prompt(dep_graph: Dict, target_function: str) ->
                 sections.append(f"{i}. `{func}`")
         sections.append("")
     
-    # 2. 前置依赖
+    # 2. 前置依赖（初始化）
     if dep_graph.get('prerequisites'):
-        sections.append("### ⚠️ Prerequisites\n")
+        sections.append("### ⚠️ Prerequisites (Initialization)\n")
         sections.append("These functions **MUST** be called before the target function:\n")
         for prereq in dep_graph['prerequisites']:
-            sections.append(f"- `{prereq}()` - Initialization function")
+            sections.append(f"- `{prereq}()` - Initialize required resources")
         sections.append("")
     
-    # 3. 数据依赖
+    # 3. LLM-enhanced: Configuration functions
+    if is_llm_enhanced and llm_metadata.get('configuration_functions'):
+        sections.append("### ⚙️ Configuration Functions\n")
+        sections.append("Use these to configure objects before calling the target:\n")
+        for config_func in llm_metadata['configuration_functions']:
+            sections.append(f"- `{config_func}()` - Set options/parameters")
+        sections.append("")
+    
+    # 4. LLM-enhanced: Complementary functions
+    if is_llm_enhanced and llm_metadata.get('complementary_functions'):
+        sections.append("### 📤 Complementary Functions (Post-processing)\n")
+        sections.append("Consider calling these after the target to query results:\n")
+        for comp_func in llm_metadata['complementary_functions']:
+            sections.append(f"- `{comp_func}()` - Get status/results")
+        sections.append("")
+    
+    # 5. LLM-enhanced: Cleanup functions
+    if is_llm_enhanced and llm_metadata.get('cleanup_functions'):
+        sections.append("### 🧹 Cleanup Functions\n")
+        sections.append("Call these to free resources (in reverse order):\n")
+        for cleanup_func in llm_metadata['cleanup_functions']:
+            sections.append(f"- `{cleanup_func}()` - Free resources")
+        sections.append("")
+    
+    # 6. 数据依赖
     if dep_graph.get('data_dependencies'):
         sections.append("### 📊 Data Flow Dependencies\n")
         for src, dst in dep_graph['data_dependencies']:
             sections.append(f"- `{src}` produces data consumed by `{dst}`")
         sections.append("")
     
-    # 4. 初始化代码模板
+    # 7. 初始化代码模板
     if dep_graph.get('initialization_code'):
         sections.append("### 💡 Initialization Code Template\n")
         sections.append("```c")
         sections.extend(dep_graph['initialization_code'])
+        sections.append("```\n")
+    
+    # 8. LLM call pattern example (if available)
+    if is_llm_enhanced and llm_metadata.get('has_call_pattern'):
+        sections.append("### 📝 Complete Usage Pattern\n")
+        sections.append("```c")
+        # Extract from initialization_code (which contains the call pattern)
+        for line in dep_graph.get('initialization_code', []):
+            if line.startswith('//'):
+                sections.append(line.replace('// ', ''))
         sections.append("```\n")
     
     return "\n".join(sections)

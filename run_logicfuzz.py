@@ -20,7 +20,7 @@ from data_prep import introspector
 from experiment import benchmark as benchmarklib
 from experiment import evaluator, oss_fuzz_checkout, textcov
 from experiment.workdir import WorkDirs
-from llm_toolkit import models, prompt_builder
+from llm_toolkit import models
 
 logger = logging.getLogger(__name__)
 # log the debug and info
@@ -182,7 +182,8 @@ def parse_args() -> argparse.Namespace:
   parser.add_argument('-td',
                       '--template-directory',
                       type=str,
-                      default=prompt_builder.AGENT_TEMPLATE_DIR)
+                      default='prompts/agent_graph',
+                      help='[DEPRECATED] This argument is kept for backwards compatibility but is not used by LangGraph agents.')
   parser.add_argument('-w', '--work-dir', default=RESULTS_DIR)
   parser.add_argument('--context',
                       action='store_true',

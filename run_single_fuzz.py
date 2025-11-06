@@ -16,7 +16,7 @@ from experiment import evaluator as exp_evaluator
 from experiment import oss_fuzz_checkout, textcov
 from experiment.benchmark import Benchmark
 from experiment.workdir import WorkDirs
-from llm_toolkit import models, output_parser, prompt_builder, prompts
+from llm_toolkit import models
 from results import BenchmarkResult, Result, TrialResult
 
 # WARN: Avoid high value for NUM_EVA for local experiments.
@@ -83,29 +83,6 @@ class AggregatedResult:
         max_coverage_diff_report=benchmark_result.line_coverage_report,
         full_textcov_diff=benchmark_result.textcov_diff)
 
-# DEPRECATED: The following functions were used in the old non-agent workflow.
-# They are no longer needed in the new LangGraph-based agent workflow.
-# Kept for backwards compatibility with legacy experiments.
-
-def generate_targets(benchmark: Benchmark, model: models.LLM,
-                     prompt: prompts.Prompt, work_dirs: WorkDirs,
-                     builder: prompt_builder.PromptBuilder) -> list[str]:
-  """[DEPRECATED] Generates fuzz target with LLM.
-  
-  This function is deprecated and only used in legacy non-agent workflows.
-  The new agent workflow generates targets via FuzzingWorkflow.
-  """
-  raise NotImplementedError(
-      "generate_targets() is deprecated. Use the agent workflow instead.")
-
-def fix_code(work_dirs: WorkDirs, generated_targets: List[str]) -> List[str]:
-  """[DEPRECATED] Copies the generated target to the fixed target directory.
-  
-  This function is deprecated and only used in legacy non-agent workflows.
-  The new agent workflow handles code fixes internally.
-  """
-  raise NotImplementedError(
-      "fix_code() is deprecated. Use the agent workflow instead.")
 
 def aggregate_results(target_stats: list[tuple[int, exp_evaluator.Result]],
                       generated_targets: list[str]) -> AggregatedResult:

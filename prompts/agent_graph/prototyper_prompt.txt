@@ -1,35 +1,24 @@
-Translate the following SRS specification into a compilable and EFFECTIVE fuzz target:
+Generate fuzz target for {FUNCTION_NAME} ({PROJECT_NAME})
 
-**Project**: {PROJECT_NAME}
-**Function**: {FUNCTION_NAME}
-**Signature**: {FUNCTION_SIGNATURE}
+SIGNATURE: {FUNCTION_SIGNATURE}
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-## 📋 SRS SPECIFICATION
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
+SRS SPECIFICATION:
 {SRS_SPECIFICATION}
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-## 🏗️ REFERENCE SKELETON (USE THIS FOR HEADERS)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
+REFERENCE SKELETON (use these headers):
 {SKELETON_CODE}
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-## 📝 REQUIREMENTS
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-1. **MUST call `{FUNCTION_NAME}` directly in LLVMFuzzerTestOneInput**
-2. **Use ONLY headers from Reference Skeleton** (exact paths)
-3. **Implement ALL [MANDATORY] requirements** from SRS (FR/PRE/POST/CON)
-4. **Follow API dependencies** (init before use, cleanup in reverse order)
+REQUIREMENTS:
+1. MUST call {FUNCTION_NAME} (exact name)
+2. Use skeleton headers only (filtered, safe)
+3. Implement [MANDATORY] items from SRS
+4. Follow API dependencies (init → use → cleanup)
 
 {ADDITIONAL_CONTEXT}
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-## 🎯 PARAMETER CONSTRUCTION (FuzzedDataProvider)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PARAMETER STRATEGY (from SRS):
+
+DEFAULT: FuzzedDataProvider for 2+ parameters
 
 ```cpp
 #include <fuzzer/FuzzedDataProvider.h>
@@ -37,37 +26,82 @@ Translate the following SRS specification into a compilable and EFFECTIVE fuzz t
 extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
   FuzzedDataProvider fdp(data, size);
   
-  // DIRECT_FUZZ: simple pass-through
-  target_func(data, size);
+  // Split input into varied parameters
+  std::string p1 = fdp.ConsumeRandomLengthString(256);
+  int p2 = fdp.ConsumeIntegral<int>();
   
-  // CONSTRAIN: bounded range
-  int port = fdp.ConsumeIntegralInRange<int>(1, 65535);
-  
-  // CONSTRUCT: struct fields
-  std::string str = fdp.ConsumeRandomLengthString(1024);
-  int flags = fdp.ConsumeIntegral<uint32_t>();
-  
-  // Call target
-  target_func(str.c_str(), str.length(), flags);
+  {FUNCTION_NAME}(p1.c_str(), p2);
   return 0;
 }
 ```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-## 🎯 IMPLEMENTATION STEPS
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+DIRECT_FUZZ: Single buffer function (pass-through)
+```cpp
+extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
+  {FUNCTION_NAME}(data, size);
+  return 0;
+}
+```
 
-1. Use Reference Skeleton headers
-2. Check PRE-* conditions → return 0 if fail
-3. Construct parameters using SRS strategy (DIRECT_FUZZ/CONSTRAIN/FIX/CONSTRUCT)
-4. Call `{FUNCTION_NAME}`
-5. Check POST-* conditions
-6. Cleanup (reverse order)
+CONSTRAIN: Bounded values
+```cpp
+FuzzedDataProvider fdp(data, size);
+int port = fdp.ConsumeIntegralInRange<int>(1, 65535);
+{FUNCTION_NAME}(port);
+```
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-## 📤 OUTPUT
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+CONSTRUCT: Struct/object parameters
+```cpp
+FuzzedDataProvider fdp(data, size);
+struct Config cfg = {0};
+cfg.field1 = fdp.ConsumeIntegral<int>();
+cfg.field2 = fdp.ConsumeRandomLengthString(256).c_str();
+{FUNCTION_NAME}(&cfg);
+```
 
-<conclusion>Summary: skeleton used, [MANDATORY] items implemented, confirm `{FUNCTION_NAME}` called</conclusion>
-<fuzz_target>[Complete C/C++ code]</fuzz_target>
-<build_script>[Only if needed]</build_script>
+FIX: API requires fixed value (document rationale in SRS)
+
+IMPLEMENTATION STEPS:
+
+1. Headers:
+   - Use ONLY reference skeleton headers
+   - Filter out internal/*, detail/*, private/*
+
+2. Preconditions:
+   - Check PRE-* conditions from SRS
+   - Return 0 if preconditions cannot be satisfied
+
+3. Parameter construction:
+   - Follow SRS strategy per parameter
+   - Use FuzzedDataProvider for multi-param (default)
+   - For structs: breakdown fields per SRS field_breakdown
+
+4. API lifecycle:
+   - Call init/setup functions if required
+   - Call {FUNCTION_NAME}
+   - Check POST-* conditions if specified
+   - Cleanup in reverse order (destroy → close → cleanup)
+
+5. Multi-API fuzzing (if API dependency analysis provided):
+   - Call ALL APIs in recommended order
+   - Vary parameters for EACH call
+   - Test different combinations
+   - Cleanup in reverse order
+
+EXCEPTIONS TO FuzzedDataProvider:
+- Single buffer functions (DIRECT_FUZZ)
+- API constraints requiring fixed values (must be documented in SRS)
+
+OUTPUT FORMAT:
+
+<conclusion>Skeleton used, [MANDATORY] implemented, {FUNCTION_NAME} called</conclusion>
+<fuzz_target>[Complete code with LLVMFuzzerTestOneInput]</fuzz_target>
+<build_script>[Only if needed, otherwise omit]</build_script>
+
+CRITICAL REQUIREMENTS:
+✅ Follow exact XML format above
+✅ Keep <conclusion> brief (max 3 sentences)
+✅ Include complete, compilable code in <fuzz_target> - NO placeholders
+✅ Confirm {FUNCTION_NAME} is called
+❌ No extra commentary outside XML tags
+❌ No markdown formatting around XML tags

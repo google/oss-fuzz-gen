@@ -1,48 +1,44 @@
-📝 TASK: Improve Fuzz Driver Coverage
-Target: {FUNCTION_NAME} ({LANGUAGE})
+Improve fuzz driver coverage for {FUNCTION_NAME} ({LANGUAGE})
 
-📊 CURRENT STATUS
+CURRENT STATUS
 
-**Coverage Metrics**:
+Coverage Metrics:
 - PC Coverage: {COVERAGE_PERCENT}
 - Line Coverage Diff: {LINE_COVERAGE_DIFF}
 
-**Current Driver**:
+Current Driver:
 ```
 {CURRENT_CODE}
 ```
 
-🚨 Coverage too low! Rewrite needed.
+Coverage too low! Rewrite needed.
 
-🔍 COVERAGE ANALYZER DIAGNOSIS
+COVERAGE ANALYZER DIAGNOSIS
 
-**Root Cause**:
+Root Cause:
 {COVERAGE_INSIGHTS}
 
-**Recommended Actions**:
+Recommended Actions:
 {IMPROVEMENT_SUGGESTIONS}
 
-🎯 YOUR TASK
+TASK
+
 Rewrite driver to maximize coverage by addressing the diagnosis above.
 
-**Requirements**:
+REQUIREMENTS:
 1. Implement coverage analyzer's recommended actions
 2. Use FuzzedDataProvider for multi-parameter functions
 3. Replace fixed/constant parameters with varied inputs
 4. Test edge cases (NULL, empty, boundary values)
 5. MUST call {FUNCTION_NAME} (exact function name)
+6. Don't violate API constraints from function_analyzer
 
-**Output**: 
-<conclusion>Root cause, changes, expected improvement, confirm {FUNCTION_NAME} called</conclusion>
-<fuzz_target>[Complete improved code]</fuzz_target>
-<decision reason="...">Optional: if overriding decisions</decision>
-<coverage_strategy target="{FUNCTION_NAME}">New paths, edge cases, why better</coverage_strategy>
+IMPROVEMENT STRATEGIES (priority order):
 
-**Quick Reference**
-
-**Common Issues**: Fixed params → Use FuzzedDataProvider | Naive input → Split into multiple params | No edge cases → Test NULL/empty/boundary
-
-**Template 1: Multi-parameter function**:
+1. Use FuzzedDataProvider:
+   - Split input → vary all parameters independently
+   - Override fixed values if coverage low
+   - Example:
 ```cpp
 #include <fuzzer/FuzzedDataProvider.h>
 extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
@@ -54,7 +50,23 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
 }
 ```
 
-**Template 2: Struct parameter**:
+2. Test edge cases:
+   - NULL pointers
+   - Empty strings/buffers
+   - Boundary values (0, MAX, MIN)
+   - Success and error paths
+   - Example:
+```cpp
+// Test empty, short, and max size inputs
+{FUNCTION_NAME}(NULL, 0);
+if (size >= 1) {FUNCTION_NAME}(data, 1);
+if (size >= MAX_SIZE) {FUNCTION_NAME}(data, MAX_SIZE);
+```
+
+3. Vary struct fields:
+   - If fixed → use FuzzedDataProvider per field
+   - Check field-dependent branches (if (cfg->timeout > 0))
+   - Example:
 ```cpp
 FuzzedDataProvider fdp(data, size);
 struct Config cfg;
@@ -63,4 +75,42 @@ cfg.field1 = fdp.ConsumeIntegral<int>();  // Vary fields, not fixed!
 cfg.field2 = fdp.ConsumeIntegralInRange<uint32_t>(0, 100);
 {FUNCTION_NAME}(&cfg);
 ```
+
+4. Call preparation functions:
+   - Setup/init functions needed before target
+   - Properly create complex data structures
+   - Example:
+```cpp
+context_t* ctx = create_context();
+init_context(ctx, config_value);
+{FUNCTION_NAME}(ctx, input);
+cleanup_context(ctx);
+```
+
+OVERRIDE AUTHORITY:
+- Change FIX → varied when coverage low
+- Override previous design decisions if they limit coverage
+- Document rationale when overriding
+
+COMMON ISSUES & FIXES:
+- Fixed params → Use FuzzedDataProvider
+- Naive input → Split into multiple params
+- No edge cases → Test NULL/empty/boundary
+- Missing setup → Call init/preparation functions
+- Single code path → Vary parameter combinations
+
+OUTPUT FORMAT:
+
+<conclusion>Root cause, changes made, expected improvement, confirm {FUNCTION_NAME} called</conclusion>
+<fuzz_target>[Complete improved code]</fuzz_target>
+<decision reason="...">Optional: if overriding previous decisions</decision>
+<coverage_strategy target="{FUNCTION_NAME}">New paths, edge cases, why better</coverage_strategy>
+
+CRITICAL REQUIREMENTS:
+✅ Follow exact XML format above
+✅ Keep each tag brief (max 3 sentences)
+✅ Include complete, compilable code in <fuzz_target> - NO placeholders like "// ... unchanged ..."
+✅ Confirm {FUNCTION_NAME} is called
+❌ No extra commentary outside XML tags
+❌ No markdown formatting around XML tags
 
