@@ -156,14 +156,13 @@ class LLM:
     Returns:
         LLM response text
     """
-    # Create a prompt from messages
-    prompt = self.prompt_type()(messages)
-    
     # Get or create a client
     client = self.get_chat_client(None)
     
-    # Call the existing chat_llm method
-    return self.chat_llm(client, prompt)
+    # Call the existing chat_llm method directly with messages
+    # Note: prompt_type() returned typing.Any which cannot be instantiated.
+    # Modern LLMs accept message lists directly without a wrapper class.
+    return self.chat_llm(client, messages)
   
   def chat_with_tools(
       self,

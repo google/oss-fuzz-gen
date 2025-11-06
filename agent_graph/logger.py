@@ -16,6 +16,8 @@ from datetime import datetime
 from typing import Optional, Dict, Any, List
 from pathlib import Path
 
+import logger  # Import project-level logger for finalize() method
+
 
 class LangGraphLogger:
     """
