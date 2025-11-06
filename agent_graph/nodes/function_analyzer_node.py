@@ -45,11 +45,14 @@ def function_analyzer_node(state: FuzzingWorkflowState, config: RunnableConfig) 
         return result
         
     except Exception as e:
+        import traceback
         logger.error(f'FunctionAnalyzer failed: {e}', trial=trial)
+        logger.error(f'Traceback: {traceback.format_exc()}', trial=trial)
         return {
             "errors": [{
                 "node": "FunctionAnalyzer",
                 "message": str(e),
-                "type": type(e).__name__
+                "type": type(e).__name__,
+                "traceback": traceback.format_exc()
             }]
         }

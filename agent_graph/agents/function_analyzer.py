@@ -51,15 +51,70 @@ class LangGraphFunctionAnalyzer(LangGraphAgent):
         function_signature = benchmark.get('function_signature', 'unknown')
         function_name = benchmark.get('function_name', 'unknown')
         
-        # Query FuzzIntrospector for function source code
-        logger.info(f'Querying FuzzIntrospector for source code of {function_signature}', trial=self.trial)
-        func_source = introspector.query_introspector_function_source(
-            project_name, function_signature
-        )
+        # ========================================================================
+        # OPTIMIZATION: Try to use shared_data if available (avoids redundant FI queries)
+        # ========================================================================
+        shared_data = state.get('shared_data', None)
         
-        # Extract API context using APIContextExtractor (integrated)
-        logger.info(f'🔍 Extracting API context for {function_signature}', trial=self.trial)
-        api_context = get_api_context(project_name, function_signature)
+        if shared_data:
+            logger.info(f'✅ Using shared data (prepared at {shared_data.get("timestamp", "?")})', trial=self.trial)
+            logger.info(f'   └─ Skipping redundant FuzzIntrospector queries', trial=self.trial)
+            
+            # Extract pre-fetched data
+            func_source = shared_data.get('source_code', '')
+            api_context = shared_data.get('api_context', {})
+            api_dependencies = shared_data.get('api_dependencies', {})
+            header_info = shared_data.get('header_info', {})
+            existing_fuzzer_headers = shared_data.get('existing_fuzzer_headers', {})
+            
+            # Update header_info to include existing fuzzer headers
+            if header_info is None:
+                header_info = {}
+            header_info["existing_fuzzer_headers"] = existing_fuzzer_headers
+        else:
+            logger.warning(f'⚠️ No shared data available, querying FuzzIntrospector directly (less efficient)', trial=self.trial)
+            
+            # Fallback to original behavior (query FuzzIntrospector)
+            # Query FuzzIntrospector for function source code
+            logger.info(f'Querying FuzzIntrospector for source code of {function_signature}', trial=self.trial)
+            func_source = introspector.query_introspector_function_source(
+                project_name, function_signature
+            )
+            
+            # Extract API context using APIContextExtractor (integrated)
+            logger.info(f'🔍 Extracting API context for {function_signature}', trial=self.trial)
+            api_context = get_api_context(project_name, function_signature)
+            # Continue with dependency and header extraction (fallback path)
+            # Build API dependency graph using tree-sitter + FuzzIntrospector
+            # Enable LLM mode for enhanced dependency analysis if available
+            use_llm_for_deps = getattr(self.args, 'use_llm_api_analysis', False)
+            logger.info(
+                f'🔗 Building API dependency graph for {function_signature} '
+                f'(LLM mode: {use_llm_for_deps})',
+                trial=self.trial
+            )
+            api_dependencies = None
+            try:
+                from agent_graph.api_dependency_analyzer import APIDependencyAnalyzer
+                analyzer = APIDependencyAnalyzer(
+                    project_name,
+                    llm=self.llm if use_llm_for_deps else None,
+                    use_llm=use_llm_for_deps
+                )
+                api_dependencies = analyzer.build_dependency_graph(function_signature)
+            except Exception as e:
+                logger.warning(f'⚠️ Failed to build API dependency graph: {e}', trial=self.trial)
+                api_dependencies = {}
+            
+            # Query FuzzIntrospector for header information
+            logger.info(f'Querying FuzzIntrospector for header files of {function_signature}', trial=self.trial)
+            header_info = self._extract_header_information(project_name, function_signature)
+            
+            # Extract headers from existing fuzzers (proven to work)
+            existing_fuzzer_headers = self._extract_existing_fuzzer_headers(project_name)
+            header_info["existing_fuzzer_headers"] = existing_fuzzer_headers
+        
+        # Log data summary (works for both shared_data and fallback paths)
         if api_context:
             param_count = len(api_context.get('parameters', []))
             init_pattern_count = len(api_context.get('initialization_patterns', []))
@@ -68,7 +123,7 @@ class LangGraphFunctionAnalyzer(LangGraphAgent):
             typedef_count = len(api_context.get('type_definitions', {}))
             
             logger.info(
-                f'✅ API context extracted: {param_count} parameters, '
+                f'📊 API context available: {param_count} parameters, '
                 f'{init_pattern_count} init patterns, {example_count} usage examples',
                 trial=self.trial
             )
@@ -97,75 +152,45 @@ class LangGraphFunctionAnalyzer(LangGraphAgent):
                 trial=self.trial
             )
         else:
-            logger.warning(f'⚠️ No API context extracted for {function_signature}', trial=self.trial)
+            logger.warning(f'⚠️ No API context available for {function_signature}', trial=self.trial)
         
-        # Build API dependency graph using tree-sitter + FuzzIntrospector
-        # Enable LLM mode for enhanced dependency analysis if available
-        use_llm_for_deps = getattr(self.args, 'use_llm_api_analysis', False)
-        logger.info(
-            f'🔗 Building API dependency graph for {function_signature} '
-            f'(LLM mode: {use_llm_for_deps})',
-            trial=self.trial
-        )
-        api_dependencies = None
-        try:
-            from agent_graph.api_dependency_analyzer import APIDependencyAnalyzer
-            analyzer = APIDependencyAnalyzer(
-                project_name,
-                llm=self.llm if use_llm_for_deps else None,
-                use_llm=use_llm_for_deps
-            )
-            api_dependencies = analyzer.build_dependency_graph(function_signature)
+        if api_dependencies and api_dependencies.get('call_sequence'):
+            prereq_count = len(api_dependencies.get('prerequisites', []))
+            data_dep_count = len(api_dependencies.get('data_dependencies', []))
+            call_seq_len = len(api_dependencies.get('call_sequence', []))
             
-            if api_dependencies and api_dependencies.get('call_sequence'):
-                prereq_count = len(api_dependencies.get('prerequisites', []))
-                data_dep_count = len(api_dependencies.get('data_dependencies', []))
-                call_seq_len = len(api_dependencies.get('call_sequence', []))
-                
-                logger.info(
-                    f'✅ API dependency graph built: {prereq_count} prerequisites, '
-                    f'{data_dep_count} data deps, call sequence length: {call_seq_len}',
-                    trial=self.trial
-                )
-                
-                # Log detailed dependency information
-                logger.info(
-                    f'🔗 Detailed API Dependency Information:\n'
-                    f'  ├─ Call Sequence ({call_seq_len}):\n' +
-                    '\n'.join([f'  │   {i+1}. {func}{"" if func != function_signature else " ← TARGET"}' 
-                              for i, func in enumerate(api_dependencies.get('call_sequence', []))]) +
-                    f'\n  ├─ Prerequisites ({prereq_count}):\n' +
-                    '\n'.join([f'  │   • {prereq}()' 
-                              for prereq in api_dependencies.get('prerequisites', [])]) +
-                    f'\n  └─ Data Dependencies ({data_dep_count}):\n' +
-                    '\n'.join([f'  │   • {src} → {dst}' 
-                              for src, dst in api_dependencies.get('data_dependencies', [])]),
-                    trial=self.trial
-                )
-            else:
-                logger.warning(f'⚠️ No API dependencies extracted for {function_signature}', trial=self.trial)
-        except Exception as e:
-            logger.warning(f'⚠️ Failed to build API dependency graph: {e}', trial=self.trial)
+            logger.info(
+                f'🔗 API dependency graph available: {prereq_count} prerequisites, '
+                f'{data_dep_count} data deps, call sequence length: {call_seq_len}',
+                trial=self.trial
+            )
+            
+            # Log detailed dependency information
+            logger.info(
+                f'🔗 Detailed API Dependency Information:\n'
+                f'  ├─ Call Sequence ({call_seq_len}):\n' +
+                '\n'.join([f'  │   {i+1}. {func}{"" if func != function_signature else " ← TARGET"}' 
+                          for i, func in enumerate(api_dependencies.get('call_sequence', []))]) +
+                f'\n  ├─ Prerequisites ({prereq_count}):\n' +
+                '\n'.join([f'  │   • {prereq}()' 
+                          for prereq in api_dependencies.get('prerequisites', [])]) +
+                f'\n  └─ Data Dependencies ({data_dep_count}):\n' +
+                '\n'.join([f'  │   • {src} → {dst}' 
+                          for src, dst in api_dependencies.get('data_dependencies', [])]),
+                trial=self.trial
+            )
         
-        # Query FuzzIntrospector for header information
-        logger.info(f'Querying FuzzIntrospector for header files of {function_signature}', trial=self.trial)
-        header_info = self._extract_header_information(project_name, function_signature)
-        
-        # Extract headers from existing fuzzers (proven to work)
-        existing_fuzzer_headers = self._extract_existing_fuzzer_headers(project_name)
-        header_info["existing_fuzzer_headers"] = existing_fuzzer_headers
-        
-        # Log detailed header information
-        # existing_fuzzer_headers is a dict with 'standard_headers' and 'project_headers' keys
-        std_count = len(existing_fuzzer_headers.get('standard_headers', []))
-        proj_count = len(existing_fuzzer_headers.get('project_headers', []))
-        logger.info(
-            f'📚 Header information extracted from FuzzIntrospector:\n'
-            f'  Definition headers: {header_info.get("definition_headers", [])}\n'
-            f'  Required type headers: {header_info.get("required_type_headers", [])}\n'
-            f'  Existing fuzzer headers: {std_count} standard, {proj_count} project headers',
-            trial=self.trial
-        )
+        # Log header information
+        if header_info:
+            std_count = len(header_info.get("existing_fuzzer_headers", {}).get('standard_headers', []))
+            proj_count = len(header_info.get("existing_fuzzer_headers", {}).get('project_headers', []))
+            logger.info(
+                f'📚 Header information available:\n'
+                f'  Definition headers: {header_info.get("definition_headers", [])}\n'
+                f'  Required type headers: {header_info.get("required_type_headers", [])}\n'
+                f'  Existing fuzzer headers: {std_count} standard, {proj_count} project headers',
+                trial=self.trial
+            )
         
         if not func_source:
             logger.warning(

@@ -101,7 +101,7 @@ class APIDependencyAnalyzer:
         self, 
         project_name: str, 
         project_dir: str = "",
-        llm: Optional[any] = None,
+        llm: Optional['any'] = None,  # Using string literal to avoid import issues
         use_llm: bool = False
     ):
         self.project_name = project_name

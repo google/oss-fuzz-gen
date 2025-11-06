@@ -60,6 +60,10 @@ class FuzzingWorkflowState(TypedDict):
     trial: int  # Trial number
     work_dirs: Dict[str, Any]  # WorkDirs dict (serialized from experiment.workdir.WorkDirs)
     
+    # === Shared Data (Optimization) ===
+    # Pre-fetched data shared across all trials to avoid redundant FI queries
+    shared_data: NotRequired[Dict[str, Any]]  # Contains: source_code, api_context, api_dependencies, header_info
+    
     # === Agent-Specific Messages ===
     # Each agent maintains its own conversation history independently
     # Format: {agent_name: [messages]}

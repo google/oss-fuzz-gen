@@ -171,12 +171,138 @@ def prepare(oss_fuzz_dir: str) -> None:
   oss_fuzz_checkout.clone_oss_fuzz(oss_fuzz_dir)
   oss_fuzz_checkout.postprocess_oss_fuzz()
 
+def _prepare_shared_data(benchmark: Benchmark, args: argparse.Namespace) -> dict:
+  """
+  Extract shared data that's identical for all trials.
+  
+  This function queries FuzzIntrospector once and returns data that
+  all trials can share, avoiding redundant network I/O and computation.
+  
+  Args:
+      benchmark: Benchmark containing project and function info
+      args: Command line arguments
+      
+  Returns:
+      Dictionary with shared data:
+      - source_code: Function source code from FI
+      - api_context: API context (parameters, types, examples, etc.)
+      - api_dependencies: Dependency graph
+      - header_info: Header file information
+      - existing_fuzzer_headers: Headers from existing fuzzers
+  """
+  import time
+  from data_prep import introspector
+  from agent_graph.api_context_extractor import APIContextExtractor
+  from agent_graph.api_dependency_analyzer import APIDependencyAnalyzer
+  
+  project_name = benchmark.project
+  function_signature = benchmark.function_signature
+  
+  logger.info(f'📦 Pre-fetching shared data for {function_signature}', trial=0)
+  fetch_start = time.time()
+  
+  # 1. Query function source code
+  logger.debug(f'  1/4 Querying source code...', trial=0)
+  source_code = introspector.query_introspector_function_source(
+      project_name, function_signature
+  )
+  
+  # 2. Extract API context (parameters, types, examples)
+  logger.debug(f'  2/4 Extracting API context...', trial=0)
+  extractor = APIContextExtractor(project_name)
+  api_context = extractor.extract(function_signature)
+  
+  # 3. Build dependency graph
+  logger.debug(f'  3/4 Building dependency graph...', trial=0)
+  use_llm_for_deps = getattr(args, 'use_llm_api_analysis', False)
+  analyzer = APIDependencyAnalyzer(
+      project_name,
+      llm=None,  # Don't use LLM in shared data preparation
+      use_llm=False  # Always use heuristic mode for shared data
+  )
+  api_dependencies = analyzer.build_dependency_graph(function_signature)
+  
+  # 4. Extract header information
+  logger.debug(f'  4/4 Extracting headers...', trial=0)
+  from agent_graph.header_extractor import HeaderExtractor
+  header_extractor = HeaderExtractor(project_name)
+  header_info = header_extractor.get_all_headers(function_signature)
+  
+  # Extract existing fuzzer headers
+  existing_fuzzer_headers = _extract_existing_fuzzer_headers_helper(project_name)
+  
+  fetch_duration = time.time() - fetch_start
+  logger.info(f'✅ Shared data prepared in {fetch_duration:.2f}s', trial=0)
+  logger.info(
+      f'   └─ Source: {len(source_code) if source_code else 0} chars, '
+      f'API context: {len(api_context.get("parameters", []))} params, '
+      f'Deps: {len(api_dependencies.get("call_sequence", []))} funcs, '
+      f'Headers: {len(header_info)} types',
+      trial=0
+  )
+  
+  return {
+      'source_code': source_code,
+      'api_context': api_context,
+      'api_dependencies': api_dependencies,
+      'header_info': header_info,
+      'existing_fuzzer_headers': existing_fuzzer_headers,
+      'timestamp': fetch_start,  # For debugging
+  }
+
+
+def _extract_existing_fuzzer_headers_helper(project_name: str) -> dict:
+  """Helper to extract headers from existing fuzzers."""
+  from data_prep import introspector
+  import re
+  
+  existing_fuzzer_headers = {
+      'standard_headers': set(),
+      'project_headers': set()
+  }
+  
+  try:
+      # Get all fuzzer files
+      fuzzers = introspector.query_introspector_harness_files(project_name)
+      if not fuzzers:
+          return existing_fuzzer_headers
+      
+      # Extract headers from each fuzzer
+      for fuzzer_path in fuzzers[:5]:  # Limit to avoid overhead
+          fuzzer_source = introspector.query_introspector_file_source(
+              project_name, fuzzer_path
+          )
+          if fuzzer_source:
+              # Extract #include statements
+              for line in fuzzer_source.split('\n')[:50]:  # Only check top of file
+                  include_match = re.match(r'^\s*#include\s+[<"]([^>"]+)[>"]', line)
+                  if include_match:
+                      header = include_match.group(1)
+                      if header.startswith(project_name) or '/' in header:
+                          existing_fuzzer_headers['project_headers'].add(header)
+                      else:
+                          existing_fuzzer_headers['standard_headers'].add(header)
+  except Exception as e:
+      logger.warning(f'Failed to extract existing fuzzer headers: {e}', trial=0)
+  
+  return {
+      'standard_headers': list(existing_fuzzer_headers['standard_headers']),
+      'project_headers': list(existing_fuzzer_headers['project_headers'])
+  }
+
+
 def _fuzzing_pipeline(benchmark: Benchmark, model: models.LLM,
                       args: argparse.Namespace, work_dirs: WorkDirs,
-                      trial: int) -> TrialResult:
+                      trial: int, shared_data: dict = None) -> TrialResult:
   """Runs the LangGraph-based fuzzing workflow for one trial."""
   trial_logger = logger.get_trial_logger(trial=trial, level=logging.DEBUG)
   trial_logger.info('Trial Starts')
+  
+  # Log shared data usage
+  if shared_data:
+    trial_logger.info(f'Using shared data prepared at timestamp {shared_data.get("timestamp", "unknown")}')
+  else:
+    trial_logger.warning('No shared data provided - will query FI independently (inefficient!)')
   
   # Note: signal-based timeout is disabled because signal.signal() only works in main thread
   # ThreadPool workers run in separate threads, so signal.SIGALRM cannot be used here
@@ -194,7 +320,7 @@ def _fuzzing_pipeline(benchmark: Benchmark, model: models.LLM,
     
     # Create and run the LangGraph workflow
     trial_logger.info('🔧 Creating FuzzingWorkflow instance...')
-    workflow = FuzzingWorkflow(model, args)
+    workflow = FuzzingWorkflow(model, args, shared_data=shared_data)
     trial_logger.info('✅ FuzzingWorkflow instance created')
     
     # Run the full supervisor-based workflow
@@ -202,6 +328,10 @@ def _fuzzing_pipeline(benchmark: Benchmark, model: models.LLM,
     trial_logger.info(f'   Benchmark: {benchmark.id}')
     trial_logger.info(f'   Trial: {trial}')
     trial_logger.info(f'   Workflow type: full')
+    if shared_data:
+      trial_logger.info(f'   Using shared data: YES (timestamp {shared_data.get("timestamp", "?")})')
+    else:
+      trial_logger.info(f'   Using shared data: NO (will query FI)')
     
     import time
     workflow_start_time = time.time()
@@ -333,6 +463,19 @@ def _fuzzing_pipelines(benchmark: Benchmark, model: models.LLM,
   logger.info(f'📍 [_fuzzing_pipelines] Starting with {args.num_samples} trial(s)', trial=0)
   logger.info(f'📍 [_fuzzing_pipelines] ThreadPool size: {NUM_EVA}', trial=0)
   
+  # ============================================================
+  # OPTIMIZATION: Pre-fetch shared data (only once for all trials)
+  # ============================================================
+  logger.info('📍 [_fuzzing_pipelines] Pre-fetching shared data...', trial=0)
+  shared_data_start = time.time()
+  shared_data = _prepare_shared_data(benchmark, args)
+  shared_data_duration = time.time() - shared_data_start
+  logger.info(
+      f'📍 [_fuzzing_pipelines] Shared data prepared in {shared_data_duration:.2f}s '
+      f'(will be reused by all {args.num_samples} trials)',
+      trial=0
+  )
+  
   # Create a pool of worker processes
   logger.info('📍 [_fuzzing_pipelines] Creating ThreadPool...', trial=0)
   pool_start = time.time()
@@ -342,7 +485,8 @@ def _fuzzing_pipelines(benchmark: Benchmark, model: models.LLM,
     logger.info(f'📍 [_fuzzing_pipelines] ThreadPool created in {pool_create_duration:.2f}s', trial=0)
     
     # Initialize thread-local storage in each worker before processing
-    task_args = [(benchmark, model, args, work_dirs, trial)
+    # IMPORTANT: Pass shared_data to each trial
+    task_args = [(benchmark, model, args, work_dirs, trial, shared_data)
                  for trial in range(1, args.num_samples + 1)]
     logger.info(f'📍 [_fuzzing_pipelines] Starting {len(task_args)} trial(s) via starmap...', trial=0)
     
@@ -350,6 +494,15 @@ def _fuzzing_pipelines(benchmark: Benchmark, model: models.LLM,
     trial_results = p.starmap(_fuzzing_pipeline, task_args)
     starmap_duration = time.time() - starmap_start
     logger.info(f'📍 [_fuzzing_pipelines] All trials completed in {starmap_duration:.2f}s', trial=0)
+    
+    # Calculate efficiency metrics
+    if args.num_samples > 1:
+      time_saved = shared_data_duration * (args.num_samples - 1)
+      logger.info(
+          f'📊 [_fuzzing_pipelines] Shared data optimization: '
+          f'saved ~{time_saved:.1f}s by avoiding {args.num_samples - 1} redundant queries',
+          trial=0
+      )
     
     logger.info('📍 [_fuzzing_pipelines] Exiting ThreadPool context (will wait for cleanup)...', trial=0)
   

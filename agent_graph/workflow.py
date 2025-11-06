@@ -30,7 +30,8 @@ class FuzzingWorkflow:
     with proper configuration and state management.
     """
     
-    def __init__(self, llm: LLM, args: argparse.Namespace, use_checkpointer: bool = True):
+    def __init__(self, llm: LLM, args: argparse.Namespace, 
+                 use_checkpointer: bool = True, shared_data: dict = None):
         """
         Initialize the fuzzing workflow.
         
@@ -38,11 +39,15 @@ class FuzzingWorkflow:
             llm: LLM instance for agents
             args: Command line arguments
             use_checkpointer: Whether to use memory checkpointer for persistence
+            shared_data: Pre-fetched shared data (optional, for optimization)
+                        Contains: source_code, api_context, api_dependencies, 
+                                 header_info, existing_fuzzer_headers
         """
         self.llm = llm
         self.args = args
         self.workflow_graph = None
         self.config = ConfigAdapter.create_config(llm, args)
+        self.shared_data = shared_data  # Store for agents to access
         
         # Create memory checkpointer for conversation persistence
         self.checkpointer = create_memory_checkpointer() if use_checkpointer else None
@@ -97,6 +102,14 @@ class FuzzingWorkflow:
             trial=trial,
             work_dirs=self.args.work_dirs
         )
+        
+        # Inject shared_data into state if available
+        if self.shared_data:
+            initial_state['shared_data'] = self.shared_data
+            logger.info('📍 [workflow.run] Shared data injected into state', trial=trial)
+        else:
+            logger.info('📍 [workflow.run] No shared data to inject', trial=trial)
+        
         logger.info('📍 [workflow.run] Initial state created', trial=trial)
         
         # Compile and run the workflow with checkpointer
@@ -117,7 +130,8 @@ class FuzzingWorkflow:
             "configurable": {
                 "llm": self.llm,
                 "args": self.args,
-                "thread_id": f"{benchmark.id}_trial_{trial}"
+                "thread_id": f"{benchmark.id}_trial_{trial}",
+                "shared_data": self.shared_data  # Pass shared data to agents
             },
             "recursion_limit": getattr(self.args, 'max_iterations', 5) * 10  # Allow enough cycles
         }
