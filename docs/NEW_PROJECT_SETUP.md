@@ -74,7 +74,7 @@ cat > conti-benchmark/my-project.yaml << 'EOF'
 EOF
 
 # 3. Run LogicFuzz
-python agent_graph/main.py -y conti-benchmark/my-project.yaml --model gpt-5
+python run_logicfuzz.py -y conti-benchmark/my-project.yaml --model gpt-5
 ```
 
 ### Option B: I have a GitHub repository
@@ -265,15 +265,15 @@ ls -lh oss-fuzz/build/out/my-project/
 
 ```bash
 # Basic run
-python agent_graph/main.py \
+python run_logicfuzz.py \
   -y conti-benchmark/my-project.yaml \
   --model gpt-5
 
 # With Fuzz Introspector (recommended)
-python agent_graph/main.py \
+python run_logicfuzz.py \
   -y conti-benchmark/my-project.yaml \
   --model gpt-5 \
-  -n 5 \
+  --num-samples 5 \
   --context \
   -e http://0.0.0.0:8080/api
 ```
@@ -648,10 +648,10 @@ python infra/helper.py build_fuzzers my-project
 ls oss-fuzz/build/out/my-project/
 
 # Enable debug logging
-python agent_graph/main.py \
+python run_logicfuzz.py \
   -y conti-benchmark/my-project.yaml \
   --model gpt-5 \
-  --verbose
+  --log-level debug
 ```
 
 **Issue:** Generated fuzzer doesn't compile
@@ -722,16 +722,16 @@ For reference, check existing fuzzer build scripts in `fuzzer_build_script/`:
 
 ```bash
 # Begin with 1-2 functions
-python agent_graph/main.py \
+python run_logicfuzz.py \
   -y conti-benchmark/my-project.yaml \
   -f specific_function \
   --model gpt-5
 
 # Scale up after validation
-python agent_graph/main.py \
+python run_logicfuzz.py \
   -y conti-benchmark/my-project.yaml \
   --model gpt-5 \
-  -n 10
+  --num-samples 10
 ```
 
 ### 3. Iterate on Signatures

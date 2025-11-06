@@ -1,0 +1,98 @@
+Refine your understanding of `{FUNCTION_SIGNATURE}` based on a new usage example.
+
+---
+
+## CURRENT KNOWLEDGE (from {EXAMPLES_ANALYZED} examples so far):
+
+{CURRENT_SRS_KNOWLEDGE}
+
+---
+
+## NEW USAGE EXAMPLE #{EXAMPLE_NUMBER}:
+
+**Caller**: `{CALLER_NAME}` at line {CALL_LINE_NUMBER}
+
+**Code Context**:
+```c
+{CONTEXT_BEFORE}
+>>> {CALL_STATEMENT}  // Target call
+{CONTEXT_AFTER}
+```
+
+**Parameter Setup**: {PARAMETER_SETUP}
+**Return Handling**: {RETURN_USAGE}
+
+---
+
+## TASK: Incremental Knowledge Refinement
+
+Analyze this NEW example and identify ONLY what is NEW or DIFFERENT from your current understanding.
+
+**Focus on**:
+1. NEW preconditions not yet listed
+2. NEW postconditions not yet captured
+3. NEW constraints (execution order, parameter ranges, etc.)
+4. NEW parameter strategies or refinements
+5. Archetype confirmation or revision
+6. Confidence updates (if this example confirms existing knowledge)
+
+**Output Format** (JSON in `<updates>` tags):
+
+<updates>
+{
+  "new_preconditions": [
+    // ONLY if new preconditions discovered
+    {"priority": "MANDATORY|RECOMMENDED|OPTIONAL", "requirement": "...", "rationale": "...", "evidence": "quote from code"}
+  ],
+  "new_postconditions": [
+    // ONLY if new postconditions discovered
+    {"priority": "...", "requirement": "...", "check_method": "...", "evidence": "..."}
+  ],
+  "new_constraints": [
+    // ONLY if new constraints discovered
+    {"type": "execution_order|parameter_range|resource_limit", "requirement": "...", "evidence": "..."}
+  ],
+  "new_parameter_strategies": [
+    // ONLY if new strategies or refinements to existing ones
+    {"parameter": "...", "strategy": "DIRECT_FUZZ|CONSTRAIN|FIX|CONSTRUCT", "rationale": "..."}
+  ],
+  "new_functional_requirements": [
+    // ONLY if new functional requirements discovered
+    {"priority": "...", "requirement": "...", "rationale": "...", "evidence": "..."}
+  ],
+  "archetype_update": {
+    // ONLY if archetype changed or confidence increased
+    "primary_pattern": "unchanged | new_pattern_name",
+    "confidence": "HIGH|MEDIUM|LOW",
+    "evidence_count": "{increment by 1 if confirmed}"
+  },
+  "metadata_updates": {
+    // ONLY if metadata needs update
+    "category": "...",
+    "complexity": "...",
+    "state_model": "..."
+  },
+  "summary": "1-2 sentences: what this example confirms or reveals"
+}
+</updates>
+
+---
+
+## CRITICAL GUIDELINES:
+
+1. **Be Conservative**: Only add information that is CLEARLY evident in this example
+2. **Avoid Duplication**: Don't repeat what's already in current knowledge
+3. **Empty is OK**: If this example doesn't reveal anything new, leave arrays empty
+4. **Quote Evidence**: Always cite specific code lines to support your findings
+5. **Archetype Stability**: Don't change archetype unless strong contradictory evidence
+
+## ANTI-PATTERNS to Avoid:
+❌ Repeating existing preconditions/postconditions
+❌ Changing archetype based on single example
+❌ Adding obvious/implicit requirements
+❌ Over-interpreting absence of checks as requirements
+
+✅ Focus on what's NEW and ACTIONABLE
+✅ Confirm patterns with evidence counts
+✅ Refine parameter strategies based on real usage
+

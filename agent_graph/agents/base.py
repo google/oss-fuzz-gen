@@ -239,6 +239,102 @@ class LangGraphAgent(ABC):
         
         return response
     
+    def call_llm_stateless(
+        self, 
+        prompt: str, 
+        state: Optional[FuzzingWorkflowState] = None,
+        log_prefix: str = "STATELESS"
+    ) -> str:
+        """
+        Call LLM without conversation history (stateless).
+        
+        This method is used for iterative analysis where we manage state explicitly
+        rather than relying on LLM conversation history. Each call is independent,
+        with only system message + current prompt.
+        
+        Differences from ask_llm():
+        - Includes system message (ask_llm doesn't)
+        - Explicitly designed for iterative refinement patterns
+        - Better logging for stateless iteration
+        
+        Args:
+            prompt: User prompt (state should be embedded in the prompt)
+            state: Optional state for tracking token usage
+            log_prefix: Prefix for log messages
+        
+        Returns:
+            LLM response
+        """
+        # Construct stateless messages: system + user prompt only
+        messages = [
+            {"role": "system", "content": self.system_message},
+            {"role": "user", "content": prompt}
+        ]
+        
+        # Increment round counter for detailed logging
+        self._round += 1
+        
+        logger.debug(
+            f'<AGENT {self.name} {log_prefix}>\n{prompt[:500]}...\n</AGENT {self.name} {log_prefix}>',
+            trial=self.trial
+        )
+        
+        # Detailed logging: log stateless prompt
+        if self._langgraph_logger:
+            prompt_metadata = {
+                'model': getattr(self.llm, 'model', 'unknown'),
+                'temperature': getattr(self.args, 'temperature', None),
+                'type': 'stateless (no conversation history)',
+                'prompt_length': len(prompt)
+            }
+            self._langgraph_logger.log_interaction(
+                agent_name=self.name,
+                interaction_type='prompt',
+                content=prompt,
+                round_num=self._round,
+                metadata=prompt_metadata
+            )
+        
+        # Call LLM
+        response = self.llm.chat_with_messages(messages)
+        
+        # Track token usage if state is provided
+        token_usage = None
+        if state and hasattr(self.llm, 'last_token_usage') and self.llm.last_token_usage:
+            from agent_graph.state import update_token_usage
+            usage = self.llm.last_token_usage
+            token_usage = usage.copy()
+            update_token_usage(
+                state, 
+                self.name,
+                usage.get('prompt_tokens', 0),
+                usage.get('completion_tokens', 0),
+                usage.get('total_tokens', 0)
+            )
+        
+        # Detailed logging: log stateless response
+        if self._langgraph_logger:
+            response_metadata = {
+                'model': getattr(self.llm, 'model', 'unknown'),
+                'tokens': token_usage,
+                'type': 'stateless (no conversation history)',
+                'response_length': len(response)
+            }
+            self._langgraph_logger.log_interaction(
+                agent_name=self.name,
+                interaction_type='response',
+                content=response,
+                round_num=self._round,
+                metadata=response_metadata
+            )
+        
+        logger.debug(
+            f'<AGENT {self.name} {log_prefix} RESPONSE>\n{response[:500]}...\n</AGENT {self.name} {log_prefix} RESPONSE>',
+            trial=self.trial
+        )
+        
+        return response
+    
     @abstractmethod
     def execute(self, state: FuzzingWorkflowState) -> Dict[str, Any]:
         """

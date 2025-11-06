@@ -240,17 +240,6 @@ python run_logicfuzz.py --agent \
   2>&1 | tee logicfuzz-$(date +%m%d).log
 ```
 
-### Alternative Entry Point (Direct Agent Graph)
-
-```bash
-# Using agent_graph/main.py directly
-python agent_graph/main.py \
-  -y conti-benchmark/conti-cmp/cjson.yaml \
-  --model gpt-5 \
-  --context \
-  --max-iterations 10
-```
-
 ### Key Parameters
 
 | Parameter | Description | Default | Recommended |

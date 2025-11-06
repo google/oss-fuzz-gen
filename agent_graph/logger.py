@@ -16,7 +16,6 @@ from datetime import datetime
 from typing import Optional, Dict, Any, List
 from pathlib import Path
 
-import logger
 
 class LangGraphLogger:
     """
@@ -59,13 +58,8 @@ class LangGraphLogger:
         # Token usage tracking
         self._token_stats: Dict[str, Dict[str, int]] = {}
         
-        logger.info(
-            f'📁 LangGraph logger initialized:\n'
-            f'   Base dir: {self.base_dir}\n'
-            f'   Log dir: {self.log_dir}\n'
-            f'   Directory created: {self.log_dir.exists()}',
-            trial=trial
-        )
+        # Note: Cannot use self.info() here as it's not yet initialized
+        # This initialization message can be logged after the instance is created if needed
     
     @classmethod 
     def get_logger(cls, workflow_id: str, trial: int, base_dir: Optional[str] = None) -> 'LangGraphLogger':
