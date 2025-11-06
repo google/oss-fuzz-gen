@@ -58,7 +58,7 @@ function createAccordionSection(tagName, contents, index) {
     const id = `${tagName}-${index}`;
     const icon = TAG_ICONS[tagName] || '';
     const langClass = getLanguageClass();
-    
+
     const formattedContent = tagName === 'solution'
         ? `<code class="syntax-highlight language-${langClass}">${contents}</code>`
         : formatContent(contents);
@@ -93,10 +93,10 @@ function createAccordionSection(tagName, contents, index) {
  */
 function formatContent(content) {
     const langClass = getLanguageClass();
-    content = content.replace(/<code>([\s\S]*?)<\/code>/g, (match, code) => 
+    content = content.replace(/<code>([\s\S]*?)<\/code>/g, (match, code) =>
         `<code class="syntax-highlight language-${langClass}">${code}</code>`
     );
-    content = content.replace(/<function signature>([\s\S]*?)<\/function signature>/g, (match, signature) => 
+    content = content.replace(/<function signature>([\s\S]*?)<\/function signature>/g, (match, signature) =>
         `<div class="bg-blue-50 dark:bg-blue-900 p-3 my-2 rounded-lg"><code class="syntax-highlight language-${langClass} font-mono">${signature}</code></div>`
     );
     return content;
@@ -150,7 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const tags = parsePromptTags(rawPrompt);
 
     const structuredPromptDiv = document.getElementById('structured-prompt');
-    structuredPromptDiv.innerHTML = tags.map((tag, index) => 
+    structuredPromptDiv.innerHTML = tags.map((tag, index) =>
         createAccordionSection(tag.type, tag.content, index)
     ).join('');
 

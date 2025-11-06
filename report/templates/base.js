@@ -314,7 +314,7 @@ function initializeSearch() {
     let searchTimeout;
     let unifiedData = {};
     const unifiedDataElement = document.getElementById(BASE_ELEMENT_IDS.UNIFIED_DATA);
-    
+
     if (unifiedDataElement) {
         try {
             unifiedData = JSON.parse(unifiedDataElement.textContent);
@@ -457,7 +457,7 @@ function buildTOC() {
 function initializeTOCToggle() {
     const toc = document.getElementById(BASE_ELEMENT_IDS.TOC);
     const tocToggle = document.getElementById(BASE_ELEMENT_IDS.TOC_TOGGLE);
-    
+
     if (!toc || !tocToggle) return;
 
     tocToggle.addEventListener('click', () => {

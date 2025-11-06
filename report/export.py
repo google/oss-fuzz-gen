@@ -67,9 +67,8 @@ class CSVExporter(BaseExporter):
               f"oss-fuzz-gcb-experiment-run-logs/Result-reports/"
               f"{self._gcs_dir}/results/{benchmark_id}/artifacts/"
               f"{crash_reproduction_path}")
-    else:
-      return self._get_full_url(
-          f'results/{benchmark_id}/artifacts/{crash_reproduction_path}')
+    return self._get_full_url(
+        f'results/{benchmark_id}/artifacts/{crash_reproduction_path}')
 
   def generate(self):
     """Generate a CSV file with the results."""

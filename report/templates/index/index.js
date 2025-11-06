@@ -37,7 +37,7 @@ const TIME_UNITS = {
 };
 
 const COLORS = {
-	CYCLES_PROJECT: '#3b82f6', 
+	CYCLES_PROJECT: '#3b82f6',
 	DURATION_PROJECT: '#9ca3af',
 	CYCLES_BENCH: '#1d4ed8',
 	DURATION_BENCH: '#6b7280',
@@ -259,11 +259,11 @@ function getProjectSummaryColumnIndex(substr) {
  */
 function renderCrashReasonsPie(el, data, unified) {
 	if (typeof d3 === 'undefined') return false;
-	
+
 	while (el.children.length > 1) {
 		el.removeChild(el.lastChild);
 	}
-	
+
 	const { width, height } = containerSize(el);
 
 	const mainContainer = d3.select(el).append('div')
