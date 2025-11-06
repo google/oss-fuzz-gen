@@ -1,0 +1,254 @@
+{#
+Copyright 2025 Google LLC
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+#}
+
+{# SVG icons and UI components #}
+
+{%- macro icon_chevron_down(size_class='w-5 h-5', rotate_condition='') -%}
+<svg class="{{ size_class }} transform transition-transform duration-200"
+     {% if rotate_condition %}:class="{'rotate-180': {{ rotate_condition }}}"{% endif %}
+     fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+</svg>
+{%- endmacro -%}
+
+{%- macro icon_copy(size_class='w-4 h-4') -%}
+<svg class="{{ size_class }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+</svg>
+{%- endmacro -%}
+
+{%- macro collapsible_section(title, open_var, content_id='') -%}
+<button @click="{{ open_var }} = !{{ open_var }}"
+        class="w-full p-4 flex justify-between items-center">
+    <span class="text-lg font-bold">{{ title }}</span>
+    {{ icon_chevron_down('w-5 h-5', open_var) }}
+</button>
+{%- endmacro -%}
+
+{# Other components #}
+
+{%- macro code_block(code, language='plaintext', show_line_numbers=true) -%}
+<div class="code-container">
+    {% if show_line_numbers %}
+    <pre class="line-numbers">{% for line in code|remove_trailing_empty_lines|splitlines %}<span>{{ loop.index }}</span>{% endfor %}</pre>
+    {% endif %}
+    <pre class="code-content"><code class="syntax-highlight language-{{ language }}">{{ code|remove_trailing_empty_lines }}</code></pre>
+</div>
+{%- endmacro -%}
+
+{%- macro expand_collapse_buttons(expand_id, collapse_id, expand_text='Expand All', collapse_text='Collapse All') -%}
+<div class="flex justify-between">
+    <div class="controls flex gap-2">
+        <button id="{{ expand_id }}" class="border rounded-lg p-5">
+            {{ expand_text }}
+        </button>
+        <button id="{{ collapse_id }}" class="border rounded-lg p-5">
+            {{ collapse_text }}
+        </button>
+    </div>
+</div>
+{%- endmacro -%}
+
+{%- macro sortable_table_header(columns) -%}
+<thead>
+    <tr>
+        {% for col in columns %}
+        <th{% if col.sorted %} data-sorted="{{ col.sorted }}"{% endif %}{% if col.sort_type %} data-sort-{{ col.sort_type }}{% endif %}>{{ col.label }}</th>
+        {% endfor %}
+    </tr>
+</thead>
+{%- endmacro -%}
+
+{%- macro crash_badge(has_crash, is_potential_vuln=false) -%}
+<span class="inline-flex items-center px-3 py-1 rounded-full
+    {% if has_crash %}
+        bg-red-500 text-white
+    {% else %}
+        bg-green-300 text-black
+    {% endif %}">
+    {% if has_crash %}
+        Crashed
+    {% else %}
+        No Crash
+    {% endif %}
+</span>
+{%- endmacro -%}
+
+{%- macro vulnerability_badge(is_vuln) -%}
+<span class="inline-flex items-center px-3 py-1 rounded-full
+  {% if is_vuln %}
+      bg-red-500 text-white
+  {% else %}
+      bg-green-300 text-black
+  {% endif %}">
+  {% if is_vuln %}
+      Potential Vulnerability
+  {% else %}
+      No Potential Vulnerability
+  {% endif %}
+</span>
+{%- endmacro -%}
+
+{%- macro agent_cycle_section(cycle_data, loop_index, color_classes, default_lang='', sample=false) -%}
+{% if 'standalone' in cycle_data %}
+    {# Standalone agents #}
+    {% for agent_name, agent_data in cycle_data.standalone.items() %}
+      <div x-data="{ open: false }" class="border rounded-lg mb-4 agent-section">
+        <button @click="open = !open" class="w-full p-4 flex justify-between items-center text-left rounded-t-lg">
+          <span class="font-medium">{{ agent_name }}</span>
+          {{ icon_chevron_down('w-4 h-4', 'open') }}
+        </button>
+        <div x-show="open" class="border-t">
+          {% if agent_data.steps %}
+            {% for step in agent_data.steps %}
+              <div x-data="{ stepOpen: false }" class="border-b last:border-b-0">
+                <button @click="stepOpen = !stepOpen" class="w-full p-3 flex justify-between items-center text-left">
+                  <span class="font-medium">
+                    {% if step.number %}Step {{ step.number }}{% else %}Content{% endif %}
+                    <span class="text-gray-500 ml-2">({{ step.type }})</span>
+                  </span>
+                  {{ icon_chevron_down('w-3 h-3', 'stepOpen') }}
+                </button>
+                <div x-show="stepOpen" class="px-3 pb-3">
+                  {% for log_part in step.log_parts %}
+                    <div class="log-part-content {% if log_part.chat_prompt %}chat_prompt{% elif log_part.chat_response %}chat_response{% endif %} p-4 rounded-md mb-4 whitespace-pre-wrap break-words">{{ log_part.content|syntax_highlight|safe }}</div>
+                  {% endfor %}
+                </div>
+              </div>
+            {% endfor %}
+          {% else %}
+            {% for log_part in agent_data.logs %}
+              <div class="{% if log_part.chat_prompt %}chat_prompt {% elif log_part.chat_response %}chat_response {% endif %} p-4 rounded-md mb-4 whitespace-pre-wrap break-words">{{ log_part.content|syntax_highlight_agent(default_lang, agent_name)|safe }}</div>
+            {% endfor %}
+          {% endif %}
+        </div>
+      </div>
+    {% endfor %}
+{% else %}
+    {# Cycle with multiple agents #}
+    {% set color_index = (loop_index - 1) % color_classes|length %}
+    <div class="border-l-4 border-l-solid rounded-lg mb-6 p-4 {{ color_classes[color_index] }}">
+      <div class="mb-2 font-medium">
+        Cycle {{ loop_index }}
+      </div>
+      {% for agent_name, agent_data in cycle_data.items() %}
+        <div x-data="{ open: false }" class="border rounded-lg mb-4 agent-section">
+          <button @click="open = !open" class="w-full p-4 flex justify-between items-center text-left rounded-t-lg">
+            <span class="font-medium">{{ agent_name }}</span>
+            {{ icon_chevron_down('w-4 h-4', 'open') }}
+          </button>
+          <div x-show="open" class="border-t">
+            {% if agent_data.steps %}
+              {% if agent_data.steps|length == 1 %}
+                {# Single step - show raw content #}
+                {% set step = agent_data.steps[0] %}
+                {% if step.number and step.name %}
+                  <div class="p-3 border-b mt-3">
+                    <div class="font-medium mb-2">Step {{ step.number }} -
+                      {% if 'Stderr' in step.name %}
+                        {{ step.name.replace('Stderr', '<span class="text-red-600">Stderr</span>') | safe }}
+                      {% else %}
+                        {{ step.name }}
+                      {% endif %}
+                    </div>
+                    {% if step.bash_commands %}
+                    <div class="text-sm text-gray-600 mb-3">
+                      <span class="font-medium">Commands:</span>
+                      {% for cmd in step.bash_commands %}
+                        <span class="inline-block px-2 py-1 rounded text-xs mr-2 mb-1">{{ cmd }}</span>
+                      {% endfor %}
+                    </div>
+                    {% endif %}
+                    {% if step.log_parts %}
+                      {% for log_part in step.log_parts %}
+                        <div class="{% if log_part.chat_prompt %}chat_prompt {% elif log_part.chat_response %}chat_response {% endif %} p-3 rounded-md mb-2 whitespace-pre-wrap break-words">{{ log_part.content|syntax_highlight|safe }}</div>
+                      {% endfor %}
+                    {% else %}
+                      <div class="p-3 rounded-md whitespace-pre-wrap break-words">{{ step.content|syntax_highlight|safe }}</div>
+                    {% endif %}
+                  </div>
+                {% else %}
+                  {% if step.log_parts %}
+                    {% for log_part in step.log_parts %}
+                      <div class="{% if log_part.chat_prompt %}chat_prompt {% elif log_part.chat_response %}chat_response {% endif %} p-4 rounded-md mb-4 whitespace-pre-wrap break-words">{{ log_part.content|syntax_highlight|safe }}</div>
+                    {% endfor %}
+                  {% else %}
+                    <div class="p-4 rounded-md mb-4 whitespace-pre-wrap break-words">{{ step.content|syntax_highlight|safe }}</div>
+                  {% endif %}
+                {% endif %}
+              {% else %}
+                {# Multiple steps - show collapsible #}
+                {% for step in agent_data.steps %}
+                  <div x-data="{ stepOpen: false }" class="ml-5 border-b last:border-b-0">
+                    <button @click="stepOpen = !stepOpen" class="w-full p-3 flex justify-between items-center text-left">
+                      <div class="flex-1">
+                        <span class="font-medium">
+                          {% if step.number %}
+                            {% if step.name %}
+                              Step {{ step.number }} -
+                              {% if 'Stderr' in step.name %}
+                                {{ step.name.replace('Stderr', '<span class="text-red-600">Stderr</span>') | safe }}
+                              {% else %}
+                                {{ step.name }}
+                              {% endif %}
+                            {% else %}
+                              Step {{ step.number }}
+                            {% endif %}
+                          {% elif step.name %}
+                            {% if 'Stderr' in step.name %}
+                              {{ step.name.replace('Stderr', '<span class="text-red-600">Stderr</span>') | safe }}
+                            {% else %}
+                              {{ step.name }}
+                            {% endif %}
+                          {% else %}
+                            Content
+                          {% endif %}
+                        </span>
+                        {% if step.bash_commands %}
+                        <div class="text-sm text-gray-600 mt-2">
+                          {% for cmd in step.bash_commands %}
+                            <span class="inline-block px-1 py-0.5 rounded mr-1">{{ cmd }}</span>
+                          {% endfor %}
+                        </div>
+                        {% endif %}
+                      </div>
+                      {{ icon_chevron_down('w-3 h-3', 'stepOpen') }}
+                    </button>
+                    <div x-show="stepOpen" class="ml-5 px-3 pb-3 mt-3">
+                      {% if step.log_parts %}
+                        {% for log_part in step.log_parts %}
+                          <div class="{% if log_part.chat_prompt %}chat_prompt {% elif log_part.chat_response %}chat_response {% endif %} p-3 rounded-md mb-2 whitespace-pre-wrap break-words">{{ log_part.content|syntax_highlight_agent(default_lang, agent_name)|safe }}</div>
+                        {% endfor %}
+                      {% else %}
+                        <div class="p-3 rounded-md whitespace-pre-wrap break-words">{{ step.content|syntax_highlight|safe }}</div>
+                      {% endif %}
+                    </div>
+                  </div>
+                {% endfor %}
+              {% endif %}
+            {% else %}
+              {% for log_part in agent_data.logs %}
+                <div class="{% if log_part.chat_prompt %}chat_prompt {% elif log_part.chat_response %}chat_response {% endif %} p-4 rounded-md mb-4 whitespace-pre-wrap break-words">{{ log_part.content|syntax_highlight_agent(default_lang, agent_name)|safe }}</div>
+              {% endfor %}
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+{% endif %}
+{%- endmacro -%}
+
