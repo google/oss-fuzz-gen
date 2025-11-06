@@ -866,12 +866,49 @@ def get_next_generated_benchmarks_dir() -> str:
   return os.path.join(BENCHMARK_ROOT, f'{GENERATED_BENCHMARK}{max_idx}')
 
 def query_introspector_target_function(project: str, function: str) -> dict:
+  """Queries FuzzIntrospector for a specific target function.
+  
+  Note: The API requires the function NAME, not the full signature.
+  This function extracts the function name from the signature if needed.
+  
+  Args:
+    project: The project name
+    function: The function signature (e.g., "int foo(char* bar)")
+    
+  Returns:
+    Dictionary containing function metadata, or empty dict if not found
+  """
+  # Extract function name from signature
+  # Pattern: "return_type function_name(params)"
+  # We need to extract just "function_name"
+  import re
+  
+  # Try to extract function name from signature
+  # Match pattern: optional return type, then function name, then opening paren
+  match = re.search(r'\b(\w+)\s*\(', function)
+  if match:
+    function_name = match.group(1)
+  else:
+    # If no match, assume the whole string is the function name
+    function_name = function.strip()
+  
   resp = _query_introspector(INTROSPECTOR_GET_TARGET_FUNCTION, {
       'project': project,
-      'function': function
+      'function': function_name
   })
 
-  return _get_data(resp, 'function', {})
+  result = _get_data(resp, 'function', {})
+  
+  # Verify that the returned signature matches the requested one
+  if result and 'function_signature' in result:
+    if result['function_signature'] != function:
+      # Log a warning if signatures don't match
+      logger.warning(
+          'Requested signature "%s" but got "%s"',
+          function, result['function_signature']
+      )
+  
+  return result
 
 def query_introspector_functions_reached(project: str, func_sig: str) -> list[str]:
   """Queries FuzzIntrospector API for functions reached by |func_sig|.

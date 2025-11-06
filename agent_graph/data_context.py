@@ -97,7 +97,7 @@ class FuzzingContext:
         # === Step 1: Query function information ===
         log.debug('  1/5 Querying function information...')
         try:
-            function_info = introspector.query_function_under_test(
+            function_info = introspector.query_introspector_target_function(
                 project_name, function_signature
             )
         except Exception as e:
@@ -109,10 +109,6 @@ class FuzzingContext:
         if not function_info:
             raise ValueError(
                 f"Function '{function_signature}' not found in project '{project_name}'.\n"
-                f"Possible causes:\n"
-                f"  1. Function name is misspelled\n"
-                f"  2. Function is not instrumented in FuzzIntrospector\n"
-                f"  3. Project name is incorrect\n"
                 f"Fix your input or check FuzzIntrospector data."
             )
         

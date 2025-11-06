@@ -199,7 +199,7 @@ def _prepare_shared_data_for_benchmark(benchmark: Benchmark, args: argparse.Name
     context = FuzzingContext.prepare(
       project_name=project_name,
       function_signature=function_signature,
-      logger_instance=logger
+      logger_instance=None  # Use standard logging - no trial concept here
     )
     return context.to_dict()
   except (ValueError, RuntimeError) as e:
