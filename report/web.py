@@ -323,6 +323,7 @@ class GenerateReport:
     index_css_content = self._read_static_file('index/index.css')
     index_js_content = self._read_static_file('index/index.js')
     shared_css_content = self._read_static_file('shared.css')
+    base_js_content = self._read_static_file('base.js')
 
     rendered = self._jinja.render(
         'index/index.html',
@@ -335,6 +336,7 @@ class GenerateReport:
         index_css_content=index_css_content,
         index_js_content=index_js_content,
         shared_css_content=shared_css_content,
+        base_js_content=base_js_content,
         unified_data=unified_data)
     self._write('index.html', rendered)
 
@@ -350,6 +352,7 @@ class GenerateReport:
     benchmark_css_content = self._read_static_file('benchmark/benchmark.css')
     benchmark_js_content = self._read_static_file('benchmark/benchmark.js')
     shared_css_content = self._read_static_file('shared.css')
+    base_js_content = self._read_static_file('base.js')
 
     common_data = {
         "accumulated_results": self._results.get_macro_insights([benchmark]),
@@ -364,6 +367,7 @@ class GenerateReport:
                                   benchmark_css_content=benchmark_css_content,
                                   benchmark_js_content=benchmark_js_content,
                                   shared_css_content=shared_css_content,
+                                  base_js_content=base_js_content,
                                   **common_data)
     self._write(f'benchmark/{benchmark.id}/index.html', rendered)
 
@@ -396,6 +400,7 @@ class GenerateReport:
       sample_css_content = self._read_static_file('sample/sample.css')
       sample_js_content = self._read_static_file('sample/sample.js')
       shared_css_content = self._read_static_file('shared.css')
+      base_js_content = self._read_static_file('base.js')
 
       common_data = {
           "accumulated_results": self._results.get_macro_insights([benchmark]),
@@ -423,6 +428,7 @@ class GenerateReport:
           sample_css_content=sample_css_content,
           sample_js_content=sample_js_content,
           shared_css_content=shared_css_content,
+          base_js_content=base_js_content,
           crash_info=crash_info,
           **common_data)
 

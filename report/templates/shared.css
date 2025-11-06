@@ -125,10 +125,11 @@ td .signature {
 
 .chart-box {
     flex: 1;
-    height: 300px;
+    min-height: 300px;
     padding: 15px;
     background: #f8f9fa;
     border-radius: 6px;
+    overflow: hidden;
 }
 
 .dark-mode .chart-box {
