@@ -10,7 +10,7 @@ from .prototyper import LangGraphPrototyper
 from .fixer import LangGraphEnhancer  # Note: file is fixer.py, class is LangGraphEnhancer
 from .crash_analyzer import LangGraphCrashAnalyzer
 from .coverage_analyzer import LangGraphCoverageAnalyzer
-from .context_analyzer import LangGraphContextAnalyzer
+from .crash_feasibility_analyzer import LangGraphCrashFeasibilityAnalyzer
 from .improver import LangGraphImprover
 
 __all__ = [
@@ -20,6 +20,6 @@ __all__ = [
     'LangGraphEnhancer',
     'LangGraphCrashAnalyzer',
     'LangGraphCoverageAnalyzer',
-    'LangGraphContextAnalyzer',
+    'LangGraphCrashFeasibilityAnalyzer',
     'LangGraphImprover',
 ]

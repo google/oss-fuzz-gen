@@ -60,9 +60,14 @@ class FuzzingWorkflowState(TypedDict):
     trial: int  # Trial number
     work_dirs: Dict[str, Any]  # WorkDirs dict (serialized from experiment.workdir.WorkDirs)
     
-    # === Shared Data (Optimization) ===
+    # === Fuzzing Context (Single Source of Truth) ===
+    # All data needed for fuzzing, prepared once at the start
+    # Philosophy: Nodes read from context, never extract data themselves
+    context: NotRequired[Dict[str, Any]]  # FuzzingContext.to_dict() - immutable data
+    
+    # === Legacy: Shared Data (Deprecated, use context instead) ===
     # Pre-fetched data shared across all trials to avoid redundant FI queries
-    shared_data: NotRequired[Dict[str, Any]]  # Contains: source_code, api_context, api_dependencies, header_info
+    shared_data: NotRequired[Dict[str, Any]]  # DEPRECATED: Use context instead
     
     # === Agent-Specific Messages ===
     # Each agent maintains its own conversation history independently

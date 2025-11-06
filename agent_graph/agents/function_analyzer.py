@@ -52,67 +52,34 @@ class LangGraphFunctionAnalyzer(LangGraphAgent):
         function_name = benchmark.get('function_name', 'unknown')
         
         # ========================================================================
-        # OPTIMIZATION: Try to use shared_data if available (avoids redundant FI queries)
+        # DATA EXTRACTION: Get from context (prepared once at startup)
         # ========================================================================
-        shared_data = state.get('shared_data', None)
+        # Philosophy: No fallbacks. If context is missing, something is wrong upstream.
+        context = state.get('context', None)
         
-        if shared_data:
-            logger.info(f'✅ Using shared data (prepared at {shared_data.get("timestamp", "?")})', trial=self.trial)
-            logger.info(f'   └─ Skipping redundant FuzzIntrospector queries', trial=self.trial)
-            
-            # Extract pre-fetched data
-            func_source = shared_data.get('source_code', '')
-            api_context = shared_data.get('api_context', {})
-            api_dependencies = shared_data.get('api_dependencies', {})
-            header_info = shared_data.get('header_info', {})
-            existing_fuzzer_headers = shared_data.get('existing_fuzzer_headers', {})
-            
-            # Update header_info to include existing fuzzer headers
-            if header_info is None:
-                header_info = {}
-            header_info["existing_fuzzer_headers"] = existing_fuzzer_headers
-        else:
-            logger.warning(f'⚠️ No shared data available, querying FuzzIntrospector directly (less efficient)', trial=self.trial)
-            
-            # Fallback to original behavior (query FuzzIntrospector)
-            # Query FuzzIntrospector for function source code
-            logger.info(f'Querying FuzzIntrospector for source code of {function_signature}', trial=self.trial)
-            func_source = introspector.query_introspector_function_source(
-                project_name, function_signature
+        if not context:
+            # This should NEVER happen if run_single_fuzz.py did its job
+            error_msg = (
+                f'❌ FATAL: No fuzzing context in state!\n'
+                f'This means data preparation failed but error was hidden.\n'
+                f'Check run_single_fuzz.py::_prepare_shared_data_for_benchmark().'
             )
-            
-            # Extract API context using APIContextExtractor (integrated)
-            logger.info(f'🔍 Extracting API context for {function_signature}', trial=self.trial)
-            api_context = get_api_context(project_name, function_signature)
-            # Continue with dependency and header extraction (fallback path)
-            # Build API dependency graph using tree-sitter + FuzzIntrospector
-            # Enable LLM mode for enhanced dependency analysis if available
-            use_llm_for_deps = getattr(self.args, 'use_llm_api_analysis', False)
-            logger.info(
-                f'🔗 Building API dependency graph for {function_signature} '
-                f'(LLM mode: {use_llm_for_deps})',
-                trial=self.trial
-            )
-            api_dependencies = None
-            try:
-                from agent_graph.api_dependency_analyzer import APIDependencyAnalyzer
-                analyzer = APIDependencyAnalyzer(
-                    project_name,
-                    llm=self.llm if use_llm_for_deps else None,
-                    use_llm=use_llm_for_deps
-                )
-                api_dependencies = analyzer.build_dependency_graph(function_signature)
-            except Exception as e:
-                logger.warning(f'⚠️ Failed to build API dependency graph: {e}', trial=self.trial)
-                api_dependencies = {}
-            
-            # Query FuzzIntrospector for header information
-            logger.info(f'Querying FuzzIntrospector for header files of {function_signature}', trial=self.trial)
-            header_info = self._extract_header_information(project_name, function_signature)
-            
-            # Extract headers from existing fuzzers (proven to work)
-            existing_fuzzer_headers = self._extract_existing_fuzzer_headers(project_name)
-            header_info["existing_fuzzer_headers"] = existing_fuzzer_headers
+            logger.error(error_msg, trial=self.trial)
+            raise RuntimeError(error_msg)
+        
+        logger.info(f'✅ Using fuzzing context (prepared in {context.get("preparation_time", 0):.2f}s)', trial=self.trial)
+        
+        # Extract data from context - all guaranteed to exist
+        func_source = context.get('source_code', '')
+        api_dependencies = context.get('api_dependencies', {})
+        api_context = api_dependencies.get('api_context', {})  # Nested inside dependencies
+        header_info = context.get('header_info', {})
+        existing_fuzzer_headers = context.get('existing_fuzzer_headers', {})
+        
+        # Update header_info to include existing fuzzer headers
+        if header_info is None:
+            header_info = {}
+        header_info["existing_fuzzer_headers"] = existing_fuzzer_headers
         
         # Log data summary (works for both shared_data and fallback paths)
         if api_context:

@@ -1,5 +1,7 @@
 """
-LangGraphContextAnalyzer agent for LangGraph workflow.
+LangGraphCrashFeasibilityAnalyzer agent for LangGraph workflow.
+
+This agent analyzes whether a crash is reachable from the project's external entry points.
 """
 from typing import Any, Dict, List, Optional, Tuple
 import argparse
@@ -15,9 +17,9 @@ from agent_graph.agents.utils import parse_tag
 from agent_graph.prompt_loader import get_prompt_manager
 
 
-class LangGraphContextAnalyzer(LangGraphAgent):
+class LangGraphCrashFeasibilityAnalyzer(LangGraphAgent):
     """
-    Context analyzer agent for LangGraph - analyzes crash feasibility.
+    Crash feasibility analyzer agent for LangGraph - analyzes crash reachability.
     
     Uses OpenAI Function Calling with comprehensive FuzzIntrospector API tools.
     Provides 8+ tools for deep project analysis: functions, types, headers, tests, etc.
@@ -26,10 +28,10 @@ class LangGraphContextAnalyzer(LangGraphAgent):
     def __init__(self, llm: LLM, trial: int, args: argparse.Namespace):
         # Load system prompt from file
         prompt_manager = get_prompt_manager()
-        system_message = prompt_manager.get_system_prompt("context_analyzer")
+        system_message = prompt_manager.get_system_prompt("crash_feasibility_analyzer")
         
         super().__init__(
-            name="context_analyzer",
+            name="crash_feasibility_analyzer",
             llm=llm,
             trial=trial,
             args=args,
@@ -441,7 +443,7 @@ class LangGraphContextAnalyzer(LangGraphAgent):
         """
         Analyze crash feasibility by examining project context.
         
-        Following the original ContextAnalyzer logic from context_analyzer.py.
+        Determines if a crash is reachable from project's external entry points.
         Uses ADK-style tool functions that LLM can call.
         """
         from tool.container_tool import ProjectContainerTool
@@ -483,9 +485,9 @@ class LangGraphContextAnalyzer(LangGraphAgent):
         stack_trace = state.get("crash_info", {}).get("stack_trace", "")
         fuzz_target = state.get("fuzz_target_source", "")
         
-        # Build base user prompt with context information
+        # Build base user prompt with crash feasibility information
         base_prompt = prompt_manager.build_user_prompt(
-            "context_analyzer",
+            "crash_feasibility_analyzer",
             PROJECT_NAME=benchmark.project,
             FUZZ_TARGET=fuzz_target,
             FUNCTION_REQUIREMENTS=function_requirements,

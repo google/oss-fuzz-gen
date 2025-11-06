@@ -171,7 +171,7 @@ def prepare(oss_fuzz_dir: str) -> None:
   oss_fuzz_checkout.clone_oss_fuzz(oss_fuzz_dir)
   oss_fuzz_checkout.postprocess_oss_fuzz()
 
-def _prepare_shared_data(benchmark: Benchmark, args: argparse.Namespace) -> dict:
+def _prepare_shared_data_for_benchmark(benchmark: Benchmark, args: argparse.Namespace) -> dict:
   """
   Extract shared data that's identical for all trials.
   
@@ -190,105 +190,26 @@ def _prepare_shared_data(benchmark: Benchmark, args: argparse.Namespace) -> dict
       - header_info: Header file information
       - existing_fuzzer_headers: Headers from existing fuzzers
   """
-  import time
-  from data_prep import introspector
-  from agent_graph.api_context_extractor import APIContextExtractor
-  from agent_graph.api_dependency_analyzer import APIDependencyAnalyzer
+  from agent_graph.data_context import FuzzingContext
   
   project_name = benchmark.project
   function_signature = benchmark.function_signature
   
-  logger.info(f'📦 Pre-fetching shared data for {function_signature}', trial=0)
-  fetch_start = time.time()
-  
-  # 1. Query function source code
-  logger.debug(f'  1/4 Querying source code...', trial=0)
-  source_code = introspector.query_introspector_function_source(
-      project_name, function_signature
-  )
-  
-  # 2. Extract API context (parameters, types, examples)
-  logger.debug(f'  2/4 Extracting API context...', trial=0)
-  extractor = APIContextExtractor(project_name)
-  api_context = extractor.extract(function_signature)
-  
-  # 3. Build dependency graph
-  logger.debug(f'  3/4 Building dependency graph...', trial=0)
-  use_llm_for_deps = getattr(args, 'use_llm_api_analysis', False)
-  analyzer = APIDependencyAnalyzer(
-      project_name,
-      llm=None,  # Don't use LLM in shared data preparation
-      use_llm=False  # Always use heuristic mode for shared data
-  )
-  api_dependencies = analyzer.build_dependency_graph(function_signature)
-  
-  # 4. Extract header information
-  logger.debug(f'  4/4 Extracting headers...', trial=0)
-  from agent_graph.header_extractor import HeaderExtractor
-  header_extractor = HeaderExtractor(project_name)
-  header_info = header_extractor.get_all_headers(function_signature)
-  
-  # Extract existing fuzzer headers
-  existing_fuzzer_headers = _extract_existing_fuzzer_headers_helper(project_name)
-  
-  fetch_duration = time.time() - fetch_start
-  logger.info(f'✅ Shared data prepared in {fetch_duration:.2f}s', trial=0)
-  logger.info(
-      f'   └─ Source: {len(source_code) if source_code else 0} chars, '
-      f'API context: {len(api_context.get("parameters", []))} params, '
-      f'Deps: {len(api_dependencies.get("call_sequence", []))} funcs, '
-      f'Headers: {len(header_info)} types',
-      trial=0
-  )
-  
-  return {
-      'source_code': source_code,
-      'api_context': api_context,
-      'api_dependencies': api_dependencies,
-      'header_info': header_info,
-      'existing_fuzzer_headers': existing_fuzzer_headers,
-      'timestamp': fetch_start,  # For debugging
-  }
-
-
-def _extract_existing_fuzzer_headers_helper(project_name: str) -> dict:
-  """Helper to extract headers from existing fuzzers."""
-  from data_prep import introspector
-  import re
-  
-  existing_fuzzer_headers = {
-      'standard_headers': set(),
-      'project_headers': set()
-  }
-  
   try:
-      # Get all fuzzer files
-      fuzzers = introspector.query_introspector_harness_files(project_name)
-      if not fuzzers:
-          return existing_fuzzer_headers
-      
-      # Extract headers from each fuzzer
-      for fuzzer_path in fuzzers[:5]:  # Limit to avoid overhead
-          fuzzer_source = introspector.query_introspector_file_source(
-              project_name, fuzzer_path
-          )
-          if fuzzer_source:
-              # Extract #include statements
-              for line in fuzzer_source.split('\n')[:50]:  # Only check top of file
-                  include_match = re.match(r'^\s*#include\s+[<"]([^>"]+)[>"]', line)
-                  if include_match:
-                      header = include_match.group(1)
-                      if header.startswith(project_name) or '/' in header:
-                          existing_fuzzer_headers['project_headers'].add(header)
-                      else:
-                          existing_fuzzer_headers['standard_headers'].add(header)
-  except Exception as e:
-      logger.warning(f'Failed to extract existing fuzzer headers: {e}', trial=0)
-  
-  return {
-      'standard_headers': list(existing_fuzzer_headers['standard_headers']),
-      'project_headers': list(existing_fuzzer_headers['project_headers'])
-  }
+    context = FuzzingContext.prepare(
+      project_name=project_name,
+      function_signature=function_signature,
+      logger_instance=logger
+    )
+    return context.to_dict()
+  except (ValueError, RuntimeError) as e:
+    # Re-raise with clear message - caller decides how to handle
+    logger.error(f'❌ Failed to prepare fuzzing context: {e}', trial=0)
+    raise
+
+
+# Removed: _extract_existing_fuzzer_headers_helper
+# Now handled inside FuzzingContext.prepare()
 
 
 def _fuzzing_pipeline(benchmark: Benchmark, model: models.LLM,
@@ -468,7 +389,35 @@ def _fuzzing_pipelines(benchmark: Benchmark, model: models.LLM,
   # ============================================================
   logger.info('📍 [_fuzzing_pipelines] Pre-fetching shared data...', trial=0)
   shared_data_start = time.time()
-  shared_data = _prepare_shared_data(benchmark, args)
+  
+  try:
+    shared_data = _prepare_shared_data_for_benchmark(benchmark, args)
+  except ValueError as e:
+    # Data preparation failed due to bad input - this is terminal
+    logger.error(
+      f'❌ Cannot prepare fuzzing context: {e}\n'
+      f'This is a DATA problem. Check your benchmark configuration.',
+      trial=0
+    )
+    # Return empty result - no trials can proceed without data
+    return BenchmarkResult(
+      benchmark=benchmark,
+      work_dirs=work_dirs,
+      trial_results=[]
+    )
+  except RuntimeError as e:
+    # Infrastructure failure - also terminal
+    logger.error(
+      f'❌ Infrastructure failure during data preparation: {e}\n'
+      f'Check FuzzIntrospector API availability.',
+      trial=0
+    )
+    return BenchmarkResult(
+      benchmark=benchmark,
+      work_dirs=work_dirs,
+      trial_results=[]
+    )
+  
   shared_data_duration = time.time() - shared_data_start
   logger.info(
       f'📍 [_fuzzing_pipelines] Shared data prepared in {shared_data_duration:.2f}s '

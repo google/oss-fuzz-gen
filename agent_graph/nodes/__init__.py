@@ -11,7 +11,7 @@ from .fixer_node import enhancer_node  # Note: file is fixer_node.py, function i
 from .improver_node import improver_node
 from .crash_analyzer_node import crash_analyzer_node
 from .coverage_analyzer_node import coverage_analyzer_node
-from .context_analyzer_node import context_analyzer_node
+from .crash_feasibility_analyzer_node import crash_feasibility_analyzer_node
 
 # Build and execution nodes don't use LLM, keep as is
 from .execution_node import execution_node, build_node
@@ -26,7 +26,7 @@ __all__ = [
     'improver_node',
     'crash_analyzer_node',
     'coverage_analyzer_node',
-    'context_analyzer_node',
+    'crash_feasibility_analyzer_node',
     'execution_node',
     'build_node',
     'supervisor_node',

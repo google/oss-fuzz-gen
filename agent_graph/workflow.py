@@ -103,12 +103,14 @@ class FuzzingWorkflow:
             work_dirs=self.args.work_dirs
         )
         
-        # Inject shared_data into state if available
+        # Inject fuzzing context into state
         if self.shared_data:
-            initial_state['shared_data'] = self.shared_data
-            logger.info('📍 [workflow.run] Shared data injected into state', trial=trial)
+            # Store both as 'context' (new) and 'shared_data' (legacy compatibility)
+            initial_state['context'] = self.shared_data
+            initial_state['shared_data'] = self.shared_data  # Keep for legacy nodes
+            logger.info('📍 [workflow.run] Fuzzing context injected into state', trial=trial)
         else:
-            logger.info('📍 [workflow.run] No shared data to inject', trial=trial)
+            logger.info('📍 [workflow.run] WARNING: No fuzzing context available!', trial=trial)
         
         logger.info('📍 [workflow.run] Initial state created', trial=trial)
         
@@ -145,44 +147,13 @@ class FuzzingWorkflow:
             invoke_duration = time.time() - invoke_start
             logger.info(f'📍 [workflow.run] Workflow.invoke() completed in {invoke_duration:.2f}s', trial=trial)
         except Exception as e:
-            import logger
-            logger.error(f"Workflow execution failed: {e}", trial=trial)
-            logger.error("Returning partial state with error information", trial=trial)
+            import traceback
+            logger.error(f"❌ Workflow execution failed: {e}", trial=trial)
+            logger.error(f"Traceback:\n{traceback.format_exc()}", trial=trial)
             
-            # Try to get the last state from checkpointer if available
-            if self.checkpointer:
-                try:
-                    # Get the last checkpoint
-                    from langgraph.checkpoint.base import CheckpointTuple
-                    config_for_checkpoint = {
-                        "configurable": {"thread_id": f"{benchmark.id}_trial_{trial}"}
-                    }
-                    checkpoint_tuple = self.checkpointer.get_tuple(config_for_checkpoint)
-                    if checkpoint_tuple and checkpoint_tuple.checkpoint:
-                        final_state = checkpoint_tuple.checkpoint.get('channel_values', initial_state)
-                        logger.info("Retrieved partial state from checkpointer", trial=trial)
-                    else:
-                        final_state = initial_state.copy()
-                except Exception as checkpoint_err:
-                    logger.warning(f"Failed to retrieve checkpoint: {checkpoint_err}", trial=trial)
-                    final_state = initial_state.copy()
-            else:
-                final_state = initial_state.copy()
-            
-            # Add error information to the state
-            if 'errors' not in final_state:
-                final_state['errors'] = []
-            final_state['errors'].append({
-                'node': 'workflow',
-                'message': str(e),
-                'type': type(e).__name__,
-                'fatal': True
-            })
-            final_state['termination_reason'] = 'fatal_error'
-            
-            # Re-raise if it's a keyboard interrupt
-            if isinstance(e, KeyboardInterrupt):
-                raise
+            raise RuntimeError(
+                f"Workflow execution failed for {benchmark.id} trial {trial}: {e}"
+            ) from e
         
         # Print token usage summary at the end
         logger.info('📍 [workflow.run] Getting token usage summary...', trial=trial)
@@ -213,7 +184,7 @@ class FuzzingWorkflow:
     def _create_full_workflow(self) -> StateGraph:
         """Create the full supervisor-based workflow."""
         from agent_graph.nodes.coverage_analyzer_node import coverage_analyzer_node
-        from agent_graph.nodes.context_analyzer_node import context_analyzer_node
+        from agent_graph.nodes.crash_feasibility_analyzer_node import crash_feasibility_analyzer_node
         from agent_graph.nodes.improver_node import improver_node
         
         workflow = StateGraph(FuzzingWorkflowState)
@@ -228,7 +199,7 @@ class FuzzingWorkflow:
         workflow.add_node("execution", execution_node)
         workflow.add_node("crash_analyzer", crash_analyzer_node)
         workflow.add_node("coverage_analyzer", coverage_analyzer_node)
-        workflow.add_node("context_analyzer", context_analyzer_node)
+        workflow.add_node("crash_feasibility_analyzer", crash_feasibility_analyzer_node)
         
         # Set entry point
         workflow.set_entry_point("supervisor")
@@ -246,7 +217,7 @@ class FuzzingWorkflow:
                 "execution": "execution",
                 "crash_analyzer": "crash_analyzer",
                 "coverage_analyzer": "coverage_analyzer",
-                "context_analyzer": "context_analyzer",
+                "crash_feasibility_analyzer": "crash_feasibility_analyzer",
                 "__end__": END
             }
         )
@@ -260,7 +231,7 @@ class FuzzingWorkflow:
         workflow.add_edge("execution", "supervisor")
         workflow.add_edge("crash_analyzer", "supervisor")
         workflow.add_edge("coverage_analyzer", "supervisor")
-        workflow.add_edge("context_analyzer", "supervisor")
+        workflow.add_edge("crash_feasibility_analyzer", "supervisor")
         
         return workflow
     

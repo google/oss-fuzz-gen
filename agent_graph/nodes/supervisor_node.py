@@ -253,11 +253,11 @@ def _determine_next_action(state: FuzzingWorkflowState) -> str:
                     logger.debug('Crash detected, routing to crash_analyzer', trial=trial)
                     return "crash_analyzer"
                 
-                # We have crash analysis, check if we need context analysis
+                # We have crash analysis, check if we need crash feasibility analysis
                 context_analysis = state.get("context_analysis")
                 if not context_analysis:
-                    logger.debug('Crash analyzed, routing to context_analyzer', trial=trial)
-                    return "context_analyzer"
+                    logger.debug('Crash analyzed, routing to crash_feasibility_analyzer', trial=trial)
+                    return "crash_feasibility_analyzer"
                 
                 # Both crash and context analysis done
                 # If crash is feasible (true bug), we're done successfully
@@ -369,7 +369,7 @@ def route_condition(state: FuzzingWorkflowState) -> str:
         "execution": "execution",
         "crash_analyzer": "crash_analyzer",
         "coverage_analyzer": "coverage_analyzer",
-        "context_analyzer": "context_analyzer",
+        "crash_feasibility_analyzer": "crash_feasibility_analyzer",
         "END": "__end__"
     }
     
