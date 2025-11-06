@@ -197,10 +197,6 @@ class LangGraphCrashAnalyzer(LangGraphAgent):
             ADDITIONAL_CONTEXT=f"Project: {benchmark.project}\nFunction: {benchmark.function_name}"
         )
         
-        # Create prompt object
-        prompt = self.llm.prompt_type()(None)
-        prompt.add_priming(user_prompt)
-        
         # Define tool specifications for function calling
         tools = self._get_tool_definitions()
         

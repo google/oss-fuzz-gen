@@ -69,9 +69,6 @@ class LLM:
     self.temperature = temperature
     self.temperature_list = temperature_list
 
-    # Preserve chat history for OpenAI
-    self.messages = []
-
   def cloud_setup(self):
     """Runs Cloud specific-setup."""
     # Only a subset of models need a cloud specific set up, so
@@ -141,7 +138,7 @@ class LLM:
     """Queries the LLM in the given chat session with tools."""
 
   @abstractmethod
-  def chat_llm(self, client: Any, prompt: Any) -> str:
+  def chat_llm(self, client: Any, messages: list[dict[str, str]]) -> str:
     """Queries the LLM in the given chat session and returns the response."""
 
   def chat_with_messages(self, messages: list[dict[str, str]]) -> str:
@@ -220,9 +217,6 @@ class LLM:
   def get_model(self) -> Any:
     """Returns the underlying model instance."""
 
-  @abstractmethod
-  def prompt_type(self) -> type[Any]:
-    """Returns the expected prompt type."""
 
   def _delay_for_retry(self, attempt_count: int) -> None:
     """Sleeps for a while based on the |attempt_count|."""
@@ -470,11 +464,8 @@ class GPT(LLM):
 
     return num_tokens
 
-  def prompt_type(self) -> type[Any]:
-    """Returns the expected prompt type."""
-    return Any  # Legacy: prompts.OpenAIPrompt
 
-  def chat_llm(self, client: Any, prompt: Any) -> str:
+  def chat_llm(self, client: Any, messages: list[dict[str, str]]) -> str:
     """Queries LLM in a chat session and returns its response."""
     if self.ai_binary:
       raise ValueError(f'OpenAI does not use local AI binary: {self.ai_binary}')
@@ -482,12 +473,8 @@ class GPT(LLM):
       logger.info('OpenAI does not allow temperature list: %s',
                   self.temperature_list)
 
-    # Fix: Use prompt messages directly instead of accumulating to self.messages
-    # This prevents infinite accumulation when called via chat_with_messages()
-    messages_to_send = prompt.get()
-
     completion = self.with_retry_on_error(
-        lambda: client.chat.completions.create(messages=messages_to_send,
+        lambda: client.chat.completions.create(messages=messages,
                                                model=self.name,
                                                n=self.num_samples,
                                                temperature=self.temperature),
@@ -689,7 +676,7 @@ class GPT5(GPT):
 
   name = 'gpt-5'
 
-  def chat_llm(self, client: Any, prompt: Any) -> str:
+  def chat_llm(self, client: Any, messages: list[dict[str, str]]) -> str:
     """Queries LLM in a chat session and returns its response (no temperature)."""
     if self.ai_binary:
       raise ValueError(f'OpenAI does not use local AI binary: {self.ai_binary}')
@@ -697,12 +684,8 @@ class GPT5(GPT):
       logger.info('GPT-5 does not allow temperature list: %s',
                   self.temperature_list)
 
-    # Fix: Use prompt messages directly instead of accumulating to self.messages
-    # This prevents infinite accumulation when called via chat_with_messages()
-    messages_to_send = prompt.get()
-
     completion = self.with_retry_on_error(
-        lambda: client.chat.completions.create(messages=messages_to_send,
+        lambda: client.chat.completions.create(messages=messages,
                                                model=self.name,
                                                n=self.num_samples),
         [openai.OpenAIError])
@@ -890,7 +873,7 @@ class ChatGPT(GPT):
                      temperature_list)
     self.conversation_history = []
 
-  def chat_llm(self, client: Any, prompt: Any) -> str:
+  def chat_llm(self, client: Any, messages: list[dict[str, str]]) -> str:
     """Queries the LLM in the given chat session and returns the response."""
     if self.ai_binary:
       raise ValueError(f'OpenAI does not use local AI binary: {self.ai_binary}')
@@ -898,13 +881,9 @@ class ChatGPT(GPT):
       logger.info('OpenAI does not allow temperature list: %s',
                   self.temperature_list)
 
-    # Fix: Use prompt messages directly instead of accumulating to self.conversation_history
-    # This prevents infinite accumulation when called via chat_with_messages()
-    messages_to_send = prompt.get()
-
     completion = self.with_retry_on_error(
         lambda: client.chat.completions.create(
-            messages=messages_to_send,
+            messages=messages,
             model=self.name,
             n=self.num_samples,
             temperature=self.temperature), [openai.OpenAIError])
@@ -975,9 +954,6 @@ class Claude(LLM):
     client = anthropic.Client()
     return client.count_tokens(text)
 
-  def prompt_type(self) -> type[Any]:
-    """Returns the expected prompt type."""
-    return Any  # Legacy: prompts.ClaudePrompt
 
   def get_model(self) -> str:
     return self._vertex_ai_model
@@ -1012,10 +988,11 @@ class Claude(LLM):
     del model
     # Placeholder: To Be Implemented.
 
-  def chat_llm(self, client: Any, prompt: Any) -> Any:
+  def chat_llm(self, client: Any, messages: list[dict[str, str]]) -> str:
     """Queries the LLM in the given chat session and returns the response."""
-    del client, prompt
+    del client, messages
     # Placeholder: To Be Implemented.
+    raise NotImplementedError(f"{self.__class__.__name__}.chat_llm is not implemented")
 
   def chat_llm_with_tools(self, client: Any, prompt: Optional[Any],
                           tools) -> Any:
@@ -1044,9 +1021,6 @@ class ClaudeSonnetV3D5(Claude):
 class GoogleModel(LLM):
   """Generic Google model."""
 
-  def prompt_type(self) -> type[Any]:
-    """Returns the expected prompt type."""
-    return Any  # Legacy: prompts.TextPrompt
 
   def estimate_token_num(self, text) -> int:
     """Estimates the number of tokens in |text|."""
@@ -1123,9 +1097,9 @@ class GoogleModel(LLM):
     del model
     raise NotImplementedError
 
-  def chat_llm(self, client: Any, prompt: Any) -> Any:
+  def chat_llm(self, client: Any, messages: list[dict[str, str]]) -> str:
     """Queries the LLM in the given chat session and returns the response."""
-    del client, prompt
+    del client, messages
     raise NotImplementedError
 
   def chat_llm_with_tools(self, client: Any, prompt: Optional[Any],
@@ -1395,13 +1369,13 @@ class GeminiV1D5Chat(GeminiV1D5):
                 len(raw_prompt_text), len(truncated_prompt))
     return self.truncate_prompt(truncated_prompt, extra_text)
 
-  def chat_llm(self, client: ChatSession, prompt: Any) -> str:
+  def chat_llm(self, client: ChatSession, messages: list[dict[str, str]]) -> str:
     if self.ai_binary:
       logger.info('VertexAI does not use local AI binary: %s', self.ai_binary)
 
     # TODO(dongge): Use different values for different trials
     parameters_list = self._prepare_parameters()[0]
-    response = self._do_generate(client, prompt.get(), parameters_list) or ''
+    response = self._do_generate(client, messages, parameters_list) or ''
     return response
 
   def chat_llm_with_tools(self, client: Any, prompt: Optional[Any],
@@ -1457,10 +1431,11 @@ class AIBinaryModel(GoogleModel):
     del model
     # Placeholder: To Be Implemented.
 
-  def chat_llm(self, client: Any, prompt: Any) -> Any:
+  def chat_llm(self, client: Any, messages: list[dict[str, str]]) -> str:
     """Queries the LLM in the given chat session and returns the response."""
-    del client, prompt
+    del client, messages
     # Placeholder: To Be Implemented.
+    raise NotImplementedError(f"{self.__class__.__name__}.chat_llm is not implemented")
 
   def chat_llm_with_tools(self, client: Any, prompt: Optional[Any],
                           tools) -> Any:
