@@ -37,8 +37,8 @@ RUN echo "deb https://packages.cloud.google.com/apt cloud-sdk main" | tee -a /et
     curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add - && \
     apt-get update -y && \
     apt-get install google-cloud-cli -y
-# Set timezone to Australia/Sydney.
-ENV TZ='Australia/Sydney'
+# Set timezone to Anywhere on Earth (UTC-12).
+ENV TZ='Etc/GMT+12'
 
 
 # Install Docker for OSS-Fuzz.
