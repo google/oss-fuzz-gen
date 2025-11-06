@@ -124,15 +124,6 @@ class LLM:
 
   # ============================== Generation ============================== #
   @abstractmethod
-  def query_llm(self, prompt: Any, response_dir: str) -> None:
-    """Queries the LLM and stores responses in |response_dir|."""
-
-  def ask_llm(self, prompt: Any) -> str:
-    """Queries LLM a single prompt and returns its response."""
-    del prompt
-    return ''
-
-  @abstractmethod
   def chat_llm_with_tools(self, client: Any, prompt: Optional[Any],
                           tools) -> Any:
     """Queries the LLM in the given chat session with tools."""
@@ -577,55 +568,6 @@ class GPT(LLM):
         "tool_calls": tool_calls
     }
 
-  def ask_llm(self, prompt: Any) -> str:
-    """Queries LLM a single prompt and returns its response."""
-    if self.ai_binary:
-      raise ValueError(f'OpenAI does not use local AI binary: {self.ai_binary}')
-    if self.temperature_list:
-      logger.info('OpenAI does not allow temperature list: %s',
-                  self.temperature_list)
-
-    client = self._get_client()
-
-    completion = self.with_retry_on_error(
-        lambda: client.chat.completions.create(messages=prompt.get(),
-                                               model=self.name,
-                                               n=self.num_samples,
-                                               temperature=self.temperature),
-        [openai.OpenAIError])
-    
-    # Store token usage info for later retrieval
-    if hasattr(completion, 'usage') and completion.usage:
-      self.last_token_usage = {
-          'prompt_tokens': completion.usage.prompt_tokens,
-          'completion_tokens': completion.usage.completion_tokens,
-          'total_tokens': completion.usage.total_tokens
-      }
-    else:
-      self.last_token_usage = None
-    
-    return completion.choices[0].message.content
-
-  # ============================== Generation ============================== #
-  def query_llm(self, prompt: Any, response_dir: str) -> None:
-    """Queries OpenAI's API and stores response in |response_dir|."""
-    if self.ai_binary:
-      raise ValueError(f'OpenAI does not use local AI binary: {self.ai_binary}')
-    if self.temperature_list:
-      logger.info('OpenAI does not allow temperature list: %s',
-                  self.temperature_list)
-
-    client = self._get_client()
-
-    completion = self.with_retry_on_error(
-        lambda: client.chat.completions.create(messages=prompt.get(),
-                                               model=self.name,
-                                               n=self.num_samples,
-                                               temperature=self.temperature),
-        [openai.OpenAIError])
-    for index, choice in enumerate(completion.choices):  # type: ignore
-      content = choice.message.content
-      self._save_output(index, content, response_dir)
 
 class GPT4(GPT):
   """OpenAI's GPT-4 model."""
@@ -769,65 +711,6 @@ class GPT5(GPT):
         "tool_calls": tool_calls
     }
 
-  def ask_llm(self, prompt: Any) -> str:
-    """Queries LLM a single prompt and returns its response (no temperature)."""
-    if self.ai_binary:
-      raise ValueError(f'OpenAI does not use local AI binary: {self.ai_binary}')
-    if self.temperature_list:
-      logger.info('GPT-5 does not allow temperature list: %s',
-                  self.temperature_list)
-
-    client = self._get_client()
-
-    completion = self.with_retry_on_error(
-        lambda: client.chat.completions.create(messages=prompt.get(),
-                                               model=self.name,
-                                               n=self.num_samples),
-        [openai.OpenAIError])
-    
-    # Store token usage info for later retrieval
-    if hasattr(completion, 'usage') and completion.usage:
-      self.last_token_usage = {
-          'prompt_tokens': completion.usage.prompt_tokens,
-          'completion_tokens': completion.usage.completion_tokens,
-          'total_tokens': completion.usage.total_tokens
-      }
-    else:
-      self.last_token_usage = None
-    
-    return completion.choices[0].message.content
-
-  def ask_llm_to_file(self, prompt: Any, response_dir: str) -> None:
-    """Queries OpenAI's API and stores response in |response_dir| (no temperature)."""
-    if self.ai_binary:
-      raise ValueError(f'OpenAI does not use local AI binary: {self.ai_binary}')
-    if self.temperature_list:
-      logger.info('GPT-5 does not allow temperature list: %s',
-                  self.temperature_list)
-
-    client = self._get_client()
-
-    completion = self.with_retry_on_error(
-        lambda: client.chat.completions.create(messages=prompt.get(),
-                                               model=self.name,
-                                               n=self.num_samples),
-        [openai.OpenAIError])
-    
-    # Store token usage info for later retrieval
-    if hasattr(completion, 'usage') and completion.usage:
-      self.last_token_usage = {
-          'prompt_tokens': completion.usage.prompt_tokens,
-          'completion_tokens': completion.usage.completion_tokens,
-          'total_tokens': completion.usage.total_tokens
-      }
-    else:
-      self.last_token_usage = None
-    
-    for index, choice in enumerate(completion.choices):  # type: ignore
-      content = choice.message.content
-      response_file = os.path.join(response_dir, f'response_{index}.txt')
-      with open(response_file, 'w') as f:
-        f.write(content)
 
 class GPT5Chat(GPT):
   """OpenAI's GPT-5-Chat model (with temperature setting)."""
@@ -958,30 +841,6 @@ class Claude(LLM):
   def get_model(self) -> str:
     return self._vertex_ai_model
 
-  # ============================== Generation ============================== #
-  def query_llm(self, prompt: Any, response_dir: str) -> None:
-    """Queries Claude's API and stores response in |response_dir|."""
-    if self.ai_binary:
-      raise ValueError(f'Claude does not use local AI binary: {self.ai_binary}')
-    if self.temperature_list:
-      logger.info('Claude does not allow temperature list: %s',
-                  self.temperature_list)
-
-    vertex_ai_locations = os.getenv('VERTEX_AI_LOCATIONS',
-                                    'europe-west1').split(',')
-    project_id = os.getenv('GOOGLE_CLOUD_PROJECT', 'oss-fuzz')
-    region = random.sample(vertex_ai_locations, 1)[0]
-    client = anthropic.AnthropicVertex(region=region, project_id=project_id)
-
-    completion = self.with_retry_on_error(
-        lambda: client.messages.create(max_tokens=self._max_output_tokens,
-                                       messages=prompt.get(),
-                                       model=self.get_model(),
-                                       temperature=self.temperature),
-        [anthropic.AnthropicError])
-    for index, choice in enumerate(completion.content):
-      content = choice.text
-      self._save_output(index, content, response_dir)
 
   def get_chat_client(self, model: Any) -> Any:
     """Returns a new chat session."""
@@ -1047,46 +906,6 @@ class GoogleModel(LLM):
     # token_target corresponds to roughly (token_target / T) * L characters.
     return int(len(text) * token_target / total_tokens)
 
-  # ============================== Generation ============================== #
-  def query_llm(self, prompt: Any, response_dir: str) -> None:
-    """Queries a Google LLM and stores results in |response_dir|."""
-    if not self.ai_binary:
-      logger.info('Error: This model requires a local AI binary: %s',
-                  self.ai_binary)
-      sys.exit(1)
-    if self.temperature_list:
-      logger.info('AI Binary does not implement temperature list: %s',
-                  self.temperature_list)
-
-    with tempfile.NamedTemporaryFile(delete=False, mode='w') as f:
-      f.write(prompt.get())
-      prompt_path = f.name
-
-    try:
-      command = [
-          self.ai_binary,
-          f'-model={self.name}',
-          f'-prompt={prompt_path}',
-          f'-response={response_dir}',
-          f'-max-tokens={self.max_tokens}',
-          f'-expected-samples={self.num_samples}',
-          f'-temperature={self.temperature}',
-      ]
-
-      proc = subprocess.Popen(
-          command,
-          stdout=subprocess.PIPE,
-          stderr=subprocess.PIPE,
-          stdin=subprocess.DEVNULL,
-      )
-      stdout, stderr = proc.communicate()
-
-      if proc.returncode != 0:
-        logger.info('Failed to generate targets with prompt %s', prompt.get())
-        logger.info('stdout: %s', stdout)
-        logger.info('stderr: %s', stderr)
-    finally:
-      os.unlink(prompt_path)
 
   def get_model(self) -> Any:
     """Returns the underlying model instance."""
@@ -1139,32 +958,6 @@ class VertexAIModel(GoogleModel):
             self._max_output_tokens
     } for index in range(self.num_samples)]
 
-  def query_llm(self, prompt: Any, response_dir: str) -> None:
-    if self.ai_binary:
-      logger.info('VertexAI does not use local AI binary: %s', self.ai_binary)
-
-    model = self.get_model()
-    parameters_list = self._prepare_parameters()
-
-    for i in range(self.num_samples):
-      # Handle ValueError thrown when LLM maxes out output token when generating response
-      response = self.with_retry_on_error(
-          lambda i=i: self.do_generate(model, prompt.get(), parameters_list[i]),
-          [GoogleAPICallError, ValueError]) or ''
-      self._save_output(i, response, response_dir)
-
-  def ask_llm(self, prompt: Any) -> str:
-    if self.ai_binary:
-      logger.info('VertexAI does not use local AI binary: %s', self.ai_binary)
-
-    model = self.get_model()
-    # TODO: Allow each trial to customize its parameters_list.
-    parameter = self._prepare_parameters()[0]
-    # Handle ValueError thrown when LLM maxes out output token when generating response
-    response = self.with_retry_on_error(
-        lambda: self.do_generate(model, prompt.get(), parameter),
-        [GoogleAPICallError, ValueError]) or ''
-    return response
 
 class GeminiModel(VertexAIModel):
   """Gemini models."""
