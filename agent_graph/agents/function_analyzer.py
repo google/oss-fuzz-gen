@@ -308,6 +308,12 @@ class LangGraphFunctionAnalyzer(LangGraphAgent):
         logger.info('🔬 Phase 2: Querying call sites', trial=self.trial)
         logger.info('=' * 80, trial=self.trial)
         
+        # Note: call_sites API 在这里是合理使用场景
+        # 因为这个 agent 需要：
+        #  1. 迭代式学习（从多个调用示例中逐步提取知识）
+        #  2. 精细控制（参数设置、返回值使用的上下文分析）
+        #  3. 元数据（文件名、行号用于日志）
+        # 对于一般的 driver 生成，应该使用 test_xrefs + sample_xrefs
         call_sites = introspector.query_introspector_call_sites_metadata(project_name, function_signature)
         examples_analyzed = 0
         

@@ -121,18 +121,8 @@ class LLMAPIDependencyAnalyzer:
             self.project_name, func_sig
         )
         
-        # Get cross-references (functions that call this one)
-        xrefs = introspector.query_introspector_cross_references(
-            self.project_name, func_sig
-        )
-        
-        # Get sample xrefs (usage examples)
+        # Get sample xrefs (usage examples from FI pre-processed snippets)
         sample_xrefs = introspector.query_introspector_sample_xrefs(
-            self.project_name, func_sig
-        )
-        
-        # Get call site metadata
-        call_sites = introspector.query_introspector_call_sites_metadata(
             self.project_name, func_sig
         )
         
@@ -141,19 +131,15 @@ class LLMAPIDependencyAnalyzer:
             'parameters': func_context.get('parameters', []),
             'return_type': func_context.get('return_type', 'unknown'),
             'function_source': func_source or "// Source not available",
-            'cross_references': xrefs[:max_xrefs] if xrefs else [],
             'sample_xrefs': sample_xrefs[:max_xrefs] if sample_xrefs else [],
             'related_functions': [
                 f['name'] for f in func_context.get('related_functions', [])[:max_related]
-            ],
-            'call_sites': call_sites[:max_xrefs] if call_sites else []
+            ]
         }
         
         logger.debug(
             f"Gathered context: {len(context['parameters'])} params, "
-            f"{len(context['cross_references'])} xrefs, "
-            f"{len(context['sample_xrefs'])} samples, "
-            f"{len(context['related_functions'])} related funcs"
+            f"{len(context['sample_xrefs'])} samples"
         )
         
         return context
@@ -165,22 +151,13 @@ class LLMAPIDependencyAnalyzer:
         # Format parameters
         params_text = self._format_parameters(context.get('parameters', []))
         
-        # Format cross-references section
-        xrefs = context.get('cross_references', [])
-        if xrefs:
-            xrefs_text = f"\n## Cross-References (Functions calling {func_sig})\n\n"
-            xrefs_text += "These are real examples of how this function is used:\n\n"
-            for i, xref in enumerate(xrefs[:3], 1):  # Limit to 3 to avoid token overflow
-                xrefs_text += f"### Example {i}\n\n```c\n{xref}\n```\n\n"
-        else:
-            xrefs_text = "\n## Cross-References\n\nNo cross-references available.\n"
-        
-        # Format sample xrefs
+        # Format sample xrefs (usage examples)
         sample_xrefs = context.get('sample_xrefs', [])
         if sample_xrefs:
-            samples_text = "\n## Sample Usage Code\n\n"
+            samples_text = "\n## Usage Examples\n\n"
+            samples_text += "These are real examples of how this function is used:\n\n"
             for i, sample in enumerate(sample_xrefs[:3], 1):
-                samples_text += f"### Sample {i}\n\n```c\n{sample}\n```\n\n"
+                samples_text += f"### Example {i}\n\n```c\n{sample}\n```\n\n"
         else:
             samples_text = ""
         
@@ -200,7 +177,6 @@ class LLMAPIDependencyAnalyzer:
             project_name=self.project_name,
             parameters=params_text,
             function_source=context.get('function_source', '// Not available')[:2000],  # Truncate
-            cross_references_section=xrefs_text,
             related_functions_section=related_text,
             sample_xrefs_section=samples_text
         )

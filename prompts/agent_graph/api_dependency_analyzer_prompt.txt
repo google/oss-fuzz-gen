@@ -15,8 +15,6 @@ Analyze the API dependencies for the target function: **{function_signature}**
 {function_source}
 ```
 
-{cross_references_section}
-
 {related_functions_section}
 
 {sample_xrefs_section}
@@ -29,7 +27,7 @@ ANALYSIS STRATEGY:
 
 Use the following information sources (in order of priority):
 
-1. **Cross-references (xrefs)**: Real usage examples showing how the target is called in practice
+1. **Usage Examples**: Real code snippets showing how the target is called in practice
 2. **Function signature**: Parameter types reveal dependencies (e.g., `CURL*` suggests `curl_easy_init`)
 3. **Naming patterns**: Common patterns like `*_init`, `*_setopt`, `*_perform`, `*_cleanup`
 4. **Related functions list**: Functions with similar prefixes or operating on the same types
@@ -45,13 +43,13 @@ FOCUS AREAS:
 
 CONFIDENCE GUIDELINES:
 
-- **high**: Found in xrefs or explicitly shown in examples
+- **high**: Found in usage examples or explicitly shown in code
 - **medium**: Inferred from naming patterns and parameter types
 - **low**: Speculative based on common practices
 
 KEY PRINCIPLES:
 
-1. **Evidence-based**: Prioritize functions you see in cross-references
+1. **Evidence-based**: Prioritize functions you see in usage examples
 2. **Type-driven**: If target needs a `Foo*`, find functions returning `Foo*`
 3. **Lifecycle-aware**: Most object-oriented C APIs follow init → configure → use → cleanup
 4. **Conservative**: Only include functions you're confident about (medium+ confidence)
@@ -62,10 +60,10 @@ EXAMPLE ANALYSIS:
 Given target: `curl_easy_perform(CURL *curl)`
 
 Good analysis:
-- Prerequisites: `curl_easy_init` (returns CURL*, always in xrefs) - HIGH
-- Configuration: `curl_easy_setopt` (seen in all xrefs configuring curl) - HIGH
+- Prerequisites: `curl_easy_init` (returns CURL*, always in usage examples) - HIGH
+- Configuration: `curl_easy_setopt` (seen in all examples configuring curl) - HIGH
 - Complementary: `curl_easy_getinfo` (often called after perform to check status) - MEDIUM
-- Cleanup: `curl_easy_cleanup` (always in xrefs, frees CURL*) - HIGH
+- Cleanup: `curl_easy_cleanup` (always in examples, frees CURL*) - HIGH
 
 Bad analysis:
 - Prerequisites: `curl_global_init` - Rarely needed in fuzzers, over-engineering

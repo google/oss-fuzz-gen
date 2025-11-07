@@ -238,7 +238,57 @@ class APIContextExtractor:
         """从现有代码中提取用法示例（优化采样策略）"""
         logger.debug(f"Extracting usage examples for {func_sig}")
         
-        # 方法 1 (NEW): 使用 Sample XRefs API（预处理的高质量示例）
+        # 方法 0 (HIGHEST PRIORITY): 从测试文件提取用法（最干净的API使用示例）
+        try:
+            # Extract simple function name from signature for test xref query
+            # e.g., "void curl_easy_perform(CURL *)" -> "curl_easy_perform"
+            func_name = self._extract_function_name(func_sig)
+            if func_name:
+                logger.debug(f"Querying test xrefs for function: {func_name}")
+                test_xrefs = introspector.query_introspector_for_tests_xref(
+                    self.project_name, [func_name]
+                )
+                
+                # test_xrefs format: {'source': [lines], 'details': [structured_snippets]}
+                if test_xrefs:
+                    # Prefer 'details' if available (structured call information)
+                    details = test_xrefs.get('details', [])
+                    if details:
+                        logger.debug(f"Found {len(details)} detailed test examples")
+                        for i, detail_lines in enumerate(details[:3], 1):  # Limit to 3
+                            if detail_lines:  # detail_lines is a list of code lines
+                                source_code = '\n'.join(detail_lines)
+                                context['usage_examples'].append({
+                                    'source': source_code,
+                                    'file': 'test_file',  # Generic, FI doesn't give specific path
+                                    'function': f'test_example_{i}',
+                                    'line': 0,
+                                    'source_type': 'test_file',  # HIGHEST quality marker
+                                    'priority': 1000  # Far higher than other sources
+                                })
+                        logger.info(f"✓ Added {len(details[:3])} high-quality test examples")
+                        return  # Test files are the cleanest examples - use them exclusively
+                    
+                    # Fallback: use 'source' (plain text snippets)
+                    source_lines = test_xrefs.get('source', [])
+                    if source_lines:
+                        # source_lines is a list of strings, need to group them
+                        source_code = '\n'.join(source_lines[:50])  # Limit total lines
+                        if source_code.strip():
+                            context['usage_examples'].append({
+                                'source': source_code,
+                                'file': 'test_file',
+                                'function': 'test_example',
+                                'line': 0,
+                                'source_type': 'test_file',
+                                'priority': 1000
+                            })
+                            logger.info(f"✓ Added test file example ({len(source_lines)} lines)")
+                            return
+        except Exception as e:
+            logger.debug(f"Could not get test xrefs: {e}")
+        
+        # 方法 1 (Fallback): 使用 Sample XRefs API（预处理的高质量示例）
         try:
             sample_xrefs = introspector.query_introspector_sample_xrefs(
                 self.project_name, func_sig
@@ -260,101 +310,12 @@ class APIContextExtractor:
         except Exception as e:
             logger.debug(f"Could not get sample xrefs: {e}")
         
-        # 方法 2 (Fallback): 使用 Call Sites Metadata（需要优先级排序）
-        try:
-            call_sites = introspector.query_introspector_call_sites_metadata(
-                self.project_name, func_sig
-            )
-            
-            logger.debug(f"Found {len(call_sites)} call sites")
-            
-            # 优化：按优先级排序 call sites
-            # 优先选择：1) 测试文件 2) 示例文件 3) 其他源文件
-            prioritized_call_sites = self._prioritize_call_sites(call_sites)
-            
-            # 限制数量，避免过多
-            for call_site in prioritized_call_sites[:3]:
-                try:
-                    caller_func = call_site.get('src_func', '')
-                    if not caller_func:
-                        continue
-                    
-                    # 获取调用者的源码
-                    caller_source = introspector.query_introspector_function_source(
-                        self.project_name, caller_func
-                    )
-                    
-                    if caller_source:
-                        # 提取相关代码片段（包含目标函数调用的部分）
-                        snippet = self._extract_relevant_snippet(
-                            caller_source, 
-                            func_sig
-                        )
-                        
-                        context['usage_examples'].append({
-                            'source': snippet or caller_source[:1000],  # 限制长度
-                            'file': call_site.get('src_file', ''),
-                            'function': caller_func,
-                            'line': call_site.get('src_line', 0),
-                            'source_type': 'call_site',
-                            'priority': call_site.get('priority', 0)
-                        })
-                        
-                        logger.debug(f"Added usage example from {caller_func}")
-                except Exception as e:
-                    logger.debug(f"Could not extract usage example: {e}")
-        
-        except Exception as e:
-            logger.debug(f"Could not query call sites: {e}")
-    
-    def _prioritize_call_sites(self, call_sites: List[Dict]) -> List[Dict]:
-        """优先级排序 call sites，优先选择高质量示例"""
-        def get_priority(call_site: Dict) -> int:
-            """计算 call site 的优先级（值越大优先级越高）"""
-            src_file = call_site.get('src_file', '').lower()
-            priority = 0
-            
-            # 优先级1: 测试文件（最有价值的示例）
-            if 'test' in src_file or 'example' in src_file:
-                priority += 100
-            
-            # 优先级2: Fuzzer文件（实际fuzzing用法）
-            if 'fuzz' in src_file or 'harness' in src_file:
-                priority += 80
-            
-            # 优先级3: 示例/demo文件
-            if 'demo' in src_file or 'sample' in src_file:
-                priority += 60
-            
-            # 优先级4: 避免内部/私有实现
-            if 'internal' in src_file or 'private' in src_file:
-                priority -= 50
-            
-            # 添加随机性，避免总是选择同一个
-            priority += hash(src_file) % 10
-            
-            return priority
-        
-        # 为每个 call site 添加优先级
-        for cs in call_sites:
-            cs['priority'] = get_priority(cs)
-        
-        # 按优先级排序（降序）
-        return sorted(call_sites, key=lambda x: x.get('priority', 0), reverse=True)
-    
-    def _extract_relevant_snippet(self, source: str, func_name: str) -> Optional[str]:
-        """提取包含函数调用的相关代码片段"""
-        lines = source.split('\n')
-        
-        # 查找函数调用的行
-        for i, line in enumerate(lines):
-            if func_name in line:
-                # 提取前后各 5 行
-                start = max(0, i - 5)
-                end = min(len(lines), i + 6)
-                return '\n'.join(lines[start:end])
-        
-        return None
+        # Note: 方法2 (call_sites) 已移除
+        # 理由：
+        #  - test_xrefs 和 sample_xrefs 已提供足够高质量的示例
+        #  - call_sites 需要二次查询、优先级排序、snippet提取，复杂度高
+        #  - 质量不如前两者（包含内部实现、业务逻辑）
+        # 特殊用例（如 function_analyzer 的迭代学习）仍可直接调用底层 API
     
     def _identify_initialization_patterns(self, context: Dict):
         """识别需要初始化的类型和初始化方法"""
@@ -539,6 +500,32 @@ class APIContextExtractor:
             logger.debug(f"Could not identify side effects: {e}")
             context['side_effects'] = side_effects
     
+    def _extract_function_name(self, func_sig: str) -> Optional[str]:
+        """
+        从函数签名中提取简单函数名
+        
+        Examples:
+            "void curl_easy_perform(CURL *)" -> "curl_easy_perform"
+            "int parse_header(const char*, size_t)" -> "parse_header"
+            "igraph_sparsemat_arpack_rssolve" -> "igraph_sparsemat_arpack_rssolve"
+        """
+        import re
+        
+        # Case 1: Full signature with parentheses (e.g., "void func(int x)")
+        if '(' in func_sig:
+            # Extract the last identifier before '('
+            match = re.search(r'\b([a-zA-Z_]\w*)\s*\(', func_sig)
+            if match:
+                return match.group(1)
+        
+        # Case 2: Simple function name without signature
+        # Clean up any leading type info (e.g., "void func" -> "func")
+        parts = func_sig.strip().split()
+        if parts:
+            return parts[-1]  # Last word is likely the function name
+        
+        return None
+    
     def _function_exists(self, func_name: str) -> bool:
         """检查函数是否存在"""
         # 懒加载：第一次调用时获取所有函数列表
@@ -637,12 +624,19 @@ def format_api_context_for_prompt(context: Dict) -> str:
                 sections.append(f"- `{func['name']}` for `{func['for_type']}`")
             sections.append("")
     
-    # 5. 用法示例（优化：区分 sample xref 和 call site）
+    # 5. 用法示例（优化：优先显示测试文件，明确标注质量）
     if context.get('usage_examples'):
         sections.append("### Usage Examples from Existing Code\n")
         for i, example in enumerate(context['usage_examples'][:2], 1):
             source_type = example.get('source_type', 'unknown')
-            quality_indicator = "✓ High-quality" if source_type == 'sample_xref' else ""
+            
+            # Quality indicators (from highest to lowest)
+            if source_type == 'test_file':
+                quality_indicator = "🏆 TEST FILE (Highest Quality - Clean API Usage)"
+            elif source_type == 'sample_xref':
+                quality_indicator = "✓ High-quality"
+            else:
+                quality_indicator = ""
             
             sections.append(f"#### Example {i}: {example['function']} {quality_indicator}")
             if example.get('file'):

@@ -1,394 +1,221 @@
-# API 依赖图建模系统
+# API 依赖图系统
 
-## 📋 概述
-
-基于 **tree-sitter** 和 **FuzzIntrospector** 构建的 API 依赖图分析系统，用于自动识别函数调用的前置依赖和数据流依赖，指导 LLM 生成正确的 fuzzer 代码。
+基于 **tree-sitter** 和 **FuzzIntrospector** 分析 API 调用依赖，生成正确的函数调用序列。
 
 ---
 
-## 🎯 核心功能
+## 核心功能
 
-### 1. **前置依赖识别**
-自动识别必须在目标函数之前调用的初始化函数：
-- `*_init()`, `*_create()`, `*_new()`, `*_alloc()`, `*_open()`
-- 基于类型名和命名约定的启发式规则
-- 使用 FuzzIntrospector 验证函数存在性
-
-### 2. **数据流依赖分析**
-识别参数的生产者-消费者关系：
-- 追踪哪些参数需要来自其他函数的返回值
-- 识别复杂类型的生产者函数
-- 构建数据依赖边
-
-### 3. **调用序列生成**
-使用拓扑排序生成正确的调用顺序：
-- 确保所有依赖在使用前被满足
-- 处理有向无环图 (DAG)
-- Fallback 到简单顺序（如果存在环）
-
-### 4. **初始化代码模板**
-自动生成初始化代码片段：
-- 变量声明
-- 初始化函数调用
-- 内存清零（memset）
+1. **前置依赖识别**: 识别初始化函数 (`*_init`, `*_create`, `*_new`, `*_alloc`, `*_open`)
+2. **数据流依赖**: 追踪参数的生产者-消费者关系
+3. **调用序列生成**: 拓扑排序生成正确的调用顺序
+4. **初始化模板**: 自动生成变量声明和初始化代码
 
 ---
 
-## 🏗️ 架构
+## 架构
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│  LangGraphFunctionAnalyzer (函数分析器)                    │
-│  ├─ API Context Extraction (现有)                        │
-│  └─ API Dependency Analysis (新增)                       │
-└────────────────────┬────────────────────────────────────┘
-                     │
-                     ▼
-┌─────────────────────────────────────────────────────────┐
-│  APIDependencyAnalyzer                                  │
-│  ├─ 使用 APIContextExtractor 提取函数信息                │
-│  ├─ 识别前置依赖 (_find_prerequisite_functions)         │
-│  ├─ 分析数据依赖 (_analyze_data_dependencies)           │
-│  ├─ 构建图 (NetworkX DiGraph)                           │
-│  └─ 生成调用序列 (拓扑排序)                              │
-└────────────────────┬────────────────────────────────────┘
-                     │
-                     ▼
-┌─────────────────────────────────────────────────────────┐
-│  FuzzIntrospector API                                   │
-│  ├─ query_introspector_all_functions                    │
-│  ├─ query_introspector_function_source                  │
-│  ├─ query_introspector_type_definition                  │
-│  └─ query_introspector_call_sites_metadata              │
-└─────────────────────────────────────────────────────────┘
-
-┌─────────────────────────────────────────────────────────┐
-│  tree-sitter (Header Extraction)                        │
-│  └─ header_extractor.py (已有)                          │
-└─────────────────────────────────────────────────────────┘
-
-                     ▼
-┌─────────────────────────────────────────────────────────┐
-│  LangGraphPrototyper (代码生成器)                          │
-│  └─ 在 SRS 规范中注入依赖图信息                           │
-│     └─ _format_srs_specification                        │
-└─────────────────────────────────────────────────────────┘
+Function Analyzer
+    ↓
+APIDependencyAnalyzer
+    ├─ tree-sitter (解析头文件)
+    └─ FuzzIntrospector (验证函数/类型)
+    ↓
+NetworkX DiGraph (依赖图)
+    ↓
+拓扑排序 → 调用序列
+    ↓
+Prototyper (注入SRS规范)
 ```
 
 ---
 
-## 📦 依赖
+## 核心类
 
-- **tree-sitter** >= 0.25.0 (已有)
-- **tree-sitter-cpp** >= 0.23.0 (已有)
-- **networkx** >= 3.0 (新增)
-
-```bash
-pip install networkx
-```
-
----
-
-## 🚀 使用方法
-
-### 命令行测试
-
-```bash
-python test_api_dependency_analyzer.py <project_name> <function_signature>
-
-# 示例：
-python test_api_dependency_analyzer.py igraph \
-  "igraph_error_t igraph_sparsemat_arpack_rssolve(const igraph_sparsemat_t *, igraph_arpack_options_t *, igraph_arpack_storage_t *, igraph_vector_t *, igraph_matrix_t *, igraph_sparsemat_solve_t)"
-```
-
-### 编程接口
+### APIDependencyAnalyzer
 
 ```python
-from agent_graph.api_dependency_analyzer import APIDependencyAnalyzer
-
-# 创建分析器
-analyzer = APIDependencyAnalyzer(project_name="igraph")
-
-# 构建依赖图
-dep_graph = analyzer.build_dependency_graph(
-    "igraph_error_t igraph_sparsemat_arpack_rssolve(...)"
-)
-
-# 访问结果
-print(dep_graph['call_sequence'])       # 调用顺序
-print(dep_graph['prerequisites'])       # 前置依赖
-print(dep_graph['data_dependencies'])   # 数据依赖
-print(dep_graph['initialization_code']) # 初始化代码
+class APIDependencyAnalyzer:
+    def analyze(self, target_function_name, header_file_content):
+        """返回依赖图和调用序列"""
+        return {
+            "target_function": "decode",
+            "prerequisite_functions": ["ctx_init", "ctx_create"],
+            "calling_sequence": ["ctx_create", "ctx_init", "decode"],
+            "dependency_graph_edges": [
+                {"from": "decode", "to": "ctx_init", "reason": "data_flow"}
+            ],
+            "initialization_code": "MyCtx* ctx = ctx_create(); ctx_init(ctx);"
+        }
 ```
 
-### 集成到工作流
+### 关键方法
 
-依赖图信息会**自动**注入到 FunctionAnalyzer → Prototyper 流程：
-
-1. **FunctionAnalyzer** 提取依赖图
-2. **Prototyper** 在 SRS 规范中看到依赖信息
-3. **LLM** 根据依赖图生成正确的初始化序列
+| 方法 | 职责 |
+|------|------|
+| `_find_prerequisite_functions` | 启发式识别初始化函数 |
+| `_analyze_data_dependencies` | 分析参数类型依赖 |
+| `_build_dependency_graph` | 构建NetworkX图 |
+| `_generate_calling_sequence` | 拓扑排序生成序列 |
+| `_generate_initialization_code` | 生成初始化模板 |
 
 ---
 
-## 📊 实际案例
+## 识别规则
 
-### 案例：igraph_sparsemat_arpack_rssolve
+### 前置依赖启发式
 
-**输入**：
-```c
-igraph_error_t igraph_sparsemat_arpack_rssolve(
-    const igraph_sparsemat_t *A,
-    igraph_arpack_options_t *options,
-    igraph_arpack_storage_t *storage,
-    igraph_vector_t *values,
-    igraph_matrix_t *vectors,
-    igraph_sparsemat_solve_t solvemethod
-)
-```
-
-**分析结果**：
-
-✅ **调用序列** (6 函数):
-1. `igraph_arpack_storage_init`
-2. `igraph_sparsemat_init`
-3. `igraph_arpack_options_init`
-4. `igraph_vector_init`
-5. `igraph_matrix_init`
-6. `igraph_sparsemat_arpack_rssolve` ← 目标函数
-
-⚠️ **前置依赖** (1 函数):
-- `igraph_arpack_storage_init()` - 必须先调用
-
-📊 **数据依赖** (5 条边):
-- `igraph_sparsemat_init` → `igraph_sparsemat_arpack_rssolve`
-- `igraph_arpack_options_init` → `igraph_sparsemat_arpack_rssolve`
-- `igraph_arpack_storage_init` → `igraph_sparsemat_arpack_rssolve`
-- `igraph_vector_init` → `igraph_sparsemat_arpack_rssolve`
-- `igraph_matrix_init` → `igraph_sparsemat_arpack_rssolve`
-
-💡 **生成的初始化代码**：
-```c
-// Initialize required data structures
-igraph_arpack_storage_t *storage;
-memset(&*storage, 0, sizeof(igraph_arpack_storage_t));
-// Call prerequisite: igraph_arpack_storage_init
-igraph_arpack_storage_init(...);  // TODO: Fill in parameters
-```
-
----
-
-## 🔧 工作原理
-
-### 启发式规则
-
-#### 1. 初始化函数识别
 ```python
-INIT_SUFFIXES = ['_init', '_create', '_new', '_alloc', '_setup', '_open']
-
-# 示例：
-# igraph_arpack_storage_t → 查找 igraph_arpack_storage_init
-# my_context_t → 查找 my_context_create
-```
-
-#### 2. 类型依赖分析
-```python
-# 如果参数类型是 igraph_vector_t*，查找:
-# - igraph_vector_init()
-# - igraph_vector_create()
-# - igraph_vector_new()
-```
-
-#### 3. 初始化模式识别
-```python
-INIT_REQUIRED_KEYWORDS = [
-    'storage', 'context', 'state', 'buffer',
-    'data', 'cache', 'pool', 'arena'
+INIT_FUNCTION_PATTERNS = [
+    r'.*_init$', r'.*_create$', r'.*_new$',
+    r'.*_alloc$', r'.*_open$', r'.*_setup$'
 ]
-
-# 如果参数类型包含这些关键词，标记为需要初始化
 ```
 
-### 图构建
+**条件**:
+1. 函数名匹配模式
+2. 返回值/参数类型与目标函数相关
+3. FuzzIntrospector验证存在性
 
-使用 NetworkX 有向图 (DiGraph):
-- **节点**: 函数名
-- **边**: 依赖关系
-  - `control` 边: 必须先调用 (prerequisites)
-  - `data` 边: 数据流依赖
+### 数据流依赖
 
-拓扑排序确保正确的调用顺序。
+```python
+# 例子: decode(MyCtx* ctx)
+#      ctx_create() -> MyCtx*
+# 结论: decode 依赖 ctx_create (数据流)
+```
 
 ---
 
-## 🎨 Prototyper 集成
+## 输出格式
 
-### Prompt 增强
+### 注入到SRS规范
 
-在 `prototyper_prompt.txt` 中新增第 6 项要求：
+```python
+# agents/prototyper.py
+def _format_srs_specification(self, state):
+    srs = base_srs
+    
+    if has_api_dependency:
+        srs += f"""
+## API调用依赖
 
-```markdown
-6. **API DEPENDENCIES & INITIALIZATION ORDER** (🔗 IMPORTANT)
-   - Follow the API dependency graph to ensure correct initialization sequence
-   - Call prerequisite functions (init/create/new) BEFORE the target function
-   - Respect data flow dependencies (produce data before consumption)
-   - Use the provided call sequence to avoid runtime errors
-   - See "API Dependency Analysis" section below for details
-```
-
-### SRS 规范注入
-
-在 `_format_srs_specification` 中自动添加依赖图部分：
-
-```markdown
-### 🔗 API Dependency Analysis
-
-**CRITICAL**: Follow this dependency graph to ensure correct initialization sequence!
-
-#### ✅ Recommended Call Sequence
-1. `igraph_arpack_storage_init`
-2. `igraph_sparsemat_init`
-...
-
-#### ⚠️ Prerequisites (MUST call before target)
-- `igraph_arpack_storage_init()` - Initialization function
-
-#### 📊 Data Flow Dependencies
-- `igraph_sparsemat_init` produces data consumed by `target_function`
-
-#### 💡 Initialization Code Template
+**调用序列**: {sequence}
+**初始化代码**:
 ```c
-// Initialize required data structures
-...
+{init_code}
 ```
-```
-
----
-
-## 🔬 与同类工作对比
-
-| 工具 | 使用者 | logicfuzz 实现 |
-|------|--------|---------------|
-| **Tree-sitter** | CKGFuzzer | ✅ 用于 header 提取 |
-| **FuzzIntrospector** | OSS-Fuzz | ✅ 调用图、类型信息 |
-| **NetworkX** | CKGFuzzer | ✅ 图操作、拓扑排序 |
-| **Clang LibTooling** | RUBICK, libErator | ⚠️ 未使用（可选增强） |
-| **CodeQL** | CKGFuzzer | ❌ 未使用（过于重量） |
-
-**优势**:
-- ✅ **轻量级**: 无需编译环境，直接查询 FuzzIntrospector API
-- ✅ **快速**: 利用现有基础设施（tree-sitter + FI）
-- ✅ **可靠**: Fallback 机制（无 networkx 时使用简单图）
-- ✅ **可扩展**: 易于添加新的启发式规则
-
----
-
-## 🧪 测试
-
-### 运行测试
-
-```bash
-# 简单函数（无依赖）
-python test_api_dependency_analyzer.py libxml2 xmlParseFile
-
-# 复杂函数（多依赖）
-python test_api_dependency_analyzer.py igraph \
-  "igraph_error_t igraph_sparsemat_arpack_rssolve(...)"
+"""
+    return srs
 ```
 
-### 预期输出
+### 示例输出
 
-成功的测试应输出：
-- ✅ Call sequence generated
-- ✅ Dependencies found (如果有)
-- 🎉 Test PASSED!
+```yaml
+calling_sequence:
+  - ctx_create
+  - ctx_init  
+  - decode
 
----
-
-## 📝 文件清单
-
-### 新增文件
-- `agent_graph/api_dependency_analyzer.py` - 核心分析器
-- `test_api_dependency_analyzer.py` - 测试脚本
-- `docs/API_DEPENDENCY_GRAPH.md` - 本文档
-
-### 修改文件
-- `agent_graph/agents/langgraph_agent.py`
-  - `LangGraphFunctionAnalyzer.execute()` - 添加依赖图分析
-  - `LangGraphPrototyper._format_srs_specification()` - 注入依赖信息
-- `prompts/agent_graph/prototyper_prompt.txt` - 新增第 6 项要求
-- `requirements.txt` - 添加 `networkx>=3.0`
+initialization_code: |
+  MyCtx* ctx = ctx_create();
+  if (ctx) {
+      ctx_init(ctx);
+  }
+```
 
 ---
 
-## 🚧 未来改进
+## 集成点
 
-### 短期（1-2 周）
-1. **增强启发式规则**
-   - 添加更多初始化函数后缀模式
-   - 支持 C++ 构造函数识别
-   - 处理析构函数（cleanup 函数）
+### Function Analyzer → Prototyper
 
-2. **改进数据流分析**
-   - 使用 FuzzIntrospector 的返回类型信息
-   - 追踪多层依赖（间接依赖）
+```python
+# nodes/function_analyzer_node.py
+analyzer = APIDependencyAnalyzer(...)
+result = analyzer.analyze(target_func, header_content)
+state["api_dependency"] = result  # 存入state
 
-### 中期（1-2 月）
-3. **集成 Clang LibTooling**（可选）
-   - 更精确的类型推断
-   - 数据流分析（def-use chains）
-   - 需要编译环境
-
-4. **缓存优化**
-   - 缓存 FuzzIntrospector 查询结果
-   - 缓存依赖图（project-level）
-
-### 长期（2+ 月）
-5. **状态机学习**（参考 RUBICK）
-   - 从样例学习 API 调用顺序约束
-   - 构建 DFA 模型
-
-6. **跨项目知识迁移**
-   - 从 igraph 学习的模式应用到其他图库
-   - 通用的 API 模式库
+# agents/prototyper.py
+def generate(..., state):
+    srs = self._format_srs_specification(state)
+    # api_dependency注入到SRS
+```
 
 ---
 
-## 📚 参考文献
+## 使用的FuzzIntrospector API
 
-1. **RUBICK** (USENIX Security 2023)
-   - 状态机学习，从样例推断 API 序列约束
-   
-2. **CKGFuzzer**
-   - 使用 tree-sitter + CodeQL 构建代码知识图
-
-3. **libErator** (FSE 2025)
-   - 静态分析构建调用图，推断可组合 API 序列
-
-4. **Scheduzz**
-   - 约束提取和类型推断
+| API | 用途 |
+|-----|------|
+| `query_introspector_all_functions` | 验证函数存在 |
+| `query_introspector_function_source` | 获取函数源码 |
+| `query_introspector_type_definition` | 查询类型定义 |
+| `query_introspector_call_sites_metadata` | 分析调用关系 |
 
 ---
 
-## 🤝 贡献
+## 实际例子
 
-如需改进或扩展此系统：
-1. 在 `api_dependency_analyzer.py` 中添加新的启发式规则
-2. 更新 `INIT_SUFFIXES` 和 `INIT_REQUIRED_KEYWORDS`
-3. 运行 `test_api_dependency_analyzer.py` 验证
-4. 更新本文档
+### libxml2 xmlParseFile
+
+```c
+// 目标函数
+xmlDoc* xmlParseFile(const char* filename);
+
+// 前置依赖识别
+xmlInitParser();  // 全局初始化
+
+// 数据依赖
+xmlCleanupParser();  // 清理函数 (后置)
+```
+
+**生成的调用序列**:
+```c
+xmlInitParser();
+xmlDoc* doc = xmlParseFile("/tmp/input.xml");
+if (doc) xmlFreeDoc(doc);
+xmlCleanupParser();
+```
 
 ---
 
-## ✅ 总结
+## 关键配置
 
-基于 **tree-sitter + FuzzIntrospector** 的轻量级 API 依赖图系统已成功集成！
+```python
+# api_dependency_analyzer.py
+MAX_SEARCH_DEPTH = 2          # 依赖搜索深度
+MAX_PREREQUISITE_COUNT = 5    # 最多识别5个前置函数
+FUZZER_FRIENDLY_KEYWORDS = [  # 优先选择这些函数
+    "init", "create", "new", "setup"
+]
+```
 
-**核心价值**:
-- 🎯 **自动识别** 初始化依赖，减少 LLM 幻觉
-- 🔗 **构建调用图**，指导正确的调用顺序
-- 💡 **生成模板**，加速代码生成
-- 📊 **可视化依赖**，提升可解释性
+---
 
-**立即可用**，无需额外配置！
+## 限制
 
+1. **启发式规则**: 依赖命名约定，可能漏识别
+2. **循环依赖**: 检测到环时fallback到简单顺序
+3. **全局状态**: 难以追踪跨函数的全局变量依赖
+4. **Token限制**: 只包含最关键的依赖信息
+
+---
+
+## 关键文件
+
+```
+utils/
+├── api_dependency_analyzer.py    # 核心分析器
+└── header_extractor.py           # tree-sitter解析
+
+nodes/
+└── function_analyzer_node.py     # 集成点
+
+agents/
+└── prototyper.py                 # 消费依赖图
+
+tools/
+└── fuzz_introspector_tools.py    # FI API包装
+```

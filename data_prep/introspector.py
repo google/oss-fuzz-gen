@@ -54,7 +54,7 @@ INTROSPECTOR_ORACLE_ALL_TESTS = ''
 INTROSPECTOR_ORACLE_ALL_TESTS_XREF = ''
 INTROSPECTOR_FUNCTION_SOURCE = ''
 INTROSPECTOR_PROJECT_SOURCE = ''
-INTROSPECTOR_XREF = ''
+INTROSPECTOR_CALL_SITES = ''
 INTROSPECTOR_FUNC_SIG = ''
 INTROSPECTOR_ADDR_TYPE = ''
 INTROSPECTOR_ALL_HEADER_FILES = ''
@@ -91,7 +91,7 @@ def set_introspector_endpoints(endpoint):
   """Sets URLs for Fuzz Introspector endpoints to local or remote endpoints."""
   global INTROSPECTOR_ENDPOINT, INTROSPECTOR_CFG, INTROSPECTOR_FUNC_SIG, \
       INTROSPECTOR_FUNCTION_SOURCE, INTROSPECTOR_PROJECT_SOURCE, \
-      INTROSPECTOR_XREF, INTROSPECTOR_ORACLE_FAR_REACH, \
+      INTROSPECTOR_CALL_SITES, INTROSPECTOR_ORACLE_FAR_REACH, \
       INTROSPECTOR_ORACLE_KEYWORD, INTROSPECTOR_ADDR_TYPE, \
       INTROSPECTOR_ALL_HEADER_FILES, INTROSPECTOR_ALL_FUNC_TYPES, \
       INTROSPECTOR_SAMPLE_XREFS, INTROSPECTOR_ORACLE_EASY_PARAMS, \
@@ -121,7 +121,7 @@ def set_introspector_endpoints(endpoint):
   INTROSPECTOR_FUNCTION_SOURCE = f'{INTROSPECTOR_ENDPOINT}/function-source-code'
   INTROSPECTOR_PROJECT_SOURCE = f'{INTROSPECTOR_ENDPOINT}/project-source-code'
   INTROSPECTOR_TEST_SOURCE = f'{INTROSPECTOR_ENDPOINT}/project-test-code'
-  INTROSPECTOR_XREF = f'{INTROSPECTOR_ENDPOINT}/all-cross-references'
+  INTROSPECTOR_CALL_SITES = f'{INTROSPECTOR_ENDPOINT}/all-cross-references'
   INTROSPECTOR_FUNC_SIG = f'{INTROSPECTOR_ENDPOINT}/function-signature'
   INTROSPECTOR_ADDR_TYPE = (
       f'{INTROSPECTOR_ENDPOINT}/addr-to-recursive-dwarf-info')
@@ -733,8 +733,18 @@ def query_introspector_call_sites_metadata(project: str,
                                             func_sig: str) -> list[dict]:
   """Queries FuzzIntrospector API for call site metadata without fetching full source code.
   
-  This is more efficient than query_introspector_cross_references when you only need
-  metadata about where a function is called, not the full source code of caller functions.
+  ⚠️ NOT RECOMMENDED for general driver generation use cases.
+  
+  This API is kept for special scenarios like iterative learning (see function_analyzer.py),
+  but for typical driver generation, prefer:
+    1. query_introspector_for_tests_xref() - highest quality test file examples
+    2. query_introspector_sample_xrefs() - pre-processed code snippets
+  
+  Why not recommended for driver generation:
+    - Requires secondary queries to get full source code
+    - Includes internal implementations (high noise)
+    - Needs priority filtering and snippet extraction (complex)
+    - Lower quality than test files and sample xrefs
   
   Args:
     project: Project name
@@ -751,7 +761,7 @@ def query_introspector_call_sites_metadata(project: str,
     logger.warning('Cannot query call sites: empty function signature provided')
     return []
   
-  resp = _query_introspector(INTROSPECTOR_XREF, {
+  resp = _query_introspector(INTROSPECTOR_CALL_SITES, {
       'project': project,
       'function_signature': func_sig
   })
@@ -760,36 +770,6 @@ def query_introspector_call_sites_metadata(project: str,
   # Return the raw call site metadata
   return call_sites
 
-
-def query_introspector_cross_references(project: str,
-                                        func_sig: str) -> list[str]:
-  """Queries FuzzIntrospector API for source code of functions
-  which reference |func_sig|."""
-  # Don't query if signature is empty
-  if not func_sig or not func_sig.strip():
-    logger.warning('Cannot query cross-references: empty function signature provided')
-    return []
-  
-  # Use the new metadata function
-  call_sites = query_introspector_call_sites_metadata(project, func_sig)
-
-  xref_source = []
-  for cs in call_sites:
-    name = cs.get('src_func')
-    if not name:
-      continue
-    
-    sig = query_introspector_function_signature(project, name)
-    if not sig:
-      # Skip if we can't get the signature
-      logger.debug('Skipping cross-reference %s: could not get signature', name)
-      continue
-    
-    source = query_introspector_function_source(project, sig)
-    if source:  # Only append non-empty sources
-      xref_source.append(source)
-  
-  return xref_source
 
 def query_introspector_language_stats() -> dict:
   """Queries introspector for language stats"""

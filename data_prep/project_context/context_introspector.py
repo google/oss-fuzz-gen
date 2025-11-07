@@ -154,14 +154,14 @@ class ContextRetriever:
     return function_source.strip()
 
   def _get_xrefs_to_function(self) -> list[str]:
-    """Queries FI for function being fuzzed."""
+    """Queries FI for sample xrefs (pre-processed usage examples)."""
     project = self._benchmark.project
     func_sig = self._benchmark.function_signature
-    xrefs = introspector.query_introspector_cross_references(project, func_sig)
+    xrefs = introspector.query_introspector_sample_xrefs(project, func_sig)
 
     if not xrefs:
       logging.warning(
-          'Could not retrieve xrefs for project: %s '
+          'Could not retrieve sample xrefs for project: %s '
           'function_signature: %s', project, func_sig)
     return [xref for xref in xrefs if xref.strip()]
 

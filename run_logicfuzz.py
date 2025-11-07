@@ -424,11 +424,14 @@ def _collect_token_usage_stats() -> dict[str, Any]:
       continue
     
     # Look for result.json files for each trial
-    for status_file in os.listdir(status_dir):
-      if not status_file.endswith('-result.json'):
+    for trial_dir in os.listdir(status_dir):
+      trial_path = os.path.join(status_dir, trial_dir)
+      if not os.path.isdir(trial_path):
         continue
       
-      result_file_path = os.path.join(status_dir, status_file)
+      result_file_path = os.path.join(trial_path, 'result.json')
+      if not os.path.exists(result_file_path):
+        continue
       try:
         with open(result_file_path, 'r') as f:
           result_data = json.load(f)

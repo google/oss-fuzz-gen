@@ -178,32 +178,11 @@ class FuzzIntrospectorTool(base_tool.BaseTool):
   
   # ==================== Cross-Reference APIs ====================
   
-  def get_all_cross_references(self, function_signature: str) -> List[str]:
-    """
-    Gets all cross-references (callers) for a given function.
-    
-    Returns source code of functions that call the target function.
-    
-    Args:
-        function_signature: Full function signature
-        
-    Returns:
-        List of source code strings of calling functions
-        
-    Example:
-        callers = tool.get_all_cross_references(
-            "void sam_hrecs_remove_ref_altnames(sam_hrecs_t *, int, const char *)")
-    """
-    logger.info('Getting cross-references for: %s', function_signature)
-    return introspector.query_introspector_cross_references(
-        self.project_name, function_signature)
-  
   def get_sample_cross_references(self, function_signature: str) -> List[str]:
     """
-    Gets sample cross-references with simplified source code snippets.
+    Gets sample cross-references with pre-processed usage examples.
     
-    This is more efficient than get_all_cross_references and returns
-    smaller code samples.
+    Returns high-quality code snippets showing how the function is used.
     
     Args:
         function_signature: Full function signature
@@ -223,7 +202,18 @@ class FuzzIntrospectorTool(base_tool.BaseTool):
     """
     Gets metadata about where a function is called without full source code.
     
-    More efficient than full cross-references when you only need locations.
+    ⚠️ NOT RECOMMENDED for typical driver generation workflows.
+    
+    This method is kept for special use cases (e.g., iterative learning in function_analyzer),
+    but for most driver generation tasks, prefer:
+      1. get_sample_cross_references() - pre-processed, high-quality code snippets
+      2. Direct test file analysis via query_introspector_for_tests_xref()
+    
+    Why not recommended:
+      - Requires secondary queries to fetch actual source code
+      - Returns metadata from all callers (including internal implementations)
+      - Needs additional filtering and snippet extraction
+      - Lower signal-to-noise ratio than sample_xrefs
     
     Args:
         function_signature: Full function signature
@@ -613,7 +603,6 @@ Sample Callers: {len(samples)} found
         'get_target_function': self.get_target_function,
         'get_function_signature': self.get_function_signature,
         'get_function_source': self.get_function_source_code,
-        'get_xrefs': self.get_all_cross_references,
         'get_sample_xrefs': self.get_sample_cross_references,
         'get_all_functions': self.get_all_functions,
         'get_optimal_targets': self.get_optimal_targets,
