@@ -321,45 +321,13 @@ class LLMAPIDependencyAnalyzer:
         }
 
 
-def load_prompts() -> tuple[str, str]:
-    """
-    Load system and user prompt templates from files.
-    
-    Returns:
-        Tuple of (system_prompt, user_prompt_template)
-    """
-    import os
-    
-    prompts_dir = os.path.join(
-        os.path.dirname(os.path.dirname(__file__)),
-        'prompts',
-        'agent_graph'
-    )
-    
-    system_prompt_path = os.path.join(prompts_dir, 'api_dependency_analyzer_system.txt')
-    user_prompt_path = os.path.join(prompts_dir, 'api_dependency_analyzer_prompt.txt')
-    
-    try:
-        with open(system_prompt_path, 'r') as f:
-            system_prompt = f.read()
-    except FileNotFoundError:
-        logger.warning(f"System prompt not found at {system_prompt_path}, using default")
-        system_prompt = "You are an API dependency analyzer. Analyze the given function and identify related API calls."
-    
-    try:
-        with open(user_prompt_path, 'r') as f:
-            user_prompt_template = f.read()
-    except FileNotFoundError:
-        logger.warning(f"User prompt template not found at {user_prompt_path}, using default")
-        user_prompt_template = "Analyze: {function_signature}"
-    
-    return system_prompt, user_prompt_template
 
 
 if __name__ == "__main__":
     # Simple test
     import sys
     import argparse
+    from agent_graph.prompt_loader import get_prompt_manager
     
     logging.basicConfig(level=logging.INFO)
     
@@ -378,8 +346,14 @@ if __name__ == "__main__":
     # Create LLM
     llm = LLM(model=args.model)
     
-    # Load prompts
-    system_prompt, user_prompt_template = load_prompts()
+    # Load prompts using unified interface
+    prompt_manager = get_prompt_manager()
+    try:
+        system_prompt = prompt_manager.get_system_prompt("api_dependency_analyzer")
+        user_prompt_template = prompt_manager.get_user_prompt_template("api_dependency_analyzer")
+    except FileNotFoundError as e:
+        logger.error(f"Prompt files missing: {e}")
+        sys.exit(1)
     
     # Create analyzer
     analyzer = LLMAPIDependencyAnalyzer(

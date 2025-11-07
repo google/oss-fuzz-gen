@@ -6,25 +6,9 @@ ensuring all agents can see the consensus constraints for the current task witho
 relying on the entire message history.
 """
 
-import os
 from typing import Dict, Any
 from agent_graph.state import FuzzingWorkflowState, format_session_memory_for_prompt
-
-# Prompt template paths
-_PROMPT_DIR = os.path.normpath(
-    os.path.join(os.path.dirname(__file__), '../prompts/agent_graph'))
-_SESSION_MEMORY_HEADER = os.path.join(_PROMPT_DIR, 'session_memory_header.txt')
-_SESSION_MEMORY_FOOTER = os.path.join(_PROMPT_DIR, 'session_memory_footer.txt')
-
-
-def _load_prompt_template(template_path: str) -> str:
-    """Load prompt template from file."""
-    try:
-        with open(template_path, 'r', encoding='utf-8') as f:
-            return f.read()
-    except FileNotFoundError:
-        # Fallback to minimal template if file not found
-        return ""
+from agent_graph.prompt_loader import get_prompt_manager
 
 
 def build_prompt_with_session_memory(
@@ -49,9 +33,17 @@ def build_prompt_with_session_memory(
     # Format session_memory
     consensus_context = format_session_memory_for_prompt(state)
     
-    # Load prompt templates
-    header_template = _load_prompt_template(_SESSION_MEMORY_HEADER)
-    footer_template = _load_prompt_template(_SESSION_MEMORY_FOOTER)
+    # Load prompt templates using PromptManager
+    pm = get_prompt_manager()
+    try:
+        header_template = pm.get_session_memory_header()
+    except FileNotFoundError:
+        header_template = ""
+    
+    try:
+        footer_template = pm.get_session_memory_footer()
+    except FileNotFoundError:
+        footer_template = ""
     
     # Combine: header + consensus + agent prompt + footer
     header = header_template.replace('{CONSENSUS_CONTEXT}', consensus_context)

@@ -127,9 +127,13 @@ class APIDependencyAnalyzer:
     def _initialize_llm_analyzer(self):
         """初始化 LLM 分析器"""
         try:
-            from agent_graph.llm_api_analyzer import LLMAPIDependencyAnalyzer, load_prompts
+            from agent_graph.llm_api_analyzer import LLMAPIDependencyAnalyzer
+            from agent_graph.prompt_loader import get_prompt_manager
             
-            system_prompt, user_prompt_template = load_prompts()
+            prompt_manager = get_prompt_manager()
+            system_prompt = prompt_manager.get_system_prompt("api_dependency_analyzer")
+            user_prompt_template = prompt_manager.get_user_prompt_template("api_dependency_analyzer")
+            
             self._llm_analyzer = LLMAPIDependencyAnalyzer(
                 project_name=self.project_name,
                 llm=self.llm,
@@ -141,12 +145,13 @@ class APIDependencyAnalyzer:
             logger.warning(f"Failed to initialize LLM analyzer: {e}. Falling back to heuristics.")
             self.use_llm = False
     
-    def build_dependency_graph(self, target_function: str) -> Dict:
+    def build_dependency_graph(self, target_function: str, api_context: Optional[Dict] = None) -> Dict:
         """
         构建目标函数的局部依赖图
         
         Args:
             target_function: 目标函数名（如 "igraph_sparsemat_arpack_rssolve"）
+            api_context: (Optional) 预先提取的 API context，避免重复查询 FuzzIntrospector
         
         Returns:
             包含以下字段的字典：
@@ -167,8 +172,14 @@ class APIDependencyAnalyzer:
             return self._build_with_llm(target_function)
         
         # Otherwise use heuristic approach
-        # 1. 使用 FuzzIntrospector 获取函数上下文
-        context = self.extractor.extract(target_function)
+        # 1. 使用 FuzzIntrospector 获取函数上下文（或使用提供的 api_context）
+        if api_context:
+            logger.debug(f"Using provided api_context (avoiding redundant FI query)")
+            context = api_context
+        else:
+            logger.debug(f"No api_context provided, querying FuzzIntrospector")
+            context = self.extractor.extract(target_function)
+        
         if not context:
             logger.warning(f"Could not extract context for {target_function}")
             return {

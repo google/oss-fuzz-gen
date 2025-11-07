@@ -32,7 +32,7 @@ class LangGraphFunctionAnalyzer(LangGraphAgent):
         )
         
         # Configuration for iterative analysis
-        self.max_examples = getattr(args, 'max_function_examples', 20)
+        self.max_examples = getattr(args, 'max_function_examples', 5)
         self.convergence_threshold = getattr(args, 'convergence_threshold', 3)
     
     def execute(self, state: FuzzingWorkflowState) -> Dict[str, Any]:
@@ -371,7 +371,7 @@ class LangGraphFunctionAnalyzer(LangGraphAgent):
         
         archetype_knowledge = self._retrieve_archetype_knowledge(state)
         final_prompt = prompt_manager.build_user_prompt(
-            "function_analyzer_final_summary_prompt",
+            "function_analyzer_final_summary",
             FUNCTION_SIGNATURE=function_signature,
             EXAMPLES_COUNT=examples_analyzed,
             ARCHETYPE_KNOWLEDGE=archetype_knowledge

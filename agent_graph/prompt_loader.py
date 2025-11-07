@@ -1,15 +1,13 @@
 """
 Prompt loader for LangGraph agents.
 
-This module loads prompt templates from external files, similar to the
-legacy agent system but simplified for LangGraph.
+Unified interface for loading all agent prompts.
 """
 import os
-from typing import Dict, Optional
+from typing import Dict
 
 
 # Base directory for agent_graph prompts
-# LangGraph agents use this hardcoded path - not configurable via CLI
 PROMPT_DIR = os.path.normpath(
     os.path.join(os.path.dirname(os.path.dirname(__file__)),
                  'prompts', 'agent_graph'))
@@ -18,6 +16,9 @@ PROMPT_DIR = os.path.normpath(
 def load_prompt_file(filename: str) -> str:
     """
     Load a prompt file from the prompts/agent_graph directory.
+    
+    Use this ONLY for non-standard files (e.g., session_memory_header.txt).
+    For standard agent prompts, use PromptManager.
     
     Args:
         filename: Name of the prompt file
@@ -37,119 +38,114 @@ def load_prompt_file(filename: str) -> str:
         return f.read()
 
 
-def load_system_prompt(agent_name: str) -> str:
-    """
-    Load system prompt for a specific agent.
-    
-    Args:
-        agent_name: Name of the agent (e.g., "function_analyzer")
-    
-    Returns:
-        System prompt text
-    """
-    filename = f"{agent_name}_system.txt"
-    return load_prompt_file(filename)
-
-
-def load_user_prompt_template(agent_name: str) -> str:
-    """
-    Load user prompt template for a specific agent.
-    
-    Args:
-        agent_name: Name of the agent (e.g., "function_analyzer")
-    
-    Returns:
-        User prompt template text
-    """
-    filename = f"{agent_name}_prompt.txt"
-    return load_prompt_file(filename)
-
-
-def format_prompt(template: str, **kwargs) -> str:
-    """
-    Format a prompt template with provided arguments.
-    
-    Args:
-        template: Prompt template string with {VARIABLE} placeholders
-        **kwargs: Variables to substitute in the template
-    
-    Returns:
-        Formatted prompt
-    
-    Example:
-        >>> template = "Hello {NAME}, you are {AGE} years old"
-        >>> format_prompt(template, NAME="Alice", AGE=30)
-        "Hello Alice, you are 30 years old"
-    """
-    # Convert kwargs to uppercase keys for consistency
-    uppercase_kwargs = {k.upper(): v for k, v in kwargs.items()}
-    
-    # Use safe_substitute to avoid KeyError for missing variables
-    # First, replace with uppercase keys
-    result = template
-    for key, value in uppercase_kwargs.items():
-        placeholder = "{" + key + "}"
-        result = result.replace(placeholder, str(value))
-    
-    return result
-
-
 class PromptManager:
     """
     Manager for loading and caching prompts for LangGraph agents.
+    
+    Standard naming convention:
+    - System prompt: {agent_name}_system.txt
+    - User prompt: {agent_name}_prompt.txt
     """
     
     def __init__(self):
         """Initialize the prompt manager with empty cache."""
-        self._system_prompts: Dict[str, str] = {}
-        self._user_templates: Dict[str, str] = {}
+        self._cache: Dict[str, str] = {}
     
     def get_system_prompt(self, agent_name: str) -> str:
         """
         Get system prompt for an agent (with caching).
         
         Args:
-            agent_name: Name of the agent
+            agent_name: Name of the agent (e.g., "function_analyzer")
         
         Returns:
-            System prompt text
+            System prompt text from {agent_name}_system.txt
         """
-        if agent_name not in self._system_prompts:
-            self._system_prompts[agent_name] = load_system_prompt(agent_name)
-        return self._system_prompts[agent_name]
+        filename = f"{agent_name}_system.txt"
+        if filename not in self._cache:
+            self._cache[filename] = load_prompt_file(filename)
+        return self._cache[filename]
     
     def get_user_prompt_template(self, agent_name: str) -> str:
         """
         Get user prompt template for an agent (with caching).
         
         Args:
-            agent_name: Name of the agent
+            agent_name: Name of the agent (e.g., "function_analyzer")
         
         Returns:
-            User prompt template text
+            User prompt template text from {agent_name}_prompt.txt
         """
-        if agent_name not in self._user_templates:
-            self._user_templates[agent_name] = load_user_prompt_template(agent_name)
-        return self._user_templates[agent_name]
+        filename = f"{agent_name}_prompt.txt"
+        if filename not in self._cache:
+            self._cache[filename] = load_prompt_file(filename)
+        return self._cache[filename]
     
     def build_user_prompt(self, agent_name: str, **kwargs) -> str:
         """
         Build a user prompt by loading template and formatting it.
         
         Args:
-            agent_name: Name of the agent
+            agent_name: Name of the agent (WITHOUT _prompt suffix!)
             **kwargs: Variables to substitute in the template
         
         Returns:
             Formatted user prompt
+        
+        Example:
+            >>> pm = PromptManager()
+            >>> prompt = pm.build_user_prompt("crash_analyzer", 
+            ...                               CRASH_INFO="...", 
+            ...                               SOURCE_CODE="...")
         """
         template = self.get_user_prompt_template(agent_name)
-        return format_prompt(template, **kwargs)
+        # Convert kwargs to uppercase and substitute
+        result = template
+        for key, value in kwargs.items():
+            placeholder = "{" + key.upper() + "}"
+            result = result.replace(placeholder, str(value))
+        return result
+    
+    # Special methods for non-standard prompts
+    
+    def get_session_memory_header(self) -> str:
+        """Get session memory header template."""
+        filename = "session_memory_header.txt"
+        if filename not in self._cache:
+            self._cache[filename] = load_prompt_file(filename)
+        return self._cache[filename]
+    
+    def get_session_memory_footer(self) -> str:
+        """Get session memory footer template."""
+        filename = "session_memory_footer.txt"
+        if filename not in self._cache:
+            self._cache[filename] = load_prompt_file(filename)
+        return self._cache[filename]
+    
+    def get_function_analyzer_initial_prompt(self) -> str:
+        """Get function analyzer initial analysis prompt."""
+        filename = "function_analyzer_initial_prompt.txt"
+        if filename not in self._cache:
+            self._cache[filename] = load_prompt_file(filename)
+        return self._cache[filename]
+    
+    def get_function_analyzer_incremental_refine_prompt(self) -> str:
+        """Get function analyzer incremental refinement prompt."""
+        filename = "function_analyzer_incremental_refine_prompt.txt"
+        if filename not in self._cache:
+            self._cache[filename] = load_prompt_file(filename)
+        return self._cache[filename]
+    
+    def get_function_analyzer_final_summary_prompt(self) -> str:
+        """Get function analyzer final summary prompt."""
+        filename = "function_analyzer_final_summary_prompt.txt"
+        if filename not in self._cache:
+            self._cache[filename] = load_prompt_file(filename)
+        return self._cache[filename]
     
     def clear_cache(self):
         """Clear the prompt cache."""
-        self._system_prompts.clear()
-        self._user_templates.clear()
+        self._cache.clear()
 
 
 # Global prompt manager instance

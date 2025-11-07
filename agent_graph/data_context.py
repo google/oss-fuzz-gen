@@ -147,7 +147,11 @@ class FuzzingContext:
                 llm=None,
                 use_llm=False  # Use heuristic mode for data preparation
             )
-            api_dependencies = analyzer.build_dependency_graph(function_signature)
+            # Pass api_context to avoid redundant FI query
+            api_dependencies = analyzer.build_dependency_graph(
+                function_signature, 
+                api_context=api_context
+            )
         except Exception as e:
             raise RuntimeError(
                 f"Failed to build dependency graph: {e}\n"
@@ -259,7 +263,8 @@ def _extract_existing_fuzzer_headers(project_name: str,
     
     try:
         # Get all fuzzer files
-        fuzzers = introspector.query_introspector_harness_files(project_name)
+        harness_data = introspector.query_introspector_for_harness_intrinsics(project_name)
+        fuzzers = [item['source'] for item in harness_data if 'source' in item]
         if not fuzzers:
             return result
         
