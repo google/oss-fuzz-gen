@@ -34,18 +34,17 @@ class Result:
   _repr_exclude = {'_repr_exclude', 'chat_history'}
   function_analysis: Optional['FunctionAnalysisResult']
 
-  def __init__(
-      self,
-      benchmark: Benchmark,
-      trial: int,
-      work_dirs: WorkDirs,
-      fuzz_target_source: str = '',
-      build_script_source: str = '',
-      author: Any = None,
-      chat_history: Optional[dict] = None,
-      default_success: bool = False,
-      function_analysis: Optional['FunctionAnalysisResult'] = None,
-      build_id: Optional[str] = None) -> None:
+  def __init__(self,
+               benchmark: Benchmark,
+               trial: int,
+               work_dirs: WorkDirs,
+               fuzz_target_source: str = '',
+               build_script_source: str = '',
+               author: Any = None,
+               chat_history: Optional[dict] = None,
+               default_success: bool = False,
+               function_analysis: Optional['FunctionAnalysisResult'] = None,
+               build_id: Optional[str] = None) -> None:
     self.benchmark = benchmark
     self.trial = trial
     self.work_dirs = work_dirs
