@@ -102,6 +102,7 @@ class Pipeline():
         result_status_dir=trial_result.best_result.work_dirs.status,
         result=trial_result,
         finished=finished)
+    self.logger.write_build_info(trial_result)
 
   def _execute_one_cycle(self, result_history: list[Result],
                          cycle_count: int) -> None:
