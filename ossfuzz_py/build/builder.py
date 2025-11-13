@@ -37,9 +37,13 @@ from typing import Any, Dict, List, Optional, Tuple
 from ossfuzz_py.build.build_config import BuildConfig
 from ossfuzz_py.build.cloud_build_manager import CloudBuildManager
 from ossfuzz_py.build.docker_manager import CommandResult, DockerManager
+from ossfuzz_py.core.benchmark_manager import Benchmark
 from ossfuzz_py.core.data_models import Sanitizer
 from ossfuzz_py.data.storage_manager import StorageManager
 from ossfuzz_py.execution.fuzz_target import FuzzTarget
+# Import ResultManager for result storage
+from ossfuzz_py.result.result_manager import ResultManager
+from ossfuzz_py.result.results import BuildInfo, Result
 from ossfuzz_py.utils.file_utils import FileUtils
 
 # NOTE: Running-related constants have been moved to LocalRunner and CloudRunner
@@ -49,7 +53,7 @@ from ossfuzz_py.utils.file_utils import FileUtils
 logger = logging.getLogger('ossfuzz_sdk.builder')
 
 
-class Result:
+class BuildResult:
   """Simple result class for build operations."""
 
   def __init__(self,
@@ -99,7 +103,7 @@ class Builder(ABC):
     """
 
   @abstractmethod
-  def build(self, target: FuzzTarget, sanitizer: Sanitizer) -> 'Result':
+  def build(self, target: FuzzTarget, sanitizer: Sanitizer) -> 'BuildResult':
     """
     Build a fuzz target with the specified sanitizer.
 
@@ -168,8 +172,11 @@ class LocalBuilder(Builder):
   Docker, following the UML specification.
   """
 
-  def __init__(self, storage_manager: StorageManager, build_config: BuildConfig,
-               docker_manager: DockerManager):
+  def __init__(self,
+               storage_manager: StorageManager,
+               build_config: BuildConfig,
+               docker_manager: DockerManager,
+               result_manager: Optional[ResultManager] = None):
     """
     Initialize the local builder.
 
@@ -177,9 +184,11 @@ class LocalBuilder(Builder):
         storage_manager: Storage manager for artifacts
         build_config: Build configuration
         docker_manager: Docker manager for container operations
+        result_manager: Optional ResultManager for centralized result storage
     """
     super().__init__(storage_manager, build_config)
     self.docker_manager = docker_manager
+    self.result_manager = result_manager
     self._artifacts: Dict[str, Path] = {}
 
     self.logger.debug("Initialized LocalBuilder with Docker manager")
@@ -198,7 +207,9 @@ class LocalBuilder(Builder):
 
   def build(self,
             target: FuzzTarget,
-            sanitizer: Sanitizer = Sanitizer.ADDRESS) -> Result:
+            sanitizer: Sanitizer = Sanitizer.ADDRESS,
+            benchmark_id: Optional[str] = None,
+            trial: int = 1) -> BuildResult:
     """Build a fuzz target with the specified sanitizer."""
     try:
       self.logger.info("Building target %s with sanitizer %s", target.name,
@@ -206,7 +217,9 @@ class LocalBuilder(Builder):
 
       # Prepare build environment
       if not self.prepare_build_environment():
-        return Result(False, "Failed to prepare build environment")
+        build_result = BuildResult(False, "Failed to prepare build environment")
+        self._store_build_result(target, build_result, benchmark_id, trial)
+        return build_result
 
       # Use the build_local method (focused only on building)
       success, build_metadata = self.build_local(
@@ -216,7 +229,9 @@ class LocalBuilder(Builder):
 
       if not success:
         error_msg = build_metadata.get('error', 'Local build failed')
-        return Result(False, error_msg)
+        build_result = BuildResult(False, error_msg)
+        self._store_build_result(target, build_result, benchmark_id, trial)
+        return build_result
 
       # # Store artifacts in storage manager
       # for name, path in artifacts.items():
@@ -226,13 +241,20 @@ class LocalBuilder(Builder):
       #         self.storage_manager.store(
       #         f"{self.build_config.project_name}/{name}", data)
 
-      return Result(True,
-                    "Build completed successfully",
-                    metadata=build_metadata)
+      build_result = BuildResult(True,
+                                 "Build completed successfully",
+                                 metadata=build_metadata)
+
+      # Store result through ResultManager if available
+      self._store_build_result(target, build_result, benchmark_id, trial)
+
+      return build_result
 
     except Exception as e:
       self.logger.error("Build failed: %s", e)
-      return Result(False, f"Build failed: {e}")
+      build_result = BuildResult(False, f"Build failed: {e}")
+      self._store_build_result(target, build_result, benchmark_id, trial)
+      return build_result
 
   def clean(self) -> bool:
     """Clean up build artifacts and temporary files."""
@@ -392,6 +414,53 @@ RUN compile
     self.logger.info('Built %s locally successfully.', benchmark_target_name)
     return True, build_metadata
 
+  def _store_build_result(self, target: FuzzTarget, build_result: BuildResult,
+                          benchmark_id: Optional[str], trial: int) -> None:
+    """Store build result through ResultManager if available."""
+    try:
+      # Create BuildInfo from build result
+      build_info = BuildInfo(
+          compiles=build_result.success,
+          compile_log=build_result.message or '',
+          errors=[]
+          if build_result.success else [build_result.message or 'Build failed'],
+          binary_exists=build_result.success,
+          is_function_referenced=build_result.success,
+          fuzz_target_source=target.source_code,
+          build_script_source=target.build_script or '',
+      )
+
+      # Create minimal benchmark for the result
+      benchmark = Benchmark(
+          project=self.build_config.project_name,
+          language=target.language,
+          function_signature=
+          f'int {target.name}(const uint8_t* data, size_t size)',
+          function_name=target.name,
+          return_type='int',
+          target_path='',
+          id=benchmark_id or target.name,
+      )
+
+      # Create Result object for storage
+      result_obj = Result(
+          benchmark=benchmark,
+          work_dirs='',
+          trial=trial,
+          build_info=build_info,
+      )
+
+      # Store through ResultManager
+      if self.result_manager:
+        self.result_manager.store_result(benchmark_id or target.name,
+                                         result_obj)
+        self.logger.debug("Stored build result for %s through ResultManager",
+                          benchmark_id or target.name)
+
+    except Exception as e:
+      self.logger.warning(
+          "Failed to store build result through ResultManager: %s", e)
+
   def build_target_local(self,
                          generated_project: str,
                          sanitizer: str = 'address') -> bool:
@@ -458,7 +527,7 @@ class CloudBuilder(Builder):
       self.logger.error("Failed to setup cloud environment: %s", e)
       return False
 
-  def build(self, target: FuzzTarget, sanitizer: Sanitizer) -> Result:
+  def build(self, target: FuzzTarget, sanitizer: Sanitizer) -> BuildResult:
     """Build a fuzz target using cloud build."""
     try:
       self.logger.info("Starting cloud build for target %s with sanitizer %s",
@@ -466,7 +535,7 @@ class CloudBuilder(Builder):
 
       # Prepare build environment
       if not self.prepare_build_environment():
-        return Result(False, "Failed to prepare build environment")
+        return BuildResult(False, "Failed to prepare build environment")
 
       # Use the build_cloud method (focused only on building)
       success, build_metadata = self.build_cloud(
@@ -477,7 +546,7 @@ class CloudBuilder(Builder):
 
       if not success:
         error_msg = build_metadata.get('error', 'Cloud build failed')
-        return Result(False, error_msg)
+        return BuildResult(False, error_msg)
 
       # Process build artifacts
       artifacts = self._process_cloud_build_artifacts(build_metadata)
@@ -494,12 +563,12 @@ class CloudBuilder(Builder):
       # TODO: Running should be handled separately by CloudRunner
       # The build_metadata contains all necessary information for the runner
 
-      return Result(True, "Cloud build completed successfully", artifacts,
-                    build_metadata)
+      return BuildResult(True, "Cloud build completed successfully", artifacts,
+                         build_metadata)
 
     except Exception as e:
       self.logger.error("Cloud build failed: %s", e)
-      return Result(False, f"Cloud build failed: {e}")
+      return BuildResult(False, f"Cloud build failed: {e}")
 
   def build_cloud(self,
                   source_code: str,

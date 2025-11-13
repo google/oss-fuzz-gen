@@ -1,0 +1,79 @@
+{
+  "metadata": {
+    "name": "Development Configuration",
+    "description": "Configuration optimized for development and testing",
+    "version": "1.0",
+    "environment": "development",
+    "created": "2025-01-29"
+  },
+  "sdk_config": {
+    "storage_backend": "local",
+    "storage_path": "/tmp/ossfuzz_dev",
+    "work_dir": "/tmp/ossfuzz_work_dev",
+    "oss_fuzz_dir": null,
+    "enable_caching": false,
+    "log_level": "DEBUG",
+    "timeout_seconds": 1800,
+    "max_retries": 2
+  },
+  "build_options": {
+    "sanitizer": "address",
+    "architecture": "x86_64",
+    "fuzzing_engine": "libfuzzer",
+    "timeout_seconds": 1800,
+    "environment_vars": {
+      "FUZZING_ENGINE": "libfuzzer",
+      "SANITIZER": "address",
+      "ARCHITECTURE": "x86_64",
+      "DEBUG": "1"
+    },
+    "build_args": [
+      "--enable-fuzzing",
+      "--debug",
+      "--verbose"
+    ]
+  },
+  "run_options": {
+    "duration_seconds": 300,
+    "timeout_seconds": 25,
+    "max_memory_mb": 1024,
+    "detect_leaks": true,
+    "extract_coverage": true,
+    "corpus_dir": "corpus_dev",
+    "output_dir": "fuzz_output_dev",
+    "engine_args": [
+      "-max_len=1024",
+      "-rss_limit_mb=1024",
+      "-print_stats=1"
+    ],
+    "env_vars": {
+      "ASAN_OPTIONS": "detect_odr_violation=0:abort_on_error=1:print_stats=1",
+      "MSAN_OPTIONS": "halt_on_error=1:print_stats=1",
+      "UBSAN_OPTIONS": "halt_on_error=1:print_stacktrace=1"
+    }
+  },
+  "pipeline_options": {
+    "trials": 2,
+    "analyze_coverage": true,
+    "store_results": true
+  },
+  "development_settings": {
+    "quick_mode": true,
+    "verbose_output": true,
+    "debug_builds": true,
+    "short_runs": true,
+    "detailed_logging": true
+  },
+  "monitoring": {
+    "enable_metrics": true,
+    "metrics_interval": 30,
+    "log_performance": true,
+    "track_memory_usage": true
+  },
+  "testing": {
+    "mock_components": false,
+    "simulate_failures": false,
+    "test_data_path": "/tmp/ossfuzz_test_data",
+    "cleanup_after_tests": true
+  }
+}
