@@ -13,6 +13,7 @@ from agent_graph.state import FuzzingWorkflowState
 from agent_graph.agents.base import LangGraphAgent
 from agent_graph.agents.utils import parse_tag
 from agent_graph.prompt_loader import get_prompt_manager
+from agent_graph.memory import get_agent_messages, add_agent_message
 
 
 class LangGraphCoverageAnalyzer(LangGraphAgent):
@@ -255,15 +256,18 @@ class LangGraphCoverageAnalyzer(LangGraphAgent):
                 # Call LLM with tools
                 response_data = self.llm.chat_with_tools(
                     messages=messages,
-                    tools=tools,
-                    state=state
+                    tools=tools
                 )
                 
-                assistant_message = response_data["message"]
-                text_response = assistant_message.get("content", "") or ""
-                tool_calls = assistant_message.get("tool_calls", [])
+                # Normalize response to content/tool_calls schema
+                text_response = response_data.get("content", "") or ""
+                tool_calls = response_data.get("tool_calls", [])
                 
                 # Add assistant message to conversation
+                assistant_message = {
+                    "role": "assistant",
+                    "content": text_response if text_response else "I will use tools to investigate."
+                }
                 messages.append(assistant_message)
                 add_agent_message(state, self.name, assistant_message)
                 

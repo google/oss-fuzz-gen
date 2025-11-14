@@ -67,12 +67,14 @@
 #                                             struct Curl_cfilter *cf,
 #                                             struct Curl_easy *data,
 #                                             int http_version_major)
-- "name": "curl_easy_perform"
+- "name": "curl_easy_setopt"
   "params":
-  - "name": "data"
+  - "name": "d"
     "type": "CURL*"
+  - "name": "tag"
+    "type": "CURLoption"
   "return_type": "CURLcode"
-  "signature": "CURLcode curl_easy_perform(CURL *data)"
+  "signature": "CURLcode curl_easy_setopt(CURL *d, CURLoption tag, ...)"
 # - "name": "curl_multi_socket_action"
 #   "params":
 #   - "name": "m"
