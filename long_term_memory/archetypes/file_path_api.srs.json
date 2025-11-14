@@ -1,0 +1,43 @@
+{
+    "archetype_name": "file_path_api",
+    "api_pattern": "API requires file path, not memory buffer",
+    "when_to_use": [
+        "API function takes filename/path parameter instead of memory buffer",
+        "Examples: OpenCV cv::imread(), HDF5 H5Fopen(), ImageMagick loaders"
+    ],
+    "core_template": {
+        "c": "int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {\n  if (size < 1) return 0;\n  \n  char filename[256];\n  snprintf(filename, sizeof(filename), \"/tmp/fuzz_%d_%p\", getpid(), (void*)data);\n  \n  FILE *fp = fopen(filename, \"wb\");\n  if (!fp) return 0;\n  fwrite(data, 1, size, fp);\n  fclose(fp);  // MUST close before API call\n  \n  API_LOAD_FILE(filename);\n  \n  unlink(filename);  // MUST cleanup\n  return 0;\n}",
+        "cpp": "extern \"C\" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {\n  if (size < 1) return 0;\n  \n  char filename[256];\n  snprintf(filename, sizeof(filename), \"/tmp/fuzz_%d_%p\", getpid(), (void*)data);\n  \n  FILE *fp = fopen(filename, \"wb\");\n  if (!fp) return 0;\n  fwrite(data, 1, size, fp);\n  fclose(fp);  // MUST close before API call\n  \n  API_LOAD_FILE(filename);\n  \n  unlink(filename);  // MUST cleanup\n  return 0;\n}"
+    },
+    "critical_mistakes": [
+        {
+            "mistake": "Fixed filename causes race condition",
+            "wrong": "char filename[] = \"/tmp/fuzz.dat\";  // Fixed name",
+            "right": "char filename[256];\nsnprintf(filename, sizeof(filename), \"/tmp/fuzz_%d_%p\", getpid(), (void*)data);",
+            "why": "Multiple fuzzer instances will collide on same filename. Use unique name."
+        },
+        {
+            "mistake": "File not closed before API call",
+            "wrong": "fwrite(data, size, 1, fp);\n// Missing fclose(fp)\nAPI_LOAD_FILE(filename);",
+            "right": "fwrite(data, size, 1, fp);\nfclose(fp);  // Close before loading\nAPI_LOAD_FILE(filename);",
+            "why": "File must be closed before API reads it. Otherwise API might not see all data."
+        },
+        {
+            "mistake": "Missing unlink() after API call",
+            "wrong": "API_LOAD_FILE(filename);\n// Missing cleanup",
+            "right": "API_LOAD_FILE(filename);\nunlink(filename);  // Always cleanup",
+            "why": "Temp files accumulate and exhaust disk space. Must unlink even if API crashes."
+        },
+        {
+            "mistake": "Not checking fopen() return value",
+            "wrong": "FILE *fp = fopen(filename, \"wb\");\nfwrite(data, size, 1, fp);  // Crash if NULL",
+            "right": "FILE *fp = fopen(filename, \"wb\");\nif (!fp) return 0;  // Must check",
+            "why": "fopen() can fail. Using NULL FILE* causes crash."
+        }
+    ],
+    "real_examples": [
+        "OpenCV: cv::imread(filename) - needs file path",
+        "HDF5: H5Fopen(filename, ...) - file-based",
+        "ImageMagick: Many image loaders require file path"
+    ]
+}

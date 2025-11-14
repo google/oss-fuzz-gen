@@ -15,43 +15,38 @@ The knowledge is organized for efficient retrieval during spec generation and dr
 
 ```
 long_term_memory/
-├── archetypes/           # 6 behavioral patterns
-│   ├── stateless_parser.md
-│   ├── object_lifecycle.md
-│   ├── state_machine.md
-│   ├── stream_processor.md
-│   ├── round_trip.md
-│   └── file_based.md
-│
-├── skeletons/            # Code templates per archetype
-│   ├── stateless_parser_skeleton.c
-│   ├── object_lifecycle_skeleton.c
-│   ├── state_machine_skeleton.c
-│   ├── stream_processor_skeleton.c
-│   ├── round_trip_skeleton.c
-│   └── file_based_skeleton.c
-│
-├── pitfalls/             # Common error patterns
-│   ├── initialization_errors.md
-│   ├── data_argument_errors.md
-│   ├── call_sequence_errors.md
-│   └── resource_management.md
+├── archetypes/           # 6 behavioral patterns (unified SRS JSON format)
+│   ├── stateless_parser.srs.json
+│   ├── object_lifecycle.srs.json
+│   ├── state_machine.srs.json
+│   ├── stream_processor.srs.json
+│   ├── round_trip.srs.json
+│   └── file_based.srs.json
 │
 └── retrieval.py          # Retrieval implementation
 ```
+
+Each SRS JSON file contains:
+- Pattern description and when to use
+- Functional requirements with implementation code
+- Preconditions and postconditions
+- Constraints (execution order, resource limits)
+- Parameter strategies
+- Common pitfalls
+- Real-world examples
 
 ---
 
 ## Archetypes
 
-Each archetype file contains:
-- **Pattern Signature**: Visual representation
-- **Characteristics**: When to use this pattern
-- **Preconditions**: What must be true before calling
+Each archetype SRS JSON file contains:
+- **Pattern Description**: When to use this pattern
+- **Functional Requirements**: Mandatory and recommended requirements with code examples
+- **Preconditions**: What must be true before calling (with validation checks)
 - **Postconditions**: What's guaranteed after calling
-- **Driver Pattern**: Complete code example
-- **Parameter Strategy**: How to construct each parameter
-- **Common Pitfalls**: What to avoid
+- **Constraints**: Execution order, resource limits, and implementation sequences
+- **Parameter Strategies**: How to construct each parameter for fuzzing
+- **Common Pitfalls**: Error patterns with wrong/right examples
 - **Real Examples**: Actual APIs using this pattern
 
 ### The 6 Archetypes
@@ -82,52 +77,28 @@ Each archetype file contains:
 
 ---
 
-## Skeletons
+## SRS JSON Format
 
-Each skeleton is a compilable template with placeholders:
-- `PARSE_FUNCTION`: Replace with actual function name
-- `OBJECT_TYPE`: Replace with actual type
-- `MIN_SIZE`, `MAX_SIZE`: Adjust based on API
+Each archetype is stored as a unified SRS (Software Requirements Specification) JSON file that combines:
+- **Pattern knowledge**: When and how to use the archetype
+- **Code skeletons**: Implementation examples embedded in functional requirements
+- **Pitfalls**: Common errors integrated into requirements and constraints
 
-Skeletons include:
-- Proper structure for the archetype
-- Postcondition checks at correct locations
-- Resource cleanup patterns
-- Comments explaining each section
+The SRS format ensures consistency with Function Analyzer output and provides structured guidance for Prototyper.
 
----
+### Common Pitfall Categories
 
-## Pitfalls
+Pitfalls are integrated into each archetype's SRS JSON:
 
-Four categories of common errors:
+1. **Initialization Errors**: Missing library init, wrong initialization order
+2. **Data & Argument Errors**: Unchecked NULL pointers, missing bounds validation
+3. **Call Sequence Errors**: Double-free, use-after-free, wrong cleanup order
+4. **Resource Management**: Memory leaks, file descriptor leaks, stack overflow
 
-1. **Initialization Errors**
-   - Missing library init
-   - Missing error handler setup
-   - Wrong initialization order
-
-2. **Data & Argument Errors**
-   - Unchecked NULL pointers
-   - Missing bounds validation
-   - Buffer size mismatches
-
-3. **Call Sequence Errors**
-   - Double-free
-   - Use-after-free
-   - Wrong cleanup order
-
-4. **Resource Management**
-   - Memory leaks on error paths
-   - C++ goto limitations (cannot jump over variable initialization)
-   - Stack overflow (large stack arrays)
-   - Unbounded loops (timeout prevention)
-   - File descriptor/temp file leaks
-
-Each pitfall file contains:
-- Error examples (what NOT to do)
-- Fix examples (correct approach)
-- Detection methods
-- Specification markings
+Each pitfall includes:
+- Wrong example (what NOT to do)
+- Right example (correct approach)
+- Impact description
 
 ---
 
@@ -137,17 +108,22 @@ Each pitfall file contains:
 
 When identifying archetype:
 ```python
-# Pseudo-code
-archetype = identify_archetype(function_analysis)
-# archetype = "object_lifecycle"
+from long_term_memory.retrieval import KnowledgeRetriever
 
-# Retrieve knowledge
-knowledge = read_file(f"long_term_memory/archetypes/{archetype}.md")
+retriever = KnowledgeRetriever()
+archetype = "object_lifecycle"
+
+# Retrieve SRS knowledge
+srs = retriever.get_srs(archetype)
+# Returns full SRS JSON with pattern description, requirements, constraints
+
+# Or get archetype description only
+archetype_doc = retriever.get_archetype(archetype)
 
 # Inject into context
 context = f"""
 Relevant Pattern:
-{knowledge}
+{archetype_doc}
 
 Use this as reference for your specification.
 """
@@ -157,18 +133,25 @@ Use this as reference for your specification.
 
 When generating driver:
 ```python
-# Extract archetype from spec
-archetype = extract_from_spec(specification)
+from long_term_memory.retrieval import KnowledgeRetriever
 
-# Retrieve skeleton
-skeleton = read_file(f"long_term_memory/skeletons/{archetype}_skeleton.c")
+retriever = KnowledgeRetriever()
+archetype = "object_lifecycle"
+
+# Get skeleton code from SRS
+skeleton = retriever.get_skeleton(archetype)
+# Extracts implementation code from functional requirements
+
+# Or get full bundle
+bundle = retriever.get_bundle(archetype)
+# Returns: {'archetype': str, 'skeleton': str, 'pitfalls': dict, 'srs': dict}
 
 # Inject into prompt
 prompt = f"""
 Base skeleton:
 {skeleton}
 
-Fill in the placeholders according to the specification.
+Fill in according to the specification.
 """
 ```
 
@@ -183,21 +166,27 @@ from long_term_memory.retrieval import KnowledgeRetriever
 
 retriever = KnowledgeRetriever()
 
-# Get archetype knowledge
+# Get archetype description (markdown format)
 archetype_doc = retriever.get_archetype("object_lifecycle")
 
-# Get skeleton
+# Get skeleton code (extracted from SRS functional requirements)
 skeleton = retriever.get_skeleton("object_lifecycle")
 
-# Get relevant pitfalls
-pitfalls = retriever.get_pitfalls(["initialization", "resource_management"])
+# Get relevant pitfalls for an archetype
+pitfalls = retriever.get_pitfalls("object_lifecycle")
+# Returns: dict of pitfall categories with wrong/right examples
 
-# Get all knowledge for an archetype
+# Get full SRS JSON
+srs = retriever.get_srs("object_lifecycle")
+# Returns: complete SRS JSON dict
+
+# Get all knowledge for an archetype (convenience method)
 bundle = retriever.get_bundle("object_lifecycle")
 # Returns: {
-#   'archetype': '<markdown content>',
+#   'archetype': '<markdown description>',
 #   'skeleton': '<C code>',
-#   'relevant_pitfalls': ['<pitfall1>', '<pitfall2>']
+#   'pitfalls': {'category': {'issue': str, 'wrong': str, 'right': str, ...}},
+#   'srs': '<full SRS JSON dict>'
 # }
 ```
 
@@ -207,37 +196,38 @@ bundle = retriever.get_bundle("object_lifecycle")
 
 ### Adding New Archetypes
 
-1. Create `archetypes/new_pattern.md`
-2. Create `skeletons/new_pattern_skeleton.c`
-3. Update `retrieval.py` archetype list
-
-### Adding New Pitfalls
-
-1. Create `pitfalls/new_category.md`
-2. Follow template: Error → Fix → Detection → Spec
-3. Update `retrieval.py` pitfall mappings
+1. Create `archetypes/new_pattern.srs.json` following the SRS JSON format
+2. Add archetype name to `KnowledgeRetriever.ARCHETYPES` list in `retrieval.py`
+3. Ensure JSON includes: pattern_description, functional_requirements, preconditions, postconditions, constraints, parameter_strategies, common_pitfalls, real_examples, metadata
 
 ### Updating Existing Knowledge
 
+- Edit the corresponding `.srs.json` file directly
 - Keep examples updated with real-world cases
-- Add new pitfalls as discovered
-- Refine skeletons based on feedback
+- Add new pitfalls to `common_pitfalls` array
+- Refine implementation code in `functional_requirements`
 
 ---
 
 ## Statistics
 
 Current knowledge base:
-- **6** archetypes (covers 95%+ of APIs)
-- **6** code skeletons (ready-to-use templates)
-- **4** pitfall categories (prevents most false positives)
-  - 4 initialization error patterns
-  - 4 data/argument error patterns
-  - 3 call sequence error patterns
-  - 7 resource management patterns (including C++ goto constraints)
-- **50+** real-world examples cited
+- **6** archetypes in unified SRS JSON format (covers 95%+ of APIs)
+  - stateless_parser
+  - object_lifecycle
+  - state_machine
+  - stream_processor
+  - round_trip
+  - file_based
+- **6** code skeletons embedded in SRS functional requirements
+- **4** pitfall categories integrated into each archetype
+  - Initialization errors
+  - Data/argument errors
+  - Call sequence errors
+  - Resource management errors
+- **50+** real-world examples cited across all archetypes
 
-Extracted from:
+Knowledge extracted from:
 - 4,699 OSS-Fuzz drivers
 - FUZZER_TAXONOMY 5 dimensions × 25 patterns
 - FUZZER_COOKBOOK 11 scenarios
@@ -252,9 +242,10 @@ Extracted from:
 - Real examples to cite in specifications
 
 ### For Prototyper
-- Ready-made skeletons (no guessing structure)
+- Ready-made skeletons extracted from SRS functional requirements
 - Correct postcondition check locations
 - Proven cleanup patterns
+- Structured implementation guidance from constraints
 
 ### For Quality
 - Prevent common pitfalls proactively

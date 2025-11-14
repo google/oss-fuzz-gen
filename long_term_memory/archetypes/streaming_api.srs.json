@@ -1,0 +1,38 @@
+{
+    "archetype_name": "streaming_api",
+    "api_pattern": "Process data incrementally in chunks/iterations",
+    "when_to_use": [
+        "API processes data in chunks or iterations",
+        "Requires loop with iteration limit",
+        "Examples: zlib inflate(), bzip2 BZ2_bzDecompress(), libxml2 push parser"
+    ],
+    "core_template": {
+        "c": "int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {\n  if (size < MIN_SIZE) return 0;\n  \n  Stream *stream = STREAM_INIT();\n  if (!stream) return 0;\n  \n  int max_iter = 1000;  // MUST limit iterations\n  while (max_iter-- > 0) {\n    int ret = STREAM_NEXT(stream, data, size);\n    if (ret == EOF || ret == DONE) break;\n    if (ret != OK) goto cleanup;\n  }\n  \ncleanup:\n  STREAM_CLOSE(stream);\n  STREAM_FREE(stream);\n  return 0;\n}",
+        "cpp": "extern \"C\" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {\n  if (size < MIN_SIZE) return 0;\n  \n  Stream *stream = STREAM_INIT();\n  if (!stream) return 0;\n  \n  int max_iter = 1000;  // MUST limit iterations\n  while (max_iter-- > 0) {\n    int ret = STREAM_NEXT(stream, data, size);\n    if (ret == EOF || ret == DONE) break;\n    if (ret != OK) goto cleanup;\n  }\n  \ncleanup:\n  STREAM_CLOSE(stream);\n  STREAM_FREE(stream);\n  return 0;\n}"
+    },
+    "critical_mistakes": [
+        {
+            "mistake": "Infinite loop without iteration limit",
+            "wrong": "while (has_more_data()) { process_next(); }  // Infinite loop",
+            "right": "int max_iter = 1000;\nwhile (has_more_data() && max_iter-- > 0) { process_next(); }",
+            "why": "Fuzzer input may cause infinite loop. Must limit iterations to prevent timeout."
+        },
+        {
+            "mistake": "Missing cleanup on early return from loop",
+            "wrong": "if (STREAM_NEXT(stream) != OK) return 0;  // Leaks stream",
+            "right": "if (STREAM_NEXT(stream) != OK) goto cleanup;  // Use goto cleanup",
+            "why": "Early return without cleanup causes resource leak. Use goto cleanup pattern."
+        },
+        {
+            "mistake": "Not checking loop termination condition",
+            "wrong": "while (true) { process_next(); }  // Never breaks",
+            "right": "while (max_iter-- > 0) {\n  int ret = process_next();\n  if (ret == EOF || ret == DONE) break;\n}",
+            "why": "Must check return value for EOF/DONE to properly terminate loop."
+        }
+    ],
+    "real_examples": [
+        "zlib: inflateInit() → while() { inflate() } → inflateEnd()",
+        "bzip2: BZ2_bzDecompressInit() → while() { BZ2_bzDecompress() } → BZ2_bzDecompressEnd()",
+        "libxml2 push parser: xmlParseChunk() called repeatedly in loop"
+    ]
+}

@@ -413,3 +413,6 @@ tree-sitter-cpp>=0.23.0
 
 # NetworkX for API dependency graph construction
 networkx>=3.0
+
+# ChromaDB for vector database
+chromadb>=0.4.0

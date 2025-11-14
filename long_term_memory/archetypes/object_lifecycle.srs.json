@@ -1,0 +1,44 @@
+{
+  "archetype_name": "object_lifecycle",
+  "api_pattern": "Create object → Use object → Destroy object",
+  "when_to_use": [
+    "API requires object initialization before use",
+    "Object must be explicitly destroyed/cleaned up",
+    "Examples: expat XML_Parser, libpng png_struct, libyaml yaml_parser"
+  ],
+  "core_template": {
+    "c": "int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {\n  if (size < MIN_SIZE) return 0;\n  \n  Object *obj = OBJECT_CREATE();\n  if (!obj) return 0;\n  \n  int ret = OBJECT_USE(obj, data, size);\n  if (ret != OK) goto cleanup;\n  \ncleanup:\n  OBJECT_DESTROY(obj);\n  return 0;\n}",
+    "cpp": "extern \"C\" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {\n  if (size < MIN_SIZE) return 0;\n  \n  Object *obj = OBJECT_CREATE();\n  if (!obj) return 0;\n  \n  int ret = OBJECT_USE(obj, data, size);\n  if (ret != OK) goto cleanup;\n  \ncleanup:\n  OBJECT_DESTROY(obj);\n  return 0;\n}"
+  },
+  "critical_mistakes": [
+    {
+      "mistake": "Not checking create() return value",
+      "wrong": "Object *obj = OBJECT_CREATE();\nOBJECT_USE(obj, data, size);  // Crash if NULL",
+      "right": "Object *obj = OBJECT_CREATE();\nif (!obj) return 0;  // Must check",
+      "why": "create() can return NULL. Using NULL pointer causes segfault."
+    },
+    {
+      "mistake": "Missing destroy on early return",
+      "wrong": "if (ret != OK) return 0;  // Leaks obj",
+      "right": "if (ret != OK) goto cleanup;  // Use goto cleanup",
+      "why": "Early return without cleanup causes resource leak. Use goto cleanup pattern."
+    },
+    {
+      "mistake": "Destroy called before use",
+      "wrong": "obj = OBJECT_CREATE();\nOBJECT_DESTROY(obj);\nOBJECT_USE(obj, data);  // Use after free",
+      "right": "obj = OBJECT_CREATE();\nOBJECT_USE(obj, data);\nOBJECT_DESTROY(obj);  // Destroy after use",
+      "why": "Using object after destroy causes use-after-free crash."
+    },
+    {
+      "mistake": "Destroying NULL pointer",
+      "wrong": "OBJECT_DESTROY(obj);  // May crash if obj is NULL",
+      "right": "if (obj) OBJECT_DESTROY(obj);  // Check before destroy",
+      "why": "Some destroy functions don't handle NULL. Always check first."
+    }
+  ],
+  "real_examples": [
+    "expat: XML_ParserCreate() → XML_Parse() → XML_ParserFree()",
+    "libpng: png_create_read_struct() → png_read_image() → png_destroy_read_struct()",
+    "libyaml: yaml_parser_initialize() → yaml_parser_parse() → yaml_parser_delete()"
+  ]
+}

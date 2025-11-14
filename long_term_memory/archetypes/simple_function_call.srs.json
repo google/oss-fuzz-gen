@@ -1,0 +1,39 @@
+{
+    "archetype_name": "simple_function_call",
+    "api_pattern": "Single function call, no state, no resource management",
+    "when_to_use": [
+        "API is a pure function: result = func(data, size)",
+        "No object creation/destruction needed",
+        "No cleanup required",
+        "Examples: zlib uncompress(), cJSON cJSON_Parse(), protobuf-c message__unpack()"
+    ],
+    "core_template": {
+        "c": "int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {\n  if (size < MIN_SIZE) return 0;\n  API_FUNCTION(data, size);\n  return 0;\n}",
+        "cpp": "extern \"C\" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {\n  if (size < MIN_SIZE) return 0;\n  API_FUNCTION(data, size);\n  return 0;\n}"
+    },
+    "critical_mistakes": [
+        {
+            "mistake": "Modifying input data directly",
+            "wrong": "data[0] = 0;  // libFuzzer will crash",
+            "right": "uint8_t *copy = malloc(size);\nmemcpy(copy, data, size);\ncopy[0] = 0;  // Modify copy, not original",
+            "why": "libFuzzer input is read-only. Modifying it causes crash."
+        },
+        {
+            "mistake": "Missing size validation",
+            "wrong": "API_FUNCTION(data, size);  // Crashes on size=0",
+            "right": "if (size < MIN_SIZE) return 0;\nAPI_FUNCTION(data, size);",
+            "why": "Many APIs require minimum size. Zero-size input causes crash."
+        },
+        {
+            "mistake": "Not checking return value when API allocates",
+            "wrong": "Result *r = API_FUNCTION(data, size);\n// Missing free",
+            "right": "Result *r = API_FUNCTION(data, size);\nif (r) free(r);  // Or use API-specific free",
+            "why": "If API returns allocated object, must free it to avoid leak."
+        }
+    ],
+    "real_examples": [
+        "zlib: uncompress(buffer, &len, data, size) - simple call",
+        "cJSON: cJSON_Parse(data) - returns object, must call cJSON_Delete()",
+        "protobuf-c: message__unpack(data, size) - stateless"
+    ]
+}

@@ -605,7 +605,11 @@ class LangGraphPrototyper(LangGraphAgent):
                 "round-trip": "round_trip",
                 "round trip": "round_trip",
                 "file-based": "file_based",
-                "file based": "file_based"
+                "file based": "file_based",
+                "global initialization": "global_initialization",
+                "global init": "global_initialization",
+                "stateful fuzzing": "stateful_fuzzing",
+                "stateful": "stateful_fuzzing"
             }
             result = mapping.get(archetype_name)
             if result:
@@ -626,7 +630,11 @@ class LangGraphPrototyper(LangGraphAgent):
                 "round-trip": "round_trip",
                 "round trip": "round_trip",
                 "file-based": "file_based",
-                "file based": "file_based"
+                "file based": "file_based",
+                "global initialization": "global_initialization",
+                "global init": "global_initialization",
+                "stateful fuzzing": "stateful_fuzzing",
+                "stateful": "stateful_fuzzing"
             }
             result = mapping.get(archetype_name)
             if result:

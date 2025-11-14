@@ -1,0 +1,38 @@
+{
+    "archetype_name": "callback_api",
+    "api_pattern": "API requires callback functions to be set before use",
+    "when_to_use": [
+        "API needs callback functions for event handling",
+        "Callbacks must be set before parsing/processing",
+        "Examples: expat XML_SetElementHandler(), libxml2 SAX callbacks"
+    ],
+    "core_template": {
+        "c": "int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {\n  if (size < MIN_SIZE) return 0;\n  \n  Object *obj = OBJECT_CREATE();\n  if (!obj) return 0;\n  \n  // Set callbacks BEFORE use\n  SET_CALLBACK(obj, callback_func, user_data);\n  \n  int ret = OBJECT_USE(obj, data, size);\n  if (ret != OK) goto cleanup;\n  \ncleanup:\n  OBJECT_DESTROY(obj);\n  return 0;\n}\n\nvoid callback_func(void *user_data, ...) {\n  // Callback implementation\n}",
+        "cpp": "extern \"C\" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {\n  if (size < MIN_SIZE) return 0;\n  \n  Object *obj = OBJECT_CREATE();\n  if (!obj) return 0;\n  \n  // Set callbacks BEFORE use\n  SET_CALLBACK(obj, callback_func, user_data);\n  \n  int ret = OBJECT_USE(obj, data, size);\n  if (ret != OK) goto cleanup;\n  \ncleanup:\n  OBJECT_DESTROY(obj);\n  return 0;\n}\n\nvoid callback_func(void *user_data, ...) {\n  // Callback implementation\n}"
+    },
+    "critical_mistakes": [
+        {
+            "mistake": "Setting callbacks after use",
+            "wrong": "OBJECT_USE(obj, data, size);\nSET_CALLBACK(obj, callback_func);  // Too late",
+            "right": "SET_CALLBACK(obj, callback_func);  // Set BEFORE use\nOBJECT_USE(obj, data, size);",
+            "why": "Callbacks must be set before processing starts. Setting after is ignored."
+        },
+        {
+            "mistake": "Missing callback implementation",
+            "wrong": "SET_CALLBACK(obj, NULL, NULL);  // No callback",
+            "right": "void my_callback(...) { /* implementation */ }\nSET_CALLBACK(obj, my_callback, data);",
+            "why": "Some APIs require callbacks. NULL callback causes crash or undefined behavior."
+        },
+        {
+            "mistake": "Callback accesses invalid data",
+            "wrong": "void callback(void *data) {\n  char *str = (char*)data;\n  printf(\"%s\", str);  // May be invalid",
+            "right": "void callback(void *data) {\n  if (!data) return;  // Check first\n  // Safe access",
+            "why": "Callback may be called with invalid data. Always validate."
+        }
+    ],
+    "real_examples": [
+        "expat: XML_SetElementHandler(parser, start, end) → XML_Parse()",
+        "libxml2 SAX: xmlSAXHandler callbacks → xmlParseChunk()",
+        "libpng: png_set_read_fn() with custom read callback"
+    ]
+}

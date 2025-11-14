@@ -1,0 +1,37 @@
+{
+    "archetype_name": "exception_handling_api",
+    "api_pattern": "C++ API that may throw exceptions",
+    "when_to_use": [
+        "C++ API that throws exceptions",
+        "Must catch exceptions to prevent crash",
+        "Examples: C++ STL, modern C++ libraries"
+    ],
+    "core_template": {
+        "cpp": "#include <fuzzer/FuzzedDataProvider.h>\n\nextern \"C\" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {\n  if (size < MIN_SIZE) return 0;\n  \n  try {\n    FuzzedDataProvider fdp(data, size);\n    \n    // API calls that may throw\n    API_FUNCTION(...);\n    \n  } catch (const std::exception &e) {\n    // Expected exceptions, ignore\n  } catch (...) {\n    // Catch all other exceptions\n  }\n  \n  return 0;\n}"
+    },
+    "critical_mistakes": [
+        {
+            "mistake": "Not catching exceptions",
+            "wrong": "API_FUNCTION(...);  // May throw, crashes fuzzer",
+            "right": "try { API_FUNCTION(...); } catch (...) {}",
+            "why": "Uncaught exceptions crash the fuzzer. Must catch all exceptions."
+        },
+        {
+            "mistake": "Catching only specific exception types",
+            "wrong": "try { API_FUNCTION(...); } catch (std::runtime_error &e) {}  // Misses other types",
+            "right": "try { API_FUNCTION(...); } catch (...) {}  // Catch all",
+            "why": "API may throw unexpected exception types. Catch all with catch(...)."
+        },
+        {
+            "mistake": "Throwing exceptions from driver",
+            "wrong": "if (size < 1) throw std::invalid_argument(\"size\");  // Don't throw",
+            "right": "if (size < 1) return 0;  // Return, don't throw",
+            "why": "Driver should return 0 on invalid input, not throw. Exceptions are for API only."
+        }
+    ],
+    "real_examples": [
+        "C++ STL: std::string, std::vector operations may throw",
+        "Modern C++ libraries: Often use exceptions for error handling",
+        "C++ parsers: May throw on invalid input"
+    ]
+}

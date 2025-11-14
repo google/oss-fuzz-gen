@@ -1,0 +1,56 @@
+{
+    "archetype_name": "stateful_fuzzing",
+    "api_pattern": "Use static/global variables to maintain state across fuzz inputs",
+    "when_to_use": [
+        "API context creation is expensive (e.g., compression/decompression contexts)",
+        "Want to reuse expensive resources across multiple fuzz inputs for performance",
+        "Examples: zstd stream contexts, libxml2 parser contexts, expensive object initialization"
+    ],
+    "core_template": {
+        "c": "// Static context reused across inputs\nstatic Context *ctx = NULL;\n\nint LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {\n  if (size < MIN_SIZE) return 0;\n  \n  // Create context once, reuse for subsequent inputs\n  if (!ctx) {\n    ctx = CONTEXT_CREATE();\n    if (!ctx) return 0;\n  } else {\n    // Reset context state for new input\n    CONTEXT_RESET(ctx);\n  }\n  \n  // Use context to process input\n  int ret = CONTEXT_USE(ctx, data, size);\n  if (ret != OK) return 0;\n  \n  // Note: Context is NOT freed here - reused for next input\n  // Context is freed when fuzzer exits (or use atexit())\n  return 0;\n}",
+        "cpp": "// Static context reused across inputs\nstatic Context *ctx = nullptr;\n\nextern \"C\" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {\n  if (size < MIN_SIZE) return 0;\n  \n  // Create context once, reuse for subsequent inputs\n  if (!ctx) {\n    ctx = CONTEXT_CREATE();\n    if (!ctx) return 0;\n  } else {\n    // Reset context state for new input\n    CONTEXT_RESET(ctx);\n  }\n  \n  // Use context to process input\n  int ret = CONTEXT_USE(ctx, data, size);\n  if (ret != OK) return 0;\n  \n  // Note: Context is NOT freed here - reused for next input\n  // Context is freed when fuzzer exits (or use atexit())\n  return 0;\n}"
+    },
+    "critical_mistakes": [
+        {
+            "mistake": "Not resetting context state between inputs",
+            "wrong": "static Context *ctx = NULL;\nif (!ctx) ctx = CREATE();\nUSE(ctx, data);  // State from previous input leaks",
+            "right": "static Context *ctx = NULL;\nif (!ctx) ctx = CREATE();\nelse RESET(ctx);  // MUST reset state\nUSE(ctx, data);",
+            "why": "Context state from previous input contaminates current input. Must reset before each use."
+        },
+        {
+            "mistake": "Creating context on every input (defeats purpose)",
+            "wrong": "int LLVMFuzzerTestOneInput(...) {\n  Context *ctx = CREATE();  // Created every time, expensive",
+            "right": "static Context *ctx = NULL;\nif (!ctx) ctx = CREATE();  // Created once, reused",
+            "why": "Stateful fuzzing is for performance. Creating context every time defeats the purpose."
+        },
+        {
+            "mistake": "Not checking if context creation succeeded",
+            "wrong": "static Context *ctx = NULL;\nif (!ctx) ctx = CREATE();\nUSE(ctx, data);  // May crash if CREATE() returns NULL",
+            "right": "static Context *ctx = NULL;\nif (!ctx) {\n  ctx = CREATE();\n  if (!ctx) return 0;  // Must check\n}",
+            "why": "Context creation can fail. Using NULL context causes segfault."
+        },
+        {
+            "mistake": "Freeing context in TestOneInput (breaks reuse)",
+            "wrong": "static Context *ctx = NULL;\nif (!ctx) ctx = CREATE();\nUSE(ctx, data);\nFREE(ctx);  // Freed every time, inefficient",
+            "right": "static Context *ctx = NULL;\nif (!ctx) ctx = CREATE();\nUSE(ctx, data);\n// Don't free - reuse for next input\n// Use atexit() if cleanup needed",
+            "why": "Freeing context breaks reuse. Context should persist across inputs. Use atexit() for cleanup if needed."
+        },
+        {
+            "mistake": "Not handling reset failure",
+            "wrong": "if (ctx) RESET(ctx);  // Ignore reset failure\nUSE(ctx, data);",
+            "right": "if (ctx) {\n  if (RESET(ctx) != OK) return 0;  // Check reset failure\n}\nUSE(ctx, data);",
+            "why": "Reset can fail. Must check return value to avoid using invalid context state."
+        }
+    ],
+    "real_examples": [
+        "zstd: static ZSTD_DStream *dstream - created once, reset with ZSTD_DCtx_reset() for each input",
+        "zstd: static ZSTD_CCtx *cctx, ZSTD_DCtx *dctx - reused across inputs for performance",
+        "libxml2: static xmlParserCtxtPtr - created once, reset for each input"
+    ],
+    "notes": [
+        "Stateful fuzzing improves performance by reusing expensive contexts",
+        "MUST reset context state between inputs to avoid contamination",
+        "Context cleanup typically happens when fuzzer exits (or use atexit())",
+        "Consider using #ifndef STATEFUL_FUZZING to allow disabling for debugging"
+    ]
+}

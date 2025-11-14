@@ -682,7 +682,9 @@ Use this knowledge to structure your analysis.
             "state_machine": ["state machine", "multi-step", "sequence", "configure"],
             "stream_processor": ["stream", "chunk", "incremental", "loop"],
             "round_trip": ["round-trip", "encode", "decode", "compress"],
-            "file_based": ["file path", "filename", "temp file"]
+            "file_based": ["file path", "filename", "temp file"],
+            "global_initialization": ["LLVMFuzzerInitialize", "global init", "one-time setup", "initialize once"],
+            "stateful_fuzzing": ["static context", "reuse context", "static variable", "context reset", "stateful"]
         }
         
         # Count keyword matches

@@ -1,0 +1,45 @@
+{
+    "archetype_name": "round_trip",
+    "api_pattern": "Parse/Decode → Serialize/Encode → Verify equality",
+    "when_to_use": [
+        "API supports both parsing and serialization",
+        "Need to verify round-trip correctness (parse then serialize should equal original)",
+        "Examples: protobuf unpack/pack, base64 encode/decode, zstd compress/decompress, JSON parse/stringify"
+    ],
+    "core_template": {
+        "c": "int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {\n  if (size < MIN_SIZE) return 0;\n  \n  // Step 1: Parse/Decode input\n  ParsedObject *parsed = PARSE(data, size);\n  if (!parsed) return 0;\n  \n  // Step 2: Serialize/Encode back\n  size_t serialized_size = SERIALIZE_SIZE(parsed);\n  uint8_t *serialized = malloc(serialized_size);\n  if (!serialized) {\n    PARSE_FREE(parsed);\n    return 0;\n  }\n  \n  size_t actual_size = SERIALIZE(parsed, serialized, serialized_size);\n  if (actual_size == 0) {\n    free(serialized);\n    PARSE_FREE(parsed);\n    return 0;\n  }\n  \n  // Step 3: Verify round-trip (optional but recommended)\n  // Note: Some formats may not be exactly equal (e.g., compression)\n  // For exact formats: assert(memcmp(data, serialized, size) == 0);\n  \n  free(serialized);\n  PARSE_FREE(parsed);\n  return 0;\n}",
+        "cpp": "extern \"C\" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {\n  if (size < MIN_SIZE) return 0;\n  \n  // Step 1: Parse/Decode input\n  ParsedObject parsed;\n  if (!PARSE(data, size, &parsed)) return 0;\n  \n  // Step 2: Serialize/Encode back\n  std::vector<uint8_t> serialized;\n  if (!SERIALIZE(parsed, &serialized)) return 0;\n  \n  // Step 3: Verify round-trip (optional but recommended)\n  // Note: Some formats may not be exactly equal (e.g., compression)\n  // For exact formats: assert(serialized == std::vector<uint8_t>(data, data + size));\n  \n  return 0;\n}"
+    },
+    "critical_mistakes": [
+        {
+            "mistake": "Only parsing without serializing",
+            "wrong": "int LLVMFuzzerTestOneInput(...) {\n  ParsedObject *p = PARSE(data, size);  // Only parse\n  PARSE_FREE(p);\n  return 0;",
+            "right": "int LLVMFuzzerTestOneInput(...) {\n  ParsedObject *p = PARSE(data, size);\n  uint8_t *serialized = SERIALIZE(p);  // Must serialize too\n  free(serialized);\n  PARSE_FREE(p);",
+            "why": "Round-trip testing exercises both parse and serialize paths. Only parsing misses serialize bugs."
+        },
+        {
+            "mistake": "Not verifying round-trip correctness",
+            "wrong": "ParsedObject *p = PARSE(data, size);\nuint8_t *s = SERIALIZE(p);\n// No verification, may have bugs",
+            "right": "ParsedObject *p = PARSE(data, size);\nuint8_t *s = SERIALIZE(p);\nassert(memcmp(data, s, size) == 0);  // Verify equality",
+            "why": "Verification catches bugs where parse+serialize doesn't reproduce original. Essential for round-trip testing."
+        },
+        {
+            "mistake": "Not handling serialization size correctly",
+            "wrong": "size_t size = SERIALIZE_SIZE(parsed);\nSERIALIZE(parsed, buf, size);  // May overflow if size wrong",
+            "right": "size_t size = SERIALIZE_SIZE(parsed);\nif (size == 0) return 0;  // Check size\nuint8_t *buf = malloc(size);\nif (!buf) return 0;\nSERIALIZE(parsed, buf, size);",
+            "why": "Serialization size may be 0 or larger than expected. Must check and allocate correctly."
+        },
+        {
+            "mistake": "Memory leak in error paths",
+            "wrong": "ParsedObject *p = PARSE(data, size);\nif (SERIALIZE(p) == NULL) return 0;  // Leaks p",
+            "right": "ParsedObject *p = PARSE(data, size);\nif (!p) return 0;\nif (SERIALIZE(p) == NULL) {\n  PARSE_FREE(p);  // Cleanup before return\n  return 0;\n}",
+            "why": "Error paths must free all allocated resources. Use goto cleanup pattern for complex cases."
+        }
+    ],
+    "real_examples": [
+        "protobuf-c: __unpack() → __pack() → verify equality",
+        "base64: encode_base64() → decode_base64() → verify equality",
+        "zstd: ZSTD_compress() → ZSTD_decompress() → verify decompressed equals original",
+        "JSON: ParseDocument() → StringifyDocument() → verify (may have formatting differences)"
+    ]
+}

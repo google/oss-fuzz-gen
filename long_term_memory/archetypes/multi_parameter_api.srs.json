@@ -1,0 +1,37 @@
+{
+    "archetype_name": "multi_parameter_api",
+    "api_pattern": "API has multiple parameters that need to be varied",
+    "when_to_use": [
+        "API function has 3+ parameters",
+        "Parameters should be varied independently for better coverage",
+        "Examples: Functions with flags, options, or multiple input buffers"
+    ],
+    "core_template": {
+        "cpp": "#include <fuzzer/FuzzedDataProvider.h>\n\nextern \"C\" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {\n  if (size < MIN_SIZE) return 0;\n  \n  FuzzedDataProvider fdp(data, size);\n  \n  // Extract parameters independently\n  int param1 = fdp.ConsumeIntegral<int>();\n  bool param2 = fdp.ConsumeBool();\n  std::string param3 = fdp.ConsumeRandomLengthString(256);\n  auto remaining = fdp.ConsumeRemainingBytes();\n  \n  API_FUNCTION(param1, param2, param3.c_str(), remaining.data(), remaining.size());\n  \n  return 0;\n}"
+    },
+    "critical_mistakes": [
+        {
+            "mistake": "Using fixed/constant parameters",
+            "wrong": "API_FUNCTION(1, true, \"fixed\", data, size);  // Fixed values",
+            "right": "FuzzedDataProvider fdp(data, size);\nint p1 = fdp.ConsumeIntegral<int>();\nbool p2 = fdp.ConsumeBool();\nAPI_FUNCTION(p1, p2, ...);",
+            "why": "Fixed parameters reduce coverage. Vary all parameters to explore more code paths."
+        },
+        {
+            "mistake": "Not using FuzzedDataProvider for multiple parameters",
+            "wrong": "API_FUNCTION(data[0], data[1], data+2, size-2);  // Manual splitting",
+            "right": "FuzzedDataProvider fdp(data, size);\nint p1 = fdp.ConsumeIntegral<int>();\nint p2 = fdp.ConsumeIntegral<int>();\nauto rest = fdp.ConsumeRemainingBytes();",
+            "why": "Manual splitting is error-prone. FuzzedDataProvider handles it correctly."
+        },
+        {
+            "mistake": "Consuming more data than available",
+            "wrong": "std::string s = fdp.ConsumeRandomLengthString(10000);  // May fail",
+            "right": "size_t max_len = std::min((size_t)256, size);\nstd::string s = fdp.ConsumeRandomLengthString(max_len);",
+            "why": "Consuming more than available data causes issues. Check size first."
+        }
+    ],
+    "real_examples": [
+        "cJSON: cJSON_ParseWithOpts(data, return_parse_end, require_null_terminated) - multiple flags",
+        "Functions with struct parameters: Fill struct fields from FuzzedDataProvider",
+        "Functions with multiple buffers: Split input into multiple parts"
+    ]
+}

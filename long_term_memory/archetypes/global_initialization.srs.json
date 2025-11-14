@@ -1,0 +1,44 @@
+{
+    "archetype_name": "global_initialization",
+    "api_pattern": "Requires global initialization before fuzzing starts",
+    "when_to_use": [
+        "Library requires one-time setup before any API calls",
+        "Need to initialize global state, resources, or configuration",
+        "Examples: yara rules compilation, xvid codec initialization, zydis disassembler setup"
+    ],
+    "core_template": {
+        "c": "// Global initialization function\nint LLVMFuzzerInitialize(int *argc, char ***argv) {\n  // Initialize global state, resources, or configuration\n  if (GLOBAL_INIT() != OK) {\n    return 1;  // Return non-zero on failure\n  }\n  return 0;  // Return 0 on success\n}\n\nint LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {\n  if (size < MIN_SIZE) return 0;\n  \n  // Use API that depends on global initialization\n  int ret = API_USE(data, size);\n  if (ret != OK) return 0;\n  \n  return 0;\n}",
+        "cpp": "// Global initialization function\nextern \"C\" int LLVMFuzzerInitialize(int *argc, char ***argv) {\n  // Initialize global state, resources, or configuration\n  if (GLOBAL_INIT() != OK) {\n    return 1;  // Return non-zero on failure\n  }\n  return 0;  // Return 0 on success\n}\n\nextern \"C\" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {\n  if (size < MIN_SIZE) return 0;\n  \n  // Use API that depends on global initialization\n  int ret = API_USE(data, size);\n  if (ret != OK) return 0;\n  \n  return 0;\n}"
+    },
+    "critical_mistakes": [
+        {
+            "mistake": "Not implementing LLVMFuzzerInitialize when needed",
+            "wrong": "int LLVMFuzzerTestOneInput(...) {\n  API_USE(data, size);  // May crash without init",
+            "right": "int LLVMFuzzerInitialize(...) { GLOBAL_INIT(); return 0; }\nint LLVMFuzzerTestOneInput(...) { API_USE(data, size); }",
+            "why": "Library requires global initialization. Without it, API calls may crash or behave incorrectly."
+        },
+        {
+            "mistake": "Not checking initialization return value",
+            "wrong": "int LLVMFuzzerInitialize(...) {\n  GLOBAL_INIT();  // Ignore failure\n  return 0;",
+            "right": "int LLVMFuzzerInitialize(...) {\n  if (GLOBAL_INIT() != OK) return 1;  // Check failure\n  return 0;",
+            "why": "Initialization can fail. Returning non-zero signals failure to fuzzer framework."
+        },
+        {
+            "mistake": "Initializing in LLVMFuzzerTestOneInput instead of LLVMFuzzerInitialize",
+            "wrong": "int LLVMFuzzerTestOneInput(...) {\n  GLOBAL_INIT();  // Called every input, inefficient",
+            "right": "int LLVMFuzzerInitialize(...) { GLOBAL_INIT(); return 0; }\nint LLVMFuzzerTestOneInput(...) { API_USE(...); }",
+            "why": "LLVMFuzzerInitialize is called once. Initializing in TestOneInput is inefficient and may cause issues."
+        },
+        {
+            "mistake": "Not cleaning up global state (if needed)",
+            "wrong": "int LLVMFuzzerInitialize(...) {\n  GLOBAL_INIT();\n  return 0;\n  // No cleanup, leaks resources",
+            "right": "int LLVMFuzzerInitialize(...) {\n  if (GLOBAL_INIT() != OK) return 1;\n  atexit(GLOBAL_CLEANUP);  // Register cleanup\n  return 0;",
+            "why": "Some libraries require cleanup. Use atexit() or ensure cleanup happens when fuzzer exits."
+        }
+    ],
+    "real_examples": [
+        "yara: LLVMFuzzerInitialize() compiles rules once, TestOneInput() matches against input",
+        "xvid: LLVMFuzzerInitialize() initializes codec, TestOneInput() decodes frames",
+        "zydis: LLVMFuzzerInitialize() calls ZydisFuzzerInit(), TestOneInput() disassembles instructions"
+    ]
+}
