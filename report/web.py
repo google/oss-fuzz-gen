@@ -107,6 +107,16 @@ class JinjaEnv:
         'remove_trailing_empty_lines'] = self._remove_trailing_empty_lines
     self._env.filters['splitlines'] = self._splitlines
 
+    # Add a new filter for syntax highlighting
+    logs_parser = LogsParser([])
+    self._env.filters['syntax_highlight'] = logs_parser.syntax_highlight_content
+
+    def syntax_highlight_with_agent(content, default_lang="", agent_name=""):
+      return logs_parser.syntax_highlight_content(content, default_lang,
+                                                  agent_name)
+
+    self._env.filters['syntax_highlight_agent'] = syntax_highlight_with_agent
+
     if template_globals:
       for key, val in template_globals.items():
         self._env.globals[key] = val
@@ -138,13 +148,16 @@ class GenerateReport:
                jinja_env: JinjaEnv,
                results_dir: str,
                output_dir: str = 'results-report',
-               base_url: str = ''):
+               base_url: str = '',
+               gcs_dir: str = ''):
     self._results = results
     self._output_dir = output_dir
     self._jinja = jinja_env
     self.results_dir = results_dir
-    # If cloud, this will be `llm-exp.oss-fuzz.com/Result-reports/ofg-pr/experiment-name`
+    # If cloud, this will be
+    # `llm-exp.oss-fuzz.com/Result-reports/ofg-pr/experiment-name`
     self._base_url = base_url
+    self._gcs_dir = gcs_dir
 
   def read_timings(self):
     with open(os.path.join(self.results_dir, 'report.json'), 'r') as f:
@@ -186,6 +199,27 @@ class GenerateReport:
       sample.result.coverage_report_path = \
         f'/sample/{benchmark.id}/coverage/{sample.id}/linux/'
 
+  def _copy_plot_library(self):
+    """Copies the Plot.js library to the output directory."""
+    search_path = self._jinja.get_template_search_path()
+    templates_dir = search_path[0] if search_path else 'report/templates'
+    libs_dir = os.path.abspath(
+        os.path.join(templates_dir, '..', 'trends_report_web'))
+
+    os.makedirs(self._output_dir, exist_ok=True)
+
+    for lib_name in ['plot.min.js', 'd3.min.js']:
+      lib_src = os.path.join(libs_dir, lib_name)
+      lib_dst = os.path.join(self._output_dir, lib_name)
+      if os.path.exists(lib_src):
+        try:
+          shutil.copy(lib_src, lib_dst)
+          logging.info('Copied %s to %s', lib_name, lib_dst)
+        except Exception as e:
+          logging.warning('Failed to copy %s: %s', lib_name, e)
+      else:
+        logging.warning('%s not found at %s', lib_name, lib_src)
+
   def _read_static_file(self, file_path_in_templates_subdir: str) -> str:
     """Reads a static file from the templates directory."""
 
@@ -213,6 +247,8 @@ class GenerateReport:
 
   def generate(self):
     """Generate and write every report file."""
+    self._copy_plot_library()
+
     benchmarks = []
     samples_with_bugs = []
     # First pass: collect benchmarks and samples
@@ -286,6 +322,8 @@ class GenerateReport:
     """Generate the report index.html and write to filesystem."""
     index_css_content = self._read_static_file('index/index.css')
     index_js_content = self._read_static_file('index/index.js')
+    shared_css_content = self._read_static_file('shared.css')
+    base_js_content = self._read_static_file('base.js')
 
     rendered = self._jinja.render(
         'index/index.html',
@@ -297,6 +335,8 @@ class GenerateReport:
         coverage_language_gains=coverage_language_gains,
         index_css_content=index_css_content,
         index_js_content=index_js_content,
+        shared_css_content=shared_css_content,
+        base_js_content=base_js_content,
         unified_data=unified_data)
     self._write('index.html', rendered)
 
@@ -311,6 +351,8 @@ class GenerateReport:
     """Generate the benchmark index.html and write to filesystem."""
     benchmark_css_content = self._read_static_file('benchmark/benchmark.css')
     benchmark_js_content = self._read_static_file('benchmark/benchmark.js')
+    shared_css_content = self._read_static_file('shared.css')
+    base_js_content = self._read_static_file('base.js')
 
     common_data = {
         "accumulated_results": self._results.get_macro_insights([benchmark]),
@@ -324,6 +366,8 @@ class GenerateReport:
                                   prompt=prompt,
                                   benchmark_css_content=benchmark_css_content,
                                   benchmark_js_content=benchmark_js_content,
+                                  shared_css_content=shared_css_content,
+                                  base_js_content=base_js_content,
                                   **common_data)
     self._write(f'benchmark/{benchmark.id}/index.html', rendered)
 
@@ -355,6 +399,8 @@ class GenerateReport:
 
       sample_css_content = self._read_static_file('sample/sample.css')
       sample_js_content = self._read_static_file('sample/sample.js')
+      shared_css_content = self._read_static_file('shared.css')
+      base_js_content = self._read_static_file('base.js')
 
       common_data = {
           "accumulated_results": self._results.get_macro_insights([benchmark]),
@@ -365,18 +411,26 @@ class GenerateReport:
       agent_sections = logs_parser.get_agent_sections()
       agent_cycles = logs_parser.get_agent_cycles()
 
-      rendered = self._jinja.render('sample/sample.html',
-                                    benchmark=benchmark,
-                                    sample=sample,
-                                    agent_sections=agent_sections,
-                                    agent_cycles=agent_cycles,
-                                    logs=logs,
-                                    triage=triage,
-                                    targets=sample_targets,
-                                    sample_css_content=sample_css_content,
-                                    sample_js_content=sample_js_content,
-                                    crash_info=crash_info,
-                                    **common_data)
+      crash_info = self._get_crash_info_from_run_logs(benchmark.id, sample)
+
+      rendered = self._jinja.render(
+          'sample/sample.html',
+          benchmark=benchmark,
+          sample=sample,
+          agent_sections=agent_sections,
+          agent_cycles=agent_cycles,
+          logs=logs,
+          logs_parser=logs_parser,
+          default_lang=(benchmark.language.lower() if getattr(
+              benchmark, 'language', '') else ''),
+          triage=triage,
+          targets=sample_targets,
+          sample_css_content=sample_css_content,
+          sample_js_content=sample_js_content,
+          shared_css_content=shared_css_content,
+          base_js_content=base_js_content,
+          crash_info=crash_info,
+          **common_data)
 
       self._write(f'sample/{benchmark.id}/{sample.id}.html', rendered)
     except Exception as e:
@@ -428,20 +482,33 @@ class GenerateReport:
 
     project_build_successes = {}
     project_crashes = {}
+    project_cycles_sum = {}
+    project_trial_avg_duration_sum = {}
+    project_benchmark_counts = {}
 
     for benchmark in benchmarks:
-      samples = self._results.get_samples(
-          *self._results.get_results(benchmark.id))
+      results, targets = self._results.get_results(benchmark.id)
+      samples = self._results.get_samples(results, targets)
       samples_data = []
 
       benchmark_metrics = {
           "crashes": 0,
           "compiles": 0,
           "total_coverage": 0,
-          "total_line_coverage_diff": 0
+          "total_line_coverage_diff": 0,
+          "cycles_sum": 0,
+          "avg_trial_duration_sum": 0.0
       }
 
       for sample in samples:
+        logs = self._results.get_logs(benchmark.id, sample.id) or []
+        logs_parser = LogsParser(logs)
+        cycles_count = logs_parser.count_cycles()
+        trial_durations = logs_parser.compute_trial_durations_seconds()
+        avg_trial_duration_sec = (sum(trial_durations.values()) /
+                                  len(trial_durations)
+                                  if trial_durations else 0.0)
+
         crash_info = self._get_crash_info_from_run_logs(benchmark.id, sample)
         triage = self._results.get_triage(benchmark.id, sample.id) or {
             "result": "",
@@ -458,16 +525,22 @@ class GenerateReport:
             "crash_reason": getattr(sample.result, 'semantic_error', '') or '',
             "triage": triage.result,
             "triager_prompt": triage.triager_prompt,
-            # Give the full crash details for template rendering
             "crash_details": crash_info["crash_details"],
-            "crash_symptom": crash_info["crash_symptom"]
+            "crash_symptom": crash_info["crash_symptom"],
+            # New metrics
+            "cycles_count": cycles_count,
+            "trial_avg_duration_sec": avg_trial_duration_sec
         }
         samples_data.append(sample_data)
+
         benchmark_metrics["total_coverage"] += int(sample.result.coverage)
         benchmark_metrics["total_line_coverage_diff"] += int(
             sample.result.line_coverage_diff)
         benchmark_metrics["crashes"] += int(sample.result.crashes)
         benchmark_metrics["compiles"] += int(sample.result.compiles)
+        benchmark_metrics["cycles_sum"] += int(cycles_count)
+        benchmark_metrics["avg_trial_duration_sum"] += float(
+            avg_trial_duration_sec)
 
       if len(samples) > 0:
         build_success_rate = float(benchmark_metrics["compiles"]) / float(
@@ -477,11 +550,17 @@ class GenerateReport:
             len(samples))
         average_line_coverage_diff = benchmark_metrics[
             "total_line_coverage_diff"] / float(len(samples))
+        avg_cycles_per_sample = benchmark_metrics["cycles_sum"] / float(
+            len(samples))
+        avg_trial_duration_sec = benchmark_metrics[
+            "avg_trial_duration_sum"] / float(len(samples))
       else:
         build_success_rate = 0
         crash_rate = 0
         average_coverage = 0
         average_line_coverage_diff = 0
+        avg_cycles_per_sample = 0
+        avg_trial_duration_sec = 0.0
 
       unified_data[benchmark.project]["benchmarks"][benchmark.id] = {
           "samples":
@@ -499,18 +578,30 @@ class GenerateReport:
           "total_line_coverage_diff":
               benchmark_metrics["total_line_coverage_diff"],
           "average_line_coverage_diff":
-              average_line_coverage_diff
+              average_line_coverage_diff,
+          # New aggregates per benchmark
+          "avg_cycles_per_sample":
+              avg_cycles_per_sample,
+          "avg_trial_duration_sec":
+              avg_trial_duration_sec
       }
 
       if benchmark.project not in project_build_successes:
         project_build_successes[benchmark.project] = 0
         project_crashes[benchmark.project] = 0
+        project_cycles_sum[benchmark.project] = 0.0
+        project_trial_avg_duration_sum[benchmark.project] = 0.0
+        project_benchmark_counts[benchmark.project] = 0
 
       project_build_successes[benchmark.project] += build_success_rate
       project_crashes[benchmark.project] += crash_rate
+      project_cycles_sum[benchmark.project] += avg_cycles_per_sample
+      project_trial_avg_duration_sum[
+          benchmark.project] += avg_trial_duration_sec
+      project_benchmark_counts[benchmark.project] += 1
 
     for project_name in unified_data:
-      benchmark_count = len(unified_data[project_name]["benchmarks"])
+      benchmark_count = project_benchmark_counts.get(project_name, 0)
       if benchmark_count > 0:
         if project_name in project_build_successes:
           unified_data[project_name][
@@ -518,8 +609,27 @@ class GenerateReport:
                   project_name] / benchmark_count
           unified_data[project_name]["average_crash_rate"] = project_crashes[
               project_name] / benchmark_count
+          unified_data[project_name]["average_cycles_per_benchmark"] = (
+              project_cycles_sum[project_name] / benchmark_count)
+          unified_data[project_name]["average_trial_duration_sec"] = (
+              project_trial_avg_duration_sum[project_name] / benchmark_count)
 
     return unified_data
+
+  def _get_artifact_folder_url(self, benchmark_id: str, sample: Sample) -> dict:
+    """Get the artifact folder URLs for cloud builds."""
+    if not sample.result.crashes:
+      return {}
+    if not self._gcs_dir:
+      return {}
+
+    gs_url = (f"gs://oss-fuzz-gcb-experiment-run-logs/Result-reports/"
+              f"{self._gcs_dir}/results/{benchmark_id}/artifacts")
+    console_url = (f"https://console.cloud.google.com/storage/browser/"
+                   f"oss-fuzz-gcb-experiment-run-logs/Result-reports/"
+                   f"{self._gcs_dir}/results/{benchmark_id}/artifacts")
+
+    return {"gs_url": gs_url, "console_url": console_url}
 
   def _get_crash_info_from_run_logs(self, benchmark_id: str,
                                     sample: Sample) -> dict:
@@ -533,11 +643,13 @@ class GenerateReport:
     crash_symptom = parser.get_crash_symptom()
     stack_traces = parser.get_formatted_stack_traces(self._base_url)
     execution_stats = parser.get_execution_stats()
+    artifact_folder = self._get_artifact_folder_url(benchmark_id, sample)
     return {
         "crash_details": crash_details,
         "crash_symptom": crash_symptom,
         "stack_traces": stack_traces,
-        "execution_stats": execution_stats
+        "execution_stats": execution_stats,
+        "artifact_folder": artifact_folder
     }
 
 
@@ -556,7 +668,8 @@ def generate_report(args: argparse.Namespace) -> None:
   if args.with_csv:
     csv_reporter = CSVExporter(results=results,
                                output_dir=args.output_dir,
-                               base_url=base_url)
+                               base_url=base_url,
+                               gcs_dir=args.gcs_dir)
     csv_reporter.generate()
     # Temporarily commented out because locally this is just a relative path
     # template_globals['csv_url_path'] = csv_reporter.get_url_path()
@@ -571,7 +684,8 @@ def generate_report(args: argparse.Namespace) -> None:
                       jinja_env=jinja_env,
                       results_dir=args.results_dir,
                       output_dir=args.output_dir,
-                      base_url=base_url)
+                      base_url=base_url,
+                      gcs_dir=args.gcs_dir)
   gr.generate()
 
 
@@ -628,6 +742,9 @@ def _parse_arguments() -> argparse.Namespace:
       '--base-url',
       help='Base URL for the report (used in cloud environments).',
       default='')
+  parser.add_argument('--gcs-dir',
+                      help='GCS directory for experiment.',
+                      default='')
 
   return parser.parse_args()
 

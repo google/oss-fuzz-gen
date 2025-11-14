@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 #}{% extends 'base.html' %}
+{% import 'macros.html' as macros %}
 
 {% block content %}
 
@@ -35,6 +36,8 @@ limitations under the License.
     languageOpen: true,
     crashesFoundOpen: true,
     ofgMetricsOpen: true,
+    cyclesOpen: true,
+    chartsOpen: true,
 }" class="space-y-2">
 
     <div class="border rounded-lg toc-section">
@@ -43,11 +46,7 @@ limitations under the License.
             <span class="text-lg font-bold">
                 Benchmark summary
             </span>
-            <svg class="w-5 h-5 transform transition-transform duration-200"
-                 :class="{'rotate-180': projectOpen}"
-                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-            </svg>
+            {{ macros.icon_chevron_down('w-5 h-5', 'benchmarkOpen') }}
         </button>
 
         <div x-show="benchmarkOpen"
@@ -98,25 +97,12 @@ limitations under the License.
             <span class="text-lg font-bold">
                 Project summary
             </span>
-            <svg class="w-5 h-5 transform transition-transform duration-200"
-                 :class="{'rotate-180': projectOpen}"
-                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-            </svg>
+            {{ macros.icon_chevron_down('w-5 h-5', 'projectOpen') }}
         </button>
         <div x-show="projectOpen"
              class="p-4 border-t">
 
-            <div class="flex justify-between">
-                <div class="controls flex gap-2">
-                    <button id="project-summary-expand-all" class="border rounded-lg p-5">
-                        Expand All
-                    </button>
-                    <button id="project-summary-collapse-all" class="border rounded-lg p-5">
-                        Collapse All
-                    </button>
-                </div>
-            </div>
+            {{ macros.expand_collapse_buttons('project-summary-expand-all', 'project-summary-collapse-all') }}
 
             <div class="overflow-x-auto">
                 <table class="sortable-table min-w-full" id="project-summary-table">
@@ -155,9 +141,7 @@ limitations under the License.
                         <tr class="project-data-row">
                             <td class="table-index">
                                 <button class="w-5 h-5 flex items-center justify-center focus:outline-none" @click="$refs.benchmarks_{{ loop.index }}.classList.toggle('hidden')">
-                                    <svg class="w-4 h-4 transform transition-transform duration-200" :class="{'rotate-180': !$refs.benchmarks_{{ loop.index }}.classList.contains('hidden')}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                                    </svg>
+                                    {{ macros.icon_chevron_down('w-4 h-4', '!$refs.benchmarks_' ~ loop.index ~ '.classList.contains(\'hidden\')') }}
                                 </button>
                             </td>
                             <td data-sort-value="{{ project.name }}" class="w-full">
@@ -198,7 +182,8 @@ limitations under the License.
                         <tr class="project-benchmarks-container-row">
                             <td colspan="10" class="">
                                 <div x-ref="benchmarks_{{ loop.index }}" class="hidden">
-                                    <table class="sortable-table min-w-full ml-8" id="benchmarks-table-{{ loop.index }}">
+                                    <div class="overflow-x-auto">
+                                        <table class="sortable-table min-w-full ml-8" id="benchmarks-table-{{ loop.index }}">
                                         <thead>
                                             <tr>
                                                 <th></th>
@@ -235,8 +220,8 @@ limitations under the License.
                                             {% endif %}
                                             {% endfor %}
                                             <tr class="font-bold">
+                                                <td></td>
                                                 <td>Average</td>
-                                                <td>-</td>
                                                 <td>-</td>
                                                 <td>{{ (ns.aggregated_build_rate / project.count)|percent }}</td>
                                                 <td>{{ (ns.aggregated_crash_rate / project.count)|percent }}</td>
@@ -246,6 +231,7 @@ limitations under the License.
                                             </tr>
                                         </tbody>
                                     </table>
+                                    </div>
                                 </div>
                             </td>
                         </tr>
@@ -285,25 +271,12 @@ limitations under the License.
             <span class="text-lg font-bold">
                 Crashes found by generated fuzz harnesses
             </span>
-            <svg class="w-5 h-5 transform transition-transform duration-200"
-                 :class="{'rotate-180': crashesFoundOpen}"
-                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-            </svg>
+            {{ macros.icon_chevron_down('w-5 h-5', 'crashesFoundOpen') }}
         </button>
         <div x-show="crashesFoundOpen"
              class="p-4 border-t">
 
-            <div class="flex justify-between">
-                <div class="controls flex gap-2">
-                    <button id="crashes-expand-all" class="border rounded-lg p-5">
-                        Expand All
-                    </button>
-                    <button id="crashes-collapse-all" class="border rounded-lg p-5">
-                        Collapse All
-                    </button>
-                </div>
-            </div>
+            {{ macros.expand_collapse_buttons('crashes-expand-all', 'crashes-collapse-all') }}
 
              <table class="sortable-table min-w-full" id="crashes-table">
                 <thead>
@@ -346,9 +319,7 @@ limitations under the License.
                     <tr class="project-data-row">
                         <td class="table-index">
                             <button class="w-5 h-5 flex items-center justify-center focus:outline-none" @click="$refs.project_{{ loop.index }}.classList.toggle('hidden')">
-                                <svg class="w-4 h-4 transform transition-transform duration-200" :class="{'rotate-180': !$refs.project_{{ loop.index }}.classList.contains('hidden')}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                                </svg>
+                                {{ macros.icon_chevron_down('w-4 h-4', '!$refs.project_' ~ loop.index ~ '.classList.contains(\'hidden\')') }}
                             </button>
                         </td>
                         <td data-sort-value="{{ project_name }}">
@@ -368,17 +339,11 @@ limitations under the License.
                     <tr>
                         <td colspan="6">
                             <div x-ref="project_{{ loop.index }}" class="hidden">
-                                <div class="flex justify-between ml-8 mt-4">
-                                    <div class="controls flex gap-2">
-                                        <button id="project-expand-all-{{ loop.index }}" class="border rounded-lg p-3">
-                                            Expand All
-                                        </button>
-                                        <button id="project-collapse-all-{{ loop.index }}" class="border rounded-lg p-3">
-                                            Collapse All
-                                        </button>
-                                    </div>
+                                <div class="ml-8 mt-4">
+                                    {{ macros.expand_collapse_buttons('project-expand-all-' ~ loop.index, 'project-collapse-all-' ~ loop.index, 'Expand All', 'Collapse All') }}
                                 </div>
-                                <table class="sortable-table min-w-full ml-8">
+                                <div class="overflow-x-auto">
+                                    <table class="sortable-table min-w-full ml-8">
                                     <thead>
                                         <tr>
                                             <th></th>
@@ -393,9 +358,7 @@ limitations under the License.
                                         <tr>
                                             <td class="table-index">
                                                 <button class="w-5 h-5 flex items-center justify-center focus:outline-none" @click="$refs.samples_{{ loop.index }}_{{ project_loop.index }}.classList.toggle('hidden')">
-                                                    <svg class="w-4 h-4 transform transition-transform duration-200" :class="{'rotate-180': $refs.samples_{{ loop.index }}_{{ project_loop.index }}.classList.contains('hidden')}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                                                    </svg>
+                                                    {{ macros.icon_chevron_down('w-4 h-4', '$refs.samples_' ~ loop.index ~ '_' ~ project_loop.index ~ '.classList.contains(\'hidden\')') }}
                                                 </button>
                                             </td>
                                             <td data-sort-value="{{ benchmark_id }}">
@@ -432,6 +395,7 @@ limitations under the License.
                                         {% endfor %}
                                     </tbody>
                                 </table>
+                                </div>
                             </div>
                         </td>
                     </tr>
@@ -450,16 +414,166 @@ limitations under the License.
     </div>
 
     <div class="border rounded-lg toc-section">
+        <button @click="cyclesOpen = !cyclesOpen"
+                class="w-full p-4 flex justify-between items-center">
+            <span class="text-lg font-bold">Cycles / Time</span>
+            {{ macros.icon_chevron_down('w-5 h-5', 'cyclesOpen') }}
+        </button>
+        <div x-show="cyclesOpen" class="p-4 border-t space-y-8">
+            <div>
+                <h3 class="text-md font-semibold mb-2">Per Project</h3>
+                <div class="overflow-x-auto">
+                    <table class="sortable-table min-w-full">
+                        <thead>
+                            <tr>
+                                <th data-sorted="asc">Project</th>
+                                <th data-sort-number>Avg cycles/benchmark</th>
+                                <th data-sort-number>Avg trial duration (min)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% set ns_proj = namespace(total_cycles=0, total_duration=0, count=0) %}
+                            {% for project_name, pdata in unified_data.items() %}
+                            {% set cycles = (pdata.get('average_cycles_per_benchmark') or 0) | float %}
+                            {% set duration = (pdata.get('average_trial_duration_sec') or 0) | float %}
+                            {% set ns_proj.total_cycles = ns_proj.total_cycles + cycles %}
+                            {% set ns_proj.total_duration = ns_proj.total_duration + duration %}
+                            {% set ns_proj.count = ns_proj.count + 1 %}
+                            <tr>
+                                <td data-sort-value="{{ project_name }}">{{ project_name }}</td>
+                                <td data-sort-value="{{ cycles }}">{{ cycles }}</td>
+                                <td data-sort-value="{{ (duration / 60) | round(2) }}">{{ (duration / 60) | round(2) }}</td>
+                            </tr>
+                            {% endfor %}
+                            {% if ns_proj.count > 0 %}
+                            <tr class="font-bold">
+                                <td>Average</td>
+                                <td>{{ (ns_proj.total_cycles / ns_proj.count) | round(2) }}</td>
+                                <td>{{ ((ns_proj.total_duration / ns_proj.count) / 60) | round(2) }}</td>
+                            </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div>
+                <h3 class="text-md font-semibold mb-2">Per Benchmark</h3>
+                <div class="overflow-x-auto">
+                    <table class="sortable-table min-w-full">
+                        <thead>
+                            <tr>
+                                <th>Project</th>
+                                <th data-sorted="asc">Benchmark</th>
+                                <th data-sort-number>Average cycles/sample</th>
+                                <th data-sort-number>Average trial duration (min)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% set ns_bench = namespace(total_cycles=0, total_duration=0, count=0) %}
+                            {% for project_name, pdata in unified_data.items() %}
+                                {% if pdata.benchmarks %}
+                                    {% for bench_id, bdata in pdata.benchmarks.items() %}
+                                    {% set cycles = (bdata.get('avg_cycles_per_sample') or 0) | float %}
+                                    {% set duration = (bdata.get('avg_trial_duration_sec') or 0) | float %}
+                                    {% set ns_bench.total_cycles = ns_bench.total_cycles + cycles %}
+                                    {% set ns_bench.total_duration = ns_bench.total_duration + duration %}
+                                    {% set ns_bench.count = ns_bench.count + 1 %}
+                                    <tr>
+                                        <td data-sort-value="{{ project_name }}">{{ project_name }}</td>
+                                        <td data-sort-value="{{ bench_id }}">
+                                            <pre class="signature">
+                                                <a href="benchmark/{{ bench_id|urlencode }}/index.html" class="prettify-benchmark-name">{{ bench_id }}</a>
+                                            </pre>
+                                        </td>
+                                        <td data-sort-value="{{ cycles }}">{{ cycles }}</td>
+                                        <td data-sort-value="{{ (duration / 60) | round(2) }}">{{ (duration / 60) | round(2) }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                {% endif %}
+                            {% endfor %}
+                            {% if ns_bench.count > 0 %}
+                            <tr class="font-bold">
+                                <td>Average</td>
+                                <td>-</td>
+                                <td>{{ (ns_bench.total_cycles / ns_bench.count) | round(2) }}</td>
+                                <td>{{ ((ns_bench.total_duration / ns_bench.count) / 60) | round(2) }}</td>
+                            </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div>
+                <h3 class="text-md font-semibold mb-2">Per Sample</h3>
+                <div class="overflow-x-auto">
+                    <table class="sortable-table min-w-full">
+                        <thead>
+                            <tr>
+                                <th>Project</th>
+                                <th>Benchmark</th>
+                                <th data-sorted="asc">Sample</th>
+                                <th data-sort-number>Cycles</th>
+                                <th data-sort-number>Trial duration (min)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% set ns_sample = namespace(total_cycles=0, total_duration=0, count=0) %}
+                            {% for project_name, pdata in unified_data.items() %}
+                                {% if pdata.benchmarks %}
+                                    {% for bench_id, bdata in pdata.benchmarks.items() %}
+                                        {% if bdata.samples %}
+                                            {% for s in bdata.samples %}
+                                            {% set cycles = (s.get('cycles_count') or 0) | int %}
+                                            {% set duration = (s.get('trial_avg_duration_sec') or 0) | float %}
+                                            {% set ns_sample.total_cycles = ns_sample.total_cycles + cycles %}
+                                            {% set ns_sample.total_duration = ns_sample.total_duration + duration %}
+                                            {% set ns_sample.count = ns_sample.count + 1 %}
+                                            <tr>
+                                                <td data-sort-value="{{ project_name }}">{{ project_name }}</td>
+                                                <td data-sort-value="{{ bench_id }}">
+                                                    <pre class="signature">
+                                                        <a href="benchmark/{{ bench_id|urlencode }}/index.html" class="prettify-benchmark-name">{{ bench_id }}</a>
+                                                    </pre>
+                                                </td>
+                                                <td data-sort-value="{{ s.sample }}">
+                                                    <pre class="signature">
+                                                        <a href="sample/{{ bench_id|urlencode }}/{{ s.sample }}.html">Sample {{ s.sample }}</a>
+                                                    </pre>
+                                                </td>
+                                                <td data-sort-value="{{ cycles }}">{{ cycles }}</td>
+                                                <td data-sort-value="{{ (duration / 60) | round(2) }}">{{ (duration / 60) | round(2) }}</td>
+                                            </tr>
+                                            {% endfor %}
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endif %}
+                            {% endfor %}
+                            {% if ns_sample.count > 0 %}
+                            <tr class="font-bold">
+                                <td>Average</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>{{ (ns_sample.total_cycles / ns_sample.count) | round(2) }}</td>
+                                <td>{{ ((ns_sample.total_duration / ns_sample.count) / 60) | round(2) }}</td>
+                            </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="border rounded-lg toc-section">
         <button @click="languageOpen = !languageOpen"
                 class="w-full p-4 flex justify-between items-center">
             <span class="text-lg font-bold">
                 Language coverage
             </span>
-            <svg class="w-5 h-5 transform transition-transform duration-200"
-                 :class="{'rotate-180': languageOpen}"
-                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-            </svg>
+            {{ macros.icon_chevron_down('w-5 h-5', 'languageOpen') }}
         </button>
 
         <div x-show="languageOpen"
@@ -489,6 +603,34 @@ limitations under the License.
         </div>
     </div>
 
+    <div class="container mx-auto mt-8">
+        <div class="border rounded-lg toc-section">
+            <button @click="chartsOpen = !chartsOpen"
+                    class="w-full p-4 flex justify-between items-center">
+                <span class="text-lg font-bold">
+                    Charts
+                </span>
+                {{ macros.icon_chevron_down('w-5 h-5', 'chartsOpen') }}
+            </button>
+            <div x-show="chartsOpen" class="p-4 border-t">
+                <div class="chart-row">
+                    <div id="coverage-chart" class="chart-box" style="grid-column: 1 / -1; width: 100%"></div>
+                    <div id="language-coverage-chart" class="chart-box" style="display:none"></div>
+                </div>
+                <div class="chart-row">
+                    <div id="crash-reasons-chart" class="chart-box"></div>
+                </div>
+                <div class="chart-row">
+                    <div id="cycles-projects-chart" class="chart-box"></div>
+                    <div id="duration-projects-chart" class="chart-box"></div>
+                </div>
+                <div class="chart-row">
+                    <div id="cycles-benchmarks-chart" class="chart-box"></div>
+                    <div id="duration-benchmarks-chart" class="chart-box"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <button class="toc-toggle" id="tocToggle">

@@ -21,6 +21,20 @@ limitations under the License.
 <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Overpass+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Overpass:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+{% set shared_css = '' %}
+{% if shared_css_content %}
+<style>
+{{ shared_css_content | safe }}
+</style>
+{% endif %}
+
+{% if base_js_content %}
+<script>
+window.BASE_RELATIVE_PATH = '{% if sample %}../../{% elif benchmark %}../../{% endif %}';
+{{ base_js_content | safe }}
+</script>
+{% endif %}
+
 <style>
 * {
     box-sizing: border-box;
@@ -83,16 +97,32 @@ th:last-child {
 tbody tr:nth-child(odd) {
     background-color: #edf2f7;
 }
+.dark-mode select {
+    background-color: #3d3d3d;
+    color: #f7fafc;
+    border-color: #3d3d3d;
+}
+.dark-mode select:focus {
+    background-color: #3d3d3d;
+    color: #f7fafc;
+}
+.dark-mode option {
+    background-color: #3d3d3d;
+    color: #f7fafc;
+}
+
 .dark-mode tbody tr:nth-child(odd) {
     background-color: #333333;
 }
 .chat_prompt {
-    background-color: #fff7f2;
+    background-color: #e2e8f0;
+    border: 1px solid #a0aec0;
     max-width: 50%;
     overflow: scroll;
 }
 .chat_response {
-    background-color: #fcfff2;
+    background-color: #ececec;
+    border: 1px solid #718096;
     max-width: 50%;
     overflow: scroll;
     margin-left: auto;
@@ -112,6 +142,7 @@ tbody tr:nth-child(odd) {
     width: fit-content;
     max-width: 100%;
 }
+
 .dark-mode .code-container {
     background-color: #222222;
     border: 1px solid #3d3d3d;
@@ -280,6 +311,22 @@ tbody tr:nth-child(odd) {
 .dark-mode .toc-item {
     color: #9ca3af;
 }
+
+.log-tag {
+    color: #8b7355;
+}
+
+.dark-mode .log-tag {
+    color: #a08968;
+}
+
+.chat_prompt .log-tag {
+    color: #5a6b8a;
+}
+
+.dark-mode .chat_prompt .log-tag {
+    color: #7a8ba8;
+}
 </style>
 <body
       x-data="{
@@ -334,7 +381,6 @@ tbody tr:nth-child(odd) {
                 <div class="py-1" role="menu">
                     <a href="{{ json_url_path }}" class="block px-4 py-2 text-sm" role="menuitem">Export as JSON (.json)</a>
                     <a href="{{ csv_url_path }}" class="block px-4 py-2 text-sm" role="menuitem">Export as CSV (.csv)</a>
-                    <a href="#" class="block px-4 py-2 text-sm" role="menuitem">Export as Google Sheet</a>
                 </div>
             </div>
         </div>
@@ -507,418 +553,17 @@ tbody tr:nth-child(odd) {
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.10.3/cdn.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+<script src="d3.min.js" defer></script>
+<script src="plot.min.js" defer></script>
 
 {% if unified_data %}
 <script type="application/json" id="unified-data">{{ unified_data|tojson|safe }}</script>
 {% endif %}
 
-<script>
-function prettifyBenchmarkName(name) {
-    return name.replace(/^output-[^-]+-/, '');
-}
-
-function searchSamples(searchTerm, unifiedData) {
-    if (!searchTerm || searchTerm.length < 2) {
-        return [];
-    }
-
-    const results = [];
-    let searchPattern;
-
-    try {
-        searchPattern = new RegExp(searchTerm.toLowerCase(), 'g');
-    } catch (e) {
-        return { error: true, message: e.message, pattern: searchTerm };
-    }
-
-    for (const projectName in unifiedData) {
-        const project = unifiedData[projectName];
-        if (project.benchmarks) {
-            for (const benchmarkId in project.benchmarks) {
-                const benchmark = project.benchmarks[benchmarkId];
-                if (benchmark.samples) {
-                    benchmark.samples.forEach(sample => {
-                        const sampleId = sample.sample || '';
-                        const triage = sample.triage || '';
-                        const triagerPrompt = sample.triager_prompt || '';
-                        const crashDetails = sample.crash_details || '';
-
-                        // Calculate match score based on field importance and match quality
-                        // Weightings here are a bit arbitrary for now
-                        let score = 0;
-                        const fields = [
-                            { text: sampleId, weight: 10, name: 'Sample ID' },
-                            { text: crashDetails, weight: 8, name: 'Crash Details' },
-                            { text: benchmarkId, weight: 5, name: 'Benchmark ID' },
-                            { text: projectName, weight: 3, name: 'Project Name' },
-                            { text: triage, weight: 1, name: 'Triage' },
-                            { text: triagerPrompt, weight: 1, name: 'Triager Prompt' }
-                        ];
-
-                        let hasMatch = false;
-                        let matchedFields = [];
-                        fields.forEach(field => {
-                            const fieldText = field.text.toLowerCase();
-                            const matches = fieldText.match(searchPattern);
-                            if (matches) {
-                                hasMatch = true;
-                                let fieldScore = 0;
-
-                                // Base score for having matches in this field
-                                fieldScore += field.weight * matches.length;
-
-                                // Bonus for exact word matches
-                                if (fieldText.includes(searchTerm.toLowerCase())) {
-                                    fieldScore += field.weight * 2;
-                                }
-
-                                score += fieldScore;
-                                matchedFields.push({
-                                    name: field.name,
-                                    matches: matches.length,
-                                    score: fieldScore
-                                });
-                            }
-                        });
-
-                        if (hasMatch) {
-                            results.push({
-                                projectName: projectName,
-                                benchmarkId: benchmarkId,
-                                sampleId: sampleId,
-                                sample: sample,
-                                score: score,
-                                matchedFields: matchedFields
-                            });
-                        }
-                    });
-                }
-            }
-        }
-    }
-
-    results.sort((a, b) => b.score - a.score);
-
-    return results;
-}
-
-function renderSearchResults(results, currentPage = 1) {
-    const searchResultsContainer = document.getElementById('searchResults');
-    const searchResultsBody = document.getElementById('searchResultsBody');
-    const searchResultsCount = document.getElementById('searchResultsCount');
-
-    if (results.length === 0) {
-        searchResultsContainer.classList.add('hidden');
-        return;
-    }
-
-    const resultsPerPage = 10;
-    const totalPages = Math.ceil(results.length / resultsPerPage);
-    const startIndex = (currentPage - 1) * resultsPerPage;
-    const endIndex = startIndex + resultsPerPage;
-    const pageResults = results.slice(startIndex, endIndex);
-
-    searchResultsCount.textContent = `${results.length} sample${results.length !== 1 ? 's' : ''} found (showing page ${currentPage} of ${totalPages})`;
-
-    const paginationHtml = totalPages > 1 ? `
-        <div class="pagination-controls flex items-center justify-center gap-2 mb-4 p-4 border rounded-lg">
-            <button onclick="navigateToPage(${currentPage - 1})"
-                    ${currentPage === 1 ? 'disabled' : ''}
-                    class="px-3 py-1 border rounded ${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-100 dark:hover:bg-gray-700'}">
-                « Previous
-            </button>
-
-            ${Array.from({length: Math.min(5, totalPages)}, (_, i) => {
-                let pageNum;
-                if (totalPages <= 5) {
-                    pageNum = i + 1;
-                } else if (currentPage <= 3) {
-                    pageNum = i + 1;
-                } else if (currentPage >= totalPages - 2) {
-                    pageNum = totalPages - 4 + i;
-                } else {
-                    pageNum = currentPage - 2 + i;
-                }
-
-                return `
-                    <button onclick="navigateToPage(${pageNum})"
-                            class="px-3 py-1 border rounded ${pageNum === currentPage ? 'bg-blue-500 text-white' : 'hover:bg-gray-100 dark:hover:bg-gray-700'}">
-                        ${pageNum}
-                    </button>
-                `;
-            }).join('')}
-
-            <button onclick="navigateToPage(${currentPage + 1})"
-                    ${currentPage === totalPages ? 'disabled' : ''}
-                    class="px-3 py-1 border rounded ${currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-100 dark:hover:bg-gray-700'}">
-                Next »
-            </button>
-        </div>
-    ` : '';
-
-    searchResultsBody.innerHTML = paginationHtml + pageResults.map(result => {
-        const sampleUrl = `{% if sample %}../../{% elif benchmark %}../../{% endif %}sample/${encodeURIComponent(result.benchmarkId)}/${encodeURIComponent(result.sampleId)}.html`;
-        const benchmarkUrl = `{% if sample %}../../{% elif benchmark %}../../{% endif %}benchmark/${encodeURIComponent(result.benchmarkId)}/index.html`;
-
-        let additionalInfo = [];
-
-        if (result.sample.crash_symptom) {
-            additionalInfo.push(`<span class="font-medium">Crash Symptom:</span> ${result.sample.crash_symptom}`);
-        }
-
-        if (result.sample.triage) {
-            const triagePreview = result.sample.triage.length > 100
-                ? result.sample.triage.substring(0, 100) + '...'
-                : result.sample.triage;
-            additionalInfo.push(`<span class="font-medium">Triage:</span> ${triagePreview}`);
-        }
-
-        return `
-            <div class="border rounded-lg p-4">
-                <div class="flex justify-between items-start mb-2">
-                    <h2 class="signature">
-                        <a href="${sampleUrl}" class="hover:underline">
-                            <span class="prettify-benchmark-name">${result.benchmarkId}/${result.sampleId}</span>
-                        </a>
-                    </h2>
-                    <div class="text-xs px-2 py-1 rounded">
-                        Score: ${result.score}
-                    </div>
-                </div>
-                <div class="text-sm mb-2">
-                    <span class="font-medium">Project:</span> ${result.projectName} |
-                    <span class="font-medium">Benchmark:</span>
-                    <a href="${benchmarkUrl}" class="hover:underline">
-                        <span class="prettify-benchmark-name">${result.benchmarkId}</span>
-                    </a>
-                </div>
-                <div class="text-sm mb-2">
-                    <span class="font-medium">Matches in:</span>
-                    ${result.matchedFields.map(field =>
-                        `<span class="inline-block px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs mr-1 mb-1">
-                            ${field.name} (${field.matches} ${field.matches > 1 ? 'matches' : 'match'})
-                        </span>`
-                    ).join('')}
-                </div>
-                ${additionalInfo.length > 0 ? `
-                <div class="text-sm mb-3 space-y-1">
-                    ${additionalInfo.map(info => `<div>${info}</div>`).join('')}
-                </div>
-                ` : ''}
-                <div class="flex gap-4 text-xs">
-                    <span>Coverage: ${(result.sample.total_coverage || 0).toFixed(2)}%</span>
-                    <span>Line Diff: ${(result.sample.total_line_coverage_diff || 0).toFixed(2)}%</span>
-                </div>
-            </div>
-        `;
-    }).join('');
-
-    searchResultsContainer.classList.remove('hidden');
-
-    document.querySelectorAll('.search-results-body .prettify-benchmark-name').forEach(el => {
-        el.textContent = prettifyBenchmarkName(el.textContent);
-    });
-}
-
-function renderRegexError(error) {
-    const searchResultsContainer = document.getElementById('searchResults');
-    const searchResultsBody = document.getElementById('searchResultsBody');
-    const searchResultsCount = document.getElementById('searchResultsCount');
-
-    searchResultsBody.innerHTML = `
-        <div class="border rounded-lg p-4 bg-red-50 border-red-200">
-            <div class="flex items-center mb-2">
-                <svg class="w-5 h-5 text-red-50 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
-                </svg>
-                <span class="font-medium text-red-50">Invalid regex pattern</span>
-            </div>
-            <p class="text-sm">
-                Pattern: <code class="bg-red-200 px-1 rounded text-black">${error.pattern}</code>
-            </p>
-            <p class="text-sm mt-2">
-                Error: ${error.message}
-            </p>
-        </div>
-    `;
-
-    searchResultsContainer.classList.remove('hidden');
-}
-
-document.addEventListener('DOMContentLoaded', (event) => {
-    document.querySelectorAll('pre code.syntax-highlight').forEach((block) => {
-        hljs.highlightElement(block);
-    });
-
-    const searchInput = document.getElementById('searchInput');
-    const searchResults = document.getElementById('searchResults');
-    let searchTimeout;
-
-    let unifiedData = {};
-    const unifiedDataElement = document.getElementById('unified-data');
-    if (unifiedDataElement) {
-        try {
-            unifiedData = JSON.parse(unifiedDataElement.textContent);
-            console.log('Unified data loaded:', unifiedData);
-        } catch (e) {
-            console.warn('Could not parse unified data for search:', e);
-        }
-    } else {
-        console.warn('No unified data element found');
-    }
-
-    let currentSearchResults = [];
-    let currentPage = 1;
-
-    window.navigateToPage = function(page) {
-        if (page < 1 || page > Math.ceil(currentSearchResults.length / 10)) return;
-        currentPage = page;
-        renderSearchResults(currentSearchResults, currentPage);
-    };
-
-    searchInput.addEventListener('input', (event) => {
-        clearTimeout(searchTimeout);
-        const searchTerm = event.target.value.trim();
-
-        if (searchTerm.length < 2) {
-            searchResults.classList.add('hidden');
-            currentSearchResults = [];
-            currentPage = 1;
-            return;
-        }
-
-        searchTimeout = setTimeout(() => {
-            const results = searchSamples(searchTerm, unifiedData);
-            if (results.error) {
-                renderRegexError(results);
-                currentSearchResults = [];
-            } else {
-                currentSearchResults = results;
-                currentPage = 1;
-                renderSearchResults(results, currentPage);
-            }
-        }, 300);
-    });
-
-    document.querySelectorAll('.prettify-benchmark-name').forEach(el => {
-        el.textContent = prettifyBenchmarkName(el.textContent);
-    });
-
-    const tocTree = document.getElementById('toc-tree');
-    const sections = document.querySelectorAll('.toc-section');
-    sections.forEach((section, index) => {
-        const sectionLi = document.createElement('li');
-        const sectionLink = document.createElement('a');
-        const sectionTitle = section.querySelector('.text-lg.font-bold');
-        sectionLink.textContent = sectionTitle.textContent.trim();
-        sectionLink.href = `#section-${index}`;
-        sectionLink.className = 'toc-link toc-section';
-        section.id = `section-${index}`;
-        sectionLi.appendChild(sectionLink);
-
-        const subsectionButtons = section.querySelectorAll('.toc-subsection');
-        if (subsectionButtons.length > 0) {
-            const subsectionsUl = document.createElement('ul');
-
-            subsectionButtons.forEach(subsectionBtn => {
-                const subsectionName = subsectionBtn.textContent.trim();
-                const subsectionLi = document.createElement('li');
-                const subsectionLink = document.createElement('a');
-                subsectionLink.textContent = subsectionName;
-                subsectionLink.href = `#subsection-${subsectionName}`;
-                subsectionLink.className = 'toc-link toc-subsection';
-                subsectionLi.appendChild(subsectionLink);
-
-                const subsectionRow = subsectionBtn.closest('tr');
-                const itemsContainer = subsectionRow ? subsectionRow.nextElementSibling : null;
-
-                if (itemsContainer) {
-                    const itemButtons = itemsContainer.querySelectorAll('button.toc-item');
-                    const itemLinks = itemsContainer.querySelectorAll('pre.signature.toc-item a');
-
-                    if (itemButtons.length > 0 || itemLinks.length > 0) {
-                        const itemsUl = document.createElement('ul');
-
-                        itemButtons.forEach(itemBtn => {
-                            const itemLi = document.createElement('li');
-                            const itemLink = document.createElement('a');
-                            const itemText = itemBtn.querySelector('pre.signature a') ?
-                                itemBtn.querySelector('pre.signature a').textContent.trim() :
-                                itemBtn.textContent.trim();
-                            itemLink.textContent = itemText;
-                            itemLink.href = `#item-${itemText}`;
-                            itemLink.className = 'toc-link toc-item prettify-benchmark-name';
-                            itemLink.addEventListener('click', (e) => {
-                                e.preventDefault();
-                                const itemRow = itemBtn.closest('tr');
-                                if (itemRow) {
-                                    itemRow.scrollIntoView({ behavior: 'smooth' });
-                                    const containers = itemRow.closest('[x-ref^="benchmarks_"], [x-ref^="project_"]');
-                                    if (containers && containers.classList.contains('hidden')) {
-                                        containers.classList.remove('hidden');
-                                    }
-                                }
-                            });
-                            itemLi.appendChild(itemLink);
-                            itemsUl.appendChild(itemLi);
-                        });
-
-                        itemLinks.forEach(itemLinkEl => {
-                            const itemLi = document.createElement('li');
-                            const itemLink = document.createElement('a');
-                            itemLink.textContent = itemLinkEl.textContent.trim();
-                            itemLink.href = `#item-${itemLinkEl.textContent.trim()}`;
-                            itemLink.className = 'toc-link toc-item prettify-benchmark-name';
-                            itemLink.addEventListener('click', (e) => {
-                                e.preventDefault();
-                                const itemRow = itemLinkEl.closest('tr');
-                                if (itemRow) {
-                                    itemRow.scrollIntoView({ behavior: 'smooth' });
-                                    const containers = itemRow.closest('[x-ref^="benchmarks_"], [x-ref^="project_"]');
-                                    if (containers && containers.classList.contains('hidden')) {
-                                        containers.classList.remove('hidden');
-                                    }
-                                }
-                            });
-                            itemLi.appendChild(itemLink);
-                            itemsUl.appendChild(itemLi);
-                        });
-
-                        subsectionLi.appendChild(itemsUl);
-                    }
-                }
-                subsectionsUl.appendChild(subsectionLi);
-            });
-            sectionLi.appendChild(subsectionsUl);
-        }
-        tocTree.appendChild(sectionLi);
-    });
-
-    // Toggle functionality
-    const toc = document.getElementById('toc');
-    const tocToggle = document.getElementById('tocToggle');
-
-    tocToggle.addEventListener('click', () => {
-        toc.classList.toggle('open');
-        tocToggle.classList.toggle('open');
-    });
-
-    document.addEventListener('click', (e) => {
-        if (!toc.contains(e.target) && !tocToggle.contains(e.target) && toc.classList.contains('open')) {
-            toc.classList.remove('open');
-            tocToggle.classList.remove('open')
-        }
-    });
-
-});
-
-</script>
-
-</body>
 <!-- added highlight.js for syntax highlighting -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/default.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
-<!-- some additional language -->
+<!-- additional languages -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/bash.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/c.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/cpp.min.js"></script>
@@ -926,3 +571,5 @@ document.addEventListener('DOMContentLoaded', (event) => {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/python.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/rust.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/go.min.js"></script>
+
+</body>

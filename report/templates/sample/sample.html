@@ -14,10 +14,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 #}{% extends 'base.html' %}
+{% import 'macros.html' as macros %}
 
 {% block content %}
 
-{% if sample_css_content %}
+{% if sample_css_content and sample_css_content.strip() and '{' in sample_css_content %}
 <style type="text/css">
 {{ sample_css_content | safe }}
 </style>
@@ -36,32 +37,40 @@ limitations under the License.
             <span class="prettify-benchmark-name">{{ benchmark.id }}</span>
             <span class="text-gray-500">/ {{ sample.id }}</span>
           </h1>
-          <span class="inline-flex items-center px-3 py-1 rounded-full
-              {% if sample.result.crashes %}
-                  bg-red-500 text-white
-              {% else %}
-                  bg-green-300 text-black
-              {% endif %}">
-              {% if sample.result.crashes %}
-                  Crashed
-              {% else %}
-                  No Crash
-              {% endif %}
-          </span>
-          <span class="inline-flex items-center px-3 py-1 rounded-full
-            {% if sample.result.crashes and not sample.result.is_semantic_error %}
-                bg-red-500 text-white
-            {% else %}
-                bg-green-300 text-black
-            {% endif %}">
-            {% if sample.result.crashes and not sample.result.is_semantic_error %}
-                Potential Vulnerability
-            {% else %}
-                No Potential Vulnerability
-            {% endif %}
-        </span>
+          {{ macros.crash_badge(sample.result.crashes) }}
+          {{ macros.vulnerability_badge(sample.result.crashes and not sample.result.is_semantic_error) }}
       </div>
       <div class="flex flex-col gap-2 mt-8">
+        {% if crash_info is defined and crash_info.artifact_folder %}
+        <div class="border rounded-lg p-4 shadow-sm mb-4">
+          <div class="flex items-center gap-3">
+            <div class="flex-1">
+              <p class="text-sm font-medium mb-2">Artifact Folder</p>
+              <div class="space-y-1">
+                <div>
+                  <span class="text-xs">Console:</span>
+                  <a href="{{ crash_info.artifact_folder.console_url }}" target="_blank" rel="noopener noreferrer"
+                     class="text-sm hover:underline break-all ml-1">
+                    {{ crash_info.artifact_folder.console_url }}
+                  </a>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="text-xs">GCS:</span>
+                  <code class="text-sm break-all ml-1" id="gcs-url-text">{{ crash_info.artifact_folder.gs_url }}</code>
+                  <button
+                    onclick="copyGcsUrl(this)"
+                    class="inline-flex items-center justify-center p-1.5 rounded"
+                    title="Copy GCS URL"
+                    aria-label="Copy GCS URL">
+                    {{ macros.icon_copy('w-4 h-4') }}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+
 
         {% if sample.result.semantic_error or (crash_info is defined and crash_info) %}
         <div class="border rounded-lg p-6 shadow-sm">
@@ -69,17 +78,42 @@ limitations under the License.
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
             <div class="p-4 rounded-lg">
               <p class="text-sm uppercase tracking-wide">Sanitizer</p>
-              <p class="font-medium mt-1">{{ crash_info.crash_symptom.split(": ")[1] }}</p>
+              <p class="font-medium mt-1"><span id="sym-sanitizer"></span></p>
             </div>
             <div class="p-4 rounded-lg">
               <p class="text-sm uppercase tracking-wide">Bug Type</p>
-              <p class="font-medium mt-1">{{ crash_info.crash_symptom.split(" ")[2] }}</p>
+              <p class="font-medium mt-1"><span id="sym-bugtype"></span></p>
             </div>
             <div class="p-4 rounded-lg">
               <p class="text-sm uppercase tracking-wide">Crash Address</p>
-              <p class="font-medium mt-1 font-mono">{{ crash_info.crash_symptom.split("address ")[1] }}</p>
+              <p class="font-medium mt-1 font-mono"><span id="sym-address"></span></p>
             </div>
           </div>
+          <script>
+          (function() {
+            var symptom = {{ crash_info.crash_symptom | tojson | safe }};
+            var sanitizer = '';
+            var bugType = '';
+            var address = '';
+            if (symptom && typeof symptom === 'string') {
+              var mSan = symptom.match(/ERROR:\s*([A-Za-z0-9_-]+)\s*:/i);
+              if (mSan) sanitizer = mSan[1];
+              var mType = symptom.match(/AddressSanitizer:\s*(.+?)\s+on\b/i);
+              if (mType) {
+                bugType = mType[1].trim();
+              } else {
+                var mTypeFallback = symptom.match(/ERROR:\s*AddressSanitizer:\s*([A-Za-z0-9 _-]+)/i);
+                if (mTypeFallback) bugType = mTypeFallback[1].trim();
+              }
+              var mAddr = symptom.match(/address\s+([^\s]+)/i);
+              if (mAddr) address = mAddr[1];
+            }
+            var el;
+            el = document.getElementById('sym-sanitizer'); if (el) el.textContent = sanitizer || 'AddressSanitizer';
+            el = document.getElementById('sym-bugtype'); if (el) el.textContent = bugType || 'N/A';
+            el = document.getElementById('sym-address'); if (el) el.textContent = address || '';
+          })();
+          </script>
           {% endif %}
 
           {% if crash_info.execution_stats %}
@@ -98,12 +132,11 @@ limitations under the License.
           <script type="application/json" id="stackTracesData" style="display: none;">{{ crash_info.stack_traces | tojson }}</script>
           {% endif %}
           <script>
-            function processStackTracesForElement(elementId) {
+          function processStackTracesForElement(elementId) {
               const element = document.getElementById(elementId);
-              if (element && window.AnsiUp) {
-                const ansi_up = new window.AnsiUp();
+              if (element) {
                 const textContent = element.textContent || element.innerText;
-                let htmlContent = ansi_up.ansi_to_html(textContent);
+                let htmlContent = textContent;
 
                 const stackTracesElement = document.getElementById('stackTracesData');
 
@@ -115,7 +148,6 @@ limitations under the License.
                     for (const frameId in stackTraces) {
                       const frameData = stackTraces[frameId];
 
-                      // First try to match by memory address
                       if (match.includes(frameData.memory_address)) {
                         if (frameData.url) {
                           formattedPath = '<a href="' + frameData.url + '" target="_blank" class="text-blue-500 hover:text-blue-700 underline">' + filePath + '</a>';
@@ -123,9 +155,8 @@ limitations under the License.
                         }
                       }
 
-                      // Then as fallback, match by function name and similar file path (without line:column)
-                      const filePathBase = filePath.split(':')[0]; // Remove :line:column
-                      const framePathBase = frameData.path.split(':')[0]; // Remove :line:column
+                      const filePathBase = filePath.split(':')[0];
+                      const framePathBase = frameData.path.split(':')[0];
                       if (match.includes(frameData.function) && filePathBase === framePathBase) {
                         if (frameData.url) {
                           formattedPath = '<a href="' + frameData.url + '" target="_blank" class="text-blue-500 hover:text-blue-700 underline">' + filePath + '</a>';
@@ -133,7 +164,6 @@ limitations under the License.
                         }
                       }
 
-                      // As final fallback, match by frame number and function name
                       if (frameId === frameNum && match.includes(frameData.function)) {
                         if (frameData.url) {
                           formattedPath = '<a href="' + frameData.url + '" target="_blank" class="text-blue-500 hover:text-blue-700 underline">' + filePath + '</a>';
@@ -181,11 +211,7 @@ limitations under the License.
             <button @click="toggleDetails()"
                     class="w-full p-4 flex justify-between items-center">
                 <span class="font-medium">Crash Details</span>
-                <svg class="w-4 h-4 transform transition-transform duration-200"
-                     :class="{'rotate-180': detailsOpen}"
-                     fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                </svg>
+                {{ macros.icon_chevron_down('w-4 h-4', 'detailsOpen') }}
             </button>
             <div x-show="detailsOpen" class="p-4 border-t">
               <pre id="crashDetailsPreview" class="p-4 rounded-md overflow-x-auto font-mono whitespace-pre-wrap">{{ crash_info.crash_details }}</pre>
@@ -222,15 +248,7 @@ limitations under the License.
       coverageOpen: false
   }" class="space-y-2">
       <div class="border rounded-lg">
-          <button @click="codeOpen = !codeOpen"
-                  class="w-full p-4 flex justify-between items-center">
-              <span class="text-lg font-bold">Final Code</span>
-              <svg class="w-5 h-5 transform transition-transform duration-200"
-                   :class="{'rotate-180': codeOpen}"
-                   fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-              </svg>
-          </button>
+          {{ macros.collapsible_section('Final Code', 'codeOpen') }}
           <div x-show="codeOpen"
                class="p-4 border-t">
               {% for target in targets %}
@@ -238,118 +256,47 @@ limitations under the License.
                 <h3>Code #{{ loop.index - 1}}</h3>
 
                 {% if target.code is defined and target.code %}
-                <div class="code-container">
-                    <pre class="line-numbers">{% for line in target.code|remove_trailing_empty_lines|splitlines %}<span>{{ loop.index }}</span>{% endfor %}</pre>
-                    <pre class="code-content"><code class="syntax-highlight language-{% if benchmark.language is defined and benchmark.language %}{{ benchmark.language | lower }}{% else %}plaintext{% endif %}">{{ target.code|remove_trailing_empty_lines }}</code></pre>
-                </div>
+                {{ macros.code_block(target.code, benchmark.language|lower if benchmark.language else 'plaintext') }}
                 {% endif %}
 
                 {% if target.build_script_code is defined and target.build_script_code %}
                 <h3>Build Script</h3>
-                <div class="code-container">
-                    <pre class="line-numbers">{% for line in target.build_script_code|remove_trailing_empty_lines|splitlines %}<span>{{ loop.index }}</span>{% endfor %}</pre>
-                    <pre class="code-content"><code class="syntax-highlight language-bash">{{ target.build_script_code|remove_trailing_empty_lines }}</code></pre>
-                </div>
+                {{ macros.code_block(target.build_script_code, 'bash') }}
                 {% endif %}
                 {% endfor %}
           </div>
       </div>
 
       <div class="border rounded-lg">
-          <button @click="agentsOpen = !agentsOpen"
-                  class="w-full p-4 flex justify-between items-center">
-              <span class="text-lg font-bold">Agents</span>
-              <svg class="w-5 h-5 transform transition-transform duration-200"
-                   :class="{'rotate-180': agentsOpen}"
-                   fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-              </svg>
-          </button>
+          {{ macros.collapsible_section('Agents', 'agentsOpen') }}
           {% if agent_cycles %}
             <div x-show="agentsOpen"
                 class="p-4 border-t">
 
-                <div class="flex justify-between mb-4">
-                  <div class="controls flex gap-2">
-                      <button id="agent-sections-expand-all" class="border rounded-lg p-3">
-                          Expand All
-                      </button>
-                      <button id="agent-sections-collapse-all" class="border rounded-lg p-3">
-                          Collapse All
-                      </button>
-                  </div>
-                </div>
+                {{ macros.expand_collapse_buttons('agent-sections-expand-all', 'agent-sections-collapse-all', 'Expand All', 'Collapse All') }}
 
+                {% set color_classes = [
+                  'border-blue-300',
+                  'border-green-300',
+                  'border-purple-300',
+                  'border-red-300',
+                  'border-indigo-300',
+                  'border-pink-300',
+                  'border-teal-300'
+                ] %}
                 {% for cycle_data in agent_cycles %}
-                  {% if 'standalone' in cycle_data %}
-                    <!-- Standalone agents -->
-                    {% for agent_name, agent_logs in cycle_data.standalone.items() %}
-                      <div x-data="{ open: false }" class="border rounded-lg mb-4 agent-section">
-                        <button @click="open = !open" class="w-full p-4 flex justify-between items-center text-left rounded-t-lg">
-                          <span class="font-medium">{{ agent_name }}</span>
-                          <svg class="w-4 h-4" :class="{'rotate-180': open}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                          </svg>
-                        </button>
-                        <div x-show="open" class="border-t">
-                          {% for log_part in agent_logs %}
-                            <pre class="{% if log_part.chat_prompt %}chat_prompt {% elif log_part.chat_response %}chat_response {% endif %} p-4 rounded-md mb-4 whitespace-pre-wrap break-words">{{ log_part.content }}</pre>
-                          {% endfor %}
-                        </div>
-                      </div>
-                    {% endfor %}
-                  {% else %}
-                    <!-- Cycle with multiple agents -->
-                    {% set color_classes = [
-                      'border-blue-300',
-                      'border-green-300',
-                      'border-purple-300',
-                      'border-red-300',
-                      'border-indigo-300',
-                      'border-pink-300',
-                      'border-teal-300'
-                    ] %}
-                    {% set color_index = (loop.index - 1) % color_classes|length %}
-                    <div class="border-l-4 border-l-solid rounded-lg mb-6 p-4 {{ color_classes[color_index] }}">
-                      <div class="mb-2 font-medium">
-                        Cycle {{ loop.index }}
-                      </div>
-                      {% for agent_name, agent_logs in cycle_data.items() %}
-                        <div x-data="{ open: false }" class="border rounded-lg mb-4 agent-section">
-                          <button @click="open = !open" class="w-full p-4 flex justify-between items-center text-left rounded-t-lg">
-                            <span class="font-medium">{{ agent_name }}</span>
-                            <svg class="w-4 h-4" :class="{'rotate-180': open}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                            </svg>
-                          </button>
-                          <div x-show="open" class="border-t">
-                            {% for log_part in agent_logs %}
-                              <pre class="{% if log_part.chat_prompt %}chat_prompt {% elif log_part.chat_response %}chat_response {% endif %} p-4 rounded-md mb-4 whitespace-pre-wrap break-words">{{ log_part.content }}</pre>
-                            {% endfor %}
-                          </div>
-                        </div>
-                      {% endfor %}
-                    </div>
-                  {% endif %}
+                  {{ macros.agent_cycle_section(cycle_data, loop.index, color_classes, default_lang) }}
                 {% endfor %}
             </div>
           {% endif %}
       </div>
 
       <div class="border rounded-lg">
-        <button @click="logsOpen = !logsOpen"
-                class="w-full p-4 flex justify-between items-center">
-            <span class="text-lg font-bold">Raw Logs</span>
-            <svg class="w-5 h-5 transform transition-transform duration-200"
-                :class="{'rotate-180': logsOpen}"
-                fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-            </svg>
-        </button>
+        {{ macros.collapsible_section('Raw Logs', 'logsOpen') }}
         <div x-show="logsOpen"
              class="p-4 border-t">
               {% for part in logs %}
-                <pre id="logs" class="{% if part.chat_prompt %}chat_prompt bg-gray-50{% elif part.chat_response %}chat_response bg-gray-100{% endif %} p-4 rounded-md mb-4 overflow-x-auto">{{ part.content }}</pre>
+                <div id="logs" class="{% if part.chat_prompt %}chat_prompt bg-gray-50{% elif part.chat_response %}chat_response bg-gray-100{% endif %} p-4 rounded-md mb-4 overflow-x-auto">{{ part.content|syntax_highlight(default_lang)|safe }}</div>
               {% endfor %}
         </div>
       </div>
@@ -376,15 +323,7 @@ limitations under the License.
               }
            }"
            x-init="initIframe">
-          <button @click="coverageOpen = !coverageOpen"
-                  class="w-full p-4 flex justify-between items-center">
-              <span class="text-lg font-bold">Coverage Report (embedded)</span>
-              <svg class="w-5 h-5 transform transition-transform duration-200"
-                   :class="{'rotate-180': coverageOpen}"
-                   fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-              </svg>
-          </button>
+          {{ macros.collapsible_section('Coverage Report (embedded)', 'coverageOpen') }}
           <div x-show="coverageOpen"
                x-cloak
                class="p-4 border-t">
@@ -400,34 +339,5 @@ limitations under the License.
       {% endif %}
   </div>
 </div>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Agent sections expand/collapse buttons
-    const agentSectionsExpandAllButton = document.getElementById('agent-sections-expand-all');
-    if (agentSectionsExpandAllButton) {
-        agentSectionsExpandAllButton.addEventListener('click', () => {
-            document.querySelectorAll('.agent-section').forEach(section => {
-                const alpineData = Alpine.$data(section);
-                if (alpineData) {
-                    alpineData.open = true;
-                }
-            });
-        });
-    }
-
-    const agentSectionsCollapseAllButton = document.getElementById('agent-sections-collapse-all');
-    if (agentSectionsCollapseAllButton) {
-        agentSectionsCollapseAllButton.addEventListener('click', () => {
-            document.querySelectorAll('.agent-section').forEach(section => {
-                const alpineData = Alpine.$data(section);
-                if (alpineData) {
-                    alpineData.open = false;
-                }
-            });
-        });
-    }
-});
-</script>
 
 {% endblock %}
