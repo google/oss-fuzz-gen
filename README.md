@@ -374,7 +374,7 @@ logicfuzz/
 │   ├── benchmark_loader.py         # Benchmark YAML loader
 │   └── README.md                   # Architecture deep dive
 │
-├── prompts/agent_graph/            # 📝 LLM System Prompts (80% token optimized)
+├── prompts/                        # 📝 LLM System Prompts (80% token optimized)
 │   ├── function_analyzer_system.txt / *_prompt.txt / *_iteration_prompt.txt
 │   ├── prototyper_system.txt / prototyper_prompt.txt
 │   ├── enhancer_system.txt / enhancer_prompt.txt
@@ -411,7 +411,7 @@ logicfuzz/
 **Key Directories**:
 - `agent_graph/nodes/` - LangGraph node wrappers (state management + config extraction)
 - `agent_graph/agents/` - Core LLM agent logic (prompt construction + response parsing)
-- `prompts/agent_graph/` - Optimized system prompts with structured examples
+- `prompts/` - Optimized system prompts with structured examples
 - `experiment/` - Build/execution/evaluation infrastructure (OSS-Fuzz integration)
 - `data_prep/` - Benchmark data preparation and FuzzIntrospector integration
 

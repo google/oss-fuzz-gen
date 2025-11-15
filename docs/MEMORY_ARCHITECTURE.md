@@ -17,7 +17,7 @@ LogicFuzz 使用三层记忆系统：
 ### 内容结构
 
 ```
-archetypes/         # 6种API模式
+archetypes/         # 10种API模式
 ├── stateless_parser.md
 ├── object_lifecycle.md
 ├── state_machine.md
@@ -232,7 +232,7 @@ def supervisor_node(state):
 
 ## 7. 关键指标
 
-- **Long-term Memory大小**: ~6 archetypes × 200行 = 1200行代码模板
+- **Long-term Memory大小**: ~10 archetypes × 200行 = 2000行代码模板
 - **Session Memory平均大小**: 5-15条约束/修复 (< 2K tokens)
 - **Message History上限**: 100K tokens (自动trim)
 - **Consolidate频率**: 每3次迭代清理一次重复

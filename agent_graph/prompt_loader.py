@@ -7,15 +7,15 @@ import os
 from typing import Dict
 
 
-# Base directory for agent_graph prompts
+# Base directory for agent prompts
 PROMPT_DIR = os.path.normpath(
     os.path.join(os.path.dirname(os.path.dirname(__file__)),
-                 'prompts', 'agent_graph'))
+                 'prompts'))
 
 
 def load_prompt_file(filename: str) -> str:
     """
-    Load a prompt file from the prompts/agent_graph directory.
+    Load a prompt file from the prompts directory.
     
     Use this ONLY for non-standard files (e.g., session_memory_header.txt).
     For standard agent prompts, use PromptManager.

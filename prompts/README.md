@@ -139,7 +139,7 @@ class LangGraphFunctionAnalyzer(LangGraphAgent):
 
 To modify a prompt:
 
-1. Open the relevant `.txt` file in `prompts/agent_graph/`
+1. Open the relevant `.txt` file in `prompts/`
 2. Edit the text (preserve `{PLACEHOLDER}` syntax)
 3. Save the file
 4. Restart the application (prompts are cached)

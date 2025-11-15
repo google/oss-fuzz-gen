@@ -8,6 +8,7 @@ EXTRACT:
 ARCHETYPES:
 - Stateless Parser, Object Lifecycle, State Machine
 - Stream Processor, Round-trip, File-based
+- Global Initialization, Stateful Fuzzing
 
 PARAMETER STRATEGIES:
 - FuzzedDataProvider (default for 2+ params)

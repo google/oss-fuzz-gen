@@ -15,13 +15,15 @@ The knowledge is organized for efficient retrieval during spec generation and dr
 
 ```
 long_term_memory/
-├── archetypes/           # 6 behavioral patterns (unified SRS JSON format)
+├── archetypes/           # 10 behavioral patterns (unified SRS JSON format)
 │   ├── stateless_parser.srs.json
 │   ├── object_lifecycle.srs.json
 │   ├── state_machine.srs.json
 │   ├── stream_processor.srs.json
 │   ├── round_trip.srs.json
-│   └── file_based.srs.json
+│   ├── file_based.srs.json
+│   ├── global_initialization.srs.json
+│   └── stateful_fuzzing.srs.json
 │
 └── retrieval.py          # Retrieval implementation
 ```
@@ -49,7 +51,7 @@ Each archetype SRS JSON file contains:
 - **Common Pitfalls**: Error patterns with wrong/right examples
 - **Real Examples**: Actual APIs using this pattern
 
-### The 6 Archetypes
+### The 10 Archetypes
 
 1. **Stateless Parser**: Single function, no state
    - Example: `json_parse(data, size)`
@@ -74,6 +76,14 @@ Each archetype SRS JSON file contains:
 6. **File-based**: Requires file path
    - Example: `write_temp()` → `api_load_file()` → `unlink()`
    - Use when: API needs filename, not buffer
+
+7. **Global Initialization**: One-time setup via LLVMFuzzerInitialize
+   - Example: `LLVMFuzzerInitialize()` → `LLVMFuzzerTestOneInput()` (multiple calls)
+   - Use when: Library requires global initialization before fuzzing
+
+8. **Stateful Fuzzing**: Static context reused across fuzzer calls
+   - Example: Static variables, context reset between iterations
+   - Use when: API benefits from maintaining state across fuzzer inputs
 
 ---
 
@@ -212,14 +222,16 @@ bundle = retriever.get_bundle("object_lifecycle")
 ## Statistics
 
 Current knowledge base:
-- **6** archetypes in unified SRS JSON format (covers 95%+ of APIs)
+- **10** archetypes in unified SRS JSON format (covers 95%+ of APIs)
   - stateless_parser
   - object_lifecycle
   - state_machine
   - stream_processor
   - round_trip
   - file_based
-- **6** code skeletons embedded in SRS functional requirements
+  - global_initialization
+  - stateful_fuzzing
+- **10** code skeletons embedded in SRS functional requirements
 - **4** pitfall categories integrated into each archetype
   - Initialization errors
   - Data/argument errors

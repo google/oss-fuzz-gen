@@ -182,7 +182,7 @@ def parse_args() -> argparse.Namespace:
   parser.add_argument('-td',
                       '--template-directory',
                       type=str,
-                      default='prompts/agent_graph',
+                      default='prompts',
                       help='[DEPRECATED] This argument is kept for backwards compatibility but is not used by LangGraph agents.')
   parser.add_argument('-w', '--work-dir', default=RESULTS_DIR)
   parser.add_argument('--context',

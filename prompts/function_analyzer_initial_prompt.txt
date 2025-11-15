@@ -26,6 +26,8 @@ Based on the signature and source, which pattern does this likely match?
 - Stream Processor (incremental/iterative)
 - Round-trip (encode/decode)
 - File-based (requires filepath)
+- Global Initialization (LLVMFuzzerInitialize, one-time setup)
+- Stateful Fuzzing (static context, reuse across calls)
 
 Evidence: [Why you chose this]
 

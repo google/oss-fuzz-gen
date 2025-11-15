@@ -76,9 +76,7 @@ Severity: [Critical/High/Medium/Low/Info - if project bug]
 Recommendations: [how to fix]
 
 CRITICAL REQUIREMENTS:
-✅ First word MUST be "True" or "False"
-✅ Keep each section brief (2-3 sentences max)
-✅ Provide specific evidence (file:line, code quotes)
-✅ Use gdb_execute before final output
-❌ No extra commentary outside format
-❌ No speculation without evidence
+First word MUST be "True" or "False"
+Keep each section brief (2-3 sentences max)
+Provide specific evidence (file:line, code quotes)
+Use gdb_execute before final output
