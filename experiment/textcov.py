@@ -140,6 +140,7 @@ class Function:
         if line.hit_count and line.contents in self.lines:
           del self.lines[line.contents]
 
+
 @dataclasses.dataclass
 class RawFunctionReport:
   """Represents a function report in a textcov."""
@@ -148,6 +149,7 @@ class RawFunctionReport:
 
   def append_line(self, line: str):
     self.lines.append(line)
+
 
 @dataclasses.dataclass
 class File:
@@ -185,7 +187,8 @@ class Textcov:
   # For JVM / C / C++ / Rust
   functions: dict[str, Function] = dataclasses.field(default_factory=dict)
   # Normalized function name -> extracted coverage reports for function.
-  raw_coverage_report: dict[str, RawFunctionReport] = dataclasses.field(default_factory=dict)
+  raw_coverage_report: dict[str, RawFunctionReport] = dataclasses.field(
+      default_factory=dict)
   # File name -> File object.
   # For Python
   files: dict[str, File] = dataclasses.field(default_factory=dict)
@@ -274,7 +277,6 @@ class Textcov:
 
         continue
     return textcov
-
 
   @classmethod
   def from_file_raw(
@@ -560,10 +562,9 @@ class Textcov:
     """Get raw coverage report for a function."""
 
     coverage_reports = []
-    
-    for function in self.raw_coverage_report.keys():
+
+    for function, report in self.raw_coverage_report.items():
       if function_name in function:
-        report = self.raw_coverage_report[function]
         coverage_text = report.name + ':\n' + '\n'.join(report.lines)
         coverage_reports.append(coverage_text)
 
