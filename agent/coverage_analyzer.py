@@ -49,11 +49,9 @@ class CoverageAnalyzer(BaseAgent):
     function_requirements = self.get_function_requirements()
 
     builder = CoverageAnalyzerTemplateBuilder(self.llm, benchmark, last_result)
+    tool_guides = f'{self.inspect_tool.tutorial()}\n\n{self.coverage_tool.tutorial()}'
     prompt = builder.build(example_pair=[],
-                           tool_guides=[
-                               self.inspect_tool.tutorial(),
-                               self.coverage_tool.tutorial()
-                           ],
+                           tool_guides=tool_guides,
                            project_dir=self.inspect_tool.project_dir,
                            function_requirements=function_requirements)
     # TODO: A different file name/dir.
