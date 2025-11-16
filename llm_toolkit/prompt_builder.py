@@ -691,7 +691,7 @@ class CoverageAnalyzerTemplateBuilder(PrototyperTemplateBuilder):
             example_pair: list[list[str]],
             project_example_content: Optional[list[list[str]]] = None,
             project_context_content: Optional[dict] = None,
-            tool_guides: str = '',
+            tool_guides: list[str] = [],
             project_dir: str = '',
             function_requirements: str = '') -> prompts.Prompt:
     """Constructs a prompt using the templates in |self| and saves it."""
@@ -707,7 +707,7 @@ class CoverageAnalyzerTemplateBuilder(PrototyperTemplateBuilder):
     prompt = prompt.replace('{FUNCTION_SIGNATURE}',
                             self.benchmark.function_signature)
     prompt = prompt.replace('{FUZZ_TARGET}', self.run_result.fuzz_target_source)
-    prompt = prompt.replace('{TOOL_GUIDES}', tool_guides)
+    prompt = prompt.replace('{TOOL_GUIDES}', '\n'.join(tool_guides))
     prompt = prompt.replace('{FUZZING_LOG}', self.run_result.run_log)
     prompt = prompt.replace('{FUNCTION_REQUIREMENTS}', function_requirements)
 
