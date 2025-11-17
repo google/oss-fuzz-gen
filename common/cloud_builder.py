@@ -348,6 +348,8 @@ class CloudBuilder:
                     'GOOGLE_CLOUD_LOCATION=' +
                     os.getenv("GOOGLE_CLOUD_LOCATION", "global"),
                     '--network=cloudbuild',
+                    '-e',
+                    'DOCKER_API_VERSION=1.41',
                     # Built from this repo's `Dockerfile.cloudbuild-agent`.
                     ('us-central1-docker.pkg.dev/oss-fuzz/oss-fuzz-gen/'
                      'agent-image'),
