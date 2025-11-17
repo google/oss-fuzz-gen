@@ -1,6 +1,6 @@
 <tool>
 **Coverage tool Guide**
-Use the coverage tool to access the coverage report for specific functions, produced during fuzzing. 
+Use the coverage tool to access the coverage report for specific functions, produced during fuzzing.
 This will help you understand the specific lines of code that are covered or not covered by the fuzz target.
 
 <interaction protocols>
