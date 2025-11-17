@@ -12,7 +12,6 @@ Based on {EXAMPLES_COUNT} usage examples, generate a machine-readable API specif
   "target_function": "{exact_function_name}",
   "archetype": {
     "primary_pattern": "...",
-    "reference": "FUZZER_COOKBOOK.md Scenario X",
     "confidence": "HIGH | MEDIUM | LOW",
     "evidence_count": "{N}/{EXAMPLES_COUNT}"
   },

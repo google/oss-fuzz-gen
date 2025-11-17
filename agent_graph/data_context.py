@@ -86,7 +86,7 @@ class FuzzingContext:
         import time
         from data_prep import introspector
         from agent_graph.api_context_extractor import APIContextExtractor
-        from agent_graph.api_dependency_analyzer import APIDependencyAnalyzer
+        from agent_graph.api_composition_analyzer import APICompositionAnalyzer
         from agent_graph.header_extractor import get_function_definition_headers
         
         log = logger_instance or logger
@@ -139,23 +139,23 @@ class FuzzingContext:
                 f"This function might have unusual signature that APIContextExtractor cannot parse."
             )
         
-        # === Step 4: Build dependency graph ===
-        log.debug('  4/5 Building dependency graph...')
+        # === Step 4: Find API combinations ===
+        log.debug('  4/5 Finding API combinations...')
         try:
-            analyzer = APIDependencyAnalyzer(
+            analyzer = APICompositionAnalyzer(
                 project_name,
                 llm=None,
                 use_llm=False  # Use heuristic mode for data preparation
             )
             # Pass api_context to avoid redundant FI query
-            api_dependencies = analyzer.build_dependency_graph(
+            api_dependencies = analyzer.find_api_combinations(
                 function_signature, 
                 api_context=api_context
             )
         except Exception as e:
             raise RuntimeError(
-                f"Failed to build dependency graph: {e}\n"
-                f"This is an internal error in APIDependencyAnalyzer."
+                f"Failed to find API combinations: {e}\n"
+                f"This is an internal error in APICompositionAnalyzer."
             ) from e
         
         if not api_dependencies:
