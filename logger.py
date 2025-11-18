@@ -23,7 +23,7 @@ from urllib.parse import urlparse
 
 from google.cloud import storage
 
-from results import Result, RunResult, TrialResult
+from results import AnalysisResult, BuildResult, Result, RunResult, TrialResult
 
 FINAL_RESULT_JSON = 'result.json'
 
@@ -79,6 +79,37 @@ class CustomLoggerAdapter(logging.LoggerAdapter):
         f'{chat_history}\n'
         for agent_name, chat_history in result.chat_history.items())
     self.write_to_file(chat_history_path, chat_history)
+
+  def write_build_info(self, trial_result: TrialResult) -> None:
+    """Writes build_info.json with Cloud Build IDs per cycle."""
+    trial_result_dir = os.path.join(trial_result.work_dirs.status,
+                                    f'{trial_result.trial:02d}')
+    os.makedirs(trial_result_dir, exist_ok=True)
+
+    build_info = {}
+    build_info['trial'] = trial_result.trial
+    build_info['cycles'] = {}
+    cycle = 0
+
+    for i, result in enumerate(trial_result.result_history):
+      if isinstance(
+          result, BuildResult) and not isinstance(result,
+                                                  (RunResult, AnalysisResult)):
+        # Determine whether to start a new cycle
+        if i == 0 or isinstance(trial_result.result_history[i - 1],
+                                (AnalysisResult, RunResult)):
+          cycle += 1
+
+        if cycle not in build_info['cycles']:
+          build_info['cycles'][cycle] = {}
+
+        if result.author and result.build_id:
+          agent_name = result.author.name
+          build_url = f"https://console.cloud.google.com/cloud-build/builds;region=us-west2/{result.build_id}"
+          build_info['cycles'][cycle][agent_name] = build_url
+
+    with open(os.path.join(trial_result_dir, 'build_info.json'), 'w') as f:
+      json.dump(build_info, f)
 
   def download_gcs_file(self, local_path: str, gs_url: str) -> bool:
     """Downloads a file from Google Cloud storage to a local file."""
