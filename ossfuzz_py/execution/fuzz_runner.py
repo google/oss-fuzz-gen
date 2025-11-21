@@ -40,8 +40,10 @@ from typing import Any, Dict, List, Optional
 from google.cloud import storage
 from pydantic import BaseModel, Field
 
+# Import ResultManager for result storage
+from ossfuzz_py.core.benchmark_manager import Benchmark
 from ossfuzz_py.core.data_models import FuzzingEngine, Sanitizer
-from ossfuzz_py.result.results import RunInfo
+from ossfuzz_py.result.results import Result, RunInfo
 from ossfuzz_py.utils.env_utils import EnvUtils
 from ossfuzz_py.utils.work_dir_manager import WorkDirManager
 
@@ -145,13 +147,20 @@ class LocalRunner(FuzzRunner):
   Implements the standardized Runner interface as per UML design.
   """
 
-  def __init__(self, work_dir_manager: WorkDirManager):
+  def __init__(self,
+               work_dir_manager: WorkDirManager,
+               result_manager: Any = None):
     """Initialize LocalRunner with Docker manager integration."""
     super().__init__()
     self.work_dir_manager = work_dir_manager
+    self.result_manager = result_manager
 
-  def run(self, target: str, options: FuzzRunOptions,
-          build_metadata: Dict[str, Any]) -> RunInfo:
+  def run(self,
+          target: str,
+          options: FuzzRunOptions,
+          build_metadata: Dict[str, Any],
+          benchmark_id: Optional[str] = None,
+          trial: int = 1) -> RunInfo:
     """
     Run a fuzz target using build metadata from LocalBuilder.
 
@@ -159,6 +168,8 @@ class LocalRunner(FuzzRunner):
         target: Target name to run
         options: Fuzzing options
         build_metadata: Metadata from LocalBuilder containing build artifacts
+        benchmark_id: Optional benchmark ID for result storage
+        trial: Trial number for result storage
 
     Returns:
         RunInfo: Standardized result data structure
@@ -174,6 +185,11 @@ class LocalRunner(FuzzRunner):
 
     except Exception as e:
       self.logger.error("Local run failed: %s", e)
+      run_info.error_message = str(e)
+
+    # Store result through ResultManager if available
+    self._store_run_result(target, run_info, build_metadata, benchmark_id,
+                           trial)
 
     return run_info
 
@@ -271,6 +287,50 @@ class LocalRunner(FuzzRunner):
       args.append('-detect_leaks=0')
 
     return args
+
+  def _store_run_result(self, target: str, run_info: RunInfo,
+                        build_metadata: Dict[str, Any],
+                        benchmark_id: Optional[str], trial: int) -> None:
+    """Store run result through ResultManager if available."""
+    if not self.result_manager:
+      return
+
+    try:
+      # Create minimal benchmark for the result
+      if Benchmark is None:
+        self.logger.warning("Benchmark class not available")
+        return
+
+      benchmark = Benchmark(
+          project=build_metadata.get('project_name', 'unknown'),
+          language='c++',  # Default language
+          function_signature=f'int {target}(const uint8_t* data, size_t size)',
+          function_name=target,
+          return_type='int',
+          target_path='',
+          id=benchmark_id or target,
+      )
+
+      # Create Result object for storage
+      if Result is None:
+        self.logger.warning("Result class not available")
+        return
+
+      result_obj = Result(
+          benchmark=benchmark,
+          work_dirs='',
+          trial=trial,
+          run_info=run_info,
+      )
+
+      # Store through ResultManager
+      self.result_manager.store_result(benchmark_id or target, result_obj)
+      self.logger.debug("Stored run result for %s through ResultManager",
+                        benchmark_id or target)
+
+    except Exception as e:
+      self.logger.warning(
+          "Failed to store run result through ResultManager: %s", e)
 
   def _parse_and_update_run_results(self, log_path: str, run_info: 'RunInfo',
                                     project_name: str):

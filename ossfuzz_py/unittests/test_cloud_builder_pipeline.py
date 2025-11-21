@@ -34,6 +34,7 @@ Usage:
     GOOGLE_APPLICATION_CREDENTIALS=/path/to/creds.json python -m unittest
     test_cloud_builder_pipeline.py -v
 """
+import os
 import shutil
 import subprocess
 import unittest
@@ -97,8 +98,8 @@ class TestCloudBuilderPipeline(unittest.TestCase):
     # test_ossfuzz_manager.py approach)
     try:
       if oss_fuzz_manager.checkout_path.exists():
-        oss_fuzz_manager.logger.info(
-            f"Repository already exists at {oss_fuzz_manager.checkout_path}")
+        oss_fuzz_manager.logger.info("Repository already exists at %s",
+                                     oss_fuzz_manager.checkout_path)
       else:
         repo_url = "https://github.com/google/oss-fuzz.git"
         cmd = [
@@ -111,8 +112,8 @@ class TestCloudBuilderPipeline(unittest.TestCase):
                                 check=True,
                                 timeout=120)
         oss_fuzz_manager.logger.info(
-            f"Successfully cloned OSS-Fuzz repository "
-            f"to {oss_fuzz_manager.checkout_path}, result={result}")
+            "Successfully cloned OSS-Fuzz repository to %s, result=%s",
+            oss_fuzz_manager.checkout_path, result)
 
     except subprocess.TimeoutExpired:
       self.skipTest("OSS-Fuzz clone timed out - network may be slow")
@@ -131,7 +132,8 @@ class TestCloudBuilderPipeline(unittest.TestCase):
 
     print("✓ OSS-Fuzz repository cloned successfully")
 
-    benchmark_yaml_path = "../../benchmark-sets/all/libspng.yaml"
+    benchmark_yaml_path = os.path.join(os.path.dirname(__file__),
+                                       "../../benchmark-sets/all/libspng.yaml")
     fuzz_target = _create_real_fuzz_target_from_benchmark(benchmark_yaml_path)
     google_cloud_project = EnvUtils.get_env(EnvVars.GOOGLE_CLOUD_PROJECT,
                                             "oss-fuzz") or "oss-fuzz"
