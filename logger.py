@@ -98,7 +98,7 @@ class CustomLoggerAdapter(logging.LoggerAdapter):
         with open(build_info_path, 'r') as f:
           build_info = json.load(f)
       except (json.JSONDecodeError, IOError):
-        pass  
+        pass
 
     existing_build_ids = {
         exec_info.get('build_id')
@@ -136,7 +136,7 @@ class CustomLoggerAdapter(logging.LoggerAdapter):
         with open(build_info_path, 'r') as f:
           build_info = json.load(f)
       except (json.JSONDecodeError, IOError):
-        pass  
+        pass
 
     existing_build_ids = {
         exec_info.get('build_id')
