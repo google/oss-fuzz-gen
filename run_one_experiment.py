@@ -21,6 +21,7 @@ import os
 import shutil
 from multiprocessing import pool
 from typing import List, Optional
+from agent.fix_build_agent import FixBuildAgent
 
 import logger
 import pipeline
@@ -109,6 +110,21 @@ class AggregatedResult:
             max_coverage_diff_report=benchmark_result.line_coverage_report,
             full_textcov_diff=benchmark_result.textcov_diff,
         )
+
+class FixPipeline:
+    """A custom pipeline wrapper for the Fix Build Agent."""
+    def __init__(self, agent):
+        self.agent = agent
+
+    def execute(self, result_history: list[Result]) -> list[Result]:
+        current_trial = self.agent.trial
+        logger.info('Executing FixPipeline...', trial=current_trial)
+        result = self.agent.execute(result_history)
+        result_history.append(result)
+        
+        logger.info(f'FixPipeline finished. Fixed: {result.is_fixed}', trial=current_trial)
+        
+        return result_history
 
 
 def generate_targets(
@@ -280,8 +296,34 @@ def _fuzzing_pipeline(
     trial_logger = logger.get_trial_logger(trial=trial, level=logging.DEBUG)
     trial_logger.info("Trial Starts")
 
-    # Support custom pipeline.
-    if args.custom_pipeline == "function_based_prototyper":
+
+    if args.fix_build:
+        if "gpt" in args.model or "openai" in args.model:
+            api_key = os.getenv("OPENAI_API_KEY")
+        elif "deepseek" in args.model:
+            api_key = os.getenv("DPSEEK_API_KEY")
+        else:
+            # 默认回退到 OPENAI_API_KEY，或者你可以根据需要添加其他厂商的 Key
+            api_key = os.getenv("OPENAI_API_KEY")
+
+        if not api_key:
+            trial_logger.error(f"API Key not found for model: {args.model}")
+            raise ValueError(f"API Key environment variable is required for model {args.model}.")
+
+        # 初始化你的 FixBuildAgent
+        fix_agent = FixBuildAgent(
+            trial=trial,
+            llm_model_name=args.model,
+            api_key=api_key,
+            args=args,
+            benchmark=benchmark,
+            work_dirs=work_dirs
+        )
+
+        # 使用自定义的 FixPipeline 包装它
+        p = FixPipeline(agent=fix_agent)
+
+    elif args.custom_pipeline == "function_based_prototyper":
         p = pipeline.Pipeline(
             args=args,
             trial=trial,

@@ -1,0 +1,280 @@
+#5 extracting sha256:87976449b1e589384149409ebed652fe44f473c7af88f5f4a5c8c2882e9dd9a4 0.3s done
+#5 DONE 445.4s
+
+#5 [1/6] FROM gcr.io/oss-fuzz-base/base-builder-python:latest@sha256:521cad67b616c3ad22faab29b4c721e6f9cb4236bfb4e9b471fe7b0dc80ac43a
+#5 extracting sha256:aef3b597e5534a189f7b972ac19d8db4f54123e671b18a6065b6e957aec0b244
+#5 extracting sha256:aef3b597e5534a189f7b972ac19d8db4f54123e671b18a6065b6e957aec0b244 0.3s done
+#5 extracting sha256:8e87d0a34575733185cc981d021e5834ec1d3c7d9af2cda9e62babb2c7a3ab3e
+#5 extracting sha256:8e87d0a34575733185cc981d021e5834ec1d3c7d9af2cda9e62babb2c7a3ab3e 4.2s done
+#5 extracting sha256:0311f979b5557bac0d6b5a1611b05ef7c7603d2c8f453171ec9c06649741de15
+#5 extracting sha256:0311f979b5557bac0d6b5a1611b05ef7c7603d2c8f453171ec9c06649741de15 3.5s done
+#5 DONE 453.4s
+
+#5 [1/6] FROM gcr.io/oss-fuzz-base/base-builder-python:latest@sha256:521cad67b616c3ad22faab29b4c721e6f9cb4236bfb4e9b471fe7b0dc80ac43a
+#5 extracting sha256:47db0df2fe08b1bedd7b0ebabe67540c2a4b2296cfe64fe9248038aa65d8a9e4
+#5 extracting sha256:47db0df2fe08b1bedd7b0ebabe67540c2a4b2296cfe64fe9248038aa65d8a9e4 1.5s done
+#5 DONE 454.8s
+
+#5 [1/6] FROM gcr.io/oss-fuzz-base/base-builder-python:latest@sha256:521cad67b616c3ad22faab29b4c721e6f9cb4236bfb4e9b471fe7b0dc80ac43a
+#5 extracting sha256:a06d0055d4284dfa28513cbcaa3f672757799428ed3019ed4559ab5ea18fba77
+#5 extracting sha256:a06d0055d4284dfa28513cbcaa3f672757799428ed3019ed4559ab5ea18fba77 0.5s done
+#5 DONE 455.4s
+
+#5 [1/6] FROM gcr.io/oss-fuzz-base/base-builder-python:latest@sha256:521cad67b616c3ad22faab29b4c721e6f9cb4236bfb4e9b471fe7b0dc80ac43a
+#5 extracting sha256:bf679d2823898efd6cdba32dd700a581209b3daafc8fef62f518b39765c5d2d3
+#5 extracting sha256:bf679d2823898efd6cdba32dd700a581209b3daafc8fef62f518b39765c5d2d3 0.3s done
+#5 extracting sha256:b117462b63bccfb63778428f0d82e5c7a24cec6518637f170fb07d13d3a9759f
+#5 extracting sha256:b117462b63bccfb63778428f0d82e5c7a24cec6518637f170fb07d13d3a9759f 0.3s done
+#5 DONE 456.0s
+
+#5 [1/6] FROM gcr.io/oss-fuzz-base/base-builder-python:latest@sha256:521cad67b616c3ad22faab29b4c721e6f9cb4236bfb4e9b471fe7b0dc80ac43a
+#5 extracting sha256:d1a0fb4671fb1df84a74f4476266e67f72a040aadfa94cf016306b5f49057c94
+#5 extracting sha256:d1a0fb4671fb1df84a74f4476266e67f72a040aadfa94cf016306b5f49057c94 0.5s done
+#5 DONE 456.5s
+
+#5 [1/6] FROM gcr.io/oss-fuzz-base/base-builder-python:latest@sha256:521cad67b616c3ad22faab29b4c721e6f9cb4236bfb4e9b471fe7b0dc80ac43a
+#5 extracting sha256:2e77be67bf7def941592776b83fd2293b79d44e71354fc72331e7be95cb02d8a
+#5 extracting sha256:2e77be67bf7def941592776b83fd2293b79d44e71354fc72331e7be95cb02d8a 0.3s done
+#5 DONE 456.7s
+
+#5 [1/6] FROM gcr.io/oss-fuzz-base/base-builder-python:latest@sha256:521cad67b616c3ad22faab29b4c721e6f9cb4236bfb4e9b471fe7b0dc80ac43a
+#5 extracting sha256:62002e1ba333a3c8c1b51beafd31c18c0c39cfcf0aa9dd5ee9965100a512a95a
+#5 extracting sha256:62002e1ba333a3c8c1b51beafd31c18c0c39cfcf0aa9dd5ee9965100a512a95a 0.4s done
+#5 extracting sha256:56aef7354f9752b15501517d63392f810e251f76784761d0d5f1ff01366c314e
+#5 extracting sha256:56aef7354f9752b15501517d63392f810e251f76784761d0d5f1ff01366c314e 0.3s done
+#5 extracting sha256:d341b0e838835988f96f1bbac5fa205d25f5f01be64abf9a2e960ac9dd9db085
+#5 extracting sha256:d341b0e838835988f96f1bbac5fa205d25f5f01be64abf9a2e960ac9dd9db085 0.3s done
+#5 extracting sha256:138f6acb03c56e9b5d6bc9f8588682473f1260c6eb4b8c2e13f7de02e54f7e30
+#5 extracting sha256:138f6acb03c56e9b5d6bc9f8588682473f1260c6eb4b8c2e13f7de02e54f7e30 0.5s done
+#5 extracting sha256:12b34223de00001a9bf16a6432b5f3cff596baf523640b0a1b6d0fd321aa2183
+#5 extracting sha256:12b34223de00001a9bf16a6432b5f3cff596baf523640b0a1b6d0fd321aa2183 1.3s done
+#5 DONE 459.4s
+
+#5 [1/6] FROM gcr.io/oss-fuzz-base/base-builder-python:latest@sha256:521cad67b616c3ad22faab29b4c721e6f9cb4236bfb4e9b471fe7b0dc80ac43a
+#5 extracting sha256:4ac658ebcc73a23a989027f4f4a5bb82670206b1dcb73ee90713b72a91f472ce
+#5 extracting sha256:4ac658ebcc73a23a989027f4f4a5bb82670206b1dcb73ee90713b72a91f472ce 0.3s done
+#5 DONE 459.7s
+
+#5 [1/6] FROM gcr.io/oss-fuzz-base/base-builder-python:latest@sha256:521cad67b616c3ad22faab29b4c721e6f9cb4236bfb4e9b471fe7b0dc80ac43a
+#5 extracting sha256:41dceb542baa2fc1bfb82da1c0df3a592e49cc5ca472da4e26ebf25d1e025752
+#5 extracting sha256:41dceb542baa2fc1bfb82da1c0df3a592e49cc5ca472da4e26ebf25d1e025752 0.3s done
+#5 extracting sha256:25afd0a4f5ad620689fca37e3d5e6968d5702ecf86aa1f246622ec0f32d8bd50
+#5 extracting sha256:25afd0a4f5ad620689fca37e3d5e6968d5702ecf86aa1f246622ec0f32d8bd50 0.3s done
+#5 extracting sha256:5123d77986a46f53125446fdcd9c3ed863d0bf6ee0e3ff86778f52e9433a0727
+#5 extracting sha256:5123d77986a46f53125446fdcd9c3ed863d0bf6ee0e3ff86778f52e9433a0727 0.3s done
+#5 DONE 460.6s
+
+#5 [1/6] FROM gcr.io/oss-fuzz-base/base-builder-python:latest@sha256:521cad67b616c3ad22faab29b4c721e6f9cb4236bfb4e9b471fe7b0dc80ac43a
+#5 extracting sha256:84d91ee6cc7e7e7fc204a0a101daaeb20cc32ce4a7041fe902290be7a30328d6
+#5 extracting sha256:84d91ee6cc7e7e7fc204a0a101daaeb20cc32ce4a7041fe902290be7a30328d6 0.3s done
+#5 DONE 460.9s
+
+#5 [1/6] FROM gcr.io/oss-fuzz-base/base-builder-python:latest@sha256:521cad67b616c3ad22faab29b4c721e6f9cb4236bfb4e9b471fe7b0dc80ac43a
+#5 extracting sha256:79cc58241fb0a98d5f1269023d144b24f8a44ab4722f47bcd7702801146b5165
+#5 extracting sha256:79cc58241fb0a98d5f1269023d144b24f8a44ab4722f47bcd7702801146b5165 0.3s done
+#5 DONE 461.2s
+
+#5 [1/6] FROM gcr.io/oss-fuzz-base/base-builder-python:latest@sha256:521cad67b616c3ad22faab29b4c721e6f9cb4236bfb4e9b471fe7b0dc80ac43a
+#5 extracting sha256:02e935a465a613b66866bd7a9f243c8e12976bc90e4d7b07d285c50be443ad62
+#5 extracting sha256:02e935a465a613b66866bd7a9f243c8e12976bc90e4d7b07d285c50be443ad62 0.3s done
+#5 DONE 461.5s
+
+#5 [1/6] FROM gcr.io/oss-fuzz-base/base-builder-python:latest@sha256:521cad67b616c3ad22faab29b4c721e6f9cb4236bfb4e9b471fe7b0dc80ac43a
+#5 extracting sha256:0fc0bdc4184223152fdb41c5183adb4cb205f818b94d0b9d9c08cbe3733a473f
+#5 extracting sha256:0fc0bdc4184223152fdb41c5183adb4cb205f818b94d0b9d9c08cbe3733a473f 0.3s done
+#5 DONE 461.8s
+
+#5 [1/6] FROM gcr.io/oss-fuzz-base/base-builder-python:latest@sha256:521cad67b616c3ad22faab29b4c721e6f9cb4236bfb4e9b471fe7b0dc80ac43a
+#5 extracting sha256:e6af1d50e81fb5c24ab8076bb274b3fbff287c579b09b2e658eb79d47dfdc69d
+#5 extracting sha256:e6af1d50e81fb5c24ab8076bb274b3fbff287c579b09b2e658eb79d47dfdc69d 0.3s done
+#5 extracting sha256:cd05acb2663f1a81ab0d9486f26e76c10b1bec8e14f0338c8f7f2cd24f049bd4
+#5 extracting sha256:cd05acb2663f1a81ab0d9486f26e76c10b1bec8e14f0338c8f7f2cd24f049bd4 0.3s done
+#5 DONE 462.4s
+
+#5 [1/6] FROM gcr.io/oss-fuzz-base/base-builder-python:latest@sha256:521cad67b616c3ad22faab29b4c721e6f9cb4236bfb4e9b471fe7b0dc80ac43a
+#5 extracting sha256:b7b1f77e3af62f65fd095e0d124c28a64ba82ad031bc1a61984822aab85df8da
+#5 extracting sha256:b7b1f77e3af62f65fd095e0d124c28a64ba82ad031bc1a61984822aab85df8da 0.3s done
+#5 extracting sha256:8d17bbdec0970dec6cbf5b1d01ebaa344b5a881ecb2f71ac8c37c3daa2628a13
+#5 extracting sha256:8d17bbdec0970dec6cbf5b1d01ebaa344b5a881ecb2f71ac8c37c3daa2628a13 0.3s done
+#5 extracting sha256:713455ac51e77436b013a2549bd65d0b4f68032aad65d687e5862f8b9e7a86ab
+#5 extracting sha256:713455ac51e77436b013a2549bd65d0b4f68032aad65d687e5862f8b9e7a86ab 0.3s done
+#5 extracting sha256:e511fe7b39bc2cb00ecaa043becdb9de13c721ecde67fbcfc222b757aa9852dd
+#5 extracting sha256:e511fe7b39bc2cb00ecaa043becdb9de13c721ecde67fbcfc222b757aa9852dd 0.3s done
+#5 DONE 463.5s
+
+#5 [1/6] FROM gcr.io/oss-fuzz-base/base-builder-python:latest@sha256:521cad67b616c3ad22faab29b4c721e6f9cb4236bfb4e9b471fe7b0dc80ac43a
+#5 extracting sha256:a112d91da9b77a929fce80a39dbee5509aba710a8a7680e1f4955fc3f70500c9
+#5 extracting sha256:a112d91da9b77a929fce80a39dbee5509aba710a8a7680e1f4955fc3f70500c9 0.3s done
+#5 DONE 463.7s
+
+#5 [1/6] FROM gcr.io/oss-fuzz-base/base-builder-python:latest@sha256:521cad67b616c3ad22faab29b4c721e6f9cb4236bfb4e9b471fe7b0dc80ac43a
+#5 extracting sha256:2cfdf85d843e005d6da79ca25e6fd5c05f1080621db5cce0903628282421a99e
+#5 extracting sha256:2cfdf85d843e005d6da79ca25e6fd5c05f1080621db5cce0903628282421a99e 1.3s done
+#5 extracting sha256:27ebc4e6960caee805a21ba48bed0006af5cada08d4f38308df438cc5605338e
+#5 extracting sha256:27ebc4e6960caee805a21ba48bed0006af5cada08d4f38308df438cc5605338e 3.2s done
+#5 extracting sha256:6a4a1702edcbd95b1b3eedb0e939436e90d4c7172c3881d2d486cba7b2724894
+#5 extracting sha256:6a4a1702edcbd95b1b3eedb0e939436e90d4c7172c3881d2d486cba7b2724894 4.2s done
+#5 DONE 472.5s
+
+#6 [2/6] RUN apt-get install sqlite3
+#6 2.740 Reading package lists...
+#6 3.782 Building dependency tree...
+#6 3.967 Reading state information...
+#6 4.121 The following packages were automatically installed and are no longer required:
+#6 4.122   autotools-dev libsigsegv2 m4
+#6 4.122 Use 'apt autoremove' to remove them.
+#6 4.124 Suggested packages:
+#6 4.124   sqlite3-doc
+#6 4.287 The following NEW packages will be installed:
+#6 4.287   sqlite3
+#6 7.387 0 upgraded, 1 newly installed, 0 to remove and 0 not upgraded.
+#6 7.387 Need to get 860 kB of archives.
+#6 7.387 After this operation, 2803 kB of additional disk space will be used.
+#6 7.387 Get:1 http://archive.ubuntu.com/ubuntu focal-updates/main amd64 sqlite3 amd64 3.31.1-4ubuntu0.7 [860 kB]
+#6 7.705 debconf: delaying package configuration, since apt-utils is not installed
+#6 7.834 Fetched 860 kB in 3s (277 kB/s)
+#6 8.056 Selecting previously unselected package sqlite3.
+#6 8.056 (Reading database ... 
+(Reading database ... 5%
+(Reading database ... 10%
+(Reading database ... 15%
+(Reading database ... 20%
+(Reading database ... 25%
+(Reading database ... 30%
+(Reading database ... 35%
+(Reading database ... 40%
+(Reading database ... 45%
+(Reading database ... 50%
+(Reading database ... 55%
+(Reading database ... 60%
+(Reading database ... 65%
+(Reading database ... 70%
+(Reading database ... 75%
+(Reading database ... 80%
+(Reading database ... 85%
+(Reading database ... 90%
+(Reading database ... 95%
+(Reading database ... 100%
+(Reading database ... 17483 files and directories currently installed.)
+#6 8.108 Preparing to unpack .../sqlite3_3.31.1-4ubuntu0.7_amd64.deb ...
+#6 8.189 Unpacking sqlite3 (3.31.1-4ubuntu0.7) ...
+#6 8.732 Setting up sqlite3 (3.31.1-4ubuntu0.7) ...
+#6 DONE 14.4s
+
+#7 [3/6] RUN pip3 install --upgrade pip
+#7 1.326 Requirement already satisfied: pip in /usr/local/lib/python3.11/site-packages (25.3)
+#7 2.345 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+#7 DONE 3.4s
+
+#8 [4/6] RUN git clone https://github.com/apache/airflow
+#8 1.095 Cloning into 'airflow'...
+#8 227.7 Updating files:  51% (5679/10994)
+Updating files:  52% (5717/10994)
+Updating files:  53% (5827/10994)
+Updating files:  54% (5937/10994)
+Updating files:  55% (6047/10994)
+Updating files:  56% (6157/10994)
+Updating files:  57% (6267/10994)
+Updating files:  58% (6377/10994)
+Updating files:  59% (6487/10994)
+Updating files:  60% (6597/10994)
+Updating files:  61% (6707/10994)
+Updating files:  62% (6817/10994)
+Updating files:  63% (6927/10994)
+Updating files:  64% (7037/10994)
+Updating files:  65% (7147/10994)
+Updating files:  66% (7257/10994)
+Updating files:  67% (7366/10994)
+Updating files:  68% (7476/10994)
+Updating files:  69% (7586/10994)
+Updating files:  70% (7696/10994)
+Updating files:  71% (7806/10994)
+Updating files:  72% (7916/10994)
+Updating files:  73% (8026/10994)
+Updating files:  74% (8136/10994)
+Updating files:  75% (8246/10994)
+Updating files:  76% (8356/10994)
+Updating files:  77% (8466/10994)
+Updating files:  78% (8576/10994)
+Updating files:  79% (8686/10994)
+Updating files:  80% (8796/10994)
+Updating files:  81% (8906/10994)
+Updating files:  82% (9016/10994)
+Updating files:  83% (9126/10994)
+Updating files:  84% (9235/10994)
+Updating files:  85% (9345/10994)
+Updating files:  86% (9455/10994)
+Updating files:  87% (9565/10994)
+Updating files:  88% (9675/10994)
+Updating files:  89% (9785/10994)
+Updating files:  90% (9895/10994)
+Updating files:  91% (10005/10994)
+Updating files:  92% (10115/10994)
+Updating files:  93% (10225/10994)
+Updating files:  94% (10335/10994)
+Updating files:  95% (10445/10994)
+Updating files:  96% (10555/10994)
+Updating files:  97% (10665/10994)
+Updating files:  98% (10775/10994)
+Updating files:  99% (10885/10994)
+Updating files: 100% (10994/10994)
+Updating files: 100% (10994/10994), done.
+#8 DONE 232.9s
+
+#9 [5/6] WORKDIR airflow
+#9 DONE 0.9s
+
+#10 [6/6] COPY build.sh dag_fuzz.py /src/
+#10 DONE 1.1s
+
+#11 exporting to image
+#11 exporting layers
+#11 exporting layers 25.4s done
+#11 exporting manifest sha256:8f116afec870b37ff79f60ec79b4b80f9203810d85b1d5e847f662e5c495c072
+#11 exporting manifest sha256:8f116afec870b37ff79f60ec79b4b80f9203810d85b1d5e847f662e5c495c072 0.2s done
+#11 exporting config sha256:c1cad0302f01b4f276590d8dc542398c76c0f62a712bf41ed66462ec285f01d9
+#11 exporting config sha256:c1cad0302f01b4f276590d8dc542398c76c0f62a712bf41ed66462ec285f01d9 0.2s done
+#11 exporting attestation manifest sha256:ceaee720bed40996e4edeeb67ab8a75c767b2a62e93c994edc9b82185e72c835
+#11 exporting attestation manifest sha256:ceaee720bed40996e4edeeb67ab8a75c767b2a62e93c994edc9b82185e72c835 0.5s done
+#11 exporting manifest list sha256:8cb71684867aef581488cc6d7b754581cfdcfbae1368342ed2d1bfd966d6ed53
+#11 exporting manifest list sha256:8cb71684867aef581488cc6d7b754581cfdcfbae1368342ed2d1bfd966d6ed53 0.2s done
+#11 naming to gcr.io/oss-fuzz/airflow:latest
+#11 naming to gcr.io/oss-fuzz/airflow:latest 0.1s done
+#11 unpacking to gcr.io/oss-fuzz/airflow:latest
+#11 unpacking to gcr.io/oss-fuzz/airflow:latest 7.6s done
+#11 DONE 34.5s
+
+ [33m1 warning found (use docker --debug to expand):
+[0m - WorkdirRelativePath: Relative workdir "airflow" can have unexpected results if the base image changes (line 24)
+INFO:__main__:Keeping existing build artifacts as-is (if any).
+INFO:__main__:Running: docker run --privileged --shm-size=2g --platform linux/amd64 --rm -i -e FUZZING_ENGINE=libfuzzer -e SANITIZER=address -e ARCHITECTURE=x86_64 -e PROJECT_NAME=airflow -e HELPER=True -e FUZZING_LANGUAGE=python -v /root/oss-fuzz-gen/oss-fuzz/build/out/airflow/:/out -v /root/oss-fuzz-gen/oss-fuzz/build/work/airflow:/work -t gcr.io/oss-fuzz/airflow.
+---------------------------------------------------------------
+vm.mmap_rnd_bits = 28
+Compiling libFuzzer to /usr/lib/libFuzzingEngine.a...  done.
+---------------------------------------------------------------
+CC=clang
+CXX=clang++
+CFLAGS=-O1   -fno-omit-frame-pointer   -gline-tables-only   -Wno-error=incompatible-function-pointer-types   -Wno-error=int-conversion   -Wno-error=deprecated-declarations   -Wno-error=implicit-function-declaration   -Wno-error=implicit-int   -Wno-error=unknown-warning-option   -Wno-error=vla-cxx-extension   -DFUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION -fsanitize=address -fsanitize-address-use-after-scope -fsanitize=fuzzer-no-link -fno-sanitize=function,leak,vptr,
+CXXFLAGS=-O1   -fno-omit-frame-pointer   -gline-tables-only   -Wno-error=incompatible-function-pointer-types   -Wno-error=int-conversion   -Wno-error=deprecated-declarations   -Wno-error=implicit-function-declaration   -Wno-error=implicit-int   -Wno-error=unknown-warning-option   -Wno-error=vla-cxx-extension   -DFUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION -fsanitize=address -fsanitize-address-use-after-scope -fsanitize=fuzzer-no-link -stdlib=libc++ -fno-sanitize=function,leak,vptr
+RUSTFLAGS=--cfg fuzzing -Zsanitizer=address -Cdebuginfo=1 -Cforce-frame-pointers
+---------------------------------------------------------------
++ pip3 install --upgrade pip
+Requirement already satisfied: pip in /usr/local/lib/python3.11/site-packages (25.3)
+[33mWARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.[0m[33m
+[0m+ pip3 install colorlog
+Collecting colorlog
+  Downloading colorlog-6.10.1-py3-none-any.whl.metadata (11 kB)
+Downloading colorlog-6.10.1-py3-none-any.whl (11 kB)
+Installing collected packages: colorlog
+Successfully installed colorlog-6.10.1
+[33mWARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.[0m[33m
+[0m+ pip3 install .
+Processing /src/airflow
+  Installing build dependencies ... [?25l- \ | / - \ | / - \ | / - \ | / - \ | / - done
+[?25h  Getting requirements to build wheel ... [?25ldone
+[?25h  Preparing metadata (pyproject.toml) ... [?25ldone
+[?25hINFO: pip is looking at multiple versions of apache-airflow to determine which version is compatible with other requirements. This could take a while.
+[31mERROR: Ignored the following yanked versions: 3.0.5[0m[31m
+[0m[31mERROR: Could not find a version that satisfies the requirement apache-airflow-core==3.2.0 (from apache-airflow) (from versions: 3.0.0rc1, 3.0.0rc1.post1, 3.0.0rc1.post2, 3.0.0rc1.post3, 3.0.0rc1.post4, 3.0.0rc2, 3.0.0rc3, 3.0.0rc4, 3.0.0, 3.0.1rc1, 3.0.1, 3.0.2rc1, 3.0.2rc2, 3.0.2, 3.0.3rc1, 3.0.3rc2, 3.0.3rc3, 3.0.3rc4, 3.0.3rc5, 3.0.3rc6, 3.0.3, 3.0.4rc1, 3.0.4rc2, 3.0.4, 3.0.5rc1, 3.0.5rc2, 3.0.5rc3, 3.0.6rc1, 3.0.6rc2, 3.0.6, 3.1.0b1, 3.1.0b2, 3.1.0rc1, 3.1.0rc2, 3.1.0, 3.1.1rc1, 3.1.1rc2, 3.1.1, 3.1.2rc1, 3.1.2rc2, 3.1.2, 3.1.3rc1, 3.1.3)[0m[31m
+[0m[31mERROR: No matching distribution found for apache-airflow-core==3.2.0[0m[31m
+[0mERROR:__main__:Building fuzzers failed.

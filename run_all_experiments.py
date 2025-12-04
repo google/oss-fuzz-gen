@@ -100,14 +100,48 @@ def prepare_experiment_targets(
 ) -> list[benchmarklib.Benchmark]:
     """Constructs a list of experiment configs based on the |BENCHMARK_DIR| and
     |args| setting."""
+    
+    # --- 统一为 4 空格缩进 ---
+    if args.fix_build:
+        logger.info('Running in Fix Build Mode. Loading targets from benchmark-sets/fix-build/')
+        fix_build_dir = os.path.join(os.path.dirname(__file__), 'benchmark-sets', 'fix-build')
+        experiment_configs = []
+
+        if not os.path.exists(fix_build_dir):
+            logger.error(f"Directory {fix_build_dir} does not exist.")
+            return []
+
+        import yaml
+        for file in os.listdir(fix_build_dir):
+            if file.endswith('.yaml'):
+                path = os.path.join(fix_build_dir, file)
+                try:
+                    with open(path, 'r') as f:
+                        data = yaml.safe_load(f)
+
+                    bm = benchmarklib.Benchmark(
+                        benchmark_id=f"{data['project']}-fix",
+                        project=data['project'],
+                        language=data['language'],
+                        function_signature='fix_build_task',
+                        function_name='fix_build_task',
+                        return_type='',
+                        params=[],
+                        target_path=data.get('error_time', ''),
+                        commit=data['oss-fuzz_sha']
+                    )
+                    experiment_configs.append(bm)
+                except Exception as e:
+                    logger.error(f"Failed to parse {file}: {e}")
+
+        return experiment_configs
+    # --- 新增逻辑结束 ---
+
     benchmark_yamls = []
     if args.benchmark_yaml:
         logger.info(
-            "A benchmark yaml file %s is provided. Will use it and ignore "
-            "the files in %s.",
-            args.benchmark_yaml,
-            args.benchmarks_directory,
-        )
+            'A benchmark yaml file %s is provided. Will use it and ignore '
+            'the files in %s.', args.benchmark_yaml, args.benchmarks_directory)
         benchmark_yamls = [args.benchmark_yaml]
     else:
         if args.generate_benchmarks:
@@ -116,7 +150,7 @@ def prepare_experiment_targets(
         benchmark_yamls = [
             os.path.join(args.benchmarks_directory, file)
             for file in os.listdir(args.benchmarks_directory)
-            if file.endswith(".yaml") or file.endswith("yml")
+            if file.endswith('.yaml') or file.endswith('yml')
         ]
     experiment_configs = []
     for benchmark_file in benchmark_yamls:
@@ -153,6 +187,13 @@ def parse_args() -> argparse.Namespace:
     """Parses command line arguments."""
     parser = argparse.ArgumentParser(
         description="Run all experiments that evaluates all target functions."
+    )
+    parser.add_argument(
+        "-fb",
+        "--fix-build",
+        action='store_true',
+        default=False,
+        help="Enables fix build agent mode.",
     )
     parser.add_argument(
         "-n",
@@ -314,13 +355,26 @@ def parse_args() -> argparse.Namespace:
     bench_yml = bool(benchmark_yaml)
     bench_dir = bool(args.benchmarks_directory)
     bench_gen = bool(args.generate_benchmarks)
-    num_options = int(bench_yml) + int(bench_dir) + int(bench_gen)
-    assert num_options == 1, (
-        "One and only one of --benchmark-yaml, --benchmarks-directory and "
-        "--generate-benchmarks. --benchmark-yaml takes one benchmark YAML file, "
-        "--benchmarks-directory takes: a directory of them and "
-        "--generate-benchmarks generates them during analysis."
-    )
+    bench_yml = bool(benchmark_yaml)
+    bench_dir = bool(args.benchmarks_directory)
+    bench_gen = bool(args.generate_benchmarks)
+
+    if not args.fix_build:
+        num_options = int(bench_yml) + int(bench_dir) + int(bench_gen)
+        assert num_options == 1, (
+            "One and only one of --benchmark-yaml, --benchmarks-directory and "
+            "--generate-benchmarks. --benchmark-yaml takes one benchmark YAML file, "
+            "--benchmarks-directory takes: a directory of them and "
+            "--generate-benchmarks generates them during analysis."
+        )
+
+#    num_options = int(bench_yml) + int(bench_dir) + int(bench_gen)
+#    assert num_options == 1, (
+#        "One and only one of --benchmark-yaml, --benchmarks-directory and "
+#        "--generate-benchmarks. --benchmark-yaml takes one benchmark YAML file, "
+#        "--benchmarks-directory takes: a directory of them and "
+#        "--generate-benchmarks generates them during analysis."
+#    )
 
     # Validate templates.
     assert os.path.isdir(
@@ -597,7 +651,9 @@ def main():
     # right API endpoint is used throughout.
     introspector.set_introspector_endpoints(args.introspector_endpoint)
 
-    run_one_experiment.prepare(args.oss_fuzz_dir)
+#    run_one_experiment.prepare(args.oss_fuzz_dir)
+    if not args.fix_build:
+        run_one_experiment.prepare(args.oss_fuzz_dir)
 
     experiment_targets = prepare_experiment_targets(args)
     if oss_fuzz_checkout.ENABLE_CACHING:
