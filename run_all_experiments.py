@@ -13,10 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """Run an experiment with all function-under-tests."""
-import os
 
-os.environ["OPENAI_API_KEY"] = "sk-yXQff96bab0115e2fe18f50889ede95b43abc7a9a17fb9Uo"
-os.environ["OPENAI_BASE_URL"] = "https://api.gptsapi.net/v1"
 import argparse
 import json
 import logging
@@ -41,9 +38,6 @@ from llm_toolkit import models, prompt_builder
 logger = logging.getLogger(__name__)
 
 # WARN: Avoid large NUM_EXP for local experiments.
-# NUM_EXP controls the number of experiments in parallel, while each experiment
-# will evaluate {run_one_experiment.NUM_EVA, default 3} fuzz targets in
-# parallel.
 NUM_EXP = int(os.getenv("LLM_NUM_EXP", "2"))
 
 # Default LLM hyper-parameters.
@@ -63,12 +57,6 @@ LOG_FMT = (
     "%(asctime)s.%(msecs)03d %(levelname)s " "%(module)s - %(funcName)s: %(message)s"
 )
 
-class DummyModel:
-    def __init__(self, name):
-        self.name = name
-
-    def cloud_setup(self):
-        pass
 
 class Result:
     benchmark: benchmarklib.Benchmark
@@ -106,8 +94,7 @@ def prepare_experiment_targets(
 ) -> list[benchmarklib.Benchmark]:
     """Constructs a list of experiment configs based on the |BENCHMARK_DIR| and
     |args| setting."""
-    
-    # --- 统一为 4 空格缩进 ---
+
     if args.fix_build:
         logger.info('Running in Fix Build Mode. Loading targets from benchmark-sets/fix-build/')
         fix_build_dir = os.path.join(os.path.dirname(__file__), 'benchmark-sets', 'fix-build')
@@ -141,7 +128,6 @@ def prepare_experiment_targets(
                     logger.error(f"Failed to parse {file}: {e}")
 
         return experiment_configs
-    # --- 新增逻辑结束 ---
 
     benchmark_yamls = []
     if args.benchmark_yaml:
@@ -171,20 +157,15 @@ def run_experiments(benchmark: benchmarklib.Benchmark, args) -> Result:
         work_dirs = WorkDirs(os.path.join(args.work_dir, f'output-{benchmark.id}'))
         args.work_dirs = work_dirs
 
-        # --- 修改开始：Fix Build 模式下绕过原生模型校验 ---
-        if args.fix_build:
-            # 使用 DummyModel 绕过框架的模型检查
-            model = DummyModel(name=args.model)
-        else:
-            # 原有逻辑：使用框架原生校验
-            model = models.LLM.setup(
-                ai_binary=args.ai_binary,
-                name=args.model,
-                max_tokens=MAX_TOKENS,
-                num_samples=args.num_samples,
-                temperature=args.temperature,
-                temperature_list=args.temperature_list,
-            )
+        # Use native model setup for all modes
+        model = models.LLM.setup(
+            ai_binary=args.ai_binary,
+            name=args.model,
+            max_tokens=MAX_TOKENS,
+            num_samples=args.num_samples,
+            temperature=args.temperature,
+            temperature_list=args.temperature_list,
+        )
 
         result = run_one_experiment.run(
             benchmark=benchmark, model=model, args=args, work_dirs=work_dirs
@@ -368,9 +349,6 @@ def parse_args() -> argparse.Namespace:
     bench_yml = bool(benchmark_yaml)
     bench_dir = bool(args.benchmarks_directory)
     bench_gen = bool(args.generate_benchmarks)
-    bench_yml = bool(benchmark_yaml)
-    bench_dir = bool(args.benchmarks_directory)
-    bench_gen = bool(args.generate_benchmarks)
 
     if not args.fix_build:
         num_options = int(bench_yml) + int(bench_dir) + int(bench_gen)
@@ -380,14 +358,6 @@ def parse_args() -> argparse.Namespace:
             "--benchmarks-directory takes: a directory of them and "
             "--generate-benchmarks generates them during analysis."
         )
-
-#    num_options = int(bench_yml) + int(bench_dir) + int(bench_gen)
-#    assert num_options == 1, (
-#        "One and only one of --benchmark-yaml, --benchmarks-directory and "
-#        "--generate-benchmarks. --benchmark-yaml takes one benchmark YAML file, "
-#        "--benchmarks-directory takes: a directory of them and "
-#        "--generate-benchmarks generates them during analysis."
-#    )
 
     # Validate templates.
     assert os.path.isdir(
@@ -551,8 +521,6 @@ def _process_total_coverage_gain() -> dict[str, dict[str, Any]]:
         else:
             logger.info("Found benchmark for %s", benchmark_dir)
             project_name = benchmark_used[0].project
-            #      target_basename = os.path.basename(benchmark_used[0].target_path)
-            #      ignore_patterns = [re.compile(r'^' + re.escape(target_basename) + ':')]
             ignore_patterns = []
             if (
                 hasattr(benchmark_used[0], "target_path")
@@ -664,7 +632,6 @@ def main():
     # right API endpoint is used throughout.
     introspector.set_introspector_endpoints(args.introspector_endpoint)
 
-#    run_one_experiment.prepare(args.oss_fuzz_dir)
     if not args.fix_build:
         run_one_experiment.prepare(args.oss_fuzz_dir)
 

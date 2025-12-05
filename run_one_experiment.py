@@ -43,20 +43,8 @@ from experiment.workdir import WorkDirs
 from llm_toolkit import models, output_parser, prompt_builder, prompts
 from results import BenchmarkResult, Result, TrialResult
 
-# WARN: Avoid high value for NUM_EVA for local experiments.
-# NUM_EVA controls the number of fuzz targets to evaluate in parallel by each
-# experiment, while {run_all_experiments.NUM_EXP, default 2} experiments will
-# run in parallel.
 NUM_EVA = int(os.getenv("LLM_NUM_EVA", "3"))
 
-# Default LLM hyper-parameters.
-# #182 shows Gemini returns NUM_SAMPLES independent responses via repeated
-#  queries, which generally performs better than top-k responses from one
-#  query [1].
-# [1] TODO(@happy-qop): Update the link.
-# WARN: Avoid large NUM_SAMPLES in highly parallelized local experiments.
-# It controls the number of LLM responses per prompt, which may exceed your
-# LLM's limit on query-per-second.
 NUM_SAMPLES = 2
 MAX_TOKENS: int = 4096
 RUN_TIMEOUT: int = 30
@@ -121,9 +109,9 @@ class FixPipeline:
         logger.info('Executing FixPipeline...', trial=current_trial)
         result = self.agent.execute(result_history)
         result_history.append(result)
-        
+
         logger.info(f'FixPipeline finished. Fixed: {result.is_fixed}', trial=current_trial)
-        
+
         return result_history
 
 
@@ -296,31 +284,16 @@ def _fuzzing_pipeline(
     trial_logger = logger.get_trial_logger(trial=trial, level=logging.DEBUG)
     trial_logger.info("Trial Starts")
     if args.fix_build:
-        if "gpt" in args.model or "openai" in args.model:
-            api_key = os.getenv("OPENAI_API_KEY")
-        elif "deepseek" in args.model:
-            api_key = os.getenv("DPSEEK_API_KEY")
-        elif "gemini" in args.model:
-            api_key = os.getenv("GOOGLE_API_KEY")
-        else:
-            # 默认回退
-            api_key = os.getenv("OPENAI_API_KEY")
-
-        if not api_key:
-            trial_logger.error(f"API Key not found for model: {args.model}")
-            raise ValueError(f"API Key environment variable is required for model {args.model}.")
-
-        # 2. 初始化 FixBuildAgent
+        # Initialize FixBuildAgent with the passed model object
         fix_agent = FixBuildAgent(
             trial=trial,
-            llm_model_name=args.model,
-            api_key=api_key,
+            model=model,  # Pass the oss-fuzz-gen model object
             args=args,
             benchmark=benchmark,
             work_dirs=work_dirs
         )
 
-        # 3. 使用自定义的 FixPipeline 包装它
+        # Use custom FixPipeline
         p = FixPipeline(agent=fix_agent)
 
     elif args.custom_pipeline == "function_based_prototyper":

@@ -10,7 +10,7 @@ from typing import Dict, List, Tuple, Optional, Set
 from google.adk.tools.tool_context import ToolContext
 
 CURRENT_TOOL_DIR = os.path.dirname(os.path.abspath(__file__))
-ROOT_DIR = os.path.dirname(CURRENT_TOOL_DIR) 
+ROOT_DIR = os.path.dirname(CURRENT_TOOL_DIR)
 
 PROCESSED_PROJECTS_DIR = os.path.join(ROOT_DIR, "process")
 PROCESSED_PROJECTS_FILE = os.path.join(PROCESSED_PROJECTS_DIR, "project_processed.txt")
@@ -26,15 +26,15 @@ def force_clean_git_repo(repo_path: str) -> Dict[str, str]:
     try:
         os.chdir(repo_path)
 
-        # 1. First, switch to the main branch. Using -f or --force can force a switch, but resetting first is safer.
-        # 2. Force reset to HEAD, which will discard all modifications in the working directory. This is the most critical step.
+        # 1. First, switch to the main branch.
+        # 2. Force reset to HEAD.
         subprocess.run(["git", "reset", "--hard", "HEAD"], capture_output=True, text=True, check=True)
 
-        # 3. Now that the workspace is clean, we can safely switch branches.
+        # 3. Switch to main/master branch.
         main_branch = "main" if "main" in subprocess.run(["git", "branch", "--list"], capture_output=True, text=True).stdout else "master"
         subprocess.run(["git", "switch", main_branch], capture_output=True, text=True, check=True)
 
-        # 4. Remove all untracked files and directories (e.g., build artifacts, logs).
+        # 4. Remove all untracked files.
         subprocess.run(["git", "clean", "-fdx"], capture_output=True, text=True, check=True)
 
         message = f"Successfully force-cleaned the repository '{repo_path}'. All local changes and untracked files have been removed."
@@ -58,7 +58,6 @@ def get_project_paths(project_name: str) -> Dict[str, str]:
     Generates and returns the standard project_config_path and project_source_path based on the project name.
     """
     print(f"--- Tool: get_project_paths called for: {project_name} ---")
-    # Ensure paths are always relative to the parent directory of the current script file (i.e., the project root)
     base_path = os.path.abspath(os.path.join(os.path.dirname(__file__)))
 
     safe_project_name = "".join(c for c in project_name if c.isalnum() or c in ('_', '-')).rstrip()
@@ -70,7 +69,7 @@ def get_project_paths(project_name: str) -> Dict[str, str]:
         "project_name": project_name,
         "project_config_path": config_path,
         "project_source_path": source_path,
-        "max_depth": 1 # Default to getting 1 level of the file tree
+        "max_depth": 1
     }
     print(f"--- Generated paths: {paths} ---")
     return paths
@@ -95,7 +94,7 @@ def save_processed_project(project_name: str) -> Dict[str, str]:
 
 def update_excel_report(file_path: str, row_index: int, attempted: str, result: str) -> Dict[str, str]:
     """
-    [Revised] Updates the "Whether Fix Was Attempted", "Fix Result", and "Fix Date" columns for a specified row in an .xlsx file.
+    [Revised] Updates the "Fix Attempted", "Fix Result", and "Fix Date" columns for a specified row in an .xlsx file.
     """
     print(f"--- Tool: update_excel_report called for file '{file_path}', row {row_index} ---")
     try:
@@ -103,12 +102,11 @@ def update_excel_report(file_path: str, row_index: int, attempted: str, result: 
         sheet = workbook.active
         headers = [cell.value for cell in sheet[1]]
 
-        # Dynamically get column indices
-        attempted_col_idx = headers.index("是否尝试修复") + 1  # "Whether Fix Was Attempted"
-        result_col_idx = headers.index("修复结果") + 1       # "Fix Result"
-        date_col_idx = headers.index("修复日期") + 1         # "Fix Date"
+        # Dynamically get column indices (Translated headers)
+        attempted_col_idx = headers.index("Fix Attempted") + 1
+        result_col_idx = headers.index("Fix Result") + 1
+        date_col_idx = headers.index("Fix Date") + 1
 
-        # [Core write-back logic]
         sheet.cell(row=row_index, column=attempted_col_idx, value=attempted)
         sheet.cell(row=row_index, column=result_col_idx, value=result)
         sheet.cell(row=row_index, column=date_col_idx, value=datetime.now().strftime('%Y-%m-%d'))
@@ -126,7 +124,6 @@ def update_excel_report(file_path: str, row_index: int, attempted: str, result: 
 def read_projects_from_excel(file_path: str) -> Dict:
     """
     [Revised] Reads project information from the specified .xlsx file.
-    Only reads rows where "报错是否一致" ("Error Consistency") is "是" ("Yes") and "是否尝试修复" ("Whether Fix Was Attempted") is not "是" ("Yes").
     """
     print(f"--- Tool: read_projects_from_excel called for: {file_path} ---")
     if not os.path.exists(file_path):
@@ -138,24 +135,23 @@ def read_projects_from_excel(file_path: str) -> Dict:
         sheet = workbook.active
         headers = [cell.value for cell in sheet[1]]
 
-        # Verify that all required headers are present
-        required_headers = ["项目名称", "复现oss-fuzz SHA", "报错是否一致", "是否尝试修复"]
+        # Verify required headers (Translated)
+        required_headers = ["Project Name", "Reproduce OSS-Fuzz SHA", "Error Consistency", "Fix Attempted"]
         if not all(h in headers for h in required_headers):
              return {'status': 'error', 'message': f"Excel file is missing one of the required columns: {required_headers}"}
 
-        # Get column indices for later use
-        name_idx = headers.index("项目名称")          # "Project Name"
-        sha_idx = headers.index("复现oss-fuzz SHA")   # "Reproducible oss-fuzz SHA"
-        consistent_idx = headers.index("报错是否一致")   # "Error Consistency"
-        attempted_idx = headers.index("是否尝试修复")  # "Whether Fix Was Attempted"
+        name_idx = headers.index("Project Name")
+        sha_idx = headers.index("Reproduce OSS-Fuzz SHA")
+        consistent_idx = headers.index("Error Consistency")
+        attempted_idx = headers.index("Fix Attempted")
 
         for row_index, row in enumerate(sheet.iter_rows(min_row=2, values_only=True), start=2):
-            # [Core filtering logic]
-            if row[consistent_idx] == "是" and row[attempted_idx] != "是": # "Yes"
+            # "Yes" check
+            if row[consistent_idx] == "Yes" and row[attempted_idx] != "Yes":
                 project_info = {
                     "project_name": row[name_idx],
                     "sha": str(row[sha_idx]),
-                    "row_index": row_index  # Record the row number for easy write-back
+                    "row_index": row_index
                 }
                 projects_to_run.append(project_info)
 
@@ -167,7 +163,7 @@ def read_projects_from_excel(file_path: str) -> Dict:
 
 def run_command(command: str) -> Dict[str, str]:
     """
-    Executes a shell command and returns its output. This is a dangerous tool; use with caution.
+    Executes a shell command and returns its output.
     """
     print(f"--- Tool: run_command called with: '{command}' ---")
     try:
@@ -189,7 +185,7 @@ def run_command(command: str) -> Dict[str, str]:
 
 def truncate_prompt_file(file_path: str, max_lines: int = 2000) -> Dict[str, str]:
     """
-    Reads a file, and if it exceeds max_lines, truncates it in the middle, keeping the head and tail.
+    Reads a file, and if it exceeds max_lines, truncates it.
     """
     print(f"--- Tool: truncate_prompt_file called for: {file_path} ---")
     try:
@@ -221,7 +217,7 @@ def truncate_prompt_file(file_path: str, max_lines: int = 2000) -> Dict[str, str
 
 def archive_fixed_project(project_name: str, project_config_path: str) -> Dict[str, str]:
     """
-    Archives the configuration directory of a successfully fixed project into a 'success-fix-project' directory.
+    Archives the configuration directory of a successfully fixed project.
     """
     print(f"--- Tool: archive_fixed_project called for: {project_name} ---")
     try:
@@ -247,12 +243,11 @@ def archive_fixed_project(project_name: str, project_config_path: str) -> Dict[s
 
 def download_github_repo(project_name: str, target_dir: str) -> Dict[str, str]:
     """
-    Searches for a project on GitHub and clones it to the specified directory.
+    Searches for a project on GitHub and clones it.
     """
     print(f"--- Tool: download_github_repo called for '{project_name}' into '{target_dir}' ---")
 
     if os.path.isdir(target_dir):
-        # For oss-fuzz, if it exists, we might need to update it
         if project_name == "oss-fuzz":
              print(f"--- Directory '{target_dir}' already exists. Pulling latest changes. ---")
              try:
@@ -295,10 +290,9 @@ def download_github_repo(project_name: str, target_dir: str) -> Dict[str, str]:
         return {'status': 'error', 'message': message}
 
 
-# Version Reverting Tool
 def find_sha_for_timestamp(commits_file_path: str, error_date: str) -> Dict[str, str]:
     """
-    Finds the most suitable commit SHA for a given date from a commits file.
+    Finds the most suitable commit SHA for a given date.
     """
     print(f"--- Tool: find_sha_for_timestamp called for date: {error_date} ---")
     try:
@@ -347,7 +341,7 @@ def find_sha_for_timestamp(commits_file_path: str, error_date: str) -> Dict[str,
 
 def checkout_oss_fuzz_commit(sha: str) -> Dict[str, str]:
     """
-    [Revised] Executes a git checkout command in the fixed oss-fuzz directory.
+    Executes a git checkout command in the fixed oss-fuzz directory.
     """
     oss_fuzz_path = os.path.join(ROOT_DIR, "oss-fuzz")
     print(f"--- Tool: checkout_oss_fuzz_commit called for SHA: {sha} in '{oss_fuzz_path}' ---")
@@ -456,7 +450,7 @@ def save_file_tree(directory_path: str, output_file: Optional[str] = None) -> di
 
 def save_file_tree_shallow(directory_path: str, max_depth: int, output_file: Optional[str] = None) -> dict:
     """
-    Gets the top N levels of the file tree structure for a specified directory and overwrites it to a file.
+    Gets the top N levels of the file tree structure.
     """
     print(f"--- Tool: save_file_tree_shallow called for path: {directory_path} with max_depth: {max_depth} ---")
     if not os.path.isdir(directory_path):
@@ -758,17 +752,13 @@ def run_fuzz_build_streaming(
     Executes a predefined fuzzing build command and streams its output in real-time.
     """
     print(f"--- Tool: run_fuzz_build_streaming called for project: {project_name} ---")
-    
-    # [关键修改 1] 路径修正逻辑
-    # 无论传入什么路径，优先使用基于项目根目录计算出的绝对路径，以防止相对路径导致的 FileNotFoundError
+
     target_oss_fuzz_path = os.path.join(ROOT_DIR, "oss-fuzz")
-    
-    # 如果传入的路径不存在，或者只是为了保险起见，强制指向正确的位置
+
     if not os.path.exists(oss_fuzz_path) or not os.path.isabs(oss_fuzz_path):
         print(f"--- Path Correction: Redirecting '{oss_fuzz_path}' to absolute path '{target_oss_fuzz_path}' ---")
         oss_fuzz_path = target_oss_fuzz_path
 
-    # [关键修改 2] 验证 helper.py 是否存在
     helper_script_path = os.path.join(oss_fuzz_path, "infra", "helper.py")
     if not os.path.exists(helper_script_path):
         error_msg = f"Critical Error: 'infra/helper.py' not found at expected path: {helper_script_path}"
@@ -777,7 +767,7 @@ def run_fuzz_build_streaming(
 
     LOG_DIR = "fuzz_build_log_file"
     LOG_FILE_PATH = os.path.join(LOG_DIR, "fuzz_build_log.txt")
-    
+
     try:
         command = [
             "python3.10", helper_script_path, "build_fuzzers",
@@ -786,34 +776,33 @@ def run_fuzz_build_streaming(
             "--architecture", architecture,
             project_name
         ]
-        
+
         print(f"--- Executing command: {' '.join(command)} ---")
         print(f"--- Working Directory: {oss_fuzz_path} ---")
         print("--- Fuzzing process started. Real-time output will be displayed below: ---")
-        
+
         process = subprocess.Popen(
             command,
             stdout=subprocess.PIPE,
             stderr=subprocess.STDOUT,
             text=True,
             bufsize=1,
-            cwd=oss_fuzz_path, # 确保在 oss-fuzz 根目录下执行
+            cwd=oss_fuzz_path,
             encoding='utf-8'
         )
-        
+
         log_buffer = deque(maxlen=280)
         for line in process.stdout:
             print(line, end='', flush=True)
             log_buffer.append(line)
-            
+
         process.wait()
         return_code = process.returncode
-        
+
         print("\n--- Fuzzing process finished. ---")
-        
-        # 确保日志目录存在
+
         os.makedirs(LOG_DIR, exist_ok=True)
-        
+
         if return_code == 0:
             content_to_write = "success"
             message = f"Fuzzing build command completed successfully. Result saved to '{LOG_FILE_PATH}'."
@@ -822,17 +811,16 @@ def run_fuzz_build_streaming(
             content_to_write = "".join(log_buffer)
             message = f"Fuzzing build command failed. Detailed log saved to '{LOG_FILE_PATH}'."
             status = "error"
-            
+
         with open(LOG_FILE_PATH, "w", encoding="utf-8") as f:
             f.write(content_to_write)
-            
+
         print(message)
         return {"status": status, "message": message}
-        
+
     except Exception as e:
         message = f"An unknown exception occurred while executing the fuzzing command: {str(e)}"
         print(message)
-        # Also attempt to write to log on exception
         os.makedirs(LOG_DIR, exist_ok=True)
         with open(LOG_FILE_PATH, "w", encoding="utf-8") as f:
             f.write(message)
