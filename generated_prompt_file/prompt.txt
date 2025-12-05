@@ -1,0 +1,133 @@
+
+You are a premier expert in software testing, specializing in solving fuzzing compilation and build issues. These problems are often caused by mismatches between fuzzing configuration files and the project's source files. I will provide you with error logs from the oss-fuzz build process for different projects. Based on the error messages, configuration files, and other information, you are to provide targeted solutions. Strive to avoid altering files unrelated to the problem, with the ultimate goal of enabling the project to compile and build successfully.
+Next, the Dockerfile, build.sh, dag_fuzz.py, project.yaml, file tree, and error log for airflow will be provided. Please read and analyze the file tree and the given information, identify which files might be causing the problem—whether they are core fuzz testing build files like Dockerfile and build.sh, or files within the airflow project itself—and attempt to propose a solution.
+
+
+--- Configuration Files ---
+
+### Content from: Dockerfile ###
+# Copyright 2022 Google LLC.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+################################################################################
+
+FROM gcr.io/oss-fuzz-base/base-builder-python
+
+RUN apt-get install sqlite3
+RUN pip3 install --upgrade pip
+
+RUN git clone https://github.com/apache/airflow
+ENV AIRFLOW_HOME=$SRC/airflow/
+WORKDIR airflow
+
+COPY build.sh dag_fuzz.py $SRC/
+
+### Content from: build.sh ###
+#!/bin/bash -eu
+# Copyright 2022 Google LLC.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+################################################################################
+
+# Build and install project (using current CFLAGS, CXXFLAGS).
+pip3 install --upgrade pip
+pip3 install colorlog
+pip3 install .
+
+# Build fuzzers in $OUT.
+cd $SRC
+compile_python_fuzzer dag_fuzz.py --add-data airflow:airflow --add-data airflow/airflow:airflow --add-data /usr/local/lib/python3.8/site-packages/cron_descriptor:cron_descriptor
+
+### Content from: dag_fuzz.py ###
+#!/usr/bin/python3
+
+# Copyright 2022 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+import atheris
+import colorlog
+from datetime import datetime, timedelta
+with atheris.instrument_imports():
+   import airflow
+   from airflow import DAG
+   from airflow.exceptions import AirflowException
+   from airflow.operators.dummy_operator import DummyOperator
+   from airflow.operators.python_operator import PythonOperator
+
+def py_func():
+   return
+
+def TestInput(input_bytes):
+   fdp = atheris.FuzzedDataProvider(input_bytes)
+
+   default_args = {
+      'owner': fdp.ConsumeString(8),
+      'depends_on_past': fdp.ConsumeBool(),
+      'start_date': airflow.utils.dates.days_ago(fdp.ConsumeIntInRange(1,5)),
+      'email': [fdp.ConsumeString(8)],
+      'email_on_failure': fdp.ConsumeBool(),
+      'email_on_retry': fdp.ConsumeBool(),
+      'retries': fdp.ConsumeIntInRange(1,5),
+      'retry_delay': timedelta(minutes=fdp.ConsumeIntInRange(1,5)),
+   }
+
+   try:
+      with DAG(fdp.ConsumeString(8), schedule_interval='@daily', default_args=default_args) as dag:
+         dummy_task = DummyOperator(task_id=fdp.ConsumeString(8), retries=fdp.ConsumeIntInRange(1,5))
+         python_task = PythonOperator(task_id=fdp.ConsumeString(8), python_callable=py_func)
+
+         dummy_task >> python_task
+   except AirflowException:
+      pass
+
+def main():
+   atheris.Setup(sys.argv, TestInput, enable_python_coverage=True)
+   atheris.Fuzz()
+
+if __name__ == "__main__":
+   main()
+
+### Content from: project.yaml ###
+fuzzing_engines:
+- libfuzzer
+homepage: https://github.com/apache/airflow
+language: python
+main_repo: https://github.com/apache/airflow
+sanitizers:
+- address
+vendor_ccs:
+- david@adalogics.com
+- adam@adalogics.com
+- arthur.chan@adalogics.com

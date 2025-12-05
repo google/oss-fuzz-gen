@@ -295,22 +295,22 @@ def _fuzzing_pipeline(
     """Runs the predefined 3-stage pipeline for one trial."""
     trial_logger = logger.get_trial_logger(trial=trial, level=logging.DEBUG)
     trial_logger.info("Trial Starts")
-
-
     if args.fix_build:
         if "gpt" in args.model or "openai" in args.model:
             api_key = os.getenv("OPENAI_API_KEY")
         elif "deepseek" in args.model:
             api_key = os.getenv("DPSEEK_API_KEY")
+        elif "gemini" in args.model:
+            api_key = os.getenv("GOOGLE_API_KEY")
         else:
-            # 默认回退到 OPENAI_API_KEY，或者你可以根据需要添加其他厂商的 Key
+            # 默认回退
             api_key = os.getenv("OPENAI_API_KEY")
 
         if not api_key:
             trial_logger.error(f"API Key not found for model: {args.model}")
             raise ValueError(f"API Key environment variable is required for model {args.model}.")
 
-        # 初始化你的 FixBuildAgent
+        # 2. 初始化 FixBuildAgent
         fix_agent = FixBuildAgent(
             trial=trial,
             llm_model_name=args.model,
@@ -320,7 +320,7 @@ def _fuzzing_pipeline(
             work_dirs=work_dirs
         )
 
-        # 使用自定义的 FixPipeline 包装它
+        # 3. 使用自定义的 FixPipeline 包装它
         p = FixPipeline(agent=fix_agent)
 
     elif args.custom_pipeline == "function_based_prototyper":

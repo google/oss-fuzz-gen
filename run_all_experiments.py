@@ -63,6 +63,12 @@ LOG_FMT = (
     "%(asctime)s.%(msecs)03d %(levelname)s " "%(module)s - %(funcName)s: %(message)s"
 )
 
+class DummyModel:
+    def __init__(self, name):
+        self.name = name
+
+    def cloud_setup(self):
+        pass
 
 class Result:
     benchmark: benchmarklib.Benchmark
@@ -162,16 +168,23 @@ def prepare_experiment_targets(
 def run_experiments(benchmark: benchmarklib.Benchmark, args) -> Result:
     """Runs an experiment based on the |benchmark| config."""
     try:
-        work_dirs = WorkDirs(os.path.join(args.work_dir, f"output-{benchmark.id}"))
+        work_dirs = WorkDirs(os.path.join(args.work_dir, f'output-{benchmark.id}'))
         args.work_dirs = work_dirs
-        model = models.LLM.setup(
-            ai_binary=args.ai_binary,
-            name=args.model,
-            max_tokens=MAX_TOKENS,
-            num_samples=args.num_samples,
-            temperature=args.temperature,
-            temperature_list=args.temperature_list,
-        )
+
+        # --- 修改开始：Fix Build 模式下绕过原生模型校验 ---
+        if args.fix_build:
+            # 使用 DummyModel 绕过框架的模型检查
+            model = DummyModel(name=args.model)
+        else:
+            # 原有逻辑：使用框架原生校验
+            model = models.LLM.setup(
+                ai_binary=args.ai_binary,
+                name=args.model,
+                max_tokens=MAX_TOKENS,
+                num_samples=args.num_samples,
+                temperature=args.temperature,
+                temperature_list=args.temperature_list,
+            )
 
         result = run_one_experiment.run(
             benchmark=benchmark, model=model, args=args, work_dirs=work_dirs
