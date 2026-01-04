@@ -1,0 +1,7 @@
+"language": "c++"
+"project": "file"
+"target_name": "magic_fuzzer_loaddb"
+"target_path": "/src/magic_fuzzer_loaddb.cc"
+"test_files":
+- "test_file_path": "/src/file/src/memtest.c"
+- "test_file_path": "/src/file/tests/test.c"

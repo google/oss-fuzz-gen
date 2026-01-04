@@ -1,0 +1,6 @@
+"language": "c"
+"project": "w3m"
+"target_name": "fuzz_conv"
+"target_path": "/src/w3m/fuzz/fuzz-conv.c"
+"test_files":
+- "test_file_path": "/src/w3m/libwc/test.c"

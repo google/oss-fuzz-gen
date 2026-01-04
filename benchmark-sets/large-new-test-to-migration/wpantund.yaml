@@ -1,0 +1,7 @@
+"language": "c++"
+"project": "wpantund"
+"target_name": "wpantund-fuzz"
+"target_path": "/src/wpantund/src/wpantund/wpantund-fuzz.cpp"
+"test_files":
+- "test_file_path": "/src/wpantund/src/missing/strlcat/strlcat_test.c"
+- "test_file_path": "/src/wpantund/src/missing/strlcpy/strlcpy_test.c"

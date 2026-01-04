@@ -1,0 +1,6 @@
+"language": "c"
+"project": "nginx"
+"target_name": "http_request_fuzzer"
+"target_path": "/src/fuzz/http_request_fuzzer.cc"
+"test_files":
+- "test_file_path": "/src/nginx/src/misc/ngx_cpp_test_module.cpp"

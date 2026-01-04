@@ -1,0 +1,13 @@
+"language": "c"
+"project": "rtpproxy"
+"target_name": "fuzz_rtp_parser"
+"target_path": "/src/rtpproxy/scripts/fuzz/fuzz_rtp_parser.c"
+"test_files":
+- "test_file_path": "/src/rtpproxy/libexecinfo/execinfo_testfunc1.c"
+- "test_file_path": "/src/rtpproxy/libexecinfo/execinfo_testfunc.c"
+- "test_file_path": "/src/rtpproxy/src/rtpp_memdeb_test.c"
+- "test_file_path": "/src/rtpproxy/src/rtpp_fintest.c"
+- "test_file_path": "/src/rtpproxy/modules/acct_rtcp_hep/rtcp2json_test.c"
+- "test_file_path": "/src/rtpproxy/libre/libre_test.c"
+- "test_file_path": "/src/rtpproxy/libelperiodic/src/testskew.c"
+- "test_file_path": "/src/rtpproxy/libucl/libucl_test.c"

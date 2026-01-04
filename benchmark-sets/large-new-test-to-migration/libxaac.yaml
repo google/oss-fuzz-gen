@@ -1,0 +1,12 @@
+"language": "c++"
+"project": "libxaac"
+"target_name": "xaac_enc_fuzzer"
+"target_path": "/src/libxaac/fuzzer/xaac_enc_fuzzer.cpp"
+"test_files":
+- "test_file_path": "/src/libxaac/test/encoder/ixheaace_error.c"
+- "test_file_path": "/src/libxaac/test/decoder/ixheaacd_fileifc.c"
+- "test_file_path": "/src/libxaac/test/decoder/ixheaacd_metadata_read.c"
+- "test_file_path": "/src/libxaac/test/decoder/ixheaacd_error.c"
+- "test_file_path": "/src/libxaac/test/decoder/ixheaacd_main.c"
+- "test_file_path": "/src/libxaac/test/encoder/impd_drc_user_config.c"
+- "test_file_path": "/src/libxaac/test/encoder/ixheaace_testbench.c"

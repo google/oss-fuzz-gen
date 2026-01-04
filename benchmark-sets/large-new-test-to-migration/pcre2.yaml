@@ -1,0 +1,11 @@
+"language": "c++"
+"project": "pcre2"
+"target_name": "pcre2_fuzzer_16"
+"target_path": "/src/pcre2/src/pcre2_fuzzsupport.c"
+"test_files":
+- "test_file_path": "/src/pcre2/deps/sljit/test_src/sljitTest.c"
+- "test_file_path": "/src/pcre2/src/pcre2_jit_test.c"
+- "test_file_path": "/src/pcre2/deps/sljit/test_src/sljitMain.c"
+- "test_file_path": "/src/pcre2/src/pcre2posix_test.c"
+- "test_file_path": "/src/pcre2/src/pcre2test.c"
+- "test_file_path": "/src/pcre2/maint/ucptest.c"

@@ -1,0 +1,13 @@
+"language": "c++"
+"project": "janet"
+"target_name": "fuzz_dostring"
+"target_path": "/src/janet/test/fuzzers/fuzz_dostring.c"
+"test_files":
+- "test_file_path": "/src/janet/examples/ffi/so.c"
+- "test_file_path": "/src/janet/src/boot/array_test.c"
+- "test_file_path": "/src/janet/src/boot/system_test.c"
+- "test_file_path": "/src/janet/src/boot/number_test.c"
+- "test_file_path": "/src/janet/examples/numarray/numarray.c"
+- "test_file_path": "/src/janet/test/amalg/main.c"
+- "test_file_path": "/src/janet/src/boot/buffer_test.c"
+- "test_file_path": "/src/janet/src/boot/table_test.c"

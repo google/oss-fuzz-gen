@@ -1,0 +1,8 @@
+"language": "c++"
+"project": "myanmar-tools"
+"target_name": "zawgyi_detector_fuzz_target"
+"target_path": "/src/myanmar-tools/clients/cpp/zawgyi_detector_fuzz_target.cpp"
+"test_files":
+- "test_file_path": "/src/myanmar-tools/clients/cpp/zawgyi_detector_unittest.cpp"
+- "test_file_path": "/src/myanmar-tools/clients/cpp/zawgyi_detector_unittest.c"
+- "test_file_path": "/src/myanmar-tools/samples/cpp/demo.cpp"

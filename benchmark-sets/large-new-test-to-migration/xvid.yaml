@@ -1,0 +1,8 @@
+"language": "c++"
+"project": "xvid"
+"target_name": "fuzzer-decoder"
+"target_path": "/src/oss-fuzz-fuzzers/xvid/fuzzer.cpp"
+"test_files":
+- "test_file_path": "/src/trunk/xvidcore/examples/xvid_decraw.c"
+- "test_file_path": "/src/trunk/xvidcore/examples/xvid_bench.c"
+- "test_file_path": "/src/trunk/xvidcore/examples/xvid_encraw.c"

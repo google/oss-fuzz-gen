@@ -1,0 +1,12 @@
+"language": "c"
+"project": "inih"
+"target_name": "inihfuzz"
+"target_path": "/src/inih/inihfuzz.c"
+"test_files":
+- "test_file_path": "/src/inih/examples/ini_example.c"
+- "test_file_path": "/src/inih/examples/INIReaderExample.cpp"
+- "test_file_path": "/src/inih/examples/ini_dump.c"
+- "test_file_path": "/src/inih/tests/unittest.c"
+- "test_file_path": "/src/inih/tests/unittest_string.c"
+- "test_file_path": "/src/inih/tests/unittest_alloc.c"
+- "test_file_path": "/src/inih/examples/ini_xmacros.c"

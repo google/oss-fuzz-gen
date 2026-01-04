@@ -1,0 +1,12 @@
+"language": "c"
+"project": "libcacard"
+"target_name": "fuzz_simpletlv"
+"target_path": "/src/libcacard/fuzz/fuzz_simpletlv.c"
+"test_files":
+- "test_file_path": "/src/libcacard/tests/initialize.c"
+- "test_file_path": "/src/libcacard/tests/hwtests.c"
+- "test_file_path": "/src/libcacard/tests/simpletlv.c"
+- "test_file_path": "/src/libcacard/tests/common.c"
+- "test_file_path": "/src/libcacard/tests/unit_cac.c"
+- "test_file_path": "/src/libcacard/tests/libcacard.c"
+- "test_file_path": "/src/libcacard/tests/atr.c"

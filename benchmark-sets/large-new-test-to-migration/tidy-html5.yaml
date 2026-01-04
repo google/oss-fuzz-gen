@@ -1,0 +1,6 @@
+"language": "c++"
+"project": "tidy-html5"
+"target_name": "tidy_config_fuzzer"
+"target_path": "/src/tidy_config_fuzzer.c"
+"test_files":
+- "test_file_path": "/src/tidy-html5/console/test71.cxx"
