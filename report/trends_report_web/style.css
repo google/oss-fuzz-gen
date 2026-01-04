@@ -51,17 +51,46 @@ button {
 }
 
 @keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
+  0% { transform: rotate(0deg); }
+  50% { transform: rotate(180deg); }
+  100% { transform: rotate(360deg); }
+}
 
-  50% {
-    transform: rotate(180deg);
-  }
+/*
+ * Search + Filters Container
+ */
+.search-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 20px 0;
+}
 
-  100% {
-    transform: rotate(360deg);
-  }
+#search-input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 999px;
+  outline: none;
+  font-size: 1em;
+  transition: border-color 0.2s ease;
+}
+
+#search-input:focus {
+  border-color: #888;
+}
+
+#search-clear {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2em;
+  color: #666;
+  line-height: 1;
+}
+
+#search-clear:hover {
+  color: #333;
 }
 
 /*
@@ -83,25 +112,31 @@ button {
   border-radius: 5px;
   max-height: 70vh;
   overflow-y: auto;
+  z-index: 10;
 }
 
 .filter-autocomplete > div {
-  padding: 3px;
+  padding: 5px 8px;
   cursor: pointer;
 }
 
 .filter-autocomplete > div.hovered {
-  background: #ddd;
+  background: #f0f0f0;
 }
 
 .selected-values {
   margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
 }
 
 .selected-values .chip {
+  display: inline-flex;
+  align-items: center;
   padding: 5px 10px;
   background: #dedede;
-  border-radius: 99px;
+  border-radius: 999px;
 }
 
 .selected-values .chip > button {
@@ -111,6 +146,7 @@ button {
   border: none;
   padding: 0;
   margin-left: 5px;
+  font-size: 0.9em;
 }
 
 /*
@@ -120,6 +156,7 @@ button {
   display: flex;
   flex-flow: row wrap;
   gap: 10px 5px;
+  margin: 20px 0;
 }
 
 .projects button {
@@ -127,12 +164,18 @@ button {
   appearance: none;
   background: inherit;
   border: 1px #ccc solid;
-  border-radius: 99px;
-  padding: 10px;
+  border-radius: 999px;
+  padding: 10px 15px;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.projects button:hover {
+  border-color: #888;
 }
 
 .projects button.selected {
   background: #eee;
+  border-color: #888;
 }
 
 /*
@@ -141,24 +184,34 @@ button {
 table {
   border-collapse: collapse;
   border-spacing: 0;
+  width: 100%;
+  margin: 20px 0;
 }
 
 td, th {
   border-right: 1px #dedede solid;
   border-bottom: 1px #dedede solid;
-  padding: 5px;
+  padding: 8px;
   text-align: left;
+  font-size: 0.95em;
 }
+
 td:first-child, th:first-child {
   border-left: 1px #dedede solid;
 }
+
 th {
   border-top: 1px #dedede solid;
-  font-weight: 500;
+  font-weight: 600;
+  background: #f9f9f9;
 }
 
 tbody tr:nth-child(odd) {
   background-color: #f4f5ff;
+}
+
+tbody tr:hover {
+  background-color: #eef;
 }
 
 /*
