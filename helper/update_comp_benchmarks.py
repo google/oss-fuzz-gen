@@ -24,64 +24,67 @@ import os
 
 from experiment.benchmark import Benchmark
 
-BENCHMARK_DIR = 'benchmark-sets'
-SOURCE_SET = 'all'
-TARGET_SET = 'comparison'
+BENCHMARK_DIR = "benchmark-sets"
+SOURCE_SET = "all"
+TARGET_SET = "comparison"
 
 
 def parse_args() -> argparse.Namespace:
-  """parse arguments"""
-  parser = argparse.ArgumentParser(
-      description=
-      'Updates all benchmark yamls in <target> to match with <source>.')
-  parser.add_argument(
-      '-s',
-      '--source',
-      type=str,
-      default=os.path.join(BENCHMARK_DIR, SOURCE_SET),
-      help='The source benchmark set used to update target set.')
-  parser.add_argument('-t',
-                      '--target',
-                      type=str,
-                      default=os.path.join(BENCHMARK_DIR, TARGET_SET),
-                      help='The target benchmark set to update.')
+    """parse arguments"""
+    parser = argparse.ArgumentParser(
+        description="Updates all benchmark yamls in <target> to match with <source>."
+    )
+    parser.add_argument(
+        "-s",
+        "--source",
+        type=str,
+        default=os.path.join(BENCHMARK_DIR, SOURCE_SET),
+        help="The source benchmark set used to update target set.",
+    )
+    parser.add_argument(
+        "-t",
+        "--target",
+        type=str,
+        default=os.path.join(BENCHMARK_DIR, TARGET_SET),
+        help="The target benchmark set to update.",
+    )
 
-  args = parser.parse_args()
-  assert os.path.isdir(args.target), '--target must be an existing directory.'
-  assert os.path.isdir(args.source), '--source must be an existing directory.'
+    args = parser.parse_args()
+    assert os.path.isdir(args.target), "--target must be an existing directory."
+    assert os.path.isdir(args.source), "--source must be an existing directory."
 
-  return args
+    return args
 
 
 def main():
-  args = parse_args()
-  target_path = args.target
-  src_path = args.source
+    args = parse_args()
+    target_path = args.target
+    src_path = args.source
 
-  for file_name in os.listdir(target_path):
-    if not file_name.endswith('.yaml'):
-      continue
+    for file_name in os.listdir(target_path):
+        if not file_name.endswith(".yaml"):
+            continue
 
-    target_bms = Benchmark.from_yaml(os.path.join(target_path, file_name))
-    try:
-      source_bms = Benchmark.from_yaml(os.path.join(src_path, file_name))
-    except FileNotFoundError:
-      logging.error('%s is not found in %s', file_name, src_path)
-      continue
+        target_bms = Benchmark.from_yaml(os.path.join(target_path, file_name))
+        try:
+            source_bms = Benchmark.from_yaml(os.path.join(src_path, file_name))
+        except FileNotFoundError:
+            logging.error("%s is not found in %s", file_name, src_path)
+            continue
 
-    # Get raw name of the functions selected in target.
-    functions = [b.function_name for b in target_bms]
-    # Get the selected benchmarks from source.
-    selected_bms = []
-    for b in source_bms:
-      if b.function_name in functions:
-        selected_bms.append(b)
+        # Get raw name of the functions selected in target.
+        functions = [b.function_name for b in target_bms]
+        # Get the selected benchmarks from source.
+        selected_bms = []
+        for b in source_bms:
+            if b.function_name in functions:
+                selected_bms.append(b)
 
-    Benchmark.to_yaml(selected_bms, outdir=target_path)
-    logging.info('Updated %s', file_name)
+        Benchmark.to_yaml(selected_bms, outdir=target_path)
+        logging.info("Updated %s", file_name)
 
 
-if __name__ == '__main__':
-  logging.basicConfig(level=logging.INFO)
+if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO)
 
-  main()
+    main()

@@ -17,43 +17,47 @@ from results import AnalysisResult, CrashResult, RunResult
 
 
 class ContextAnalyzerAgentTest(BaseAgentTest):
-  """Test for the ContextAnalyzer agent."""
+    """Test for the ContextAnalyzer agent."""
 
-  def setup_initial_result_list(self, benchmark, prompt):
-    """Sets up the initial result list for the ContextAnalyzer agent test."""
+    def setup_initial_result_list(self, benchmark, prompt):
+        """Sets up the initial result list for the ContextAnalyzer agent test."""
 
-    # Get necessary data from prompt
-    fuzz_target_source = self._parse_tag(prompt, 'fuzz-target')
-    function_requirement = self._parse_tag(prompt, 'function-requirements')
-    stacktrace = self._parse_tag(prompt, 'crash-stacktrace')
-    insight = self._parse_tag(prompt, 'crash-analysis')
+        # Get necessary data from prompt
+        fuzz_target_source = self._parse_tag(prompt, "fuzz-target")
+        function_requirement = self._parse_tag(prompt, "function-requirements")
+        stacktrace = self._parse_tag(prompt, "crash-stacktrace")
+        insight = self._parse_tag(prompt, "crash-analysis")
 
-    if function_requirement:
-      # Save function requirements to file
-      self.write_requirements_to_file(self.args, function_requirement)
+        if function_requirement:
+            # Save function requirements to file
+            self.write_requirements_to_file(self.args, function_requirement)
 
-    run_result = RunResult(benchmark=benchmark,
-                           trial=self.trial,
-                           work_dirs=self.args.work_dirs,
-                           author=None,
-                           chat_history={},
-                           crashes=True,
-                           fuzz_target_source=fuzz_target_source)
+        run_result = RunResult(
+            benchmark=benchmark,
+            trial=self.trial,
+            work_dirs=self.args.work_dirs,
+            author=None,
+            chat_history={},
+            crashes=True,
+            fuzz_target_source=fuzz_target_source,
+        )
 
-    crash_result = CrashResult(
-        benchmark=benchmark,
-        trial=self.trial,
-        work_dirs=self.args.work_dirs,
-        author=None,
-        chat_history={},
-        stacktrace=stacktrace,
-        true_bug=True,
-        insight=insight,
-    )
+        crash_result = CrashResult(
+            benchmark=benchmark,
+            trial=self.trial,
+            work_dirs=self.args.work_dirs,
+            author=None,
+            chat_history={},
+            stacktrace=stacktrace,
+            true_bug=True,
+            insight=insight,
+        )
 
-    analysis_result = AnalysisResult(author=None,
-                                     run_result=run_result,
-                                     crash_result=crash_result,
-                                     chat_history={})
+        analysis_result = AnalysisResult(
+            author=None,
+            run_result=run_result,
+            crash_result=crash_result,
+            chat_history={},
+        )
 
-    return [run_result, analysis_result]
+        return [run_result, analysis_result]

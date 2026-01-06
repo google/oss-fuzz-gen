@@ -30,12 +30,21 @@ Public API:
 
 # Core error types and enums
 from .core import ErrorCode, ErrorDetails, ErrorDomain, OSSFuzzError
+
 # All generated error classes from factory
 from .factory import *
+
 # Formatting and conversion utilities
-from .formatting import (format_error, format_error_json, format_error_legacy,
-                         format_error_simple, get_error_category, handle_error,
-                         is_retryable_error, to_dict)
+from .formatting import (
+    format_error,
+    format_error_json,
+    format_error_legacy,
+    format_error_simple,
+    get_error_category,
+    handle_error,
+    is_retryable_error,
+    to_dict,
+)
 
 # Backward compatibility aliases
 # The original errors.py had these function names
@@ -44,142 +53,121 @@ format_error_original = format_error_legacy  # Original format_error behavior
 # All public symbols for __all__
 __all__ = [
     # Core types and enums
-    'ErrorDomain',
-    'ErrorCode',
-    'ErrorDetails',
-    'OSSFuzzError',
-
+    "ErrorDomain",
+    "ErrorCode",
+    "ErrorDetails",
+    "OSSFuzzError",
     # Authentication errors
-    'AuthenticationError',
-    'InvalidCredentialsError',
-    'TokenExpiredError',
-
+    "AuthenticationError",
+    "InvalidCredentialsError",
+    "TokenExpiredError",
     # Configuration errors
-    'ConfigurationError',
-    'ConfigValidationError',
-
+    "ConfigurationError",
+    "ConfigValidationError",
     # API errors
-    'APIError',
-
+    "APIError",
     # Network errors
-    'NetworkError',
-    'NetworkTimeoutError',
-    'StorageConnectionError',
-
+    "NetworkError",
+    "NetworkTimeoutError",
+    "StorageConnectionError",
     # Validation errors
-    'ValidationError',
-    'InvalidParameterError',
-    'DataAggregationError',
-    'DataExportError',
-
+    "ValidationError",
+    "InvalidParameterError",
+    "DataAggregationError",
+    "DataExportError",
     # Project errors
-    'ProjectNotFoundError',
-    'ProjectInfoError',
-
+    "ProjectNotFoundError",
+    "ProjectInfoError",
     # Fuzzing errors
-    'FuzzingError',
-    'FuzzRunnerError',
-    'FuzzExecutionError',
-    'RunConfigurationError',
-    'ResultCollectionError',
-    'CloudRunnerError',
-    'CloudAuthError',
-    'CloudApiError',
-    'LocalRunnerError',
-
+    "FuzzingError",
+    "FuzzRunnerError",
+    "FuzzExecutionError",
+    "RunConfigurationError",
+    "ResultCollectionError",
+    "CloudRunnerError",
+    "CloudAuthError",
+    "CloudApiError",
+    "LocalRunnerError",
     # Rate limiting
-    'RateLimitError',
-
+    "RateLimitError",
     # Build errors
-    'BuildSystemError',
-    'BuildSystemNotFoundError',
-    'BuildConfigError',
-    'BuildConfigFileNotFoundError',
-    'BuildConfigFormatError',
-    'BuildConfigValidationError',
-    'BuildIntegrationError',
-    'BuildMonitorError',
-    'BuilderError',
-    'CloudBuildError',
-    'BuildConfigurationError',
-    'BuildExecutionError',
-    'BuildArtifactError',
-
+    "BuildSystemError",
+    "BuildSystemNotFoundError",
+    "BuildConfigError",
+    "BuildConfigFileNotFoundError",
+    "BuildConfigFormatError",
+    "BuildConfigValidationError",
+    "BuildIntegrationError",
+    "BuildMonitorError",
+    "BuilderError",
+    "CloudBuildError",
+    "BuildConfigurationError",
+    "BuildExecutionError",
+    "BuildArtifactError",
     # Storage and data errors
-    'StorageManagerError',
-    'StorageError',
-    'StorageAdapterError',
-    'HistoricalDataError',
-    'HistoricalDataManagerError',
-    'DataRetrievalError',
-    'DataValidationError',
-    'DataFetchError',
-    'CacheError',
-    'ResultComparisonError',
-    'QueryError',
-
+    "StorageManagerError",
+    "StorageError",
+    "StorageAdapterError",
+    "HistoricalDataError",
+    "HistoricalDataManagerError",
+    "DataRetrievalError",
+    "DataValidationError",
+    "DataFetchError",
+    "CacheError",
+    "ResultComparisonError",
+    "QueryError",
     # Analysis errors
-    'ChangeTrackingError',
-    'FunctionExtractionError',
-    'CrashAnalysisError',
-    'CoverageAnalysisError',
-
+    "ChangeTrackingError",
+    "FunctionExtractionError",
+    "CrashAnalysisError",
+    "CoverageAnalysisError",
     # Benchmark errors
-    'BenchmarkError',
-    'BenchmarkValidationError',
-    'UnsupportedLanguageError',
-
+    "BenchmarkError",
+    "BenchmarkValidationError",
+    "UnsupportedLanguageError",
     # Metadata errors
-    'MetadataError',
-    'MetadataParseError',
-    'MetadataValidationError',
-
+    "MetadataError",
+    "MetadataParseError",
+    "MetadataValidationError",
     # Artifact errors
-    'ArtifactError',
-    'ArtifactNotFoundException',
-    'ArtifactNotFoundError',
-    'ArtifactValidationError',
-    'ArtifactStorageError',
-    'ArtifactIntegrityError',
-
+    "ArtifactError",
+    "ArtifactNotFoundException",
+    "ArtifactNotFoundError",
+    "ArtifactValidationError",
+    "ArtifactStorageError",
+    "ArtifactIntegrityError",
     # Docker errors
-    'DockerManagerError',
-    'DockerExecutionError',
-    'DockerImageError',
-    'DockerContainerError',
-
+    "DockerManagerError",
+    "DockerExecutionError",
+    "DockerImageError",
+    "DockerContainerError",
     # File errors
-    'FileUtilsError',
-    'FilePermissionError',
-    'FileFormatError',
-    'WorkDirError',
-    'WorkDirPermissionError',
-    'WorkDirValidationError',
-
+    "FileUtilsError",
+    "FilePermissionError",
+    "FileFormatError",
+    "WorkDirError",
+    "WorkDirPermissionError",
+    "WorkDirValidationError",
     # Repository errors
-    'RepositoryError',
-    'RepositoryNotInitializedError',
-    'CloneError',
-    'UpdateError',
-
+    "RepositoryError",
+    "RepositoryNotInitializedError",
+    "CloneError",
+    "UpdateError",
     # Manager errors
-    'OSSFuzzManagerError',
-
+    "OSSFuzzManagerError",
     # General/legacy errors
-    'SDKError',
-    'EnvironmentParametersError',
-
+    "SDKError",
+    "EnvironmentParametersError",
     # Utility functions
-    'handle_error',
-    'to_dict',
-    'format_error',
-    'format_error_simple',
-    'format_error_json',
-    'is_retryable_error',
-    'get_error_category',
-
+    "handle_error",
+    "to_dict",
+    "format_error",
+    "format_error_simple",
+    "format_error_json",
+    "is_retryable_error",
+    "get_error_category",
     # Factory utilities
-    'make_error',
-    'get_error_class',
-    'list_error_classes',
+    "make_error",
+    "get_error_class",
+    "list_error_classes",
 ]

@@ -35,16 +35,17 @@ from string import Template
 # Configure logging to display all messages at or above INFO level
 logging.basicConfig(level=logging.INFO)
 
-DEFAULT_CLUSTER = 'llm-experiment'
-LARGE_CLUSTER = 'llm-experiment-large'
-DEFAULT_LOCATION = 'us-central1-c'
-LARGE_LOCATION = 'us-central1'
-TEMPLATE_PATH = os.path.join(os.path.dirname(__file__), 'k8s', 'pr-exp.yaml')
-LARGE_TEMPLATE_PATH = os.path.join(os.path.dirname(__file__), 'k8s',
-                                   'large-pr-exp.yaml')
-BENCHMARK_SET = 'comparison'
-LLM_NAME = 'vertex_ai_gemini-1-5'
-LLM_CHAT_NAME = 'vertex_ai_gemini-1-5-chat'
+DEFAULT_CLUSTER = "llm-experiment"
+LARGE_CLUSTER = "llm-experiment-large"
+DEFAULT_LOCATION = "us-central1-c"
+LARGE_LOCATION = "us-central1"
+TEMPLATE_PATH = os.path.join(os.path.dirname(__file__), "k8s", "pr-exp.yaml")
+LARGE_TEMPLATE_PATH = os.path.join(
+    os.path.dirname(__file__), "k8s", "large-pr-exp.yaml"
+)
+BENCHMARK_SET = "comparison"
+LLM_NAME = "vertex_ai_gemini-1-5"
+LLM_CHAT_NAME = "vertex_ai_gemini-1-5-chat"
 EXP_DELAY = 0
 FUZZING_TIMEOUT = 300
 REQUEST_CPU = 6
@@ -56,363 +57,415 @@ NUM_FIXES = 2
 VARY_TEMPERATURE = True
 MAX_ROUND = 100
 
-PR_LINK_PREFIX = 'https://github.com/google/oss-fuzz-gen/pull'
-JOB_LINK_PREFIX = ('https://console.cloud.google.com/kubernetes/job/'
-                   '<LOCATION>/<CLUSTER>/default')
-REPORT_LINK_PREFIX = 'https://llm-exp.oss-fuzz.com/Result-reports/ofg-pr'
+PR_LINK_PREFIX = "https://github.com/google/oss-fuzz-gen/pull"
+JOB_LINK_PREFIX = (
+    "https://console.cloud.google.com/kubernetes/job/" "<LOCATION>/<CLUSTER>/default"
+)
+REPORT_LINK_PREFIX = "https://llm-exp.oss-fuzz.com/Result-reports/ofg-pr"
 # Use storage.cloud.google.com if we want to give external access.
-BUCKET_LINK_PREFIX = ('https://console.cloud.google.com/storage/browser/'
-                      'oss-fuzz-gcb-experiment-run-logs/Result-reports/ofg-pr')
-BUCKET_GS_LINK_PREFIX = (
-    'gs://oss-fuzz-gcb-experiment-run-logs/Result-reports/ofg-pr')
+BUCKET_LINK_PREFIX = (
+    "https://console.cloud.google.com/storage/browser/"
+    "oss-fuzz-gcb-experiment-run-logs/Result-reports/ofg-pr"
+)
+BUCKET_GS_LINK_PREFIX = "gs://oss-fuzz-gcb-experiment-run-logs/Result-reports/ofg-pr"
 
-DEFAULT_VERTEX_AI_LOCATION = 'us-central1'
+DEFAULT_VERTEX_AI_LOCATION = "us-central1"
 VERTEX_AI_LOCATIONS = {
-    'vertex_ai_gemini-pro':
-        ('asia-east1,asia-east2,asia-northeast1,asia-northeast3,asia-south1,'
-         'asia-southeast1,australia-southeast1,europe-central2,europe-north1,'
-         'europe-southwest1,europe-west1,europe-west2,europe-west3,'
-         'europe-west4,europe-west6,europe-west8,europe-west9,'
-         'southamerica-east1,us-central1,us-east1,us-east4,us-east5,'
-         'us-south1,us-west1,us-west4'),
-    'vertex_ai_gemini-ultra':
-        ('asia-east1,asia-east2,asia-northeast1,asia-northeast3,asia-south1,'
-         'asia-southeast1,australia-southeast1,europe-central2,europe-north1,'
-         'europe-southwest1,europe-west1,europe-west2,europe-west3,'
-         'europe-west4,europe-west6,europe-west8,europe-west9,'
-         'southamerica-east1,us-central1,us-east1,us-east4,us-east5,'
-         'us-south1,us-west1,us-west4'),
-    'vertex_ai_gemini-1-5':
-        ('asia-east1,asia-east2,asia-northeast1,asia-northeast3,asia-south1,'
-         'asia-southeast1,australia-southeast1,europe-central2,europe-north1,'
-         'europe-southwest1,europe-west1,europe-west2,europe-west3,'
-         'europe-west4,europe-west6,europe-west8,europe-west9,'
-         'southamerica-east1,us-central1,us-east1,us-east4,us-east5,'
-         'us-south1,us-west1,us-west4'),
-    'vertex_ai_gemini-1-5-chat':
-        ('asia-east1,asia-east2,asia-northeast1,asia-northeast3,asia-south1,'
-         'asia-southeast1,australia-southeast1,europe-central2,europe-north1,'
-         'europe-southwest1,europe-west1,europe-west2,europe-west3,'
-         'europe-west4,europe-west6,europe-west8,europe-west9,'
-         'southamerica-east1,us-central1,us-east1,us-east4,us-east5,'
-         'us-south1,us-west1,us-west4'),
-    'vertex_ai_gemini-2-flash':
-        ('europe-central2,europe-north1,europe-southwest1,europe-west1,'
-         'europe-west4,europe-west8,europe-west9,us-central1,us-east1,'
-         'us-east4,us-east5,us-south1,us-west1,us-west4'),
-    'vertex_ai_gemini-2-flash-chat':
-        ('europe-central2,europe-north1,europe-southwest1,europe-west1,'
-         'europe-west4,europe-west8,europe-west9,us-central1,us-east1,'
-         'us-east4,us-east5,us-south1,us-west1,us-west4')
+    "vertex_ai_gemini-pro": (
+        "asia-east1,asia-east2,asia-northeast1,asia-northeast3,asia-south1,"
+        "asia-southeast1,australia-southeast1,europe-central2,europe-north1,"
+        "europe-southwest1,europe-west1,europe-west2,europe-west3,"
+        "europe-west4,europe-west6,europe-west8,europe-west9,"
+        "southamerica-east1,us-central1,us-east1,us-east4,us-east5,"
+        "us-south1,us-west1,us-west4"
+    ),
+    "vertex_ai_gemini-ultra": (
+        "asia-east1,asia-east2,asia-northeast1,asia-northeast3,asia-south1,"
+        "asia-southeast1,australia-southeast1,europe-central2,europe-north1,"
+        "europe-southwest1,europe-west1,europe-west2,europe-west3,"
+        "europe-west4,europe-west6,europe-west8,europe-west9,"
+        "southamerica-east1,us-central1,us-east1,us-east4,us-east5,"
+        "us-south1,us-west1,us-west4"
+    ),
+    "vertex_ai_gemini-1-5": (
+        "asia-east1,asia-east2,asia-northeast1,asia-northeast3,asia-south1,"
+        "asia-southeast1,australia-southeast1,europe-central2,europe-north1,"
+        "europe-southwest1,europe-west1,europe-west2,europe-west3,"
+        "europe-west4,europe-west6,europe-west8,europe-west9,"
+        "southamerica-east1,us-central1,us-east1,us-east4,us-east5,"
+        "us-south1,us-west1,us-west4"
+    ),
+    "vertex_ai_gemini-1-5-chat": (
+        "asia-east1,asia-east2,asia-northeast1,asia-northeast3,asia-south1,"
+        "asia-southeast1,australia-southeast1,europe-central2,europe-north1,"
+        "europe-southwest1,europe-west1,europe-west2,europe-west3,"
+        "europe-west4,europe-west6,europe-west8,europe-west9,"
+        "southamerica-east1,us-central1,us-east1,us-east4,us-east5,"
+        "us-south1,us-west1,us-west4"
+    ),
+    "vertex_ai_gemini-2-flash": (
+        "europe-central2,europe-north1,europe-southwest1,europe-west1,"
+        "europe-west4,europe-west8,europe-west9,us-central1,us-east1,"
+        "us-east4,us-east5,us-south1,us-west1,us-west4"
+    ),
+    "vertex_ai_gemini-2-flash-chat": (
+        "europe-central2,europe-north1,europe-southwest1,europe-west1,"
+        "europe-west4,europe-west8,europe-west9,us-central1,us-east1,"
+        "us-east4,us-east5,us-south1,us-west1,us-west4"
+    ),
 }
 
 
 def _parse_args(cmd) -> argparse.Namespace:
-  """Parses the command line arguments."""
-  parser = argparse.ArgumentParser(
-      description=
-      'Requests a GKE experiment with the given PR ID from OSS-Fuzz-Gen.')
-  parser.add_argument(
-      '-c',
-      '--cluster',
-      type=str,
-      default=DEFAULT_CLUSTER,
-      help=f'The cluster name to run GKE jobs, default: {DEFAULT_CLUSTER}')
-  parser.add_argument(
-      '-l',
-      '--location',
-      type=str,
-      default=DEFAULT_LOCATION,
-      help=f'The cluster location to run GKE jobs, default: {DEFAULT_LOCATION}')
-  parser.add_argument(
-      '-t',
-      '--gke-template',
-      type=str,
-      default=TEMPLATE_PATH,
-      help=f'The template to request GKE job, default: {TEMPLATE_PATH}')
-  parser.add_argument(
-      '-p',
-      '--pr-id',
-      type=int,
-      required=True,
-      help='The PR ID from OSS-Fuzz-Gen. Wait until the CI finishes building.')
-  parser.add_argument(
-      '-n',
-      '--name-suffix',
-      required=True,
-      type=str,
-      help=('Experiment name suffix (e.g., your name), this will be used in '
-            'GKE job and result report.'))
-  parser.add_argument(
-      '-b',
-      '--benchmark-set',
-      type=str,
-      default=BENCHMARK_SET,
-      help=f'Experiment benchmark set, default: {BENCHMARK_SET}.')
-  parser.add_argument('-m',
-                      '--llm',
-                      type=str,
-                      default=LLM_NAME,
-                      help=f'Large Language Model name, default: {LLM_NAME}.')
-  parser.add_argument(
-      '-ll',
-      '--llm-locations',
-      type=str,
-      help=(
-          'Comma-separated list of locations where the LLM is available. '
-          'If not provided, default locations will be used based on the LLM.'))
-  parser.add_argument(
-      '-d',
-      '--delay',
-      type=int,
-      default=EXP_DELAY,
-      help=('Delay each benchmark experiment by N seconds, default: '
-            f'{EXP_DELAY}.'))
-  parser.add_argument(
-      '-to',
-      '--fuzzing-timeout',
-      type=int,
-      default=FUZZING_TIMEOUT,
-      help=f'Fuzzing timeout in seconds, default: {FUZZING_TIMEOUT} seconds.')
-  parser.add_argument(
-      '-rc',
-      '--request-cpus',
-      type=int,
-      default=REQUEST_CPU,
-      help=f'CPU requested for experiment, default: {REQUEST_CPU}.')
-  parser.add_argument(
-      '-rm',
-      '--request-memory',
-      type=int,
-      default=REQUEST_MEM,
-      help=f'Memory requested for experiment in Gi, default: {REQUEST_MEM} Gi.')
-  parser.add_argument(
-      '-i',
-      '--local-introspector',
-      action='store_true',
-      help='If set will use a local version of fuzz introspector\'s webapp')
-  parser.add_argument(
-      '-ns',
-      '--num-samples',
-      type=int,
-      default=NUM_SAMPLES,
-      help=f'The number of samples to request from LLM, default: {NUM_SAMPLES}')
-  parser.add_argument(
-      '-nf',
-      '--llm-fix-limit',
-      type=int,
-      default=NUM_FIXES,
-      help=f'The number of fixes to request from LLM, default: {NUM_FIXES}')
-  parser.add_argument(
-      '-vt',
-      '--vary-temperature',
-      type=bool,
-      default=VARY_TEMPERATURE,
-      help=('Use different temperatures for each sample, default: '
-            f'{VARY_TEMPERATURE}'))
-  parser.add_argument('-mr',
-                      '--max-round',
-                      type=int,
-                      default=MAX_ROUND,
-                      help=f'Max trial round for agents, default: {MAX_ROUND}.')
-  parser.add_argument('-ag',
-                      '--agent',
-                      action='store_true',
-                      default=False,
-                      help='Enables agent enhancement.')
-  parser.add_argument('-lg',
-                      '--large',
-                      action='store_true',
-                      default=False,
-                      help=('(Use sparingly) Do a large experiment with '
-                            'many more cores available.'))
-  parser.add_argument('-rd',
-                      '--redirect-outs',
-                      action='store_true',
-                      default=False,
-                      help='Redirects experiments stdout/stderr to file')
+    """Parses the command line arguments."""
+    parser = argparse.ArgumentParser(
+        description="Requests a GKE experiment with the given PR ID from OSS-Fuzz-Gen."
+    )
+    parser.add_argument(
+        "-c",
+        "--cluster",
+        type=str,
+        default=DEFAULT_CLUSTER,
+        help=f"The cluster name to run GKE jobs, default: {DEFAULT_CLUSTER}",
+    )
+    parser.add_argument(
+        "-l",
+        "--location",
+        type=str,
+        default=DEFAULT_LOCATION,
+        help=f"The cluster location to run GKE jobs, default: {DEFAULT_LOCATION}",
+    )
+    parser.add_argument(
+        "-t",
+        "--gke-template",
+        type=str,
+        default=TEMPLATE_PATH,
+        help=f"The template to request GKE job, default: {TEMPLATE_PATH}",
+    )
+    parser.add_argument(
+        "-p",
+        "--pr-id",
+        type=int,
+        required=True,
+        help="The PR ID from OSS-Fuzz-Gen. Wait until the CI finishes building.",
+    )
+    parser.add_argument(
+        "-n",
+        "--name-suffix",
+        required=True,
+        type=str,
+        help=(
+            "Experiment name suffix (e.g., your name), this will be used in "
+            "GKE job and result report."
+        ),
+    )
+    parser.add_argument(
+        "-b",
+        "--benchmark-set",
+        type=str,
+        default=BENCHMARK_SET,
+        help=f"Experiment benchmark set, default: {BENCHMARK_SET}.",
+    )
+    parser.add_argument(
+        "-m",
+        "--llm",
+        type=str,
+        default=LLM_NAME,
+        help=f"Large Language Model name, default: {LLM_NAME}.",
+    )
+    parser.add_argument(
+        "-ll",
+        "--llm-locations",
+        type=str,
+        help=(
+            "Comma-separated list of locations where the LLM is available. "
+            "If not provided, default locations will be used based on the LLM."
+        ),
+    )
+    parser.add_argument(
+        "-d",
+        "--delay",
+        type=int,
+        default=EXP_DELAY,
+        help=(
+            "Delay each benchmark experiment by N seconds, default: " f"{EXP_DELAY}."
+        ),
+    )
+    parser.add_argument(
+        "-to",
+        "--fuzzing-timeout",
+        type=int,
+        default=FUZZING_TIMEOUT,
+        help=f"Fuzzing timeout in seconds, default: {FUZZING_TIMEOUT} seconds.",
+    )
+    parser.add_argument(
+        "-rc",
+        "--request-cpus",
+        type=int,
+        default=REQUEST_CPU,
+        help=f"CPU requested for experiment, default: {REQUEST_CPU}.",
+    )
+    parser.add_argument(
+        "-rm",
+        "--request-memory",
+        type=int,
+        default=REQUEST_MEM,
+        help=f"Memory requested for experiment in Gi, default: {REQUEST_MEM} Gi.",
+    )
+    parser.add_argument(
+        "-i",
+        "--local-introspector",
+        action="store_true",
+        help="If set will use a local version of fuzz introspector's webapp",
+    )
+    parser.add_argument(
+        "-ns",
+        "--num-samples",
+        type=int,
+        default=NUM_SAMPLES,
+        help=f"The number of samples to request from LLM, default: {NUM_SAMPLES}",
+    )
+    parser.add_argument(
+        "-nf",
+        "--llm-fix-limit",
+        type=int,
+        default=NUM_FIXES,
+        help=f"The number of fixes to request from LLM, default: {NUM_FIXES}",
+    )
+    parser.add_argument(
+        "-vt",
+        "--vary-temperature",
+        type=bool,
+        default=VARY_TEMPERATURE,
+        help=(
+            "Use different temperatures for each sample, default: "
+            f"{VARY_TEMPERATURE}"
+        ),
+    )
+    parser.add_argument(
+        "-mr",
+        "--max-round",
+        type=int,
+        default=MAX_ROUND,
+        help=f"Max trial round for agents, default: {MAX_ROUND}.",
+    )
+    parser.add_argument(
+        "-ag",
+        "--agent",
+        action="store_true",
+        default=False,
+        help="Enables agent enhancement.",
+    )
+    parser.add_argument(
+        "-lg",
+        "--large",
+        action="store_true",
+        default=False,
+        help=(
+            "(Use sparingly) Do a large experiment with " "many more cores available."
+        ),
+    )
+    parser.add_argument(
+        "-rd",
+        "--redirect-outs",
+        action="store_true",
+        default=False,
+        help="Redirects experiments stdout/stderr to file",
+    )
 
-  # Allow piping arbitrary args to run_all_experiments.py
-  args, additional_args = parser.parse_known_args(cmd)
-  args.additional_args = additional_args
+    # Allow piping arbitrary args to run_all_experiments.py
+    args, additional_args = parser.parse_known_args(cmd)
+    args.additional_args = additional_args
 
-  assert os.path.isfile(
-      args.gke_template), (f'GKE template does not exist: {args.gke_template}')
+    assert os.path.isfile(
+        args.gke_template
+    ), f"GKE template does not exist: {args.gke_template}"
 
-  # Construct experiment name and save it under args for simplicity.
-  args.experiment_name = f'{args.pr_id}'
-  if args.name_suffix:
-    args.experiment_name = f'{args.experiment_name}-{args.name_suffix}'
+    # Construct experiment name and save it under args for simplicity.
+    args.experiment_name = f"{args.pr_id}"
+    if args.name_suffix:
+        args.experiment_name = f"{args.experiment_name}-{args.name_suffix}"
 
-  # Use Chat model by default in agent-enhance experiments.
-  if args.agent and args.llm == LLM_NAME:
-    args.llm = LLM_CHAT_NAME
+    # Use Chat model by default in agent-enhance experiments.
+    if args.agent and args.llm == LLM_NAME:
+        args.llm = LLM_CHAT_NAME
 
-  if not args.llm_locations:
-    args.llm_locations = VERTEX_AI_LOCATIONS.get(args.llm,
-                                                 DEFAULT_VERTEX_AI_LOCATION)
+    if not args.llm_locations:
+        args.llm_locations = VERTEX_AI_LOCATIONS.get(
+            args.llm, DEFAULT_VERTEX_AI_LOCATION
+        )
 
-  if args.large:
-    args.location = LARGE_LOCATION
-    args.cluster = LARGE_CLUSTER
-    args.request_cpus = LARGE_REQUEST_CPU
-    args.request_memory = LARGE_REQUEST_MEM
-    args.gke_template = LARGE_TEMPLATE_PATH
+    if args.large:
+        args.location = LARGE_LOCATION
+        args.cluster = LARGE_CLUSTER
+        args.request_cpus = LARGE_REQUEST_CPU
+        args.request_memory = LARGE_REQUEST_MEM
+        args.gke_template = LARGE_TEMPLATE_PATH
 
-  if (args.max_round == 100 and
-      any(args.name_suffix.startswith(suffix) for suffix in ['ascc-', 'dgk-'])):
-    args.max_round = 10
+    if args.max_round == 100 and any(
+        args.name_suffix.startswith(suffix) for suffix in ["ascc-", "dgk-"]
+    ):
+        args.max_round = 10
 
-  if args.additional_args:
-    logging.info("Additional args: %s", args.additional_args)
+    if args.additional_args:
+        logging.info("Additional args: %s", args.additional_args)
 
-  return args
+    return args
 
 
-def _remove_existing_job_bucket(gke_job_name: str, bucket_link: str,
-                                bucket_gs_link: str):
-  """Removes existing GKE job and gcloud bucket."""
-  logging.info('Deleting GKE job: %s', gke_job_name)
-  del_job = sp.run(['kubectl', 'delete', 'job', gke_job_name],
-                   stdin=sp.DEVNULL,
-                   stdout=sp.PIPE,
-                   stderr=sp.PIPE,
-                   check=False)
-  if del_job.returncode:
-    stdout = del_job.stdout.decode('utf-8')
-    stderr = del_job.stderr.decode('utf-8')
-    if 'Error from server (NotFound)' in stderr:
-      logging.warning(stderr)
-    else:
-      logging.error('Failed to delete GKE job: %s.', gke_job_name)
-      logging.error('STDOUT:\n  %s', stdout)
-      logging.error('STDERR:\n  %s', stderr)
-      sys.exit(1)
+def _remove_existing_job_bucket(
+    gke_job_name: str, bucket_link: str, bucket_gs_link: str
+):
+    """Removes existing GKE job and gcloud bucket."""
+    logging.info("Deleting GKE job: %s", gke_job_name)
+    del_job = sp.run(
+        ["kubectl", "delete", "job", gke_job_name],
+        stdin=sp.DEVNULL,
+        stdout=sp.PIPE,
+        stderr=sp.PIPE,
+        check=False,
+    )
+    if del_job.returncode:
+        stdout = del_job.stdout.decode("utf-8")
+        stderr = del_job.stderr.decode("utf-8")
+        if "Error from server (NotFound)" in stderr:
+            logging.warning(stderr)
+        else:
+            logging.error("Failed to delete GKE job: %s.", gke_job_name)
+            logging.error("STDOUT:\n  %s", stdout)
+            logging.error("STDERR:\n  %s", stderr)
+            sys.exit(1)
 
-  # Wait for 5 seconds to ensure job is deleted and not writing to bucket.
-  time.sleep(5)
+    # Wait for 5 seconds to ensure job is deleted and not writing to bucket.
+    time.sleep(5)
 
-  logging.info('Deleting gcloud bucket: %s', bucket_gs_link)
-  del_bucket = sp.run(['gsutil', '-m', 'rm', '-r', bucket_gs_link],
-                      stdin=sp.DEVNULL,
-                      stdout=sp.PIPE,
-                      stderr=sp.PIPE,
-                      check=False)
-  if del_bucket.returncode:
-    logging.error('Failed to rm gcloud bucket directory:\n  %s', bucket_link)
-    logging.error('STDOUT:\n  %s', del_bucket.stdout.decode('utf-8'))
-    logging.error('STDERR:\n  %s', del_bucket.stderr.decode('utf-8'))
+    logging.info("Deleting gcloud bucket: %s", bucket_gs_link)
+    del_bucket = sp.run(
+        ["gsutil", "-m", "rm", "-r", bucket_gs_link],
+        stdin=sp.DEVNULL,
+        stdout=sp.PIPE,
+        stderr=sp.PIPE,
+        check=False,
+    )
+    if del_bucket.returncode:
+        logging.error("Failed to rm gcloud bucket directory:\n  %s", bucket_link)
+        logging.error("STDOUT:\n  %s", del_bucket.stdout.decode("utf-8"))
+        logging.error("STDERR:\n  %s", del_bucket.stderr.decode("utf-8"))
 
 
 def _prepare_experiment_info(args: argparse.Namespace) -> tuple[str, str, str]:
-  """
-  Prepares and logs the key experiment information for easier accesses.
-  """
-  # GKE job name.
-  gke_job_name = f'ofg-pr-{args.experiment_name}'
+    """
+    Prepares and logs the key experiment information for easier accesses.
+    """
+    # GKE job name.
+    gke_job_name = f"ofg-pr-{args.experiment_name}"
 
-  # GKE job link.
-  gke_job_link = f'{JOB_LINK_PREFIX}/ofg-pr-{args.experiment_name}'
-  gke_job_link = gke_job_link.replace('<LOCATION>', args.location)
-  gke_job_link = gke_job_link.replace('<CLUSTER>', args.cluster)
+    # GKE job link.
+    gke_job_link = f"{JOB_LINK_PREFIX}/ofg-pr-{args.experiment_name}"
+    gke_job_link = gke_job_link.replace("<LOCATION>", args.location)
+    gke_job_link = gke_job_link.replace("<CLUSTER>", args.cluster)
 
-  # PR link.
-  ofg_pr_link = f'{PR_LINK_PREFIX}/{args.pr_id}'
+    # PR link.
+    ofg_pr_link = f"{PR_LINK_PREFIX}/{args.pr_id}"
 
-  # Report link.
-  report_link = (
-      f'{REPORT_LINK_PREFIX}/{datetime.now().strftime("%Y-%m-%d")}-'
-      f'{args.pr_id}-{args.name_suffix}-{args.benchmark_set}/index.html')
+    # Report link.
+    report_link = (
+        f'{REPORT_LINK_PREFIX}/{datetime.now().strftime("%Y-%m-%d")}-'
+        f"{args.pr_id}-{args.name_suffix}-{args.benchmark_set}/index.html"
+    )
 
-  # Bucket links.
-  bucket_link = (f'{BUCKET_LINK_PREFIX}/{datetime.now().strftime("%Y-%m-%d")}-'
-                 f'{args.pr_id}-{args.name_suffix}-{args.benchmark_set}')
-  bucket_gs_link = (
-      f'{BUCKET_GS_LINK_PREFIX}/{datetime.now().strftime("%Y-%m-%d")}-'
-      f'{args.pr_id}-{args.name_suffix}-{args.benchmark_set}')
+    # Bucket links.
+    bucket_link = (
+        f'{BUCKET_LINK_PREFIX}/{datetime.now().strftime("%Y-%m-%d")}-'
+        f"{args.pr_id}-{args.name_suffix}-{args.benchmark_set}"
+    )
+    bucket_gs_link = (
+        f'{BUCKET_GS_LINK_PREFIX}/{datetime.now().strftime("%Y-%m-%d")}-'
+        f"{args.pr_id}-{args.name_suffix}-{args.benchmark_set}"
+    )
 
-  logging.info(
-      'FORCE mode enable, will first remove existing GKE job and bucket.')
+    logging.info("FORCE mode enable, will first remove existing GKE job and bucket.")
 
-  logging.info(
-      'Requesting a GKE experiment named %s:\nPR: %s\nJOB: %s\nREPORT: %s\n'
-      'BUCKET: %s\nBUCKET GS: `%s`\n',
-      gke_job_name,
-      ofg_pr_link,
-      gke_job_link,
-      report_link,
-      bucket_link,
-      bucket_gs_link,
-  )
-  return gke_job_name, bucket_link, bucket_gs_link
+    logging.info(
+        "Requesting a GKE experiment named %s:\nPR: %s\nJOB: %s\nREPORT: %s\n"
+        "BUCKET: %s\nBUCKET GS: `%s`\n",
+        gke_job_name,
+        ofg_pr_link,
+        gke_job_link,
+        report_link,
+        bucket_link,
+        bucket_gs_link,
+    )
+    return gke_job_name, bucket_link, bucket_gs_link
 
 
 def _get_gke_credential(args: argparse.Namespace):
-  """Authenticates gcloud account."""
-  try:
-    sp.run([
-        'gcloud',
-        'container',
-        'clusters',
-        'get-credentials',
-        args.cluster,
-        '--location',
-        args.location,
-    ],
-           check=False)
-  except Exception as e:
-    logging.error('Failed to authenticate gcloud: %s', e)
+    """Authenticates gcloud account."""
+    try:
+        sp.run(
+            [
+                "gcloud",
+                "container",
+                "clusters",
+                "get-credentials",
+                args.cluster,
+                "--location",
+                args.location,
+            ],
+            check=False,
+        )
+    except Exception as e:
+        logging.error("Failed to authenticate gcloud: %s", e)
 
 
 def _fill_template(args: argparse.Namespace) -> str:
-  """Fills the GKE template with |args| and returns the result YAML path."""
-  exp_env_vars = os.environ.copy()
-  exp_env_vars['PR_ID'] = str(args.pr_id)
-  exp_env_vars['GKE_EXP_BENCHMARK'] = args.benchmark_set
-  exp_env_vars['GKE_EXP_LLM'] = args.llm
-  exp_env_vars['GKE_EXP_VERTEX_AI_LOCATIONS'] = args.llm_locations
-  exp_env_vars['GKE_EXP_DELAY'] = args.delay
-  exp_env_vars['GKE_EXP_FUZZING_TIMEOUT'] = str(args.fuzzing_timeout)
-  exp_env_vars['GKE_EXP_NAME'] = args.experiment_name
-  exp_env_vars['GKE_EXP_REQ_CPU'] = args.request_cpus
-  exp_env_vars['GKE_EXP_REQ_MEM'] = f'{args.request_memory}Gi'
-  exp_env_vars[
-      'GKE_EXP_LOCAL_INTROSPECTOR'] = f'{args.local_introspector}'.lower()
-  exp_env_vars['GKE_EXP_NUM_SAMPLES'] = f'{args.num_samples}'
-  exp_env_vars['GKE_EXP_LLM_FIX_LIMIT'] = f'{args.llm_fix_limit}'
-  exp_env_vars['GKE_EXP_VARY_TEMPERATURE'] = f'{args.vary_temperature}'.lower()
-  exp_env_vars['GKE_EXP_AGENT'] = f'{args.agent}'.lower()
-  exp_env_vars['GKE_REDIRECT_OUTS'] = f'{args.redirect_outs}'.lower()
-  exp_env_vars['GKE_EXP_MAX_ROUND'] = args.max_round
+    """Fills the GKE template with |args| and returns the result YAML path."""
+    exp_env_vars = os.environ.copy()
+    exp_env_vars["PR_ID"] = str(args.pr_id)
+    exp_env_vars["GKE_EXP_BENCHMARK"] = args.benchmark_set
+    exp_env_vars["GKE_EXP_LLM"] = args.llm
+    exp_env_vars["GKE_EXP_VERTEX_AI_LOCATIONS"] = args.llm_locations
+    exp_env_vars["GKE_EXP_DELAY"] = args.delay
+    exp_env_vars["GKE_EXP_FUZZING_TIMEOUT"] = str(args.fuzzing_timeout)
+    exp_env_vars["GKE_EXP_NAME"] = args.experiment_name
+    exp_env_vars["GKE_EXP_REQ_CPU"] = args.request_cpus
+    exp_env_vars["GKE_EXP_REQ_MEM"] = f"{args.request_memory}Gi"
+    exp_env_vars["GKE_EXP_LOCAL_INTROSPECTOR"] = f"{args.local_introspector}".lower()
+    exp_env_vars["GKE_EXP_NUM_SAMPLES"] = f"{args.num_samples}"
+    exp_env_vars["GKE_EXP_LLM_FIX_LIMIT"] = f"{args.llm_fix_limit}"
+    exp_env_vars["GKE_EXP_VARY_TEMPERATURE"] = f"{args.vary_temperature}".lower()
+    exp_env_vars["GKE_EXP_AGENT"] = f"{args.agent}".lower()
+    exp_env_vars["GKE_REDIRECT_OUTS"] = f"{args.redirect_outs}".lower()
+    exp_env_vars["GKE_EXP_MAX_ROUND"] = args.max_round
 
-  # Add additional args as a space-separated string
-  exp_env_vars['GKE_EXP_ADDITIONAL_ARGS'] = ' '.join(args.additional_args)
+    # Add additional args as a space-separated string
+    exp_env_vars["GKE_EXP_ADDITIONAL_ARGS"] = " ".join(args.additional_args)
 
-  with open(args.gke_template, 'r') as file:
-    yaml_template = file.read()
+    with open(args.gke_template, "r") as file:
+        yaml_template = file.read()
 
-  substituted_content = Template(yaml_template).safe_substitute(exp_env_vars)
-  substituted_file_path = f'{os.path.splitext(args.gke_template)[0]}-sub.yaml'
+    substituted_content = Template(yaml_template).safe_substitute(exp_env_vars)
+    substituted_file_path = f"{os.path.splitext(args.gke_template)[0]}-sub.yaml"
 
-  with open(substituted_file_path, 'w') as substituted_file:
-    substituted_file.write(substituted_content)
+    with open(substituted_file_path, "w") as substituted_file:
+        substituted_file.write(substituted_content)
 
-  return substituted_file_path
+    return substituted_file_path
 
 
 def _request_experiment(substituted_file_path: str):
-  """Requests an GKE experiment with |args| settings."""
-  sp.run(['kubectl', 'create', '-f', substituted_file_path], check=True)
+    """Requests an GKE experiment with |args| settings."""
+    sp.run(["kubectl", "create", "-f", substituted_file_path], check=True)
 
 
 def main(cmd=None):
-  """The main function."""
-  args = _parse_args(cmd)
-  gke_job_name, bucket_link, bucket_gs_link = _prepare_experiment_info(args)
-  _get_gke_credential(args)
-  _remove_existing_job_bucket(gke_job_name, bucket_link, bucket_gs_link)
-  _request_experiment(_fill_template(args))
+    """The main function."""
+    args = _parse_args(cmd)
+    gke_job_name, bucket_link, bucket_gs_link = _prepare_experiment_info(args)
+    _get_gke_credential(args)
+    _remove_existing_job_bucket(gke_job_name, bucket_link, bucket_gs_link)
+    _request_experiment(_fill_template(args))
 
 
 if __name__ == "__main__":
-  sys.exit(main())
+    sys.exit(main())

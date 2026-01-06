@@ -17,13 +17,15 @@ from results import AnalysisResult, CrashResult, Result, RunResult
 
 
 class FunctionAnalyzerAgentTest(BaseAgentTest):
-  """Test for the FunctionAnalyzer agent."""
+    """Test for the FunctionAnalyzer agent."""
 
-  def setup_initial_result_list(self, benchmark, prompt):
-    """Sets up the initial result list for the FunctionAnalyzer agent test."""
+    def setup_initial_result_list(self, benchmark, prompt):
+        """Sets up the initial result list for the FunctionAnalyzer agent test."""
 
-    return [
-        Result(benchmark=benchmark,
-               trial=self.args.trial,
-               work_dirs=self.args.work_dirs)
-    ]
+        return [
+            Result(
+                benchmark=benchmark,
+                trial=self.args.trial,
+                work_dirs=self.args.work_dirs,
+            )
+        ]

@@ -23,111 +23,124 @@ logger = logging.getLogger(__name__)
 
 
 class FuzzIntrospectorTool(base_tool.BaseTool):
-  """Calls FI API with params."""
+    """Calls FI API with params."""
 
-  def __init__(self, benchmark: benchmarklib.Benchmark, name: str = ''):
-    super().__init__(benchmark, name)
-    self.project_functions = None
-
-  def _source_code(self, filename: str, start_line: int, end_line: int) -> str:
-    """Calls the source code API of the Fuzz Introspector."""
-    # A placeholder
-    raise NotImplementedError
-
-  def _xrefs(self, function_signature: str) -> list[str]:
-    """Calls the xrefs API of the Fuzz Introspector."""
-    # A placeholder
-    raise NotImplementedError
-
-  def _types_def(self, function_signature: str) -> list[str]:
-    """Calls the type API of the Fuzz Introspector."""
-    # A placeholder
-    raise NotImplementedError
-
-  def _function_signature(self, function_name: str) -> str:
-    """Calls the function signature API of the Fuzz Introspector."""
-    # A placeholder
-    raise NotImplementedError
-
-  def function_source_with_signature(self, project_name: str,
-                                     function_signature: str) -> str:
-    """
-    Retrieves a function's source from the fuzz introspector API,
-      using the project's name and function's signature.
-
-    Args:
-        project_name (str): The name of the project.
-        function_signature (str): The signature of the function.
-
-    Returns:
-        str: Source code of the function if found, otherwise an empty string.
-    """
-
-    logger.info('Retrieving function source for %s in project %s.',
-                function_signature, project_name)
-
-    function_code = introspector.query_introspector_function_source(
-        project_name, function_signature)
-
-    if function_code.strip():
-      logger.info('Function with signature %s found and extracted.',
-                  function_signature)
-    else:
-      logger.error('Error: Function with signature %s not found in project %s.',
-                   function_signature, project_name)
-
-    return function_code
-
-  def get_function_implementation(self, project_name: str,
-                                  function_name: str) -> str:
-    """
-    Retrieves a function's source from the fuzz introspector API,
-      using the project's name and function's name
-
-    Args:
-        project_name (str): The name of the project.
-        function_name (str): The name of the function.
-
-    Returns:
-        str: Source code of the function if found, otherwise an empty string.
-    """
-
-    logger.info('Retrieving function source for %s in project %s.',
-                function_name, project_name)
-
-    if self.project_functions is None:
-      logger.info(
-          'Project functions not initialized. Initializing for project %s.',
-          project_name)
-      functions_list = introspector.query_introspector_all_functions(
-          project_name)
-
-      if functions_list:
-        # func["debug_summary"] and func["debug_summary"]["name"] could be
-        # None or empty but still exists
-        self.project_functions = {
-            func["debug_summary"]["name"]: func
-            for func in functions_list
-            if isinstance(func.get("debug_summary"), dict) and
-            isinstance(func["debug_summary"].get("name"), str) and
-            func["debug_summary"]["name"].strip()
-        }
-      else:
+    def __init__(self, benchmark: benchmarklib.Benchmark, name: str = ""):
+        super().__init__(benchmark, name)
         self.project_functions = None
 
-    if (self.project_functions is None or
-        function_name not in self.project_functions):
-      logger.error('Error: Required function not found for project %s.',
-                   project_name)
-      return ''
+    def _source_code(self, filename: str, start_line: int, end_line: int) -> str:
+        """Calls the source code API of the Fuzz Introspector."""
+        # A placeholder
+        raise NotImplementedError
 
-    function_signature = self.project_functions[function_name][
-        'function_signature']
+    def _xrefs(self, function_signature: str) -> list[str]:
+        """Calls the xrefs API of the Fuzz Introspector."""
+        # A placeholder
+        raise NotImplementedError
 
-    return self.function_source_with_signature(project_name, function_signature)
+    def _types_def(self, function_signature: str) -> list[str]:
+        """Calls the type API of the Fuzz Introspector."""
+        # A placeholder
+        raise NotImplementedError
 
-  def tutorial(self) -> str:
-    raise NotImplementedError
+    def _function_signature(self, function_name: str) -> str:
+        """Calls the function signature API of the Fuzz Introspector."""
+        # A placeholder
+        raise NotImplementedError
 
-  def execute(self, command: str) -> introspector.Any:
-    raise NotImplementedError
+    def function_source_with_signature(
+        self, project_name: str, function_signature: str
+    ) -> str:
+        """
+        Retrieves a function's source from the fuzz introspector API,
+          using the project's name and function's signature.
+
+        Args:
+            project_name (str): The name of the project.
+            function_signature (str): The signature of the function.
+
+        Returns:
+            str: Source code of the function if found, otherwise an empty string.
+        """
+
+        logger.info(
+            "Retrieving function source for %s in project %s.",
+            function_signature,
+            project_name,
+        )
+
+        function_code = introspector.query_introspector_function_source(
+            project_name, function_signature
+        )
+
+        if function_code.strip():
+            logger.info(
+                "Function with signature %s found and extracted.", function_signature
+            )
+        else:
+            logger.error(
+                "Error: Function with signature %s not found in project %s.",
+                function_signature,
+                project_name,
+            )
+
+        return function_code
+
+    def get_function_implementation(self, project_name: str, function_name: str) -> str:
+        """
+        Retrieves a function's source from the fuzz introspector API,
+          using the project's name and function's name
+
+        Args:
+            project_name (str): The name of the project.
+            function_name (str): The name of the function.
+
+        Returns:
+            str: Source code of the function if found, otherwise an empty string.
+        """
+
+        logger.info(
+            "Retrieving function source for %s in project %s.",
+            function_name,
+            project_name,
+        )
+
+        if self.project_functions is None:
+            logger.info(
+                "Project functions not initialized. Initializing for project %s.",
+                project_name,
+            )
+            functions_list = introspector.query_introspector_all_functions(project_name)
+
+            if functions_list:
+                # func["debug_summary"] and func["debug_summary"]["name"] could be
+                # None or empty but still exists
+                self.project_functions = {
+                    func["debug_summary"]["name"]: func
+                    for func in functions_list
+                    if isinstance(func.get("debug_summary"), dict)
+                    and isinstance(func["debug_summary"].get("name"), str)
+                    and func["debug_summary"]["name"].strip()
+                }
+            else:
+                self.project_functions = None
+
+        if (
+            self.project_functions is None
+            or function_name not in self.project_functions
+        ):
+            logger.error(
+                "Error: Required function not found for project %s.", project_name
+            )
+            return ""
+
+        function_signature = self.project_functions[function_name]["function_signature"]
+
+        return self.function_source_with_signature(project_name, function_signature)
+
+    def tutorial(self) -> str:
+        raise NotImplementedError
+
+    def execute(self, command: str) -> introspector.Any:
+        raise NotImplementedError

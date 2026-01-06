@@ -16,4 +16,4 @@ from tool.base_tool import BaseTool
 
 
 class BashTool(BaseTool):
-  pass
+    pass

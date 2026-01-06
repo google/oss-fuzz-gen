@@ -18,37 +18,35 @@ import logger
 
 
 class BaseAgentTest:
-  """Base class for agent tests, providing common setup and utility methods."""
+    """Base class for agent tests, providing common setup and utility methods."""
 
-  def __init__(self, args, trial):
-    self.args = args
-    self.trial = trial
+    def __init__(self, args, trial):
+        self.args = args
+        self.trial = trial
 
-  def _parse_tag(self, response: str, tag: str) -> str:
-    """Parses the XML-style tags from LLM response."""
-    match = re.search(rf'<{tag}>(.*?)</{tag}>', response, re.DOTALL)
-    return match.group(1).strip() if match else ''
+    def _parse_tag(self, response: str, tag: str) -> str:
+        """Parses the XML-style tags from LLM response."""
+        match = re.search(rf"<{tag}>(.*?)</{tag}>", response, re.DOTALL)
+        return match.group(1).strip() if match else ""
 
-  def write_requirements_to_file(self, args, requirements: str) -> str:
-    """Write the requirements to a file."""
-    if not requirements:
-      logger.warning('No requirements to write to file.', trial=self.trial)
-      return ''
+    def write_requirements_to_file(self, args, requirements: str) -> str:
+        """Write the requirements to a file."""
+        if not requirements:
+            logger.warning("No requirements to write to file.", trial=self.trial)
+            return ""
 
-    requirement_path = args.work_dirs.requirements_file_path(self.trial)
+        requirement_path = args.work_dirs.requirements_file_path(self.trial)
 
-    with open(requirement_path, 'w') as f:
-      f.write(requirements)
+        with open(requirement_path, "w") as f:
+            f.write(requirements)
 
-    logger.info('Requirements written to %s',
-                requirement_path,
-                trial=self.trial)
+        logger.info("Requirements written to %s", requirement_path, trial=self.trial)
 
-    return requirement_path
+        return requirement_path
 
-  def setup_initial_result_list(self, benchmark, prompt):
-    """Sets up the initial result list for the agent test."""
-    # Load the benchmark and prompt file
-    raise NotImplementedError(
-        "This method should be implemented in subclasses to set up the initial result list."
-    )
+    def setup_initial_result_list(self, benchmark, prompt):
+        """Sets up the initial result list for the agent test."""
+        # Load the benchmark and prompt file
+        raise NotImplementedError(
+            "This method should be implemented in subclasses to set up the initial result list."
+        )

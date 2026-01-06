@@ -1,0 +1,39 @@
+"enums": []
+"function_pointers": []
+"functions":
+- "name": "cJSON_Parse"
+  "params":
+  - "name": ""
+    "type": "const char*"
+  "return_type": "cJSON*"
+  "signature": "cJSON * cJSON_Parse(const char *)"
+- "name": "cJSON_Print"
+  "params":
+  - "name": ""
+    "type": "const cJSON*"
+  "return_type": "char*"
+  "signature": "char * cJSON_Print(const cJSON *)"
+"language": "c++"
+"macros":
+- "CJSON_VERSION_MAJOR"
+- "CJSON_VERSION_MINOR"
+- "CJSON_VERSION_PATCH"
+- "cJSON_Invalid"
+- "cJSON_False"
+- "cJSON_True"
+- "cJSON_NULL"
+- "cJSON_Number"
+- "cJSON_String"
+- "cJSON_Array"
+- "cJSON_Object"
+- "cJSON_Raw"
+- "cJSON_IsReference"
+- "cJSON_StringIsConst"
+- "CJSON_NESTING_LIMIT"
+- "CJSON_CIRCULAR_LIMIT"
+"project": "cjson"
+"target_name": "cjson_read_fuzzer"
+"target_path": "/src/cjson/fuzzing/cjson_read_fuzzer.c"
+"typedefs":
+- "datatype": "int"
+  "name": "cJSON_bool"
