@@ -16,79 +16,92 @@ Use it as a usual module locally, or as script in cloud builds.
 """
 import logger
 from agent.prototyper import Prototyper
-from llm_toolkit.prompt_builder import (CoverageEnhancerTemplateBuilder,
-                                        CrashEnhancerTemplateBuilder,
-                                        EnhancerTemplateBuilder,
-                                        JvmFixingBuilder)
+from llm_toolkit.prompt_builder import (
+    CoverageEnhancerTemplateBuilder,
+    CrashEnhancerTemplateBuilder,
+    EnhancerTemplateBuilder,
+    JvmFixingBuilder,
+)
 from llm_toolkit.prompts import Prompt, TextPrompt
 from results import AnalysisResult, BuildResult, Result
 
 
 class Enhancer(Prototyper):
-  """The Agent to refine a compilable fuzz target for higher coverage."""
+    """The Agent to refine a compilable fuzz target for higher coverage."""
 
-  def _initial_prompt(self, results: list[Result]) -> Prompt:
-    """Constructs initial prompt of the agent."""
-    last_result = results[-1]
-    benchmark = last_result.benchmark
+    def _initial_prompt(self, results: list[Result]) -> Prompt:
+        """Constructs initial prompt of the agent."""
+        last_result = results[-1]
+        benchmark = last_result.benchmark
 
-    if not isinstance(last_result, AnalysisResult):
-      logger.error('The last result in Enhancer is not AnalysisResult: %s',
-                   results,
-                   trial=self.trial)
-      return Prompt()
+        if not isinstance(last_result, AnalysisResult):
+            logger.error(
+                "The last result in Enhancer is not AnalysisResult: %s",
+                results,
+                trial=self.trial,
+            )
+            return Prompt()
 
-    last_build_result = None
-    for result in results[::-1]:
-      if isinstance(result, BuildResult):
-        last_build_result = result
-        break
-    if not last_build_result:
-      logger.error('Unable to find the last build result in Enhancer : %s',
-                   results,
-                   trial=self.trial)
-      return Prompt()
+        last_build_result = None
+        for result in results[::-1]:
+            if isinstance(result, BuildResult):
+                last_build_result = result
+                break
+        if not last_build_result:
+            logger.error(
+                "Unable to find the last build result in Enhancer : %s",
+                results,
+                trial=self.trial,
+            )
+            return Prompt()
 
-    function_requirements = self.get_function_requirements()
+        function_requirements = self.get_function_requirements()
 
-    if benchmark.language == 'jvm':
-      # TODO: Do this in a separate agent for JVM coverage.
-      builder = JvmFixingBuilder(self.llm, benchmark,
-                                 last_result.run_result.fuzz_target_source, [])
-      prompt = builder.build([], None, None)
-    else:
-      # TODO(dongge): Refine this logic.
-      if last_result.semantic_result:
-        error_desc, errors = last_result.semantic_result.get_error_info()
-        builder = EnhancerTemplateBuilder(self.llm, benchmark,
-                                          last_build_result, error_desc, errors)
-      elif last_result.crash_result:
-        crash_result = last_result.crash_result
-        context_result = last_result.crash_context_result
-        builder = CrashEnhancerTemplateBuilder(self.llm, benchmark,
-                                               last_build_result, crash_result,
-                                               context_result)
-      elif last_result.coverage_result:
-        builder = CoverageEnhancerTemplateBuilder(
-            self.llm,
-            benchmark,
-            last_build_result,
-            coverage_result=last_result.coverage_result)
-      else:
-        logger.error(
-            'Last result does not contain either semantic result or '
-            'coverage result',
-            trial=self.trial)
-        # TODO(dongge): Give some default initial prompt.
-        prompt = TextPrompt(
-            'Last result does not contain either semantic result or '
-            'coverage result')
+        if benchmark.language == "jvm":
+            # TODO: Do this in a separate agent for JVM coverage.
+            builder = JvmFixingBuilder(
+                self.llm, benchmark, last_result.run_result.fuzz_target_source, []
+            )
+            prompt = builder.build([], None, None)
+        else:
+            # TODO(dongge): Refine this logic.
+            if last_result.semantic_result:
+                error_desc, errors = last_result.semantic_result.get_error_info()
+                builder = EnhancerTemplateBuilder(
+                    self.llm, benchmark, last_build_result, error_desc, errors
+                )
+            elif last_result.crash_result:
+                crash_result = last_result.crash_result
+                context_result = last_result.crash_context_result
+                builder = CrashEnhancerTemplateBuilder(
+                    self.llm, benchmark, last_build_result, crash_result, context_result
+                )
+            elif last_result.coverage_result:
+                builder = CoverageEnhancerTemplateBuilder(
+                    self.llm,
+                    benchmark,
+                    last_build_result,
+                    coverage_result=last_result.coverage_result,
+                )
+            else:
+                logger.error(
+                    "Last result does not contain either semantic result or "
+                    "coverage result",
+                    trial=self.trial,
+                )
+                # TODO(dongge): Give some default initial prompt.
+                prompt = TextPrompt(
+                    "Last result does not contain either semantic result or "
+                    "coverage result"
+                )
+                return prompt
+            prompt = builder.build(
+                example_pair=[],
+                tool_guides=self.inspect_tool.tutorial(),
+                project_dir=self.inspect_tool.project_dir,
+                function_requirements=function_requirements,
+            )
+            # TODO: A different file name/dir.
+            prompt.save(self.args.work_dirs.prompt)
+
         return prompt
-      prompt = builder.build(example_pair=[],
-                             tool_guides=self.inspect_tool.tutorial(),
-                             project_dir=self.inspect_tool.project_dir,
-                             function_requirements=function_requirements)
-      # TODO: A different file name/dir.
-      prompt.save(self.args.work_dirs.prompt)
-
-    return prompt

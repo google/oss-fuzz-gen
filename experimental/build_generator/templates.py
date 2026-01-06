@@ -15,7 +15,7 @@
 """Holds templates used by the auto-generator both inside and outside the
 OSS-Fuzz base builder."""
 
-OSS_FUZZ_LICENSE = '''# Copyright 2025 Google LLC.
+OSS_FUZZ_LICENSE = """# Copyright 2025 Google LLC.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -30,19 +30,25 @@ OSS_FUZZ_LICENSE = '''# Copyright 2025 Google LLC.
 # limitations under the License.
 #
 ################################################################################
-'''
+"""
 
-EMPTY_OSS_FUZZ_BUILD = '''#!/bin/bash -eu
-''' + OSS_FUZZ_LICENSE
+EMPTY_OSS_FUZZ_BUILD = (
+    """#!/bin/bash -eu
+"""
+    + OSS_FUZZ_LICENSE
+)
 
-BASE_DOCKER_HEAD = OSS_FUZZ_LICENSE + '''
+BASE_DOCKER_HEAD = (
+    OSS_FUZZ_LICENSE
+    + """
 FROM gcr.io/oss-fuzz-base/base-builder
 RUN apt-get update && apt-get install -y make autoconf automake autopoint \\
                       libtool cmake pkg-config curl check libcpputest-dev \\
                       flex bison re2c protobuf-compiler uuid uuid-dev
-'''
+"""
+)
 
-CFLITE_TEMPLATE = '''name: ClusterFuzzLite PR fuzzing
+CFLITE_TEMPLATE = """name: ClusterFuzzLite PR fuzzing
 on:
   workflow_dispatch:
   pull_request:
@@ -72,11 +78,11 @@ jobs:
         mode: 'code-change'
         report-unreproducible-crashes: false
         sanitizer: ${{ matrix.sanitizer }}
-'''
+"""
 
 # Empty CPP harness that is used to confirm compilation when generating
 # auto-build scripts.
-CPP_BASE_TEMPLATE = '''#include <stdint.h>
+CPP_BASE_TEMPLATE = """#include <stdint.h>
 #include <iostream>
 
 extern "C" int
@@ -90,11 +96,11 @@ LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
     // end of fuzzer contents
 
     return 0;
-}'''
+}"""
 
 # Empty C harness that is used to confirm compilation when generating
 # auto-build scripts.
-C_BASE_TEMPLATE = '''#include <stdint.h>
+C_BASE_TEMPLATE = """#include <stdint.h>
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -107,11 +113,13 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
     // end of fuzzer contents
 
     return 0;
-}'''
+}"""
 
 # Docker file used for starting the auto-gen workflow within an OSS-Fuzz
 # base-builder image.
-AUTOGEN_DOCKER_FILE = BASE_DOCKER_HEAD + '''
+AUTOGEN_DOCKER_FILE = (
+    BASE_DOCKER_HEAD
+    + """
 RUN rm /usr/local/bin/cargo && \\
  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | bash -s -- -y && \\
  apt-get install -y cargo
@@ -130,7 +138,8 @@ COPY *.py *.json $SRC/
 RUN python3 -m pip install pyyaml
 WORKDIR $SRC
 COPY build.sh $SRC/
-'''
+"""
+)
 
 EMPTY_PROJECT_YAML = """homepage: "https://github.com/google/oss-fuzz"
 language: c++
@@ -141,7 +150,9 @@ main_repo: 'https://github.com/google/oss-fuzz'
 """
 
 # Docker file used for OSS-Fuzz integrations.
-CLEAN_OSS_FUZZ_DOCKER = BASE_DOCKER_HEAD + ''' {additional_packages}
+CLEAN_OSS_FUZZ_DOCKER = (
+    BASE_DOCKER_HEAD
+    + """ {additional_packages}
 COPY *.sh $SRC/
 RUN mkdir -p {fuzzer_dir}
 COPY *.cpp *.c {fuzzer_dir}
@@ -156,22 +167,26 @@ RUN mkdir ~/.ssh && ssh-keyscan github.com >> ~/.ssh/known_hosts
 ENV FI_DISABLE_LIGHT=1
 RUN git clone --recurse-submodules {repo_url} {project_repo_dir}
 WORKDIR $SRC/{project_repo_dir}
-'''
+"""
+)
 
-CLEAN_DOCKER_CFLITE = BASE_DOCKER_HEAD + ''' {additional_packages}
+CLEAN_DOCKER_CFLITE = (
+    BASE_DOCKER_HEAD
+    + """ {additional_packages}
 COPY . $SRC/{project_repo_dir}
 COPY .clusterfuzzlite/build.sh $SRC/build.sh
 COPY .clusterfuzzlite/*.cpp $SRC/
 COPY .clusterfuzzlite/*.c $SRC/
 WORKDIR $SRC/{project_repo_dir}
-'''
+"""
+)
 
 # Template file for building LLM prompt
-LLM_PRIMING = '''<system>
+LLM_PRIMING = """<system>
 You are a developer wanting to build a given C/C++ projects.
-</system>'''
+</system>"""
 
-LLM_PROBLEM = '''
+LLM_PROBLEM = """
 You are tasked with generating a fuzzing harness and build script to fuzz a target project. Use the provided build system files to compile the project and link it with the fuzzing harness.
 
 ### Output Format
@@ -226,14 +241,14 @@ Your response **must only contain two XML tags**:
   <headers>
   {HEADERS}
   </headers>
-'''
+"""
 
-LLM_BUILD_FILE_TEMPLATE = '''
+LLM_BUILD_FILE_TEMPLATE = """
 <file_path>{PATH}</file_path>
 <file_content>{CONTENT}</file_content>
-'''
+"""
 
-LLM_RETRY = '''
+LLM_RETRY = """
 I failed to build the project with the above provided build script.
 Please analyse the result and generate a new build script with the same assumption above.
 You must only returns the content of the build script and nothing else more as always.
@@ -243,9 +258,9 @@ Your output must contain only two XML tags:
 
 Here is a dump of the bash execution result.
 {BASH_RESULT}
-'''
+"""
 
-LLM_AUTO_DISCOVERY = '''
+LLM_AUTO_DISCOVERY = """
 You are tasked with generating a **build script** to compile and statically link a target project, and updating a **template fuzzing harness** by including relevant project headers. Do **not** modify the harness logic, only add `#include` statements.
 
 The source code is located at `$SRC/{PROJECT_NAME}` inside a Docker container running **Ubuntu 24.04**. The fuzzing harness template is at `$SRC/{FUZZING_FILE}` and is provided below.
@@ -496,15 +511,15 @@ find $SRC/{PROJECT_NAME} -type f \\( -iname '*README*' -o -iname '*INSTALL*' -o 
 
 Your **first reply** must be a `<command>` block to begin project exploration.
 Your **final reply** must include the `<bash>` block and, if the harness was modified, the `<fuzzer>` block.
-'''
+"""
 
-LLM_DOCKER_FEEDBACK = '''
+LLM_DOCKER_FEEDBACK = """
 Here is the result of that command execution:
 
 {RESULT}
-'''
+"""
 
-LLM_NO_VALID_TAG = '''
+LLM_NO_VALID_TAG = """
 Your previous response is invalid.
 
 To be valid, the response must meet the following requirements regarding XML tags:
@@ -516,12 +531,12 @@ To be valid, the response must meet the following requirements regarding XML tag
 - The <fuzzer></fuzzer> tag is **required only if** the fuzzing harness has been modified. If included, it must contain the **entire source code** of the updated fuzzing harness, not just a diff or partial snippet.
 
 Do not include any content outside these XML tags. Revisit your output and regenerate it with these rules strictly followed.
-'''
+"""
 
-LLM_MISSING_BINARY = '''
+LLM_MISSING_BINARY = """
 The compiled binary was not found at `$OUT/{FUZZER_NAME}`. Please ensure that you use `-o $OUT/{FUZZER_NAME}` during the linking stage of the fuzzing harness.
 
 Below is the output from executing the previously generated build script for reference:
 
 {RESULT}
-'''
+"""

@@ -48,334 +48,367 @@ from ossfuzz_py.utils.work_dir_manager import WorkDirManager
 
 
 def _create_dummy_c_target() -> FuzzTarget:
-  """Generate a minimal C++ fuzz target and build script."""
-  # Source with a no-op LLVMFuzzerTestOneInput
-  source_code = textwrap.dedent("""
+    """Generate a minimal C++ fuzz target and build script."""
+    # Source with a no-op LLVMFuzzerTestOneInput
+    source_code = textwrap.dedent(
+        """
     #include <stddef.h>
     #include <stdint.h>
     extern "C" int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
         return 0;
     }
-    """).strip()
+    """
+    ).strip()
 
-  # Simple build.sh using $CXX and $LIB_FUZZING_ENGINE env vars supplied by
-  # OSS-Fuzz images
-  build_script = textwrap.dedent("""
+    # Simple build.sh using $CXX and $LIB_FUZZING_ENGINE env vars supplied by
+    # OSS-Fuzz images
+    build_script = textwrap.dedent(
+        """
     #!/bin/bash -eu
     $CXX $CXXFLAGS -c dummy_fuzzer.cc -o dummy_fuzzer.o
     $CXX $CXXFLAGS dummy_fuzzer.o -o $OUT/dummy_fuzzer $LIB_FUZZING_ENGINE
-    """).strip()
+    """
+    ).strip()
 
-  return FuzzTarget(name="dummy_fuzzer",
-                    source_code=source_code,
-                    build_script=build_script,
-                    project_name="dummy",
-                    language="cpp")
+    return FuzzTarget(
+        name="dummy_fuzzer",
+        source_code=source_code,
+        build_script=build_script,
+        project_name="dummy",
+        language="cpp",
+    )
 
 
-def _create_real_fuzz_target_from_benchmark(
-    benchmark_yaml_path: str) -> FuzzTarget:
-  """Create a real fuzz target from a benchmark YAML file."""
-  # Load benchmarks from YAML file
-  manager = BenchmarkManager()
-  benchmarks = manager.import_benchmarks(benchmark_yaml_path)
+def _create_real_fuzz_target_from_benchmark(benchmark_yaml_path: str) -> FuzzTarget:
+    """Create a real fuzz target from a benchmark YAML file."""
+    # Load benchmarks from YAML file
+    manager = BenchmarkManager()
+    benchmarks = manager.import_benchmarks(benchmark_yaml_path)
 
-  if not benchmarks:
-    raise ValueError(f"No benchmarks found in {benchmark_yaml_path}")
+    if not benchmarks:
+        raise ValueError(f"No benchmarks found in {benchmark_yaml_path}")
 
-  # Use the first benchmark
-  benchmark = benchmarks[0]
+    # Use the first benchmark
+    benchmark = benchmarks[0]
 
-  # Create a basic fuzz target template from the benchmark
-  fuzz_target = FuzzTarget.create_basic_template(benchmark)
+    # Create a basic fuzz target template from the benchmark
+    fuzz_target = FuzzTarget.create_basic_template(benchmark)
 
-  return fuzz_target
+    return fuzz_target
 
 
 class TestLocalBuilderPipeline(unittest.TestCase):
-  """Test class for LocalBuilder pipeline integration tests."""
+    """Test class for LocalBuilder pipeline integration tests."""
 
-  def setUp(self):
-    """Set up test fixtures."""
-    # Configure logging to show all logs
-    import logging
-    logging.basicConfig(
-        level=logging.DEBUG,
-        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-        force=True)
+    def setUp(self):
+        """Set up test fixtures."""
+        # Configure logging to show all logs
+        import logging
 
-  def _setup_build_infrastructure_and_get_metadata(self):
-    """
-    Helper function to set up build infrastructure and return build metadata.
-    This function contains the common build setup logic that can be reused
-    by both the build test and the runner test.
+        logging.basicConfig(
+            level=logging.DEBUG,
+            format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+            force=True,
+        )
 
-    Returns:
-        tuple: (build_result, build_metadata)
-            - build_result: The result from LocalBuilder.build()
-            - build_metadata: Dictionary containing build metadata for runner
-    """
+    def _setup_build_infrastructure_and_get_metadata(self):
+        """
+        Helper function to set up build infrastructure and return build metadata.
+        This function contains the common build setup logic that can be reused
+        by both the build test and the runner test.
 
-    # Skip if this is a CI environment or if network access is limited
-    if EnvUtils.is_ci_environment():
-      self.skipTest("Skipping real OSS-Fuzz clone in CI environment")
+        Returns:
+            tuple: (build_result, build_metadata)
+                - build_result: The result from LocalBuilder.build()
+                - build_metadata: Dictionary containing build metadata for runner
+        """
 
-    print("Setting up real OSS-Fuzz infrastructure...")
+        # Skip if this is a CI environment or if network access is limited
+        if EnvUtils.is_ci_environment():
+            self.skipTest("Skipping real OSS-Fuzz clone in CI environment")
 
-    tmp_path = Path(EnvUtils.get_oss_fuzz_dir())
+        print("Setting up real OSS-Fuzz infrastructure...")
 
-    # Create OSS-Fuzz manager and clone the real repository
-    oss_fuzz_manager = OSSFuzzManager(checkout_path=tmp_path, use_temp=False)
+        tmp_path = Path(EnvUtils.get_oss_fuzz_dir())
 
-    # Setup shallow clone for faster testing (similar to the
-    # test_ossfuzz_manager.py approach)
-    try:
-      if oss_fuzz_manager.checkout_path.exists():
-        oss_fuzz_manager.logger.info(
-            f"Repository already exists at {oss_fuzz_manager.checkout_path}")
-      else:
-        repo_url = "https://github.com/google/oss-fuzz.git"
-        cmd = [
-            "git", "clone", "--depth", "1", "--branch", "master", repo_url,
-            str(oss_fuzz_manager.checkout_path)
-        ]
-        result = subprocess.run(cmd,
-                                capture_output=True,
-                                text=True,
-                                check=True,
-                                timeout=120)
-        oss_fuzz_manager.logger.info(
-            f"Successfully cloned OSS-Fuzz repository "
-            f"to {oss_fuzz_manager.checkout_path}, result={result}")
+        # Create OSS-Fuzz manager and clone the real repository
+        oss_fuzz_manager = OSSFuzzManager(checkout_path=tmp_path, use_temp=False)
 
-    except subprocess.TimeoutExpired:
-      self.skipTest("OSS-Fuzz clone timed out - network may be slow")
-    except subprocess.CalledProcessError as e:
-      self.skipTest(f"Failed to clone OSS-Fuzz repository: {e.stderr}")
-    except Exception as e:
-      self.skipTest(f"Unexpected error during OSS-Fuzz clone: {str(e)}")
+        # Setup shallow clone for faster testing (similar to the
+        # test_ossfuzz_manager.py approach)
+        try:
+            if oss_fuzz_manager.checkout_path.exists():
+                oss_fuzz_manager.logger.info(
+                    f"Repository already exists at {oss_fuzz_manager.checkout_path}"
+                )
+            else:
+                repo_url = "https://github.com/google/oss-fuzz.git"
+                cmd = [
+                    "git",
+                    "clone",
+                    "--depth",
+                    "1",
+                    "--branch",
+                    "master",
+                    repo_url,
+                    str(oss_fuzz_manager.checkout_path),
+                ]
+                result = subprocess.run(
+                    cmd, capture_output=True, text=True, check=True, timeout=120
+                )
+                oss_fuzz_manager.logger.info(
+                    f"Successfully cloned OSS-Fuzz repository "
+                    f"to {oss_fuzz_manager.checkout_path}, result={result}"
+                )
 
-    # Verify OSS-Fuzz structure exists
-    self.assertTrue(oss_fuzz_manager.checkout_path.exists(),
-                    "OSS-Fuzz checkout failed")
-    self.assertTrue((oss_fuzz_manager.checkout_path / "projects").exists(),
-                    "OSS-Fuzz projects directory not found")
-    self.assertTrue((oss_fuzz_manager.checkout_path / "infra").exists(),
-                    "OSS-Fuzz infra directory not found")
+        except subprocess.TimeoutExpired:
+            self.skipTest("OSS-Fuzz clone timed out - network may be slow")
+        except subprocess.CalledProcessError as e:
+            self.skipTest(f"Failed to clone OSS-Fuzz repository: {e.stderr}")
+        except Exception as e:
+            self.skipTest(f"Unexpected error during OSS-Fuzz clone: {str(e)}")
 
-    print("✓ OSS-Fuzz repository cloned successfully")
+        # Verify OSS-Fuzz structure exists
+        self.assertTrue(
+            oss_fuzz_manager.checkout_path.exists(), "OSS-Fuzz checkout failed"
+        )
+        self.assertTrue(
+            (oss_fuzz_manager.checkout_path / "projects").exists(),
+            "OSS-Fuzz projects directory not found",
+        )
+        self.assertTrue(
+            (oss_fuzz_manager.checkout_path / "infra").exists(),
+            "OSS-Fuzz infra directory not found",
+        )
 
-    # Create a real fuzz target from benchmark YAML
-    benchmark_yaml_path = "../../benchmark-sets/all/libspng.yaml"
+        print("✓ OSS-Fuzz repository cloned successfully")
 
-    try:
-      fuzz_target = _create_real_fuzz_target_from_benchmark(benchmark_yaml_path)
-      print(f"✓ Created real fuzz target from benchmark: {fuzz_target.name}")
-      print(f"  Project: {fuzz_target.project_name}")
-      print(f"  Language: {fuzz_target.language}")
-      print(f"  Function: {fuzz_target.function_signature}")
-    except Exception as e:
-      print(f"Failed to create real fuzz target: {e}")
-      print("Falling back to dummy fuzz target...")
-      fuzz_target = _create_dummy_c_target()
+        # Create a real fuzz target from benchmark YAML
+        benchmark_yaml_path = "../../benchmark-sets/all/libspng.yaml"
 
-    # Create storage manager with temporary directory
-    storage_config = {
-        'storage_backend': 'local',
-        'storage_path': str(tmp_path / "storage")
-    }
-    storage_manager = StorageManager(storage_config)
+        try:
+            fuzz_target = _create_real_fuzz_target_from_benchmark(benchmark_yaml_path)
+            print(f"✓ Created real fuzz target from benchmark: {fuzz_target.name}")
+            print(f"  Project: {fuzz_target.project_name}")
+            print(f"  Language: {fuzz_target.language}")
+            print(f"  Function: {fuzz_target.function_signature}")
+        except Exception as e:
+            print(f"Failed to create real fuzz target: {e}")
+            print("Falling back to dummy fuzz target...")
+            fuzz_target = _create_dummy_c_target()
 
-    # Create build configuration matching the fuzz target
-    build_config = BuildConfig(project_name=fuzz_target.project_name,
-                               language=fuzz_target.language,
-                               sanitizer=Sanitizer.ADDRESS,
-                               architecture="aarch64",
-                               fuzzing_engine=FuzzingEngine.LIBFUZZER)
+        # Create storage manager with temporary directory
+        storage_config = {
+            "storage_backend": "local",
+            "storage_path": str(tmp_path / "storage"),
+        }
+        storage_manager = StorageManager(storage_config)
 
-    # Create Docker manager with real OSS-Fuzz directory
-    docker_manager = DockerManager(cache_enabled=False,
-                                   oss_fuzz_dir=str(
-                                       oss_fuzz_manager.checkout_path))
+        # Create build configuration matching the fuzz target
+        build_config = BuildConfig(
+            project_name=fuzz_target.project_name,
+            language=fuzz_target.language,
+            sanitizer=Sanitizer.ADDRESS,
+            architecture="aarch64",
+            fuzzing_engine=FuzzingEngine.LIBFUZZER,
+        )
 
-    print("✓ Docker manager created with real OSS-Fuzz directory")
+        # Create Docker manager with real OSS-Fuzz directory
+        docker_manager = DockerManager(
+            cache_enabled=False, oss_fuzz_dir=str(oss_fuzz_manager.checkout_path)
+        )
 
-    # Save fuzz target files to disk for the builder
-    source_path, build_path = fuzz_target.save_to_files(tmp_path /
-                                                        "fuzz_target_files")
-    print("✓ Saved fuzz target files:")
-    print(f"  Source: {source_path}")
-    print(f"  Build script: {build_path}")
+        print("✓ Docker manager created with real OSS-Fuzz directory")
 
-    # Create LocalBuilder
-    builder = LocalBuilder(storage_manager, build_config, docker_manager)
+        # Save fuzz target files to disk for the builder
+        source_path, build_path = fuzz_target.save_to_files(
+            tmp_path / "fuzz_target_files"
+        )
+        print("✓ Saved fuzz target files:")
+        print(f"  Source: {source_path}")
+        print(f"  Build script: {build_path}")
 
-    print("✓ LocalBuilder created, attempting build...")
+        # Create LocalBuilder
+        builder = LocalBuilder(storage_manager, build_config, docker_manager)
 
-    # Build the target
-    build_result = builder.build(fuzz_target, Sanitizer.ADDRESS)
+        print("✓ LocalBuilder created, attempting build...")
 
-    # Create build metadata for runner
-    build_metadata = {
-        'generated_project':
-            build_result.metadata.get('generated_project')
-            if build_result.metadata else None,
-        'project_name':
-            fuzz_target.project_name,
-        'target_name':
-            fuzz_target.name,
-        'fuzz_target':
-            fuzz_target
-    }
+        # Build the target
+        build_result = builder.build(fuzz_target, Sanitizer.ADDRESS)
 
-    return build_result, build_metadata
+        # Create build metadata for runner
+        build_metadata = {
+            "generated_project": (
+                build_result.metadata.get("generated_project")
+                if build_result.metadata
+                else None
+            ),
+            "project_name": fuzz_target.project_name,
+            "target_name": fuzz_target.name,
+            "fuzz_target": fuzz_target,
+        }
 
-  @unittest.skipIf(shutil.which("docker") is None, "Docker not installed")
-  @unittest.skipIf(shutil.which("git") is None, "Git not installed")
-  def test_local_builder_pipeline_real_docker(self):
-    """End-to-end build: FuzzTarget → LocalBuilder → verify binary using real
-    OSS-Fuzz."""
+        return build_result, build_metadata
 
-    # Use the helper function to set up build infrastructure
-    build_result, build_metadata = (
-        self._setup_build_infrastructure_and_get_metadata())
+    @unittest.skipIf(shutil.which("docker") is None, "Docker not installed")
+    @unittest.skipIf(shutil.which("git") is None, "Git not installed")
+    def test_local_builder_pipeline_real_docker(self):
+        """End-to-end build: FuzzTarget → LocalBuilder → verify binary using real
+        OSS-Fuzz."""
 
-    # --- Assertions -----------------------------------------------------
-    # Note: The build may fail due to missing Docker images or other
-    # infrastructure, but we can still verify the pipeline setup and error
-    # handling
+        # Use the helper function to set up build infrastructure
+        build_result, build_metadata = (
+            self._setup_build_infrastructure_and_get_metadata()
+        )
 
-    if build_result.success:
-      print(f"✓ Build succeeded!, build_metadata={build_metadata}")
+        # --- Assertions -----------------------------------------------------
+        # Note: The build may fail due to missing Docker images or other
+        # infrastructure, but we can still verify the pipeline setup and error
+        # handling
 
-      # Check that we have a generated project (image_id equivalent)
-      generated_project = build_result.metadata.get('generated_project')
-      self.assertIsNotNone(generated_project,
-                           "No generated project found in metadata")
-      print(f"✓ Generated project: {generated_project}")
+        if build_result.success:
+            print(f"✓ Build succeeded!, build_metadata={build_metadata}")
 
-    else:
-      print(
-          f"Build failed (expected in test environment): {build_result.message}"
-      )
-      # Verify that the failure is due to expected infrastructure issues
-      expected_errors = [
-          "No such file or directory", "Docker image not found",
-          "Permission denied", "Network error", "Build failed"
-      ]
-      self.assertTrue(
-          any(error in build_result.message for error in expected_errors),
-          f"Unexpected build failure: {build_result.message}")
-      print("✓ Build failed with expected infrastructure error")
+            # Check that we have a generated project (image_id equivalent)
+            generated_project = build_result.metadata.get("generated_project")
+            self.assertIsNotNone(
+                generated_project, "No generated project found in metadata"
+            )
+            print(f"✓ Generated project: {generated_project}")
 
-    print("✓ OSS-Fuzz infrastructure properly integrated")
+        else:
+            print(
+                f"Build failed (expected in test environment): {build_result.message}"
+            )
+            # Verify that the failure is due to expected infrastructure issues
+            expected_errors = [
+                "No such file or directory",
+                "Docker image not found",
+                "Permission denied",
+                "Network error",
+                "Build failed",
+            ]
+            self.assertTrue(
+                any(error in build_result.message for error in expected_errors),
+                f"Unexpected build failure: {build_result.message}",
+            )
+            print("✓ Build failed with expected infrastructure error")
 
-  @unittest.skipIf(shutil.which("docker") is None, "Docker not installed")
-  @unittest.skipIf(shutil.which("git") is None, "Git not installed")
-  def test_local_runner_pipeline_real_docker(self):
-    """End-to-end run: Reuse build metadata → LocalRunner → execute Docker
-    image and verify results."""
+        print("✓ OSS-Fuzz infrastructure properly integrated")
 
-    # Reuse the build logic and get build metadata
-    build_result, build_metadata = (
-        self._setup_build_infrastructure_and_get_metadata())
+    @unittest.skipIf(shutil.which("docker") is None, "Docker not installed")
+    @unittest.skipIf(shutil.which("git") is None, "Git not installed")
+    def test_local_runner_pipeline_real_docker(self):
+        """End-to-end run: Reuse build metadata → LocalRunner → execute Docker
+        image and verify results."""
 
-    # Only proceed with runner test if build was successful
-    if not build_result.success:
-      self.skipTest(f"Build failed, cannot test runner: {build_result.message}")
+        # Reuse the build logic and get build metadata
+        build_result, build_metadata = (
+            self._setup_build_infrastructure_and_get_metadata()
+        )
 
-    print("✓ Build succeeded, proceeding with runner test...")
+        # Only proceed with runner test if build was successful
+        if not build_result.success:
+            self.skipTest(f"Build failed, cannot test runner: {build_result.message}")
 
-    # Extract build information
-    generated_project = build_metadata.get('generated_project')
-    target_name: str = build_metadata.get('target_name') or ''
+        print("✓ Build succeeded, proceeding with runner test...")
 
-    self.assertIsNotNone(generated_project,
-                         "No generated project found in build metadata")
-    self.assertIsNotNone(target_name, "No target name found in build metadata")
+        # Extract build information
+        generated_project = build_metadata.get("generated_project")
+        target_name: str = build_metadata.get("target_name") or ""
 
-    print("✓ Build metadata extracted:")
-    print(f"  Generated project: {generated_project}")
-    print(f"  Target name: {target_name}")
+        self.assertIsNotNone(
+            generated_project, "No generated project found in build metadata"
+        )
+        self.assertIsNotNone(target_name, "No target name found in build metadata")
 
-    # Create WorkDirManager pointing at environment variable WORK_DIR
-    work_dir = EnvUtils.get_work_dir()
-    workdir_manager = WorkDirManager(work_dir)
+        print("✓ Build metadata extracted:")
+        print(f"  Generated project: {generated_project}")
+        print(f"  Target name: {target_name}")
 
-    print(f"✓ WorkDirManager created with work directory: {work_dir}")
+        # Create WorkDirManager pointing at environment variable WORK_DIR
+        work_dir = EnvUtils.get_work_dir()
+        workdir_manager = WorkDirManager(work_dir)
 
-    # Create LocalRunner instance
-    runner = LocalRunner(workdir_manager)
+        print(f"✓ WorkDirManager created with work directory: {work_dir}")
 
-    print("✓ LocalRunner instance created")
+        # Create LocalRunner instance
+        runner = LocalRunner(workdir_manager)
 
-    # Build FuzzerRunOptions with short timeouts for testing
-    options = FuzzRunOptions(
-        duration_seconds=15,  # max_total_time equivalent
-        timeout_seconds=5,  # timeout equivalent
-        corpus_dir=None  # Let runner manage corpus directory
-    )
+        print("✓ LocalRunner instance created")
 
-    print("✓ FuzzRunOptions created:")
-    print(f"  Duration: {options.duration_seconds}s")
-    print(f"  Timeout: {options.timeout_seconds}s")
+        # Build FuzzerRunOptions with short timeouts for testing
+        options = FuzzRunOptions(
+            duration_seconds=15,  # max_total_time equivalent
+            timeout_seconds=5,  # timeout equivalent
+            corpus_dir=None,  # Let runner manage corpus directory
+        )
 
-    # Run the target
-    print("✓ Starting fuzzer run...")
-    run_info = runner.run(target=target_name,
-                          options=options,
-                          build_metadata=build_metadata)
+        print("✓ FuzzRunOptions created:")
+        print(f"  Duration: {options.duration_seconds}s")
+        print(f"  Timeout: {options.timeout_seconds}s")
 
-    # --- Assertions -----------------------------------------------------
-    print("✓ Fuzzer run completed, verifying results...")
+        # Run the target
+        print("✓ Starting fuzzer run...")
+        run_info = runner.run(
+            target=target_name, options=options, build_metadata=build_metadata
+        )
 
-    # Basic run_info validation
-    self.assertIsNotNone(run_info, "run_info should not be None")
-    print("✓ run_info is not None")
+        # --- Assertions -----------------------------------------------------
+        print("✓ Fuzzer run completed, verifying results...")
 
-    # Check for crashes (should not crash in a simple test)
-    self.assertFalse(
-        run_info.crashes,
-        f"Fuzzer should not crash in basic test, but crashes={run_info.crashes}"
-    )
-    print("✓ No crashes detected")
+        # Basic run_info validation
+        self.assertIsNotNone(run_info, "run_info should not be None")
+        print("✓ run_info is not None")
 
-    # Check that log path exists and has content
-    if run_info.run_log:
-      log_path = Path(run_info.run_log)
-      self.assertTrue(log_path.exists(), f"Log path should exist: {log_path}")
-      print(f"✓ Log path exists: {log_path}")
+        # Check for crashes (should not crash in a simple test)
+        self.assertFalse(
+            run_info.crashes,
+            f"Fuzzer should not crash in basic test, but crashes={run_info.crashes}",
+        )
+        print("✓ No crashes detected")
 
-      # Check log has some content (at least a few bytes)
-      log_size = log_path.stat().st_size
-      self.assertGreater(
-          log_size, 0, f"Log file should have content, but size is {log_size}")
-      print(f"✓ Log file has content: {log_size} bytes")
-    else:
-      print("⚠ No log path provided in run_info")
+        # Check that log path exists and has content
+        if run_info.run_log:
+            log_path = Path(run_info.run_log)
+            self.assertTrue(log_path.exists(), f"Log path should exist: {log_path}")
+            print(f"✓ Log path exists: {log_path}")
 
-    # Check that corpus path exists
-    if run_info.corpus_path:
-      corpus_path = Path(run_info.corpus_path)
-      self.assertTrue(corpus_path.exists(),
-                      f"Corpus path should exist: {corpus_path}")
-      print(f"✓ Corpus path exists: {corpus_path}")
+            # Check log has some content (at least a few bytes)
+            log_size = log_path.stat().st_size
+            self.assertGreater(
+                log_size, 0, f"Log file should have content, but size is {log_size}"
+            )
+            print(f"✓ Log file has content: {log_size} bytes")
+        else:
+            print("⚠ No log path provided in run_info")
 
-      # Check if corpus directory is accessible (it may be empty for short runs)
-      self.assertTrue(corpus_path.is_dir(),
-                      f"Corpus path should be a directory: {corpus_path}")
-      print("✓ Corpus path is a directory")
-    else:
-      print("⚠ No corpus path provided in run_info")
+        # Check that corpus path exists
+        if run_info.corpus_path:
+            corpus_path = Path(run_info.corpus_path)
+            self.assertTrue(
+                corpus_path.exists(), f"Corpus path should exist: {corpus_path}"
+            )
+            print(f"✓ Corpus path exists: {corpus_path}")
 
-    print("✓ All runner pipeline assertions passed!")
+            # Check if corpus directory is accessible (it may be empty for short runs)
+            self.assertTrue(
+                corpus_path.is_dir(),
+                f"Corpus path should be a directory: {corpus_path}",
+            )
+            print("✓ Corpus path is a directory")
+        else:
+            print("⚠ No corpus path provided in run_info")
 
-  @unittest.skipIf(shutil.which("docker") is None, "Docker not installed")
-  def test_local_builder_pipeline_minimal_setup(self):
-    """Test with minimal setup to ensure basic functionality works."""
+        print("✓ All runner pipeline assertions passed!")
 
-    # Create minimal C target
-    target_source = textwrap.dedent("""
+    @unittest.skipIf(shutil.which("docker") is None, "Docker not installed")
+    def test_local_builder_pipeline_minimal_setup(self):
+        """Test with minimal setup to ensure basic functionality works."""
+
+        # Create minimal C target
+        target_source = textwrap.dedent(
+            """
           #include <stddef.h>
           #include <stdint.h>
           extern "C" int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
@@ -386,64 +419,75 @@ class TestLocalBuilderPipeline(unittest.TestCase):
               }
               return 0;
           }
-      """)
+      """
+        )
 
-    build_script = textwrap.dedent("""
+        build_script = textwrap.dedent(
+            """
           #!/bin/bash -eu
           # Minimal build script
           $CXX $CXXFLAGS -o $OUT/minimal_fuzzer $SRC/minimal_fuzzer.cc $LIB_FUZZING_ENGINE
-      """)
+      """
+        )
 
-    fuzz_target = FuzzTarget(name="minimal_fuzzer",
-                             source_code=target_source,
-                             build_script=build_script,
-                             project_name="minimal",
-                             language="cpp")
+        fuzz_target = FuzzTarget(
+            name="minimal_fuzzer",
+            source_code=target_source,
+            build_script=build_script,
+            project_name="minimal",
+            language="cpp",
+        )
 
-    # Create minimal dependencies using temporary directory
-    with tempfile.TemporaryDirectory() as tmp_dir:
-      tmp_path = Path(tmp_dir)
+        # Create minimal dependencies using temporary directory
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            tmp_path = Path(tmp_dir)
 
-      storage_config = {
-          'storage_backend': 'local',
-          'storage_path': str(tmp_path / "storage")
-      }
-      storage_manager = StorageManager(storage_config)
+            storage_config = {
+                "storage_backend": "local",
+                "storage_path": str(tmp_path / "storage"),
+            }
+            storage_manager = StorageManager(storage_config)
 
-      build_config = BuildConfig(project_name="minimal",
-                                 language="cpp",
-                                 sanitizer=Sanitizer.ADDRESS)
+            build_config = BuildConfig(
+                project_name="minimal", language="cpp", sanitizer=Sanitizer.ADDRESS
+            )
 
-      docker_manager = DockerManager(cache_enabled=False)
+            docker_manager = DockerManager(cache_enabled=False)
 
-      # Create and test builder
-      builder = LocalBuilder(storage_manager, build_config, docker_manager)
+            # Create and test builder
+            builder = LocalBuilder(storage_manager, build_config, docker_manager)
 
-      # Verify builder was created successfully
-      self.assertIsNotNone(builder)
-      self.assertEqual(builder.build_config.project_name, "minimal")
-      self.assertEqual(builder.build_config.sanitizer, Sanitizer.ADDRESS)
+            # Verify builder was created successfully
+            self.assertIsNotNone(builder)
+            self.assertEqual(builder.build_config.project_name, "minimal")
+            self.assertEqual(builder.build_config.sanitizer, Sanitizer.ADDRESS)
 
-      # Test that we can call the build method (it will fail due to missing
-      # OSS-Fuzz infrastructure), but we can verify the error handling works
-      # correctly
-      build_result = builder.build(fuzz_target, Sanitizer.ADDRESS)
+            # Test that we can call the build method (it will fail due to missing
+            # OSS-Fuzz infrastructure), but we can verify the error handling works
+            # correctly
+            build_result = builder.build(fuzz_target, Sanitizer.ADDRESS)
 
-      # The build should fail due to missing OSS-Fuzz infrastructure,
-      # but gracefully
-      self.assertFalse(build_result.success,
-                       "Build should fail without OSS-Fuzz infrastructure")
-      self.assertTrue(("No such file or directory" in build_result.message or
-                       "Build failed" in build_result.message))
+            # The build should fail due to missing OSS-Fuzz infrastructure,
+            # but gracefully
+            self.assertFalse(
+                build_result.success,
+                "Build should fail without OSS-Fuzz infrastructure",
+            )
+            self.assertTrue(
+                (
+                    "No such file or directory" in build_result.message
+                    or "Build failed" in build_result.message
+                )
+            )
 
-      print(
-          "✓ LocalBuilder setup, configuration, and error handling successful")
+            print("✓ LocalBuilder setup, configuration, and error handling successful")
 
-  def test_local_builder_pipeline_components(self):
-    """Test that all LocalBuilder pipeline components integrate correctly."""
+    def test_local_builder_pipeline_components(self):
+        """Test that all LocalBuilder pipeline components integrate correctly."""
 
-    # Create a comprehensive fuzz target
-    target_source = textwrap.dedent("""
+        # Create a comprehensive fuzz target
+        target_source = textwrap.dedent(
+            """
           #include <stddef.h>
           #include <stdint.h>
           #include <string.h>
@@ -464,9 +508,11 @@ class TestLocalBuilderPipeline(unittest.TestCase):
 
               return 0;
           }
-      """)
+      """
+        )
 
-    build_script = textwrap.dedent("""
+        build_script = textwrap.dedent(
+            """
           #!/bin/bash -eu
           # Comprehensive build script with error checking
           set -x
@@ -493,75 +539,86 @@ class TestLocalBuilderPipeline(unittest.TestCase):
           fi
 
           echo "Build completed successfully"
-      """)
+      """
+        )
 
-    # Create FuzzTarget
-    fuzz_target = FuzzTarget(name="comprehensive_fuzzer",
-                             source_code=target_source,
-                             build_script=build_script,
-                             project_name="comprehensive",
-                             language="cpp",
-                             engine="libfuzzer",
-                             sanitizers=["address"])
+        # Create FuzzTarget
+        fuzz_target = FuzzTarget(
+            name="comprehensive_fuzzer",
+            source_code=target_source,
+            build_script=build_script,
+            project_name="comprehensive",
+            language="cpp",
+            engine="libfuzzer",
+            sanitizers=["address"],
+        )
 
-    # Test all component creation using temporary directory
-    with tempfile.TemporaryDirectory() as tmp_dir:
-      tmp_path = Path(tmp_dir)
+        # Test all component creation using temporary directory
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            tmp_path = Path(tmp_dir)
 
-      storage_config = {
-          'storage_backend': 'local',
-          'storage_path': str(tmp_path / "storage")
-      }
-      storage_manager = StorageManager(storage_config)
+            storage_config = {
+                "storage_backend": "local",
+                "storage_path": str(tmp_path / "storage"),
+            }
+            storage_manager = StorageManager(storage_config)
 
-      build_config = BuildConfig(project_name="comprehensive",
-                                 language="cpp",
-                                 sanitizer=Sanitizer.ADDRESS,
-                                 architecture="x86_64",
-                                 fuzzing_engine=FuzzingEngine.LIBFUZZER,
-                                 environment_vars={"CUSTOM_VAR": "test_value"},
-                                 build_args=["--verbose"])
+            build_config = BuildConfig(
+                project_name="comprehensive",
+                language="cpp",
+                sanitizer=Sanitizer.ADDRESS,
+                architecture="x86_64",
+                fuzzing_engine=FuzzingEngine.LIBFUZZER,
+                environment_vars={"CUSTOM_VAR": "test_value"},
+                build_args=["--verbose"],
+            )
 
-      docker_manager = DockerManager(cache_enabled=True)
+            docker_manager = DockerManager(cache_enabled=True)
 
-      # Create LocalBuilder and verify all components
-      builder = LocalBuilder(storage_manager, build_config, docker_manager)
+            # Create LocalBuilder and verify all components
+            builder = LocalBuilder(storage_manager, build_config, docker_manager)
 
-      # Verify builder configuration
-      self.assertEqual(builder.build_config.project_name, "comprehensive")
-      self.assertEqual(builder.build_config.sanitizer, Sanitizer.ADDRESS)
-      self.assertEqual(builder.build_config.fuzzing_engine,
-                       FuzzingEngine.LIBFUZZER)
-      self.assertEqual(builder.build_config.environment_vars["CUSTOM_VAR"],
-                       "test_value")
-      self.assertIn("--verbose", builder.build_config.build_args)
+            # Verify builder configuration
+            self.assertEqual(builder.build_config.project_name, "comprehensive")
+            self.assertEqual(builder.build_config.sanitizer, Sanitizer.ADDRESS)
+            self.assertEqual(
+                builder.build_config.fuzzing_engine, FuzzingEngine.LIBFUZZER
+            )
+            self.assertEqual(
+                builder.build_config.environment_vars["CUSTOM_VAR"], "test_value"
+            )
+            self.assertIn("--verbose", builder.build_config.build_args)
 
-      # Verify storage manager integration
-      self.assertEqual(builder.storage_manager, storage_manager)
+            # Verify storage manager integration
+            self.assertEqual(builder.storage_manager, storage_manager)
 
-      # Verify docker manager integration
-      self.assertEqual(builder.docker_manager, docker_manager)
-      self.assertTrue(builder.docker_manager.cache_enabled)
+            # Verify docker manager integration
+            self.assertEqual(builder.docker_manager, docker_manager)
+            self.assertTrue(builder.docker_manager.cache_enabled)
 
-      # Test environment preparation
-      env_prepared = builder.prepare_build_environment()
-      self.assertTrue(env_prepared)
+            # Test environment preparation
+            env_prepared = builder.prepare_build_environment()
+            self.assertTrue(env_prepared)
 
-      # Test cleanup
-      cleanup_result = builder.clean()
-      self.assertTrue(cleanup_result)
+            # Test cleanup
+            cleanup_result = builder.clean()
+            self.assertTrue(cleanup_result)
 
-      print("✓ All LocalBuilder pipeline components integrate correctly")
-      print(f"  - FuzzTarget: {fuzz_target.name} ({fuzz_target.language})")
-      print(f"  - BuildConfig: {build_config.project_name} with "
-            f"{build_config.sanitizer.value}")
-      print(f"  - StorageManager: "
-            f"{storage_manager.config['storage_backend']} backend")
-      print(f"  - DockerManager: cache_enabled={docker_manager.cache_enabled}")
-      print("  - Environment preparation: successful")
-      print("  - Artifact processing: functional")
-      print("  - Cleanup: successful")
+            print("✓ All LocalBuilder pipeline components integrate correctly")
+            print(f"  - FuzzTarget: {fuzz_target.name} ({fuzz_target.language})")
+            print(
+                f"  - BuildConfig: {build_config.project_name} with "
+                f"{build_config.sanitizer.value}"
+            )
+            print(
+                f"  - StorageManager: "
+                f"{storage_manager.config['storage_backend']} backend"
+            )
+            print(f"  - DockerManager: cache_enabled={docker_manager.cache_enabled}")
+            print("  - Environment preparation: successful")
+            print("  - Artifact processing: functional")
+            print("  - Cleanup: successful")
 
 
-if __name__ == '__main__':
-  unittest.main()
+if __name__ == "__main__":
+    unittest.main()
