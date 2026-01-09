@@ -1015,7 +1015,6 @@ class BuilderRunner:
         destination_coverage = self.work_dirs.code_coverage_report(
             benchmark_target_name
         )
-        shutil.copytree(coverage_report, destination_coverage, dirs_exist_ok=True)
 
         textcov_dir = os.path.join(
             get_build_artifact_dir(generated_project, "out"), "textcov_reports"
@@ -1023,7 +1022,9 @@ class BuilderRunner:
         dst_textcov = os.path.join(
             self.work_dirs.code_coverage_report(benchmark_target_name), "textcov"
         )
-        shutil.copytree(textcov_dir, dst_textcov, dirs_exist_ok=True)
+        if os.environ.get("SAVE_STORAGE_MEM") is not None:
+            shutil.copytree(coverage_report, destination_coverage, dirs_exist_ok=True)
+            shutil.copytree(textcov_dir, dst_textcov, dirs_exist_ok=True)
 
         coverage_summary = os.path.join(
             get_build_artifact_dir(generated_project, "out"),

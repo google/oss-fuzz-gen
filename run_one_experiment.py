@@ -376,7 +376,7 @@ def _fuzzing_pipeline(
                 store_successful_harness(
                     r.fuzz_target_source,
                     r.build_script_source,
-                    r.work_dirs._corpus_base,
+                    r.work_dirs.corpus(r.benchmark.target_name),
                 )
 
     trial_logger.write_result(

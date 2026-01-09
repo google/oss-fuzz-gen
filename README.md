@@ -1,3 +1,21 @@
+# Changelog
+
+This repository features a few changes to save memory and time during harness generation with oss-fuzz-gen. 
+### [experiment/container_pool.py](./experiment/container_pool.py)
+This file represents a tool of container pools that can be queried and locked in by different processes. This deals with the initial setup of these containers, and then delegating these to different processes in a safe manner.
+
+### [tools/container_tool.py](./tools/container_tool.py)
+The container tool has been refactored for reusability across multiple harnessing trials. Previously, each generated harness required building a separate container for compilation, fuzzing, and coverage collection. This approach was expensive in both time and disk space, with Docker usage reaching up to 100 GB in a single run.
+
+Now, a single pair of containers is reused for each trial running in parallel. For example, if OSS-Fuzz-Gen runs on 8 cores, only 8 container pairs are used. This strategy reduces disk usage and allows harnesses to be rebuilt quickly when modified.
+
+## Summary
+This container reuse is used across many files, but most notably in:
+- [agent/one_prompt_enhancer.py](.agent/one_prompt_enhancer.py) and [agent/one_prompt_prototyper.py](./agent/one_prompt_prototyper.py)
+- [experiment/builder_runner.py](./experiment/builder_runner.py)
+
+Changes also include logic for checking for the environment variable `SAVE_STORAGE_MEM` to reduce the storage size of the output directory.
+
 # A Framework for Fuzz Target Generation and Evaluation
 
 This framework generates fuzz targets for real-world `C`/`C++/Java/Python` projects with
