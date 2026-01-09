@@ -368,8 +368,7 @@ def _fuzzing_pipeline(
     trial_result = TrialResult(
         benchmark=benchmark, trial=trial, work_dirs=work_dirs, result_history=results
     )
-
-    # Running OFG in conjunction with HyHarn
+    
     if "SHARED_CORPUS_PATH" in os.environ:
         for r in results:
             if isinstance(r, AnalysisResult) and r.success:
