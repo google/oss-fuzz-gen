@@ -69,9 +69,11 @@ spec:
           runAsNonRoot: true
         resources:
           requests:
-            cpu: ${GKE_EXP_REQ_CPU}
-            ephemeral-storage: 10Gi
-            memory: ${GKE_EXP_REQ_MEM}
+            cpu: "250m"
+            memory: "256Mi"
+          limits:
+            cpu: "1000m"
+            memory: "512Mi"
       # imagePullSecrets:
       # - name: oss-fuzz-base-artifect
       volumes:
