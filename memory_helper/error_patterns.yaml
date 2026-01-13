@@ -1,0 +1,170 @@
+INCLUDE ERROR:
+  patterns:
+    - "fatal error: .*: No such file or directory"
+    - "error: no such file or directory: '.*'"
+    - ": .*: No such file or directory"
+    - "fatal error: '.*' file not found"
+    - "cannot find include file"
+    - "header file not found"
+    - "file not found"
+    - "include.*No such file"
+    - "error: include file '.*' not found"
+    - "'[A-Za-z0-9_]+\\.h': No such file or directory"
+    - "fatal error: cannot open file '.*'"
+    - "This header is only to be used internally"
+    - "forward declaration of '.*'"
+    - "cannot open source file"
+
+SYNTACTIC ERROR:
+  patterns:
+    - 'error: expected .*'
+    - 'expected .* before'
+    - 'error: stray '' .* '' in program'
+    - 'syntax error'
+    - 'parse error'
+    - 'missing ''\;'''
+    - 'implicit conversion changes signedness'
+    - 'error: assigning to '' .* '' from incompatible type '' .* '''
+    - 'error: no member named '' .* '' in '' .* '''
+    - 'no matching function for call to'
+    - 'no matching member function for call to'
+    - 'candidate function not viable'
+    - 'requires \d+ arguments, but \d+ were provided'
+    - 'incompatible pointer to .* conversion'
+    - 'no type named .* in namespace .*'
+    - 'is a private member of'
+    - 'expected declaration or statement at end of input'
+    - 'unterminated string literal'
+    - 'expected identifier or ''\('' before .*'
+    - 'expected unqualified-id'
+    - 'use of undeclared identifier '' .* '''
+    - 'error: expected parameter declarator'
+    - 'error: expected ''\)'''
+    - 'invalid conversion from'
+    - 'incomplete type .* named in nested name specifier'
+    - 'unknown type name .*'
+    - 'redefinition of .*'
+    - 'no member named .* in .*'
+    - 'non-void function does not return a value'
+    - 'forward declaration of .*'
+    - 'candidate constructor .* not viable'
+    - 'call to undeclared function'
+    - 'ISO C99 and later do not support implicit function declarations'
+    - 'error: krb5\.h included before k5-int\.h'
+    - 'This header is only to be used internally to libarchive\.'
+    - 'class member cannot be redeclared'
+    - 'expected member name or ''\;'' after declaration specifiers'
+    - 'error: definition of type ''[^'']+'' conflicts with typedef of the same name'
+    - 'error: exception specification in declaration does not match previous declaration'
+    - 'error: static declaration of ''[^'']+'' follows non-static declaration'
+    - "error: member reference base type .* is not a structure or union"
+    - "mixing declarations and code is incompatible with standards before C99"
+    - "out-of-line definition of '.*' does not match any declaration"
+    - "error: alias must point to a defined variable or function"
+    - "error: the function or variable specified in an alias must refer to its mangled name"
+    - "error:\\s*'.+?'\\s+is a\\s+(?:private|protected)\\s+member of\\s+'.+?'"
+    - "error:\\s*declaration of '.*' has a different language linkage"
+    - "error:\\s*no viable conversion from '.*' to '.*'"
+    - "error:\\s*no type named '.*' in '.*'"
+    - "error:\\s*too many arguments to function call, expected \\d+, have \\d+"
+    - "error:\\s*use of '.*' with tag type that does not match previous declaration"
+    - "error:\\s*too many arguments to function call, expected \\d+, have \\d+"    
+    - "error:\\s*declaration of '.*' has a different language linkage"    
+    - "error:\\s*indirection requires pointer operand \\('.*' invalid\\)"
+    - 'error: no previous prototype for (function )?''[^'']+'''
+    - 'error: unused function ''[^'']+'''
+    - "(?:error|note): .* is not a constant expression"
+    - "error: passing '.*' to parameter of incompatible type"
+    - "error: out-of-line declaration of a member must be a definition"
+    - "error: taking the address of a temporary object"
+    - "error: must use '.*' tag to refer to type '.*'"
+    - "error: assigning to '.*' from incompatible type"
+    - "error: virtual function '.*' has a different return type"
+    - "error: too few arguments to function call"
+    - "error: \".* is not set\""
+    - "error: static assertion failed"
+    - "error: '.*' is missing exception specification 'noexcept'"
+    - "error: typedef redefinition with different types"
+    - "error: definition or redeclaration of '.*' not allowed inside a function"
+
+UNDEFINED REFERENCE ERROR:
+  patterns:
+    - "undefined reference to `.*'"
+    - "undefined reference to '.*'"
+    - "symbol not found"
+    - "unresolved external symbol"
+    - "linker error: symbol undefined"
+    - "error: undefined reference to `.*`"
+    - "error: use of undeclared identifier '.*'"
+
+LINKER ERROR:
+  patterns:
+    - 'multiple definition of'
+    - 'ld: duplicate symbol'
+    - 'conflicting types for'
+    - 'linking failed'
+    - 'ld returned 1 exit status'
+    - 'collect2: error: ld returned .* exit status'
+    - 'linker command failed with exit code'
+    - 'cannot find -l.*'
+    - 'no such file or directory: ''\$LIB_FUZZING_ENGINE'''
+    - 'relocation overflowed'
+    - 'error: relocation truncated to fit'
+    - 'first defined here'
+    - 'no such file or directory: .*\.a'
+    - '/usr/bin/ld: cannot find -ljsoncpp'
+
+BUILD SCRIPT ERROR:
+  patterns:
+    - 'make: \*\*\* No rule to make target .*'
+    - 'CMake Error:.*'
+    - 'CMake was unable to find a build program'
+    - 'CMAKE_(C|CXX)_COMPILER not set'
+    - 'ninja: error: loading ''build\.ninja'': No such file or directory'
+    - 'The source directory .* does not appear to contain CMakeLists\.txt'
+    - '/src/build\.sh: line \d+: syntax error'
+    - 'sed: -e expression #1, char \d+: (Invalid content of \{\}|extra characters after command)'
+    - 'sed: can''t read.*No such file or directory'
+    - '/src/build\.sh: line \d+:( .*:)? unbound variable'
+    - 'configure: error: .* not found'
+    - "autoreconf:\\s*['\\\"]configure\\.(?:ac|in)['\\\"].*is required"
+    - 'Could not find a package configuration file provided by .*'
+    - 'CMake Error at CMakeLists\.txt:\d+ \(find_package\)'
+    - 'By not providing "Find.*\.cmake" in CMAKE_MODULE_PATH.*'
+    - '/src/build\.sh: line \d+: fuzzer/CMakeLists\.txt: No such file or directory'
+    - '\./aom_configure: No such file or directory'
+    - 'configure: error: .* (required|dependency) .* (not found|not available|missing)'
+    - 'configure: error: .* but required .* (library|package).* not available'
+    - 'configure: error: .* requires .* (but it is not installed|not found|not available)'
+    - 'configure: error: C compiler cannot create executables'
+    - 'configure: error: in `.*`:'
+    - 'CMake Error at .*'
+    - 'CMake Generate step failed'
+    - 'No SOURCES given to target: .*'
+    - '^\.\/autogen\.sh:\s+\d+:\s+\S+: not found'
+    - '^libtool:\s+error:\s+cannot find the library\s+["'']?.*\.la["'']?'
+    - '^libtool:\s+error:\s+unhandled argument\s+["'']?.*\.la["'']?'
+    - '^Makefile\.am:\d+:\s+error:.*'
+    - "make: \\*\\*\\* No targets specified and no makefile found"
+    - "^/src/build\\.sh: line \\d+:\\s+\\S+:\\s+command not found"
+    - '(?s)(?:sysctl: setting key "vm\.mmap_rnd_bits", ignoring: Read-only file system\s+)?\+\s*build/oss-fuzz/build\.sh'
+    - "CMake Error:.*Could NOT find Boost"
+    - "error: endif without if"
+    - "error: invalid argument '.*' not allowed with '.*'"
+    - "No package '.*' found"
+    - "Package .* was not found in the pkg-config search path"
+
+CORRUPTED CODE ERROR:
+  patterns:
+    - "invalid preprocessing directive"
+    - "unexpected token"
+    - "unrecognized input"
+    - "junk after number"
+    - "unclosed comment"
+    - "unterminated comment"
+    - "unexpected end of file"
+    - "illegal start of expression"
+    - "missing terminating ' character"
+    - "missing terminating \" character"
+    - "segmentation fault"
+    - "corrupted"

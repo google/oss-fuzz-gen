@@ -33,6 +33,7 @@ from agent.function_based_prototyper import FunctionToolPrototyper
 from agent.one_prompt_enhancer import OnePromptEnhancer
 from agent.one_prompt_prototyper import OnePromptPrototyper
 from agent.prototyper import Prototyper
+from agent.memory_prototyper import MemoryPrototyper
 from agent.semantic_analyzer import SemanticAnalyzer
 from experiment import builder_runner as builder_runner_lib
 from experiment import evaluator as exp_evaluator
@@ -273,8 +274,15 @@ def _fuzzing_pipeline(benchmark: Benchmark, model: models.LLM,
                            llm=model,
                            args=args,
                            benchmark=benchmark))
-    writer_agents += [
+    if getattr(args, "use_error_memory", False):
+      logger.info("[INFO] Using MemoryPrototyper with error memory enabled.",
+                  trial=trial)
+      writer_agents += [MemoryPrototyper(trial=trial,llm=model,args=args)]
+    else:
+      writer_agents += [
         Prototyper(trial=trial, llm=model, args=args),
+      ]
+    writer_agents += [
         Enhancer(trial=trial, llm=model, args=args)
     ]
     p = pipeline.Pipeline(args=args,
