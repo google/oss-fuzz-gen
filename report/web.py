@@ -750,6 +750,7 @@ def _parse_arguments() -> argparse.Namespace:
   args, _ = parser.parse_known_args()
   return args
 
+
 def main():
   args = _parse_arguments()
 
