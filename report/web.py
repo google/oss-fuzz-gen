@@ -746,8 +746,9 @@ def _parse_arguments() -> argparse.Namespace:
                       help='GCS directory for experiment.',
                       default='')
 
-  return parser.parse_args()
-
+  # Ignore unknown additional args that flows to run_all_experiment.py
+  args, _ = parser.parse_known_args()
+  return args
 
 def main():
   args = _parse_arguments()
