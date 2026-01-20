@@ -139,15 +139,16 @@ def _parse_args(cmd) -> argparse.Namespace:
 
 
 def _report_serve_exclusive_parse_arg(cmd):
+  """Parses additional args exclusively for report.web"""
   web_parser = argparse.ArgumentParser(add_help=False)
   web_parser.add_argument('--with-csv',
-                      '-csv',
-                      help='Will write a CSV file with the results.',
-                      action='store_true')
+                          '-csv',
+                          help='Will write a CSV file with the results.',
+                          action='store_true')
   web_parser.add_argument('--with-google-sheets',
-                        '-gs',
-                        help='Will write to Google Sheets.',
-                        action='store_true')
+                          '-gs',
+                          help='Will write to Google Sheets.',
+                          action='store_true')
 
   report_arg, all_exp_arg_list = web_parser.parse_known_args(cmd)
   return report_arg, all_exp_arg_list
@@ -192,7 +193,8 @@ def main(cmd=None):
   """Main entrypoint"""
   if os.path.isfile('/experiment/data-dir.zip'):
     subprocess.check_call(
-        'apt-get install -y zip && zip -s0 data-dir.zip --out newd.zip && unzip newd.zip && rm ./data-dir.z*',
+        'apt-get install -y zip && zip -s0 data-dir.zip --out newd.zip && '
+        'unzip newd.zip && rm ./data-dir.z*',
         shell=True,
         cwd='/experiment')
   if os.path.isdir(DATA_DIR):
@@ -236,8 +238,10 @@ def run_on_data_from_scratch(cmd=None):
 
   local_results_dir = 'results'
 
-  # split additional args that are exclusive to upload_report.sh, pass the rest to run_all_experiment.py
-  report_arg, args.additional_args= _report_serve_exclusive_parse_arg(args.additional_args)
+  # split additional args that are exclusive to upload_report.sh,
+  # pass the rest to run_all_experiment.py
+  report_arg, args.additional_args = _report_serve_exclusive_parse_arg(
+      args.additional_args)
 
   report_cmd = [
       "bash", "report/upload_report.sh", local_results_dir, gcs_report_dir,
@@ -402,8 +406,10 @@ def run_standard(cmd=None):
   # Trends report use a similarly named path.
   gcs_trend_report_path = f"{args.sub_dir}/{experiment_name}.json"
 
-  # split additional args that are exclusive to upload_report.sh, pass the rest to run_all_experiment.py
-  report_arg, args.additional_args= _report_serve_exclusive_parse_arg(args.additional_args)
+  # split additional args that are exclusive to upload_report.sh,
+  # pass the rest to run_all_experiment.py
+  report_arg, args.additional_args = _report_serve_exclusive_parse_arg(
+      args.additional_args)
 
   report_cmd = [
       "bash", "report/upload_report.sh", local_results_dir, gcs_report_dir,
