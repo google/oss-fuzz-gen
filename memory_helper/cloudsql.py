@@ -494,9 +494,14 @@ def _knn_search_error_full_core(
     normalized: str,
     top_k: int,
     trial: Optional[int] = None,
-    embedder: VertexEmbeddingModel = None
+    embedder: VertexEmbeddingModel = None,
+    confidence_levels: Optional[List[int]] = None
 ) -> List[Dict[str, Any]]:
     """Core KNN lookup given an already-normalized error string."""
+    # Default to confidence levels 2 and 3 if not specified
+    if confidence_levels is None:
+        confidence_levels = [2, 3]
+
     if not normalized.strip():
         _log_info("[KNN] Empty normalized error → return [].", trial=trial)
         return []
@@ -509,7 +514,15 @@ def _knn_search_error_full_core(
     vec_str = json.dumps(vec)
     _log_info("[KNN] Embedding vector prepared (len=%d).", len(vec), trial=trial)
 
-    sql = """
+    # Build placeholders for IN clause
+    if not confidence_levels:
+        # Fallback if someone passes empty list explicitly -> return nothing?
+        _log_info("[KNN] No confidence levels provided → return [].", trial=trial)
+        return []
+
+    placeholders = ", ".join(["%s"] * len(confidence_levels))
+
+    sql = f"""
         SELECT
           id,
           project,
@@ -519,11 +532,13 @@ def _knn_search_error_full_core(
           orig_fuzz_target,
           patch_text,
           fix_action,
+          confidence_level,
           cosine_distance(
             embedding,
             string_to_vector(%s)
           ) AS dist
         FROM entries
+        WHERE confidence_level IN ({placeholders})
         ORDER BY dist ASC
         LIMIT %s
     """
@@ -531,8 +546,10 @@ def _knn_search_error_full_core(
     rows: List[Dict[str, Any]] = []
     with mysql_connection_no_plain_text_auth() as conn:
         with conn.cursor() as cur:
-            _log_info("[KNN] Executing SQL top_k=%d", top_k, trial=trial)
-            cur.execute(sql, (vec_str, top_k))
+            _log_info("[KNN] Executing SQL top_k=%d, conf=%s", top_k, confidence_levels, trial=trial)
+            # Param order: vector_json, *conf_levels, top_k
+            params = [vec_str] + confidence_levels + [top_k]
+            cur.execute(sql, params)
             fetched = cur.fetchall()
             _log_info("[KNN] SQL returned %d rows.", len(fetched), trial=trial)
 
@@ -545,6 +562,7 @@ def _knn_search_error_full_core(
                 orig_ft,
                 patch_text,
                 fix_action,
+                conf_level,
                 dist,
             ) in fetched:
                 rows.append(
@@ -557,6 +575,7 @@ def _knn_search_error_full_core(
                         "orig_fuzz_target": orig_ft,
                         "patch_text": patch_text,
                         "fix_action": fix_action,
+                        "confidence_level": conf_level,
                         "distance": float(dist),
                     }
                 )
@@ -569,7 +588,8 @@ def knn_search_error_full_with_norm(
     query_error_text: str,
     top_k: int = 5,
     trial: Optional[int] = None,
-    embedder: VertexEmbeddingModel = None
+    embedder: VertexEmbeddingModel = None,
+    confidence_levels: Optional[List[int]] = None
 ) -> Tuple[str, List[Dict[str, Any]]]:
     """KNN that returns BOTH the normalized error text and the hits.
 
@@ -590,7 +610,7 @@ def knn_search_error_full_with_norm(
     _log_info("\n[KNN] Normalized error text being embedded:\n%s", normalized, trial=trial)
     _log_info("[KNN] %s", "=" * 80, trial=trial)
 
-    rows = _knn_search_error_full_core(normalized, top_k=top_k, trial=trial, embedder=embedder)
+    rows = _knn_search_error_full_core(normalized, top_k=top_k, trial=trial, embedder=embedder, confidence_levels=confidence_levels)
 
     _log_info(
         "[KNN] Final result: normalized length=%d, hits=%d",
@@ -606,14 +626,16 @@ def knn_search_error_full(
     query_error_text: str,
     top_k: int = 5,
     trial: Optional[int] = None,
-    embedder:VertexEmbeddingModel = None
+    embedder:VertexEmbeddingModel = None,
+    confidence_levels: Optional[List[int]] = None
 ) -> List[Dict[str, Any]]:
     """Legacy API: returns only the list of hits."""
     _, rows = knn_search_error_full_with_norm(
         query_error_text,
         top_k=top_k,
         trial=trial,
-        embedder=embedder
+        embedder=embedder,
+        confidence_levels=confidence_levels
     )
     return rows
 
