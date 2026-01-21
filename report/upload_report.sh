@@ -96,16 +96,16 @@ update_report() {
   rm -rf 'training_data'
   gsutil -q rm -r "gs://oss-fuzz-gcb-experiment-run-logs/Result-reports/${GCS_DIR:?}/training_data" || true
 
-  $PYTHON -m data_prep.parse_training_data \
-    --experiment-dir "${RESULTS_DIR:?}" --save-dir 'training_data'
-  $PYTHON -m data_prep.parse_training_data --group \
-    --experiment-dir "${RESULTS_DIR:?}" --save-dir 'training_data'
-  $PYTHON -m data_prep.parse_training_data --coverage \
-    --experiment-dir "${RESULTS_DIR:?}" --save-dir 'training_data'
-  $PYTHON -m data_prep.parse_training_data --coverage --group \
-    --experiment-dir "${RESULTS_DIR:?}" --save-dir 'training_data'
-  gsutil -q cp -r 'training_data' \
-    "gs://oss-fuzz-gcb-experiment-run-logs/Result-reports/${GCS_DIR:?}"
+  # $PYTHON -m data_prep.parse_training_data \
+  #  --experiment-dir "${RESULTS_DIR:?}" --save-dir 'training_data'
+  #$PYTHON -m data_prep.parse_training_data --group \
+  #  --experiment-dir "${RESULTS_DIR:?}" --save-dir 'training_data'
+  #$PYTHON -m data_prep.parse_training_data --coverage \
+  #  --experiment-dir "${RESULTS_DIR:?}" --save-dir 'training_data'
+  #$PYTHON -m data_prep.parse_training_data --coverage --group \
+  #  --experiment-dir "${RESULTS_DIR:?}" --save-dir 'training_data'
+  #gsutil -q cp -r 'training_data' \
+  #  "gs://oss-fuzz-gcb-experiment-run-logs/Result-reports/${GCS_DIR:?}"
 }
 
 while [[ ! -f /experiment_ended ]]; do
