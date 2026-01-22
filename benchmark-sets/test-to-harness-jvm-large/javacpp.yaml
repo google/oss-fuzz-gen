@@ -1,0 +1,13 @@
+"language": "jvm"
+"project": "javacpp"
+"target_name": "JavacppFuzzer"
+"target_path": "/src/JavacppFuzzer.java"
+"test_files":
+- "test_file_path": "org/bytedeco/javacpp/BuilderTest.java"
+- "test_file_path": "org/bytedeco/javacpp/IndexerTest.java"
+- "test_file_path": "org/bytedeco/javacpp/ThreadTest.java"
+- "test_file_path": "org/bytedeco/javacpp/indexer/HyperslabIndexTest.java"
+- "test_file_path": "org/bytedeco/javacpp/AdapterTest.java"
+- "test_file_path": "org/bytedeco/javacpp/BufferTest.java"
+- "test_file_path": "org/bytedeco/javacpp/EnumTest.java"
+- "test_file_path": "org/bytedeco/javacpp/PointerTest.java"

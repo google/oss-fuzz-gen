@@ -1,0 +1,8 @@
+"language": "jvm"
+"project": "json-sanitizer"
+"target_name": "DenylistFuzzer"
+"target_path": "/src/DenylistFuzzer.java"
+"test_files":
+- "test_file_path": "com/google/json/FuzzyTest.java"
+- "test_file_path": "com/google/json/EvalMinifierTest.java"
+- "test_file_path": "com/google/json/JsonSanitizerTest.java"
