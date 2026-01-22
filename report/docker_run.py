@@ -138,6 +138,22 @@ def _parse_args(cmd) -> argparse.Namespace:
   return args
 
 
+def _report_serve_exclusive_parse_arg(cmd):
+  """Parses additional args exclusively for report.web"""
+  web_parser = argparse.ArgumentParser(add_help=False)
+  web_parser.add_argument('--with-csv',
+                          '-csv',
+                          help='Will write a CSV file with the results.',
+                          action='store_true')
+  web_parser.add_argument('--with-google-sheets',
+                          '-gs',
+                          help='Will write to Google Sheets.',
+                          action='store_true')
+
+  report_arg, all_exp_arg_list = web_parser.parse_known_args(cmd)
+  return report_arg, all_exp_arg_list
+
+
 def _run_command(command: list[str], shell=False):
   """Runs a command and return its exit code."""
   process = subprocess.run(command, shell=shell, check=False)
@@ -177,7 +193,8 @@ def main(cmd=None):
   """Main entrypoint"""
   if os.path.isfile('/experiment/data-dir.zip'):
     subprocess.check_call(
-        'apt-get install -y zip && zip -s0 data-dir.zip --out newd.zip && unzip newd.zip && rm ./data-dir.z*',
+        'apt-get install -y zip && zip -s0 data-dir.zip --out newd.zip && '
+        'unzip newd.zip && rm ./data-dir.z*',
         shell=True,
         cwd='/experiment')
   if os.path.isdir(DATA_DIR):
@@ -221,11 +238,23 @@ def run_on_data_from_scratch(cmd=None):
 
   local_results_dir = 'results'
 
-  # Generate a report and upload it to GCS
-  report_process = subprocess.Popen([
+  # split additional args that are exclusive to upload_report.sh,
+  # pass the rest to run_all_experiment.py
+  report_arg, args.additional_args = _report_serve_exclusive_parse_arg(
+      args.additional_args)
+
+  report_cmd = [
       "bash", "report/upload_report.sh", local_results_dir, gcs_report_dir,
       args.benchmark_set, args.model
-  ] + args.additional_args)
+  ]
+
+  if report_arg.with_csv:
+    report_cmd.append('--with-csv')
+  if report_arg.with_google_sheets:
+    report_cmd.append('--with-google-sheets')
+
+  # Generate a report and upload it to GCS
+  report_process = subprocess.Popen(report_cmd)
 
   # Launch run_all_experiments.py
   # some notes:
@@ -377,11 +406,23 @@ def run_standard(cmd=None):
   # Trends report use a similarly named path.
   gcs_trend_report_path = f"{args.sub_dir}/{experiment_name}.json"
 
-  # Generate a report and upload it to GCS
-  report_process = subprocess.Popen([
+  # split additional args that are exclusive to upload_report.sh,
+  # pass the rest to run_all_experiment.py
+  report_arg, args.additional_args = _report_serve_exclusive_parse_arg(
+      args.additional_args)
+
+  report_cmd = [
       "bash", "report/upload_report.sh", local_results_dir, gcs_report_dir,
       args.benchmark_set, args.model
-  ] + args.additional_args)
+  ]
+
+  if report_arg.with_csv:
+    report_cmd.append('--with-csv')
+  if report_arg.with_google_sheets:
+    report_cmd.append('--with-google-sheets')
+
+  # Generate a report and upload it to GCS
+  report_process = subprocess.Popen(report_cmd)
 
   # Prepare the command to run experiments
   run_cmd = [
