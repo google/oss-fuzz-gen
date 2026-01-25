@@ -110,8 +110,8 @@ def get_credentials():
     if hasattr(credentials, "service_account_email"):
         # Note: Some SA creds return 'default' or None, so we check for actual content
         if credentials.service_account_email and credentials.service_account_email != "default":
-            #logger.info(f"[AUTH] found service account email {credentials.service_account_email}", "", trial=-1)
             db_user = credentials.service_account_email.split('@')[0]
+            logger.info (f"[AUTH] found service account {db_user}", trial=1)
             return db_user
 
 
@@ -138,93 +138,70 @@ def get_credentials():
         print(f"Failed to auto-detect email: {e}")
         raise
 
-
 @contextmanager
-def mysql_connection_no_plain_text_auth():
+def cloud_sql_connect_smart():
     """
-        Context manager that supports:
-        1. K8s Sidecar with --auto-iam-authn (No password/token needed in Python)
-        2. Local/Dev Direct Connection (Uses Python Connector with IAM)
+    Attempts to connect via Local Proxy first.
+    If that fails, falls back to Google Python Connector.
     """
     global _DB_USER
     if _DB_USER is None:
         _DB_USER = get_credentials()
-    # we hard-code proxy's IP address and port in the k8s environment
-    #host = os.getenv("DB_HOST", "127.0.0.1")
-    #port = int(os.getenv("DB_PORT", "3306"))  # Standard MySQL port
-    db = os.getenv("DB_NAME", "ofg")
-    connector = Connector(ip_type=IPTypes.PUBLIC, refresh_strategy="LAZY")
+
     conn = None
-    # hard-code the default option of using proxy to true, the PR exp runs with proxy for anyways.
-    USE_PROXY = os.getenv("USE_PROXY", True)
+    connector = None  # Only initialized if we use the fallback method
+
+    # ---------------------------------------------------------
+    # Attempt 1: Primary (Local Proxy)
+    # ---------------------------------------------------------
     try:
+        conn = pymysql.connect(
+            host="127.0.0.1",
+            port=3306,
+            database='ofg',
+            user=_DB_USER,
+            password="",
+            ssl_disabled=True,
+            connect_timeout=10
+        )
+    except Exception as proxy_e:
+        _log_info(
+            f"proxy connection failed: {proxy_e}",trial= 1 )
+
+        # ---------------------------------------------------------
+        # Attempt 2: Fallback (Google Connector)
+        # ---------------------------------------------------------
         try:
-            if USE_PROXY:
-                conn = pymysql.connect(
-                    host = "127.0.0.1",
-                    port = 3306,
-                    database=db,
-                    user=_DB_USER,
-                    password="", # Proxy handle auth using IAM
-                    ssl_disabled=True,  # Proxy handles encryption
-                    connect_timeout=10
-                )
-            else:
-                conn = connector.connect(
-                    INSTANCE_CONNECTION_NAME,
-                    "pymysql",
-                    user=_DB_USER,
-                    db=db,
-                    enable_iam_auth=True
-                )
-        except pymysql.err.OperationalError as e:
-            # Handle MySQL-layer errors with concise, identity-aware messages
-            error_code = e.args[0]
+            _log_info("fallback to connect with GSA account", trial= 1)
+            connector = Connector(ip_type=IPTypes.PUBLIC, refresh_strategy="LAZY")
+            conn = connector.connect(
+                INSTANCE_CONNECTION_NAME,
+                "pymysql",
+                user=_DB_USER,
+                db="ofg",
+                enable_iam_auth=True
+            )
+        except Exception as connector_e:
+            _log_info(f"Fallback connection also failed: {connector_e}", trial= 1)
+            # If the connector was created but connect() failed, close it.
+            if connector:
+                connector.close()
+            raise connector_e  # Raise the final error to the runner
 
-            if error_code == 1045:
-                # Access Denied
-                raise RuntimeError(
-                    f"[SQL 1045] Auth failed for DB User '{_DB_USER}'. "
-                    f"Ensure this specific user is added to Cloud SQL 'Users' (IAM)."
-                ) from e
-
-            elif error_code == 1049:
-                # Database Missing
-                raise RuntimeError(
-                    f"[SQL 1049] Database '{DB_NAME}' not found on instance."
-                ) from e
-
-            elif error_code == 2003:
-                # Connectivity
-                raise RuntimeError(
-                    f"[SQL 2003] Failed to reach '{INSTANCE_CONNECTION_NAME}' via Public IP."
-                ) from e
-
-            else:
-                # Fallback for other MySQL errors
-                raise RuntimeError(f"[SQL Error {error_code}] {e}") from e
-
-        except Exception as e:
-            # Handle Google Cloud API-layer errors
-            raise RuntimeError(
-                f"[GCP API Error] Connector failed initialization. "
-                f"Identity '{_DB_USER}' may lack 'Cloud SQL Client' role. Details: {e}"
-            ) from e
-
-        # 4. Success Yield
+    # ---------------------------------------------------------
+    # Phase 3: Yield & Cleanup
+    # ---------------------------------------------------------
+    try:
+        # Yield the successful connection (from either source) to the inner block
         yield conn
-
     finally:
-        # 5. Cleanup
+        # Cleanup Connection
         if conn:
-            try:
-                conn.close()
-            except Exception:
-                pass
-        try:
+            conn.close()
+
+        # Cleanup Connector (Only if it was initialized during fallback)
+        if connector:
             connector.close()
-        except Exception:
-            pass
 
 
 """
@@ -352,7 +329,7 @@ def knn_search_error(
         LIMIT %s
     """
     rows: List[Dict[str, Any]] = []
-    with mysql_connection_no_plain_text_auth() as conn:
+    with cloud_sql_connect_smart() as conn:
         with conn.cursor() as cur:
             _log_info("[KNN] Executing simple SQL top_k=%d", top_k, trial=trial)
             cur.execute(sql, (vec_str, top_k))
@@ -426,7 +403,7 @@ def knn_search_error_dbg(
         LIMIT %s
     """
     rows: List[Dict[str, Any]] = []
-    with mysql_connection_no_plain_text_auth() as conn:
+    with cloud_sql_connect_smart() as conn:
         with conn.cursor() as cur:
             _log_info("[KNN-DBG] Executing debug SQL top_k=%d", top_k, trial=trial)
             cur.execute(sql, (vec_str, top_k))
@@ -544,7 +521,7 @@ def _knn_search_error_full_core(
     """
 
     rows: List[Dict[str, Any]] = []
-    with mysql_connection_no_plain_text_auth() as conn:
+    with cloud_sql_connect_smart() as conn:
         with conn.cursor() as cur:
             _log_info("[KNN] Executing SQL top_k=%d, conf=%s", top_k, confidence_levels, trial=trial)
             # Param order: vector_json, *conf_levels, top_k
@@ -711,7 +688,7 @@ def update_stats_from_buffer(
           last_used_at         = UTC_TIMESTAMP()
     """
 
-    with mysql_connection_no_plain_text_auth() as conn:
+    with cloud_sql_connect_smart() as conn:
         with conn.cursor() as cur:
             for entry_id, deltas in sorted(stats_buffer.items()):
                 # Skip pure-zero deltas to avoid useless writes.
@@ -857,7 +834,7 @@ def maybe_register_successful_fix(
     # 3) Deduplicate: check if a very similar entry already exists for this project.
     DEDUP_THRESHOLD = 0.04  # tune as needed
 
-    with mysql_connection_no_plain_text_auth() as conn:
+    with cloud_sql_connect_smart() as conn:
         with conn.cursor() as cur:
             dedup_sql = """
                 SELECT
