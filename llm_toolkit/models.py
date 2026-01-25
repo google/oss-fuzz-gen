@@ -1066,7 +1066,7 @@ class GeminiV3FlashChat(GeminiV1D5Chat):
   context_window = 1048576
   name = 'vertex_ai_gemini-3-flash-chat'
   _vertex_ai_model = 'gemini-3-flash-preview'
-0
+
 
 class GeminiV3ProChat(GeminiV1D5Chat):
   """Gemini 3 Pro for chat session."""
@@ -1074,7 +1074,6 @@ class GeminiV3ProChat(GeminiV1D5Chat):
   context_window = 1048576
   name = 'vertex_ai_gemini-3-pro-chat'
   _vertex_ai_model = 'gemini-3-pro-preview'
-
 
 
 class AIBinaryModel(GoogleModel):
