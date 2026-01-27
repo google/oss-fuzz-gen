@@ -1,15 +1,20 @@
+"""
+Text embedding model based on Gcloud Vertex AI
+"""
 import sys
-from typing import Any, Callable, Optional, Type
+from typing import Any, Optional
 
-from vertexai.language_models import TextEmbeddingModel, TextEmbeddingInput
 from google.api_core.exceptions import InvalidArgument
+from vertexai.language_models import TextEmbeddingInput, TextEmbeddingModel
 
 from llm_toolkit.models import VertexAIModel
 
-class VertexEmbeddingModel (VertexAIModel):
+
+class VertexEmbeddingModel(VertexAIModel):
   """Vertex AI Embedding model."""
   _vertex_ai_model = 'text-embedding-004'
   name = "text-embedding-004"
+
   def get_model(self) -> Any:
     # OVERRIDE: We must use TextEmbeddingModel, not GenerativeModel
     return TextEmbeddingModel.from_pretrained(self._vertex_ai_model)
@@ -24,7 +29,7 @@ class VertexEmbeddingModel (VertexAIModel):
     """
     Embed a list of texts. Handles token limits via binary search truncation.
     """
-#    self._ensure_model_loaded()
+    #    self._ensure_model_loaded()
 
     processed: list[tuple[int, str]] = []
     placeholders: dict[int, list[float]] = {}
@@ -43,8 +48,9 @@ class VertexEmbeddingModel (VertexAIModel):
     i = 0
     n = len(processed)
     while i < n:
-      chunk = processed[i: i + batch_size]
-      self._embed_chunk_or_split(chunk, placeholders, hard_single_item_min_chars)
+      chunk = processed[i:i + batch_size]
+      self._embed_chunk_or_split(chunk, placeholders,
+                                 hard_single_item_min_chars)
       i += batch_size
 
     # 3. Reassemble in original order
@@ -65,21 +71,18 @@ class VertexEmbeddingModel (VertexAIModel):
         imsg = str(inner_e)
         # Heuristic: Detect token limit errors from Vertex AI
         # Vertex AI often raises InvalidArgument (400) for context length
-        is_token_err = (
-            "400" in imsg or
-            "token" in imsg or
-            "too long" in imsg or
-            isinstance(inner_e, InvalidArgument)
-        )
+        is_token_err = ("400" in imsg or "token" in imsg or
+                        "too long" in imsg or
+                        isinstance(inner_e, InvalidArgument))
 
         if is_token_err:
           # Return None to signal "try truncating"
           return None
 
         print(
-          f"[WARN] Single-item embed failed (non-token): {inner_e}; "
-          f"filled [] for index {orig_idx}.",
-          file=sys.stderr,
+            f"[WARN] Single-item embed failed (non-token): {inner_e}; "
+            f"filled [] for index {orig_idx}.",
+            file=sys.stderr,
         )
         return []
 
@@ -112,8 +115,9 @@ class VertexEmbeddingModel (VertexAIModel):
       if best_vec is None:
         placeholders[orig_idx] = []
         print(
-          f"[WARN] Embedding too large after truncation; index {orig_idx} set to [].",
-          file=sys.stderr,
+            f"[WARN] Embedding too large after truncation; "
+            f"index {orig_idx} set to [].",
+            file=sys.stderr,
         )
       else:
         placeholders[orig_idx] = best_vec
