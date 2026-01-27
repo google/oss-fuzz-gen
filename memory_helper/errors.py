@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import os
 import re
-from typing import List, Optional, Dict, Any 
+from typing import List, Optional, Dict, Any
 
 import yaml
 import logger
@@ -153,7 +153,7 @@ class ErrorPatternClassifier:
     def classify(
         self,
         error_text: str,
-        trial: Optional[int] = None,
+        trial: int = 1,
     ) -> Optional[Dict[str, Any]]:
         """Return the first matching line's classification (bottom-up) over raw error text."""
         error_text = error_text or ""
@@ -214,5 +214,6 @@ def classify_error(
         from memory_helper import classify_error
         info = classify_error(raw_error, trial=trial)
     """
+    trial = -1 if trial is None else trial
     clf = _get_global_classifier()
     return clf.classify(error_text, trial=trial)

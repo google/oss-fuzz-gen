@@ -109,7 +109,7 @@ class MemoryPrototyper(Prototyper):
           with conn.cursor() as cursor:
             cursor.execute("SHOW TABLES")
             result_sql = cursor.fetchall()
-            logger.info(f"connection successful, query returned: {result_sql} \n continue to " , trial=results[-1].trial)
+            logger.info(f"connection successful, query returned: {result_sql} \n continue" , trial=results[-1].trial)
       except Exception as e:
         logger.error(f"SQL connection fail, early abort, connection error message is: {e}", trial=results[-1].trial)
         raise RuntimeError("Agent execution aborted: Database is unreachable.") from e

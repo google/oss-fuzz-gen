@@ -8,7 +8,5 @@ from .errors import (
     classify_error,
 )
 from .cloudsql import (
-    knn_search_error,
-    knn_search_error_dbg,
     knn_search_error_full,
 )

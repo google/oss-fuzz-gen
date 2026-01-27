@@ -68,8 +68,8 @@ SYNTACTIC ERROR:
     - "error:\\s*no type named '.*' in '.*'"
     - "error:\\s*too many arguments to function call, expected \\d+, have \\d+"
     - "error:\\s*use of '.*' with tag type that does not match previous declaration"
-    - "error:\\s*too many arguments to function call, expected \\d+, have \\d+"    
-    - "error:\\s*declaration of '.*' has a different language linkage"    
+    - "error:\\s*too many arguments to function call, expected \\d+, have \\d+"
+    - "error:\\s*declaration of '.*' has a different language linkage"
     - "error:\\s*indirection requires pointer operand \\('.*' invalid\\)"
     - 'error: no previous prototype for (function )?''[^'']+'''
     - 'error: unused function ''[^'']+'''
