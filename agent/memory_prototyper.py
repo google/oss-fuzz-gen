@@ -1,24 +1,26 @@
+"""
+Prototyper that can retrieve past error message and patch history
+"""
 from __future__ import annotations
 
 import json
 import os
 from collections import defaultdict
-import time
 from typing import Any, Dict, List, Optional, Tuple
 
 import logger
 from agent.prototyper import Prototyper  # existing Prototyper
 from llm_toolkit import prompt_builder
 from llm_toolkit.prompts import Prompt
-from memory_helper.cloudsql import (
-    knn_search_error_full_with_norm,
-    update_stats_from_buffer,
-    maybe_register_successful_fix,
-    cloud_sql_connect_smart
-)
-from results import BuildResult, Result
 from llm_toolkit.text_embedder import VertexEmbeddingModel
+from memory_helper.cloudsql import (cloud_sql_connect_smart,
+                                    knn_search_error_full_with_norm,
+                                    maybe_register_successful_fix,
+                                    update_stats_from_buffer)
+from results import BuildResult, Result
 
+MAX_CANDIDATES = 5
+CANDIDATE_PREVIEW_LEN = 400
 
 
 class MemoryPrototyper(Prototyper):
@@ -72,8 +74,7 @@ class MemoryPrototyper(Prototyper):
             "retrieved_project": 0,
             "attempted_project": 0,
             "success_project": 0,
-        }
-    )
+        })
     # Track the last entry the planner actually attempted to use.
     # If planner chose NULL, this stays None.
     self._last_attempted_entry_id: Optional[str] = None
@@ -94,27 +95,34 @@ class MemoryPrototyper(Prototyper):
     # Cache raw LLM responses so we can always mine <conclusion>/<reason>
     # from the same response that produced the final fuzz target / build script.
     self._chat_blocks: List[str] = []
-    self.text_embedding_model = VertexEmbeddingModel(ai_binary=self.args.ai_binary,
-                                                     max_tokens=2048,  # Required by base __init__, but ignored by logic
-                                                     num_samples=1,  # Required by base __init__, but ignored by logic
-                                                     temperature=0.0  # Required by base __init__, but ignored by logic
-                                                     )
-
+    self.text_embedding_model = VertexEmbeddingModel(
+        ai_binary=self.args.ai_binary,
+        max_tokens=2048,  # Required by base __init__, but ignored by logic
+        num_samples=1,  # Required by base __init__, but ignored by logic
+        temperature=0.0  # Required by base __init__, but ignored by logic
+    )
 
   def _initial_prompt(self, results: list[Result]) -> Prompt:
-      # we do a DB connection check before prompt, to reduce execution time and resource waste
-      # to delete in real environment
-      try:
-        with cloud_sql_connect_smart() as conn:
-          with conn.cursor() as cursor:
-            cursor.execute("SHOW TABLES")
-            result_sql = cursor.fetchall()
-            logger.info(f"connection successful, query returned: {result_sql} \n continue" , trial=results[-1].trial)
-      except Exception as e:
-        logger.error(f"SQL connection fail, early abort, connection error message is: {e}", trial=results[-1].trial)
-        raise RuntimeError("Agent execution aborted: Database is unreachable.") from e
-      return super()._initial_prompt(results)
-
+    """
+    we do a DB connection check before prompt
+    to delete in real environment
+    """
+    try:
+      with cloud_sql_connect_smart() as conn:
+        with conn.cursor() as cursor:
+          cursor.execute("SHOW TABLES")
+          result_sql = cursor.fetchall()
+          logger.info(
+              f"connection successful, query returned:"
+              f" {result_sql} \n continue",
+              trial=results[-1].trial)
+    except Exception as e:
+      logger.error(
+          f"SQL connection fail, early abort, connection error message is: {e}",
+          trial=results[-1].trial)
+      raise RuntimeError(
+          "Agent execution aborted: Database is unreachable.") from e
+    return super()._initial_prompt(results)
 
   def chat_llm(self, *args, **kwargs) -> str:
     """Wrapper around Prototyper.chat_llm that also caches raw responses.
@@ -126,6 +134,7 @@ class MemoryPrototyper(Prototyper):
     if text:
       self._chat_blocks.append(text)
     return text
+
   # -------------------- internal helpers (stats + updater) --------------------
 
   def _bump_stats(
@@ -175,8 +184,7 @@ class MemoryPrototyper(Prototyper):
             fromfile=old_name,
             tofile=new_name,
             lineterm="",
-        )
-    )
+        ))
 
   def _extract_fix_action_from_chat(self, build_result: BuildResult) -> str:
     """Try to pull a short natural-language fix summary from chat_history.
@@ -338,18 +346,14 @@ class MemoryPrototyper(Prototyper):
       chunks: list[str] = []
 
       if diff_bs.strip():
-        chunks.append(
-            "===== BEGIN BUILD.SH DIFF =====\n"
-            f"{diff_bs}\n"
-            "===== END BUILD.SH DIFF ====="
-        )
+        chunks.append("===== BEGIN BUILD.SH DIFF =====\n"
+                      f"{diff_bs}\n"
+                      "===== END BUILD.SH DIFF =====")
 
       if diff_ft.strip():
-        chunks.append(
-            "===== BEGIN FUZZ TARGET DIFF =====\n"
-            f"{diff_ft}\n"
-            "===== END FUZZ TARGET DIFF ====="
-        )
+        chunks.append("===== BEGIN FUZZ TARGET DIFF =====\n"
+                      f"{diff_ft}\n"
+                      "===== END FUZZ TARGET DIFF =====")
 
       if chunks:
         patch_text = "\n\n".join(chunks)
@@ -387,7 +391,6 @@ class MemoryPrototyper(Prototyper):
       orig_build_script = "reuse /src/build.bk.sh"
 
     return patch_text, orig_build_script, orig_fuzz_target
-
 
   def _flush_stats_on_success(self, build_result: BuildResult) -> None:
     """Flush buffered stats and possibly register a new successful fix."""
@@ -435,43 +438,40 @@ class MemoryPrototyper(Prototyper):
     #    as long as we have an error snapshot (raw + normalized).
     if self._last_raw_error_text and self._last_normalized_error:
       try:
-          fix_action_text = self._extract_fix_action_from_chat(build_result)
-          logger.info(
-              "Online updater extracted fix_action (len=%d): %r",
-              len(fix_action_text),
-              fix_action_text[:120],
-              trial=trial,
-          )
-          patch_text, orig_bs, orig_ft = self._compute_patch_fields_for_success(
-              build_result
-          )
+        fix_action_text = self._extract_fix_action_from_chat(build_result)
+        logger.info(
+            "Online updater extracted fix_action (len=%d): %r",
+            len(fix_action_text),
+            fix_action_text[:120],
+            trial=trial,
+        )
+        patch_text, orig_bs, orig_ft = self._compute_patch_fields_for_success(
+            build_result)
 
-          # Model name logic
-          llm_model_name = getattr(self.llm, "name", None)
-          if not isinstance(llm_model_name, str) or not llm_model_name.strip():
-              llm_model_name = "unknown_model"
+        # Model name logic
+        llm_model_name = getattr(self.llm, "name", None)
+        if not isinstance(llm_model_name, str) or not llm_model_name.strip():
+          llm_model_name = "unknown_model"
 
-          maybe_register_successful_fix(
-              raw_error_text=self._last_raw_error_text,
-              normalized_error_text=self._last_normalized_error,
-              project=project,
-              benchmark=bench,
-              fuzz_target_source=orig_ft or "",
-              build_script_source=orig_bs or "",
-              fix_action_text=fix_action_text,
-              patch_text=patch_text,
-              llm_model=llm_model_name,
-              trial=trial,
-              embedder=self.text_embedding_model
-          )
+        maybe_register_successful_fix(
+            raw_error_text=self._last_raw_error_text,
+            normalized_error_text=self._last_normalized_error,
+            project=project,
+            benchmark=bench,
+            fuzz_target_source=orig_ft or "",
+            build_script_source=orig_bs or "",
+            fix_action_text=fix_action_text,
+            patch_text=patch_text,
+            llm_model=llm_model_name,
+            trial=trial,
+            embedder=self.text_embedding_model)
 
       except Exception as exc:  # noqa: BLE001
-          logger.warning(
-              "MemoryPrototyper: maybe_register_successful_fix failed: %s",
-              exc,
-              trial=trial,
-          )
-
+        logger.warning(
+            "MemoryPrototyper: maybe_register_successful_fix failed: %s",
+            exc,
+            trial=trial,
+        )
 
     # 3) Reset state.
     #
@@ -525,22 +525,17 @@ class MemoryPrototyper(Prototyper):
     if not hits:
       return None
 
-    MAX_CANDIDATES = 5
-    CANDIDATE_PREVIEW_LEN = 400
-
     compact_hits: List[Dict[str, Any]] = []
     for h in hits[:MAX_CANDIDATES]:
-      compact_hits.append(
-          {
-              "id": h["id"],
-              "project": h.get("project"),
-              "error_type": h.get("error_type"),
-              "func_name": h.get("func_name"),
-              "distance": h.get("distance"),
-              "fix_action": (h.get("fix_action") or "")[:CANDIDATE_PREVIEW_LEN],
-              "patch_text": (h.get("patch_text") or "")[:CANDIDATE_PREVIEW_LEN],
-          }
-      )
+      compact_hits.append({
+          "id": h["id"],
+          "project": h.get("project"),
+          "error_type": h.get("error_type"),
+          "func_name": h.get("func_name"),
+          "distance": h.get("distance"),
+          "fix_action": (h.get("fix_action") or "")[:CANDIDATE_PREVIEW_LEN],
+          "patch_text": (h.get("patch_text") or "")[:CANDIDATE_PREVIEW_LEN],
+      })
 
     instruction = (
         "You are an assistant that selects at most ONE reusable fix from a "
@@ -567,16 +562,18 @@ class MemoryPrototyper(Prototyper):
         "    choose it.\n"
         "  - If none are applicable, choose null.\n\n"
         "IMPORTANT:\n"
-        "  - Do NOT pick a candidate only because distance is small; check that\n"
+        "  - Do NOT pick a candidate only because distance is small;"
+        " check that\n"
         "    the error pattern, file paths, symbols, and toolchain situation\n"
         "    actually match.\n"
-        "  - Prefer fixes from the same project or very similar error message.\n"
+        "  - Prefer fixes from the same project or very similar "
+        "error message.\n"
         "  - Avoid candidates that would obviously corrupt code or change\n"
         "    unrelated functionality.\n\n"
         "Respond exactly in the following tag-based format:\n"
         "<chosen_id>BEST_ID_OR_null</chosen_id>\n"
-        "<reason>short explanation why you chose it or why you chose null</reason>\n"
-    )
+        "<reason>short explanation why you chose it or "
+        "why you chose null</reason>\n")
 
     planner_input = {
         "normalized_error": normalized_err,
@@ -584,9 +581,8 @@ class MemoryPrototyper(Prototyper):
         "candidates": compact_hits,
     }
 
-    planner_prompt = prompt_builder.DefaultTemplateBuilder(
-        self.llm, None
-    ).build([])
+    planner_prompt = prompt_builder.DefaultTemplateBuilder(self.llm,
+                                                           None).build([])
     planner_prompt.append(instruction)
 
     # Keep CURRENT_ERROR as a separate, first-class normalized error block.
@@ -602,8 +598,7 @@ class MemoryPrototyper(Prototyper):
     planner_prompt.append(json.dumps(planner_input["candidates"], indent=2))
     planner_prompt.append(
         "\n</CANDIDATES_JSON>\n\n"
-        "Now output only the <chosen_id> and <reason> tags as specified above:"
-    )
+        "Now output only the <chosen_id> and <reason> tags as specified above:")
 
     client = self.llm.get_chat_client(model=self.llm.get_model())
     raw_response = self.chat_llm(
@@ -683,7 +678,8 @@ class MemoryPrototyper(Prototyper):
       self,
       build_result: BuildResult,
   ) -> Tuple[str, Optional[Dict[str, Any]]]:
-    """Lookup Cloud SQL for a similar error and return (normalized_err, best_hit).
+    """Lookup Cloud SQL for a similar error
+     return (normalized_err, best_hit).
 
     Inputs:
 
@@ -719,8 +715,7 @@ class MemoryPrototyper(Prototyper):
         query_text,
         top_k=5,
         trial=build_result.trial,
-        embedder=self.text_embedding_model
-    )
+        embedder=self.text_embedding_model)
 
     if not hits:
       # KNN executed but found no neighbors for this round.
@@ -759,27 +754,24 @@ class MemoryPrototyper(Prototyper):
     # fields (fuzz_target, build_script, compile_log, etc.).
     if binary_exists and function_signature:
       prototyper_failure_prompt = (
-          "Binary was produced, but `LLVMFuzzerTestOneInput` does not correctly "
+          "Binary was produced, but `LLVMFuzzerTestOneInput` "
+          "does not correctly "
           f"exercise the function-under-test `{function_signature}`. The "
-          "current fuzz target is considered invalid for this benchmark."
-      )
+          "current fuzz target is considered invalid for this benchmark.")
     elif compiles_flag and not binary_exists:
-      binary_path = os.path.join(
-          "/out", getattr(bench, "target_name", "") or ""
-      )
+      binary_path = os.path.join("/out",
+                                 getattr(bench, "target_name", "") or "")
       prototyper_failure_prompt = (
           "The fuzz target and build script compile, but the final fuzz target "
           f"binary is not saved to the expected path `{binary_path}`. The "
           "build script likely misses a copy/move step or uses an incorrect "
-          "target name or output location."
-      )
+          "target name or output location.")
     else:
       prototyper_failure_prompt = (
           "The current fuzz target and/or build script still fail to produce a "
           "working fuzzing binary. You must fix the compilation and/or output "
           "steps so that the project builds successfully and writes the fuzz "
-          "target under `/out/`."
-      )
+          "target under `/out/`.")
 
     # CONTEXT_JSON intentionally *omits* `normalized_error` and `compile_error`
     # to avoid duplicating what is already in <CURRENT_ERROR>. It focuses on
@@ -824,8 +816,7 @@ class MemoryPrototyper(Prototyper):
         f"\n[MemoryPlanner] Using entry id={plan['id']} "
         f"(project={plan.get('project')}, "
         f"error_type={plan.get('error_type')}, "
-        f"distance={plan.get('distance')}).\n"
-    )
+        f"distance={plan.get('distance')}).\n")
     return normalized, plan
 
   # --- override failure logic; use fixer+memory in Case 2, Case 3, Pref 7 ---
@@ -884,7 +875,7 @@ class MemoryPrototyper(Prototyper):
       return build_result_ori, None
 
     # --- Precompute memory plan once for this failing BuildResult ---
-    normalized_err, plan = self._maybe_get_memory_plan(build_result)
+    _, plan = self._maybe_get_memory_plan(build_result)
 
     extra_hints = ""
     if plan is not None:
@@ -905,8 +896,7 @@ class MemoryPrototyper(Prototyper):
           "<memory patch>\n"
           f"{plan.get('patch_text') or ''}\n"
           "</memory patch>\n"
-          "</memory hint>\n"
-      )
+          "</memory hint>\n")
 
     # Small helper: build a PrototyperFixerTemplateBuilder prompt for a given
     # selected BuildResult + explanation (Case 2/3 text) + memory hints.
@@ -918,7 +908,8 @@ class MemoryPrototyper(Prototyper):
       # If the next round succeeds, _compute_patch_fields_for_success() will
       # diff these against the new successful sources.
       self._prev_fuzz_target_for_diff = selected_result.fuzz_target_source or ""
-      self._prev_build_script_for_diff = selected_result.build_script_source or ""
+      self._prev_build_script_for_diff = (selected_result.build_script_source or
+                                          "")
 
       # `prompt.get()` already contains the canonical block with
       # <fuzz target>, <build script>, <compilation log>.
@@ -949,7 +940,7 @@ class MemoryPrototyper(Prototyper):
     function_signature = build_result.benchmark.function_signature
     binary_path = os.path.join("/out", build_result.benchmark.target_name)
 
-    # ---------------- Case 2: Binary exists, but function-under-test not called ----------------
+    #  Case 2: Binary exists, but function-under-test not called
     # IMPORTANT: we no longer inline <fuzz target> / <build script> /
     # <compilation log> here; those are added once by the fixer template via
     # `prompt.get()`. We just give a high-level explanation.
@@ -962,45 +953,43 @@ class MemoryPrototyper(Prototyper):
         "That is NOT enough. YOU MUST MODIFY THE FUZZ TARGET to CALL "
         f"FUNCTION `{function_signature}` **EXPLICITLY OR IMPLICITLY** in "
         "`LLVMFuzzerTestOneInput` to generate a valid fuzz target.\n"
-        "Study the source code for function usages to know how.\n"
-    )
+        "Study the source code for function usages to know how.\n")
 
     if build_result_alt and build_result_alt.binary_exists:
       prompt_text_3 = (
-          prompt_text
-          + "Although `/src/build.bk.sh` compiles and saves the binary to "
+          prompt_text +
+          "Although `/src/build.bk.sh` compiles and saves the binary to "
           "the correct path, the function-under-test is still not being "
           "properly exercised by the fuzz target.\n"
           "When you have a solution later, make sure you output the FULL fuzz "
-          "target. YOU MUST NOT OMIT ANY CODE even if it is the same as before.\n"
-      )
+          "target. YOU MUST NOT OMIT ANY CODE "
+          "even if it is the same as before.\n")
       return _build_fix_prompt_for_result(build_result_alt, prompt_text_3)
 
     if (build_result_ori and build_result_ori.binary_exists and
         not build_result_ori.build_script_source):
       prompt_text_41 = (
-          prompt_text
-          + "Although `/src/build.bk.sh` compiles and saves the binary to "
+          prompt_text +
+          "Although `/src/build.bk.sh` compiles and saves the binary to "
           "the correct path, the function-under-test is still not being "
           "properly exercised by the fuzz target.\n"
           "When you have a solution later, make sure you output the FULL fuzz "
-          "target. YOU MUST NOT OMIT ANY CODE even if it is the same as before.\n"
-      )
+          "target. YOU MUST NOT OMIT ANY CODE "
+          "even if it is the same as before.\n")
       return _build_fix_prompt_for_result(build_result_ori, prompt_text_41)
 
     if build_result_ori and build_result_ori.binary_exists:
       prompt_text_42 = (
-          prompt_text
-          + "Your build script compiles and saves the binary to the correct "
+          prompt_text +
+          "Your build script compiles and saves the binary to the correct "
           "path, but the current fuzz target still does not correctly call "
           "the function-under-test.\n"
           "When you have a solution later, make sure you output the FULL fuzz "
           "target (and the FULL build script, if any). YOU MUST NOT OMIT ANY "
-          "CODE even if it is the same as before.\n"
-      )
+          "CODE even if it is the same as before.\n")
       return _build_fix_prompt_for_result(build_result_ori, prompt_text_42)
 
-    # ---------------- Case 3: Compiles, but binary not saved to /out/... ----------------
+    #  Case 3: Compiles, but binary not saved to /out/...
     if (build_result_ori and build_result_ori.compiles and
         build_result_ori.build_script_source):
       # IMPORTANT: again, no duplicated <fuzz target> / <build script> /
@@ -1016,8 +1005,7 @@ class MemoryPrototyper(Prototyper):
           f"{binary_path}.\n"
           "When you have a solution later, make sure you output the FULL fuzz "
           "target (and the FULL build script, if any). YOU MUST NOT OMIT ANY "
-          "CODE even if it is the same as before.\n"
-      )
+          "CODE even if it is the same as before.\n")
       return _build_fix_prompt_for_result(build_result_ori, prompt_text_51)
 
     if (build_result_ori and build_result_ori.compiles and
@@ -1039,8 +1027,7 @@ class MemoryPrototyper(Prototyper):
           f"{binary_path}.\n"
           "When you have a solution later, make sure you output the FULL fuzz "
           "target (and the FULL build script, if any). YOU MUST NOT OMIT ANY "
-          "CODE even if it is the same as before.\n"
-      )
+          "CODE even if it is the same as before.\n")
       return _build_fix_prompt_for_result(build_result_ori, prompt_text_52)
 
     if build_result_alt and build_result_alt.compiles:
@@ -1061,12 +1048,11 @@ class MemoryPrototyper(Prototyper):
           f"{binary_path}.\n"
           "When you have a solution later, make sure you output the FULL fuzz "
           "target (and the FULL build script, if any). YOU MUST NOT OMIT ANY "
-          "CODE even if it is the same as before.\n"
-      )
+          "CODE even if it is the same as before.\n")
       return _build_fix_prompt_for_result(build_result_alt, prompt_text_6)
 
-    # ---------------- Preference 7: new fuzz target + neither build.sh compiles ----------------
-    # Here we just rely on the memory hint + fixer template (no extra case text).
+    #  Preference 7: new fuzz target + neither build.sh compiles
+    # Here we just rely on the memory hint + fixer template.
     self._prev_fuzz_target_for_diff = build_result.fuzz_target_source or ""
     self._prev_build_script_for_diff = build_result.build_script_source or ""
 
