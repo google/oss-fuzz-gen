@@ -1044,6 +1044,38 @@ class GeminiV2D5ProChat(GeminiV1D5Chat):
   _vertex_ai_model = 'gemini-2.5-pro'
 
 
+class GeminiV3Flash(GeminiModel):
+  """Gemini 3 Flash."""
+  _max_output_tokens = 65536
+  context_window = 1048576
+  name = 'vertex_ai_gemini-3-flash'
+  _vertex_ai_model = 'gemini-3-flash-preview'
+
+
+class GeminiV3Pro(GeminiModel):
+  """Gemini 3 Pro."""
+  _max_output_tokens = 65536
+  context_window = 1048576
+  name = 'vertex_ai_gemini-3-pro'
+  _vertex_ai_model = 'gemini-3-pro-preview'
+
+
+class GeminiV3FlashChat(GeminiV1D5Chat):
+  """Gemini 3 Flash for chat session."""
+  _max_output_tokens = 65536
+  context_window = 1048576
+  name = 'vertex_ai_gemini-3-flash-chat'
+  _vertex_ai_model = 'gemini-3-flash-preview'
+
+
+class GeminiV3ProChat(GeminiV1D5Chat):
+  """Gemini 3 Pro for chat session."""
+  _max_output_tokens = 65536
+  context_window = 1048576
+  name = 'vertex_ai_gemini-3-pro-chat'
+  _vertex_ai_model = 'gemini-3-pro-preview'
+
+
 class AIBinaryModel(GoogleModel):
   """A customized model hosted internally."""
 
