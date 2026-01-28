@@ -814,3 +814,36 @@ class FunctionAnalysisResult:
         project_name=data.get('project_name', ''),
         requirements=data.get('requirements', ''),
         function_analysis_path=data.get('function_analysis_path', ''))
+
+
+# add class for fixing
+
+class FixBuildResult(Result):
+  """The result of the fix build agent."""
+  project_name: str
+  is_fixed: bool
+  solution_path: str
+  logs: str
+
+  def __init__(self,
+               project_name: str,
+               is_fixed: bool,
+               solution_path: str = '',
+               logs: str = '',
+               trial: int = 0,
+               work_dirs: Any = None,
+               benchmark: Any = None):
+    # 初始化父类
+    super().__init__(benchmark=benchmark, trial=trial, work_dirs=work_dirs)
+    self.project_name = project_name
+    self.is_fixed = is_fixed
+    self.solution_path = solution_path
+    self.logs = logs
+
+  def to_dict(self) -> dict:
+    return {
+        'project_name': self.project_name,
+        'is_fixed': self.is_fixed,
+        'solution_path': self.solution_path,
+        'logs': self.logs
+    }

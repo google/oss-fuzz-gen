@@ -1,0 +1,280 @@
+[?25hDownloading graphviz-0.21-py3-none-any.whl (47 kB)
+Downloading greenlet-3.2.4-cp311-cp311-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl (587 kB)
+[?25l   [90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m0.0/587.7 kB[0m [31m?[0m eta [36m-:--:--[0m
+[2K   [91m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m[91m╸[0m[90m━━━━[0m [32m524.3/587.7 kB[0m [31m5.8 MB/s[0m eta [36m0:00:01[0m
+[2K   [90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m587.7/587.7 kB[0m [31m1.9 MB/s[0m  [33m0:00:00[0m
+[?25hDownloading gunicorn-23.0.0-py3-none-any.whl (85 kB)
+Downloading httpx-0.28.1-py3-none-any.whl (73 kB)
+Downloading httpcore-1.0.9-py3-none-any.whl (78 kB)
+Downloading h11-0.16.0-py3-none-any.whl (37 kB)
+Downloading idna-3.11-py3-none-any.whl (71 kB)
+Downloading inflection-0.5.1-py2.py3-none-any.whl (9.5 kB)
+Downloading itsdangerous-2.2.0-py3-none-any.whl (16 kB)
+Downloading jinja2-3.1.6-py3-none-any.whl (134 kB)
+Downloading jsonschema_specifications-2025.9.1-py3-none-any.whl (18 kB)
+Downloading limits-5.6.0-py3-none-any.whl (60 kB)
+Downloading linkify_it_py-2.0.3-py3-none-any.whl (19 kB)
+Downloading lockfile-0.12.2-py2.py3-none-any.whl (13 kB)
+Downloading markdown-3.10-py3-none-any.whl (107 kB)
+Downloading markdown_it_py-4.0.0-py3-none-any.whl (87 kB)
+Downloading mdurl-0.1.2-py3-none-any.whl (10.0 kB)
+Downloading markupsafe-3.0.3-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (22 kB)
+Downloading marshmallow_oneofschema-3.2.0-py3-none-any.whl (5.9 kB)
+Downloading mdit_py_plugins-0.5.0-py3-none-any.whl (57 kB)
+Downloading msgspec-0.20.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (219 kB)
+Downloading pathspec-0.12.1-py3-none-any.whl (31 kB)
+Downloading pendulum-3.1.0-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (353 kB)
+Downloading pluggy-1.6.0-py3-none-any.whl (20 kB)
+Downloading psutil-7.1.3-cp36-abi3-manylinux2010_x86_64.manylinux_2_12_x86_64.manylinux_2_28_x86_64.whl (263 kB)
+Downloading python_daemon-3.1.2-py3-none-any.whl (30 kB)
+Downloading python_multipart-0.0.20-py3-none-any.whl (24 kB)
+Downloading python_slugify-8.0.4-py2.py3-none-any.whl (10 kB)
+Downloading pytz-2025.2-py2.py3-none-any.whl (509 kB)
+Downloading pyyaml-6.0.3-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (806 kB)
+[?25l   [90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m0.0/806.6 kB[0m [31m?[0m eta [36m-:--:--[0m
+[2K   [91m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m[91m╸[0m[90m━[0m [32m786.4/806.6 kB[0m [31m3.9 MB/s[0m eta [36m0:00:01[0m
+[2K   [90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m806.6/806.6 kB[0m [31m2.1 MB/s[0m  [33m0:00:00[0m
+[?25hDownloading referencing-0.37.0-py3-none-any.whl (26 kB)
+Downloading requests-2.32.5-py3-none-any.whl (64 kB)
+Downloading charset_normalizer-3.4.4-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (151 kB)
+Downloading urllib3-2.5.0-py3-none-any.whl (129 kB)
+Downloading certifi-2025.11.12-py3-none-any.whl (159 kB)
+Downloading rfc3339_validator-0.1.4-py2.py3-none-any.whl (3.5 kB)
+Downloading rich_argparse-1.7.2-py3-none-any.whl (25 kB)
+Downloading rpds_py-0.30.0-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (390 kB)
+Downloading setproctitle-1.3.7-cp311-cp311-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (32 kB)
+Downloading SQLAlchemy_JSONField-1.0.2-py3-none-any.whl (10 kB)
+Downloading starlette-0.50.0-py3-none-any.whl (74 kB)
+Downloading anyio-4.12.0-py3-none-any.whl (113 kB)
+Downloading tabulate-0.9.0-py3-none-any.whl (35 kB)
+Downloading tenacity-9.1.2-py3-none-any.whl (28 kB)
+Downloading termcolor-3.2.0-py3-none-any.whl (7.7 kB)
+Downloading text_unidecode-1.3-py2.py3-none-any.whl (78 kB)
+Downloading typing_extensions-4.15.0-py3-none-any.whl (44 kB)
+Downloading tzdata-2025.2-py2.py3-none-any.whl (347 kB)
+Downloading werkzeug-3.1.4-py3-none-any.whl (224 kB)
+Downloading apache_airflow_providers_common_sql-1.15.0-py3-none-any.whl (46 kB)
+Downloading more_itertools-10.8.0-py3-none-any.whl (69 kB)
+Downloading sqlparse-0.5.4-py3-none-any.whl (45 kB)
+Downloading apache_airflow_providers_ftp-3.10.1-py3-none-any.whl (19 kB)
+Downloading apache_airflow_providers_http-4.12.0-py3-none-any.whl (27 kB)
+Downloading aiohttp-3.13.2-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (1.7 MB)
+[?25l   [90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m0.0/1.7 MB[0m [31m?[0m eta [36m-:--:--[0m
+[2K   [91m━━━━━━━━━━━━[0m[90m╺[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m0.5/1.7 MB[0m [31m3.5 MB/s[0m eta [36m0:00:01[0m
+[2K   [91m━━━━━━━━━━━━━━━━━━━━━━━━[0m[90m╺[0m[90m━━━━━━━━━━━━━━━[0m [32m1.0/1.7 MB[0m [31m3.4 MB/s[0m eta [36m0:00:01[0m
+[2K   [91m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m[90m╺[0m[90m━━━[0m [32m1.6/1.7 MB[0m [31m2.8 MB/s[0m eta [36m0:00:01[0m
+[2K   [90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m1.7/1.7 MB[0m [31m2.3 MB/s[0m  [33m0:00:00[0m
+[?25hDownloading multidict-6.7.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (246 kB)
+Downloading yarl-1.22.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (365 kB)
+Downloading aiohappyeyeballs-2.6.1-py3-none-any.whl (15 kB)
+Downloading aiosignal-1.4.0-py3-none-any.whl (7.5 kB)
+Downloading frozenlist-1.8.0-cp311-cp311-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (231 kB)
+Downloading propcache-0.4.1-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (210 kB)
+Downloading apache_airflow_providers_imap-3.6.1-py3-none-any.whl (17 kB)
+Downloading apache_airflow_providers_sqlite-3.8.2-py3-none-any.whl (13 kB)
+Downloading blinker-1.9.0-py3-none-any.whl (8.5 kB)
+Downloading lazy_object_proxy-1.12.0-cp311-cp311-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (68 kB)
+Downloading mako-1.3.10-py3-none-any.whl (78 kB)
+Downloading opentelemetry_exporter_otlp-1.15.0-py3-none-any.whl (7.0 kB)
+Downloading opentelemetry_exporter_otlp_proto_grpc-1.15.0-py3-none-any.whl (20 kB)
+Downloading opentelemetry_exporter_otlp_proto_http-1.15.0-py3-none-any.whl (21 kB)
+Downloading opentelemetry_sdk-1.15.0-py3-none-any.whl (94 kB)
+Downloading opentelemetry_proto-1.15.0-py3-none-any.whl (52 kB)
+Downloading opentelemetry_semantic_conventions-0.36b0-py3-none-any.whl (26 kB)
+Downloading backoff-2.2.1-py3-none-any.whl (15 kB)
+Downloading googleapis_common_protos-1.72.0-py3-none-any.whl (297 kB)
+Downloading grpcio-1.76.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (6.6 MB)
+[?25l   [90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m0.0/6.6 MB[0m [31m?[0m eta [36m-:--:--[0m
+[2K   [90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m0.0/6.6 MB[0m [31m?[0m eta [36m-:--:--[0m
+[2K   [91m━━━━━━━[0m[91m╸[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m1.3/6.6 MB[0m [31m6.8 MB/s[0m eta [36m0:00:01[0m
+[2K   [91m━━━━━━━━━━━[0m[90m╺[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m1.8/6.6 MB[0m [31m4.4 MB/s[0m eta [36m0:00:02[0m
+[2K   [91m━━━━━━━━━━━━[0m[91m╸[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m2.1/6.6 MB[0m [31m4.7 MB/s[0m eta [36m0:00:01[0m
+[2K   [91m━━━━━━━━━━━━━━[0m[90m╺[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m2.4/6.6 MB[0m [31m2.7 MB/s[0m eta [36m0:00:02[0m
+[2K   [91m━━━━━━━━━━━━━━━━━━━━━━[0m[90m╺[0m[90m━━━━━━━━━━━━━━━━━[0m [32m3.7/6.6 MB[0m [31m3.5 MB/s[0m eta [36m0:00:01[0m
+[2K   [91m━━━━━━━━━━━━━━━━━━━━━━━━━━[0m[91m╸[0m[90m━━━━━━━━━━━━━[0m [32m4.5/6.6 MB[0m [31m3.6 MB/s[0m eta [36m0:00:01[0m
+[2K   [91m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m[90m╺[0m[90m━━━━━━[0m [32m5.5/6.6 MB[0m [31m3.8 MB/s[0m eta [36m0:00:01[0m
+[2K   [91m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m[90m╺[0m[90m━━━[0m [32m6.0/6.6 MB[0m [31m3.9 MB/s[0m eta [36m0:00:01[0m
+[2K   [91m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m[91m╸[0m [32m6.6/6.6 MB[0m [31m3.7 MB/s[0m eta [36m0:00:01[0m
+[2K   [90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m6.6/6.6 MB[0m [31m3.3 MB/s[0m  [33m0:00:02[0m
+[?25hDownloading protobuf-4.25.8-cp37-abi3-manylinux2014_x86_64.whl (294 kB)
+Downloading pycparser-2.23-py3-none-any.whl (118 kB)
+Downloading requests_toolbelt-1.0.0-py2.py3-none-any.whl (54 kB)
+Downloading uc_micro_py-1.0.3-py3-none-any.whl (6.2 kB)
+Building wheels for collected packages: apache-airflow, python-nvd3, unicodecsv
+  Building wheel for apache-airflow (pyproject.toml) ... [?25l- \ | / - \ | / - \ | / - \ done
+[?25h  Created wheel for apache-airflow: filename=apache_airflow-2.7.0-py3-none-any.whl size=2692592 sha256=a424bef0864bf70f9e9eba84261d3c303ab0eda6b848176ba360c5bf20e5666b
+  Stored in directory: /tmp/pip-ephem-wheel-cache-ovj5of3p/wheels/ca/7e/84/e5581fb317be01fbff57e539f401d1ee139dbcfec6b5791c2e
+  Building wheel for python-nvd3 (pyproject.toml) ... [?25l- \ done
+[?25h  Created wheel for python-nvd3: filename=python_nvd3-0.16.0-py3-none-any.whl size=37651 sha256=7d98ea5a676585a6683dbf2649126cfd23738af205bb541a71f70bd302f8398c
+  Stored in directory: /root/.cache/pip/wheels/88/26/3f/0695457939a8025f982dca665d4d7018468ccf8ccf43e45c5f
+  Building wheel for unicodecsv (pyproject.toml) ... [?25l- done
+[?25h  Created wheel for unicodecsv: filename=unicodecsv-0.14.1-py3-none-any.whl size=10789 sha256=f01819fe7049902ab962171bae02f2f0fb09d165efc9a55edb7d2a1aa9bea81f
+  Stored in directory: /root/.cache/pip/wheels/ec/03/6f/d2e0162d94c0d451556fa43dd4d5531457245c34a36b41ef4a
+Successfully built apache-airflow python-nvd3 unicodecsv
+Installing collected packages: unicodecsv, text-unidecode, pytz, lockfile, colorlog, wrapt, urllib3, uc-micro-py, tzdata, typing-extensions, termcolor, tenacity, tabulate, sqlparse, setproctitle, rpds-py, rfc3339-validator, PyYAML, python-slugify, python-multipart, python-dateutil, python-daemon, pyjwt, pygments, pycparser, psutil, protobuf, propcache, prison, pluggy, pathspec, ordered-set, opentelemetry-semantic-conventions, multidict, msgspec, more-itertools, mdurl, marshmallow, markupsafe, markdown, lazy-object-proxy, itsdangerous, inflection, idna, h11, gunicorn, greenlet, graphviz, google-re2, frozenlist, dnspython, dill, configupdater, colorama, click, charset_normalizer, certifi, cachelib, blinker, backoff, Babel, attrs, asgiref, argcomplete, apispec, aiohappyeyeballs, a2wsgi, yarl, WTForms, werkzeug, sqlalchemy, requests, referencing, pydantic, pendulum, opentelemetry-proto, marshmallow-oneofschema, markdown-it-py, Mako, linkify-it-py, jinja2, httpcore, grpcio, googleapis-common-protos, email-validator, deprecated, croniter, cron-descriptor, cffi, cattrs, anyio, aiosignal, starlette, sqlalchemy-utils, sqlalchemy-jsonfield, rich, requests_toolbelt, python-nvd3, opentelemetry-api, mdit-py-plugins, marshmallow-sqlalchemy, limits, jsonschema-specifications, httpx, flask, cryptography, alembic, aiohttp, rich-argparse, opentelemetry-sdk, jsonschema, flask-wtf, Flask-SQLAlchemy, flask-session, flask-login, Flask-Limiter, Flask-JWT-Extended, flask-caching, Flask-Babel, opentelemetry-exporter-otlp-proto-http, opentelemetry-exporter-otlp-proto-grpc, flask-appbuilder, connexion, opentelemetry-exporter-otlp, apache-airflow-providers-common-sql, apache-airflow-providers-sqlite, apache-airflow-providers-imap, apache-airflow-providers-http, apache-airflow-providers-ftp, apache-airflow
+[?25l
+[2K   [90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m  1/130[0m [text-unidecode]
+[2K   [91m╸[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m  2/130[0m [pytz]
+[2K   [91m╸[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m  3/130[0m [lockfile]
+[2K   [91m╸[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m  3/130[0m [lockfile]
+[2K   [91m╸[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m  3/130[0m [lockfile]
+[2K   [91m╸[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m  3/130[0m [lockfile]
+[2K   [91m╸[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m  3/130[0m [lockfile]
+[2K  Attempting uninstall: colorlog
+   [91m╸[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m  3/130[0m [lockfile]
+[2K    Found existing installation: colorlog 6.10.1
+   [91m╸[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m  3/130[0m [lockfile]
+[2K    Uninstalling colorlog-6.10.1:
+   [91m╸[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m  3/130[0m [lockfile]
+[2K      Successfully uninstalled colorlog-6.10.1
+   [91m╸[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m  3/130[0m [lockfile]
+[2K   [91m━[0m[90m╺[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m  4/130[0m [colorlog]
+[2K   [91m━[0m[91m╸[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m  5/130[0m [wrapt]
+[2K   [91m━[0m[91m╸[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m  6/130[0m [urllib3]
+[2K   [91m━━[0m[90m╺[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m  8/130[0m [tzdata]
+[2K   [91m━━[0m[91m╸[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m  9/130[0m [typing-extensions]
+[2K   [91m━━━[0m[90m╺[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m 10/130[0m [termcolor]
+[2K   [91m━━━[0m[91m╸[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m 12/130[0m [tabulate]
+[2K   [91m━━━━[0m[90m╺[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m 13/130[0m [sqlparse]
+[2K   [91m━━━━[0m[91m╸[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m 15/130[0m [rpds-py]
+[2K   [91m━━━━━[0m[90m╺[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m 17/130[0m [PyYAML]
+[2K   [91m━━━━━[0m[91m╸[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m 18/130[0m [python-slugify]
+[2K   [91m━━━━━━[0m[90m╺[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m 20/130[0m [python-dateutil]
+[2K   [91m━━━━━━[0m[90m╺[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m 21/130[0m [python-daemon]
+[2K   [91m━━━━━━[0m[91m╸[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m 22/130[0m [pyjwt]
+[2K   [91m━━━━━━━[0m[90m╺[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m 23/130[0m [pygments]
+[2K   [91m━━━━━━━[0m[90m╺[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m 23/130[0m [pygments]
+[2K   [91m━━━━━━━[0m[90m╺[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m 23/130[0m [pygments]
+[2K   [91m━━━━━━━[0m[90m╺[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m 24/130[0m [pycparser]
+[2K   [91m━━━━━━━[0m[90m╺[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m 24/130[0m [pycparser]
+[2K   [91m━━━━━━━[0m[91m╸[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m 25/130[0m [psutil]
+[2K   [91m━━━━━━━━[0m[90m╺[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m 26/130[0m [protobuf]
+[2K   [91m━━━━━━━━[0m[90m╺[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m 27/130[0m [propcache]
+[2K   [91m━━━━━━━━[0m[91m╸[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m 29/130[0m [pluggy]
+[2K   [91m━━━━━━━━━[0m[90m╺[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m 30/130[0m [pathspec]
+[2K   [91m━━━━━━━[0m[91m╸[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m 32/130[0m [opentelemetry-semantic-conventions]
+[2K   [91m━━━━━━━━━━[0m[90m╺[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m 33/130[0m [multidict]
+[2K   [91m━━━━━━━━━━[0m[91m╸[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m 35/130[0m [more-itertools]
+[2K   [91m━━━━━━━━━━━[0m[90m╺[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m 36/130[0m [mdurl]
+[2K   [91m━━━━━━━━━━━[0m[90m╺[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m 37/130[0m [marshmallow]
+[2K   [91m━━━━━━━━━━━━[0m[90m╺[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m 39/130[0m [markdown]
+[2K   [91m━━━━━━━━━━━━[0m[90m╺[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m 40/130[0m [lazy-object-proxy]
+[2K   [91m━━━━━━━━━━━━[0m[91m╸[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m 42/130[0m [inflection]
+[2K   [91m━━━━━━━━━━━━━[0m[90m╺[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m 43/130[0m [idna]
+[2K   [91m━━━━━━━━━━━━━[0m[91m╸[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m 44/130[0m [h11]
+[2K   [91m━━━━━━━━━━━━━[0m[91m╸[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m 45/130[0m [gunicorn]
+[2K   [91m━━━━━━━━━━━━━━[0m[90m╺[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m 46/130[0m [greenlet]
+[2K   [91m━━━━━━━━━━━━━━[0m[90m╺[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m 47/130[0m [graphviz]
+[2K   [91m━━━━━━━━━━━━━━━[0m[90m╺[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m 49/130[0m [frozenlist]
+[2K   [91m━━━━━━━━━━━━━━━[0m[90m╺[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m 50/130[0m [dnspython]
+[2K   [91m━━━━━━━━━━━━━━━[0m[90m╺[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m 50/130[0m [dnspython]
+[2K   [91m━━━━━━━━━━━━━━━[0m[91m╸[0m[90m━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m 51/130[0m [dill]
+[2K   [91m━━━━━━━━━━━━━━━━[0m[90m╺[0m[90m━━━━━━━━━━━━━━━━━━━━━━━[0m [32m 53/130[0m [colorama]
+[2K   [91m━━━━━━━━━━━━━━━━[0m[91m╸[0m[90m━━━━━━━━━━━━━━━━━━━━━━━[0m [32m 54/130[0m [click]
+[2K   [91m━━━━━━━━━━━━━━━━[0m[91m╸[0m[90m━━━━━━━━━━━━━━━━━━━━━━━[0m [32m 55/130[0m [charset_normalizer]
+[2K   [91m━━━━━━━━━━━━━━━━━[0m[91m╸[0m[90m━━━━━━━━━━━━━━━━━━━━━━[0m [32m 57/130[0m [cachelib]
+[2K   [91m━━━━━━━━━━━━━━━━━[0m[91m╸[0m[90m━━━━━━━━━━━━━━━━━━━━━━[0m [32m 58/130[0m [blinker]
+[2K   [91m━━━━━━━━━━━━━━━━━━[0m[90m╺[0m[90m━━━━━━━━━━━━━━━━━━━━━[0m [32m 60/130[0m [Babel]
+[2K   [91m━━━━━━━━━━━━━━━━━━[0m[90m╺[0m[90m━━━━━━━━━━━━━━━━━━━━━[0m [32m 60/130[0m [Babel]
+[2K   [91m━━━━━━━━━━━━━━━━━━[0m[90m╺[0m[90m━━━━━━━━━━━━━━━━━━━━━[0m [32m 60/130[0m [Babel]
+[2K   [91m━━━━━━━━━━━━━━━━━━[0m[91m╸[0m[90m━━━━━━━━━━━━━━━━━━━━━[0m [32m 61/130[0m [attrs]
+[2K   [91m━━━━━━━━━━━━━━━━━━━[0m[90m╺[0m[90m━━━━━━━━━━━━━━━━━━━━[0m [32m 63/130[0m [argcomplete]
+[2K   [91m━━━━━━━━━━━━━━━━━━━[0m[91m╸[0m[90m━━━━━━━━━━━━━━━━━━━━[0m [32m 64/130[0m [apispec]
+[2K   [91m━━━━━━━━━━━━━━━━━━━━[0m[90m╺[0m[90m━━━━━━━━━━━━━━━━━━━[0m [32m 65/130[0m [aiohappyeyeballs]
+[2K   [91m━━━━━━━━━━━━━━━━━━━━[0m[91m╸[0m[90m━━━━━━━━━━━━━━━━━━━[0m [32m 67/130[0m [yarl]
+[2K   [91m━━━━━━━━━━━━━━━━━━━━[0m[91m╸[0m[90m━━━━━━━━━━━━━━━━━━━[0m [32m 68/130[0m [WTForms]
+[2K   [91m━━━━━━━━━━━━━━━━━━━━━[0m[90m╺[0m[90m━━━━━━━━━━━━━━━━━━[0m [32m 69/130[0m [werkzeug]
+[2K   [91m━━━━━━━━━━━━━━━━━━━━━[0m[91m╸[0m[90m━━━━━━━━━━━━━━━━━━[0m [32m 70/130[0m [sqlalchemy]
+[2K   [91m━━━━━━━━━━━━━━━━━━━━━[0m[91m╸[0m[90m━━━━━━━━━━━━━━━━━━[0m [32m 70/130[0m [sqlalchemy]
+[2K   [91m━━━━━━━━━━━━━━━━━━━━━[0m[91m╸[0m[90m━━━━━━━━━━━━━━━━━━[0m [32m 70/130[0m [sqlalchemy]
+[2K   [91m━━━━━━━━━━━━━━━━━━━━━[0m[91m╸[0m[90m━━━━━━━━━━━━━━━━━━[0m [32m 70/130[0m [sqlalchemy]
+[2K   [91m━━━━━━━━━━━━━━━━━━━━━[0m[91m╸[0m[90m━━━━━━━━━━━━━━━━━━[0m [32m 70/130[0m [sqlalchemy]
+[2K   [91m━━━━━━━━━━━━━━━━━━━━━[0m[91m╸[0m[90m━━━━━━━━━━━━━━━━━━[0m [32m 71/130[0m [requests]
+[2K   [91m━━━━━━━━━━━━━━━━━━━━━━[0m[90m╺[0m[90m━━━━━━━━━━━━━━━━━[0m [32m 73/130[0m [pydantic]
+[2K   [91m━━━━━━━━━━━━━━━━━━━━━━[0m[90m╺[0m[90m━━━━━━━━━━━━━━━━━[0m [32m 73/130[0m [pydantic]
+[2K   [91m━━━━━━━━━━━━━━━━━━━━━━[0m[91m╸[0m[90m━━━━━━━━━━━━━━━━━[0m [32m 74/130[0m [pendulum]
+[2K   [91m━━━━━━━━━━━━━━━━━━━━━━━[0m[90m╺[0m[90m━━━━━━━━━━━━━━━━[0m [32m 75/130[0m [opentelemetry-proto]
+[2K   [91m━━━━━━━━━━━━━━━━━━━━━━━[0m[90m╺[0m[90m━━━━━━━━━━━━━━━━[0m [32m 76/130[0m [marshmallow-oneofschema]
+[2K   [91m━━━━━━━━━━━━━━━━━━━━━━━[0m[91m╸[0m[90m━━━━━━━━━━━━━━━━[0m [32m 77/130[0m [markdown-it-py]
+[2K   [91m━━━━━━━━━━━━━━━━━━━━━━━━[0m[90m╺[0m[90m━━━━━━━━━━━━━━━[0m [32m 78/130[0m [Mako]
+[2K   [91m━━━━━━━━━━━━━━━━━━━━━━━━[0m[90m╺[0m[90m━━━━━━━━━━━━━━━[0m [32m 79/130[0m [linkify-it-py]
+[2K   [91m━━━━━━━━━━━━━━━━━━━━━━━━[0m[91m╸[0m[90m━━━━━━━━━━━━━━━[0m [32m 80/130[0m [jinja2]
+[2K   [91m━━━━━━━━━━━━━━━━━━━━━━━━[0m[91m╸[0m[90m━━━━━━━━━━━━━━━[0m [32m 81/130[0m [httpcore]
+[2K   [91m━━━━━━━━━━━━━━━━━━━━━━━━━[0m[90m╺[0m[90m━━━━━━━━━━━━━━[0m [32m 82/130[0m [grpcio]
+[2K   [91m━━━━━━━━━━━━━━━━━━━━━━━━━[0m[91m╸[0m[90m━━━━━━━━━━━━━━[0m [32m 83/130[0m [googleapis-common-protos]
+[2K   [91m━━━━━━━━━━━━━━━━━━━━━━━━━[0m[91m╸[0m[90m━━━━━━━━━━━━━━[0m [32m 84/130[0m [email-validator]
+[2K   [91m━━━━━━━━━━━━━━━━━━━━━━━━━━[0m[90m╺[0m[90m━━━━━━━━━━━━━[0m [32m 86/130[0m [croniter]
+[2K   [91m━━━━━━━━━━━━━━━━━━━━━━━━━━[0m[91m╸[0m[90m━━━━━━━━━━━━━[0m [32m 87/130[0m [cron-descriptor]
+[2K   [91m━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m[90m╺[0m[90m━━━━━━━━━━━━[0m [32m 88/130[0m [cffi]
+[2K   [91m━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m[90m╺[0m[90m━━━━━━━━━━━━[0m [32m 89/130[0m [cattrs]
+[2K   [91m━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m[91m╸[0m[90m━━━━━━━━━━━━[0m [32m 90/130[0m [anyio]
+[2K   [91m━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m[90m╺[0m[90m━━━━━━━━━━━[0m [32m 92/130[0m [starlette]
+[2K   [91m━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m[91m╸[0m[90m━━━━━━━━━━━[0m [32m 93/130[0m [sqlalchemy-utils]
+[2K   [91m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m[90m╺[0m[90m━━━━━━━━━━[0m [32m 95/130[0m [rich]
+[2K   [91m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m[90m╺[0m[90m━━━━━━━━━━[0m [32m 95/130[0m [rich]
+[2K   [91m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m[91m╸[0m[90m━━━━━━━━━━[0m [32m 97/130[0m [python-nvd3]
+[2K   [91m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m[91m╸[0m[90m━━━━━━━━━━[0m [32m 97/130[0m [python-nvd3]
+[2K   [91m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m[90m╺[0m[90m━━━━━━━━━[0m [32m 98/130[0m [opentelemetry-api]
+[2K   [91m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m[90m╺[0m[90m━━━━━━━━━[0m [32m 99/130[0m [mdit-py-plugins]
+[2K   [91m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m[90m╺[0m[90m━━━━━━━━[0m [32m101/130[0m [limits]
+[2K   [91m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m[90m╺[0m[90m━━━━━━━━[0m [32m102/130[0m [jsonschema-specifications]
+[2K   [91m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m[90m╺[0m[90m━━━━━━━[0m [32m104/130[0m [flask]
+[2K   [91m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m[90m╺[0m[90m━━━━━━━[0m [32m105/130[0m [cryptography]
+[2K   [91m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m[90m╺[0m[90m━━━━━━━[0m [32m105/130[0m [cryptography]
+[2K   [91m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m[91m╸[0m[90m━━━━━━━[0m [32m106/130[0m [alembic]
+[2K   [91m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m[91m╸[0m[90m━━━━━━━[0m [32m107/130[0m [aiohttp]
+[2K   [91m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m[91m╸[0m[90m━━━━━━━[0m [32m107/130[0m [aiohttp]
+[2K   [91m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m[90m╺[0m[90m━━━━━━[0m [32m108/130[0m [rich-argparse]
+[2K   [91m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m[91m╸[0m[90m━━━━━━[0m [32m110/130[0m [jsonschema]
+[2K   [91m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m[90m╺[0m[90m━━━━━[0m [32m111/130[0m [flask-wtf]
+[2K   [91m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m[91m╸[0m[90m━━━━━[0m [32m113/130[0m [flask-session]
+[2K   [91m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m[90m╺[0m[90m━━━━[0m [32m114/130[0m [flask-login]
+[2K   [91m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m[91m╸[0m[90m━━━━[0m [32m116/130[0m [Flask-JWT-Extended]
+[2K   [91m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m[90m╺[0m[90m━━━[0m [32m118/130[0m [Flask-Babel]
+[2K   [91m━━━━━━━━━━━━━━━━━━━━━━━━━[0m[91m╸[0m[90m━━[0m [32m119/130[0m [opentelemetry-exporter-otlp-proto-http]
+[2K   [91m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m[90m╺[0m[90m━━[0m [32m121/130[0m [flask-appbuilder]
+[2K   [91m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m[90m╺[0m[90m━━[0m [32m121/130[0m [flask-appbuilder]
+[2K   [91m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m[91m╸[0m[90m━━[0m [32m122/130[0m [connexion]
+[2K   [91m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m[91m╸[0m[90m━━[0m [32m123/130[0m [opentelemetry-exporter-otlp]
+[2K   [91m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m[91m╸[0m[90m━[0m [32m124/130[0m [apache-airflow-providers-common-sql]
+[2K   [91m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m[91m╸[0m[90m━[0m [32m125/130[0m [apache-airflow-providers-sqlite]
+[2K   [91m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m[90m╺[0m [32m127/130[0m [apache-airflow-providers-http]
+[2K   [91m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m[90m╺[0m [32m128/130[0m [apache-airflow-providers-ftp]
+[2K   [91m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m[91m╸[0m [32m129/130[0m [apache-airflow]
+[2K   [91m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m[91m╸[0m [32m129/130[0m [apache-airflow]
+[2K   [91m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m[91m╸[0m [32m129/130[0m [apache-airflow]
+[2K   [91m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m[91m╸[0m [32m129/130[0m [apache-airflow]
+[2K   [91m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m[91m╸[0m [32m129/130[0m [apache-airflow]
+[2K   [90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m130/130[0m [apache-airflow]
+[?25h
+[1A[2KSuccessfully installed Babel-2.17.0 Flask-Babel-2.0.0 Flask-JWT-Extended-4.7.1 Flask-Limiter-3.12 Flask-SQLAlchemy-2.5.1 Mako-1.3.10 PyYAML-6.0.3 WTForms-3.2.1 a2wsgi-1.10.10 aiohappyeyeballs-2.6.1 aiohttp-3.13.2 aiosignal-1.4.0 alembic-1.17.2 anyio-4.12.0 apache-airflow-2.7.0 apache-airflow-providers-common-sql-1.15.0 apache-airflow-providers-ftp-3.10.1 apache-airflow-providers-http-4.12.0 apache-airflow-providers-imap-3.6.1 apache-airflow-providers-sqlite-3.8.2 apispec-6.9.0 argcomplete-3.6.3 asgiref-3.11.0 attrs-25.4.0 backoff-2.2.1 blinker-1.9.0 cachelib-0.13.0 cattrs-25.3.0 certifi-2025.11.12 cffi-2.0.0 charset_normalizer-3.4.4 click-8.3.1 colorama-0.4.6 colorlog-4.8.0 configupdater-3.2 connexion-3.3.0 cron-descriptor-2.0.6 croniter-6.0.0 cryptography-46.0.3 deprecated-1.3.1 dill-0.4.0 dnspython-2.8.0 email-validator-1.3.1 flask-2.2.5 flask-appbuilder-4.3.3 flask-caching-2.3.1 flask-login-0.6.3 flask-session-0.8.0 flask-wtf-1.2.2 frozenlist-1.8.0 google-re2-1.1.20251105 googleapis-common-protos-1.72.0 graphviz-0.21 greenlet-3.2.4 grpcio-1.76.0 gunicorn-23.0.0 h11-0.16.0 httpcore-1.0.9 httpx-0.28.1 idna-3.11 inflection-0.5.1 itsdangerous-2.2.0 jinja2-3.1.6 jsonschema-4.25.1 jsonschema-specifications-2025.9.1 lazy-object-proxy-1.12.0 limits-5.6.0 linkify-it-py-2.0.3 lockfile-0.12.2 markdown-3.10 markdown-it-py-4.0.0 markupsafe-3.0.3 marshmallow-3.26.1 marshmallow-oneofschema-3.2.0 marshmallow-sqlalchemy-0.26.1 mdit-py-plugins-0.5.0 mdurl-0.1.2 more-itertools-10.8.0 msgspec-0.20.0 multidict-6.7.0 opentelemetry-api-1.15.0 opentelemetry-exporter-otlp-1.15.0 opentelemetry-exporter-otlp-proto-grpc-1.15.0 opentelemetry-exporter-otlp-proto-http-1.15.0 opentelemetry-proto-1.15.0 opentelemetry-sdk-1.15.0 opentelemetry-semantic-conventions-0.36b0 ordered-set-4.1.0 pathspec-0.12.1 pendulum-3.1.0 pluggy-1.6.0 prison-0.2.1 propcache-0.4.1 protobuf-4.25.8 psutil-7.1.3 pycparser-2.23 pydantic-1.10.24 pygments-2.19.2 pyjwt-2.10.1 python-daemon-3.1.2 python-dateutil-2.9.0.post0 python-multipart-0.0.20 python-nvd3-0.16.0 python-slugify-8.0.4 pytz-2025.2 referencing-0.37.0 requests-2.32.5 requests_toolbelt-1.0.0 rfc3339-validator-0.1.4 rich-13.9.4 rich-argparse-1.7.2 rpds-py-0.30.0 setproctitle-1.3.7 sqlalchemy-1.4.54 sqlalchemy-jsonfield-1.0.2 sqlalchemy-utils-0.42.0 sqlparse-0.5.4 starlette-0.50.0 tabulate-0.9.0 tenacity-9.1.2 termcolor-3.2.0 text-unidecode-1.3 typing-extensions-4.15.0 tzdata-2025.2 uc-micro-py-1.0.3 unicodecsv-0.14.1 urllib3-2.5.0 werkzeug-3.1.4 wrapt-2.0.1 yarl-1.22.0
+[33mWARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.[0m[33m
+[0m+ cd /src
++ compile_python_fuzzer dag_fuzz.py --add-data airflow:airflow --add-data airflow/airflow:airflow --add-data /usr/local/lib/python3.8/site-packages/cron_descriptor:cron_descriptor
++ fuzzer_path=dag_fuzz.py
++ shift 1
+++ basename -s .py dag_fuzz.py
++ fuzzer_basename=dag_fuzz
++ fuzzer_package=dag_fuzz.pkg
++ PYFUZZ_WORKPATH=/src/pyfuzzworkdir/
++ FUZZ_WORKPATH=/src/pyfuzzworkdir//dag_fuzz
++ [[ address = *introspector* ]]
++ [[ address = *coverage* ]]
++ [[ 0 != \0 ]]
++ rm -rf /src/pyfuzzworkdir/
++ mkdir /src/pyfuzzworkdir/ /src/pyfuzzworkdir//dag_fuzz
++ pyinstaller --distpath /out --workpath=/src/pyfuzzworkdir//dag_fuzz --onefile --name dag_fuzz.pkg --add-data airflow:airflow --add-data airflow/airflow:airflow --add-data /usr/local/lib/python3.8/site-packages/cron_descriptor:cron_descriptor dag_fuzz.py
+240 INFO: PyInstaller: 6.10.0, contrib hooks: 2025.10
+241 INFO: Python: 3.11.13
+248 INFO: Platform: Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.31
+248 INFO: Python environment: /usr/local
+248 INFO: wrote /src/dag_fuzz.pkg.spec
+269 INFO: Module search paths (PYTHONPATH):
+['/usr/local/lib/python311.zip',
+ '/usr/local/lib/python3.11',
+ '/usr/local/lib/python3.11/lib-dynload',
+ '/usr/local/lib/python3.11/site-packages',
+ '/src']
+469 INFO: Appending 'datas' from .spec
+Unable to find '/usr/local/lib/python3.8/site-packages/cron_descriptor' when adding binary and data files.
+ERROR:__main__:Building fuzzers failed.
