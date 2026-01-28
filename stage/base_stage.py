@@ -65,8 +65,11 @@ class BaseStage(ABC):
   def _execute_agent(self, agent: BaseAgent,
                      result_history: list[Result]) -> Result:
     if self.args.cloud_experiment_name:
-      return self._execute_agent_cloud(agent, result_history)
-    return agent.execute(result_history)
+      result = self._execute_agent_cloud(agent, result_history)
+    else:
+      result = agent.execute(result_history)
+    self.logger.write_build_info_entry(result)
+    return result
 
   @abstractmethod
   def execute(self, result_history: list[Result], cycle_count: int) -> Result:

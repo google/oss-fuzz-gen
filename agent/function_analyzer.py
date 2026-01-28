@@ -99,11 +99,10 @@ class FunctionAnalyzer(base_agent.ADKBaseAgent):
     WorkDirs(self.args.work_dirs.base, keep=True)
     logger.info('Executing %s', self.name, trial=self.trial)
 
-    result = resultslib.Result(
-        benchmark=self.benchmark,
-        trial=self.trial,
-        work_dirs=self.args.work_dirs,
-    )
+    result = resultslib.Result(benchmark=self.benchmark,
+                               trial=self.trial,
+                               work_dirs=self.args.work_dirs,
+                               author=self)
 
     # Initialize the ProjectContainerTool for local file search
     self.inspect_tool = container_tool.ProjectContainerTool(self.benchmark)

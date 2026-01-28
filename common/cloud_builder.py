@@ -599,6 +599,7 @@ class CloudBuilder:
                       work_dirs=last_result.work_dirs,
                       author=agent)
     result.chat_history = {agent.name: cloud_build_log}
+    result.build_id = build_id
 
     # Step 6: Update work directory with any new files created by the agent.
     new_experiment_url = f'gs://{self.bucket_name}/{new_experiment_filename}'
