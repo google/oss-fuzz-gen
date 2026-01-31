@@ -44,11 +44,27 @@ class ContextRetriever:
   def __init__(self, benchmark: benchmarklib.Benchmark):
     """Constructor."""
     self._benchmark = benchmark
+    self._real_function_signature = None
+
+  def _get_real_function_signature(self) -> str:
+    """Gets the function signature from FI or falls back to benchmark."""
+    if self._real_function_signature:
+      return self._real_function_signature
+
+    project = self._benchmark.project
+    func_name = self._benchmark.function_name
+    sig = introspector.query_introspector_function_signature(project, func_name)
+    if sig:
+      self._real_function_signature = sig
+      return sig
+
+    self._real_function_signature = self._benchmark.function_signature
+    return self._real_function_signature
 
   def _get_embeddable_declaration(self) -> str:
     """Retrieves declaration by language.  Attach extern C if needed."""
     lang = self._benchmark.language.lower()
-    sig = self._benchmark.function_signature + ';'
+    sig = self._get_real_function_signature() + ';'
 
     if self._benchmark.needs_extern:
       return 'extern "C" ' + sig
@@ -156,7 +172,7 @@ class ContextRetriever:
   def _get_function_implementation(self) -> str:
     """Queries FI for the source code of function being fuzzed."""
     project = self._benchmark.project
-    func_sig = self._benchmark.function_signature
+    func_sig = self._get_real_function_signature()
     function_source = introspector.query_introspector_function_source(
         project, func_sig)
 
@@ -170,7 +186,7 @@ class ContextRetriever:
   def _get_xrefs_to_function(self) -> list[str]:
     """Queries FI for function being fuzzed."""
     project = self._benchmark.project
-    func_sig = self._benchmark.function_signature
+    func_sig = self._get_real_function_signature()
     xrefs = introspector.query_introspector_cross_references(project, func_sig)
 
     if not xrefs:
@@ -339,7 +355,7 @@ class ContextRetriever:
     """Retrieves the header/source file of the function under test."""
     # Step 1: Find a header file from the default API.
     header_file = self._get_header_files_to_include(
-        self._benchmark.function_signature)
+        self._get_real_function_signature())
     if header_file:
       return header_file
 
@@ -347,7 +363,7 @@ class ContextRetriever:
     # TODO: Make this more robust, e.g., when header file and base file do not
     # share the same basename.
     source_file = introspector.query_introspector_source_file_path(
-        self._benchmark.project, self._benchmark.function_signature)
+        self._benchmark.project, self._get_real_function_signature())
     source_file_base, _ = os.path.splitext(os.path.basename(source_file))
     header_list = introspector.query_introspector_header_files(
         self._benchmark.project)
