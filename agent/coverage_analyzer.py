@@ -25,6 +25,7 @@ from llm_toolkit.prompt_builder import CoverageAnalyzerTemplateBuilder
 from llm_toolkit.prompts import Prompt
 from results import AnalysisResult, CoverageResult, Result, RunResult
 from tool.container_tool import ProjectContainerTool
+from tool.coverage_tool import CoverageTool
 
 INVALID_PRMOT_PATH = os.path.join('prompts', 'agent',
                                   'coverage-analyzer-invalid-response.txt')
@@ -48,8 +49,9 @@ class CoverageAnalyzer(BaseAgent):
     function_requirements = self.get_function_requirements()
 
     builder = CoverageAnalyzerTemplateBuilder(self.llm, benchmark, last_result)
+    tool_guides = f'{self.inspect_tool.tutorial()}\n\n{self.coverage_tool.tutorial()}'
     prompt = builder.build(example_pair=[],
-                           tool_guides=self.inspect_tool.tutorial(),
+                           tool_guides=tool_guides,
                            project_dir=self.inspect_tool.project_dir,
                            function_requirements=function_requirements)
     # TODO: A different file name/dir.
@@ -75,6 +77,25 @@ class CoverageAnalyzer(BaseAgent):
 
     return None
 
+  def _container_handle_coverage_request(self, response: str,
+                                         tool: CoverageTool,
+                                         prompt: Prompt) -> Prompt:
+    """Executes coverage tool commands from LLM response."""
+    command = self._parse_tag(response, 'coverage-request')
+    if not command:
+      return prompt
+
+    logger.info('Executing coverage command: %s', command, trial=self.trial)
+    coverage_report = tool.execute(command) or 'No coverage report found.'
+    tool_result = ('<function>'
+                   f'{command}'
+                   '</function>'
+                   '<report>'
+                   f'{coverage_report}'
+                   '</report>')
+    prompt.append(tool_result)
+    return prompt
+
   def _container_tool_reaction(
       self, cur_round: int, response: str, run_result: RunResult,
       coverage_result: CoverageResult) -> Optional[Prompt]:
@@ -82,8 +103,13 @@ class CoverageAnalyzer(BaseAgent):
     del run_result
     prompt = prompt_builder.DefaultTemplateBuilder(self.llm, None).build([])
 
-    prompt = self._container_handle_bash_commands(response, self.inspect_tool,
-                                                  prompt)
+    if self._parse_tags(response, 'bash'):
+      prompt = self._container_handle_bash_commands(response, self.inspect_tool,
+                                                    prompt)
+    elif self._parse_tags(response, 'coverage-request'):
+      prompt = self._container_handle_coverage_request(response,
+                                                       self.coverage_tool,
+                                                       prompt)
     # Only report conclusion when no more bash investigation is required.
     if not prompt.gettext():
       # Then build fuzz target.
@@ -120,6 +146,17 @@ class CoverageAnalyzer(BaseAgent):
           content=last_result.build_script_source,
           file_path=self.inspect_tool.build_script_path)
     self.inspect_tool.compile(extra_commands=' && rm -rf /out/* > /dev/null')
+    logger.info('This is trial %d, container id: %s',
+                last_result.trial,
+                self.inspect_tool.container_id,
+                trial=last_result.trial)
+    textcov_report = self.args.work_dirs.textcov_report(last_result.trial)
+    if not textcov_report or not os.path.exists(textcov_report):
+      logger.error('Textcov report not found at %s',
+                   textcov_report,
+                   trial=last_result.trial)
+
+    self.coverage_tool = CoverageTool(benchmark, textcov_report)
     cur_round = 1
     coverage_result = CoverageResult()
     prompt = self._initial_prompt(result_history)

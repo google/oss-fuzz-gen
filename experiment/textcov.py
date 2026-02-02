@@ -142,6 +142,16 @@ class Function:
 
 
 @dataclasses.dataclass
+class RawFunctionReport:
+  """Represents a function report in a textcov."""
+  name: str = ''
+  lines: list[str] = dataclasses.field(default_factory=list)
+
+  def append_line(self, line: str):
+    self.lines.append(line)
+
+
+@dataclasses.dataclass
 class File:
   """Represents a file in a textcov, only for Python."""
   name: str = ''
@@ -176,6 +186,9 @@ class Textcov:
   # Function name -> Function object.
   # For JVM / C / C++ / Rust
   functions: dict[str, Function] = dataclasses.field(default_factory=dict)
+  # Normalized function name -> extracted coverage reports for function.
+  raw_coverage_report: dict[str, RawFunctionReport] = dataclasses.field(
+      default_factory=dict)
   # File name -> File object.
   # For Python
   files: dict[str, File] = dataclasses.field(default_factory=dict)
@@ -263,6 +276,57 @@ class Textcov:
                                                        hit_count=hit_count)
 
         continue
+    return textcov
+
+  @classmethod
+  def from_file_raw(
+      cls,
+      file_handle,
+      ignore_function_patterns: Optional[List[re.Pattern]] = None) -> Textcov:
+    """Read a textcov from a file handle."""
+    if ignore_function_patterns is None:
+      ignore_function_patterns = []
+
+    textcov = cls()
+    textcov.language = 'c++'
+
+    current_function_name: str = ''
+    current_function: RawFunctionReport = RawFunctionReport()
+    try:
+      demangled = demangle(cls._read_file_with_fallback(file_handle))
+    except Exception as e:
+      logger.warning('Decoding failure: %s', e)
+      demangled = ''
+
+    for line in demangled.split('\n'):
+      match = FUNCTION_PATTERN.match(line)
+      if match:
+        # Normalize templates.
+        current_function_name = normalize_template_args(match.group(1))
+        if any(
+            p.match(current_function_name) for p in ignore_function_patterns):
+          # Ignore this function.
+          current_function_name = ''
+          continue
+
+        if current_function_name in textcov.raw_coverage_report:
+          current_function = textcov.raw_coverage_report[current_function_name]
+        else:
+          current_function = RawFunctionReport(name=current_function_name)
+          textcov.raw_coverage_report[current_function_name] = current_function
+
+        continue
+
+      if not current_function_name:
+        # No current functions. This can happen if we're currently in an
+        # ignored function.
+        continue
+
+      match = LINE_PATTERN.match(line)
+      if match:
+        current_function.append_line(line)
+        continue
+
     return textcov
 
   @classmethod
@@ -493,6 +557,18 @@ class Textcov:
         if function.name in self.functions:
           self.functions[function.name].subtract_covered_lines(
               function, self.language)
+
+  def get_coverage_reports(self, function_name: str) -> str:
+    """Get raw coverage report for a function."""
+
+    coverage_reports = []
+
+    for function, report in self.raw_coverage_report.items():
+      if function_name in function:
+        coverage_text = report.name + ':\n' + '\n'.join(report.lines)
+        coverage_reports.append(coverage_text)
+
+    return '\n\n'.join(coverage_reports)
 
   @property
   def covered_lines(self):
