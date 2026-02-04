@@ -165,6 +165,14 @@ __all__ = [
     # Manager errors
     'OSSFuzzManagerError',
 
+    # Historical Data SDK errors
+    'HistoryManagerError',
+    'HistoryStorageError',
+    'HistoryRetrievalError',
+    'HistoryValidationError',
+    'OSSFuzzSDKError',
+    'OSSFuzzSDKConfigError',
+
     # General/legacy errors
     'SDKError',
     'EnvironmentParametersError',

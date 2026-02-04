@@ -1,0 +1,315 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "created": "2025-01-29",
+    "description": "Sample benchmark definitions for OSS-Fuzz SDK examples",
+    "total_benchmarks": 15
+  },
+  "benchmarks": [
+    {
+      "id": "libpng_decode_001",
+      "project": "libpng",
+      "language": "c++",
+      "function_name": "png_decode_fuzzer",
+      "function_signature": "int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size)",
+      "return_type": "int",
+      "target_path": "/src/libpng/contrib/oss-fuzz/png_decode_fuzzer.cc",
+      "description": "Fuzzer for PNG decoding functionality",
+      "complexity": "medium",
+      "expected_coverage": 75.0,
+      "tags": ["image", "decoder", "libpng"],
+      "priority": "high"
+    },
+    {
+      "id": "libpng_encode_002",
+      "project": "libpng",
+      "language": "c++",
+      "function_name": "png_encode_fuzzer",
+      "function_signature": "int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size)",
+      "return_type": "int",
+      "target_path": "/src/libpng/contrib/oss-fuzz/png_encode_fuzzer.cc",
+      "description": "Fuzzer for PNG encoding functionality",
+      "complexity": "medium",
+      "expected_coverage": 70.0,
+      "tags": ["image", "encoder", "libpng"],
+      "priority": "high"
+    },
+    {
+      "id": "libjpeg_decode_003",
+      "project": "libjpeg",
+      "language": "c++",
+      "function_name": "jpeg_decode_fuzzer",
+      "function_signature": "int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size)",
+      "return_type": "int",
+      "target_path": "/src/libjpeg/fuzz/jpeg_decode_fuzzer.cc",
+      "description": "Fuzzer for JPEG decoding functionality",
+      "complexity": "high",
+      "expected_coverage": 80.0,
+      "tags": ["image", "decoder", "jpeg"],
+      "priority": "high"
+    },
+    {
+      "id": "zlib_inflate_004",
+      "project": "zlib",
+      "language": "c",
+      "function_name": "inflate_fuzzer",
+      "function_signature": "int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size)",
+      "return_type": "int",
+      "target_path": "/src/zlib/contrib/oss-fuzz/inflate_fuzzer.c",
+      "description": "Fuzzer for zlib inflate functionality",
+      "complexity": "low",
+      "expected_coverage": 85.0,
+      "tags": ["compression", "inflate", "zlib"],
+      "priority": "medium"
+    },
+    {
+      "id": "zlib_deflate_005",
+      "project": "zlib",
+      "language": "c",
+      "function_name": "deflate_fuzzer",
+      "function_signature": "int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size)",
+      "return_type": "int",
+      "target_path": "/src/zlib/contrib/oss-fuzz/deflate_fuzzer.c",
+      "description": "Fuzzer for zlib deflate functionality",
+      "complexity": "low",
+      "expected_coverage": 82.0,
+      "tags": ["compression", "deflate", "zlib"],
+      "priority": "medium"
+    },
+    {
+      "id": "openssl_rsa_006",
+      "project": "openssl",
+      "language": "c++",
+      "function_name": "rsa_fuzzer",
+      "function_signature": "int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size)",
+      "return_type": "int",
+      "target_path": "/src/openssl/fuzz/rsa.c",
+      "description": "Fuzzer for OpenSSL RSA functionality",
+      "complexity": "high",
+      "expected_coverage": 65.0,
+      "tags": ["crypto", "rsa", "openssl"],
+      "priority": "critical"
+    },
+    {
+      "id": "openssl_aes_007",
+      "project": "openssl",
+      "language": "c++",
+      "function_name": "aes_fuzzer",
+      "function_signature": "int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size)",
+      "return_type": "int",
+      "target_path": "/src/openssl/fuzz/aes.c",
+      "description": "Fuzzer for OpenSSL AES functionality",
+      "complexity": "medium",
+      "expected_coverage": 78.0,
+      "tags": ["crypto", "aes", "openssl"],
+      "priority": "critical"
+    },
+    {
+      "id": "json_parser_008",
+      "project": "json-c",
+      "language": "c",
+      "function_name": "json_parse_fuzzer",
+      "function_signature": "int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size)",
+      "return_type": "int",
+      "target_path": "/src/json-c/fuzz/json_parse_fuzzer.c",
+      "description": "Fuzzer for JSON parsing functionality",
+      "complexity": "medium",
+      "expected_coverage": 72.0,
+      "tags": ["parser", "json", "text"],
+      "priority": "medium"
+    },
+    {
+      "id": "xml_parser_009",
+      "project": "libxml2",
+      "language": "c",
+      "function_name": "xml_parse_fuzzer",
+      "function_signature": "int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size)",
+      "return_type": "int",
+      "target_path": "/src/libxml2/fuzz/xml_parse_fuzzer.c",
+      "description": "Fuzzer for XML parsing functionality",
+      "complexity": "high",
+      "expected_coverage": 68.0,
+      "tags": ["parser", "xml", "text"],
+      "priority": "high"
+    },
+    {
+      "id": "regex_engine_010",
+      "project": "pcre2",
+      "language": "c",
+      "function_name": "regex_fuzzer",
+      "function_signature": "int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size)",
+      "return_type": "int",
+      "target_path": "/src/pcre2/fuzz/regex_fuzzer.c",
+      "description": "Fuzzer for PCRE2 regex engine",
+      "complexity": "high",
+      "expected_coverage": 60.0,
+      "tags": ["regex", "pattern", "text"],
+      "priority": "medium"
+    },
+    {
+      "id": "sqlite_query_011",
+      "project": "sqlite",
+      "language": "c",
+      "function_name": "sql_query_fuzzer",
+      "function_signature": "int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size)",
+      "return_type": "int",
+      "target_path": "/src/sqlite/fuzz/sql_query_fuzzer.c",
+      "description": "Fuzzer for SQLite query processing",
+      "complexity": "very_high",
+      "expected_coverage": 55.0,
+      "tags": ["database", "sql", "query"],
+      "priority": "high"
+    },
+    {
+      "id": "freetype_font_012",
+      "project": "freetype",
+      "language": "c++",
+      "function_name": "font_fuzzer",
+      "function_signature": "int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size)",
+      "return_type": "int",
+      "target_path": "/src/freetype/fuzz/font_fuzzer.cc",
+      "description": "Fuzzer for FreeType font rendering",
+      "complexity": "high",
+      "expected_coverage": 62.0,
+      "tags": ["font", "rendering", "graphics"],
+      "priority": "medium"
+    },
+    {
+      "id": "curl_http_013",
+      "project": "curl",
+      "language": "c",
+      "function_name": "http_fuzzer",
+      "function_signature": "int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size)",
+      "return_type": "int",
+      "target_path": "/src/curl/fuzz/http_fuzzer.c",
+      "description": "Fuzzer for cURL HTTP functionality",
+      "complexity": "high",
+      "expected_coverage": 58.0,
+      "tags": ["http", "network", "protocol"],
+      "priority": "high"
+    },
+    {
+      "id": "protobuf_parse_014",
+      "project": "protobuf",
+      "language": "c++",
+      "function_name": "protobuf_fuzzer",
+      "function_signature": "int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size)",
+      "return_type": "int",
+      "target_path": "/src/protobuf/fuzz/protobuf_fuzzer.cc",
+      "description": "Fuzzer for Protocol Buffers parsing",
+      "complexity": "medium",
+      "expected_coverage": 74.0,
+      "tags": ["serialization", "protobuf", "parser"],
+      "priority": "medium"
+    },
+    {
+      "id": "bzip2_compress_015",
+      "project": "bzip2",
+      "language": "c",
+      "function_name": "bzip2_fuzzer",
+      "function_signature": "int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size)",
+      "return_type": "int",
+      "target_path": "/src/bzip2/fuzz/bzip2_fuzzer.c",
+      "description": "Fuzzer for bzip2 compression",
+      "complexity": "low",
+      "expected_coverage": 88.0,
+      "tags": ["compression", "bzip2"],
+      "priority": "low"
+    }
+  ],
+  "project_summary": {
+    "libpng": {
+      "benchmarks": 2,
+      "languages": ["c++"],
+      "priority": "high",
+      "description": "PNG image processing library"
+    },
+    "libjpeg": {
+      "benchmarks": 1,
+      "languages": ["c++"],
+      "priority": "high",
+      "description": "JPEG image processing library"
+    },
+    "zlib": {
+      "benchmarks": 2,
+      "languages": ["c"],
+      "priority": "medium",
+      "description": "Data compression library"
+    },
+    "openssl": {
+      "benchmarks": 2,
+      "languages": ["c++"],
+      "priority": "critical",
+      "description": "Cryptography and SSL/TLS library"
+    },
+    "json-c": {
+      "benchmarks": 1,
+      "languages": ["c"],
+      "priority": "medium",
+      "description": "JSON parsing library"
+    },
+    "libxml2": {
+      "benchmarks": 1,
+      "languages": ["c"],
+      "priority": "high",
+      "description": "XML parsing library"
+    },
+    "pcre2": {
+      "benchmarks": 1,
+      "languages": ["c"],
+      "priority": "medium",
+      "description": "Regular expression library"
+    },
+    "sqlite": {
+      "benchmarks": 1,
+      "languages": ["c"],
+      "priority": "high",
+      "description": "SQL database engine"
+    },
+    "freetype": {
+      "benchmarks": 1,
+      "languages": ["c++"],
+      "priority": "medium",
+      "description": "Font rendering library"
+    },
+    "curl": {
+      "benchmarks": 1,
+      "languages": ["c"],
+      "priority": "high",
+      "description": "HTTP client library"
+    },
+    "protobuf": {
+      "benchmarks": 1,
+      "languages": ["c++"],
+      "priority": "medium",
+      "description": "Protocol Buffers serialization"
+    },
+    "bzip2": {
+      "benchmarks": 1,
+      "languages": ["c"],
+      "priority": "low",
+      "description": "Data compression utility"
+    }
+  },
+  "statistics": {
+    "total_projects": 12,
+    "total_benchmarks": 15,
+    "languages": {
+      "c": 8,
+      "c++": 7
+    },
+    "priorities": {
+      "critical": 2,
+      "high": 6,
+      "medium": 6,
+      "low": 1
+    },
+    "complexity": {
+      "low": 3,
+      "medium": 6,
+      "high": 5,
+      "very_high": 1
+    },
+    "average_expected_coverage": 70.1
+  }
+}

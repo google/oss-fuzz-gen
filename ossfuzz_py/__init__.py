@@ -19,27 +19,107 @@ OSS-Fuzz, enabling researchers to retrieve project information, access
 historical fuzzing results, and execute customized fuzzing experiments.
 """
 
-from .core.benchmark_manager import Benchmark, BenchmarkManager
+try:
+  from .core.benchmark_manager import Benchmark, BenchmarkManager
+except ImportError:
+  # Handle missing dependencies gracefully
+  Benchmark = None
+  BenchmarkManager = None
 # Data models and enums
-from .core.data_models import (CrashData, FuzzingEngine, ProjectConfig,
-                               Sanitizer, Severity)
+try:
+  from .core.data_models import (BuildHistoryData, CorpusHistoryData,
+                                 CoverageHistoryData, CrashData,
+                                 CrashHistoryData, FuzzingEngine,
+                                 HistoricalSummary, ProjectConfig, Sanitizer,
+                                 Severity, TimeSeriesData)
+except ImportError:
+  # Handle missing dependencies gracefully
+  BuildHistoryData = CorpusHistoryData = CoverageHistoryData = None
+  CrashData = CrashHistoryData = FuzzingEngine = HistoricalSummary = None
+  ProjectConfig = Sanitizer = Severity = TimeSeriesData = None
+
 # Core SDK - Main SDK class and modules
-from .core.ossfuzz_manager import OSSFuzzManager
+try:
+  from .core.ossfuzz_manager import OSSFuzzManager
+  from .core.ossfuzz_sdk import OSSFuzzSDK
+except ImportError:
+  # Handle missing dependencies gracefully
+  OSSFuzzManager = OSSFuzzSDK = None
+try:
+  from .data.storage_adapter import (FileStorageAdapter, GCSStorageAdapter,
+                                     StorageAdapter)
+  # Storage components
+  from .data.storage_manager import StorageManager
+except ImportError:
+  # Handle missing dependencies gracefully
+  FileStorageAdapter = GCSStorageAdapter = StorageAdapter = None
+  StorageManager = None
+
 # Error handling
 from .errors import *
+
+# History managers
+try:
+  from .history import (BuildHistoryManager, CorpusHistoryManager,
+                        CoverageHistoryManager, CrashHistoryManager,
+                        HistoryManager)
+except ImportError:
+  # Handle missing dependencies gracefully
+  BuildHistoryManager = CorpusHistoryManager = CoverageHistoryManager = None
+  CrashHistoryManager = HistoryManager = None
+
+# Result management
+try:
+  from .result import (AnalysisInfo, BenchmarkResult, BuildInfo,
+                       CoverageAnalysis, CrashAnalysis, Result, ResultManager,
+                       RunInfo, TrialResult)
+except ImportError:
+  # Handle missing dependencies gracefully
+  AnalysisInfo = BenchmarkResult = BuildInfo = CoverageAnalysis = None
+  CrashAnalysis = Result = ResultManager = RunInfo = TrialResult = None
 
 # Public API - All exports available to SDK clients
 __all__ = [
     # Core SDK - Main classes according to UML diagram
     'OSSFuzzManager',
+    'OSSFuzzSDK',
     'BenchmarkManager',
     'Benchmark',
+
+    # Result management
+    'ResultManager',
+    'Result',
+    'BuildInfo',
+    'RunInfo',
+    'AnalysisInfo',
+    'TrialResult',
+    'BenchmarkResult',
+    'CoverageAnalysis',
+    'CrashAnalysis',
+
+    # History managers
+    'HistoryManager',
+    'BuildHistoryManager',
+    'CrashHistoryManager',
+    'CorpusHistoryManager',
+    'CoverageHistoryManager',
+
+    # Storage components
+    'StorageManager',
+    'StorageAdapter',
+    'FileStorageAdapter',
+    'GCSStorageAdapter',
 
     # Data models and enums
     'Severity',
     'Sanitizer',
-    'Sanitizer',
     'FuzzingEngine',
+    'BuildHistoryData',
+    'CrashHistoryData',
+    'CorpusHistoryData',
+    'CoverageHistoryData',
+    'TimeSeriesData',
+    'HistoricalSummary',
 
     # Core error types and enums
     'ErrorCode',
