@@ -671,6 +671,81 @@ class PrototyperFixerTemplateBuilder(PrototyperTemplateBuilder):
 
     return self._prompt
 
+class PrototyperManualFixerTemplateBuilder(PrototyperTemplateBuilder):
+  """Builder specifically targeted C (and excluding C++)."""
+
+  def __init__(self,
+               model: models.LLM,
+               benchmark: Benchmark,
+               build_result: BuildResult,
+               compile_log: str,
+               template_dir: str = DEFAULT_TEMPLATE_DIR,
+               initial: Any = None,
+               manual_text: str = ''):
+    super().__init__(model, benchmark, template_dir, initial)
+    # Load templates.
+    self.priming_template_file = self._find_template(self.agent_templare_dir,
+                                                     'prototyper-manual-fixing.txt')
+    self.build_result = build_result
+    self.compile_log = compile_log
+    self.manual_text = manual_text
+
+
+  def build(self,
+            example_pair: list[list[str]],
+            project_example_content: Optional[list[list[str]]] = None,
+            project_context_content: Optional[dict] = None,
+            tool_guides: str = '',
+            project_dir: str = '') -> prompts.Prompt:
+      """Constructs a prompt using the templates in |self| and saves it."""
+      del (example_pair, project_example_content, project_context_content, tool_guides)
+
+      if not self.benchmark:
+        return self._prompt
+
+      function_signature = self.benchmark.function_signature
+      binary_path = os.path.join('/out', self.benchmark.target_name)
+
+      # Dynamically decide the first line of the prompt
+      if not self.build_result.compiles:
+          intro_line = (
+              "Build failed. Below is the fuzz target, build script, "
+              "compilation command, and error log."
+          )
+      elif self.build_result.compiles and not self.build_result.binary_exists:
+          intro_line = (
+              f"The fuzz target compiled successfully, but the expected binary "
+              f"was not saved at `{binary_path}`. Please ensure the output binary is "
+              "correctly placed in the `/out` directory."
+          )
+      elif not self.build_result.is_function_referenced:
+          intro_line = (
+              f"The fuzz target compiled and was saved to `{binary_path}`, but the "
+              f"function-under-test `{function_signature}` was not invoked in "
+              "`LLVMFuzzerTestOneInput`. Please modify the fuzz target to call it."
+          )
+      else:
+          intro_line = (
+              f"Build and compilation completed, but an issue still exists. "
+              f"Please review the target, output binary at `{binary_path}`, and logs."
+          )
+
+      if self.build_result.build_script_source:
+          build_text = (f'<build script>\n{self.build_result.build_script_source}\n'
+                        '</build script>')
+      else:
+          build_text = 'Build script reuses `/src/build.bk.sh`.'
+
+      prompt = self._get_template(self.priming_template_file)
+      prompt = prompt.replace('{INTRO_LINE}', intro_line)
+      prompt = prompt.replace('{FUZZ_TARGET_SOURCE}', self.build_result.fuzz_target_source)
+      prompt = prompt.replace('{BUILD_TEXT}', build_text)
+      prompt = prompt.replace('{COMPILE_LOG}', self.compile_log)
+      prompt = prompt.replace('{FUNCTION_SIGNATURE}', function_signature)
+      prompt = prompt.replace('{PROJECT_DIR}', project_dir)
+      prompt = prompt.replace('{MANUAL_PROMPT}', self.manual_text)
+      self._prompt.append(prompt)
+      return self._prompt
 
 class CoverageAnalyzerTemplateBuilder(PrototyperTemplateBuilder):
   """Builder specifically targeted C (and excluding C++)."""
