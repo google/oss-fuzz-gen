@@ -1,0 +1,15 @@
+"functions":
+- "name": "VP8LColorCacheInit"
+  "params":
+  - "name": "color_cache"
+    "type": "VP8LColorCache* const"
+  - "name": "hash_bits"
+    "type": "int"
+  "return_type": "WEBP_ASSUME_UNSAFE_INDEXABLE_ABI"
+  "signature": |-
+    WEBP_ASSUME_UNSAFE_INDEXABLE_ABI VP8LColorCacheInit(
+                    VP8LColorCache* const color_cache, int hash_bits)
+"language": "c++"
+"project": "libwebp"
+"target_name": "enc_fuzzer"
+"target_path": "/src/libwebp/tests/fuzzer/enc_fuzzer.cc"
