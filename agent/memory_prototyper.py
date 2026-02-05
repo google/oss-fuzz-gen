@@ -135,6 +135,42 @@ class MemoryPrototyper(Prototyper):
       self._chat_blocks.append(text)
     return text
 
+  def smart_truncate_log(self, text: str, max_chars: int = 15000) -> str:
+    """Intelligently truncate compilation log to keep the most relevant parts."""
+    if len(text) <= max_chars:
+      return text
+
+    # If we have <stderr> tags, prioritize keeping them
+    stderr_start = text.find("<stderr>")
+    stderr_end = text.rfind("</stderr>")
+
+    if stderr_start != -1 and stderr_end != -1:
+      stderr_content = text[stderr_start:stderr_end + 9]  # Include tags
+
+      # If stderr fits, keep it and add context from end of log
+      if len(stderr_content) < max_chars:
+        remaining_chars = max_chars - len(stderr_content)
+        # Take the tail of the log for context (e.g. build summary)
+        tail_content = text[-remaining_chars:]
+        return f"...[truncated]...\n{stderr_content}\n...[context]...\n{tail_content}"
+      else:
+        # If stderr is too big, keep the end of stderr (most likely place for error)
+        # In parallel builds, the error might be slightly up, but 65k chars is a lot of context.
+        return f"...[truncated]...\n{stderr_content[-max_chars:]}"
+
+    # Fallback to standard tail truncation
+    return f"...[truncated]...\n{text[-max_chars:]}"
+
+  def _get_confidence_note(self, plan: dict) -> str:
+    """Returns a note explanation based on the confidence score."""
+    confidence = plan.get('confidence_level', 0)
+    if confidence >= 3:
+      return "Note: This fix was verified to resolve the error completely."
+    elif confidence == 2:
+      return ("Note: This fix was verified to change the error type "
+              "(progress made), but may not fully resolve the issue.")
+    return "Note: This fix has uncertain confidence."
+
   # -------------------- internal helpers (stats + updater) --------------------
 
   def _bump_stats(
@@ -533,6 +569,7 @@ class MemoryPrototyper(Prototyper):
           "error_type": h.get("error_type"),
           "func_name": h.get("func_name"),
           "distance": h.get("distance"),
+          "confidence": h.get("confidence_level", 0),
           "fix_action": (h.get("fix_action") or "")[:CANDIDATE_PREVIEW_LEN],
           "patch_text": (h.get("patch_text") or "")[:CANDIDATE_PREVIEW_LEN],
       })
@@ -553,6 +590,7 @@ class MemoryPrototyper(Prototyper):
         "  (3) A list of candidate past fixes, each with:\n"
         "        - id, project, error_type, func_name\n"
         "        - distance (cosine distance; smaller is closer)\n"
+        "        - confidence (3=fully verified fix, 2=partial fix/progress made, <2=unknown)\n"
         "        - fix_action (natural-language explanation)\n"
         "        - patch_text (unified diff snippet or code change)\n\n"
         "Your job:\n"
@@ -562,18 +600,21 @@ class MemoryPrototyper(Prototyper):
         "    choose it.\n"
         "  - If none are applicable, choose null.\n\n"
         "IMPORTANT:\n"
-        "  - Do NOT pick a candidate only because distance is small;"
-        " check that\n"
+        "  - Check the <FAILURE_SUMMARY> block. It describes why the build is\n"
+        "    considered failed (e.g. 'Binary not saved', 'Function not covered'),\n"
+        "    which is crucial when <CURRENT_ERROR> is empty or inconclusive.\n"
+        "    Use it to select fixes for build script or logic errors matching that\n"
+        "    description.\n"
+        "  - Do NOT pick a candidate only because distance is small; check that\n"
         "    the error pattern, file paths, symbols, and toolchain situation\n"
         "    actually match.\n"
-        "  - Prefer fixes from the same project or very similar "
-        "error message.\n"
+        "  - Prefer fixes from the same project or very similar error message.\n"
+        "  - Prefer higher confidence scores (3 is best) if the context matches.\n"
         "  - Avoid candidates that would obviously corrupt code or change\n"
         "    unrelated functionality.\n\n"
         "Respond exactly in the following tag-based format:\n"
         "<chosen_id>BEST_ID_OR_null</chosen_id>\n"
-        "<reason>short explanation why you chose it or "
-        "why you chose null</reason>\n")
+        "<reason>short explanation why you chose it or why you chose null</reason>\n")
 
     planner_input = {
         "normalized_error": normalized_err,
@@ -584,6 +625,14 @@ class MemoryPrototyper(Prototyper):
     planner_prompt = prompt_builder.DefaultTemplateBuilder(self.llm,
                                                            None).build([])
     planner_prompt.append(instruction)
+
+    # Expose high-level failure context (e.g. "compiles but binary missing")
+    # prominently to the planner.
+    failure_msg = context.get("prototyper_failure_prompt")
+    if failure_msg:
+      planner_prompt.append("\n\n<FAILURE_SUMMARY>\n")
+      planner_prompt.append(failure_msg)
+      planner_prompt.append("\n</FAILURE_SUMMARY>\n")
 
     # Keep CURRENT_ERROR as a separate, first-class normalized error block.
     planner_prompt.append("\n\n<CURRENT_ERROR>\n")
@@ -880,23 +929,22 @@ class MemoryPrototyper(Prototyper):
     extra_hints = ""
     if plan is not None:
       extra_hints = (
-          "\n<memory hint>\n"
-          "A similar error was fixed before with the following patch. "
-          "Study and adapt it ONLY if it truly matches this benchmark.\n\n"
-          f"Entry ID: {plan['id']}\n"
+          "\n<reference_solution>\n"
+          "A similar error was previously fixed with the following patch. \n"
+          f"{self._get_confidence_note(plan)}\n"
+          "Adapt the solution if necessary.\n\n"
           f"Project: {plan.get('project')}\n"
           f"Error type: {plan.get('error_type')}\n"
-          f"Function: {plan.get('func_name')}\n"
-          f"Embedding distance: {plan.get('distance')}\n\n"
-          "Natural-language fix explanation:\n"
+          f"Function: {plan.get('func_name')}\n\n"
+          "Fix explanation:\n"
           "<fix_action>\n"
           f"{plan.get('fix_action') or ''}\n"
           "</fix_action>\n\n"
-          "Patch text (unified diff):\n"
-          "<memory patch>\n"
+          "Patch:\n"
+          "<patch>\n"
           f"{plan.get('patch_text') or ''}\n"
-          "</memory patch>\n"
-          "</memory hint>\n")
+          "</patch>\n"
+          "</reference_solution>\n")
 
     # Small helper: build a PrototyperFixerTemplateBuilder prompt for a given
     # selected BuildResult + explanation (Case 2/3 text) + memory hints.
@@ -911,14 +959,14 @@ class MemoryPrototyper(Prototyper):
       self._prev_build_script_for_diff = (selected_result.build_script_source or
                                           "")
 
-      # `prompt.get()` already contains the canonical block with
-      # <fuzz target>, <build script>, <compilation log>.
       # We now only prepend a high-level explanation + memory hints.
       initial_text = prompt.get() + explanation + extra_hints
-      sel_compile_log = self.llm.truncate_prompt(
-          selected_result.compile_log or "",
-          extra_text=initial_text,
-      ).strip()
+      
+      # Use smart truncation for the log
+      log_content = selected_result.compile_log or ""
+      # Heuristic: limit log to 15k chars (approx 4k tokens).
+      # This balances context with token limits.
+      sel_compile_log = self.smart_truncate_log(log_content, max_chars=15000)
 
       fixer = prompt_builder.PrototyperFixerTemplateBuilder(
           model=self.llm,
@@ -926,6 +974,7 @@ class MemoryPrototyper(Prototyper):
           build_result=selected_result,
           compile_log=sel_compile_log,
           initial=initial_text,
+          template_name='prototyper-fixing-memory.txt'
       )
       fixer_prompt = fixer.build(
           example_pair=[],
@@ -1057,10 +1106,10 @@ class MemoryPrototyper(Prototyper):
     self._prev_build_script_for_diff = build_result.build_script_source or ""
 
     initial_text = prompt.get() + extra_hints
-    final_compile_log = self.llm.truncate_prompt(
+    final_compile_log = self.smart_truncate_log(
         build_result.compile_log or "",
-        extra_text=initial_text,
-    ).strip()
+        max_chars=15000,
+    )
 
     fixer = prompt_builder.PrototyperFixerTemplateBuilder(
         model=self.llm,
@@ -1068,6 +1117,7 @@ class MemoryPrototyper(Prototyper):
         build_result=build_result,
         compile_log=final_compile_log,
         initial=initial_text,
+        template_name='prototyper-fixing-memory.txt'
     )
     fixer_prompt = fixer.build(
         example_pair=[],
