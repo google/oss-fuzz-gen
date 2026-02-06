@@ -257,6 +257,11 @@ def parse_args() -> argparse.Namespace:
                       type=int,
                       default=100,
                       help='Max trial round for agents.')
+  parser.add_argument(
+      "--use-error-memory",
+      action='store_true',
+      default=False,
+      help='Enable CloudSQL-backed error memory for build fixing.')
 
   args = parser.parse_args()
   if args.num_samples:

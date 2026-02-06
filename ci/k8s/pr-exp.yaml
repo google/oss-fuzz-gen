@@ -57,6 +57,23 @@ spec:
           value: 'us-west2'
         - name: GCB_BUILDPOOL_NAME
           value: projects/oss-fuzz/locations/us-west2/workerPools/buildpool-llm-agents
+      initContainers:
+      - name: cloud-sql-proxy
+        restartPolicy: Always
+        image: gcr.io/cloud-sql-connectors/cloud-sql-proxy:2.20.0
+        args:
+          - "--auto-iam-authn"
+          - "--port=3306"
+          - "uom-ossfuzz-gen:australia-southeast1:ofg-test"
+        securityContext:
+          runAsNonRoot: true
+        resources:
+          requests:
+            cpu: "250m"
+            memory: "256Mi"
+          limits:
+            cpu: "1000m"
+            memory: "512Mi"
       # imagePullSecrets:
       # - name: oss-fuzz-base-artifect
       volumes:
