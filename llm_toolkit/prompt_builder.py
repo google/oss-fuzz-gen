@@ -836,7 +836,8 @@ class CrashEnhancerTemplateBuilder(PrototyperTemplateBuilder):
       """
       priming = priming.replace('CONTEXT_ANALYZER_INSIGHT',
                                 context_analyzer_insight)
-      fix_recommendations = FIX_RECOMMENDATION_HEADER + self.context_result.recommendations
+      fix_recommendations = (FIX_RECOMMENDATION_HEADER +
+                             self.context_result.recommendations)
       priming = priming.replace('FIX_RECOMMENDATION', fix_recommendations)
 
     if function_requirements:

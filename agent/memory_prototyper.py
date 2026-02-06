@@ -136,7 +136,8 @@ class MemoryPrototyper(Prototyper):
     return text
 
   def smart_truncate_log(self, text: str, max_chars: int = 15000) -> str:
-    """Intelligently truncate compilation log to keep the most relevant parts."""
+    """Intelligently truncate compilation log,
+    keeping the most relevant parts."""
     if len(text) <= max_chars:
       return text
 
@@ -152,11 +153,11 @@ class MemoryPrototyper(Prototyper):
         remaining_chars = max_chars - len(stderr_content)
         # Take the tail of the log for context (e.g. build summary)
         tail_content = text[-remaining_chars:]
-        return f"...[truncated]...\n{stderr_content}\n...[context]...\n{tail_content}"
-      else:
-        # If stderr is too big, keep the end of stderr (most likely place for error)
-        # In parallel builds, the error might be slightly up, but 65k chars is a lot of context.
-        return f"...[truncated]...\n{stderr_content[-max_chars:]}"
+        return (f"...[truncated]...\n{stderr_content}\n"
+                f"...[context]...\n{tail_content}")
+      # If stderr is too big, keep the
+      # end of stderr (most likely place for error)
+      return f"...[truncated]...\n{stderr_content[-max_chars:]}"
 
     # Fallback to standard tail truncation
     return f"...[truncated]...\n{text[-max_chars:]}"
@@ -166,7 +167,7 @@ class MemoryPrototyper(Prototyper):
     confidence = plan.get('confidence_level', 0)
     if confidence >= 3:
       return "Note: This fix was verified to resolve the error completely."
-    elif confidence == 2:
+    if confidence == 2:
       return ("Note: This fix was verified to change the error type "
               "(progress made), but may not fully resolve the issue.")
     return "Note: This fix has uncertain confidence."
@@ -590,7 +591,8 @@ class MemoryPrototyper(Prototyper):
         "  (3) A list of candidate past fixes, each with:\n"
         "        - id, project, error_type, func_name\n"
         "        - distance (cosine distance; smaller is closer)\n"
-        "        - confidence (3=fully verified fix, 2=partial fix/progress made, <2=unknown)\n"
+        "        - confidence (3=fully verified fix,"
+        " 2=partial fix/progress made, <2=unknown)\n"
         "        - fix_action (natural-language explanation)\n"
         "        - patch_text (unified diff snippet or code change)\n\n"
         "Your job:\n"
@@ -601,20 +603,26 @@ class MemoryPrototyper(Prototyper):
         "  - If none are applicable, choose null.\n\n"
         "IMPORTANT:\n"
         "  - Check the <FAILURE_SUMMARY> block. It describes why the build is\n"
-        "    considered failed (e.g. 'Binary not saved', 'Function not covered'),\n"
+        "    considered failed"
+        " (e.g. 'Binary not saved', 'Function not covered'),\n"
         "    which is crucial when <CURRENT_ERROR> is empty or inconclusive.\n"
-        "    Use it to select fixes for build script or logic errors matching that\n"
+        "    Use it to select fixes for build script"
+        " or logic errors matching that\n"
         "    description.\n"
-        "  - Do NOT pick a candidate only because distance is small; check that\n"
+        "  - Do NOT pick a candidate only because"
+        " distance is small; check that\n"
         "    the error pattern, file paths, symbols, and toolchain situation\n"
         "    actually match.\n"
-        "  - Prefer fixes from the same project or very similar error message.\n"
-        "  - Prefer higher confidence scores (3 is best) if the context matches.\n"
+        "  - Prefer fixes from the same project"
+        " or very similar error message.\n"
+        "  - Prefer higher confidence scores (3 is best)"
+        " if the context matches.\n"
         "  - Avoid candidates that would obviously corrupt code or change\n"
         "    unrelated functionality.\n\n"
         "Respond exactly in the following tag-based format:\n"
         "<chosen_id>BEST_ID_OR_null</chosen_id>\n"
-        "<reason>short explanation why you chose it or why you chose null</reason>\n")
+        "<reason>short explanation why you chose it "
+        "or why you chose null</reason>\n")
 
     planner_input = {
         "normalized_error": normalized_err,
@@ -961,7 +969,7 @@ class MemoryPrototyper(Prototyper):
 
       # We now only prepend a high-level explanation + memory hints.
       initial_text = prompt.get() + explanation + extra_hints
-      
+
       # Use smart truncation for the log
       log_content = selected_result.compile_log or ""
       # Heuristic: limit log to 15k chars (approx 4k tokens).
@@ -974,8 +982,7 @@ class MemoryPrototyper(Prototyper):
           build_result=selected_result,
           compile_log=sel_compile_log,
           initial=initial_text,
-          template_name='prototyper-fixing-memory.txt'
-      )
+          template_name='prototyper-fixing-memory.txt')
       fixer_prompt = fixer.build(
           example_pair=[],
           project_dir=self.inspect_tool.project_dir,
@@ -1117,8 +1124,7 @@ class MemoryPrototyper(Prototyper):
         build_result=build_result,
         compile_log=final_compile_log,
         initial=initial_text,
-        template_name='prototyper-fixing-memory.txt'
-    )
+        template_name='prototyper-fixing-memory.txt')
     fixer_prompt = fixer.build(
         example_pair=[],
         project_dir=self.inspect_tool.project_dir,
