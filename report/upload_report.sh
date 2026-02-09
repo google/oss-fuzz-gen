@@ -72,21 +72,21 @@ update_report() {
   echo "Uploading the report."
   BUCKET_PATH="gs://oss-fuzz-gcb-experiment-run-logs/Result-reports/${GCS_DIR:?}"
   # Upload HTMLs.
-  gsutil -q -m -h "Content-Type:text/html" \
-         -h "Cache-Control:public, max-age=3600" \
-         cp -r . "$BUCKET_PATH"
+  gcloud storage cp --recursive --content-type="text/html" \
+         --cache-control="public, max-age=3600" \
+         . "$BUCKET_PATH"
   # Find all JSON files and upload them, removing the leading './'
   find . -name '*json' | while read -r file; do
     file_path="${file#./}"  # Remove the leading "./".
-    gsutil -q -m -h "Content-Type:application/json" \
-        -h "Cache-Control:public, max-age=3600" cp "$file" "$BUCKET_PATH/$file_path"
+    gcloud storage cp --content-type="application/json" \
+        --cache-control="public, max-age=3600" "$file" "$BUCKET_PATH/$file_path"
   done
 
   cd ..
 
   # Upload the raw results into the same GCS directory.
   echo "Uploading the raw results."
-  gsutil -q -m cp -r "${RESULTS_DIR:?}" \
+  gcloud storage cp --recursive "${RESULTS_DIR:?}" \
          "gs://oss-fuzz-gcb-experiment-run-logs/Result-reports/${GCS_DIR:?}"
 
   echo "See the published report at https://llm-exp.oss-fuzz.com/Result-reports/${GCS_DIR:?}/"
@@ -94,7 +94,7 @@ update_report() {
   # Upload training data.
   echo "Uploading training data."
   rm -rf 'training_data'
-  gsutil -q rm -r "gs://oss-fuzz-gcb-experiment-run-logs/Result-reports/${GCS_DIR:?}/training_data" || true
+  gcloud storage rm --recursive "gs://oss-fuzz-gcb-experiment-run-logs/Result-reports/${GCS_DIR:?}/training_data" || true
 
   # $PYTHON -m data_prep.parse_training_data \
   #  --experiment-dir "${RESULTS_DIR:?}" --save-dir 'training_data'

@@ -293,7 +293,7 @@ def _remove_existing_job_bucket(gke_job_name: str, bucket_link: str,
   time.sleep(5)
 
   logging.info('Deleting gcloud bucket: %s', bucket_gs_link)
-  del_bucket = sp.run(['gsutil', '-m', 'rm', '-r', bucket_gs_link],
+  del_bucket = sp.run(['gcloud', 'storage', 'rm', '--recursive', bucket_gs_link],
                       stdin=sp.DEVNULL,
                       stdout=sp.PIPE,
                       stderr=sp.PIPE,
