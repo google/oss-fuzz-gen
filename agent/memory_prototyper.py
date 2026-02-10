@@ -17,6 +17,7 @@ from memory_helper.cloudsql import (cloud_sql_connect_smart,
                                     knn_search_error_full_with_norm,
                                     maybe_register_successful_fix,
                                     update_stats_from_buffer)
+from memory_helper.errors import ERROR_SIGNATURE
 from results import BuildResult, Result
 
 MAX_CANDIDATES = 5
@@ -135,31 +136,53 @@ class MemoryPrototyper(Prototyper):
       self._chat_blocks.append(text)
     return text
 
-  def smart_truncate_log(self, text: str, max_chars: int = 15000) -> str:
+  def pinpoint_err_msg_location_idx(self, raw_err_text: str) -> int:
+    """Use pattern matching heuristics to pinpoint the
+    true error message from stderr noise"""
+    last_match = None
+    for match in ERROR_SIGNATURE.finditer(raw_err_text):
+      last_match = match
+    return last_match.start() if last_match else -1
+
+  def smart_truncate_log(self,
+                         text: str,
+                         max_chars: int = 10000,
+                         raw_err_text: str = "") -> str:
     """Intelligently truncate compilation log,
     keeping the most relevant parts."""
-    if len(text) <= max_chars:
-      return text
+    # length is not the biggest issue, we double-check
+    # if true error message in compile_log is cut away
 
-    # If we have <stderr> tags, prioritize keeping them
+    prompt_truncate_signal = text.rfind(
+        "(truncated due to exceeding input token limit)")
     stderr_start = text.find("<stderr>")
     stderr_end = text.rfind("</stderr>")
 
     if stderr_start != -1 and stderr_end != -1:
-      stderr_content = text[stderr_start:stderr_end + 9]  # Include tags
+      stderr_content = text[stderr_start:stderr_end + 9]
 
-      # If stderr fits, keep it and add context from end of log
+      if prompt_truncate_signal != -1 and raw_err_text.strip() != "":
+        err_idx = self.pinpoint_err_msg_location_idx(raw_err_text)
+
+        # we found locations showing true error message
+        if err_idx != -1:
+          len_err = stderr_end - stderr_start
+          end_index = min(len(raw_err_text), err_idx + 200)
+          start_index = max(0, end_index - len_err)
+          stderr_content = "<stderr>" + raw_err_text[
+              start_index:end_index] + "</stderr>"
+
+      # get the correct stderr content, do smart truncation
       if len(stderr_content) < max_chars:
-        remaining_chars = max_chars - len(stderr_content)
-        # Take the tail of the log for context (e.g. build summary)
-        tail_content = text[-remaining_chars:]
-        return (f"...[truncated]...\n{stderr_content}\n"
-                f"...[context]...\n{tail_content}")
-      # If stderr is too big, keep the
-      # end of stderr (most likely place for error)
+        return (f"...[context]...\n{text[:stderr_start]}\n"
+                f"...[truncated]...\n{stderr_content}")
       return f"...[truncated]...\n{stderr_content[-max_chars:]}"
 
-    # Fallback to standard tail truncation
+    # no stderr tag found, just return given the length
+    if len(text) <= max_chars:
+      return text
+
+    # fallback to standard tail truncation
     return f"...[truncated]...\n{text[-max_chars:]}"
 
   def _get_confidence_note(self, plan: dict) -> str:
@@ -838,7 +861,8 @@ class MemoryPrototyper(Prototyper):
         "language": getattr(bench, "language", "") or "",
         "target_name": getattr(bench, "target_name", "") or "",
         "function_signature": function_signature,
-        "compile_log": compile_log[:2000],
+        "compile_log":
+            query_text[-2000:],  # get the bottom of the stderr block as context
         "fuzz_target": fuzz_target_source[:2000],
         "build_script": build_script_source[:2000],
         "prototyper_failure_prompt": prototyper_failure_prompt,
@@ -907,9 +931,11 @@ class MemoryPrototyper(Prototyper):
     # Case 1: Successful → flush stats + updater.
 
     if build_result_alt and build_result_alt.success:
+      # New fuzz target + default build.sh can compile, binary exists
+      # function being referenced
       logger.info(
           "Default /src/build.sh works perfectly, no need for a new "
-          "buid script",
+          "build script",
           trial=build_result.trial,
       )
       logger.info(
@@ -922,6 +948,8 @@ class MemoryPrototyper(Prototyper):
       return build_result_alt, None
 
     if build_result_ori and build_result_ori.success:
+      # New fuzz target and new build.sh can compile, binary exists
+      # function being referenced
       logger.info(
           "***** %s succeeded in %02d rounds *****",
           self.name,
@@ -974,7 +1002,10 @@ class MemoryPrototyper(Prototyper):
       log_content = selected_result.compile_log or ""
       # Heuristic: limit log to 15k chars (approx 4k tokens).
       # This balances context with token limits.
-      sel_compile_log = self.smart_truncate_log(log_content, max_chars=15000)
+      sel_compile_log = self.smart_truncate_log(
+          log_content,
+          max_chars=15000,
+          raw_err_text=selected_result.compile_error)
 
       fixer = prompt_builder.PrototyperFixerTemplateBuilder(
           model=self.llm,
@@ -1056,7 +1087,10 @@ class MemoryPrototyper(Prototyper):
           f"`{binary_path}`.\n"
           "Below you will see the current fuzz target, build script, and "
           "compilation log. Carefully analyze the build steps to understand "
-          "why the binary is not written to the correct location.\n\n"
+          "why the binary is not written to the correct location. "
+          "You should also double-check your build script, to see if commands "
+          "or flags force the compiler to ignore compilation errors, thus "
+          "produce a false positive compilation successful message\n\n"
           "YOU MUST MODIFY THE BUILD SCRIPT to ensure the binary is saved to "
           f"{binary_path}.\n"
           "When you have a solution later, make sure you output the FULL fuzz "
@@ -1078,7 +1112,10 @@ class MemoryPrototyper(Prototyper):
           f"`{binary_path}`.\n"
           "Below you will see the current fuzz target and compilation log. "
           "Carefully analyze them to understand why the binary is not written "
-          "to the correct location.\n\n"
+          "to the correct location. "
+          "You should also double-check `/src/build.bk.sh` , to see if command "
+          "or flags force the compiler to ignore compilation errors, thus "
+          "produce a false positive compilation successful message\n\n"
           "YOU MUST MODIFY THE BUILD SCRIPT to ensure the binary is saved to "
           f"{binary_path}.\n"
           "When you have a solution later, make sure you output the FULL fuzz "
@@ -1099,7 +1136,10 @@ class MemoryPrototyper(Prototyper):
           f"`{binary_path}`.\n"
           "Below you will see the current fuzz target and compilation log. "
           "Carefully analyze them to understand why the binary is not written "
-          "to the correct location.\n\n"
+          "to the correct location."
+          "You should also double-check `/src/build.bk.sh` , to see if command "
+          "or flags force the compiler to ignore compilation errors, thus "
+          "produce a false positive compilation successful message\n\n"
           "YOU MUST MODIFY THE BUILD SCRIPT to ensure the binary is saved to "
           f"{binary_path}.\n"
           "When you have a solution later, make sure you output the FULL fuzz "
@@ -1116,6 +1156,7 @@ class MemoryPrototyper(Prototyper):
     final_compile_log = self.smart_truncate_log(
         build_result.compile_log or "",
         max_chars=15000,
+        raw_err_text=build_result.compile_error,
     )
 
     fixer = prompt_builder.PrototyperFixerTemplateBuilder(
