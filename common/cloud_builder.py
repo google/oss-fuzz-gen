@@ -216,7 +216,8 @@ class CloudBuilder:
 
     cloud_build_config = {
         'steps': [
-            # Step 1: Download the dill, artifact and experiment files from GCS bucket.
+            # Step 1: Download the dill, artifact 
+            # and experiment files from GCS bucket.
             {
                 'name': 'bash',
                 'dir': '/workspace',
@@ -225,12 +226,18 @@ class CloudBuilder:
             {
                 'name': 'gcr.io/cloud-builders/gcloud',
                 'dir': '/workspace',
-                'args': ['storage', 'cp', agent_dill_url, 'dills/agent.pkl']
+                'args': [
+                  'storage', 'cp', agent_dill_url, 
+                  'dills/agent.pkl'
+                ]
             },
             {
                 'name': 'gcr.io/cloud-builders/gcloud',
                 'dir': '/workspace',
-                'args': ['storage', 'cp', results_dill_url, 'dills/result_history.pkl']
+                'args': [
+                  'storage', 'cp', results_dill_url, 
+                  'dills/result_history.pkl'
+                ]
             },
             {
                 'name': 'gcr.io/cloud-builders/gcloud',
@@ -245,7 +252,8 @@ class CloudBuilder:
                 'name': 'gcr.io/cloud-builders/gcloud',
                 'dir': '/workspace',
                 'args': [
-                    'storage', 'cp', artifact_url, f'/workspace/host/{artifact_path}'
+                    'storage', 'cp', artifact_url, 
+                    f'/workspace/host/{artifact_path}'
                 ],
                 'allowFailure': True,
             },
@@ -253,7 +261,8 @@ class CloudBuilder:
                 'name': 'gcr.io/cloud-builders/gcloud',
                 'entrypoint': 'bash',
                 'args': [
-                    '-c', f'gcloud storage cp {experiment_url} /tmp/ofg-exp.tar.gz && '
+                    '-c', 
+                    f'gcloud storage cp {experiment_url} /tmp/ofg-exp.tar.gz && '
                     f'mkdir -p /workspace/host/{experiment_path} && '
                     f'tar -xzf /tmp/ofg-exp.tar.gz -C /workspace/host/{experiment_path}'
                 ],
@@ -266,7 +275,8 @@ class CloudBuilder:
                 'entrypoint':
                     'bash',
                 'args': [
-                    '-c', f'gcloud storage cp {ofg_repo_url} /tmp/ofg-repo.tar.gz && '
+                    '-c', 
+                    f'gcloud storage cp {ofg_repo_url} /tmp/ofg-repo.tar.gz && '
                     'mkdir /workspace/ofg && '
                     f'tar -xzf /tmp/ofg-repo.tar.gz -C /workspace/ofg'
                 ]
