@@ -229,11 +229,14 @@ class CloudBuilder:
                 'args': ['storage', 'cp', agent_dill_url, 'dills/agent.pkl']
             },
             {
-                'name': 'gcr.io/cloud-builders/gcloud',
-                'dir': '/workspace',
+                'name':
+                    'gcr.io/cloud-builders/gcloud',
+                'dir':
+                    '/workspace',
                 'args': [
-                  'storage', 'cp', results_dill_url, 
-                  'dills/result_history.pkl']
+                    'storage', 'cp', results_dill_url,
+                    'dills/result_history.pkl'
+                ]
             },
             {
                 'name': 'gcr.io/cloud-builders/gcloud',
@@ -248,7 +251,7 @@ class CloudBuilder:
                 'name': 'gcr.io/cloud-builders/gcloud',
                 'dir': '/workspace',
                 'args': [
-                    'storage', 'cp', artifact_url, 
+                    'storage', 'cp', artifact_url,
                     f'/workspace/host/{artifact_path}'
                 ],
                 'allowFailure': True,
@@ -257,10 +260,10 @@ class CloudBuilder:
                 'name': 'gcr.io/cloud-builders/gcloud',
                 'entrypoint': 'bash',
                 'args': [
-                    '-c', f'gcloud storage cp {experiment_url}' 
+                    '-c', f'gcloud storage cp {experiment_url}'
                     '/tmp/ofg-exp.tar.gz && '
                     f'mkdir -p /workspace/host/{experiment_path} && '
-                    f'tar -xzf /tmp/ofg-exp.tar.gz' 
+                    f'tar -xzf /tmp/ofg-exp.tar.gz'
                     f'-C /workspace/host/{experiment_path}'
                 ],
                 'allowFailure': True,
