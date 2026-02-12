@@ -216,24 +216,30 @@ class CloudBuilder:
 
     cloud_build_config = {
         'steps': [
-            # Step 1: Download the dill, artifact and experiment files from GCS bucket.
+            # Step 1: Download the dill, artifact
+            # and experiment files from GCS bucket.
             {
                 'name': 'bash',
                 'dir': '/workspace',
                 'args': ['-c', 'mkdir -p dills']
             },
             {
-                'name': 'gcr.io/cloud-builders/gsutil',
+                'name': 'gcr.io/cloud-builders/gcloud',
                 'dir': '/workspace',
-                'args': ['cp', agent_dill_url, 'dills/agent.pkl']
+                'args': ['storage', 'cp', agent_dill_url, 'dills/agent.pkl']
             },
             {
-                'name': 'gcr.io/cloud-builders/gsutil',
-                'dir': '/workspace',
-                'args': ['cp', results_dill_url, 'dills/result_history.pkl']
+                'name':
+                    'gcr.io/cloud-builders/gcloud',
+                'dir':
+                    '/workspace',
+                'args': [
+                    'storage', 'cp', results_dill_url,
+                    'dills/result_history.pkl'
+                ]
             },
             {
-                'name': 'gcr.io/cloud-builders/gsutil',
+                'name': 'gcr.io/cloud-builders/gcloud',
                 'entrypoint': 'bash',
                 'args': [
                     '-c',
@@ -242,31 +248,35 @@ class CloudBuilder:
                 'allowFailure': True,
             },
             {
-                'name': 'gcr.io/cloud-builders/gsutil',
+                'name': 'gcr.io/cloud-builders/gcloud',
                 'dir': '/workspace',
                 'args': [
-                    'cp', artifact_url, f'/workspace/host/{artifact_path}'
+                    'storage', 'cp', artifact_url,
+                    f'/workspace/host/{artifact_path}'
                 ],
                 'allowFailure': True,
             },
             {
-                'name': 'gcr.io/cloud-builders/gsutil',
+                'name': 'gcr.io/cloud-builders/gcloud',
                 'entrypoint': 'bash',
                 'args': [
-                    '-c', f'gsutil cp {experiment_url} /tmp/ofg-exp.tar.gz && '
+                    '-c', f'gcloud storage cp {experiment_url}'
+                    '/tmp/ofg-exp.tar.gz && '
                     f'mkdir -p /workspace/host/{experiment_path} && '
-                    f'tar -xzf /tmp/ofg-exp.tar.gz -C /workspace/host/{experiment_path}'
+                    f'tar -xzf /tmp/ofg-exp.tar.gz'
+                    f'-C /workspace/host/{experiment_path}'
                 ],
                 'allowFailure': True,
             },
             # Step 2: Prepare OFG and OF repos.
             {
                 'name':
-                    'gcr.io/cloud-builders/gsutil',
+                    'gcr.io/cloud-builders/gcloud',
                 'entrypoint':
                     'bash',
                 'args': [
-                    '-c', f'gsutil cp {ofg_repo_url} /tmp/ofg-repo.tar.gz && '
+                    '-c',
+                    f'gcloud storage cp {ofg_repo_url} /tmp/ofg-repo.tar.gz && '
                     'mkdir /workspace/ofg && '
                     f'tar -xzf /tmp/ofg-repo.tar.gz -C /workspace/ofg'
                 ]
@@ -283,11 +293,11 @@ class CloudBuilder:
             },
             # Step 4: Prepare OSS-Fuzz repo.
             {
-                'name': 'gcr.io/cloud-builders/gsutil',
+                'name': 'gcr.io/cloud-builders/gcloud',
                 'entrypoint': 'bash',
                 'args': [
                     '-c', f'test -n "{oss_fuzz_data_url}" && '
-                    f'gsutil cp {oss_fuzz_data_url} '
+                    f'gcloud storage cp {oss_fuzz_data_url} '
                     '/tmp/oss-fuzz-data.tar.gz && '
                     f'mkdir {oss_fuzz_data_dir} && '
                     f'tar -xzf /tmp/oss-fuzz-data.tar.gz -C {oss_fuzz_data_dir}'
@@ -295,11 +305,11 @@ class CloudBuilder:
                 'allowFailure': True,
             },
             {
-                'name': 'gcr.io/cloud-builders/gsutil',
+                'name': 'gcr.io/cloud-builders/gcloud',
                 'entrypoint': 'bash',
                 'args': [
                     '-c', f'test -n "{data_dir_url}" && '
-                    f'gsutil cp {data_dir_url} /tmp/data-dir.tar.gz && '
+                    f'gcloud storage cp {data_dir_url} /tmp/data-dir.tar.gz && '
                     f'mkdir {target_data_dir} && '
                     f'tar -xzf /tmp/data-dir.tar.gz -C {target_data_dir}'
                 ],
@@ -372,11 +382,11 @@ class CloudBuilder:
             },
             {
                 'name':
-                    'gcr.io/cloud-builders/gsutil',
+                    'gcr.io/cloud-builders/gcloud',
                 'dir':
                     '/workspace',
                 'args': [
-                    'cp', '/workspace/dills/new_result.pkl',
+                    'storage', 'cp', '/workspace/dills/new_result.pkl',
                     f'gs://{self.bucket_name}/{new_result_filename}'
                 ]
             },
@@ -387,13 +397,13 @@ class CloudBuilder:
                 'args': ['ls', '-R', f'/workspace/host/{experiment_path}']
             },
             {
-                'name': 'gcr.io/cloud-builders/gsutil',
+                'name': 'gcr.io/cloud-builders/gcloud',
                 'entrypoint': 'bash',
                 'args': [
                     '-c', f'test -d /workspace/host/{experiment_path} && '
                     f'tar -czf /tmp/{new_experiment_filename} '
                     f'-C /workspace/host/{experiment_path} . && '
-                    f'gsutil cp /tmp/{new_experiment_filename} '
+                    f'gcloud storage cp /tmp/{new_experiment_filename} '
                     f'gs://{self.bucket_name}/{new_experiment_filename}'
                 ],
                 'allowFailure': True,
