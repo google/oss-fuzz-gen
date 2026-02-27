@@ -1076,6 +1076,22 @@ class GeminiV3ProChat(GeminiV1D5Chat):
   _vertex_ai_model = 'gemini-3-pro-preview'
 
 
+class GeminiV3D1Pro(GeminiModel):
+  """Gemini 3.1 Pro."""
+  _max_output_tokens = 65536
+  context_window = 1048576
+  name = 'vertex_ai_gemini-3-1-pro'
+  _vertex_ai_model = 'gemini-3.1-pro-preview'
+
+
+class GeminiV3D1ProChat(GeminiV1D5Chat):
+  """Gemini 3.1 Pro for chat session."""
+  _max_output_tokens = 65536
+  context_window = 1048576
+  name = 'vertex_ai_gemini-3-1-pro-chat'
+  _vertex_ai_model = 'gemini-3.1-pro-preview'
+
+
 class AIBinaryModel(GoogleModel):
   """A customized model hosted internally."""
 
