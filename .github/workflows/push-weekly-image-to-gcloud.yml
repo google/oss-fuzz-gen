@@ -18,7 +18,7 @@ jobs:
       with:
         credentials_json: '${{ secrets.GCLOUD_CREDENTIAL }}'
     - name: Set up Cloud SDK
-      uses: google-github-actions/setup-gcloud@v2
+      uses: google-github-actions/setup-gcloud@v3
     - name: Auth to Artifact Registry
       run: gcloud auth configure-docker us-central1-docker.pkg.dev --quiet
     - name: Push to Artifact Registry
