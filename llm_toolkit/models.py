@@ -443,6 +443,20 @@ class GPT4Turbo(GPT):
 
   name = 'gpt-4-turbo'
 
+class GPT5(GPT):
+  """OpenAI's GPT-5 model."""
+
+  name = 'gpt-5'
+
+class GPT5Mini(GPT):
+  """OpenAI's GPT-5 model."""
+
+  name = 'gpt-5-mini'
+
+class GPT5Nano(GPT):
+  """OpenAI's GPT-5 model."""
+
+  name = 'gpt-5-nano'
 
 class ChatGPT(GPT):
   """OpenAI's GPT model with chat session."""
@@ -512,6 +526,20 @@ class ChatGPT4Turbo(ChatGPT):
 
   name = 'chatgpt-4-turbo'
 
+class ChatGPT5(ChatGPT):
+  """OpenAI's GPT-5 model."""
+
+  name = 'gpt-5'
+
+class ChatGPT5Mini(ChatGPT):
+  """OpenAI's GPT-5 model."""
+
+  name = 'gpt-5-mini'
+
+class ChatGPT5Nano(ChatGPT):
+  """OpenAI's GPT-5 model."""
+
+  name = 'gpt-5-nano'
 
 class AzureGPT(GPT):
   """Azure's GPT model."""
