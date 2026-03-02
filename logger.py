@@ -80,6 +80,87 @@ class CustomLoggerAdapter(logging.LoggerAdapter):
         for agent_name, chat_history in result.chat_history.items())
     self.write_to_file(chat_history_path, chat_history)
 
+  def write_build_info_entry(self, result: Result) -> None:
+    """Writes a single build info entry immediately after agent execution."""
+    if not result.build_id:
+      return
+
+    trial_result_dir = os.path.join(result.work_dirs.status,
+                                    f'{result.trial:02d}')
+    os.makedirs(trial_result_dir, exist_ok=True)
+
+    build_info_path = os.path.join(trial_result_dir, 'build_info.json')
+
+    # Load existing build_info if it exists
+    build_info = {'trial': result.trial, 'executions': []}
+    if os.path.exists(build_info_path):
+      try:
+        with open(build_info_path, 'r') as f:
+          build_info = json.load(f)
+      except (json.JSONDecodeError, IOError):
+        pass
+
+    existing_build_ids = {
+        exec_info.get('build_id')
+        for exec_info in build_info.get('executions', [])
+    }
+    if result.build_id in existing_build_ids:
+      return
+
+    agent_name = result.author.name if result.author else 'unknown'
+    result_type = type(result).__name__
+    build_url = f"https://console.cloud.google.com/cloud-build/builds;region=us-west2/{result.build_id}"
+    exec_info = {
+        'agent': agent_name,
+        'result_type': result_type,
+        'build_id': result.build_id,
+        'build_url': build_url,
+    }
+    build_info['executions'].append(exec_info)
+
+    with open(build_info_path, 'w') as f:
+      json.dump(build_info, f, indent=2)
+
+  def write_build_info(self, trial_result: TrialResult) -> None:
+    """Writes build_info.json with Cloud Build IDs for all agent executions."""
+    trial_result_dir = os.path.join(trial_result.work_dirs.status,
+                                    f'{trial_result.trial:02d}')
+    os.makedirs(trial_result_dir, exist_ok=True)
+
+    build_info_path = os.path.join(trial_result_dir, 'build_info.json')
+
+    # Load existing build_info if it exists, to support progressive writes
+    build_info = {'trial': trial_result.trial, 'executions': []}
+    if os.path.exists(build_info_path):
+      try:
+        with open(build_info_path, 'r') as f:
+          build_info = json.load(f)
+      except (json.JSONDecodeError, IOError):
+        pass
+
+    existing_build_ids = {
+        exec_info.get('build_id')
+        for exec_info in build_info.get('executions', [])
+    }
+
+    for i, result in enumerate(trial_result.result_history):
+      if result.build_id and result.build_id not in existing_build_ids:
+        agent_name = result.author.name if result.author else 'unknown'
+        result_type = type(result).__name__
+        build_url = f"https://console.cloud.google.com/cloud-build/builds;region=us-west2/{result.build_id}"
+        exec_info = {
+            'index': i,
+            'agent': agent_name,
+            'result_type': result_type,
+            'build_id': result.build_id,
+            'build_url': build_url,
+        }
+        build_info['executions'].append(exec_info)
+        existing_build_ids.add(result.build_id)
+
+    with open(build_info_path, 'w') as f:
+      json.dump(build_info, f, indent=2)
+
   def download_gcs_file(self, local_path: str, gs_url: str) -> bool:
     """Downloads a file from Google Cloud storage to a local file."""
     parsed_url = urlparse(gs_url)
