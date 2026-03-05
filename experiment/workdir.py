@@ -20,6 +20,8 @@ import re
 from shutil import rmtree
 from typing import Optional
 
+import logger
+
 
 class WorkDirs:
   """Working directories."""
@@ -79,6 +81,18 @@ class WorkDirs:
 
     benchmark_coverage = os.path.join(coverage_dir, benchmark)
     return benchmark_coverage
+
+  def textcov_report(self, trial: int) -> str:
+    code_coverage_report_dir = self.code_coverage_report(
+        f'{trial:02d}.fuzz_target')
+    textcov_dir = os.path.join(code_coverage_report_dir, 'textcov')
+    logger.info('Looking for textcov report in %s', textcov_dir, trial=trial)
+    if not os.path.exists(textcov_dir):
+      return ''
+    for filename in os.listdir(textcov_dir):
+      if filename.endswith(".covreport"):
+        return os.path.join(textcov_dir, filename)
+    return ''
 
   @property
   def status(self) -> str:

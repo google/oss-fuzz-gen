@@ -1,0 +1,34 @@
+<tool>
+**Coverage tool Guide**
+Use the coverage tool to access the coverage report for specific functions, produced during fuzzing.
+This will help you understand the specific lines of code that are covered or not covered by the fuzz target.
+
+<interaction protocols>
+1. STRICTLY Only One function name per message:
+    * Send only the function name. DO NOT append parenthesis or include the function's signature.
+    * **DO NOT** send multiple functions in each message.
+2. Execute Request Message Structure:
+    * Reason for the Request:
+        * Explain the reason for requesting coverage report for the specific function.
+        * Wrap this explanation within <reason> and </reason> tags.
+    * Coverage Request:
+        * Provide the name of the function you need its coverage report.
+        * Wrap the request with <coverage-request> and </coverage-request> tags.
+    * Format Example:
+        <reason>
+        I want to retrieve the coverage report for the function_name function, so I can understand what lines are not yet covered.
+        </reason>
+        <coverage-request>
+        function_name
+        </coverage-request>
+3. Receiving Bash Command Output Message Structure:
+    * Bash execution outputs will be returned in the following format:
+        <function>
+        [The function you requested.]
+        </function>
+        <report>
+        [Extracted snippet containing the function's coverage report.]
+        </report>
+<interaction protocols>
+
+</tool>
