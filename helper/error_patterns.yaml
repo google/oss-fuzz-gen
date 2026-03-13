@@ -1,0 +1,224 @@
+INCLUDE ERROR:
+  patterns:
+    - "fatal error: .*: No such file or directory"
+    - "error: no such file or directory: '.*'"
+    - ": .*: No such file or directory"
+    - "fatal error: '.*' file not found"
+    - "cannot find include file"
+    - "header file not found"
+    - "file not found"
+    - "include.*No such file"
+    - "error: include file '.*' not found"
+    - "'[A-Za-z0-9_]+\\.h': No such file or directory"
+    - "fatal error: cannot open file '.*'"
+    - "This header is only to be used internally"
+    - "forward declaration of '.*'"
+    - "cannot open source file"
+  good:
+    - "Use repository-relative includes: compute the correct path from the fuzz target, verify the header exists, and include the shortest include-able path."
+    - "Add a single target-scoped `-I` that points exactly to the header's root; avoid broad/global include path changes."
+    - "Prefer public/umbrella headers; remove private/internal headers only if unnecessary and ensure required declarations remain available."
+    - "For standard library symbols, include the exact standard header (e.g., `memcpy` → `<string.h>`/`<cstring>`, `size_t` → `<stddef.h>`)."
+    - "If compilation succeeds but linking reports undefined references, add the correct `-l<lib>` and, if needed, `-L<repo-relative-libdir>`; treat this as a link step fix, not an include fix."
+  bad:
+    - "Do not include source files (`.c`/`.cpp`) directly to bypass missing headers."
+    - "Do not copy headers into the fuzz target directory as a workaround; fix the include path instead."
+    - "Do not assume the output location of built libraries; check the actual build output before setting `-L` or link flags."
+    - "Do not submit changes that leave the original compile or link error unresolved; rebuild and confirm the error is cleared."
+
+SYNTACTIC ERROR:
+  patterns:
+    - 'error: expected .*'
+    - 'expected .* before'
+    - 'error: stray '' .* '' in program'
+    - 'syntax error'
+    - 'parse error'
+    - 'missing ''\;'''
+    - 'implicit conversion changes signedness'
+    - 'error: assigning to '' .* '' from incompatible type '' .* '''
+    - 'error: no member named '' .* '' in '' .* '''
+    - 'no matching function for call to'
+    - 'no matching member function for call to'
+    - 'candidate function not viable'
+    - 'requires \d+ arguments, but \d+ were provided'
+    - 'incompatible pointer to .* conversion'
+    - 'no type named .* in namespace .*'
+    - 'is a private member of'
+    - 'expected declaration or statement at end of input'
+    - 'unterminated string literal'
+    - 'expected identifier or ''\('' before .*'
+    - 'expected unqualified-id'
+    - 'use of undeclared identifier '' .* '''
+    - 'error: expected parameter declarator'
+    - 'error: expected ''\)'''
+    - 'invalid conversion from'
+    - 'incomplete type .* named in nested name specifier'
+    - 'unknown type name .*'
+    - 'redefinition of .*'
+    - 'no member named .* in .*'
+    - 'non-void function does not return a value'
+    - 'forward declaration of .*'
+    - 'candidate constructor .* not viable'
+    - 'call to undeclared function'
+    - 'ISO C99 and later do not support implicit function declarations'
+    - 'error: krb5\.h included before k5-int\.h'
+    - 'This header is only to be used internally to libarchive\.'
+    - 'class member cannot be redeclared'
+    - 'expected member name or ''\;'' after declaration specifiers'
+    - 'error: definition of type ''[^'']+'' conflicts with typedef of the same name'
+    - 'error: exception specification in declaration does not match previous declaration'
+    - 'error: static declaration of ''[^'']+'' follows non-static declaration'
+    - "error: member reference base type .* is not a structure or union"
+    - "mixing declarations and code is incompatible with standards before C99"
+    - "out-of-line definition of '.*' does not match any declaration"
+    - "error: alias must point to a defined variable or function"
+    - "error: the function or variable specified in an alias must refer to its mangled name"
+    - "error:\\s*'.+?'\\s+is a\\s+(?:private|protected)\\s+member of\\s+'.+?'"
+  good:
+    - "Fix core syntax first: add missing semicolons, match braces/parentheses, remove stray commas/tokens; rebuild to confirm the first error disappears."
+    - "Resolve undeclared identifiers/types/macros by locating their in-repo definitions and including the correct header or qualifying the name; for C libraries included in C++ code, wrap the include with `extern \"C\"`."
+    - "For 'no member named …' errors, open the struct/class definition in the repo and replace the invalid access with an existing public member or provided accessor."
+    - "Match function signatures and argument types to the declaration found in headers; adjust prototypes/calls accordingly rather than guessing."
+    - "Use project macros exactly as shown in in-repo examples: supply required arguments, and wrap statement-like macros in braces to keep scope correct."
+    - "Remove duplicate definitions causing 'redefinition' errors; keep a single definition and rely on the header for declarations."
+  bad:
+    - "Do not invent members, signatures, or macro arguments; confirm them from headers or in-repo examples before changing code."
+    - "Do not silence errors by adding ad-hoc prototypes or defining missing members/functions that are not declared by the library."
+    - "Do not modify upstream project sources or unrelated build targets when fixing a syntactic error in the fuzz target."
+    - "Do not apply superficial fixes (e.g., adding a semicolon) when the macro or construct changes statement/block structure; fix the real structure."
+
+UNDEFINED REFERENCE ERROR:
+  patterns:
+    - "undefined reference to `.*'"
+    - "undefined reference to '.*'"
+    - "symbol not found"
+    - "unresolved external symbol"
+    - "linker error: symbol undefined"
+    - "error: undefined reference to `.*`"
+    - "error: use of undeclared identifier '.*'"
+  good:
+    - "Make the missing symbol linkable: compile the needed source or add the providing library with -l..., include its search path with -L..., and keep link order correct (objects first, deps after)."
+    - "Include the correct header(s) that declare the symbol; replace any direct .cpp inclusions with headers and bring in required transitive includes."
+    - "Match the exact API: correct function signature, namespace/class membership, and identifier case; don't invent overloads."
+    - "For C++ calling C APIs, wrap the C headers (or a shim) with extern \"C\" to avoid name-mangling issues."
+    - "If the symbol lives in a sub-library or is gated by feature macros, link that sub-library and enable the macro via build flags (-D...) or a #define placed before relevant includes."
+    - "Mirror a known-working project setup (existing fuzzers/build scripts), including using the build system's fuzzing engine variable (e.g., $LIB_FUZZING_ENGINE) when appropriate."
+    - "Ensure the fuzz entrypoint LLVMFuzzerTestOneInput exists exactly once with the correct signature and is linked with the fuzzing engine."
+  bad:
+    - "Do not try to 'fix' undefined references by adding only forward declarations or by inventing stub definitions."
+    - "Do not suggest alternative functions without ensuring they have the required functionality."
+    - "Do not include .cpp files directly or add random headers that cause conflicting types."
+
+LINKER ERROR:
+  patterns:
+    - 'multiple definition of'
+    - 'ld: duplicate symbol'
+    - 'conflicting types for'
+    - 'linking failed'
+    - 'ld returned 1 exit status'
+    - 'collect2: error: ld returned .* exit status'
+    - 'linker command failed with exit code'
+    - 'cannot find -l.*'
+    - 'no such file or directory: ''\$LIB_FUZZING_ENGINE'''
+    - 'relocation overflowed'
+    - 'error: relocation truncated to fit'
+    - 'first defined here'
+    - 'no such file or directory: .*\.a'
+    - '/usr/bin/ld: cannot find -ljsoncpp'
+  good:
+    - "Ensure the missing symbol's definition is linked: compile needed sources or add the providing library with -l..., and add required search paths with -L.... If dynamic linking still fails at runtime, link available static archives by full path."
+    - "Derive required libraries/flags from the project's own build files and include needed sub-libraries when the API lives outside the primary library."
+    - "Order link inputs correctly: place objects/targets first, then their dependent libraries; put system/C++ standard libraries last."
+    - "Use proper artifacts (.a/.so) and avoid libtool .la files on the link line."
+    - "When C++ calls C APIs, wrap the C headers with extern \"C\" to avoid name-mangling issues."
+    - "Scope sanitizer/fuzzer flags to the fuzz target; build project libraries with their normal flags to avoid duplicate/conflicting symbols."
+  bad:
+    - "Do not include .c/.cpp files directly into the fuzz target—compile them separately and link the outputs."
+    - "Do not remove functional code (e.g., cleanup/free) as a primary fix; only consider after standard linking steps are exhausted."
+    - "Do not attempt to fix 'undefined reference' errors by only adding forward declarations; this addresses compiler-level declaration issues, not missing definitions at link time."
+
+BUILD SCRIPT ERROR:
+  patterns:
+    - 'make: \*\*\* No rule to make target .*'
+    - 'CMake Error:.*'
+    - 'CMake was unable to find a build program'
+    - 'CMAKE_(C|CXX)_COMPILER not set'
+    - 'ninja: error: loading ''build\.ninja'': No such file or directory'
+    - 'The source directory .* does not appear to contain CMakeLists\.txt'
+    - '/src/build\.sh: line \d+: syntax error'
+    - 'sed: -e expression #1, char \d+: (Invalid content of \{\}|extra characters after command)'
+    - 'sed: can''t read.*No such file or directory'
+    - '/src/build\.sh: line \d+:( .*:)? unbound variable'
+    - 'configure: error: .* not found'
+    - "autoreconf:\\s*['\\\"]configure\\.(?:ac|in)['\\\"].*is required"
+    - 'Could not find a package configuration file provided by .*'
+    - 'CMake Error at CMakeLists\.txt:\d+ \(find_package\)'
+    - 'By not providing "Find.*\.cmake" in CMAKE_MODULE_PATH.*'
+    - '/src/build\.sh: line \d+: fuzzer/CMakeLists\.txt: No such file or directory'
+    - '\./aom_configure: No such file or directory'
+    - 'configure: error: .* (required|dependency) .* (not found|not available|missing)'
+    - 'configure: error: .* but required .* (library|package).* not available'
+    - 'configure: error: .* requires .* (but it is not installed|not found|not available)'
+    - 'configure: error: C compiler cannot create executables'
+    - 'configure: error: in `.*`:'
+    - 'CMake Error at .*'
+    - 'CMake Generate step failed'
+    - 'No SOURCES given to target: .*'
+    - '^\.\/autogen\.sh:\s+\d+:\s+\S+: not found'
+    - '^libtool:\s+error:\s+cannot find the library\s+["'']?.*\.la["'']?'
+    - '^libtool:\s+error:\s+unhandled argument\s+["'']?.*\.la["'']?'
+    - '^Makefile\.am:\d+:\s+error:.*'
+  good:
+    - "Systematically identify and enable/disable all necessary CMake options that conditionally define targets, recognizing interdependencies and potential conflicts."
+    - "Investigate specialized build directories (e.g., oss-fuzz/) and consider altering the cmake source directory if iterative flag changes fail."
+    - "Verify make target names precisely match definitions, including full relative paths for nested targets, using cp commands as clues."
+    - "Ensure all necessary libraries and object files are explicitly linked, especially when modifying build loops or target definitions."
+    - "Recognize and adapt to project-specific build setups for fuzzing or testing, which may differ from general project builds."
+    - "Inspect build system config files (Makefile, CMakeLists.txt, meson.build, configure.ac)."
+    - "Set compiler/linker flags via build system (CMAKE_C_FLAGS, target_link_libraries)."
+    - "Leverage official project scripts (oss-fuzz.sh, build.sh) when available."
+  bad:
+    - "Do not remove required setup steps (e.g., sourcing configure.sh or running configure) without providing an equivalent in the build script."
+    - "Avoid blindly adding or removing CMake flags without understanding their purpose or impact, especially if the error message persists. Do not assume a single flag is a silver bullet."
+    - "Do not assume a new build strategy will work without verifying intermediate steps (e.g., cmake successfully generating a Makefile). Do not assume a library's main archive links all internal symbols."
+    - "Do not suggest modifying source code when the error message clearly indicates a build system configuration problem."
+    - "Incorrectly assuming the location of necessary files, the fuzz target is modified in place from the original fuzz target."
+    - "Do not use repeated or incorrect sed commands on build files, causing accumulated or broken changes."
+
+
+CORRUPTED CODE ERROR:
+  patterns:
+    - "invalid preprocessing directive"
+    - "unexpected token"
+    - "unrecognized input"
+    - "junk after number"
+    - "unclosed comment"
+    - "unterminated comment"
+    - "unexpected end of file"
+    - "illegal start of expression"
+    - "missing terminating ' character"
+    - "missing terminating \" character"
+    - "segmentation fault"
+    - "corrupted"
+  good:
+    - "If the code is severely corrupted, suggest reverting to a previous working version."
+    - "If parts are salvageable, suggest specific changes to fix corrupted sections while preserving logic."
+    - "Identify and explain the reasons for the corruption (e.g., incorrect merge, bad generation)."
+    - "Prioritize preserving the original intent and structure of the code."
+    - "Test suggested changes to ensure they restore functionality."
+    - "If the corruption is due to missing code, try to generate the missing parts based on context."
+    - "If the code is partially generated, ensure consistency and correctness of generated parts."
+    - "Check for logical errors or inconsistencies introduced by the corruption."
+    - "If the corruption is related to data structures, verify their correctness and consistency."
+    - "If the cause is unclear, suggest debugging techniques to identify the corrupted sections."
+  bad:
+    - "Replacing the entire code with generic placeholder code."
+    - "Introducing new errors or making the code even more corrupted."
+    - "Not attempting to understand or preserve the original logic."
+    - "Failing to test changes or verify they improve the situation."
+    - "Providing inadequate reasoning that doesn't justify changes."
+    - "Making assumptions about the intended functionality of the corrupted code."
+    - "Not recognizing common corruption patterns (e.g., incorrect indentation, missing braces)."
+    - "Applying generic fixes without understanding the specific corruption."
+    - "Not considering the context of the corrupted code within the larger project."
+    - "Ignoring or dismissing the corruption without attempting a fix."
