@@ -27,6 +27,7 @@ currently skipped. The minimal setup test verifies configuration and error
 handling without requiring the full OSS-Fuzz environment.
 """
 
+import os
 import shutil
 import subprocess
 import tempfile
@@ -166,7 +167,8 @@ class TestLocalBuilderPipeline(unittest.TestCase):
     print("✓ OSS-Fuzz repository cloned successfully")
 
     # Create a real fuzz target from benchmark YAML
-    benchmark_yaml_path = "../../benchmark-sets/all/libspng.yaml"
+    benchmark_yaml_path = os.path.join(os.path.dirname(__file__),
+                                       "../../benchmark-sets/all/libspng.yaml")
 
     try:
       fuzz_target = _create_real_fuzz_target_from_benchmark(benchmark_yaml_path)

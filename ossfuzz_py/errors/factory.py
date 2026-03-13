@@ -329,5 +329,24 @@ UpdateError = make_error("UpdateError", ErrorCode.UPDATE_ERROR,
 OSSFuzzManagerError = make_error("OSSFuzzManagerError",
                                  ErrorCode.INVALID_CONFIG, ErrorDomain.CONFIG)
 
+# Historical Data SDK errors
+HistoryManagerError = make_error("HistoryManagerError",
+                                 ErrorCode.HISTORY_MANAGER_ERROR,
+                                 ErrorDomain.DATA)
+HistoryStorageError = make_error("HistoryStorageError",
+                                 ErrorCode.HISTORY_STORAGE_ERROR,
+                                 ErrorDomain.STORAGE)
+HistoryRetrievalError = make_error("HistoryRetrievalError",
+                                   ErrorCode.HISTORY_RETRIEVAL_ERROR,
+                                   ErrorDomain.DATA)
+HistoryValidationError = make_error("HistoryValidationError",
+                                    ErrorCode.HISTORY_VALIDATION_ERROR,
+                                    ErrorDomain.VALIDATION)
+OSSFuzzSDKError = make_error("OSSFuzzSDKError", ErrorCode.OSSFUZZ_SDK_ERROR,
+                             ErrorDomain.CONFIG)
+OSSFuzzSDKConfigError = make_error("OSSFuzzSDKConfigError",
+                                   ErrorCode.OSSFUZZ_SDK_CONFIG_ERROR,
+                                   ErrorDomain.CONFIG)
+
 # General/legacy errors for backward compatibility
 SDKError = make_error("SDKError", ErrorCode.UNKNOWN, ErrorDomain.CONFIG)
