@@ -1,0 +1,41 @@
+name: GCS Sync Deployment
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 3 * * *'  # Daily 3AM UTC
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    environment: production
+    permissions:
+      contents: read
+      packages: write
+      deployments: write
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+
+    - name: Build sync image
+      uses: docker/build-push-action@v4
+      with:
+        file: Dockerfile.sync
+        tags: |
+          us-central1-docker.pkg.dev/oss-fuzz-base/testing/gcs-sync:${{ github.sha }}
+          us-central1-docker.pkg.dev/oss-fuzz-base/testing/gcs-sync:latest
+        push: true
+
+    - name: Authenticate to GKE
+      uses: google-github-actions/get-gke-credentials@v1
+      with:
+        cluster_name: your-cluster-name
+        location: us-central1
+        credentials: ${{ secrets.GKE_CREDENTIALS }}
+
+    - name: Deploy CronJob
+      run: kubectl apply -f k8s/gcs-sync-cron.yaml
