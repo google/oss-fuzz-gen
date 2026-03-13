@@ -21,8 +21,6 @@ metadata:
 spec:
   template:
     spec:
-      nodeSelector:
-        cloud.google.com/gke-nodepool: ofg-pr-exp
       containers:
       - name: experiment
         image:  us-central1-docker.pkg.dev/oss-fuzz-base/testing/oss-fuzz-gen-pull-request:pr-${PR_ID}
