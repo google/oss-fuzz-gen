@@ -198,7 +198,7 @@ The LLM prompt will be constructed based on the files in this directory. It
 starts with a priming to define the main goal and important notices, followed
 by some [example problems and solutions](data_prep/README.md#Fuzz-Target-Examples).
 Each example problem is in the same format as the final problem (i.e., a
-unction signature to fuzz), and the solution is the corresponding
+function signature to fuzz), and the solution is the corresponding
 human-written fuzz target for *different* functions from the same project or
 other projects. Prompt can also include more information of the function (e.g.,
 its usage, source code, or parameter type definitions), and model-specific
