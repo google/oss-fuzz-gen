@@ -31,8 +31,8 @@ builder_uml.jpg diagram.
 import logging
 from typing import Any, Dict, List, Optional
 
-from ossfuzz_py import BuildConfigError
 from ossfuzz_py.core.data_models import FuzzingEngine, ProjectConfig, Sanitizer
+from ossfuzz_py.errors import BuildConfigError
 
 # Configure module logger
 logger = logging.getLogger('ossfuzz_sdk.build_config')

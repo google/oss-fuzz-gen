@@ -585,8 +585,8 @@ class TestOSSFuzzManagerRealExecution(unittest.TestCase):
     def shallow_clone(version="master"):
       try:
         if manager.checkout_path.exists():
-          manager.logger.info(
-              f"Repository already exists at {manager.checkout_path}")
+          manager.logger.info("Repository already exists at %s",
+                              manager.checkout_path)
           return True
 
         repo_url = "https://github.com/google/oss-fuzz.git"

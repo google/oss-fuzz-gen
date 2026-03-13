@@ -133,6 +133,142 @@ class StorageAdapter(ABC):
         StorageAdapterError: If not connected or connection lost.
     """
 
+  @abstractmethod
+  def store_file(self, key: str, file_path: str) -> str:
+    """
+    Store a file with the given key.
+
+    Args:
+        key: Storage key/path for the file
+        file_path: Local path to the file to store
+
+    Returns:
+        str: Storage path or identifier where file was stored
+
+    Raises:
+        StorageAdapterError: If storage fails
+    """
+
+  @abstractmethod
+  def retrieve_file(self, key: str, dest_path: str) -> str:
+    """
+    Retrieve a file to the specified destination.
+
+    Args:
+        key: Storage key/path for the file
+        dest_path: Local path where file should be saved
+
+    Returns:
+        str: Local path where file was saved
+
+    Raises:
+        StorageAdapterError: If retrieval fails
+    """
+
+  @abstractmethod
+  def store_object(self, key: str, data: Any) -> str:
+    """
+    Store an object with the given key.
+
+    Args:
+        key: Storage key/path for the object
+        data: Object data to store
+
+    Returns:
+        str: Storage path or identifier where object was stored
+
+    Raises:
+        StorageAdapterError: If storage fails
+    """
+
+  @abstractmethod
+  def retrieve_object(self, key: str) -> Any:
+    """
+    Retrieve an object with the given key.
+
+    Args:
+        key: Storage key/path for the object
+
+    Returns:
+        Any: Retrieved object data
+
+    Raises:
+        StorageAdapterError: If retrieval fails
+    """
+
+  @abstractmethod
+  def list_keys(self, prefix: str = "") -> List[str]:
+    """
+    List all keys with the given prefix.
+
+    Args:
+        prefix: Key prefix to filter by
+
+    Returns:
+        List[str]: List of matching keys
+
+    Raises:
+        StorageAdapterError: If listing fails
+    """
+
+  @abstractmethod
+  def delete(self, key: str) -> bool:
+    """
+    Delete data with the given key.
+
+    Args:
+        key: Storage key/path for the data to delete
+
+    Returns:
+        bool: True if deletion was successful, False otherwise
+
+    Raises:
+        StorageAdapterError: If deletion fails
+    """
+
+  @abstractmethod
+  def get_history(self,
+                  category: str,
+                  name: str,
+                  start_date: Optional[str] = None,
+                  end_date: Optional[str] = None,
+                  limit: Optional[int] = None) -> List[Any]:
+    """
+    Retrieve historical data for a specific category and name.
+
+    Args:
+        category: History category
+        (e.g., 'build', 'crash', 'corpus', 'coverage')
+        name: Specific name/identifier within the category
+        start_date: Optional start date filter (ISO format)
+        end_date: Optional end date filter (ISO format)
+        limit: Optional limit on number of results
+
+    Returns:
+        List of historical data entries
+
+    Raises:
+        StorageAdapterError: If retrieval fails
+    """
+
+  @abstractmethod
+  def append_history(self, category: str, name: str, data: Any) -> str:
+    """
+    Append new data to historical records.
+
+    Args:
+        category: History category
+        (e.g., 'build', 'crash', 'corpus', 'coverage')
+        name: Specific name/identifier within the category
+        data: Data to append to history
+
+    Returns:
+        str: Storage path or identifier where data was stored
+
+    Raises:
+        StorageAdapterError: If storage fails
+    """
+
   # - fetch_project_list()
   # - fetch_build_information(...)
   # - fetch_report_details(...)
@@ -357,6 +493,150 @@ class FileStorageAdapter(StorageAdapter):
                         e,
                         exc_info=True)
       raise QueryError(f"Failed to fetch crash data for {project_name}: {e}")
+
+  def store_file(self, key: str, file_path: str) -> str:
+    """Store a file with the given key."""
+    try:
+      dest_path = self.base_directory / key
+      dest_path.parent.mkdir(parents=True, exist_ok=True)
+
+      import shutil
+      shutil.copy2(file_path, dest_path)
+      return str(dest_path)
+    except Exception as e:
+      raise StorageAdapterError(f"Failed to store file {key}: {e}")
+
+  def retrieve_file(self, key: str, dest_path: str) -> str:
+    """Retrieve a file to the specified destination."""
+    try:
+      src_path = self.base_directory / key
+      if not src_path.exists():
+        raise StorageAdapterError(f"File not found: {key}")
+
+      import shutil
+      shutil.copy2(src_path, dest_path)
+      return dest_path
+    except Exception as e:
+      raise StorageAdapterError(f"Failed to retrieve file {key}: {e}")
+
+  def store_object(self, key: str, data: Any) -> str:
+    """Store an object with the given key."""
+    try:
+      dest_path = self.base_directory / key
+      dest_path.parent.mkdir(parents=True, exist_ok=True)
+
+      with open(dest_path, 'w') as f:
+        json.dump(data, f, indent=2, default=str)
+      return str(dest_path)
+    except Exception as e:
+      raise StorageAdapterError(f"Failed to store object {key}: {e}")
+
+  def retrieve_object(self, key: str) -> Any:
+    """Retrieve an object with the given key."""
+    try:
+      src_path = self.base_directory / key
+      if not src_path.exists():
+        raise StorageAdapterError(f"Object not found: {key}")
+
+      with open(src_path, 'r') as f:
+        return json.load(f)
+    except Exception as e:
+      raise StorageAdapterError(f"Failed to retrieve object {key}: {e}")
+
+  def list_keys(self, prefix: str = "") -> List[str]:
+    """List all keys with the given prefix."""
+    try:
+      keys = []
+      search_path = self.base_directory / prefix \
+        if prefix else self.base_directory
+
+      if search_path.is_file():
+        return [str(search_path.relative_to(self.base_directory))]
+
+      if search_path.is_dir():
+        for path in search_path.rglob('*'):
+          if path.is_file():
+            keys.append(str(path.relative_to(self.base_directory)))
+
+      return keys
+    except Exception as e:
+      raise StorageAdapterError(
+          f"Failed to list keys with prefix {prefix}: {e}")
+
+  def delete(self, key: str) -> bool:
+    """Delete data with the given key."""
+    try:
+      path = self.base_directory / key
+      if path.exists():
+        if path.is_file():
+          path.unlink()
+        elif path.is_dir():
+          import shutil
+          shutil.rmtree(path)
+        return True
+      return False
+    except Exception as e:
+      raise StorageAdapterError(f"Failed to delete {key}: {e}")
+
+  def get_history(self,
+                  category: str,
+                  name: str,
+                  start_date: Optional[str] = None,
+                  end_date: Optional[str] = None,
+                  limit: Optional[int] = None) -> List[Any]:
+    """Retrieve historical data for a specific category and name."""
+    try:
+      history_path = self.base_directory / "history" / category / f"{name}.json"
+      if not history_path.exists():
+        return []
+
+      with open(history_path, 'r') as f:
+        data = json.load(f)
+
+      # Filter by date if specified
+      if start_date or end_date:
+        filtered_data = []
+        for entry in data:
+          entry_date = entry.get('timestamp', entry.get('date', ''))
+          if start_date and entry_date < start_date:
+            continue
+          if end_date and entry_date > end_date:
+            continue
+          filtered_data.append(entry)
+        data = filtered_data
+
+      # Apply limit if specified
+      if limit:
+        data = data[-limit:]  # Get most recent entries
+
+      return data
+    except Exception as e:
+      raise StorageAdapterError(
+          f"Failed to get history for {category}/{name}: {e}")
+
+  def append_history(self, category: str, name: str, data: Any) -> str:
+    """Append new data to historical records."""
+    try:
+      history_path = self.base_directory / "history" / category / f"{name}.json"
+      history_path.parent.mkdir(parents=True, exist_ok=True)
+
+      # Load existing data
+      existing_data = []
+      if history_path.exists():
+        with open(history_path, 'r') as f:
+          existing_data = json.load(f)
+
+      # Append new data
+      existing_data.append(data)
+
+      # Save back to file
+      with open(history_path, 'w') as f:
+        json.dump(existing_data, f, indent=2, default=str)
+
+      return str(history_path)
+    except Exception as e:
+      raise StorageAdapterError(
+          f"Failed to append history for {category}/{name}: {e}")
 
 
 class GCSStorageAdapter(StorageAdapter):
@@ -703,3 +983,145 @@ class GCSStorageAdapter(StorageAdapter):
           exc_info=True)
       raise QueryError(f"GCSStorageAdapter: Failed to fetch crash data for "
                        f"{project_name}: {e}")
+
+  def store_file(self, key: str, file_path: str) -> str:
+    """Store a file with the given key."""
+    if self._bucket:
+      try:
+        blob = self._bucket.blob(key)
+        blob.upload_from_filename(file_path)
+        return f"gs://{self.bucket_name}/{key}"
+      except Exception as e:
+        raise StorageAdapterError(f"Failed to store file {key}: {e}")
+    return ''
+
+  def retrieve_file(self, key: str, dest_path: str) -> str:
+    """Retrieve a file to the specified destination."""
+    if self._bucket:
+      try:
+        blob = self._bucket.blob(key)
+        if not blob.exists():
+          raise StorageAdapterError(f"File not found: {key}")
+
+        blob.download_to_filename(dest_path)
+        return dest_path
+      except Exception as e:
+        raise StorageAdapterError(f"Failed to retrieve file {key}: {e}")
+    return ''
+
+  def store_object(self, key: str, data: Any) -> str:
+    """Store an object with the given key."""
+    if self._bucket:
+      try:
+        blob = self._bucket.blob(key)
+        blob.upload_from_string(json.dumps(data, indent=2, default=str),
+                                content_type='application/json')
+        return f"gs://{self.bucket_name}/{key}"
+      except Exception as e:
+        raise StorageAdapterError(f"Failed to store object {key}: {e}")
+    return ''
+
+  def retrieve_object(self, key: str) -> Any:
+    """Retrieve an object with the given key."""
+    if self._bucket:
+      try:
+        blob = self._bucket.blob(key)
+        if not blob.exists():
+          raise StorageAdapterError(f"Object not found: {key}")
+
+        content = blob.download_as_text()
+        return json.loads(content)
+      except Exception as e:
+        raise StorageAdapterError(f"Failed to retrieve object {key}: {e}")
+    return None
+
+  def list_keys(self, prefix: str = "") -> List[str]:
+    """List all keys with the given prefix."""
+    if self._bucket:
+      try:
+        blobs = self._bucket.list_blobs(prefix=prefix)
+        return [blob.name for blob in blobs]
+      except Exception as e:
+        raise StorageAdapterError(
+            f"Failed to list keys with prefix {prefix}: {e}")
+    return []
+
+  def delete(self, key: str) -> bool:
+    """Delete data with the given key."""
+    if self._bucket:
+      try:
+        blob = self._bucket.blob(key)
+        if blob.exists():
+          blob.delete()
+          return True
+        return False
+      except Exception as e:
+        raise StorageAdapterError(f"Failed to delete {key}: {e}")
+    return False
+
+  def get_history(self,
+                  category: str,
+                  name: str,
+                  start_date: Optional[str] = None,
+                  end_date: Optional[str] = None,
+                  limit: Optional[int] = None) -> List[Any]:
+    """Retrieve historical data for a specific category and name."""
+    if self._bucket:
+      try:
+        key = f"history/{category}/{name}.json"
+        blob = self._bucket.blob(key)
+
+        if not blob.exists():
+          return []
+
+        content = blob.download_as_text()
+        data = json.loads(content)
+
+        # Filter by date if specified
+        if start_date or end_date:
+          filtered_data = []
+          for entry in data:
+            entry_date = entry.get('timestamp', entry.get('date', ''))
+            if start_date and entry_date < start_date:
+              continue
+            if end_date and entry_date > end_date:
+              continue
+            filtered_data.append(entry)
+          data = filtered_data
+
+        # Apply limit if specified
+        if limit:
+          data = data[-limit:]  # Get most recent entries
+
+        return data
+      except Exception as e:
+        raise StorageAdapterError(
+            f"Failed to get history for {category}/{name}: {e}")
+    return []
+
+  def append_history(self, category: str, name: str, data: Any) -> str:
+    """Append new data to historical records."""
+    if self._bucket:
+      try:
+        key = f"history/{category}/{name}.json"
+        blob = self._bucket.blob(key)
+
+        # Load existing data
+        existing_data = []
+        if blob.exists():
+          content = blob.download_as_text()
+          existing_data = json.loads(content)
+
+        # Append new data
+        existing_data.append(data)
+
+        # Save back to GCS
+        blob.upload_from_string(json.dumps(existing_data, indent=2,
+                                           default=str),
+                                content_type='application/json')
+
+        return f"gs://{self.bucket_name}/{key}"
+      except Exception as e:
+        raise StorageAdapterError(
+            f"Failed to append history for {category}/{name}: {e}")
+    return ''
