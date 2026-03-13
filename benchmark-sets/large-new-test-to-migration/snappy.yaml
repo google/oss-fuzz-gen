@@ -1,0 +1,9 @@
+"language": "c++"
+"project": "snappy"
+"target_name": "snappy_uncompress_fuzzer"
+"target_path": "/src/snappy/snappy_uncompress_fuzzer.cc"
+"test_files":
+- "test_file_path": "/src/snappy/snappy-test.cc"
+- "test_file_path": "/src/snappy/snappy_unittest.cc"
+- "test_file_path": "/src/snappy/snappy_test_data.cc"
+- "test_file_path": "/src/snappy/snappy_test_tool.cc"

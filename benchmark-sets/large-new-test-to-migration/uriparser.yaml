@@ -1,0 +1,10 @@
+"language": "c++"
+"project": "uriparser"
+"target_name": "uri_dissect_query_malloc_fuzzer"
+"target_path": "/src/uri_dissect_query_malloc_fuzzer.cc"
+"test_files":
+- "test_file_path": "/src/uriparser/test/test.cpp"
+- "test_file_path": "/src/uriparser/test/VersionSuite.cpp"
+- "test_file_path": "/src/uriparser/test/FourSuite.cpp"
+- "test_file_path": "/src/uriparser/cmake/test_find_package/hello.c"
+- "test_file_path": "/src/uriparser/test/MemoryManagerSuite.cpp"

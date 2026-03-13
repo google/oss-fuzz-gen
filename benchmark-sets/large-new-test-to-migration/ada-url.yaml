@@ -1,0 +1,12 @@
+"language": "c++"
+"project": "ada-url"
+"target_name": "idna"
+"target_path": "/src/ada-url/fuzz/idna.cc"
+"test_files":
+- "test_file_path": "/src/ada-url/tests/ada_c.cpp"
+- "test_file_path": "/src/ada-url/tests/basic_tests.cpp"
+- "test_file_path": "/src/ada-url/tests/url_components.cpp"
+- "test_file_path": "/src/ada-url/tests/wasm/wasm.cpp"
+- "test_file_path": "/src/ada-url/tests/url_search_params.cpp"
+- "test_file_path": "/src/ada-url/tests/wpt_tests.cpp"
+- "test_file_path": "/src/ada-url/tests/from_file_tests.cpp"

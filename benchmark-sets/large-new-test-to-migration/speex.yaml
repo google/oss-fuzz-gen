@@ -1,0 +1,10 @@
+"language": "c++"
+"project": "speex"
+"target_name": "speex_decode_fuzzer_fixed"
+"target_path": "/src/speex/contrib/oss-fuzz/speexdec_fuzzer.cc"
+"test_files":
+- "test_file_path": "/src/speex/libspeex/testenc_uwb.c"
+- "test_file_path": "/src/speex/ti/testenc-TI-C64x.c"
+- "test_file_path": "/src/speex/ti/testenc-TI-C5x.c"
+- "test_file_path": "/src/speex/libspeex/testenc.c"
+- "test_file_path": "/src/speex/libspeex/testenc_wb.c"

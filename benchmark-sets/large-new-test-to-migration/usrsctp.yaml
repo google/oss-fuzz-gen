@@ -1,0 +1,7 @@
+"language": "c++"
+"project": "usrsctp"
+"target_name": "fuzzer_listen"
+"target_path": "/src/usrsctp/fuzzer/fuzzer_listen.c"
+"test_files":
+- "test_file_path": "/src/usrsctp/programs/test_timer.c"
+- "test_file_path": "/src/usrsctp/programs/test_libmgmt.c"

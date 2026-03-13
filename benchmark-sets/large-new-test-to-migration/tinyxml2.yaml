@@ -1,0 +1,6 @@
+"language": "c++"
+"project": "tinyxml2"
+"target_name": "xmltest"
+"target_path": "/src/xmltest.cpp"
+"test_files":
+- "test_file_path": "/src/tinyxml2/xmltest.cpp"

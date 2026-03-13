@@ -1,0 +1,6 @@
+"language": "c++"
+"project": "bzip2"
+"target_name": "bzip2_decompress_target"
+"target_path": "/src/bzip2_decompress_target.c"
+"test_files":
+- "test_file_path": "/src/bzip2/dlltest.c"

@@ -1,0 +1,13 @@
+"language": "c++"
+"project": "tinyobjloader"
+"target_name": "fuzz_ParseFromString"
+"target_path": "/src/tinyobjloader/fuzzer/fuzz_ParseFromString.cc"
+"test_files":
+- "test_file_path": "/src/tinyobjloader/examples/obj_sticher/obj_sticher.cc"
+- "test_file_path": "/src/tinyobjloader/examples/callback_api/main.cc"
+- "test_file_path": "/src/tinyobjloader/tests/tester.cc"
+- "test_file_path": "/src/tinyobjloader/examples/voxelize/main.cc"
+- "test_file_path": "/src/tinyobjloader/examples/viewer/trackball.cc"
+- "test_file_path": "/src/tinyobjloader/examples/skin_weight/main.cc"
+- "test_file_path": "/src/tinyobjloader/examples/obj_sticher/obj_writer.cc"
+- "test_file_path": "/src/tinyobjloader/examples/viewer/viewer.cc"

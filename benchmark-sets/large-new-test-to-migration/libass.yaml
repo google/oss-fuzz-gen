@@ -1,0 +1,6 @@
+"language": "c++"
+"project": "libass"
+"target_name": "libass_fuzzer"
+"target_path": "/src/libass/fuzz/fuzz.c"
+"test_files":
+- "test_file_path": "/src/libass/test/test.c"

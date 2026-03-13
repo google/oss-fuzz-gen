@@ -1,0 +1,6 @@
+"language": "c++"
+"project": "wget"
+"target_name": "wget_netrc_fuzzer"
+"target_path": "/src/wget/fuzz/wget_netrc_fuzzer.c"
+"test_files":
+- "test_file_path": "/src/wget/tests/unit-tests.c"

@@ -1,0 +1,8 @@
+"language": "c++"
+"project": "spice-usbredir"
+"target_name": "usbredirfilterfuzz"
+"target_path": "/src/spice-usbredir/fuzzing/usbredirfilterfuzz.cc"
+"test_files":
+- "test_file_path": "/src/spice-usbredir/tests/filter.c"
+- "test_file_path": "/src/spice-usbredir/usbredirtestclient/usbredirtestclient.c"
+- "test_file_path": "/src/spice-usbredir/tests/serializer.c"

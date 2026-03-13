@@ -1,0 +1,12 @@
+"language": "c++"
+"project": "bloaty"
+"target_name": "fuzz_target"
+"target_path": "/src/bloaty/tests/fuzz_target.cc"
+"test_files":
+- "test_file_path": "/src/bloaty/tests/testdata/bar.c"
+- "test_file_path": "/src/bloaty/tests/bloaty_test.cc"
+- "test_file_path": "/src/bloaty/tests/testdata/main.c"
+- "test_file_path": "/src/bloaty/tests/bloaty_test_pe.cc"
+- "test_file_path": "/src/bloaty/tests/bloaty_misc_test.cc"
+- "test_file_path": "/src/bloaty/tests/range_map_test.cc"
+- "test_file_path": "/src/bloaty/tests/testdata/foo.c"

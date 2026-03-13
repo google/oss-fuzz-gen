@@ -1,0 +1,6 @@
+"language": "c"
+"project": "gss-ntlmssp"
+"target_name": "fuzz-accept-sec-context"
+"target_path": "/src/gss-ntlmssp/fuzzing/fuzz-accept-sec-context.c"
+"test_files":
+- "test_file_path": "/src/gss-ntlmssp/tests/ntlmssptest.c"

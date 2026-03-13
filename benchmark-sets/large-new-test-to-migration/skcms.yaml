@@ -1,0 +1,7 @@
+"language": "c++"
+"project": "skcms"
+"target_name": "iccprofile_info"
+"target_path": "/src/skcms/fuzz/fuzz_iccprofile_info.c"
+"test_files":
+- "test_file_path": "/src/skcms/test_only.c"
+- "test_file_path": "/src/skcms/tests.c"

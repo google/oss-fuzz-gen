@@ -1,0 +1,9 @@
+"language": "c++"
+"project": "libxslt"
+"target_name": "xpath"
+"target_path": "/src/libxslt/tests/fuzz/xpath.c"
+"test_files":
+- "test_file_path": "/src/libxslt/xsltproc/testThreads.c"
+- "test_file_path": "/src/libxslt/tests/runtest.c"
+- "test_file_path": "/src/libxslt/examples/xsltICUSort.c"
+- "test_file_path": "/src/libxslt/tests/testplugin.c"

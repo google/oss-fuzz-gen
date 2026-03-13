@@ -1,0 +1,12 @@
+"language": "c++"
+"project": "astc-encoder"
+"target_name": "fuzz_astc_physical_to_symbolic"
+"target_path": "/src/astc-encoder/Source/Fuzzers/fuzz_astc_physical_to_symbolic.cpp"
+"test_files":
+- "test_file_path": "/src/astc-encoder/Utils/astc_test_autoextract.cpp"
+- "test_file_path": "/src/astc-encoder/Utils/astc_test_autoextract_hdr.cpp"
+- "test_file_path": "/src/astc-encoder/Utils/astcenc_u8_test_bench.cpp"
+- "test_file_path": "/src/astc-encoder/Source/UnitTest/test_softfloat.cpp"
+- "test_file_path": "/src/astc-encoder/Utils/astc_blend_test.cpp"
+- "test_file_path": "/src/astc-encoder/Source/UnitTest/test_decode.cpp"
+- "test_file_path": "/src/astc-encoder/Source/UnitTest/test_simd.cpp"
