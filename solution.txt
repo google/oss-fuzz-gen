@@ -1,0 +1,6 @@
+---=== FILE ===---
+/root/oss-fuzz-gen/oss-fuzz/projects/airflow/build.sh
+---=== ORIGINAL ===---
+compile_python_fuzzer dag_fuzz.py --add-data airflow:airflow --add-data airflow/airflow:airflow --add-data /usr/local/lib/python3.8/site-packages/cron_descriptor:cron_descriptor
+---=== REPLACEMENT ===---
+compile_python_fuzzer dag_fuzz.py --add-data airflow:airflow --add-data airflow/airflow:airflow --add-data /usr/local/lib/python3.11/site-packages/cron_descriptor:cron_descriptor
