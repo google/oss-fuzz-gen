@@ -583,6 +583,9 @@ class PrototyperTemplateBuilder(DefaultTemplateBuilder):
     elif benchmark.is_cpp_target:
       self.priming_template_file = self._find_template(
           self.agent_templare_dir, 'prototyper-priming.cpp.txt')
+    elif benchmark.is_java_target:
+      self.priming_template_file = self._find_template(
+          self.agent_templare_dir, 'prototyper-priming.jvm.txt')
     else:
       self.problem_template_file = self._find_template(
           self.agent_templare_dir, 'prototyper-priming.txt')
@@ -596,6 +599,53 @@ class PrototyperTemplateBuilder(DefaultTemplateBuilder):
     self.context_template_file = self._find_template(template_dir,
                                                      'context.txt')
 
+  def _format_jvm_requirement(self) -> str:
+    """Formats a requirement based on the prompt template for JVM."""
+    requirement = self._get_template(
+        self._find_template(self._template_dir, 'jvm_requirement.txt'))
+
+    harness_name = ''
+    if self.benchmark:
+      harness_name = os.path.basename(self.benchmark.target_path).replace(
+          '.java', '')
+    if harness_name:
+      requirement = requirement.replace('{HARNESS_NAME}', harness_name)
+    else:
+      requirement = requirement.replace('{HARNESS_NAME}', 'Fuzz')
+
+    requirement = requirement.replace('{IMPORT_MAPPINGS}', '')
+    requirement = requirement.replace('{STATIC_OR_INSTANCE}', '')
+    requirement = requirement.replace('{NEED_CLOSE}', '')
+
+    return requirement
+
+  def format_jvm_problem(self, signature: str, priming: str) -> str:
+    """Format target problem specifically for JVM project."""
+    if not self.benchmark:
+      return ''
+
+    template_file = self._find_template(self._template_dir, 'jvm_target.txt')
+
+    class_name = signature.split('].')[0][1:]
+
+    target = self._get_template(template_file)
+    target = target.replace('{CLASS}', class_name)
+    target = target.replace('{SIGNATURE}', signature)
+    target = target.replace('{PROJECT_NAME}', self.benchmark.project)
+    target = target.replace(
+        '{PROJECT_URL}',
+        oss_fuzz_checkout.get_project_repository(self.benchmark.project))
+
+    priming = priming.replace('{TARGET}', target)
+    priming = priming.replace('{REQUIREMENTS}', self._format_jvm_requirement())
+    priming = priming.replace(
+        '{DATA_MAPPING}',
+        self._get_template(
+            self._find_template(self._template_dir,
+                                'jvm_specific_data_filler.txt')))
+
+    return priming
+
   def build(self,
             example_pair: list[list[str]],
             project_example_content: Optional[list[list[str]]] = None,
@@ -608,10 +658,16 @@ class PrototyperTemplateBuilder(DefaultTemplateBuilder):
       return self._prompt
     priming = self._format_priming(self.benchmark)
     priming = priming.replace('{PROJECT_DIR}', project_dir)
-    final_problem = self.format_problem(self.benchmark.function_signature)
-    final_problem += (f'You MUST call <code>\n'
-                      f'{self.benchmark.function_signature}\n'
-                      f'</code> in your solution!\n')
+
+    if self.benchmark.language == 'jvm':
+      priming = self.format_jvm_problem(self.benchmark.function_signature,
+                                        priming)
+      final_problem = ''
+    else:
+      final_problem = self.format_problem(self.benchmark.function_signature)
+      final_problem += (f'You MUST call <code>\n'
+                        f'{self.benchmark.function_signature}\n'
+                        f'</code> in your solution!\n')
     if project_context_content:
       final_problem += self.format_context(project_context_content)
     if function_requirements:
@@ -635,8 +691,13 @@ class PrototyperFixerTemplateBuilder(PrototyperTemplateBuilder):
                initial: Any = None):
     super().__init__(model, benchmark, template_dir, initial)
     # Load templates.
+    if benchmark.is_java_target:
+      priming_file = 'prototyper-fixing.jvm.txt'
+    else:
+      priming_file = 'prototyper-fixing.txt'
+
     self.priming_template_file = self._find_template(self.agent_templare_dir,
-                                                     'prototyper-fixing.txt')
+                                                     priming_file)
     self.build_result = build_result
     self.compile_log = compile_log
 
