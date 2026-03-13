@@ -1,0 +1,58 @@
+name: PR Experiment
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+  pull_request_review:
+    types: [submitted]
+
+env:
+  GCP_PROJECT: oss-fuzz
+  IMAGE_REPO: us-central1-docker.pkg.dev/oss-fuzz-base/oss-fuzz-gen/ci
+
+jobs:
+  request-pr-experiment:
+    name: "Trigger GKE experiment for PR"
+    # only run when a PR is created/updated by maintainers,
+    # or when a PR review is submitted/approved by a maintainer
+    if: >-
+      (
+        github.event_name == 'pull_request' &&
+        contains(fromJson('["DavidKorczynski","DonggeLiu"]'), github.event.pull_request.user.login)
+      ) ||
+      (
+        github.event_name == 'pull_request_review' &&
+        github.event.review.state == 'approved' &&
+        contains(fromJson('["DavidKorczynski","DonggeLiu"]'), github.event.review.user.login)
+      )
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCLOUD_CREDENTIAL }}
+
+      - name: Configure gcloud
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ env.GCP_PROJECT }}
+
+      - name: Build & push CI Docker image
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          file: ci/Dockerfile
+          push: true
+          tags: ${{ env.IMAGE_REPO }}:pr-${{ github.event.pull_request.number }}
+
+      - name: Run CI trial build container
+        run: |
+          docker run \
+            -e PULL_REQUEST_NUMBER=${{ github.event.pull_request.number }} \
+            -e BRANCH=${{ github.head_ref }} \
+            -e REPO=${{ github.repositoryUrl }} \
+            ${{ env.IMAGE_REPO }}:pr-${{ github.event.pull_request.number }}
