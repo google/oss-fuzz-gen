@@ -1,0 +1,8 @@
+"language": "jvm"
+"project": "java-xmlbuilder"
+"target_name": "XmlBuilderFuzzer"
+"target_path": "/src/XmlBuilderFuzzer.java"
+"test_files":
+- "test_file_path": "com/jamesmurty/utils/TestXMLBuilder2.java"
+- "test_file_path": "com/jamesmurty/utils/TestXMLBuilder.java"
+- "test_file_path": "com/jamesmurty/utils/BaseXMLBuilderTests.java"
