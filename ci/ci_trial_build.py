@@ -18,10 +18,32 @@ the last PR comment containing "/gcbrun" and pass it to request_pr_exp.py."""
 
 import logging
 import os
+import re
 import sys
 
 import github  # type: ignore
 import request_pr_exp
+
+# Allowlist pattern for arguments parsed from PR comments. Only permit
+# characters that are safe to embed in shell commands and Kubernetes YAML
+# templates.  Shell metacharacters (;, &, |, `, $, (, ), {, }, <, >, ", ')
+# are intentionally excluded to prevent command injection.
+_SAFE_ARG_PATTERN = re.compile(r'^[a-zA-Z0-9_\-\./,=:@]+$')
+
+
+def _sanitize_shell_arg(value: str) -> str:
+  """Returns |value| if it consists solely of safe characters.
+
+  Raises ValueError if |value| contains shell metacharacters or other
+  characters that could alter command interpretation when the value is
+  embedded in a shell string or a Kubernetes Job template.
+  """
+  if not _SAFE_ARG_PATTERN.match(value):
+    raise ValueError(
+        f'Argument contains disallowed characters: {value!r}. '
+        'Only alphanumeric characters and the following symbols are permitted: '
+        '- _ . / , = : @')
+  return value
 
 TRIGGER_COMMAND = '/gcbrun'
 TRIAL_BUILD_COMMAND_STR = f'{TRIGGER_COMMAND} exp '
@@ -43,7 +65,13 @@ def get_comments(pull_request_number):
 
 
 def get_latest_gcbrun_command(comments):
-  """Gets the last /gcbrun comment from comments."""
+  """Gets the last /gcbrun comment from comments.
+
+  Each argument parsed from the comment body is validated against an allowlist
+  before being returned. If any argument fails validation the entire command is
+  rejected and None is returned so that the CI job is not triggered with
+  untrusted input.
+  """
   for comment in reversed(comments):
     # This seems to get comments on code too.
     body = comment.body
@@ -53,7 +81,17 @@ def get_latest_gcbrun_command(comments):
       continue
     if len(body) == len(TRIAL_BUILD_COMMAND_STR):
       return None
-    return body[len(TRIAL_BUILD_COMMAND_STR):].strip().split(' ')
+    raw_args = [a for a in body[len(TRIAL_BUILD_COMMAND_STR):].strip().split(' ') if a]
+    sanitized_args = []
+    for arg in raw_args:
+      try:
+        sanitized_args.append(_sanitize_shell_arg(arg))
+      except ValueError:
+        logging.warning(
+            'Rejected /gcbrun command: argument contains disallowed '
+            'characters: %r. Command will not be executed.', arg)
+        return None
+    return sanitized_args if sanitized_args else None
   return None
 
 

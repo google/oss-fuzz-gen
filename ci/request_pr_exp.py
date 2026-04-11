@@ -26,6 +26,7 @@ You can also pass arbitrary flags to experiments after -- separator:
 import argparse
 import logging
 import os
+import shlex
 import subprocess as sp
 import sys
 import time
@@ -386,8 +387,11 @@ def _fill_template(args: argparse.Namespace) -> str:
   exp_env_vars['GKE_REDIRECT_OUTS'] = f'{args.redirect_outs}'.lower()
   exp_env_vars['GKE_EXP_MAX_ROUND'] = args.max_round
 
-  # Add additional args as a space-separated string
-  exp_env_vars['GKE_EXP_ADDITIONAL_ARGS'] = ' '.join(args.additional_args)
+  # Each additional argument is shell-quoted before being joined so that
+  # special characters within individual arguments are treated as literals
+  # by the bash -c shell that executes the Kubernetes Job command string.
+  exp_env_vars['GKE_EXP_ADDITIONAL_ARGS'] = ' '.join(
+      shlex.quote(arg) for arg in args.additional_args)
 
   with open(args.gke_template, 'r') as file:
     yaml_template = file.read()
