@@ -1,0 +1,13 @@
+"functions":
+- "name": "_ZN3BAG8MetadataC2ENSt3__110shared_ptrINS_7DatasetEEE"
+  "params":
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void BAG::Metadata::Metadata(shared_ptr<BAG::Dataset>)"
+"language": "c++"
+"project": "opennavsurf-bag"
+"target_name": "bag_extended_fuzzer"
+"target_path": "/src/bag/fuzzers/bag_extended_fuzzer.cpp"

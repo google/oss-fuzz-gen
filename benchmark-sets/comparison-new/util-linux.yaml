@@ -1,0 +1,21 @@
+"functions":
+- "name": "mnt_table_parse_mtab"
+  "params":
+  - "name": "tb"
+    "type": "bool "
+  - "name": "filename"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int mnt_table_parse_mtab(struct libmnt_table *, const char *)"
+- "name": "mnt_table_parse_fstab"
+  "params":
+  - "name": "tb"
+    "type": "bool "
+  - "name": "filename"
+    "type": "bool "
+  "return_type": "int"
+  "signature": "int mnt_table_parse_fstab(struct libmnt_table *, const char *)"
+"language": "c"
+"project": "util-linux"
+"target_name": "test_last_fuzz"
+"target_path": "/src/util-linux/login-utils/last.c"

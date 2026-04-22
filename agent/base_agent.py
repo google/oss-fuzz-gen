@@ -31,6 +31,51 @@ from google.genai import errors, types
 
 import logger
 import utils
+
+def patch_gemini_thought_signature():
+    try:
+        from google.adk.models.google_llm import Gemini
+        from google.genai import types
+        
+        orig_preprocess = Gemini._preprocess_request
+        async def patched_preprocess(self, llm_request):
+            await orig_preprocess(self, llm_request)
+            if getattr(llm_request, 'contents', None) is None:
+                return
+
+            needs_flattening = False
+            for content in llm_request.contents:
+                if getattr(content, 'parts', None) is None: 
+                    continue
+                if any(getattr(p, 'function_call', None) and not getattr(p, 'thought_signature', None) for p in content.parts):
+                    needs_flattening = True
+                    break
+
+            if needs_flattening:
+                for content in llm_request.contents:
+                    if getattr(content, 'parts', None) is None: 
+                        continue
+                    new_parts = []
+                    for p in content.parts:
+                        if getattr(p, 'function_call', None):
+                            new_parts.append(types.Part(
+                                text=f"Model called tool `{p.function_call.name}` with parameters: {p.function_call.args}"
+                            ))
+                        elif getattr(p, 'function_response', None):
+                            new_parts.append(types.Part(
+                                text=f"Tool `{p.function_response.name}` returned result: {p.function_response.response}"
+                            ))
+                        else:
+                            new_parts.append(p)
+                    content.parts = new_parts
+                    
+        Gemini._preprocess_request = patched_preprocess
+    except Exception as e:
+        import logging
+        logging.getLogger(__name__).warning("Failed to patch Gemini: %s", e)
+
+patch_gemini_thought_signature()
+
 from data_prep import introspector
 from experiment import benchmark as benchmarklib
 from llm_toolkit.models import LLM, VertexAIModel
@@ -69,6 +114,7 @@ class BaseAgent(ABC):
   def chat_llm_with_tools(self, client: Any, prompt: Optional[Prompt], tools,
                           trial) -> Any:
     """Chat with LLM with tools."""
+    self._jitter_for_rate_limit(trial=trial)
     logger.info(
         '<CHAT WITH TOOLS PROMPT:ROUND %02d>%s</CHAT PROMPT:ROUND %02d>',
         trial,
@@ -89,6 +135,7 @@ class BaseAgent(ABC):
   def chat_llm(self, cur_round: int, client: Any, prompt: Prompt,
                trial: int) -> str:
     """Chat with LLM."""
+    self._jitter_for_rate_limit(trial=trial)
     logger.info('<CHAT PROMPT:ROUND %02d>%s</CHAT PROMPT:ROUND %02d>',
                 cur_round,
                 prompt.gettext(),
@@ -104,6 +151,7 @@ class BaseAgent(ABC):
 
   def ask_llm(self, cur_round: int, prompt: Prompt, trial: int) -> str:
     """Ask LLM."""
+    self._jitter_for_rate_limit(trial=trial)
     logger.info('<ASK PROMPT:ROUND %02d>%s</ASK PROMPT:ROUND %02d>',
                 cur_round,
                 prompt.gettext(),
@@ -200,6 +248,17 @@ class BaseAgent(ABC):
           tool.execute(command), previous_prompt=prompt) + '\n'
       prompt.append(prompt_text)
     return prompt
+
+  def _jitter_for_rate_limit(
+      self,
+      trial: int,
+      min_sec: float = 1.0,
+      max_sec: float = 10.0,
+  ) -> None:
+    """Sleeps for a very short random duration to avoid 429 collisions."""
+    duration = random.uniform(min_sec, max_sec)
+    logger.debug('Jittering for %f before query', duration, trial=trial)
+    time.sleep(duration)
 
   def _sleep_random_duration(
       self,
@@ -388,6 +447,7 @@ class ADKBaseAgent(BaseAgent):
   def chat_llm(self, cur_round: int, client: Any, prompt: Prompt,
                trial: int) -> Any:
     """Call the agent with the given prompt, running async code in sync."""
+    self._jitter_for_rate_limit(trial=trial)
 
     self.round = cur_round
 

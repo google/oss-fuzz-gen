@@ -257,6 +257,29 @@ def parse_args() -> argparse.Namespace:
                       type=int,
                       default=100,
                       help='Max trial round for agents.')
+  parser.add_argument(
+      "--use-error-memory",
+      action='store_true',
+      default=False,
+      help='Enable CloudSQL-backed error memory for build fixing.')
+  parser.add_argument('--memory-project-filter',
+                      type=str,
+                      choices=['all', 'exclude-current', 'only-current'],
+                      default='all',
+                      help='Project-based filter for error memory retrieval.')
+  parser.add_argument('--memory-model-filter',
+                      type=str,
+                      default=None,
+                      help='Model-based filter for error memory retrieval.')
+  parser.add_argument('--memory-created-before-or-on',
+                      type=str,
+                      default=None,
+                      help=('Only retrieve memory entries created on or before '
+                            'this date (YYYY-MM-DD).'))
+  parser.add_argument('--no-function-analyzer',
+                      action='store_true',
+                      default=False,
+                      help='Disables function analyzer.')
 
   args = parser.parse_args()
   if args.num_samples:

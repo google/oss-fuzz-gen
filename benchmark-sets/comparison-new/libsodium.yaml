@@ -1,0 +1,17 @@
+"functions":
+- "name": "blake2b_long"
+  "params":
+  - "name": "pout"
+    "type": "bool"
+  - "name": "outlen"
+    "type": "size_t"
+  - "name": "in"
+    "type": "bool"
+  - "name": "inlen"
+    "type": "size_t"
+  "return_type": "int"
+  "signature": "int blake2b_long(void *, size_t, const void *, size_t)"
+"language": "c++"
+"project": "libsodium"
+"target_name": "secret_key_auth_fuzzer"
+"target_path": "/src/secret_key_auth_fuzzer.cc"

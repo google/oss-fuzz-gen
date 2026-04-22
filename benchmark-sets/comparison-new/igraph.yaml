@@ -1,0 +1,13 @@
+"functions":
+- "name": "igraph_delaunay_graph"
+  "params":
+  - "name": "graph"
+    "type": "bool"
+  - "name": "points"
+    "type": "bool"
+  "return_type": "int"
+  "signature": "igraph_error_t igraph_delaunay_graph(igraph_t *, const igraph_matrix_t *)"
+"language": "c"
+"project": "igraph"
+"target_name": "read_graphdb"
+"target_path": "/src/igraph/fuzzing/read_graphdb.cpp"

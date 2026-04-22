@@ -1,0 +1,13 @@
+"functions":
+- "name": "x86_decode_insn"
+  "params":
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  "return_type": "void"
+  "signature": "struct x86_emulate_state * x86_decode_insn(struct x86_emulate_ctxt *, DW_TAG_subroutine_typeInfinite loop *)"
+"language": "c"
+"project": "xen"
+"target_name": "x86_instruction_emulator"
+"target_path": "/src/xen/tools/fuzz/x86_instruction_emulator/fuzz-emul.c"

@@ -1,0 +1,15 @@
+"functions":
+- "name": "required_field_pack_to_buffer"
+  "params":
+  - "name": "desc"
+    "type": "bool "
+  - "name": "member"
+    "type": "void"
+  - "name": "buffer"
+    "type": "bool "
+  "return_type": "size_t"
+  "signature": "size_t required_field_pack_to_buffer(const ProtobufCFieldDescriptor *, const void *, ProtobufCBuffer *)"
+"language": "c"
+"project": "protobuf-c"
+"target_name": "unpack_fuzzer"
+"target_path": "/src/unpack_fuzzer.c"

@@ -1,0 +1,17 @@
+"functions":
+- "name": "tcp_connect"
+  "params":
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "short"
+  - "name": ""
+    "type": "bool "
+  "return_type": "char"
+  "signature": "err_t tcp_connect(struct tcp_pcb *, const ip_addr_t *, u16_t, tcp_connected_fn)"
+"language": "c++"
+"project": "tinyusb"
+"target_name": "cdc"
+"target_path": "/src/tinyusb/test/fuzz/device/cdc/src/fuzz.cc"

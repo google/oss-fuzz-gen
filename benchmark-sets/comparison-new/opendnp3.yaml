@@ -1,0 +1,15 @@
+"functions":
+- "name": "_ZN8opendnp327StateUnsolicitedConfirmWait19OnNewNonReadRequestERNS_8OContextERKNS_13ParsedRequestE"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  - "name": "ctx"
+    "type": "bool "
+  - "name": "request"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "OutstationState & opendnp3::StateUnsolicitedConfirmWait::OnNewNonReadRequest(OContext &, const struct ParsedRequest &)"
+"language": "c++"
+"project": "opendnp3"
+"target_name": "fuzzdecoder"
+"target_path": "/src/opendnp3/cpp/tests/fuzz/fuzzdecoder.cpp"

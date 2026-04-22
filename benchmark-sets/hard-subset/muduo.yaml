@@ -1,0 +1,36 @@
+functions:
+- name: _ZN5muduo6LoggerC2ENS0_10SourceFileEiNS0_8LogLevelEPKc
+  params:
+  - name: ""
+    type: "bool "
+  - name: file
+    type: "bool "
+  - name: ""
+    type: "int"
+  - name: ""
+    type: "int"
+  - name: ""
+    type: "int"
+  - name: ""
+    type: "bool "
+  return_type: void
+  signature: void muduo::Logger::Logger(SourceFile, int, DW_TAG_enumeration_typeLogLevel,
+    const char *)
+- name: _ZN5muduo6LoggerC2ENS0_10SourceFileEiNS0_8LogLevelE
+  params:
+  - name: ""
+    type: "bool "
+  - name: file
+    type: "bool "
+  - name: ""
+    type: "int"
+  - name: ""
+    type: "int"
+  - name: ""
+    type: "int"
+  return_type: void
+  signature: void muduo::Logger::Logger(SourceFile, int, DW_TAG_enumeration_typeLogLevel)
+language: c++
+project: muduo
+target_name: muduo_http_fuzzer
+target_path: /src/muduo_http_fuzzer.cpp

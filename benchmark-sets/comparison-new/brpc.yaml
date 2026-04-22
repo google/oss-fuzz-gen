@@ -1,0 +1,13 @@
+"functions":
+- "name": "ListDiscoveryNodes"
+  "params":
+  - "name": "discovery_api_addr"
+    "type": "bool"
+  - "name": "servers"
+    "type": "bool"
+  "return_type": "int"
+  "signature": "int brpc::policy::ListDiscoveryNodes(const char*, std::string*)"
+"language": "c++"
+"project": "brpc"
+"target_name": "fuzz_butil"
+"target_path": "/src/brpc/test/fuzzing/fuzz_butil.cpp"

@@ -1,0 +1,13 @@
+"functions":
+- "name": "server_client_handle_key"
+  "params":
+  - "name": "c"
+    "type": "bool"
+  - "name": "event"
+    "type": "bool"
+  "return_type": "int"
+  "signature": "int server_client_handle_key(struct client *, struct key_event *)"
+"language": "c"
+"project": "tmux"
+"target_name": "input-fuzzer"
+"target_path": "/src/tmux/fuzz/input-fuzzer.c"

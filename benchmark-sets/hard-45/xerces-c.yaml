@@ -1,0 +1,13 @@
+"functions":
+- "name": "_ZN14xmlProtoFuzzer11XmlDocument8CopyFromERKS0_"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  - "name": "from"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void xmlProtoFuzzer::XmlDocument::CopyFrom(const XmlDocument &)"
+"language": "c++"
+"project": "xerces-c"
+"target_name": "parse_target"
+"target_path": "/src/parse_target.cpp"

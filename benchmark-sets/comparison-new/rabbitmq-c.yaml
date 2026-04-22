@@ -1,0 +1,17 @@
+"functions":
+- "name": "amqp_basic_get"
+  "params":
+  - "name": "state"
+    "type": "bool"
+  - "name": "channel"
+    "type": "short"
+  - "name": "queue"
+    "type": "void"
+  - "name": "no_ack"
+    "type": "int"
+  "return_type": "void"
+  "signature": "amqp_rpc_reply_t amqp_basic_get(amqp_connection_state_t, amqp_channel_t, amqp_bytes_t, amqp_boolean_t)"
+"language": "c"
+"project": "rabbitmq-c"
+"target_name": "fuzz_url"
+"target_path": "/src/librabbitmq/fuzz/fuzz_url.c"

@@ -1,0 +1,23 @@
+"functions":
+- "name": "redisCommand"
+  "params":
+  - "name": "c"
+    "type": "bool "
+  - "name": "format"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void * redisCommand(redisContext *, const char *, void)"
+- "name": "redisvCommand"
+  "params":
+  - "name": "c"
+    "type": "bool "
+  - "name": "format"
+    "type": "bool "
+  - "name": "ap"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void * redisvCommand(redisContext *, const char *, struct __va_list_tag *)"
+"language": "c"
+"project": "hiredis"
+"target_name": "format_command_fuzzer"
+"target_path": "/src/hiredis/fuzzing/format_command_fuzzer.c"

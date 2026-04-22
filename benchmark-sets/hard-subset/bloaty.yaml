@@ -1,0 +1,17 @@
+functions:
+- name: _ZZN6google8protobuf7Message14_InternalParseEPKcPNS0_8internal12ParseContextEEN21ReflectiveFieldParser10ParseGroupEjS3_S6_
+  params:
+  - name: ""
+    type: "bool "
+  - name: ""
+    type: "int"
+  - name: ""
+    type: "bool "
+  - name: ""
+    type: "bool "
+  return_type: void
+  signature: "const char * google::protobuf::Message::ParseGroup(ReflectiveFieldParser *, uint32, const char *, ParseContext *)"
+language: c++
+project: bloaty
+target_name: fuzz_target
+target_path: /src/bloaty/tests/fuzz_target.cc
