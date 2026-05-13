@@ -1,0 +1,70 @@
+// This fuzz driver is generated for library liblouis, aiming to fuzz the following functions:
+// lou_getEmphClasses at compileTranslationTable.c:5070:1 in liblouis.h
+// lou_freeTableFile at metadata.c:1089:1 in liblouis.h
+// lou_freeTableInfo at metadata.c:1167:1 in liblouis.h
+// lou_freeEmphClasses at compileTranslationTable.c:5095:1 in liblouis.h
+// lou_freeTableFiles at compileTranslationTable.c:4933:1 in liblouis.h
+// lou_free at compileTranslationTable.c:5363:1 in liblouis.h
+#include <iostream>
+#include <sstream>
+#include <string>
+#include <vector>
+#include <cstring>
+#include <cstdlib>
+#include <cstdio>
+#include <cstdint>
+#include <cstddef>
+#include <cstddef>
+#include <cstdint>
+#include <cstring>
+#include <liblouis.h>
+
+extern "C" int LLVMFuzzerTestOneInput_36(const uint8_t *Data, size_t Size) {
+    if (Size == 0) return 0;
+
+    // Allocate memory for table file and table info
+    char *tableFile = static_cast<char *>(malloc(Size + 1));
+    char *tableInfo = static_cast<char *>(malloc(Size + 1));
+
+    if (!tableFile || !tableInfo) {
+        free(tableFile);
+        free(tableInfo);
+        return 0;
+    }
+
+    // Copy data into allocated memory
+    memcpy(tableFile, Data, Size);
+    tableFile[Size] = '\0';
+    memcpy(tableInfo, Data, Size);
+    tableInfo[Size] = '\0';
+
+    // Use lou_getEmphClasses to get emphasis classes
+    char const **emphClasses = lou_getEmphClasses(tableFile);
+
+    // Test freeing functions
+    lou_freeTableFile(tableFile);
+    lou_freeTableInfo(tableInfo);
+    lou_freeEmphClasses(emphClasses);
+
+    // Allocate memory for table files array
+    char **tableFiles = static_cast<char **>(malloc(2 * sizeof(char *)));
+    if (tableFiles) {
+        tableFiles[0] = static_cast<char *>(malloc(Size + 1));
+        tableFiles[1] = nullptr;
+
+        if (tableFiles[0]) {
+            memcpy(tableFiles[0], Data, Size);
+            tableFiles[0][Size] = '\0';
+
+            // Test freeing table files
+            lou_freeTableFiles(tableFiles);
+        } else {
+            free(tableFiles);
+        }
+    }
+
+    // Free any remaining resources
+    lou_free();
+
+    return 0;
+}

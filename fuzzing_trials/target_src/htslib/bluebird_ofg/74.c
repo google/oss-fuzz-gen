@@ -1,0 +1,90 @@
+#include <sys/stat.h>
+#include <stdint.h>
+#include <stdlib.h>
+#include <string.h>
+#include "htslib/sam.h"
+
+int LLVMFuzzerTestOneInput_74(const uint8_t *data, size_t size) {
+    sam_hdr_t *hdr = NULL;
+    char *id = NULL;
+
+    // Ensure size is sufficient for creating a non-empty string
+    if (size < 1) {
+        return 0;
+    }
+
+    // Create a SAM header object
+    hdr = sam_hdr_init();
+    if (hdr == NULL) {
+        return 0;
+    }
+
+    // Allocate memory for the ID string and ensure it's null-terminated
+    id = (char *)malloc(size + 1);
+    if (id == NULL) {
+        sam_hdr_destroy(hdr);
+        return 0;
+    }
+    memcpy(id, data, size);
+    id[size] = '\0';
+
+    // Add a program record to the SAM header with the ID
+    if (sam_hdr_add_line(hdr, "PG", "ID", id, NULL) < 0) {
+        free(id);
+        sam_hdr_destroy(hdr);
+        return 0;
+    }
+
+    // Call the function-under-test
+    const char *result = sam_hdr_pg_id(hdr, id);
+
+    // Check the result to ensure the function is being exercised
+    if (result != NULL) {
+        // Optionally, do something with the result to verify correctness
+    }
+
+    // Clean up
+    free(id);
+    sam_hdr_destroy(hdr);
+
+    return 0;
+}
+#ifdef INC_MAIN
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
+int main(int argc, char *argv[])
+{
+    FILE *f;
+    uint8_t *data = NULL;
+    long size;
+
+    if(argc < 2)
+        exit(0);
+
+    f = fopen(argv[1], "rb");
+    if(f == NULL)
+        exit(0);
+
+    fseek(f, 0, SEEK_END);
+
+    size = ftell(f);
+    rewind(f);
+
+    if(size < 1 + 1)
+        exit(0);
+
+    data = (uint8_t *)malloc((size_t)size);
+    if(data == NULL)
+        exit(0);
+
+    if(fread(data, (size_t)size, 1, f) != 1)
+        exit(0);
+
+    LLVMFuzzerTestOneInput_74(data + 1, (size_t)(size - 1));
+
+    free(data);
+    fclose(f);
+    return 0;
+}
+#endif

@@ -1,0 +1,1095 @@
+"enums":
+- "name": "CURL_TLSAUTH"
+  "values":
+  - "CURL_TLSAUTH_LAST"
+- "name": "CURL_NETRC_OPTION"
+  "values":
+  - "CURL_NETRC_LAST"
+- "name": "curl_khmatch"
+  "values":
+  - "CURLKHMATCH_OK"
+  - "CURLKHMATCH_MISMATCH"
+  - "CURLKHMATCH_LAST"
+  - "CURLKHMATCH_MISSING"
+- "name": "curl_khtype"
+  "values":
+  - "CURLKHTYPE_UNKNOWN"
+  - "CURLKHTYPE_RSA"
+  - "CURLKHTYPE_RSA1"
+  - "CURLKHTYPE_ECDSA"
+  - "CURLKHTYPE_DSS"
+  - "CURLKHTYPE_ED25519"
+- "name": "curl_khstat"
+  "values":
+  - "CURLKHSTAT_FINE_ADD_TO_FILE"
+  - "CURLKHSTAT_DEFER"
+  - "CURLKHSTAT_FINE"
+  - "CURLKHSTAT_FINE_REPLACE"
+  - "CURLKHSTAT_REJECT"
+  - "CURLKHSTAT_LAST"
+"function_pointers":
+- "name": "curl_hstsread_callback"
+  "return_type": "CURLSTScode"
+  "signature": |-
+    CURL *easy,
+                                                  struct curl_hstsentry *e,
+                                                  void *userp
+- "name": "curl_socket_callback"
+  "return_type": "int"
+  "signature": |-
+    CURL *easy,      /* easy handle */
+                                        curl_socket_t s, /* socket */
+                                        int what,        /* see above */
+                                        void *userp,     /* private callback
+                                                            pointer */
+                                        void *socketp
+- "name": "curl_write_callback"
+  "return_type": "size_t"
+  "signature": |-
+    char *buffer,
+                                          size_t size,
+                                          size_t nitems,
+                                          void *outstream
+- "name": "curl_closesocket_callback"
+  "return_type": "int"
+  "signature": "void *clientp, curl_socket_t item"
+- "name": "curl_free_callback"
+  "return_type": "void"
+  "signature": "void *ptr"
+- "name": "curl_notify_callback"
+  "return_type": "void"
+  "signature": |-
+    CURLM *multi,
+                                         unsigned int notification,
+                                         CURL *easy,
+                                         void *user_data
+- "name": "curl_lock_function"
+  "return_type": "void"
+  "signature": |-
+    CURL *handle,
+                                       curl_lock_data data,
+                                       curl_lock_access locktype,
+                                       void *userptr
+- "name": "curl_xferinfo_callback"
+  "return_type": "int"
+  "signature": |-
+    void *clientp,
+                                          curl_off_t dltotal,
+                                          curl_off_t dlnow,
+                                          curl_off_t ultotal,
+                                          curl_off_t ulnow
+- "name": "curl_sockopt_callback"
+  "return_type": "int"
+  "signature": |-
+    void *clientp,
+                                         curl_socket_t curlfd,
+                                         curlsocktype purpose
+- "name": "curl_seek_callback"
+  "return_type": "int"
+  "signature": |-
+    void *instream,
+                                      curl_off_t offset,
+                                      int origin
+- "name": "curl_trailer_callback"
+  "return_type": "int"
+  "signature": |-
+    struct curl_slist **list,
+                                         void *userdata
+- "name": "curl_conv_callback"
+  "return_type": "CURLcode"
+  "signature": "char *buffer, size_t length"
+- "name": "curl_ssl_ctx_callback"
+  "return_type": "CURLcode"
+  "signature": |-
+    CURL *curl,    /* easy handle */
+                                              void *ssl_ctx, /* actually an OpenSSL
+                                                                or wolfSSL SSL_CTX,
+                                                                or an mbedTLS
+                                                              mbedtls_ssl_config */
+                                              void *userptr
+- "name": "curl_formget_callback"
+  "return_type": "size_t"
+  "signature": |-
+    void *arg, const char *buf,
+                                            size_t len
+- "name": "curl_chunk_bgn_callback"
+  "return_type": "long"
+  "signature": |-
+    const void *transfer_info,
+                                            void *ptr,
+                                            int remains
+- "name": "curl_push_callback"
+  "return_type": "int"
+  "signature": |-
+    CURL *parent,
+                                      CURL *easy,
+                                      size_t num_headers,
+                                      struct curl_pushheaders *headers,
+                                      void *userp
+- "name": "curl_opensocket_callback"
+  "return_type": "curl_socket_t"
+  "signature": |-
+    void *clientp,
+                                curlsocktype purpose,
+                                struct curl_sockaddr *address
+- "name": "curl_hstswrite_callback"
+  "return_type": "CURLSTScode"
+  "signature": |-
+    CURL *easy,
+                                                   struct curl_hstsentry *e,
+                                                   struct curl_index *i,
+                                                   void *userp
+- "name": "curl_unlock_function"
+  "return_type": "void"
+  "signature": |-
+    CURL *handle,
+                                         curl_lock_data data,
+                                         void *userptr
+- "name": "curl_ioctl_callback"
+  "return_type": "curlioerr"
+  "signature": |-
+    CURL *handle,
+                                             int cmd,
+                                             void *clientp
+- "name": "curl_multi_timer_callback"
+  "return_type": "int"
+  "signature": |-
+    CURLM *multi,    /* multi handle */
+                                             long timeout_ms, /* see above */
+                                             void *userp
+- "name": "curl_progress_callback"
+  "return_type": "int"
+  "signature": |-
+    void *clientp,
+                                          double dltotal,
+                                          double dlnow,
+                                          double ultotal,
+                                          double ulnow
+- "name": "curl_resolver_start_callback"
+  "return_type": "int"
+  "signature": |-
+    void *resolver_state,
+                                                void *reserved, void *userdata
+- "name": "curl_read_callback"
+  "return_type": "size_t"
+  "signature": |-
+    char *buffer,
+                                         size_t size,
+                                         size_t nitems,
+                                         void *instream
+- "name": "curl_chunk_end_callback"
+  "return_type": "long"
+  "signature": "void *ptr"
+- "name": "curl_prereq_callback"
+  "return_type": "int"
+  "signature": |-
+    void *clientp,
+                                        char *conn_primary_ip,
+                                        char *conn_local_ip,
+                                        int conn_primary_port,
+                                        int conn_local_port
+- "name": "curl_fnmatch_callback"
+  "return_type": "int"
+  "signature": |-
+    void *ptr,
+                                         const char *pattern,
+                                         const char *string
+"functions":
+- "name": "curl_url_get"
+  "params":
+  - "name": "u"
+    "type": "const CURLU*"
+  - "name": "what"
+    "type": "CURLUPart"
+  - "name": "part"
+    "type": "char**"
+  - "name": "flags"
+    "type": "unsigned int"
+  "return_type": "CURLUcode"
+  "signature": "CURLUcode curl_url_get(const CURLU *, CURLUPart, char **, unsigned int)"
+- "name": "curl_url_set"
+  "params":
+  - "name": "u"
+    "type": "CURLU*"
+  - "name": "what"
+    "type": "CURLUPart"
+  - "name": "part"
+    "type": "const char*"
+  - "name": "flags"
+    "type": "unsigned int"
+  "return_type": "CURLUcode"
+  "signature": "CURLUcode curl_url_set(CURLU *, CURLUPart, const char *, unsigned int)"
+- "name": "curl_url_dup"
+  "params":
+  - "name": "in"
+    "type": "const CURLU*"
+  "return_type": "CURLU*"
+  "signature": "CURLU * curl_url_dup(const CURLU *)"
+- "name": "curl_url_cleanup"
+  "params":
+  - "name": "u"
+    "type": "CURLU*"
+  "return_type": "void"
+  "signature": "void curl_url_cleanup(CURLU *)"
+- "name": "curl_url"
+  "params": []
+  "return_type": "CURLU*"
+  "signature": "CURLU * curl_url()"
+- "name": "curl_free"
+  "params":
+  - "name": "p"
+    "type": "void*"
+  "return_type": "void"
+  "signature": "void curl_free(void *)"
+- "name": "curl_easy_unescape"
+  "params":
+  - "name": "data"
+    "type": "CURL*"
+  - "name": "string"
+    "type": "const char*"
+  - "name": "length"
+    "type": "int"
+  - "name": "olen"
+    "type": "int*"
+  "return_type": "char*"
+  "signature": "char * curl_easy_unescape(CURL *, const char *, int, int *)"
+- "name": "curl_unescape"
+  "params":
+  - "name": "string"
+    "type": "const char*"
+  - "name": "length"
+    "type": "int"
+  "return_type": "char*"
+  "signature": "char * curl_unescape(const char *, int)"
+- "name": "curl_easy_escape"
+  "params":
+  - "name": "data"
+    "type": "CURL*"
+  - "name": "string"
+    "type": "const char*"
+  - "name": "inlength"
+    "type": "int"
+  "return_type": "char*"
+  "signature": "char * curl_easy_escape(CURL *, const char *, int)"
+- "name": "curl_escape"
+  "params":
+  - "name": "string"
+    "type": "const char*"
+  - "name": "inlength"
+    "type": "int"
+  "return_type": "char*"
+  "signature": "char * curl_escape(const char *, int)"
+- "name": "curl_strnequal"
+  "params":
+  - "name": "first"
+    "type": "const char*"
+  - "name": "second"
+    "type": "const char*"
+  - "name": "max"
+    "type": "size_t"
+  "return_type": "int"
+  "signature": "int curl_strnequal(const char *, const char *, size_t)"
+- "name": "curl_strequal"
+  "params":
+  - "name": "first"
+    "type": "const char*"
+  - "name": "second"
+    "type": "const char*"
+  "return_type": "int"
+  "signature": "int curl_strequal(const char *, const char *)"
+- "name": "curl_ws_meta"
+  "params":
+  - "name": "data"
+    "type": "CURL*"
+  "return_type": "const struct curl_ws_frame*"
+  "signature": "const struct curl_ws_frame * curl_ws_meta(CURL *)"
+- "name": "curl_ws_send"
+  "params":
+  - "name": "curl"
+    "type": "CURL*"
+  - "name": "buffer"
+    "type": "const void*"
+  - "name": "buflen"
+    "type": "size_t"
+  - "name": "sent"
+    "type": "size_t*"
+  - "name": "fragsize"
+    "type": "curl_off_t"
+  - "name": "flags"
+    "type": "unsigned int"
+  "return_type": "CURLcode"
+  "signature": "CURLcode curl_ws_send(CURL *, const void *, size_t, size_t *, curl_off_t, unsigned int)"
+- "name": "curl_ws_recv"
+  "params":
+  - "name": "curl"
+    "type": "CURL*"
+  - "name": "buffer"
+    "type": "void*"
+  - "name": "buflen"
+    "type": "size_t"
+  - "name": "nread"
+    "type": "size_t*"
+  - "name": "metap"
+    "type": "const struct curl_ws_frame**"
+  "return_type": "CURLcode"
+  "signature": "CURLcode curl_ws_recv(CURL *, void *, size_t, size_t *, const struct curl_ws_frame **)"
+- "name": "curl_share_cleanup"
+  "params":
+  - "name": "sh"
+    "type": "CURLSH*"
+  "return_type": "CURLSHcode"
+  "signature": "CURLSHcode curl_share_cleanup(CURLSH *)"
+- "name": "curl_share_setopt"
+  "params":
+  - "name": "("
+    "type": "CURLSH*"
+  - "name": "share"
+    "type": "CURLSHoption"
+  - "name": ","
+    "type": "void"
+  "return_type": "CURLSHcode"
+  "signature": "CURLSHcode curl_share_setopt(CURLSH *, CURLSHoption, void)"
+- "name": "curl_share_init"
+  "params": []
+  "return_type": "CURLSH*"
+  "signature": "CURLSH * curl_share_init()"
+- "name": "curl_easy_ssls_export"
+  "params":
+  - "name": "d"
+    "type": "CURL*"
+  - "name": "export_fn"
+    "type": "curl_ssls_export_cb*"
+  - "name": "userptr"
+    "type": "void*"
+  "return_type": "CURLcode"
+  "signature": "CURLcode curl_easy_ssls_export(CURL *, curl_ssls_export_cb *, void *)"
+- "name": "curl_easy_ssls_import"
+  "params":
+  - "name": "d"
+    "type": "CURL*"
+  - "name": "session_key"
+    "type": "const char*"
+  - "name": "shmac"
+    "type": "const unsigned char*"
+  - "name": "shmac_len"
+    "type": "size_t"
+  - "name": "sdata"
+    "type": "const unsigned char*"
+  - "name": "sdata_len"
+    "type": "size_t"
+  "return_type": "CURLcode"
+  "signature": "CURLcode curl_easy_ssls_import(CURL *, const char *, const unsigned char *, size_t, const unsigned char *, size_t)"
+- "name": "curl_easy_upkeep"
+  "params":
+  - "name": "d"
+    "type": "CURL*"
+  "return_type": "CURLcode"
+  "signature": "CURLcode curl_easy_upkeep(CURL *)"
+- "name": "curl_easy_send"
+  "params":
+  - "name": "d"
+    "type": "CURL*"
+  - "name": "buffer"
+    "type": "const void*"
+  - "name": "buflen"
+    "type": "size_t"
+  - "name": "n"
+    "type": "size_t*"
+  "return_type": "CURLcode"
+  "signature": "CURLcode curl_easy_send(CURL *, const void *, size_t, size_t *)"
+- "name": "curl_easy_recv"
+  "params":
+  - "name": "d"
+    "type": "CURL*"
+  - "name": "buffer"
+    "type": "void*"
+  - "name": "buflen"
+    "type": "size_t"
+  - "name": "n"
+    "type": "size_t*"
+  "return_type": "CURLcode"
+  "signature": "CURLcode curl_easy_recv(CURL *, void *, size_t, size_t *)"
+- "name": "curl_easy_pause"
+  "params":
+  - "name": "d"
+    "type": "CURL*"
+  - "name": "action"
+    "type": "int"
+  "return_type": "CURLcode"
+  "signature": "CURLcode curl_easy_pause(CURL *, int)"
+- "name": "curl_easy_reset"
+  "params":
+  - "name": "d"
+    "type": "CURL*"
+  "return_type": "void"
+  "signature": "void curl_easy_reset(CURL *)"
+- "name": "curl_easy_duphandle"
+  "params":
+  - "name": "d"
+    "type": "CURL*"
+  "return_type": "CURL*"
+  "signature": "CURL * curl_easy_duphandle(CURL *)"
+- "name": "curl_easy_getinfo"
+  "params":
+  - "name": "("
+    "type": "CURL*"
+  - "name": "handle"
+    "type": "CURLINFO"
+  - "name": ","
+    "type": "void"
+  "return_type": "CURLcode"
+  "signature": "CURLcode curl_easy_getinfo(CURL *, CURLINFO, void)"
+- "name": "curl_easy_cleanup"
+  "params":
+  - "name": "ptr"
+    "type": "CURL*"
+  "return_type": "void"
+  "signature": "void curl_easy_cleanup(CURL *)"
+- "name": "curl_easy_perform"
+  "params":
+  - "name": "data"
+    "type": "CURL*"
+  "return_type": "CURLcode"
+  "signature": "CURLcode curl_easy_perform(CURL *)"
+- "name": "curl_easy_init"
+  "params": []
+  "return_type": "CURL*"
+  "signature": "CURL * curl_easy_init()"
+- "name": "curl_global_sslset"
+  "params":
+  - "name": "id"
+    "type": "curl_sslbackend"
+  - "name": "name"
+    "type": "const char*"
+  - "name": "avail"
+    "type": "const curl_ssl_backend***"
+  "return_type": "CURLsslset"
+  "signature": "CURLsslset curl_global_sslset(curl_sslbackend, const char *, const curl_ssl_backend ***)"
+- "name": "curl_global_trace"
+  "params":
+  - "name": "config"
+    "type": "const char*"
+  "return_type": "CURLcode"
+  "signature": "CURLcode curl_global_trace(const char *)"
+- "name": "curl_global_cleanup"
+  "params": []
+  "return_type": "void"
+  "signature": "void curl_global_cleanup()"
+- "name": "curl_global_init_mem"
+  "params":
+  - "name": "flags"
+    "type": "long"
+  - "name": "m"
+    "type": "curl_malloc_callback"
+  - "name": "f"
+    "type": "curl_free_callback"
+  - "name": "r"
+    "type": "curl_realloc_callback"
+  - "name": "s"
+    "type": "curl_strdup_callback"
+  - "name": "c"
+    "type": "curl_calloc_callback"
+  "return_type": "CURLcode"
+  "signature": "CURLcode curl_global_init_mem(long, curl_malloc_callback, curl_free_callback, curl_realloc_callback, curl_strdup_callback, curl_calloc_callback)"
+- "name": "curl_global_init"
+  "params":
+  - "name": "flags"
+    "type": "long"
+  "return_type": "CURLcode"
+  "signature": "CURLcode curl_global_init(long)"
+- "name": "curl_getenv"
+  "params":
+  - "name": "variable"
+    "type": "const char*"
+  "return_type": "char*"
+  "signature": "char * curl_getenv(const char *)"
+- "name": "curl_easy_nextheader"
+  "params":
+  - "name": "easy"
+    "type": "CURL*"
+  - "name": "type"
+    "type": "unsigned int"
+  - "name": "request"
+    "type": "int"
+  - "name": "prev"
+    "type": "struct curl_header*"
+  "return_type": "struct curl_header*"
+  "signature": "struct curl_header * curl_easy_nextheader(CURL *, unsigned int, int, struct curl_header *)"
+- "name": "curl_easy_header"
+  "params":
+  - "name": "easy"
+    "type": "CURL*"
+  - "name": "name"
+    "type": "const char*"
+  - "name": "index"
+    "type": "size_t"
+  - "name": "origin"
+    "type": "unsigned int"
+  - "name": "request"
+    "type": "int"
+  - "name": "hout"
+    "type": "struct curl_header**"
+  "return_type": "CURLHcode"
+  "signature": "CURLHcode curl_easy_header(CURL *, const char *, size_t, unsigned int, int, struct curl_header **)"
+- "name": "curl_pushheader_byname"
+  "params":
+  - "name": "h"
+    "type": "struct curl_pushheaders*"
+  - "name": "header"
+    "type": "const char*"
+  "return_type": "char*"
+  "signature": "char * curl_pushheader_byname(struct curl_pushheaders *, const char *)"
+- "name": "curl_pushheader_bynum"
+  "params":
+  - "name": "h"
+    "type": "struct curl_pushheaders*"
+  - "name": "num"
+    "type": "size_t"
+  "return_type": "char*"
+  "signature": "char * curl_pushheader_bynum(struct curl_pushheaders *, size_t)"
+- "name": "curl_mime_free"
+  "params":
+  - "name": "mime"
+    "type": "curl_mime*"
+  "return_type": "void"
+  "signature": "void curl_mime_free(curl_mime *)"
+- "name": "curl_mime_encoder"
+  "params":
+  - "name": "part"
+    "type": "curl_mimepart*"
+  - "name": "encoding"
+    "type": "const char*"
+  "return_type": "CURLcode"
+  "signature": "CURLcode curl_mime_encoder(curl_mimepart *, const char *)"
+- "name": "curl_mime_filename"
+  "params":
+  - "name": "part"
+    "type": "curl_mimepart*"
+  - "name": "filename"
+    "type": "const char*"
+  "return_type": "CURLcode"
+  "signature": "CURLcode curl_mime_filename(curl_mimepart *, const char *)"
+- "name": "curl_mime_name"
+  "params":
+  - "name": "part"
+    "type": "curl_mimepart*"
+  - "name": "name"
+    "type": "const char*"
+  "return_type": "CURLcode"
+  "signature": "CURLcode curl_mime_name(curl_mimepart *, const char *)"
+- "name": "curl_mime_type"
+  "params":
+  - "name": "part"
+    "type": "curl_mimepart*"
+  - "name": "mimetype"
+    "type": "const char*"
+  "return_type": "CURLcode"
+  "signature": "CURLcode curl_mime_type(curl_mimepart *, const char *)"
+- "name": "curl_mime_headers"
+  "params":
+  - "name": "part"
+    "type": "curl_mimepart*"
+  - "name": "headers"
+    "type": "struct curl_slist*"
+  - "name": "take_ownership"
+    "type": "int"
+  "return_type": "CURLcode"
+  "signature": "CURLcode curl_mime_headers(curl_mimepart *, struct curl_slist *, int)"
+- "name": "curl_mime_addpart"
+  "params":
+  - "name": "mime"
+    "type": "curl_mime*"
+  "return_type": "curl_mimepart*"
+  "signature": "curl_mimepart * curl_mime_addpart(curl_mime *)"
+- "name": "curl_mime_subparts"
+  "params":
+  - "name": "part"
+    "type": "curl_mimepart*"
+  - "name": "subparts"
+    "type": "curl_mime*"
+  "return_type": "CURLcode"
+  "signature": "CURLcode curl_mime_subparts(curl_mimepart *, curl_mime *)"
+- "name": "curl_mime_init"
+  "params":
+  - "name": "easy"
+    "type": "void*"
+  "return_type": "curl_mime*"
+  "signature": "curl_mime * curl_mime_init(void *)"
+- "name": "curl_mime_data_cb"
+  "params":
+  - "name": "part"
+    "type": "curl_mimepart*"
+  - "name": "datasize"
+    "type": "curl_off_t"
+  - "name": "readfunc"
+    "type": "curl_read_callback"
+  - "name": "seekfunc"
+    "type": "curl_seek_callback"
+  - "name": "freefunc"
+    "type": "curl_free_callback"
+  - "name": "arg"
+    "type": "void*"
+  "return_type": "CURLcode"
+  "signature": "CURLcode curl_mime_data_cb(curl_mimepart *, curl_off_t, curl_read_callback, curl_seek_callback, curl_free_callback, void *)"
+- "name": "curl_mime_filedata"
+  "params":
+  - "name": "part"
+    "type": "curl_mimepart*"
+  - "name": "filename"
+    "type": "const char*"
+  "return_type": "CURLcode"
+  "signature": "CURLcode curl_mime_filedata(curl_mimepart *, const char *)"
+- "name": "curl_mime_data"
+  "params":
+  - "name": "part"
+    "type": "curl_mimepart*"
+  - "name": "data"
+    "type": "const char*"
+  - "name": "datasize"
+    "type": "size_t"
+  "return_type": "CURLcode"
+  "signature": "CURLcode curl_mime_data(curl_mimepart *, const char *, size_t)"
+- "name": "curl_multi_get_handles"
+  "params":
+  - "name": ""
+    "type": "CURLM*"
+  "return_type": "CURL**"
+  "signature": "CURL ** curl_multi_get_handles(CURLM *)"
+- "name": "curl_multi_assign"
+  "params":
+  - "name": "m"
+    "type": "CURLM*"
+  - "name": "s"
+    "type": "curl_socket_t"
+  - "name": "hashp"
+    "type": "void*"
+  "return_type": "CURLMcode"
+  "signature": "CURLMcode curl_multi_assign(CURLM *, curl_socket_t, void *)"
+- "name": "curl_multi_timeout"
+  "params":
+  - "name": "m"
+    "type": "CURLM*"
+  - "name": "timeout_ms"
+    "type": "long*"
+  "return_type": "CURLMcode"
+  "signature": "CURLMcode curl_multi_timeout(CURLM *, long *)"
+- "name": "curl_multi_socket_all"
+  "params":
+  - "name": "m"
+    "type": "CURLM*"
+  - "name": "running_handles"
+    "type": "int*"
+  "return_type": "CURLMcode"
+  "signature": "CURLMcode curl_multi_socket_all(CURLM *, int *)"
+- "name": "curl_multi_socket_action"
+  "params":
+  - "name": "m"
+    "type": "CURLM*"
+  - "name": "s"
+    "type": "curl_socket_t"
+  - "name": "ev_bitmask"
+    "type": "int"
+  - "name": "running_handles"
+    "type": "int*"
+  "return_type": "CURLMcode"
+  "signature": "CURLMcode curl_multi_socket_action(CURLM *, curl_socket_t, int, int *)"
+- "name": "curl_multi_socket"
+  "params":
+  - "name": "("
+    "type": "CURLM*"
+  - "name": "x"
+    "type": "curl_socket_t"
+  - "name": ","
+    "type": "int*"
+  "return_type": "CURLMcode"
+  "signature": "CURLMcode curl_multi_socket(CURLM *, curl_socket_t, int *)"
+- "name": "curl_multi_setopt"
+  "params":
+  - "name": "("
+    "type": "CURLM*"
+  - "name": "handle"
+    "type": "CURLMoption"
+  - "name": ","
+    "type": "void"
+  "return_type": "CURLMcode"
+  "signature": "CURLMcode curl_multi_setopt(CURLM *, CURLMoption, void)"
+- "name": "curl_multi_info_read"
+  "params":
+  - "name": "m"
+    "type": "CURLM*"
+  - "name": "msgs_in_queue"
+    "type": "int*"
+  "return_type": "CURLMsg*"
+  "signature": "CURLMsg * curl_multi_info_read(CURLM *, int *)"
+- "name": "curl_multi_perform"
+  "params":
+  - "name": "m"
+    "type": "CURLM*"
+  - "name": "running_handles"
+    "type": "int*"
+  "return_type": "CURLMcode"
+  "signature": "CURLMcode curl_multi_perform(CURLM *, int *)"
+- "name": "curl_multi_add_handle"
+  "params":
+  - "name": "m"
+    "type": "CURLM*"
+  - "name": "d"
+    "type": "CURL*"
+  "return_type": "CURLMcode"
+  "signature": "CURLMcode curl_multi_add_handle(CURLM *, CURL *)"
+- "name": "curl_multi_remove_handle"
+  "params":
+  - "name": "m"
+    "type": "CURLM*"
+  - "name": "d"
+    "type": "CURL*"
+  "return_type": "CURLMcode"
+  "signature": "CURLMcode curl_multi_remove_handle(CURLM *, CURL *)"
+- "name": "curl_multi_cleanup"
+  "params":
+  - "name": "m"
+    "type": "CURLM*"
+  "return_type": "CURLMcode"
+  "signature": "CURLMcode curl_multi_cleanup(CURLM *)"
+- "name": "curl_multi_wakeup"
+  "params":
+  - "name": "m"
+    "type": "CURLM*"
+  "return_type": "CURLMcode"
+  "signature": "CURLMcode curl_multi_wakeup(CURLM *)"
+- "name": "curl_multi_poll"
+  "params":
+  - "name": "multi"
+    "type": "CURLM*"
+  - "name": "extra_fds"
+    "type": "struct curl_waitfd*"
+  - "name": "extra_nfds"
+    "type": "unsigned int"
+  - "name": "timeout_ms"
+    "type": "int"
+  - "name": "ret"
+    "type": "int*"
+  "return_type": "CURLMcode"
+  "signature": "CURLMcode curl_multi_poll(CURLM *, struct curl_waitfd *, unsigned int, int, int *)"
+- "name": "curl_multi_wait"
+  "params":
+  - "name": "multi"
+    "type": "CURLM*"
+  - "name": "extra_fds"
+    "type": "struct curl_waitfd*"
+  - "name": "extra_nfds"
+    "type": "unsigned int"
+  - "name": "timeout_ms"
+    "type": "int"
+  - "name": "ret"
+    "type": "int*"
+  "return_type": "CURLMcode"
+  "signature": "CURLMcode curl_multi_wait(CURLM *, struct curl_waitfd *, unsigned int, int, int *)"
+- "name": "curl_multi_waitfds"
+  "params":
+  - "name": "m"
+    "type": "CURLM*"
+  - "name": "ufds"
+    "type": "struct curl_waitfd*"
+  - "name": "size"
+    "type": "unsigned int"
+  - "name": "fd_count"
+    "type": "unsigned int*"
+  "return_type": "CURLMcode"
+  "signature": "CURLMcode curl_multi_waitfds(CURLM *, struct curl_waitfd *, unsigned int, unsigned int *)"
+- "name": "curl_multi_fdset"
+  "params":
+  - "name": "m"
+    "type": "CURLM*"
+  - "name": "read_fd_set"
+    "type": "fd_set*"
+  - "name": "write_fd_set"
+    "type": "fd_set*"
+  - "name": "exc_fd_set"
+    "type": "fd_set*"
+  - "name": "max_fd"
+    "type": "int*"
+  "return_type": "CURLMcode"
+  "signature": "CURLMcode curl_multi_fdset(CURLM *, fd_set *, fd_set *, fd_set *, int *)"
+- "name": "curl_multi_init"
+  "params": []
+  "return_type": "CURLM*"
+  "signature": "CURLM * curl_multi_init()"
+- "name": "curl_getdate"
+  "params":
+  - "name": "p"
+    "type": "const char*"
+  - "name": "now"
+    "type": "const time_t*"
+  "return_type": "time_t"
+  "signature": "time_t curl_getdate(const char *, const time_t *)"
+- "name": "curl_easy_setopt"
+  "params":
+  - "name": "("
+    "type": "CURL*"
+  - "name": "handle"
+    "type": "CURLoption"
+  - "name": ","
+    "type": "void"
+  "return_type": "CURLcode"
+  "signature": "CURLcode curl_easy_setopt(CURL *, CURLoption, void)"
+- "name": "curl_slist_free_all"
+  "params":
+  - "name": "list"
+    "type": "struct curl_slist*"
+  "return_type": "void"
+  "signature": "void curl_slist_free_all(struct curl_slist *)"
+- "name": "curl_slist_append"
+  "params":
+  - "name": "list"
+    "type": "struct curl_slist*"
+  - "name": "data"
+    "type": "const char*"
+  "return_type": "struct curl_slist*"
+  "signature": "struct curl_slist * curl_slist_append(struct curl_slist *, const char *)"
+- "name": "curl_url_strerror"
+  "params":
+  - "name": "error"
+    "type": "CURLUcode"
+  "return_type": "const char*"
+  "signature": "const char * curl_url_strerror(CURLUcode)"
+- "name": "curl_share_strerror"
+  "params":
+  - "name": "error"
+    "type": "CURLSHcode"
+  "return_type": "const char*"
+  "signature": "const char * curl_share_strerror(CURLSHcode)"
+- "name": "curl_multi_strerror"
+  "params":
+  - "name": "error"
+    "type": "CURLMcode"
+  "return_type": "const char*"
+  "signature": "const char * curl_multi_strerror(CURLMcode)"
+- "name": "curl_easy_strerror"
+  "params":
+  - "name": "error"
+    "type": "CURLcode"
+  "return_type": "const char*"
+  "signature": "const char * curl_easy_strerror(CURLcode)"
+- "name": "curl_formfree"
+  "params":
+  - "name": "form"
+    "type": "struct curl_httppost*"
+  "return_type": "void"
+  "signature": "void curl_formfree(struct curl_httppost *)"
+- "name": "curl_formget"
+  "params":
+  - "name": "form"
+    "type": "struct curl_httppost*"
+  - "name": "arg"
+    "type": "void*"
+  - "name": "append"
+    "type": "curl_formget_callback"
+  "return_type": "int"
+  "signature": "int curl_formget(struct curl_httppost *, void *, curl_formget_callback)"
+- "name": "curl_formadd"
+  "params":
+  - "name": "httppost"
+    "type": "struct curl_httppost**"
+  - "name": "last_post"
+    "type": "struct curl_httppost**"
+  "return_type": "CURLFORMcode"
+  "signature": "CURLFORMcode curl_formadd(struct curl_httppost **, struct curl_httppost **, void)"
+"language": "c"
+"macros":
+- "CURLWS_TEXT"
+- "CURLWS_BINARY"
+- "CURLWS_CONT"
+- "CURLWS_CLOSE"
+- "CURLWS_PING"
+- "CURLWS_OFFSET"
+- "CURLWS_PONG"
+- "CURL_POLL_NONE"
+- "CURL_POLL_IN"
+- "CURL_POLL_OUT"
+- "CURL_POLL_INOUT"
+- "CURL_POLL_REMOVE"
+- "CURL_PUSH_OK"
+- "CURL_PUSH_DENY"
+- "CURL_PUSH_ERROROUT"
+- "CURLMNOTIFY_INFO_READ"
+- "CURLMNOTIFY_EASY_DONE"
+- "CURL_BLOB_COPY"
+- "CURL_BLOB_NOCOPY"
+- "CURLU_DEFAULT_PORT"
+- "CURLU_NO_DEFAULT_PORT"
+- "CURLU_DEFAULT_SCHEME"
+- "CURLU_NON_SUPPORT_SCHEME"
+- "CURLU_PATH_AS_IS"
+- "CURLU_DISALLOW_USER"
+- "CURLU_URLDECODE"
+- "CURLU_URLENCODE"
+- "CURLU_APPENDQUERY"
+- "CURLU_GUESS_SCHEME"
+- "CURLU_NO_AUTHORITY"
+- "CURLU_ALLOW_SPACE"
+- "CURLU_PUNYCODE"
+- "CURLU_PUNY2IDN"
+- "CURLU_GET_EMPTY"
+- "CURLU_NO_GUESS_SCHEME"
+- "CURL_SOCKET_BAD"
+- "CURL_HTTPPOST_FILENAME"
+- "CURL_HTTPPOST_READFILE"
+- "CURL_HTTPPOST_PTRNAME"
+- "CURL_HTTPPOST_PTRCONTENTS"
+- "CURL_HTTPPOST_BUFFER"
+- "CURL_HTTPPOST_PTRBUFFER"
+- "CURL_HTTPPOST_CALLBACK"
+- "CURL_HTTPPOST_LARGE"
+- "CURL_MAX_READ_SIZE"
+- "CURL_MAX_WRITE_SIZE"
+- "CURL_MAX_HTTP_HEADER"
+- "CURLFINFOFLAG_KNOWN_FILENAME"
+- "CURLFINFOFLAG_KNOWN_FILETYPE"
+- "CURLFINFOFLAG_KNOWN_TIME"
+- "CURLFINFOFLAG_KNOWN_PERM"
+- "CURLFINFOFLAG_KNOWN_UID"
+- "CURLFINFOFLAG_KNOWN_GID"
+- "CURLFINFOFLAG_KNOWN_SIZE"
+- "CURLFINFOFLAG_KNOWN_HLINKCOUNT"
+- "CURL_CHUNK_BGN_FUNC_OK"
+- "CURL_CHUNK_BGN_FUNC_FAIL"
+- "CURL_CHUNK_BGN_FUNC_SKIP"
+- "CURL_CHUNK_END_FUNC_OK"
+- "CURL_CHUNK_END_FUNC_FAIL"
+- "CURL_FNMATCHFUNC_MATCH"
+- "CURL_FNMATCHFUNC_NOMATCH"
+- "CURL_FNMATCHFUNC_FAIL"
+- "CURL_SEEKFUNC_OK"
+- "CURL_SEEKFUNC_FAIL"
+- "CURL_SEEKFUNC_CANTSEEK"
+- "CURL_TRAILERFUNC_OK"
+- "CURL_TRAILERFUNC_ABORT"
+- "CURL_SOCKOPT_OK"
+- "CURL_SOCKOPT_ERROR"
+- "CURL_SOCKOPT_ALREADY_CONNECTED"
+- "CURL_PREREQFUNC_OK"
+- "CURL_PREREQFUNC_ABORT"
+- "CURLE_ALREADY_COMPLETE"
+- "CURLOPT_OBSOLETE72"
+- "CURLOPT_OBSOLETE40"
+- "CURL_ERROR_SIZE"
+- "CURLOPTTYPE_LONG"
+- "CURLOPTTYPE_OBJECTPOINT"
+- "CURLOPTTYPE_FUNCTIONPOINT"
+- "CURLOPTTYPE_OFF_T"
+- "CURLOPTTYPE_BLOB"
+- "CURL_GLOBAL_SSL"
+- "CURL_GLOBAL_WIN32"
+- "CURL_GLOBAL_NOTHING"
+- "CURL_GLOBAL_ACK_EINTR"
+- "CURL_VERSION_IPV6"
+- "CURL_VERSION_KERBEROS4"
+- "CURL_VERSION_SSL"
+- "CURL_VERSION_LIBZ"
+- "CURL_VERSION_NTLM"
+- "CURL_VERSION_GSSNEGOTIATE"
+- "CURL_VERSION_DEBUG"
+- "CURL_VERSION_ASYNCHDNS"
+- "CURL_VERSION_SPNEGO"
+- "CURL_VERSION_LARGEFILE"
+- "CURL_VERSION_IDN"
+- "CURL_VERSION_SSPI"
+- "CURL_VERSION_CONV"
+- "CURL_VERSION_CURLDEBUG"
+- "CURL_VERSION_TLSAUTH_SRP"
+- "CURL_VERSION_NTLM_WB"
+- "CURL_VERSION_HTTP2"
+- "CURL_VERSION_GSSAPI"
+- "CURL_VERSION_KERBEROS5"
+- "CURL_VERSION_UNIX_SOCKETS"
+- "CURL_VERSION_PSL"
+- "CURL_VERSION_HTTPS_PROXY"
+- "CURL_VERSION_MULTI_SSL"
+- "CURL_VERSION_BROTLI"
+- "CURL_VERSION_ALTSVC"
+- "CURL_VERSION_HTTP3"
+- "CURL_VERSION_ZSTD"
+- "CURL_VERSION_UNICODE"
+- "CURL_VERSION_HSTS"
+- "CURL_VERSION_GSASL"
+- "CURL_VERSION_THREADSAFE"
+- "CURLPAUSE_RECV"
+- "CURLPAUSE_RECV_CONT"
+- "CURLPAUSE_SEND"
+- "CURLPAUSE_SEND_CONT"
+- "CURLH_HEADER"
+- "CURLH_TRAILER"
+- "CURLH_CONNECT"
+- "CURLH_1XX"
+- "CURLH_PSEUDO"
+- "CURLOT_FLAG_ALIAS"
+"project": "curl"
+"target_name": "curl_fuzzer"
+"target_path": "/src/curl_fuzzer/curl_fuzzer.cc"
+"typedefs":
+- "datatype": "CURLcode"
+  "name": |-
+    curl_ssls_export_cb(CURL *handle,
+                                         void *userptr,
+                                         const char *session_key,
+                                         const unsigned char *shmac,
+                                         size_t shmac_len,
+                                         const unsigned char *sdata,
+                                         size_t sdata_len,
+                                         curl_off_t valid_until,
+                                         int ietf_tls_id,
+                                         const char *alpn,
+                                         size_t earlydata_max)
+- "datatype": "Curl_URL"
+  "name": "CURLU"
+- "datatype": "curl_version_info_data"
+  "name": "curl_version_info_data"
+- "datatype": "curl_mimepart"
+  "name": "curl_mimepart"
+- "datatype": "int"
+  "name": |-
+    (*curl_debug_callback)
+           (CURL *handle,      /* the handle/transfer this concerns */
+            curl_infotype type, /* what kind of data */
+            char *data,        /* points to the data */
+            size_t size,       /* size of the data pointed to */
+            void *userptr)
+- "datatype": "void"
+  "name": "CURLSH"
+- "datatype": "void"
+  "name": "CURLM"
+- "datatype": "SOCKET"
+  "name": "curl_socket_t"
+- "datatype": "int"
+  "name": "curl_socket_t"
+- "datatype": "char"
+  "name": "*(*curl_strdup_callback)(const char *str)"
+- "datatype": "CURLMsg"
+  "name": "CURLMsg"
+- "datatype": "void"
+  "name": "*(*curl_realloc_callback)(void *ptr, size_t size)"
+- "datatype": "curl_mime"
+  "name": "curl_mime"
+- "datatype": "curl_ssl_backend"
+  "name": "curl_ssl_backend"
+- "datatype": "void"
+  "name": "*(*curl_malloc_callback)(size_t size)"
+- "datatype": "void"
+  "name": "*(*curl_calloc_callback)(size_t nmemb, size_t size)"
+- "datatype": "int"
+  "name": |-
+    (*curl_sshhostkeycallback) (void *clientp,/* custom pointer passed */
+                                                /* with CURLOPT_SSH_HOSTKEYDATA */
+                              int keytype, /* CURLKHTYPE */
+                              const char *key, /* hostkey to check */
+                              size_t keylen)
+- "datatype": "void"
+  "name": "CURL"
+- "datatype": "int"
+  "name": |-
+    (*curl_sshkeycallback) (CURL *easy,     /* easy handle */
+                              const struct curl_khkey *knownkey, /* known */
+                              const struct curl_khkey *foundkey, /* found */
+                              enum curl_khmatch, /* libcurl's view on the keys */
+                              void *clientp)

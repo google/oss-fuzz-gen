@@ -1,0 +1,74 @@
+#include <cstdint>  // For uint8_t
+#include <cstddef>  // For size_t
+
+extern "C" {
+#include "/src/libjpeg-turbo.main/src/turbojpeg.h"
+#include "/src/libjpeg-turbo.3.1.x/src/turbojpeg.h"
+#include "/src/libjpeg-turbo.3.0.x/turbojpeg.h"
+}
+
+extern "C" int LLVMFuzzerTestOneInput_75(const uint8_t *data, size_t size) {
+    tjhandle handle = tj3Init(TJINIT_DECOMPRESS);
+    if (!handle) {
+        return 0;
+    }
+
+    // Ensure that the size is sufficient to fill the tjregion struct
+    if (size < sizeof(tjregion)) {
+        tj3Destroy(handle);
+        return 0;
+    }
+
+    // Initialize tjregion with values from the input data
+    tjregion region;
+    region.x = data[0];
+    region.y = data[1];
+    region.w = data[2];
+    region.h = data[3];
+
+    // Call the function-under-test
+    tj3SetCroppingRegion(handle, region);
+
+    // Clean up
+    tj3Destroy(handle);
+    return 0;
+}
+#ifdef INC_MAIN
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
+int main(int argc, char *argv[])
+{
+    FILE *f;
+    uint8_t *data = NULL;
+    long size;
+
+    if(argc < 2)
+        exit(0);
+
+    f = fopen(argv[1], "rb");
+    if(f == NULL)
+        exit(0);
+
+    fseek(f, 0, SEEK_END);
+
+    size = ftell(f);
+    rewind(f);
+
+    if(size < 1 + 1)
+        exit(0);
+
+    data = (uint8_t *)malloc((size_t)size);
+    if(data == NULL)
+        exit(0);
+
+    if(fread(data, (size_t)size, 1, f) != 1)
+        exit(0);
+
+    LLVMFuzzerTestOneInput_75(data + 1, (size_t)(size - 1));
+
+    free(data);
+    fclose(f);
+    return 0;
+}
+#endif

@@ -1,0 +1,71 @@
+#include <sys/stat.h>
+#include <string.h>
+#include <stdint.h>
+#include <stddef.h>
+#include "hdf5.h"
+
+int LLVMFuzzerTestOneInput_49(const uint8_t *data, size_t size) {
+    hid_t file_id;
+    hsize_t filesize;
+    herr_t status;
+
+    // Create a temporary HDF5 file for testing
+    file_id = H5Fcreate("tempfile.h5", H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT);
+    if (file_id < 0) {
+        return 0; // Failed to create file, exit early
+    }
+
+    // Call the function-under-test
+    status = H5Fget_filesize(file_id, &filesize);
+
+    // Use the data and size to simulate some operation on the HDF5 file
+    // This is a placeholder for actual operations you might want to test
+    if (size > 0 && data != NULL) {
+        // Example: write data to the file, read it back, etc.
+        // This is just a placeholder to demonstrate using the input data
+    }
+
+    // Close the file
+    H5Fclose(file_id);
+
+    return 0;
+}
+#ifdef INC_MAIN
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
+int main(int argc, char *argv[])
+{
+    FILE *f;
+    uint8_t *data = NULL;
+    long size;
+
+    if(argc < 2)
+        exit(0);
+
+    f = fopen(argv[1], "rb");
+    if(f == NULL)
+        exit(0);
+
+    fseek(f, 0, SEEK_END);
+
+    size = ftell(f);
+    rewind(f);
+
+    if(size < 1 + 1)
+        exit(0);
+
+    data = (uint8_t *)malloc((size_t)size);
+    if(data == NULL)
+        exit(0);
+
+    if(fread(data, (size_t)size, 1, f) != 1)
+        exit(0);
+
+    LLVMFuzzerTestOneInput_49(data + 1, (size_t)(size - 1));
+
+    free(data);
+    fclose(f);
+    return 0;
+}
+#endif

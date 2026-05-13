@@ -40,6 +40,7 @@ LARGE_CLUSTER = 'llm-experiment-large'
 DEFAULT_LOCATION = 'us-central1-c'
 LARGE_LOCATION = 'us-central1'
 TEMPLATE_PATH = os.path.join(os.path.dirname(__file__), 'k8s', 'pr-exp.yaml')
+FUZZ_TEMPLATE_PATH = os.path.join(os.path.dirname(__file__), 'k8s', 'pr-fuzz-exp.yaml')
 LARGE_TEMPLATE_PATH = os.path.join(os.path.dirname(__file__), 'k8s',
                                    'large-pr-exp.yaml')
 BENCHMARK_SET = 'comparison'
@@ -232,6 +233,34 @@ def _parse_args(cmd) -> argparse.Namespace:
                       default=False,
                       help='Redirects experiments stdout/stderr to file')
 
+  # ---Fuzzing trial arguments
+  parser.add_argument('-j',
+                  '--project',
+                  default='',
+                  help='The name of the project to run fuzzing trials for')
+
+  parser.add_argument('-a',
+                  '--approach',
+                  default=['ofg', 'bluebird_ofg', 'promefuzz', 'bluebird_promefuzz', 'ogharn'],
+                  nargs="+",
+                  help='Fuzz the harnesses for each given approach')
+
+  parser.add_argument('-nt',
+                  '--num-trials',
+                  default=1,
+                  help='The number of fuzzing trials to run')
+
+  parser.add_argument('-ps',
+                  '--pool-size',
+                  default=8,
+                  help='The number of fuzzing trials to run concurrently')
+
+  parser.add_argument('-rf',
+                      '--run-fuzzing',
+                      action='store_true',
+                      default=False,
+                      help=('Run a fuzzing trial with supplied harnesses'))
+
   # Allow piping arbitrary args to run_all_experiments.py
   args, additional_args = parser.parse_known_args(cmd)
   args.additional_args = additional_args
@@ -251,6 +280,8 @@ def _parse_args(cmd) -> argparse.Namespace:
   if not args.llm_locations:
     args.llm_locations = VERTEX_AI_LOCATIONS.get(args.llm,
                                                  DEFAULT_VERTEX_AI_LOCATION)
+  if args.run_fuzzing:
+    args.gke_template = FUZZ_TEMPLATE_PATH
 
   if args.large:
     args.location = LARGE_LOCATION
@@ -320,17 +351,19 @@ def _prepare_experiment_info(args: argparse.Namespace) -> tuple[str, str, str]:
   # PR link.
   ofg_pr_link = f'{PR_LINK_PREFIX}/{args.pr_id}'
 
+  bucket_link_suffix = args.benchmark_set if not args.run_fuzzing else args.project
+
   # Report link.
   report_link = (
       f'{REPORT_LINK_PREFIX}/{datetime.now().strftime("%Y-%m-%d")}-'
-      f'{args.pr_id}-{args.name_suffix}-{args.benchmark_set}/index.html')
+      f'{args.pr_id}-{args.name_suffix}-{bucket_link_suffix}/index.html')
 
   # Bucket links.
   bucket_link = (f'{BUCKET_LINK_PREFIX}/{datetime.now().strftime("%Y-%m-%d")}-'
-                 f'{args.pr_id}-{args.name_suffix}-{args.benchmark_set}')
+                 f'{args.pr_id}-{args.name_suffix}-{bucket_link_suffix}')
   bucket_gs_link = (
       f'{BUCKET_GS_LINK_PREFIX}/{datetime.now().strftime("%Y-%m-%d")}-'
-      f'{args.pr_id}-{args.name_suffix}-{args.benchmark_set}')
+      f'{args.pr_id}-{args.name_suffix}-{bucket_link_suffix}')
 
   logging.info(
       'FORCE mode enable, will first remove existing GKE job and bucket.')
@@ -385,6 +418,10 @@ def _fill_template(args: argparse.Namespace) -> str:
   exp_env_vars['GKE_EXP_AGENT'] = f'{args.agent}'.lower()
   exp_env_vars['GKE_REDIRECT_OUTS'] = f'{args.redirect_outs}'.lower()
   exp_env_vars['GKE_EXP_MAX_ROUND'] = args.max_round
+  exp_env_vars['GKE_EXP_PROJECT'] = args.project
+  exp_env_vars['GKE_EXP_APPROACH'] = ' '.join(args.approach)
+  exp_env_vars['GKE_EXP_NUM_TRIALS'] = args.num_trials
+  exp_env_vars['GKE_EXP_POOL_SIZE'] = args.pool_size
 
   # Add additional args as a space-separated string
   exp_env_vars['GKE_EXP_ADDITIONAL_ARGS'] = ' '.join(args.additional_args)

@@ -1,0 +1,1522 @@
+"enums": []
+"function_pointers":
+- "name": "ares_callback_dnsrec"
+  "return_type": "void"
+  "signature": |-
+    void *arg, ares_status_t status,
+                                         size_t                   timeouts,
+                                         const ares_dns_record_t *dnsrec
+- "name": "ares_addrinfo_callback"
+  "return_type": "void"
+  "signature": |-
+    void *arg, int status, int timeouts,
+                                           struct ares_addrinfo *res
+- "name": "ares_pending_write_cb"
+  "return_type": "void"
+  "signature": "void *data"
+- "name": "ares_host_callback"
+  "return_type": "void"
+  "signature": |-
+    void *arg, int status, int timeouts,
+                                       const struct hostent *hostent
+- "name": "ares_query_enqueue_cb"
+  "return_type": "void"
+  "signature": "void *data"
+- "name": "ares_nameinfo_callback"
+  "return_type": "void"
+  "signature": |-
+    void *arg, int status, int timeouts,
+                                           const char *node, const char *service
+- "name": "ares_sock_create_callback"
+  "return_type": "int"
+  "signature": |-
+    ares_socket_t socket_fd, int type,
+                                             void *data
+- "name": "ares_callback"
+  "return_type": "void"
+  "signature": |-
+    void *arg, int status, int timeouts,
+                                  const unsigned char *abuf, int alen
+- "name": "ares_sock_config_callback"
+  "return_type": "int"
+  "signature": |-
+    ares_socket_t socket_fd, int type,
+                                             void *data
+- "name": "ares_server_state_callback"
+  "return_type": "void"
+  "signature": |-
+    const char *server_string,
+                                               ares_bool_t success, int flags,
+                                               void *data
+- "name": "ares_sock_state_cb"
+  "return_type": "void"
+  "signature": |-
+    void *data, ares_socket_t socket_fd,
+                                       int readable, int writable
+"functions":
+- "name": "ares_dup"
+  "params":
+  - "name": "dest"
+    "type": "ares_channel_t**"
+  - "name": "src"
+    "type": "ares_channel_t*"
+  "return_type": "int"
+  "signature": "int ares_dup(ares_channel_t **dest, const ares_channel_t *src)"
+- "name": "ares_reinit"
+  "params":
+  - "name": "channel"
+    "type": "ares_channel_t*"
+  "return_type": "ares_status_t"
+  "signature": "ares_status_t ares_reinit(ares_channel_t *channel)"
+- "name": "ares_gethostbyname"
+  "params":
+  - "name": "channel"
+    "type": "ares_channel_t*"
+  - "name": "name"
+    "type": "char*"
+  - "name": "family"
+    "type": "int"
+  - "name": "callback"
+    "type": "ares_host_callback"
+  - "name": "arg"
+    "type": "void*"
+  "return_type": "void"
+  "signature": |-
+    void ares_gethostbyname(ares_channel_t *channel, const char *name, int family,
+                            ares_host_callback callback, void *arg)
+- "name": "ares_getaddrinfo"
+  "params":
+  - "name": "channel"
+    "type": "ares_channel_t*"
+  - "name": "name"
+    "type": "char*"
+  - "name": "service"
+    "type": "char*"
+  - "name": "hints"
+    "type": "struct ares_addrinfo_hints*"
+  - "name": "callback"
+    "type": "ares_addrinfo_callback"
+  - "name": "arg"
+    "type": "void*"
+  "return_type": "void"
+  "signature": |-
+    void ares_getaddrinfo(ares_channel_t *channel, const char *name,
+                          const char                       *service,
+                          const struct ares_addrinfo_hints *hints,
+                          ares_addrinfo_callback callback, void *arg)
+- "name": "ares_getnameinfo"
+  "params":
+  - "name": "channel"
+    "type": "ares_channel_t*"
+  - "name": "sa"
+    "type": "struct sockaddr*"
+  - "name": "salen"
+    "type": "ares_socklen_t"
+  - "name": "flags_int"
+    "type": "int"
+  - "name": "callback"
+    "type": "ares_nameinfo_callback"
+  - "name": "arg"
+    "type": "void*"
+  "return_type": "void"
+  "signature": |-
+    void ares_getnameinfo(ares_channel_t *channel, const struct sockaddr *sa,
+                          ares_socklen_t salen, int flags_int,
+                          ares_nameinfo_callback callback, void *arg)
+- "name": "ares_set_servers_ports_csv"
+  "params":
+  - "name": "channel"
+    "type": "ares_channel_t*"
+  - "name": "_csv"
+    "type": "char*"
+  "return_type": "int"
+  "signature": "int ares_set_servers_ports_csv(ares_channel_t *channel, const char *_csv)"
+- "name": "ares_gethostbyaddr"
+  "params":
+  - "name": "channel"
+    "type": "ares_channel_t*"
+  - "name": "addr"
+    "type": "void*"
+  - "name": "addrlen"
+    "type": "int"
+  - "name": "family"
+    "type": "int"
+  - "name": "callback"
+    "type": "ares_host_callback"
+  - "name": "arg"
+    "type": "void*"
+  "return_type": "void"
+  "signature": |-
+    void ares_gethostbyaddr(ares_channel_t *channel, const void *addr, int addrlen,
+                            int family, ares_host_callback callback, void *arg)
+- "name": "ares_process"
+  "params":
+  - "name": "channel"
+    "type": "ares_channel_t*"
+  - "name": "read_fds"
+    "type": "fd_set*"
+  - "name": "write_fds"
+    "type": "fd_set*"
+  "return_type": "void"
+  "signature": "void ares_process(ares_channel_t *channel, fd_set *read_fds, fd_set *write_fds)"
+- "name": "ares_process_fd"
+  "params":
+  - "name": "channel"
+    "type": "ares_channel_t*"
+  - "name": "read_fd"
+    "type": "ares_socket_t"
+  - "name": "write_fd"
+    "type": "ares_socket_t"
+  "return_type": "void"
+  "signature": |-
+    void ares_process_fd(ares_channel_t *channel, ares_socket_t read_fd,
+                         ares_socket_t write_fd)
+- "name": "ares_search"
+  "params":
+  - "name": "channel"
+    "type": "ares_channel_t*"
+  - "name": "name"
+    "type": "char*"
+  - "name": "dnsclass"
+    "type": "int"
+  - "name": "type"
+    "type": "int"
+  - "name": "callback"
+    "type": "ares_callback"
+  - "name": "arg"
+    "type": "void*"
+  "return_type": "void"
+  "signature": |-
+    void ares_search(ares_channel_t *channel, const char *name, int dnsclass,
+                     int type, ares_callback callback, void *arg)
+- "name": "ares_search_dnsrec"
+  "params":
+  - "name": "channel"
+    "type": "ares_channel_t*"
+  - "name": "dnsrec"
+    "type": "ares_dns_record_t*"
+  - "name": "callback"
+    "type": "ares_callback_dnsrec"
+  - "name": "arg"
+    "type": "void*"
+  "return_type": "ares_status_t"
+  "signature": |-
+    ares_status_t ares_search_dnsrec(ares_channel_t          *channel,
+                                     const ares_dns_record_t *dnsrec,
+                                     ares_callback_dnsrec callback, void *arg)
+- "name": "ares_set_servers"
+  "params":
+  - "name": "channel"
+    "type": "ares_channel_t*"
+  - "name": "servers"
+    "type": "struct ares_addr_node*"
+  "return_type": "int"
+  "signature": |-
+    int ares_set_servers(ares_channel_t              *channel,
+                         const struct ares_addr_node *servers)
+- "name": "ares_set_servers_ports"
+  "params":
+  - "name": "channel"
+    "type": "ares_channel_t*"
+  - "name": "servers"
+    "type": "struct ares_addr_port_node*"
+  "return_type": "int"
+  "signature": |-
+    int ares_set_servers_ports(ares_channel_t                   *channel,
+                               const struct ares_addr_port_node *servers)
+- "name": "ares_query"
+  "params":
+  - "name": "channel"
+    "type": "ares_channel_t*"
+  - "name": "name"
+    "type": "char*"
+  - "name": "dnsclass"
+    "type": "int"
+  - "name": "type"
+    "type": "int"
+  - "name": "callback"
+    "type": "ares_callback"
+  - "name": "arg"
+    "type": "void*"
+  "return_type": "void"
+  "signature": |-
+    void ares_query(ares_channel_t *channel, const char *name, int dnsclass,
+                    int type, ares_callback callback, void *arg)
+- "name": "ares_query_dnsrec"
+  "params":
+  - "name": "channel"
+    "type": "ares_channel_t*"
+  - "name": "name"
+    "type": "char*"
+  - "name": "dnsclass"
+    "type": "ares_dns_class_t"
+  - "name": "type"
+    "type": "ares_dns_rec_type_t"
+  - "name": "callback"
+    "type": "ares_callback_dnsrec"
+  - "name": "arg"
+    "type": "void*"
+  - "name": "qid"
+    "type": "unsigned short*"
+  "return_type": "ares_status_t"
+  "signature": |-
+    ares_status_t ares_query_dnsrec(ares_channel_t *channel, const char *name,
+                                    ares_dns_class_t     dnsclass,
+                                    ares_dns_rec_type_t  type,
+                                    ares_callback_dnsrec callback, void *arg,
+                                    unsigned short *qid)
+- "name": "ares_cancel"
+  "params":
+  - "name": "channel"
+    "type": "ares_channel_t*"
+  "return_type": "void"
+  "signature": "void ares_cancel(ares_channel_t *channel)"
+- "name": "ares_send"
+  "params":
+  - "name": "channel"
+    "type": "ares_channel_t*"
+  - "name": "qbuf"
+    "type": "unsigned char*"
+  - "name": "qlen"
+    "type": "int"
+  - "name": "callback"
+    "type": "ares_callback"
+  - "name": "arg"
+    "type": "void*"
+  "return_type": "void"
+  "signature": |-
+    void ares_send(ares_channel_t *channel, const unsigned char *qbuf, int qlen,
+                   ares_callback callback, void *arg)
+- "name": "ares_send_dnsrec"
+  "params":
+  - "name": "channel"
+    "type": "ares_channel_t*"
+  - "name": "dnsrec"
+    "type": "ares_dns_record_t*"
+  - "name": "callback"
+    "type": "ares_callback_dnsrec"
+  - "name": "arg"
+    "type": "void*"
+  - "name": "qid"
+    "type": "unsigned short*"
+  "return_type": "ares_status_t"
+  "signature": |-
+    ares_status_t ares_send_dnsrec(ares_channel_t          *channel,
+                                   const ares_dns_record_t *dnsrec,
+                                   ares_callback_dnsrec callback, void *arg,
+                                   unsigned short *qid)
+- "name": "ares_dns_record_duplicate"
+  "params":
+  - "name": "dnsrec"
+    "type": "ares_dns_record_t*"
+  "return_type": "ares_dns_record_t"
+  "signature": "ares_dns_record_t *ares_dns_record_duplicate(const ares_dns_record_t *dnsrec)"
+- "name": "ares_parse_a_reply"
+  "params":
+  - "name": "abuf"
+    "type": "unsigned char*"
+  - "name": "alen"
+    "type": "int"
+  - "name": "host"
+    "type": "struct hostent**"
+  - "name": "addrttls"
+    "type": "struct ares_addrttl*"
+  - "name": "naddrttls"
+    "type": "int*"
+  "return_type": "int"
+  "signature": |-
+    int ares_parse_a_reply(const unsigned char *abuf, int alen,
+                           struct hostent **host, struct ares_addrttl *addrttls,
+                           int *naddrttls)
+- "name": "ares_parse_aaaa_reply"
+  "params":
+  - "name": "abuf"
+    "type": "unsigned char*"
+  - "name": "alen"
+    "type": "int"
+  - "name": "host"
+    "type": "struct hostent**"
+  - "name": "addrttls"
+    "type": "struct ares_addr6ttl*"
+  - "name": "naddrttls"
+    "type": "int*"
+  "return_type": "int"
+  "signature": |-
+    int ares_parse_aaaa_reply(const unsigned char *abuf, int alen,
+                              struct hostent **host, struct ares_addr6ttl *addrttls,
+                              int *naddrttls)
+- "name": "ares_gethostbyname_file"
+  "params":
+  - "name": "channel"
+    "type": "ares_channel_t*"
+  - "name": "name"
+    "type": "char*"
+  - "name": "family"
+    "type": "int"
+  - "name": "host"
+    "type": "struct hostent**"
+  "return_type": "int"
+  "signature": |-
+    int ares_gethostbyname_file(ares_channel_t *channel, const char *name,
+                                int family, struct hostent **host)
+- "name": "ares_parse_caa_reply"
+  "params":
+  - "name": "abuf"
+    "type": "unsigned char*"
+  - "name": "alen_int"
+    "type": "int"
+  - "name": "caa_out"
+    "type": "struct ares_caa_reply**"
+  "return_type": "int"
+  "signature": |-
+    int ares_parse_caa_reply(const unsigned char *abuf, int alen_int,
+                             struct ares_caa_reply **caa_out)
+- "name": "ares_parse_ptr_reply"
+  "params":
+  - "name": "abuf"
+    "type": "unsigned char*"
+  - "name": "alen_int"
+    "type": "int"
+  - "name": "addr"
+    "type": "void*"
+  - "name": "addrlen"
+    "type": "int"
+  - "name": "family"
+    "type": "int"
+  - "name": "host"
+    "type": "struct hostent**"
+  "return_type": "int"
+  "signature": |-
+    int ares_parse_ptr_reply(const unsigned char *abuf, int alen_int,
+                             const void *addr, int addrlen, int family,
+                             struct hostent **host)
+- "name": "ares_create_query"
+  "params":
+  - "name": "name"
+    "type": "char*"
+  - "name": "dnsclass"
+    "type": "int"
+  - "name": "type"
+    "type": "int"
+  - "name": "id"
+    "type": "unsigned short"
+  - "name": "rd"
+    "type": "int"
+  - "name": "bufp"
+    "type": "unsigned char**"
+  - "name": "buflenp"
+    "type": "int*"
+  - "name": "max_udp_size"
+    "type": "int"
+  "return_type": "int"
+  "signature": |-
+    int ares_create_query(const char *name, int dnsclass, int type,
+                          unsigned short id, int rd, unsigned char **bufp,
+                          int *buflenp, int max_udp_size)
+- "name": "ares_mkquery"
+  "params":
+  - "name": "name"
+    "type": "char*"
+  - "name": "dnsclass"
+    "type": "int"
+  - "name": "type"
+    "type": "int"
+  - "name": "id"
+    "type": "unsigned short"
+  - "name": "rd"
+    "type": "int"
+  - "name": "buf"
+    "type": "unsigned char**"
+  - "name": "buflen"
+    "type": "int*"
+  "return_type": "int"
+  "signature": |-
+    int ares_mkquery(const char *name, int dnsclass, int type, unsigned short id,
+                     int rd, unsigned char **buf, int *buflen)
+- "name": "ares_parse_txt_reply"
+  "params":
+  - "name": "abuf"
+    "type": "unsigned char*"
+  - "name": "alen"
+    "type": "int"
+  - "name": "txt_out"
+    "type": "struct ares_txt_reply**"
+  "return_type": "int"
+  "signature": |-
+    int ares_parse_txt_reply(const unsigned char *abuf, int alen,
+                             struct ares_txt_reply **txt_out)
+- "name": "ares_parse_txt_reply_ext"
+  "params":
+  - "name": "abuf"
+    "type": "unsigned char*"
+  - "name": "alen"
+    "type": "int"
+  - "name": "txt_out"
+    "type": "struct ares_txt_ext**"
+  "return_type": "int"
+  "signature": |-
+    int ares_parse_txt_reply_ext(const unsigned char *abuf, int alen,
+                                 struct ares_txt_ext **txt_out)
+- "name": "ares_parse_naptr_reply"
+  "params":
+  - "name": "abuf"
+    "type": "unsigned char*"
+  - "name": "alen_int"
+    "type": "int"
+  - "name": "naptr_out"
+    "type": "struct ares_naptr_reply**"
+  "return_type": "int"
+  "signature": |-
+    int ares_parse_naptr_reply(const unsigned char *abuf, int alen_int,
+                               struct ares_naptr_reply **naptr_out)
+- "name": "ares_parse_ns_reply"
+  "params":
+  - "name": "abuf"
+    "type": "unsigned char*"
+  - "name": "alen_int"
+    "type": "int"
+  - "name": "host"
+    "type": "struct hostent**"
+  "return_type": "int"
+  "signature": |-
+    int ares_parse_ns_reply(const unsigned char *abuf, int alen_int,
+                            struct hostent **host)
+- "name": "ares_parse_soa_reply"
+  "params":
+  - "name": "abuf"
+    "type": "unsigned char*"
+  - "name": "alen_int"
+    "type": "int"
+  - "name": "soa_out"
+    "type": "struct ares_soa_reply**"
+  "return_type": "int"
+  "signature": |-
+    int ares_parse_soa_reply(const unsigned char *abuf, int alen_int,
+                             struct ares_soa_reply **soa_out)
+- "name": "ares_parse_uri_reply"
+  "params":
+  - "name": "abuf"
+    "type": "unsigned char*"
+  - "name": "alen_int"
+    "type": "int"
+  - "name": "uri_out"
+    "type": "struct ares_uri_reply**"
+  "return_type": "int"
+  "signature": |-
+    int ares_parse_uri_reply(const unsigned char *abuf, int alen_int,
+                             struct ares_uri_reply **uri_out)
+- "name": "ares_parse_srv_reply"
+  "params":
+  - "name": "abuf"
+    "type": "unsigned char*"
+  - "name": "alen_int"
+    "type": "int"
+  - "name": "srv_out"
+    "type": "struct ares_srv_reply**"
+  "return_type": "int"
+  "signature": |-
+    int ares_parse_srv_reply(const unsigned char *abuf, int alen_int,
+                             struct ares_srv_reply **srv_out)
+- "name": "ares_parse_mx_reply"
+  "params":
+  - "name": "abuf"
+    "type": "unsigned char*"
+  - "name": "alen_int"
+    "type": "int"
+  - "name": "mx_out"
+    "type": "struct ares_mx_reply**"
+  "return_type": "int"
+  "signature": |-
+    int ares_parse_mx_reply(const unsigned char *abuf, int alen_int,
+                            struct ares_mx_reply **mx_out)
+- "name": "ares_get_servers_csv"
+  "params":
+  - "name": "channel"
+    "type": "ares_channel_t*"
+  "return_type": "char"
+  "signature": "char *ares_get_servers_csv(const ares_channel_t *channel)"
+- "name": "ares_set_sortlist"
+  "params":
+  - "name": "channel"
+    "type": "ares_channel_t*"
+  - "name": "sortstr"
+    "type": "char*"
+  "return_type": "int"
+  "signature": "int ares_set_sortlist(ares_channel_t *channel, const char *sortstr)"
+- "name": "ares_dns_rr_set_bin"
+  "params":
+  - "name": "dns_rr"
+    "type": "ares_dns_rr_t*"
+  - "name": "key"
+    "type": "ares_dns_rr_key_t"
+  - "name": "val"
+    "type": "unsigned char*"
+  - "name": "len"
+    "type": "size_t"
+  "return_type": "ares_status_t"
+  "signature": |-
+    ares_status_t ares_dns_rr_set_bin(ares_dns_rr_t *dns_rr, ares_dns_rr_key_t key,
+                                      const unsigned char *val, size_t len)
+- "name": "ares_dns_addr_to_ptr"
+  "params":
+  - "name": "addr"
+    "type": "struct ares_addr*"
+  "return_type": "char"
+  "signature": "char *ares_dns_addr_to_ptr(const struct ares_addr *addr)"
+- "name": "ares_save_options"
+  "params":
+  - "name": "channel"
+    "type": "ares_channel_t*"
+  - "name": "options"
+    "type": "struct ares_options*"
+  - "name": "optmask"
+    "type": "int*"
+  "return_type": "int"
+  "signature": |-
+    int ares_save_options(const ares_channel_t *channel,
+                          struct ares_options *options, int *optmask)
+- "name": "ares_dns_record_rr_del"
+  "params":
+  - "name": "dnsrec"
+    "type": "ares_dns_record_t*"
+  - "name": "sect"
+    "type": "ares_dns_section_t"
+  - "name": "idx"
+    "type": "size_t"
+  "return_type": "ares_status_t"
+  "signature": |-
+    ares_status_t ares_dns_record_rr_del(ares_dns_record_t *dnsrec,
+                                         ares_dns_section_t sect, size_t idx)
+- "name": "ares_get_servers_ports"
+  "params":
+  - "name": "channel"
+    "type": "ares_channel_t*"
+  - "name": "servers"
+    "type": "struct ares_addr_port_node**"
+  "return_type": "int"
+  "signature": |-
+    int ares_get_servers_ports(const ares_channel_t        *channel,
+                               struct ares_addr_port_node **servers)
+- "name": "ares_get_servers"
+  "params":
+  - "name": "channel"
+    "type": "ares_channel_t*"
+  - "name": "servers"
+    "type": "struct ares_addr_node**"
+  "return_type": "int"
+  "signature": |-
+    int ares_get_servers(const ares_channel_t   *channel,
+                         struct ares_addr_node **servers)
+- "name": "ares_dns_rr_set_str"
+  "params":
+  - "name": "dns_rr"
+    "type": "ares_dns_rr_t*"
+  - "name": "key"
+    "type": "ares_dns_rr_key_t"
+  - "name": "val"
+    "type": "char*"
+  "return_type": "ares_status_t"
+  "signature": |-
+    ares_status_t ares_dns_rr_set_str(ares_dns_rr_t *dns_rr, ares_dns_rr_key_t key,
+                                      const char *val)
+- "name": "ares_getsock"
+  "params":
+  - "name": "channel"
+    "type": "ares_channel_t*"
+  - "name": "socks"
+    "type": "ares_socket_t*"
+  - "name": "numsocks"
+    "type": "int"
+  "return_type": "int"
+  "signature": |-
+    int ares_getsock(const ares_channel_t *channel, ares_socket_t *socks,
+                     int numsocks)
+- "name": "ares_fds"
+  "params":
+  - "name": "channel"
+    "type": "ares_channel_t*"
+  - "name": "read_fds"
+    "type": "fd_set*"
+  - "name": "write_fds"
+    "type": "fd_set*"
+  "return_type": "int"
+  "signature": "int ares_fds(const ares_channel_t *channel, fd_set *read_fds, fd_set *write_fds)"
+- "name": "ares_dns_rec_type_fromstr"
+  "params":
+  - "name": "qtype"
+    "type": "ares_dns_rec_type_t*"
+  - "name": "str"
+    "type": "char*"
+  "return_type": "ares_bool_t"
+  "signature": |-
+    ares_bool_t ares_dns_rec_type_fromstr(ares_dns_rec_type_t *qtype,
+                                          const char          *str)
+- "name": "ares_dns_class_fromstr"
+  "params":
+  - "name": "qclass"
+    "type": "ares_dns_class_t*"
+  - "name": "str"
+    "type": "char*"
+  "return_type": "ares_bool_t"
+  "signature": "ares_bool_t ares_dns_class_fromstr(ares_dns_class_t *qclass, const char *str)"
+- "name": "ares_set_socket_functions"
+  "params":
+  - "name": "channel"
+    "type": "ares_channel_t*"
+  - "name": "funcs"
+    "type": "struct ares_socket_functions*"
+  - "name": "data"
+    "type": "void*"
+  "return_type": "void"
+  "signature": |-
+    void ares_set_socket_functions(ares_channel_t                     *channel,
+                                   const struct ares_socket_functions *funcs,
+                                   void                               *data)
+- "name": "ares_timeout"
+  "params":
+  - "name": "channel"
+    "type": "ares_channel_t*"
+  - "name": "maxtv"
+    "type": "struct timeval*"
+  - "name": "tvbuf"
+    "type": "struct timeval*"
+  "return_type": "struct timeval"
+  "signature": |-
+    struct timeval *ares_timeout(const ares_channel_t *channel,
+                                 struct timeval *maxtv, struct timeval *tvbuf)
+- "name": "ares_queue_wait_empty"
+  "params":
+  - "name": "channel"
+    "type": "ares_channel_t*"
+  - "name": "timeout_ms"
+    "type": "int"
+  "return_type": "ares_status_t"
+  "signature": "ares_status_t ares_queue_wait_empty(ares_channel_t *channel, int timeout_ms)"
+- "name": "ares_free_data"
+  "params":
+  - "name": "dataptr"
+    "type": "void*"
+  "return_type": "void"
+  "signature": "void ares_free_data(void *dataptr)"
+- "name": "ares_dns_record_query_set_type"
+  "params":
+  - "name": "dnsrec"
+    "type": "ares_dns_record_t*"
+  - "name": "idx"
+    "type": "size_t"
+  - "name": "qtype"
+    "type": "ares_dns_rec_type_t"
+  "return_type": "ares_status_t"
+  "signature": |-
+    ares_status_t ares_dns_record_query_set_type(ares_dns_record_t  *dnsrec,
+                                                 size_t              idx,
+                                                 ares_dns_rec_type_t qtype)
+- "name": "ares_set_local_dev"
+  "params":
+  - "name": "channel"
+    "type": "ares_channel_t*"
+  - "name": "local_dev_name"
+    "type": "char*"
+  "return_type": "void"
+  "signature": "void ares_set_local_dev(ares_channel_t *channel, const char *local_dev_name)"
+- "name": "ares_free_hostent"
+  "params":
+  - "name": "host"
+    "type": "struct hostent*"
+  "return_type": "void"
+  "signature": "void ares_free_hostent(struct hostent *host)"
+- "name": "ares_library_init_mem"
+  "params":
+  - "name": "flags"
+    "type": "int"
+  - "name": "(*amalloc)(size_t size)"
+    "type": "void*"
+  - "name": "(*arealloc)(void *ptr, size_t size)"
+    "type": "void*"
+  "return_type": "int"
+  "signature": |-
+    int ares_library_init_mem(int flags, void *(*amalloc)(size_t size),
+                              void (*afree)(void *ptr),
+                              void *(*arealloc)(void *ptr, size_t size))
+- "name": "ares_freeaddrinfo"
+  "params":
+  - "name": "ai"
+    "type": "struct ares_addrinfo*"
+  "return_type": "void"
+  "signature": "void ares_freeaddrinfo(struct ares_addrinfo *ai)"
+- "name": "ares_queue_active_queries"
+  "params":
+  - "name": "channel"
+    "type": "ares_channel_t*"
+  "return_type": "size_t"
+  "signature": "size_t ares_queue_active_queries(const ares_channel_t *channel)"
+- "name": "ares_set_socket_configure_callback"
+  "params":
+  - "name": "channel"
+    "type": "ares_channel_t*"
+  - "name": "cb"
+    "type": "ares_sock_config_callback"
+  - "name": "data"
+    "type": "void*"
+  "return_type": "void"
+  "signature": |-
+    void ares_set_socket_configure_callback(ares_channel_t           *channel,
+                                            ares_sock_config_callback cb,
+                                            void                     *data)
+- "name": "ares_destroy_options"
+  "params":
+  - "name": "options"
+    "type": "struct ares_options*"
+  "return_type": "void"
+  "signature": "void ares_destroy_options(struct ares_options *options)"
+- "name": "ares_set_socket_callback"
+  "params":
+  - "name": "channel"
+    "type": "ares_channel_t*"
+  - "name": "cb"
+    "type": "ares_sock_create_callback"
+  - "name": "data"
+    "type": "void*"
+  "return_type": "void"
+  "signature": |-
+    void ares_set_socket_callback(ares_channel_t           *channel,
+                                  ares_sock_create_callback cb, void *data)
+- "name": "ares_set_server_state_callback"
+  "params":
+  - "name": "channel"
+    "type": "ares_channel_t*"
+  - "name": "cb"
+    "type": "ares_server_state_callback"
+  - "name": "data"
+    "type": "void*"
+  "return_type": "void"
+  "signature": |-
+    void ares_set_server_state_callback(ares_channel_t            *channel,
+                                        ares_server_state_callback cb, void *data)
+- "name": "ares_set_local_ip4"
+  "params":
+  - "name": "channel"
+    "type": "ares_channel_t*"
+  - "name": "local_ip"
+    "type": "unsigned int"
+  "return_type": "void"
+  "signature": "void ares_set_local_ip4(ares_channel_t *channel, unsigned int local_ip)"
+- "name": "ares_set_local_ip6"
+  "params":
+  - "name": "channel"
+    "type": "ares_channel_t*"
+  - "name": "local_ip6"
+    "type": "unsigned char*"
+  "return_type": "void"
+  "signature": "void ares_set_local_ip6(ares_channel_t *channel, const unsigned char *local_ip6)"
+- "name": "ares_version"
+  "params":
+  - "name": "version"
+    "type": "int*"
+  "return_type": "char"
+  "signature": "char *ares_version(int *version)"
+- "name": "ares_expand_name"
+  "params":
+  - "name": "encoded"
+    "type": "unsigned char*"
+  - "name": "abuf"
+    "type": "unsigned char*"
+  - "name": "alen"
+    "type": "int"
+  - "name": "s"
+    "type": "char**"
+  - "name": "enclen"
+    "type": "long*"
+  "return_type": "int"
+  "signature": |-
+    int ares_expand_name(const unsigned char *encoded, const unsigned char *abuf,
+                         int alen, char **s, long *enclen)
+- "name": "ares_expand_string"
+  "params":
+  - "name": "encoded"
+    "type": "unsigned char*"
+  - "name": "abuf"
+    "type": "unsigned char*"
+  - "name": "alen"
+    "type": "int"
+  - "name": "s"
+    "type": "unsigned char**"
+  - "name": "enclen"
+    "type": "long*"
+  "return_type": "int"
+  "signature": |-
+    int ares_expand_string(const unsigned char *encoded, const unsigned char *abuf,
+                           int alen, unsigned char **s, long *enclen)
+- "name": "ares_dns_rr_set_opt"
+  "params":
+  - "name": "dns_rr"
+    "type": "ares_dns_rr_t*"
+  - "name": "key"
+    "type": "ares_dns_rr_key_t"
+  - "name": "opt"
+    "type": "unsigned short"
+  - "name": "val"
+    "type": "unsigned char*"
+  - "name": "val_len"
+    "type": "size_t"
+  "return_type": "ares_status_t"
+  "signature": |-
+    ares_status_t ares_dns_rr_set_opt(ares_dns_rr_t *dns_rr, ares_dns_rr_key_t key,
+                                      unsigned short opt, const unsigned char *val,
+                                      size_t val_len)
+- "name": "ares_dns_rr_get_opt_byid"
+  "params":
+  - "name": "dns_rr"
+    "type": "ares_dns_rr_t*"
+  - "name": "key"
+    "type": "ares_dns_rr_key_t"
+  - "name": "opt"
+    "type": "unsigned short"
+  - "name": "val"
+    "type": "unsigned char**"
+  - "name": "val_len"
+    "type": "size_t*"
+  "return_type": "ares_bool_t"
+  "signature": |-
+    ares_bool_t ares_dns_rr_get_opt_byid(const ares_dns_rr_t *dns_rr,
+                                         ares_dns_rr_key_t key, unsigned short opt,
+                                         const unsigned char **val, size_t *val_len)
+- "name": "ares_dns_record_query_set_name"
+  "params":
+  - "name": "dnsrec"
+    "type": "ares_dns_record_t*"
+  - "name": "idx"
+    "type": "size_t"
+  - "name": "name"
+    "type": "char*"
+  "return_type": "ares_status_t"
+  "signature": |-
+    ares_status_t ares_dns_record_query_set_name(ares_dns_record_t *dnsrec,
+                                                 size_t idx, const char *name)
+- "name": "ares_dns_opt_get_datatype"
+  "params":
+  - "name": "key"
+    "type": "ares_dns_rr_key_t"
+  - "name": "opt"
+    "type": "unsigned short"
+  "return_type": "ares_dns_opt_datatype_t"
+  "signature": |-
+    ares_dns_opt_datatype_t ares_dns_opt_get_datatype(ares_dns_rr_key_t key,
+                                                      unsigned short    opt)
+- "name": "ares_dns_opt_get_name"
+  "params":
+  - "name": "key"
+    "type": "ares_dns_rr_key_t"
+  - "name": "opt"
+    "type": "unsigned short"
+  "return_type": "char"
+  "signature": "char *ares_dns_opt_get_name(ares_dns_rr_key_t key, unsigned short opt)"
+- "name": "ares_strerror"
+  "params":
+  - "name": "code"
+    "type": "int"
+  "return_type": "char"
+  "signature": "char *ares_strerror(int code)"
+- "name": "ares_free_string"
+  "params":
+  - "name": "str"
+    "type": "void*"
+  "return_type": "void"
+  "signature": "void ares_free_string(void *str)"
+- "name": "ares_init_options"
+  "params":
+  - "name": "channelptr"
+    "type": "ares_channel_t**"
+  - "name": "options"
+    "type": "struct ares_options*"
+  - "name": "optmask"
+    "type": "int"
+  "return_type": "int"
+  "signature": |-
+    int ares_init_options(ares_channel_t           **channelptr,
+                          const struct ares_options *options, int optmask)
+- "name": "ares_dns_rr_get_bin"
+  "params":
+  - "name": "dns_rr"
+    "type": "ares_dns_rr_t*"
+  - "name": "key"
+    "type": "ares_dns_rr_key_t"
+  - "name": "len"
+    "type": "size_t*"
+  "return_type": "unsigned char"
+  "signature": |-
+    unsigned char *ares_dns_rr_get_bin(const ares_dns_rr_t *dns_rr,
+                                             ares_dns_rr_key_t key, size_t *len)
+- "name": "ares_dns_rr_get_addr"
+  "params":
+  - "name": "dns_rr"
+    "type": "ares_dns_rr_t*"
+  - "name": "key"
+    "type": "ares_dns_rr_key_t"
+  "return_type": "struct in_addr"
+  "signature": |-
+    struct in_addr *ares_dns_rr_get_addr(const ares_dns_rr_t *dns_rr,
+                                               ares_dns_rr_key_t    key)
+- "name": "ares_dns_rr_get_addr6"
+  "params":
+  - "name": "dns_rr"
+    "type": "ares_dns_rr_t*"
+  - "name": "key"
+    "type": "ares_dns_rr_key_t"
+  "return_type": "struct ares_in6_addr"
+  "signature": |-
+    struct ares_in6_addr *ares_dns_rr_get_addr6(const ares_dns_rr_t *dns_rr,
+                                                      ares_dns_rr_key_t    key)
+- "name": "ares_dns_rr_get_u8"
+  "params":
+  - "name": "dns_rr"
+    "type": "ares_dns_rr_t*"
+  - "name": "key"
+    "type": "ares_dns_rr_key_t"
+  "return_type": "unsigned char"
+  "signature": |-
+    unsigned char ares_dns_rr_get_u8(const ares_dns_rr_t *dns_rr,
+                                     ares_dns_rr_key_t    key)
+- "name": "ares_dns_rr_get_u16"
+  "params":
+  - "name": "dns_rr"
+    "type": "ares_dns_rr_t*"
+  - "name": "key"
+    "type": "ares_dns_rr_key_t"
+  "return_type": "unsigned short"
+  "signature": |-
+    unsigned short ares_dns_rr_get_u16(const ares_dns_rr_t *dns_rr,
+                                       ares_dns_rr_key_t    key)
+- "name": "ares_dns_rr_get_u32"
+  "params":
+  - "name": "dns_rr"
+    "type": "ares_dns_rr_t*"
+  - "name": "key"
+    "type": "ares_dns_rr_key_t"
+  "return_type": "unsigned int"
+  "signature": |-
+    unsigned int ares_dns_rr_get_u32(const ares_dns_rr_t *dns_rr,
+                                     ares_dns_rr_key_t    key)
+- "name": "ares_dns_rr_set_addr6"
+  "params":
+  - "name": "dns_rr"
+    "type": "ares_dns_rr_t*"
+  - "name": "key"
+    "type": "ares_dns_rr_key_t"
+  - "name": "addr"
+    "type": "struct ares_in6_addr*"
+  "return_type": "ares_status_t"
+  "signature": |-
+    ares_status_t ares_dns_rr_set_addr6(ares_dns_rr_t              *dns_rr,
+                                        ares_dns_rr_key_t           key,
+                                        const struct ares_in6_addr *addr)
+- "name": "ares_dns_rr_set_addr"
+  "params":
+  - "name": "dns_rr"
+    "type": "ares_dns_rr_t*"
+  - "name": "key"
+    "type": "ares_dns_rr_key_t"
+  - "name": "addr"
+    "type": "struct in_addr*"
+  "return_type": "ares_status_t"
+  "signature": |-
+    ares_status_t ares_dns_rr_set_addr(ares_dns_rr_t *dns_rr, ares_dns_rr_key_t key,
+                                       const struct in_addr *addr)
+- "name": "ares_dns_rr_get_str"
+  "params":
+  - "name": "dns_rr"
+    "type": "ares_dns_rr_t*"
+  - "name": "key"
+    "type": "ares_dns_rr_key_t"
+  "return_type": "char"
+  "signature": |-
+    char *ares_dns_rr_get_str(const ares_dns_rr_t *dns_rr,
+                                    ares_dns_rr_key_t    key)
+- "name": "ares_dns_rr_set_u8"
+  "params":
+  - "name": "dns_rr"
+    "type": "ares_dns_rr_t*"
+  - "name": "key"
+    "type": "ares_dns_rr_key_t"
+  - "name": "val"
+    "type": "unsigned char"
+  "return_type": "ares_status_t"
+  "signature": |-
+    ares_status_t ares_dns_rr_set_u8(ares_dns_rr_t *dns_rr, ares_dns_rr_key_t key,
+                                     unsigned char val)
+- "name": "ares_dns_rr_set_u16"
+  "params":
+  - "name": "dns_rr"
+    "type": "ares_dns_rr_t*"
+  - "name": "key"
+    "type": "ares_dns_rr_key_t"
+  - "name": "val"
+    "type": "unsigned short"
+  "return_type": "ares_status_t"
+  "signature": |-
+    ares_status_t ares_dns_rr_set_u16(ares_dns_rr_t *dns_rr, ares_dns_rr_key_t key,
+                                      unsigned short val)
+- "name": "ares_dns_rr_set_u32"
+  "params":
+  - "name": "dns_rr"
+    "type": "ares_dns_rr_t*"
+  - "name": "key"
+    "type": "ares_dns_rr_key_t"
+  - "name": "val"
+    "type": "unsigned int"
+  "return_type": "ares_status_t"
+  "signature": |-
+    ares_status_t ares_dns_rr_set_u32(ares_dns_rr_t *dns_rr, ares_dns_rr_key_t key,
+                                      unsigned int val)
+- "name": "ares_dns_record_query_cnt"
+  "params":
+  - "name": "dnsrec"
+    "type": "ares_dns_record_t*"
+  "return_type": "size_t"
+  "signature": "size_t ares_dns_record_query_cnt(const ares_dns_record_t *dnsrec)"
+- "name": "ares_library_init"
+  "params":
+  - "name": "flags"
+    "type": "int"
+  "return_type": "int"
+  "signature": "int ares_library_init(int flags)"
+- "name": "ares_dns_record_get_id"
+  "params":
+  - "name": "dnsrec"
+    "type": "ares_dns_record_t*"
+  "return_type": "unsigned short"
+  "signature": "unsigned short ares_dns_record_get_id(const ares_dns_record_t *dnsrec)"
+- "name": "ares_dns_record_get_flags"
+  "params":
+  - "name": "dnsrec"
+    "type": "ares_dns_record_t*"
+  "return_type": "unsigned short"
+  "signature": "unsigned short ares_dns_record_get_flags(const ares_dns_record_t *dnsrec)"
+- "name": "ares_dns_record_get_opcode"
+  "params":
+  - "name": "dnsrec"
+    "type": "ares_dns_record_t*"
+  "return_type": "ares_dns_opcode_t"
+  "signature": "ares_dns_opcode_t ares_dns_record_get_opcode(const ares_dns_record_t *dnsrec)"
+- "name": "ares_dns_record_get_rcode"
+  "params":
+  - "name": "dnsrec"
+    "type": "ares_dns_record_t*"
+  "return_type": "ares_dns_rcode_t"
+  "signature": "ares_dns_rcode_t ares_dns_record_get_rcode(const ares_dns_record_t *dnsrec)"
+- "name": "ares_dns_rr_get_name"
+  "params":
+  - "name": "rr"
+    "type": "ares_dns_rr_t*"
+  "return_type": "char"
+  "signature": "char *ares_dns_rr_get_name(const ares_dns_rr_t *rr)"
+- "name": "ares_dns_rr_get_type"
+  "params":
+  - "name": "rr"
+    "type": "ares_dns_rr_t*"
+  "return_type": "ares_dns_rec_type_t"
+  "signature": "ares_dns_rec_type_t ares_dns_rr_get_type(const ares_dns_rr_t *rr)"
+- "name": "ares_dns_rr_get_class"
+  "params":
+  - "name": "rr"
+    "type": "ares_dns_rr_t*"
+  "return_type": "ares_dns_class_t"
+  "signature": "ares_dns_class_t ares_dns_rr_get_class(const ares_dns_rr_t *rr)"
+- "name": "ares_dns_rr_get_ttl"
+  "params":
+  - "name": "rr"
+    "type": "ares_dns_rr_t*"
+  "return_type": "unsigned int"
+  "signature": "unsigned int ares_dns_rr_get_ttl(const ares_dns_rr_t *rr)"
+- "name": "ares_destroy"
+  "params":
+  - "name": "channel"
+    "type": "ares_channel_t*"
+  "return_type": "void"
+  "signature": "void ares_destroy(ares_channel_t *channel)"
+- "name": "ares_library_cleanup"
+  "params": []
+  "return_type": "void"
+  "signature": "void ares_library_cleanup(void)"
+- "name": "ares_dns_parse"
+  "params":
+  - "name": "buf"
+    "type": "unsigned char*"
+  - "name": "buf_len"
+    "type": "size_t"
+  - "name": "flags"
+    "type": "unsigned int"
+  - "name": "dnsrec"
+    "type": "ares_dns_record_t**"
+  "return_type": "ares_status_t"
+  "signature": |-
+    ares_status_t ares_dns_parse(const unsigned char *buf, size_t buf_len,
+                                 unsigned int flags, ares_dns_record_t **dnsrec)
+- "name": "ares_dns_rr_key_to_rec_type"
+  "params":
+  - "name": "key"
+    "type": "ares_dns_rr_key_t"
+  "return_type": "ares_dns_rec_type_t"
+  "signature": "ares_dns_rec_type_t ares_dns_rr_key_to_rec_type(ares_dns_rr_key_t key)"
+- "name": "ares_dns_pton"
+  "params":
+  - "name": "ipaddr"
+    "type": "char*"
+  - "name": "addr"
+    "type": "struct ares_addr*"
+  - "name": "out_len"
+    "type": "size_t*"
+  "return_type": "void"
+  "signature": |-
+    void *ares_dns_pton(const char *ipaddr, struct ares_addr *addr,
+                              size_t *out_len)
+- "name": "ares_dns_record_create"
+  "params":
+  - "name": "dnsrec"
+    "type": "ares_dns_record_t**"
+  - "name": "id"
+    "type": "unsigned short"
+  - "name": "flags"
+    "type": "unsigned short"
+  - "name": "opcode"
+    "type": "ares_dns_opcode_t"
+  - "name": "rcode"
+    "type": "ares_dns_rcode_t"
+  "return_type": "ares_status_t"
+  "signature": |-
+    ares_status_t ares_dns_record_create(ares_dns_record_t **dnsrec,
+                                         unsigned short id, unsigned short flags,
+                                         ares_dns_opcode_t opcode,
+                                         ares_dns_rcode_t  rcode)
+- "name": "ares_inet_ntop"
+  "params":
+  - "name": "af"
+    "type": "int"
+  - "name": "src"
+    "type": "void*"
+  - "name": "dst"
+    "type": "char*"
+  - "name": "size"
+    "type": "ares_socklen_t"
+  "return_type": "char"
+  "signature": |-
+    char *ares_inet_ntop(int af, const void *src, char *dst,
+                                      ares_socklen_t size)
+- "name": "ares_dns_record_query_add"
+  "params":
+  - "name": "dnsrec"
+    "type": "ares_dns_record_t*"
+  - "name": "name"
+    "type": "char*"
+  - "name": "qtype"
+    "type": "ares_dns_rec_type_t"
+  - "name": "qclass"
+    "type": "ares_dns_class_t"
+  "return_type": "ares_status_t"
+  "signature": |-
+    ares_status_t ares_dns_record_query_add(ares_dns_record_t  *dnsrec,
+                                            const char         *name,
+                                            ares_dns_rec_type_t qtype,
+                                            ares_dns_class_t    qclass)
+- "name": "ares_dns_rr_get_opt"
+  "params":
+  - "name": "dns_rr"
+    "type": "ares_dns_rr_t*"
+  - "name": "key"
+    "type": "ares_dns_rr_key_t"
+  - "name": "idx"
+    "type": "size_t"
+  - "name": "val"
+    "type": "unsigned char**"
+  - "name": "val_len"
+    "type": "size_t*"
+  "return_type": "unsigned short"
+  "signature": |-
+    unsigned short ares_dns_rr_get_opt(const ares_dns_rr_t *dns_rr,
+                                       ares_dns_rr_key_t key, size_t idx,
+                                       const unsigned char **val, size_t *val_len)
+- "name": "ares_dns_record_rr_cnt"
+  "params":
+  - "name": "dnsrec"
+    "type": "ares_dns_record_t*"
+  - "name": "sect"
+    "type": "ares_dns_section_t"
+  "return_type": "size_t"
+  "signature": |-
+    size_t ares_dns_record_rr_cnt(const ares_dns_record_t *dnsrec,
+                                  ares_dns_section_t       sect)
+- "name": "ares_dns_write"
+  "params":
+  - "name": "dnsrec"
+    "type": "ares_dns_record_t*"
+  - "name": "buf"
+    "type": "unsigned char**"
+  - "name": "buf_len"
+    "type": "size_t*"
+  "return_type": "ares_status_t"
+  "signature": |-
+    ares_status_t ares_dns_write(const ares_dns_record_t *dnsrec,
+                                 unsigned char **buf, size_t *buf_len)
+- "name": "ares_dns_rr_get_opt_cnt"
+  "params":
+  - "name": "dns_rr"
+    "type": "ares_dns_rr_t*"
+  - "name": "key"
+    "type": "ares_dns_rr_key_t"
+  "return_type": "size_t"
+  "signature": |-
+    size_t ares_dns_rr_get_opt_cnt(const ares_dns_rr_t *dns_rr,
+                                   ares_dns_rr_key_t    key)
+- "name": "ares_inet_pton"
+  "params":
+  - "name": "af"
+    "type": "int"
+  - "name": "src"
+    "type": "char*"
+  - "name": "dst"
+    "type": "void*"
+  "return_type": "int"
+  "signature": "int ares_inet_pton(int af, const char *src, void *dst)"
+- "name": "ares_dns_record_rr_add"
+  "params":
+  - "name": "rr_out"
+    "type": "ares_dns_rr_t**"
+  - "name": "dnsrec"
+    "type": "ares_dns_record_t*"
+  - "name": "sect"
+    "type": "ares_dns_section_t"
+  - "name": "name"
+    "type": "char*"
+  - "name": "type"
+    "type": "ares_dns_rec_type_t"
+  - "name": "rclass"
+    "type": "ares_dns_class_t"
+  - "name": "ttl"
+    "type": "unsigned int"
+  "return_type": "ares_status_t"
+  "signature": |-
+    ares_status_t ares_dns_record_rr_add(ares_dns_rr_t    **rr_out,
+                                         ares_dns_record_t *dnsrec,
+                                         ares_dns_section_t sect, const char *name,
+                                         ares_dns_rec_type_t type,
+                                         ares_dns_class_t rclass, unsigned int ttl)
+- "name": "ares_dns_record_query_get"
+  "params":
+  - "name": "dnsrec"
+    "type": "ares_dns_record_t*"
+  - "name": "idx"
+    "type": "size_t"
+  - "name": "name"
+    "type": "char**"
+  - "name": "qtype"
+    "type": "ares_dns_rec_type_t*"
+  - "name": "qclass"
+    "type": "ares_dns_class_t*"
+  "return_type": "ares_status_t"
+  "signature": |-
+    ares_status_t ares_dns_record_query_get(const ares_dns_record_t *dnsrec,
+                                            size_t idx, const char **name,
+                                            ares_dns_rec_type_t *qtype,
+                                            ares_dns_class_t    *qclass)
+- "name": "ares_dns_record_rr_get"
+  "params":
+  - "name": "dnsrec"
+    "type": "ares_dns_record_t*"
+  - "name": "sect"
+    "type": "ares_dns_section_t"
+  - "name": "idx"
+    "type": "size_t"
+  "return_type": "ares_dns_rr_t"
+  "signature": |-
+    ares_dns_rr_t *ares_dns_record_rr_get(ares_dns_record_t *dnsrec,
+                                          ares_dns_section_t sect, size_t idx)
+- "name": "ares_dns_section_tostr"
+  "params":
+  - "name": "section"
+    "type": "ares_dns_section_t"
+  "return_type": "char"
+  "signature": "char *ares_dns_section_tostr(ares_dns_section_t section)"
+- "name": "ares_dns_rr_get_keys"
+  "params":
+  - "name": "type"
+    "type": "ares_dns_rec_type_t"
+  - "name": "cnt"
+    "type": "size_t*"
+  "return_type": "ares_dns_rr_key_t"
+  "signature": |-
+    ares_dns_rr_key_t *ares_dns_rr_get_keys(ares_dns_rec_type_t type,
+                                                        size_t             *cnt)
+- "name": "ares_dns_opcode_tostr"
+  "params":
+  - "name": "opcode"
+    "type": "ares_dns_opcode_t"
+  "return_type": "char"
+  "signature": "char *ares_dns_opcode_tostr(ares_dns_opcode_t opcode)"
+- "name": "ares_dns_rcode_tostr"
+  "params":
+  - "name": "rcode"
+    "type": "ares_dns_rcode_t"
+  "return_type": "char"
+  "signature": "char *ares_dns_rcode_tostr(ares_dns_rcode_t rcode)"
+- "name": "ares_dns_rr_key_datatype"
+  "params":
+  - "name": "key"
+    "type": "ares_dns_rr_key_t"
+  "return_type": "ares_dns_datatype_t"
+  "signature": "ares_dns_datatype_t ares_dns_rr_key_datatype(ares_dns_rr_key_t key)"
+- "name": "ares_dns_rr_key_tostr"
+  "params":
+  - "name": "key"
+    "type": "ares_dns_rr_key_t"
+  "return_type": "char"
+  "signature": "char *ares_dns_rr_key_tostr(ares_dns_rr_key_t key)"
+- "name": "ares_init"
+  "params":
+  - "name": "channelptr"
+    "type": "ares_channel_t**"
+  "return_type": "int"
+  "signature": "int ares_init(ares_channel_t **channelptr)"
+- "name": "ares_set_servers_csv"
+  "params":
+  - "name": "channel"
+    "type": "ares_channel_t*"
+  - "name": "_csv"
+    "type": "char*"
+  "return_type": "int"
+  "signature": "int ares_set_servers_csv(ares_channel_t *channel, const char *_csv)"
+- "name": "ares_dns_record_rr_get_const"
+  "params":
+  - "name": "dnsrec"
+    "type": "ares_dns_record_t*"
+  - "name": "sect"
+    "type": "ares_dns_section_t"
+  - "name": "idx"
+    "type": "size_t"
+  "return_type": "ares_dns_rr_t"
+  "signature": |-
+    ares_dns_rr_t *
+      ares_dns_record_rr_get_const(const ares_dns_record_t *dnsrec,
+                                   ares_dns_section_t sect, size_t idx)
+- "name": "ares_dns_record_destroy"
+  "params":
+  - "name": "dnsrec"
+    "type": "ares_dns_record_t*"
+  "return_type": "void"
+  "signature": "void ares_dns_record_destroy(ares_dns_record_t *dnsrec)"
+- "name": "ares_dns_rec_type_tostr"
+  "params":
+  - "name": "type"
+    "type": "ares_dns_rec_type_t"
+  "return_type": "char"
+  "signature": "char *ares_dns_rec_type_tostr(ares_dns_rec_type_t type)"
+- "name": "ares_dns_class_tostr"
+  "params":
+  - "name": "qclass"
+    "type": "ares_dns_class_t"
+  "return_type": "char"
+  "signature": "char *ares_dns_class_tostr(ares_dns_class_t qclass)"
+- "name": "ares_library_initialized"
+  "params": []
+  "return_type": "int"
+  "signature": "int ares_library_initialized(void)"
+- "name": "ares_threadsafety"
+  "params": []
+  "return_type": "ares_bool_t"
+  "signature": "ares_bool_t ares_threadsafety(void)"
+"language": "c++"
+"macros":
+- "CARES_GCC_VERSION"
+- "ARES_FLAG_USEVC"
+- "ARES_FLAG_PRIMARY"
+- "ARES_FLAG_IGNTC"
+- "ARES_FLAG_NORECURSE"
+- "ARES_FLAG_STAYOPEN"
+- "ARES_FLAG_NOSEARCH"
+- "ARES_FLAG_NOALIASES"
+- "ARES_FLAG_NOCHECKRESP"
+- "ARES_FLAG_EDNS"
+- "ARES_FLAG_NO_DFLT_SVR"
+- "ARES_FLAG_DNS0x20"
+- "ARES_OPT_FLAGS"
+- "ARES_OPT_TIMEOUT"
+- "ARES_OPT_TRIES"
+- "ARES_OPT_NDOTS"
+- "ARES_OPT_UDP_PORT"
+- "ARES_OPT_TCP_PORT"
+- "ARES_OPT_SERVERS"
+- "ARES_OPT_DOMAINS"
+- "ARES_OPT_LOOKUPS"
+- "ARES_OPT_SOCK_STATE_CB"
+- "ARES_OPT_SORTLIST"
+- "ARES_OPT_SOCK_SNDBUF"
+- "ARES_OPT_SOCK_RCVBUF"
+- "ARES_OPT_TIMEOUTMS"
+- "ARES_OPT_ROTATE"
+- "ARES_OPT_EDNSPSZ"
+- "ARES_OPT_NOROTATE"
+- "ARES_OPT_RESOLVCONF"
+- "ARES_OPT_HOSTS_FILE"
+- "ARES_OPT_UDP_MAX_QUERIES"
+- "ARES_OPT_MAXTIMEOUTMS"
+- "ARES_OPT_QUERY_CACHE"
+- "ARES_OPT_EVENT_THREAD"
+- "ARES_OPT_SERVER_FAILOVER"
+- "ARES_NI_NOFQDN"
+- "ARES_NI_NUMERICHOST"
+- "ARES_NI_NAMEREQD"
+- "ARES_NI_NUMERICSERV"
+- "ARES_NI_DGRAM"
+- "ARES_NI_TCP"
+- "ARES_NI_SCTP"
+- "ARES_NI_DCCP"
+- "ARES_NI_NUMERICSCOPE"
+- "ARES_NI_LOOKUPHOST"
+- "ARES_NI_LOOKUPSERVICE"
+- "ARES_NI_IDN"
+- "ARES_NI_IDN_ALLOW_UNASSIGNED"
+- "ARES_NI_IDN_USE_STD3_ASCII_RULES"
+- "ARES_AI_CANONNAME"
+- "ARES_AI_NUMERICHOST"
+- "ARES_AI_PASSIVE"
+- "ARES_AI_NUMERICSERV"
+- "ARES_AI_V4MAPPED"
+- "ARES_AI_ALL"
+- "ARES_AI_ADDRCONFIG"
+- "ARES_AI_NOSORT"
+- "ARES_AI_ENVHOSTS"
+- "ARES_AI_IDN"
+- "ARES_AI_IDN_ALLOW_UNASSIGNED"
+- "ARES_AI_IDN_USE_STD3_ASCII_RULES"
+- "ARES_AI_CANONIDN"
+- "ARES_GETSOCK_MAXNUM"
+- "ARES_LIB_INIT_NONE"
+- "ARES_LIB_INIT_WIN32"
+- "ARES_SERV_STATE_UDP"
+- "ARES_SERV_STATE_TCP"
+- "ARES_SOCKET_BAD"
+- "CARES_HAVE_ARES_LIBRARY_INIT"
+- "CARES_HAVE_ARES_LIBRARY_CLEANUP"
+"project": "c-ares"
+"target_name": "ares_parse_reply_fuzzer"
+"target_path": "/src/c-ares/test/ares-test-fuzz.c"
+"commit":
+  /src/c-ares: "73bc590b8ee80b4eee8ae637f5089584b217f3b0"
+"typedefs":
+- "datatype": "CARES_TYPEOF_ARES_SOCKLEN_T"
+  "name": "ares_socklen_t"
+- "datatype": "SOCKET"
+  "name": "ares_socket_t"
+- "datatype": "CARES_TYPEOF_ARES_SSIZE_T"
+  "name": "ares_ssize_t"
+- "datatype": "ares_channeldata"
+  "name": "*ares_channel"
+- "datatype": "int"
+  "name": "ares_socket_t"
+- "datatype": "ares_dns_record"
+  "name": "ares_dns_record_t"
+- "datatype": "ares_dns_qd"
+  "name": "ares_dns_qd_t"
+- "datatype": "ares_channeldata"
+  "name": "ares_channel_t"
+- "datatype": "ares_dns_rr"
+  "name": "ares_dns_rr_t"

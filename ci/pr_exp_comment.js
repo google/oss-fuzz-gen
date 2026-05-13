@@ -35,6 +35,8 @@ function parseGcbrunArgs(comment) {
       nameSuffix = args[i + 1];
     } else if (args[i] === '-b' && i + 1 < args.length) {
       benchmarkSet = args[i + 1];
+    } else if (args[i] === '-j' && i + 1 < args.length) {
+      benchmarkSet = args[i + 1];
     }
   }
 

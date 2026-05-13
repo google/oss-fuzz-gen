@@ -1,0 +1,90 @@
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h> // Include for close()
+#include <string.h> // Include for strncpy()
+
+extern "C" {
+    #include <sndfile.h>
+}
+
+extern "C" int LLVMFuzzerTestOneInput_69(const uint8_t *data, size_t size) {
+    // Create a temporary file to write the fuzz data
+    char tmpl[] = "/tmp/fuzzfileXXXXXX";
+    int fd = mkstemp(tmpl);
+    if (fd < 0) {
+        return 0;
+    }
+    FILE *file = fdopen(fd, "wb");
+    if (!file) {
+        close(fd);
+        return 0;
+    }
+    fwrite(data, 1, size, file);
+    fclose(file);
+
+    // Open the temporary file with libsndfile
+    SF_INFO sfinfo;
+    SNDFILE *sndfile = sf_open(tmpl, SFM_READ, &sfinfo);
+    if (sndfile == NULL) {
+        remove(tmpl);
+        return 0;
+    }
+
+    // Initialize a SF_CHUNK_INFO structure
+    SF_CHUNK_INFO chunk_info;
+    strncpy(chunk_info.id, "data", sizeof(chunk_info.id)); // Set to a valid chunk ID
+    chunk_info.datalen = 0; // Set to 0 or any valid data length
+    chunk_info.data = NULL; // Set to NULL or any valid data pointer
+
+    // Call the function-under-test
+    SF_CHUNK_ITERATOR *iterator = sf_get_chunk_iterator(sndfile, &chunk_info);
+
+    // Clean up
+    if (iterator != NULL) {
+        sf_next_chunk_iterator(iterator); // Correct function to iterate or close
+    }
+    sf_close(sndfile);
+    remove(tmpl);
+
+    return 0;
+}
+#ifdef INC_MAIN
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
+int main(int argc, char *argv[])
+{
+    FILE *f;
+    uint8_t *data = NULL;
+    long size;
+
+    if(argc < 2)
+        exit(0);
+
+    f = fopen(argv[1], "rb");
+    if(f == NULL)
+        exit(0);
+
+    fseek(f, 0, SEEK_END);
+
+    size = ftell(f);
+    rewind(f);
+
+    if(size < 1 + 1)
+        exit(0);
+
+    data = (uint8_t *)malloc((size_t)size);
+    if(data == NULL)
+        exit(0);
+
+    if(fread(data, (size_t)size, 1, f) != 1)
+        exit(0);
+
+    LLVMFuzzerTestOneInput_69(data + 1, (size_t)(size - 1));
+
+    free(data);
+    fclose(f);
+    return 0;
+}
+#endif

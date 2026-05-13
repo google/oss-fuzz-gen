@@ -44,6 +44,7 @@ class WorkDirs:
     os.makedirs(self.fuzz_targets, exist_ok=True)
     os.makedirs(self._artifact_base, exist_ok=True)
     os.makedirs(self.requirements, exist_ok=True)
+    os.makedirs(self.afl_output, exist_ok=True)
 
   def __repr__(self) -> str:
     return self._base_dir
@@ -118,6 +119,10 @@ class WorkDirs:
   def requirements(self) -> str:
     return os.path.join(self._base_dir, 'requirements')
 
+  @property
+  def afl_output(self) -> str:
+    return os.path.join(self._base_dir, 'afl_output')
+
   def build_logs_target(self, generated_target_name: str, iteration: int,
                         trial: int) -> str:
     return os.path.join(
@@ -138,3 +143,5 @@ class WorkDirs:
     if match:
       return int(match.group(1))
     return None
+
+  
