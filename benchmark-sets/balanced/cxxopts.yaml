@@ -1,0 +1,11 @@
+functions:
+- name: _Z3absB7v180000l
+  params:
+  - name: __x
+    type: size_t
+  return_type: size_t
+  signature: long abs(long)
+language: c++
+project: cxxopts
+target_name: cxxopts_fuzz_test
+target_path: /src/cxxopts/test/fuzz.cpp

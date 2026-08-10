@@ -1,0 +1,13 @@
+functions:
+- name: sudo_set_grlist
+  params:
+  - name: pw
+    type: 'bool '
+  - name: groups
+    type: 'bool '
+  return_type: int
+  signature: int sudo_set_grlist(struct passwd *, const char **)
+language: c
+project: sudoers
+target_name: fuzz_iolog_legacy
+target_path: /src/sudo/lib/iolog/regress/fuzz/fuzz_iolog_legacy.c

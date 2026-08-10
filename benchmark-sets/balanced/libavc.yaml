@@ -1,0 +1,41 @@
+functions:
+- name: isvcd_compute_interlyr_motion_mode
+  params:
+  - name: pv_comp_mode_mv_ctxt
+    type: 'bool '
+  - name: pv_mb_params
+    type: 'bool '
+  - name: pv_svc_mb_params
+    type: 'bool '
+  - name: pv_dec
+    type: 'bool '
+  - name: pv_mb_part_info
+    type: 'bool '
+  - name: pv_part
+    type: 'bool '
+  return_type: int
+  signature: WORD32 isvcd_compute_interlyr_motion_mode(void *, void *, void *, void *, void *, void *)
+- name: irc_add_picture_to_stack_re_enc
+  params:
+  - name: rate_control_api
+    type: 'bool '
+  - name: i4_enc_pic_id
+    type: int
+  - name: e_pic_type
+    type: int
+  return_type: void
+  signature: void irc_add_picture_to_stack_re_enc(rate_control_api_t *, WORD32, picture_type_e)
+- name: ih264_dpb_mgr_count_ref_frames
+  params:
+  - name: ps_dpb_mgr
+    type: 'bool '
+  - name: curr_frame_num
+    type: int
+  - name: max_frame_num
+    type: int
+  return_type: int
+  signature: WORD32 ih264_dpb_mgr_count_ref_frames(dpb_mgr_t *, WORD32, WORD32)
+language: c++
+project: libavc
+target_name: avc_enc_fuzzer
+target_path: /src/libavc/fuzzer/avc_enc_fuzzer.cpp

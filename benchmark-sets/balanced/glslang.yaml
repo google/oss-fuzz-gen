@@ -1,0 +1,15 @@
+functions:
+- name: _ZN7glslang11HlslGrammar12acceptStructERNS_5TTypeERP11TIntermNode
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: bool
+  signature: bool glslang::HlslGrammar::acceptStruct(TType &, TIntermNode &*)
+language: c++
+project: glslang
+target_name: compile_fuzzer
+target_path: /src/compile_fuzzer.cc

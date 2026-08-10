@@ -1,0 +1,11 @@
+functions:
+- name: _ZNK7spotify4json6detail14field_registry5beginEv
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: const_iterator spotify::json::detail::field_registry::begin()
+language: c++
+project: spotify-json
+target_name: fuzz_decode
+target_path: /src/spotify-json/fuzzers/fuzz_decode.cpp

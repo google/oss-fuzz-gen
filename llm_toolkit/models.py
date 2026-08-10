@@ -936,11 +936,21 @@ class GeminiV1D5Chat(GeminiV1D5):
                    config: dict[str, Any]) -> Any:
     """Generates chat response."""
     logger.info('%s generating response with config: %s', self.name, config)
-    return client.send_message(
-        prompt,
-        stream=False,
-        generation_config=config,
-        safety_settings=self.safety_config).text  # type: ignore
+    previous_history_len = len(client._history) if hasattr(client, '_history') else 0
+    try:
+      response = client.send_message(
+          prompt,
+          stream=False,
+          generation_config=config,
+          safety_settings=self.safety_config)
+      return response.text
+    except Exception as e:
+      if hasattr(client, '_history'):
+        while len(client._history) > previous_history_len:
+          client._history.pop()
+      if isinstance(e, ValueError) and 'Cannot get the response text' in str(e):
+        logger.warning('Failed to get response text: %s', e)
+      raise
 
   def truncate_prompt(self,
                       raw_prompt_text: Any,

@@ -1,0 +1,13 @@
+functions:
+- name: _ZN8jsonconsgtERKNS_12basic_bigintINSt3__19allocatorIhEEEES6_
+  params:
+  - name: x
+    type: 'bool '
+  - name: y
+    type: 'bool '
+  return_type: bool
+  signature: bool jsoncons::operator>(const basic_bigint<std::__1::allocator<unsigned char> > &, const basic_bigint<std::__1::allocator<unsigned char> > &)
+language: c++
+project: jsoncons
+target_name: fuzz_ubjson_parser_max
+target_path: /src/jsoncons/fuzzers/fuzz_ubjson_parser_max.cpp
