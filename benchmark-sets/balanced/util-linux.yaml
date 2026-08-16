@@ -7,6 +7,14 @@ functions:
     type: 'bool '
   return_type: int
   signature: int mnt_table_parse_fstab(struct libmnt_table *, const char *)
+- name: mnt_table_is_fs_mounted
+  params:
+  - name: tb
+    type: 'bool '
+  - name: fstab_fs
+    type: 'bool '
+  return_type: int
+  signature: int mnt_table_is_fs_mounted(struct libmnt_table *, struct libmnt_fs *)
 language: c
 project: util-linux
 target_name: test_last_fuzz
