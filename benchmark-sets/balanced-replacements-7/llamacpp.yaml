@@ -1,0 +1,15 @@
+functions:
+- name: ggml_opt
+  params:
+  - name: ctx
+    type: 'bool '
+  - name: params
+    type: 'bool '
+  - name: f
+    type: 'bool '
+  return_type: int
+  signature: DW_TAG_enumeration_typeggml_opt_result ggml_opt(struct ggml_context *, struct ggml_opt_params, struct ggml_tensor *)
+language: c++
+project: llamacpp
+target_name: fuzz_apply_template
+target_path: /src/llama.cpp/fuzzers/fuzz_apply_template.cpp

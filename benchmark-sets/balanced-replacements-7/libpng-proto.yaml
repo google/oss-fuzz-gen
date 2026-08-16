@@ -1,0 +1,13 @@
+functions:
+- name: _ZN8PngProto9MergeFromERKS_
+  params:
+  - name: this
+    type: 'bool '
+  - name: from
+    type: 'bool '
+  return_type: void
+  signature: void PngProto::MergeFrom(const PngProto &)
+language: c++
+project: libpng-proto
+target_name: png_transforms_fuzzer
+target_path: /src/libpng_transforms_fuzzer.cc

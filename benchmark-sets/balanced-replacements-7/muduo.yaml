@@ -1,0 +1,17 @@
+functions:
+- name: _ZN5muduo6LoggerC2ENS0_10SourceFileEi
+  params:
+  - name: ''
+    type: 'bool '
+  - name: file
+    type: 'bool '
+  - name: ''
+    type: int
+  - name: ''
+    type: int
+  return_type: void
+  signature: void muduo::Logger::Logger(SourceFile, int)
+language: c++
+project: muduo
+target_name: muduo_http_fuzzer
+target_path: /src/muduo_http_fuzzer.cpp
