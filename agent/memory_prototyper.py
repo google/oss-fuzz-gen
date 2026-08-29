@@ -3,6 +3,7 @@ Prototyper that can retrieve past error message and patch history
 """
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 from collections import defaultdict
@@ -15,6 +16,7 @@ from llm_toolkit.prompts import Prompt
 from llm_toolkit.text_embedder import VertexEmbeddingModel
 from memory_helper.cloudsql import (knn_search_error_full_with_norm,
                                     maybe_register_fix_episode,
+                                    random_search_error_full_with_norm,
                                     update_stats_from_buffer)
 from memory_helper.errors import (ERROR_SIGNATURE, classify_error, find_anchor)
 from results import BuildResult, Result
@@ -857,14 +859,109 @@ class MemoryPrototyper(Prototyper):
       )
       return None
 
-  # -------------------- KNN + stats + planner wiring --------------------
-
-  def _maybe_get_memory_plan(
+  def _log_memory_ablation(
       self,
       build_result: BuildResult,
-  ) -> Tuple[str, Optional[Dict[str, Any]]]:
-    """Lookup Cloud SQL for a similar error
-     return (normalized_err, best_hit).
+      candidates: List[Dict[str, Any]],
+      selected: List[Dict[str, Any]],
+      *,
+      eligible_count: Optional[int],
+      planner_called: bool,
+      planner_accepted: Optional[bool],
+      effective_random_seed: Optional[int] = None,
+  ) -> None:
+    """Emit one machine-readable record for each memory selection step."""
+    mode = getattr(self.args, "memory_selection_mode", "planner")
+    project_filter = getattr(self.args, "memory_project_filter", "all")
+    scope_names = {
+        "all": "all-data",
+        "only-current": "only-p",
+        "exclude-current": "exclude-p",
+    }
+    bench = build_result.benchmark
+    has_similarity_ranks = mode != "random-1"
+    ranks_by_id = {str(candidate["id"]): rank
+                   for rank, candidate in enumerate(candidates, 1)}
+    record = {
+        "memory_selection_mode": mode,
+        "retrieval_scope": scope_names.get(project_filter, project_filter),
+        "query_benchmark": getattr(bench, "id", ""),
+        "query_project": getattr(bench, "project", ""),
+        "eligible_count": eligible_count,
+        "retrieved_count": len(candidates),
+        "candidate_ranks": (list(range(1, len(candidates) + 1))
+                            if has_similarity_ranks else [None] * len(candidates)),
+        "candidate_ids": [candidate.get("id") for candidate in candidates],
+        "cosine_distances": [candidate.get("distance")
+                             for candidate in candidates],
+        "candidate_projects": [candidate.get("project")
+                               for candidate in candidates],
+        "confidence_levels": [candidate.get("confidence_level")
+                              for candidate in candidates],
+        "planner_called": planner_called,
+        "planner_accepted": planner_accepted,
+        "injected_ids": [candidate.get("id") for candidate in selected],
+        "injected_ranks": ([ranks_by_id.get(str(candidate.get("id")))
+                            for candidate in selected]
+                           if has_similarity_ranks else [None] * len(selected)),
+        "selected_candidate_id": (selected[0].get("id")
+                                  if mode == "planner" and selected else None),
+        "selected_candidate_rank": (
+            ranks_by_id.get(str(selected[0].get("id")))
+            if mode == "planner" and selected else None),
+        "memory_cutoff": getattr(self.args,
+                                 "memory_created_before_or_on", None),
+        "memory_random_seed": getattr(self.args, "memory_random_seed", 0),
+        "effective_random_seed": effective_random_seed,
+    }
+    logger.info("MEMORY_ABLATION %s", json.dumps(record, sort_keys=True),
+                trial=build_result.trial)
+
+  def _format_reference_solutions(
+      self,
+      references: List[Dict[str, Any]],
+  ) -> str:
+    """Format one or more memory entries without ambiguous concatenation."""
+    if not references:
+      return ""
+
+    def _one(reference: Dict[str, Any], rank: Optional[int] = None) -> str:
+      rank_attr = f' rank="{rank}"' if rank is not None else ""
+      return (
+          f"\n<reference_solution{rank_attr}>\n"
+          "A similar error was previously fixed with the following patch. \n"
+          f"{self._get_confidence_note(reference)}\n"
+          "Adapt the solution if necessary.\n\n"
+          f"Project: {reference.get('project')}\n"
+          f"Error type: {reference.get('error_type')}\n"
+          f"Function: {reference.get('func_name')}\n"
+          f"Confidence level: {reference.get('confidence_level', 0)}\n\n"
+          "Fix explanation:\n"
+          "<fix_action>\n"
+          f"{reference.get('fix_action') or ''}\n"
+          "</fix_action>\n\n"
+          "Patch:\n"
+          "<patch>\n"
+          f"{reference.get('patch_text') or ''}\n"
+          "</patch>\n"
+          "</reference_solution>\n")
+
+    # Preserve the exact legacy single-reference structure for planner and
+    # top-1 modes. The plural wrapper is only needed for multiple references.
+    if len(references) == 1:
+      return _one(references[0])
+    return ("\n<reference_solutions>\n" +
+            "".join(_one(reference, rank)
+                    for rank, reference in enumerate(references, 1)) +
+            "</reference_solutions>\n")
+
+  # -------------------- KNN + stats + planner wiring --------------------
+
+  def _maybe_get_memory_references(
+      self,
+      build_result: BuildResult,
+  ) -> Tuple[str, List[Dict[str, Any]]]:
+    """Select memory references according to the configured ablation mode.
 
     Inputs:
 
@@ -894,7 +991,7 @@ class MemoryPrototyper(Prototyper):
       self._last_round_had_hits = False
       self._last_raw_error_text = ""
       self._last_normalized_error = ""
-      return "", None
+      return "", []
 
     bench = build_result.benchmark
     current_project = getattr(bench, "project", "") or ""
@@ -902,6 +999,7 @@ class MemoryPrototyper(Prototyper):
     model_filter = getattr(self.args, "memory_model_filter", None)
     created_before_or_on = getattr(self.args, "memory_created_before_or_on",
                                    None)
+    selection_mode = getattr(self.args, "memory_selection_mode", "planner")
     include_project = None
     exclude_project = None
 
@@ -910,24 +1008,49 @@ class MemoryPrototyper(Prototyper):
     elif project_filter == "only-current":
       include_project = current_project
 
-    normalized, hits = knn_search_error_full_with_norm(
-        query_text,
-        top_k=5,
-        trial=build_result.trial,
-        embedder=self.text_embedding_model,
-        created_before_or_on=created_before_or_on,
-        include_project=include_project,
-        exclude_project=exclude_project,
-        include_model=model_filter,
-        max_chars=4000,  # Slightly larger window for planner context only.
-    )
+    eligible_count: Optional[int] = None
+    query_seed: Optional[int] = None
+    if selection_mode == "random-1":
+      base_seed = getattr(self.args, "memory_random_seed", 0)
+      benchmark_id = getattr(bench, "id", "") or current_project
+      seed_material = f"{base_seed}\0{benchmark_id}\0{query_text}".encode()
+      query_seed = int.from_bytes(hashlib.sha256(seed_material).digest()[:4],
+                                  "big") & 0x7fffffff
+      normalized, hits, eligible_count = random_search_error_full_with_norm(
+          query_text,
+          random_seed=query_seed,
+          trial=build_result.trial,
+          created_before_or_on=created_before_or_on,
+          include_project=include_project,
+          exclude_project=exclude_project,
+          include_model=model_filter,
+          max_chars=4000,
+      )
+    else:
+      normalized, hits = knn_search_error_full_with_norm(
+          query_text,
+          top_k=MAX_CANDIDATES,
+          trial=build_result.trial,
+          embedder=self.text_embedding_model,
+          created_before_or_on=created_before_or_on,
+          include_project=include_project,
+          exclude_project=exclude_project,
+          include_model=model_filter,
+          max_chars=4000,  # Slightly larger window for planner context only.
+      )
 
     if not hits:
       # KNN executed but found no neighbors for this round.
       self._last_round_had_hits = False
       self._last_raw_error_text = query_text
       self._last_normalized_error = normalized
-      return normalized, None
+      selected: List[Dict[str, Any]] = []
+      self._log_memory_ablation(build_result, hits, selected,
+                                eligible_count=eligible_count,
+                                planner_called=False,
+                                planner_accepted=None,
+                                effective_random_seed=query_seed)
+      return normalized, []
 
     # From here on: this failing round DID have retrieval hits.
     self._last_round_had_hits = True
@@ -1004,37 +1127,76 @@ class MemoryPrototyper(Prototyper):
         "prototyper_failure_prompt": prototyper_failure_prompt,
     }
 
-    plan = self._llm_choose_action_plan(
-        normalized_err=normalized,
-        hits=hits,
-        context=context,
-        trial=build_result.trial,
-    )
+    planner_called = selection_mode == "planner"
+    planner_accepted: Optional[bool] = None
+    if selection_mode == "planner":
+      plan = self._llm_choose_action_plan(
+          normalized_err=normalized,
+          hits=hits,
+          context=context,
+          trial=build_result.trial,
+      )
+      selected = [plan] if plan is not None else []
+      planner_accepted = plan is not None
+    elif selection_mode == "top-1":
+      selected = hits[:1]
+    elif selection_mode == "top-5":
+      selected = hits[:MAX_CANDIDATES]
+    elif selection_mode == "random-1":
+      selected = hits[:1]
+    else:
+      raise ValueError(f"Unsupported memory selection mode: {selection_mode}")
 
-    if plan is None:
-      # This failing round had hits, but the LLM planner chose NULL.
+    self._log_memory_ablation(build_result, hits, selected,
+                              eligible_count=eligible_count,
+                              planner_called=planner_called,
+                              planner_accepted=planner_accepted,
+                              effective_random_seed=query_seed)
+
+    if not selected:
       self._last_attempted_entry_id = None
       self._last_attempted_project_match = False
-      return normalized, None
+      return normalized, []
 
-    # Stats: record that the planner actually *attempted* to use this entry.
-    eid = str(plan["id"])
-    project_match = (plan.get("project") or "") == current_project
-    self._bump_stats(
-        eid,
-        attempted=1,
-        attempted_project=1 if project_match else 0,
-    )
-    self._last_attempted_entry_id = eid
-    self._last_attempted_project_match = project_match
+    # Every directly injected entry counts as attempted. Keep the first entry
+    # in the legacy scalar fields used by online success attribution.
+    for reference in selected:
+      eid = str(reference["id"])
+      project_match = (reference.get("project") or "") == current_project
+      self._bump_stats(
+          eid,
+          attempted=1,
+          attempted_project=1 if project_match else 0,
+      )
+    first = selected[0]
+    self._last_attempted_entry_id = str(first["id"])
+    self._last_attempted_project_match = (
+        (first.get("project") or "") == current_project)
 
     build_result.chat_history.setdefault("MemoryPlanner", "")
-    build_result.chat_history["MemoryPlanner"] += (
-        f"\n[MemoryPlanner] Using entry id={plan['id']} "
-        f"(project={plan.get('project')}, "
-        f"error_type={plan.get('error_type')}, "
-        f"distance={plan.get('distance')}).\n")
-    return normalized, plan
+    if selection_mode == "planner":
+      reference = selected[0]
+      build_result.chat_history["MemoryPlanner"] += (
+          f"\n[MemoryPlanner] Using entry id={reference['id']} "
+          f"(project={reference.get('project')}, "
+          f"error_type={reference.get('error_type')}, "
+          f"distance={reference.get('distance')}).\n")
+    else:
+      for reference in selected:
+        build_result.chat_history["MemoryPlanner"] += (
+            f"\n[MemoryPlanner] mode={selection_mode} using entry "
+            f"id={reference['id']} (project={reference.get('project')}, "
+            f"error_type={reference.get('error_type')}, "
+            f"distance={reference.get('distance')}).\n")
+    return normalized, selected
+
+  def _maybe_get_memory_plan(
+      self,
+      build_result: BuildResult,
+  ) -> Tuple[str, Optional[Dict[str, Any]]]:
+    """Backward-compatible private wrapper returning the first reference."""
+    normalized, references = self._maybe_get_memory_references(build_result)
+    return normalized, references[0] if references else None
 
   # --- override failure logic; use fixer+memory in Case 2, Case 3, Pref 7 ---
 
@@ -1101,31 +1263,12 @@ class MemoryPrototyper(Prototyper):
 
     # --- Precompute memory plan once for this failing BuildResult ---
     try:
-      _, plan = self._maybe_get_memory_plan(build_result)
+      _, references = self._maybe_get_memory_references(build_result)
     except Exception as e:
       logger.error(
           "***** failed to get memory plan, error: %s*****", e, trial=build_result.trial)
-      plan = None
-    extra_hints = ""
-    if plan is not None:
-      extra_hints = (
-          "\n<reference_solution>\n"
-          "A similar error was previously fixed with the following patch. \n"
-          f"{self._get_confidence_note(plan)}\n"
-          "Adapt the solution if necessary.\n\n"
-          f"Project: {plan.get('project')}\n"
-          f"Error type: {plan.get('error_type')}\n"
-          f"Function: {plan.get('func_name')}\n"
-          f"Confidence level: {plan.get('confidence_level', 0)}\n\n"
-          "Fix explanation:\n"
-          "<fix_action>\n"
-          f"{plan.get('fix_action') or ''}\n"
-          "</fix_action>\n\n"
-          "Patch:\n"
-          "<patch>\n"
-          f"{plan.get('patch_text') or ''}\n"
-          "</patch>\n"
-          "</reference_solution>\n")
+      references = []
+    extra_hints = self._format_reference_solutions(references)
 
     # Small helper: build a PrototyperFixerTemplateBuilder prompt for a given
     # selected BuildResult + explanation (Case 2/3 text) + memory hints.

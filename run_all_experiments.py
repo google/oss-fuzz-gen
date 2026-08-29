@@ -281,7 +281,18 @@ def parse_args() -> argparse.Namespace:
                       type=str,
                       default=None,
                       help=('Only retrieve memory entries created on or before '
-                            'this date (YYYY-MM-DD).'))
+                            'this date or timestamp (YYYY-MM-DD or ISO-8601).'))
+  parser.add_argument('--memory-selection-mode',
+                      choices=['planner', 'random-1', 'top-1', 'top-5'],
+                      default='planner',
+                      help=('How eligible error-memory entries are selected '
+                            'and injected. The default preserves the existing '
+                            'top-5 KNN plus planner behavior.'))
+  parser.add_argument('--memory-random-seed',
+                      type=int,
+                      default=0,
+                      help=('Base seed for deterministic random-1 selection. '
+                            'Ignored by other memory selection modes.'))
   args = parser.parse_args()
   if args.num_samples:
     assert args.num_samples > 0, '--num-samples must take a positive integer.'

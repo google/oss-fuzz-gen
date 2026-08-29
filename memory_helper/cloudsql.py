@@ -7,6 +7,7 @@ import json
 import uuid
 import atexit
 from contextlib import contextmanager
+from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional, Tuple
 
 import pymysql
@@ -205,6 +206,19 @@ def _embed_normalized(normalized: str,
   return vec_list[0] or []
 
 
+def _created_at_cutoff_clause(cutoff: str) -> Tuple[str, str]:
+  """Return a backward-compatible SQL clause and normalized cutoff value."""
+  if "T" not in cutoff and " " not in cutoff:
+    # Historical CLI semantics: a date includes the full UTC calendar day.
+    datetime.strptime(cutoff, "%Y-%m-%d")
+    return "DATE(created_at) <= %s", cutoff
+
+  parsed = datetime.fromisoformat(cutoff.replace("Z", "+00:00"))
+  if parsed.tzinfo is not None:
+    parsed = parsed.astimezone(timezone.utc).replace(tzinfo=None)
+  return "created_at <= %s", parsed.isoformat(sep=" ", timespec="seconds")
+
+
 @retry_cloudsql(max_retries=3, base_delay=2.0)
 def _knn_search_error_full_core(
     normalized: str,
@@ -265,8 +279,13 @@ def _knn_search_error_full_core(
     """
   params: List[Any] = [vec_str] + confidence_levels
   if created_before_or_on:
-    sql += " AND DATE(created_at) <= %s"
-    params.append(created_before_or_on)
+    # Preserve the historical date-only behavior while allowing an exact T0.
+    # A timestamp must not be wrapped in DATE(), otherwise rows later on T0's
+    # calendar day would leak into the experiment snapshot.
+    cutoff_clause, cutoff_value = _created_at_cutoff_clause(
+        created_before_or_on)
+    sql += f" AND {cutoff_clause}"
+    params.append(cutoff_value)
   if include_project:
     sql += " AND project = %s"
     params.append(include_project)
@@ -323,6 +342,86 @@ def _knn_search_error_full_core(
 
   logger.info("[KNN] Returning %d processed rows.", len(rows), trial=trial)
   return rows
+
+
+@retry_cloudsql(max_retries=3, base_delay=2.0)
+def random_search_error_full_with_norm(
+    query_error_text: str,
+    random_seed: int,
+    trial: Optional[int] = None,
+    confidence_levels: Optional[List[int]] = None,
+    created_before_or_on: Optional[str] = None,
+    include_project: Optional[str] = None,
+    exclude_project: Optional[str] = None,
+    include_model: Optional[str] = None,
+    max_chars: int = DEFAULT_NORM_MAX_CHARS,
+) -> Tuple[str, List[Dict[str, Any]], int]:
+  """Uniformly select one row from the fully eligible memory pool.
+
+  This deliberately does not embed the query or perform KNN retrieval. MySQL's
+  seeded RAND provides reproducibility without relying on process-global random
+  state. It does scan/sort the eligible pool, which is the cost of an exact
+  uniform baseline with the current schema.
+  """
+  if confidence_levels is None:
+    confidence_levels = [2, 3]
+  _, normalized = _prepare_normalized(query_error_text,
+                                      max_chars=max_chars,
+                                      trial=trial)
+  if not confidence_levels:
+    return normalized, [], 0
+
+  placeholders = ", ".join(["%s"] * len(confidence_levels))
+  filters = f"confidence_level IN ({placeholders})"
+  filter_params: List[Any] = list(confidence_levels)
+  if created_before_or_on:
+    cutoff_clause, cutoff_value = _created_at_cutoff_clause(
+        created_before_or_on)
+    filters += f" AND {cutoff_clause}"
+    filter_params.append(cutoff_value)
+  if include_project:
+    filters += " AND project = %s"
+    filter_params.append(include_project)
+  if exclude_project:
+    filters += " AND project != %s"
+    filter_params.append(exclude_project)
+  if include_model:
+    filters += " AND llm_model = %s"
+    filter_params.append(include_model)
+
+  count_sql = f"SELECT COUNT(*) FROM entries WHERE {filters}"
+  select_sql = f"""
+      SELECT id, project, error_type, func_name, orig_build_script,
+             orig_fuzz_target, patch_text, fix_action, confidence_level
+      FROM entries
+      WHERE {filters}
+      ORDER BY RAND(%s)
+      LIMIT 1
+  """
+  with cloud_sql_connect_smart(trial=trial) as conn:
+    with conn.cursor() as cur:
+      cur.execute(count_sql, tuple(filter_params))
+      eligible_count = int(cur.fetchone()[0])
+      if not eligible_count:
+        return normalized, [], 0
+      cur.execute(select_sql, tuple(filter_params + [random_seed]))
+      fetched = cur.fetchall()
+
+  rows = [{
+      "id": row[0],
+      "project": row[1],
+      "error_type": row[2],
+      "func_name": row[3],
+      "orig_build_script": row[4],
+      "orig_fuzz_target": row[5],
+      "patch_text": row[6],
+      "fix_action": row[7],
+      "confidence_level": row[8],
+      "distance": None,
+  } for row in fetched]
+  logger.info("[RANDOM_MEMORY] eligible=%d selected=%d seed=%d",
+              eligible_count, len(rows), random_seed, trial=trial)
+  return normalized, rows, eligible_count
 
 
 def knn_search_error_full_with_norm(
