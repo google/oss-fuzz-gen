@@ -355,8 +355,10 @@ def random_search_error_full_with_norm(
     exclude_project: Optional[str] = None,
     include_model: Optional[str] = None,
     max_chars: int = DEFAULT_NORM_MAX_CHARS,
+    limit: int = 1,
+    exclude_ids: Optional[List[Any]] = None,
 ) -> Tuple[str, List[Dict[str, Any]], int]:
-  """Uniformly select one row from the fully eligible memory pool.
+  """Uniformly select rows from the fully eligible memory pool.
 
   This deliberately does not embed the query or perform KNN retrieval. MySQL's
   seeded RAND provides reproducibility without relying on process-global random
@@ -368,9 +370,10 @@ def random_search_error_full_with_norm(
   _, normalized = _prepare_normalized(query_error_text,
                                       max_chars=max_chars,
                                       trial=trial)
-  if not confidence_levels:
+  if not confidence_levels or limit <= 0:
     return normalized, [], 0
 
+  exclude_ids = exclude_ids or []
   placeholders = ", ".join(["%s"] * len(confidence_levels))
   filters = f"confidence_level IN ({placeholders})"
   filter_params: List[Any] = list(confidence_levels)
@@ -388,6 +391,10 @@ def random_search_error_full_with_norm(
   if include_model:
     filters += " AND llm_model = %s"
     filter_params.append(include_model)
+  if exclude_ids:
+    id_placeholders = ", ".join(["%s"] * len(exclude_ids))
+    filters += f" AND id NOT IN ({id_placeholders})"
+    filter_params.extend(exclude_ids)
 
   count_sql = f"SELECT COUNT(*) FROM entries WHERE {filters}"
   select_sql = f"""
@@ -396,7 +403,7 @@ def random_search_error_full_with_norm(
       FROM entries
       WHERE {filters}
       ORDER BY RAND(%s)
-      LIMIT 1
+      LIMIT %s
   """
   with cloud_sql_connect_smart(trial=trial) as conn:
     with conn.cursor() as cur:
@@ -404,7 +411,7 @@ def random_search_error_full_with_norm(
       eligible_count = int(cur.fetchone()[0])
       if not eligible_count:
         return normalized, [], 0
-      cur.execute(select_sql, tuple(filter_params + [random_seed]))
+      cur.execute(select_sql, tuple(filter_params + [random_seed, limit]))
       fetched = cur.fetchall()
 
   rows = [{
@@ -419,8 +426,8 @@ def random_search_error_full_with_norm(
       "confidence_level": row[8],
       "distance": None,
   } for row in fetched]
-  logger.info("[RANDOM_MEMORY] eligible=%d selected=%d seed=%d",
-              eligible_count, len(rows), random_seed, trial=trial)
+  logger.info("[RANDOM_MEMORY] eligible=%d selected=%d seed=%d limit=%d",
+              eligible_count, len(rows), random_seed, limit, trial=trial)
   return normalized, rows, eligible_count
 
 

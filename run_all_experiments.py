@@ -283,11 +283,14 @@ def parse_args() -> argparse.Namespace:
                       help=('Only retrieve memory entries created on or before '
                             'this date or timestamp (YYYY-MM-DD or ISO-8601).'))
   parser.add_argument('--memory-selection-mode',
-                      choices=['planner', 'random-1', 'top-1', 'top-5'],
+                      choices=['planner', 'random-1', 'top-1', 'top-5',
+                               'tr-5'],
                       default='planner',
                       help=('How eligible error-memory entries are selected '
                             'and injected. The default preserves the existing '
-                            'top-5 KNN plus planner behavior.'))
+                            'top-5 KNN plus planner behavior. '
+                            'tr-5 gives the planner the nearest entry plus '
+                            'four deterministic random entries.'))
   parser.add_argument('--memory-random-seed',
                       type=int,
                       default=0,

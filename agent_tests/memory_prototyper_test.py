@@ -99,6 +99,16 @@ class MemorySelectionTest(unittest.TestCase):
     self.assertEqual("planner", args.memory_selection_mode)
     self.assertEqual(0, args.memory_random_seed)
 
+  def test_cli_accepts_tr_5(self):
+    argv = [
+        "run_all_experiments.py", "--benchmarks-directory",
+        "benchmark-sets/balanced", "--memory-selection-mode",
+        "tr-5"
+    ]
+    with mock.patch.object(sys, "argv", argv):
+      args = run_all_experiments.parse_args()
+    self.assertEqual("tr-5", args.memory_selection_mode)
+
   def test_planner_calls_planner_and_returns_its_choice(self):
     agent = _agent("planner")
     hits = [_hit(i) for i in range(1, 6)]
@@ -167,6 +177,31 @@ class MemorySelectionTest(unittest.TestCase):
     self.assertEqual([17], [entry["id"] for entry in second])
     self.assertEqual(seeds[0], seeds[1])
 
+  def test_tr_5_gives_mixed_candidates_to_planner(self):
+    agent = _agent("tr-5", seed=123)
+    nearest = _hit(1)
+    random_hits = [_hit(i) for i in range(10, 14)]
+    agent._llm_choose_action_plan = mock.Mock(return_value=random_hits[1])
+
+    with mock.patch.object(
+        memory_module,
+        "knn_search_error_full_with_norm",
+        return_value=("normalized", [nearest]),
+    ) as knn, mock.patch.object(
+        memory_module,
+        "random_search_error_full_with_norm",
+        return_value=("normalized", random_hits, 39),
+    ) as random_search:
+      _, selected = agent._maybe_get_memory_references(_result())
+
+    self.assertEqual(1, knn.call_args.kwargs["top_k"])
+    self.assertEqual(4, random_search.call_args.kwargs["limit"])
+    self.assertEqual([1], random_search.call_args.kwargs["exclude_ids"])
+    planner_hits = agent._llm_choose_action_plan.call_args.kwargs["hits"]
+    self.assertEqual([1, 10, 11, 12, 13],
+                     [entry["id"] for entry in planner_hits])
+    self.assertEqual([11], [entry["id"] for entry in selected])
+
   def test_cutoff_and_project_filters_are_forwarded_unchanged(self):
     for scope, expected in (("all", (None, None)),
                             ("only-current", ("current", None)),
@@ -208,6 +243,41 @@ class MemorySelectionTest(unittest.TestCase):
         "2026-01-02")
     self.assertEqual("DATE(created_at) <= %s", date_clause)
     self.assertEqual("2026-01-02", date_value)
+
+  def test_random_search_supports_limit_and_excluded_ids(self):
+    cursor = mock.MagicMock()
+    cursor.fetchone.return_value = (9,)
+    cursor.fetchall.return_value = [
+        (10, "other", "linker", "fn", "build", "fuzz", "patch",
+         "fix", 3),
+    ]
+    connection = mock.MagicMock()
+    connection.cursor.return_value.__enter__.return_value = cursor
+    connection_context = mock.MagicMock()
+    connection_context.__enter__.return_value = connection
+
+    with mock.patch.object(cloudsql,
+                           "cloud_sql_connect_smart",
+                           return_value=connection_context), mock.patch.object(
+                               cloudsql,
+                               "_prepare_normalized",
+                               return_value=("raw", "normalized")):
+      normalized, rows, eligible = (
+          cloudsql.random_search_error_full_with_norm(
+              "error",
+              random_seed=123,
+              trial=1,
+              limit=4,
+              exclude_ids=[1],
+          ))
+
+    self.assertEqual("normalized", normalized)
+    self.assertEqual(9, eligible)
+    self.assertEqual([10], [row["id"] for row in rows])
+    select_sql, select_params = cursor.execute.call_args_list[1].args
+    self.assertIn("id NOT IN (%s)", select_sql)
+    self.assertIn("LIMIT %s", select_sql)
+    self.assertEqual((2, 3, 1, 123, 4), select_params)
 
 
 if __name__ == "__main__":

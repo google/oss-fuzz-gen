@@ -879,9 +879,18 @@ class MemoryPrototyper(Prototyper):
         "exclude-current": "exclude-p",
     }
     bench = build_result.benchmark
-    has_similarity_ranks = mode != "random-1"
-    ranks_by_id = {str(candidate["id"]): rank
-                   for rank, candidate in enumerate(candidates, 1)}
+    if mode == "random-1":
+      candidate_ranks: List[Optional[int]] = [None] * len(candidates)
+    elif mode == "tr-5":
+      candidate_ranks = ([1] + [None] * (len(candidates) - 1)
+                         if candidates else [])
+    else:
+      candidate_ranks = list(range(1, len(candidates) + 1))
+    ranks_by_id = {
+        str(candidate["id"]): rank
+        for candidate, rank in zip(candidates, candidate_ranks)
+        if rank is not None
+    }
     record = {
         "memory_selection_mode": mode,
         "retrieval_scope": scope_names.get(project_filter, project_filter),
@@ -889,8 +898,7 @@ class MemoryPrototyper(Prototyper):
         "query_project": getattr(bench, "project", ""),
         "eligible_count": eligible_count,
         "retrieved_count": len(candidates),
-        "candidate_ranks": (list(range(1, len(candidates) + 1))
-                            if has_similarity_ranks else [None] * len(candidates)),
+        "candidate_ranks": candidate_ranks,
         "candidate_ids": [candidate.get("id") for candidate in candidates],
         "cosine_distances": [candidate.get("distance")
                              for candidate in candidates],
@@ -901,14 +909,13 @@ class MemoryPrototyper(Prototyper):
         "planner_called": planner_called,
         "planner_accepted": planner_accepted,
         "injected_ids": [candidate.get("id") for candidate in selected],
-        "injected_ranks": ([ranks_by_id.get(str(candidate.get("id")))
-                            for candidate in selected]
-                           if has_similarity_ranks else [None] * len(selected)),
+        "injected_ranks": [ranks_by_id.get(str(candidate.get("id")))
+                           for candidate in selected],
         "selected_candidate_id": (selected[0].get("id")
-                                  if mode == "planner" and selected else None),
+                                  if planner_called and selected else None),
         "selected_candidate_rank": (
             ranks_by_id.get(str(selected[0].get("id")))
-            if mode == "planner" and selected else None),
+            if planner_called and selected else None),
         "memory_cutoff": getattr(self.args,
                                  "memory_created_before_or_on", None),
         "memory_random_seed": getattr(self.args, "memory_random_seed", 0),
@@ -1010,12 +1017,14 @@ class MemoryPrototyper(Prototyper):
 
     eligible_count: Optional[int] = None
     query_seed: Optional[int] = None
-    if selection_mode == "random-1":
+    if selection_mode in ("random-1", "tr-5"):
       base_seed = getattr(self.args, "memory_random_seed", 0)
       benchmark_id = getattr(bench, "id", "") or current_project
       seed_material = f"{base_seed}\0{benchmark_id}\0{query_text}".encode()
       query_seed = int.from_bytes(hashlib.sha256(seed_material).digest()[:4],
                                   "big") & 0x7fffffff
+
+    if selection_mode == "random-1":
       normalized, hits, eligible_count = random_search_error_full_with_norm(
           query_text,
           random_seed=query_seed,
@@ -1029,7 +1038,8 @@ class MemoryPrototyper(Prototyper):
     else:
       normalized, hits = knn_search_error_full_with_norm(
           query_text,
-          top_k=MAX_CANDIDATES,
+          top_k=(1 if selection_mode == "tr-5"
+                 else MAX_CANDIDATES),
           trial=build_result.trial,
           embedder=self.text_embedding_model,
           created_before_or_on=created_before_or_on,
@@ -1038,6 +1048,24 @@ class MemoryPrototyper(Prototyper):
           include_model=model_filter,
           max_chars=4000,  # Slightly larger window for planner context only.
       )
+      if selection_mode == "tr-5" and hits:
+        _, random_hits, random_eligible_count = (
+            random_search_error_full_with_norm(
+                query_text,
+                random_seed=query_seed or 0,
+                trial=build_result.trial,
+                created_before_or_on=created_before_or_on,
+                include_project=include_project,
+                exclude_project=exclude_project,
+                include_model=model_filter,
+                max_chars=4000,
+                limit=MAX_CANDIDATES - 1,
+                exclude_ids=[hits[0]["id"]],
+            ))
+        hits.extend(random_hits)
+        # The random query excludes the KNN entry; report the full eligible
+        # pool size so ablation records remain comparable across modes.
+        eligible_count = random_eligible_count + 1
 
     if not hits:
       # KNN executed but found no neighbors for this round.
@@ -1127,9 +1155,9 @@ class MemoryPrototyper(Prototyper):
         "prototyper_failure_prompt": prototyper_failure_prompt,
     }
 
-    planner_called = selection_mode == "planner"
+    planner_called = selection_mode in ("planner", "tr-5")
     planner_accepted: Optional[bool] = None
-    if selection_mode == "planner":
+    if planner_called:
       plan = self._llm_choose_action_plan(
           normalized_err=normalized,
           hits=hits,
@@ -1174,7 +1202,7 @@ class MemoryPrototyper(Prototyper):
         (first.get("project") or "") == current_project)
 
     build_result.chat_history.setdefault("MemoryPlanner", "")
-    if selection_mode == "planner":
+    if planner_called:
       reference = selected[0]
       build_result.chat_history["MemoryPlanner"] += (
           f"\n[MemoryPlanner] Using entry id={reference['id']} "
