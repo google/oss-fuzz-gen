@@ -1,0 +1,13 @@
+functions:
+- name: tsk_fs_open_vol
+  params:
+  - name: a_part_info
+    type: 'bool '
+  - name: a_ftype
+    type: int
+  return_type: void
+  signature: TSK_FS_INFO * tsk_fs_open_vol(const TSK_VS_PART_INFO *, TSK_FS_TYPE_ENUM)
+language: c++
+project: sleuthkit
+target_name: mmls_sun_fuzzer
+target_path: /src/sleuthkit_mmls_fuzzer.cc

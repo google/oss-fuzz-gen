@@ -1,0 +1,11 @@
+functions:
+- name: wpa_supplicant_reload_configuration
+  params:
+  - name: wpa_s
+    type: 'bool '
+  return_type: int
+  signature: int wpa_supplicant_reload_configuration(struct wpa_supplicant *)
+language: c++
+project: hostap
+target_name: json
+target_path: /src/hostap/tests/fuzzing/json/json.c
