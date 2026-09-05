@@ -1,0 +1,13 @@
+functions:
+- name: gf_sc_texture_update_frame
+  params:
+  - name: txh
+    type: 'bool '
+  - name: disable_resync
+    type: int
+  return_type: void
+  signature: void gf_sc_texture_update_frame(GF_TextureHandler *, Bool)
+language: c
+project: gpac
+target_name: fuzz_m2ts_probe
+target_path: /src/gpac/testsuite/oss-fuzzers/fuzz_m2ts_probe.c

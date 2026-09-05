@@ -257,7 +257,45 @@ def parse_args() -> argparse.Namespace:
                       type=int,
                       default=100,
                       help='Max trial round for agents.')
-
+  parser.add_argument(
+      "--use-error-memory",
+      action='store_true',
+      default=False,
+      help='Enable CloudSQL-backed error memory for build fixing.')
+  parser.add_argument(
+      '--memory-online-update',
+      action=argparse.BooleanOptionalAction,
+      default=True,
+      help=('Allow error-memory agents to update Cloud SQL entries and stats '
+            'during a run. Use --no-memory-online-update for read-only memory.'))
+  parser.add_argument('--memory-project-filter',
+                      type=str,
+                      choices=['all', 'exclude-current', 'only-current'],
+                      default='all',
+                      help='Project-based filter for error memory retrieval.')
+  parser.add_argument('--memory-model-filter',
+                      type=str,
+                      default=None,
+                      help='Model-based filter for error memory retrieval.')
+  parser.add_argument('--memory-created-before-or-on',
+                      type=str,
+                      default=None,
+                      help=('Only retrieve memory entries created on or before '
+                            'this date or timestamp (YYYY-MM-DD or ISO-8601).'))
+  parser.add_argument('--memory-selection-mode',
+                      choices=['planner', 'random-1', 'top-1', 'top-5',
+                               'tr-5'],
+                      default='planner',
+                      help=('How eligible error-memory entries are selected '
+                            'and injected. The default preserves the existing '
+                            'top-5 KNN plus planner behavior. '
+                            'tr-5 gives the planner the nearest entry plus '
+                            'four deterministic random entries.'))
+  parser.add_argument('--memory-random-seed',
+                      type=int,
+                      default=0,
+                      help=('Base seed for deterministic random-1 selection. '
+                            'Ignored by other memory selection modes.'))
   args = parser.parse_args()
   if args.num_samples:
     assert args.num_samples > 0, '--num-samples must take a positive integer.'

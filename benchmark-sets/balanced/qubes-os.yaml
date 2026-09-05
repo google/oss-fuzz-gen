@@ -1,0 +1,11 @@
+functions:
+- name: process_io
+  params:
+  - name: req
+    type: 'bool '
+  return_type: int
+  signature: int process_io(const struct process_io_request *)
+language: c++
+project: qubes-os
+target_name: db-daemon_fuzzer
+target_path: /src/qubes-os/qubes-core-qubesdb/fuzz/db-daemon_fuzzer.c

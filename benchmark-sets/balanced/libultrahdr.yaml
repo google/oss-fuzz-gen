@@ -1,0 +1,15 @@
+functions:
+- name: _ZN22photos_editing_formats8image_io7XmlRule5ParseENS0_17XmlHandlerContextE
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: void
+  signature: DataMatchResult photos_editing_formats::image_io::XmlRule::Parse(XmlHandlerContext)
+language: c++
+project: libultrahdr
+target_name: ultrahdr_dec_fuzzer
+target_path: /src/libultrahdr/fuzzer/ultrahdr_dec_fuzzer.cpp

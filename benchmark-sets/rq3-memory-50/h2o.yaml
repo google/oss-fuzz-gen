@@ -1,0 +1,19 @@
+functions:
+- name: ptls_init_compressed_certificate
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: size_t
+  return_type: int
+  signature: int ptls_init_compressed_certificate(ptls_emit_compressed_certificate_t *, ptls_iovec_t *, size_t, ptls_iovec_t)
+language: c++
+project: h2o
+target_name: h2o-fuzzer-url
+target_path: /src/h2o/fuzz/driver_url.cc

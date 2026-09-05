@@ -1,0 +1,27 @@
+Failed to build the enhanced fuzz target. Here is the fuzz target, build script, compilation command, and compilation output:
+<fuzz target>
+{FUZZ_TARGET_SOURCE}
+</fuzz target>
+{BUILD_TEXT}
+<compilation log>
+{COMPILE_LOG}
+</compilation log>
+YOU MUST first analyze the error messages with the fuzz target and the build script carefully to identify the root cause.
+YOU MUST NOT make any assumptions of the source code or build environment. Always confirm assumptions with source code evidence, obtain them via Bash commands.
+Once you are absolutely certain of the error root cause, output the FULL SOURCE CODE of the fuzz target (and FULL SOURCE CODE of build script, if /src/build.bk.sh is insufficient).
+TIPS:
+1. Validating Reference Solutions (if provided):
+   - A <reference_solution> (see above) comes from a SIMILAR past error, not necessarily THIS one.
+   - You are **strongly encouraged** to use the Bash tool to verify its applicability before adopting it.
+   - Verification examples:
+       * Check if referenced header files exist: `ls /src/path/to/header.h`
+       * Check if functions/symbols definition align with the hint: `grep -r "some_function" /src/project`
+   - ADAPT the solution logic to the current project state; do not blindly copy code.
+   - If the reference has confidence level 2, it represents useful progress rather than a complete fix. Reuse the relevant approach, then continue diagnosing and fixing the current error while preserving the intended enhancement.
+2. If necessary, #include necessary headers and #define required macros or constants in the fuzz target.
+3. Adjust compiler flags to link required libraries in the build script.
+4. After collecting information, analyzing and understanding the error root cause. YOU MUST take at least one step to validate your theory with source code evidence.
+5. Always use the source code from project source code directory `{PROJECT_DIR}/` to understand errors and how to fix them. For example, search for the key words (e.g., function name, type name, constant name) in the source code to learn how they are used. Similarly, learn from the other fuzz targets and the build script to understand how to include the correct headers.
+6. Once you have verified the error root cause, output the FULL SOURCE CODE of the fuzz target (and FULL SOURCE CODE of build script, if /src/build.bk.sh is insufficient).
+7. Restore compilation while preserving the enhancement's intended coverage improvement. Do not revert the enhancement unless source evidence shows that it is fundamentally invalid. The resulting fuzz target must still call the function-under-test {FUNCTION_SIGNATURE}.
+8. If an error happens repeatedly and cannot be fixed, mitigate it without removing the required function call or discarding the intended enhancement.
