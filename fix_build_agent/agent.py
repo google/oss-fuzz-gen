@@ -747,10 +747,15 @@ async def process_single_project(
   attempt_expert_matched = False
   attempt_last_patch_files = 0
   attempt_last_patch_lines = 0
+  last_validation_report: dict = {}
   try:
     for attempt in range(MAX_RETRIES):
 
       cleanup_environment(project_name)
+      # Keep validation state independent for each retry.  Once the
+      # validation tool has returned a passing Step 2 result, later
+      # orchestration/model errors must not erase that result.
+      last_validation_report = {}
       current_attempt_id = attempt + 1
       processed_event_ids = set()
       ledger_abs_file = TraceLedgerManager.get_ledger_path()
@@ -1215,6 +1220,9 @@ async def process_single_project(
               if resp.name == 'run_fuzz_build_and_validate':
                 val_report = resp.response.get('validation_report')
                 if val_report:
+                  # Persist this before ledger/cleanup work and before any
+                  # subsequent LLM event can fail.
+                  last_validation_report = val_report
                   session = await session_service.get_session(
                       app_name=APP_NAME,
                       user_id=USER_ID,
@@ -1352,6 +1360,12 @@ async def process_single_project(
       except litellm.ContextWindowExceededError as e:
         # 🔑 物理加固 3：单独捕获 Token 越界，阻止 Traceback 污染终端
         print(f"--- 🚨 [CRITICAL] Context limit exceeded: {e} ---")
+        if _is_step_2_success(last_validation_report):
+          is_successful = True
+          print(
+              "--- ✅ Validation passed before context error; keeping success. ---"
+          )
+          break
         if attempt + 1 >= MAX_RETRIES:
           break
         continue
@@ -1366,6 +1380,12 @@ async def process_single_project(
         GLOBAL_LOGGER.log_raw(
             f"[CRITICAL ATTEMPT EXCEPTION]\nException: {str(e)}\nTraceback:\n{err_tb}"
         )
+        if _is_step_2_success(last_validation_report):
+          is_successful = True
+          print(
+              "--- ✅ Validation passed before orchestration error; keeping success. ---"
+          )
+          break
         await asyncio.sleep(1)
         if attempt + 1 >= MAX_RETRIES:
           break

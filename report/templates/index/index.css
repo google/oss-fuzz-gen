@@ -118,6 +118,32 @@
     line-height: 1.45;
 }
 
+.repair-chain-cell details {
+    white-space: normal;
+}
+
+.repair-chain-popover {
+    margin-top: .5rem;
+    padding: .75rem;
+    border: 1px solid var(--border-color, #dadce0);
+    border-radius: .5rem;
+    background: var(--card-background, #fff);
+    text-align: left;
+}
+
+.repair-chain-popover ul {
+    margin: .35rem 0 .75rem 1.25rem;
+}
+
+.repair-chain-popover p {
+    margin: .35rem 0 .75rem;
+}
+
+.repair-chain-popover strong {
+    display: block;
+    margin-top: .5rem;
+}
+
 .repair-arrow, .repair-chain-connector {
     color: #2563eb;
     font-weight: 700;

@@ -76,8 +76,21 @@ limitations under the License.
                         <td><a class="font-semibold" href="benchmark/{{ benchmark_id|urlencode }}/index.html">{{ repair.project }}</a></td>
                         <td><span class="repair-status {{ 'repair-status-success' if repair.status|lower in ['success', 'fixed'] else 'repair-status-failed' }}">{{ repair.status }}</span></td>
                         <td class="repair-chain-cell">
-                            {% if repair.repair_summary.initial_errors %}{{ repair.repair_summary.initial_errors[0] }}{% else %}Initial build error unavailable{% endif %}
-                            {% if repair.repair_summary.intermediate %}<span class="repair-arrow">→</span>{{ repair.repair_summary.intermediate }}{% endif %}
+                            <details>
+                                <summary>View failure chain</summary>
+                                <div class="repair-chain-popover">
+                                    <strong>Initial build error</strong>
+                                    {% if repair.repair_summary.initial_errors %}
+                                    <ul>
+                                        {% for error in repair.repair_summary.initial_errors %}<li><code>{{ error }}</code></li>{% endfor %}
+                                    </ul>
+                                    {% else %}<p>Initial build error unavailable</p>{% endif %}
+                                    <strong>Intermediate evolution</strong>
+                                    {% if repair.repair_summary.intermediate %}<p>{{ repair.repair_summary.intermediate }}</p>{% else %}<p>No intermediate failure recorded.</p>{% endif %}
+                                    <strong>Root cause</strong>
+                                    {% if repair.repair_summary.root_cause %}<p>{{ repair.repair_summary.root_cause }}</p>{% else %}<p>Root cause not verified.</p>{% endif %}
+                                </div>
+                            </details>
                         </td>
                         <td><code>{{ repair.metrics.upstream_repo }}</code> → <code>{{ repair.metrics.downstream_repo }}</code></td>
                         <td>{{ repair.metrics.files_changed }} / {{ repair.metrics.lines_changed }}</td>

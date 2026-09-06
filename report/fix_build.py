@@ -90,8 +90,12 @@ def _first_file(project_dir: Path, name: str) -> Path | None:
 
 def _project_record(project_dir: Path) -> dict[str, Any]:
   """Collects metadata and repair artifacts for one project."""
-  input_path = project_dir / 'input.yaml'
-  metadata = _load_input(input_path) if input_path.is_file() else {}
+  # The external agent writes metadata below ``repair/`` while the standard
+  # report identifies the enclosing ``output-*`` directory as the project.
+  # Search below that directory so fields such as ``fix_result`` and
+  # ``software_repo_url`` are not silently lost.
+  input_path = _first_file(project_dir, 'input.yaml')
+  metadata = _load_input(input_path) if input_path else {}
   trace_path = _first_file(project_dir, 'repair-trace.json')
   result_path = _first_file(project_dir, 'result.txt')
   run_log_path = _first_file(project_dir, 'run.log')
