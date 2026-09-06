@@ -246,15 +246,15 @@ def _trace_summary(trace: dict[str, Any]) -> tuple[str, str, str]:
   for node in nodes:
     validation = node.get('validation', {}) if isinstance(node, dict) else {}
     action = node.get('action_and_intent', {}) if isinstance(node, dict) else {}
-    action_root_commit = (action.get('root_cause_commit_sha')
-                          if isinstance(action, dict) else None)
+    action_root_commit = (action.get('root_cause_commit_sha') if isinstance(
+        action, dict) else None)
     if isinstance(action, dict):
       if action_root_commit not in ('', 'N/A', None):
         root_located = True
         root_cause = str(action_root_commit)
       semantic_memory = node.get('semantic_memory', {})
-      problem = (semantic_memory.get('unsolved_problems', '')
-                 if isinstance(semantic_memory, dict) else '')
+      problem = (semantic_memory.get('unsolved_problems', '') if isinstance(
+          semantic_memory, dict) else '')
       if problem and problem != 'N/A':
         intermediate.append(str(problem))
       if not root_cause:
