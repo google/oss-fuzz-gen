@@ -258,7 +258,7 @@ class GenerateReport:
       results, targets = self._results.get_results(benchmark_id)
       benchmark = self._results.match_benchmark(benchmark_id, results, targets)
       benchmarks.append(benchmark)
-      samples = self._results.get_samples(results, targets)
+      samples = self._results.get_samples(benchmark.id, results, targets)
       prompt = self._results.get_prompt(benchmark.id)
 
       for sample in samples:
@@ -284,7 +284,7 @@ class GenerateReport:
     for benchmark_id in self._results.list_benchmark_ids():
       results, targets = self._results.get_results(benchmark_id)
       benchmark = self._results.match_benchmark(benchmark_id, results, targets)
-      samples = self._results.get_samples(results, targets)
+      samples = self._results.get_samples(benchmark_id, results, targets)
       prompt = self._results.get_prompt(benchmark.id)
 
       self._write_benchmark_index(benchmark, samples, time_results, prompt,
@@ -510,7 +510,7 @@ class GenerateReport:
 
     for benchmark in benchmarks:
       results, targets = self._results.get_results(benchmark.id)
-      samples = self._results.get_samples(results, targets)
+      samples = self._results.get_samples(benchmark.id, results, targets)
       samples_data = []
 
       benchmark_metrics = {

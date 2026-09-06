@@ -1331,16 +1331,14 @@ async def process_single_project(
                     f"--- 💾 Node {curr_node} SHA updated after commit: oss={oss_sha[:7] if oss_sha != 'N/A' else 'N/A'}, prj={prj_sha[:7] if prj_sha != 'N/A' else 'N/A'} ---"
                 )
 
-          # 实时监控退出条件
+          # 只有 OSS-Fuzz check_build（Step 2）通过才允许将项目判定为成功。
+          # event.actions.escalate 仅表示工作流请求结束，不能绕过构建验证。
           curr_session = await session_service.get_session(
               app_name=APP_NAME, user_id=USER_ID, session_id=current_session_id)
-          is_exit_triggered = (event.actions and event.actions.escalate)
-          if is_exit_triggered or _is_step_2_success(
+          if _is_step_2_success(
               curr_session.state.get("last_validation_report", {})):
             is_successful = True
-            print(
-                f"--- ✅ Build success/exit signal detected. Workflow finishing. ---"
-            )
+            print(f"--- ✅ Step 2 check_build passed. Workflow finishing. ---")
             break
 
           # 🔑 物理加固 2：恢复工作流中途物理超时审计，防止无限循环

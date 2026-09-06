@@ -300,27 +300,31 @@ class CloudBuilder:
             },
             # Step 4: Prepare OSS-Fuzz repo.
             {
-                'name': 'gcr.io/cloud-builders/gcloud',
-                'entrypoint': 'bash',
+                'name':
+                    'gcr.io/cloud-builders/gcloud',
+                'entrypoint':
+                    'bash',
                 'args': [
-                    '-c', f'test -n "{oss_fuzz_data_url}" && '
+                    '-c', f'if test -n "{oss_fuzz_data_url}"; then '
                     f'gcloud storage cp {oss_fuzz_data_url} '
                     '/tmp/oss-fuzz-data.tar.gz && '
-                    f'mkdir {oss_fuzz_data_dir} && '
-                    f'tar -xzf /tmp/oss-fuzz-data.tar.gz -C {oss_fuzz_data_dir}'
+                    f'mkdir -p {oss_fuzz_data_dir} && '
+                    f'tar -xzf /tmp/oss-fuzz-data.tar.gz -C {oss_fuzz_data_dir}; '
+                    'fi'
                 ],
-                'allowFailure': True,
             },
             {
-                'name': 'gcr.io/cloud-builders/gcloud',
-                'entrypoint': 'bash',
+                'name':
+                    'gcr.io/cloud-builders/gcloud',
+                'entrypoint':
+                    'bash',
                 'args': [
-                    '-c', f'test -n "{data_dir_url}" && '
+                    '-c', f'if test -n "{data_dir_url}"; then '
                     f'gcloud storage cp {data_dir_url} /tmp/data-dir.tar.gz && '
-                    f'mkdir {target_data_dir} && '
-                    f'tar -xzf /tmp/data-dir.tar.gz -C {target_data_dir}'
+                    f'mkdir -p {target_data_dir} && '
+                    f'tar -xzf /tmp/data-dir.tar.gz -C {target_data_dir}; '
+                    'fi'
                 ],
-                'allowFailure': True,
             },
             {
                 'name':

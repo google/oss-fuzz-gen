@@ -85,7 +85,7 @@ class CSVExporter(BaseExporter):
         benchmark = self._results.match_benchmark(benchmark_id, results,
                                                   targets)
         benchmarks.append(benchmark)
-        samples = self._results.get_samples(results, targets)
+        samples = self._results.get_samples(benchmark.id, results, targets)
 
         project_name = benchmark_id.split("-")[1]
 
