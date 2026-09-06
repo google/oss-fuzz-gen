@@ -89,6 +89,10 @@ limitations under the License.
                                     {% if repair.repair_summary.intermediate %}<p>{{ repair.repair_summary.intermediate }}</p>{% else %}<p>No intermediate failure recorded.</p>{% endif %}
                                     <strong>Root cause</strong>
                                     {% if repair.repair_summary.root_cause %}<p>{{ repair.repair_summary.root_cause }}</p>{% else %}<p>Root cause not verified.</p>{% endif %}
+                                    {% if repair.trace_error %}
+                                    <strong>Repair trace status</strong>
+                                    <p>Unavailable: <code>{{ repair.trace_error }}</code></p>
+                                    {% endif %}
                                 </div>
                             </details>
                         </td>

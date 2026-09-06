@@ -101,12 +101,18 @@ def _project_record(project_dir: Path) -> dict[str, Any]:
   run_log_path = _first_file(project_dir, 'run.log')
 
   trace: dict[str, Any] = {}
+  trace_error = ''
   if trace_path:
     try:
       value = json.loads(_read_text(trace_path))
-      trace = value if isinstance(value, dict) else {}
-    except json.JSONDecodeError:
+      if not isinstance(value, dict):
+        raise ValueError('top-level JSON value is not an object')
+      trace = value
+    except (OSError, ValueError, TypeError) as error:
+      trace_error = f'{type(error).__name__}: {error}'
       trace = {}
+  else:
+    trace_error = 'repair-trace.json not found'
 
   nodes = trace.get('nodes', [])
   nodes = nodes if isinstance(nodes, list) else []
@@ -118,11 +124,21 @@ def _project_record(project_dir: Path) -> dict[str, Any]:
 
   result_text = _read_text(result_path) if result_path else ''
   root_location = _final_field(result_text, 'Root Cause Location').lower()
-  root_cause, intermediate, root_status = _trace_summary(trace)
+  try:
+    root_cause, intermediate, root_status = _trace_summary(trace)
+  except Exception as error:  # pylint: disable=broad-exception-caught
+    trace_error = trace_error or f'{type(error).__name__}: {error}'
+    root_cause, intermediate, root_status = '', '', '未验证'
   if root_location in ('true', 'yes', 'success'):
     root_status = '已定位'
   elif root_location in ('false', 'no', 'failure'):
     root_status = '未验证'
+  trace_reason = ''
+  if not trace_error:
+    try:
+      trace_reason = _repair_reason(trace)
+    except Exception as error:  # pylint: disable=broad-exception-caught
+      trace_error = f'{type(error).__name__}: {error}'
   stats = _patch_stats([(str(path.relative_to(project_dir)), _read_text(path))
                         for path in patch_files])
   upstream_url = str(metadata.get('software_repo_url', ''))
@@ -136,6 +152,8 @@ def _project_record(project_dir: Path) -> dict[str, Any]:
           status,
       'metadata':
           metadata,
+      'trace_error':
+          trace_error,
       'rounds':
           len(nodes),
       'trace':
@@ -154,7 +172,7 @@ def _project_record(project_dir: Path) -> dict[str, Any]:
                   _read_remote_log(
                       str(metadata.get('fuzzing_build_error_log', '')))),
           'reason':
-              _repair_reason(trace) or '修复理由未在账本中提供。',
+              trace_reason or '修复理由未在账本中提供。',
       },
       'metrics': {
           'upstream_repo':
@@ -228,11 +246,15 @@ def _trace_summary(trace: dict[str, Any]) -> tuple[str, str, str]:
   for node in nodes:
     validation = node.get('validation', {}) if isinstance(node, dict) else {}
     action = node.get('action_and_intent', {}) if isinstance(node, dict) else {}
+    action_root_commit = (action.get('root_cause_commit_sha')
+                          if isinstance(action, dict) else None)
     if isinstance(action, dict):
-      if action.get('root_cause_commit_sha') not in ('', 'N/A', None):
+      if action_root_commit not in ('', 'N/A', None):
         root_located = True
-        root_cause = str(action.get('root_cause_commit_sha'))
-      problem = node.get('semantic_memory', {}).get('unsolved_problems', '')
+        root_cause = str(action_root_commit)
+      semantic_memory = node.get('semantic_memory', {})
+      problem = (semantic_memory.get('unsolved_problems', '')
+                 if isinstance(semantic_memory, dict) else '')
       if problem and problem != 'N/A':
         intermediate.append(str(problem))
       if not root_cause:
@@ -244,7 +266,7 @@ def _trace_summary(trace: dict[str, Any]) -> tuple[str, str, str]:
       if isinstance(report, dict) and any(
           str(value).startswith('pass') for value in report.values()):
         root_located = root_located or bool(
-            action.get('root_cause_commit_sha') not in ('', 'N/A', None))
+            action_root_commit not in ('', 'N/A', None))
   return (root_cause if root_located else '', ' → '.join(intermediate[-2:]),
           '已定位' if root_located else '未验证')
 
@@ -296,6 +318,9 @@ def _project_html(record: dict[str, Any]) -> str:
       _section('Original OSS-Fuzz build log', record['original_build_log']))
   sections.append(
       _section('Repair trace (JSON)', json.dumps(record['trace'], indent=2)))
+  if record['trace_error']:
+    sections.append(
+        _section('Repair trace unavailable', record['trace_error'], True))
   sections.append(_section('Agent run log', record['run_log']))
   for name, content in record['patches']:
     sections.append(_section(f'Patch: {name}', content, True))

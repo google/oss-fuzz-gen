@@ -41,6 +41,14 @@ limitations under the License.
         <span class="repair-status {{ 'repair-status-success' if repair_report.status|lower in ['success', 'fixed'] else 'repair-status-failed' }}">{{ repair_report.status }}</span>
     </div>
 
+    {% if repair_report.trace_error %}
+    <div class="repair-warning">
+        <strong>Repair trace unavailable</strong>
+        <code>{{ repair_report.trace_error }}</code>
+        <p>The basic repair result was still loaded from input.yaml and result.txt.</p>
+    </div>
+    {% endif %}
+
     <div class="repair-chain">
         <div class="repair-chain-step">
             <span class="repair-step-label">Initial build failure</span>
