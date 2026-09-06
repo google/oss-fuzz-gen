@@ -125,6 +125,85 @@
     font-weight: 700;
 }
 
+.repair-evidence-section {
+    margin-top: 1rem;
+    border-top: 1px solid #dbeafe;
+    padding-top: 1rem;
+}
+
+.repair-evidence-section summary {
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.repair-validation-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+    gap: .6rem;
+    margin-top: .75rem;
+}
+
+.repair-validation-grid div {
+    padding: .7rem;
+    border: 1px solid #e2e8f0;
+    border-radius: .5rem;
+}
+
+.repair-validation-grid span,
+.repair-validation-grid strong {
+    display: block;
+}
+
+.repair-validation-grid span {
+    color: #64748b;
+    font-size: .75rem;
+}
+
+.repair-pass { color: #15803d; }
+.repair-fail { color: #b91c1c; }
+.repair-neutral { color: #a16207; }
+
+.repair-trace-node {
+    margin-top: .75rem;
+    padding: .8rem;
+    border: 1px solid #e2e8f0;
+    border-radius: .5rem;
+}
+
+.repair-trace-node h3 {
+    margin-bottom: .5rem;
+    font-weight: 700;
+}
+
+.repair-trace-grid {
+    display: grid;
+    grid-template-columns: minmax(7rem, auto) 1fr;
+    gap: .35rem .75rem;
+}
+
+.repair-trace-grid dt {
+    color: #64748b;
+    font-size: .8rem;
+}
+
+.repair-trace-grid dd {
+    margin: 0;
+    overflow-wrap: anywhere;
+}
+
+.repair-log-block {
+    max-height: 28rem;
+    overflow: auto;
+    margin-top: .75rem;
+    padding: 1rem;
+    border-radius: .5rem;
+    background: #0f172a;
+    color: #e2e8f0;
+    font-size: .78rem;
+    line-height: 1.45;
+    white-space: pre-wrap;
+}
+
 .repair-patch-block p {
     margin: 1rem 0 0.35rem;
     color: #475569;

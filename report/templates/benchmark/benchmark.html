@@ -76,6 +76,45 @@ limitations under the License.
         <p>{{ repair_report.repair_summary.reason }}</p>
     </div>
 
+    {% set trace_nodes = repair_report.trace.nodes if repair_report.trace and repair_report.trace.nodes else [] %}
+    {% if trace_nodes %}
+    <details class="repair-evidence-section">
+        <summary>Validation results</summary>
+        {% set latest_node = trace_nodes[-1] %}
+        {% set validation = latest_node.validation if latest_node.validation else {} %}
+        {% set validation_after = validation.validation_report_after if validation.validation_report_after else {} %}
+        <div class="repair-validation-grid">
+            {% for name, result in validation_after.items() %}
+            <div><span>{{ name }}</span><strong class="{% if 'pass' in result|string|lower %}repair-pass{% elif 'fail' in result|string|lower %}repair-fail{% else %}repair-neutral{% endif %}">{{ result }}</strong></div>
+            {% endfor %}
+        </div>
+    </details>
+    <details class="repair-evidence-section">
+        <summary>Repair trace ({{ trace_nodes|length }} trace nodes)</summary>
+        {% for node in trace_nodes %}
+        <div class="repair-trace-node">
+            <h3>Node {{ node.node_id|default(loop.index0) }} · {{ node.identification.node_status|default('unknown') }}</h3>
+            <dl class="repair-trace-grid">
+                <dt>Timestamp</dt><dd>{{ node.identification.timestamp|default('unknown') }}</dd>
+                <dt>Parent</dt><dd>{{ node.parent_id|default('unknown') }}</dd>
+                <dt>Rollback</dt><dd>{{ node.identification.should_rollback|default(false) }} ({{ node.identification.rollback_type|default('NONE') }})</dd>
+                <dt>Target file</dt><dd><code>{{ node.action_and_intent.target_file|default('N/A') }}</code></dd>
+                <dt>Strategy</dt><dd>{{ node.action_and_intent.repair_strategy|default('N/A') }}</dd>
+            </dl>
+        </div>
+        {% endfor %}
+    </details>
+    {% endif %}
+
+    <details class="repair-evidence-section">
+        <summary>Original OSS-Fuzz build log</summary>
+        <pre class="repair-log-block">{{ repair_report.original_build_log|default('Original build log unavailable.') }}</pre>
+    </details>
+    <details class="repair-evidence-section">
+        <summary>External build-fix agent log</summary>
+        <pre class="repair-log-block">{{ repair_report.run_log|default('Agent run log unavailable.') }}</pre>
+    </details>
+
     <div class="repair-metrics">
         <div><span>Upstream → downstream</span><strong>{{ repair_report.metrics.upstream_repo }} → {{ repair_report.metrics.downstream_repo }}</strong></div>
         <div><span>Files changed</span><strong>{{ repair_report.metrics.files_changed }}</strong></div>
@@ -90,6 +129,15 @@ limitations under the License.
         <summary>Patch diff</summary>
         {% for name, patch in repair_report.patches %}
         <div class="repair-patch-block"><p>{{ name }}</p><pre>{{ patch }}</pre></div>
+        {% endfor %}
+    </details>
+    {% endif %}
+
+    {% if repair_report.fixed_files %}
+    <details class="repair-evidence-section">
+        <summary>Fixed files</summary>
+        {% for name, content in repair_report.fixed_files %}
+        <div class="repair-patch-block"><p>{{ name }}</p><pre class="repair-log-block">{{ content }}</pre></div>
         {% endfor %}
     </details>
     {% endif %}

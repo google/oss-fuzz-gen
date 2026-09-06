@@ -242,6 +242,7 @@ def _trace_summary(trace: dict[str, Any]) -> tuple[str, str, str]:
   nodes = nodes if isinstance(nodes, list) else []
   root_located = False
   root_cause = ''
+  candidate_root_cause = ''
   intermediate = []
   for node in nodes:
     validation = node.get('validation', {}) if isinstance(node, dict) else {}
@@ -257,6 +258,8 @@ def _trace_summary(trace: dict[str, Any]) -> tuple[str, str, str]:
           semantic_memory, dict) else '')
       if problem and problem != 'N/A':
         intermediate.append(str(problem))
+        if not candidate_root_cause:
+          candidate_root_cause = str(problem)
       if not root_cause:
         strategy = str(action.get('repair_strategy', ''))
         if strategy:
@@ -267,8 +270,10 @@ def _trace_summary(trace: dict[str, Any]) -> tuple[str, str, str]:
           str(value).startswith('pass') for value in report.values()):
         root_located = root_located or bool(
             action_root_commit not in ('', 'N/A', None))
-  return (root_cause if root_located else '', ' → '.join(intermediate[-2:]),
-          '已定位' if root_located else '未验证')
+  if not root_cause:
+    root_cause = candidate_root_cause
+  return (root_cause, ' → '.join(intermediate[-2:]),
+          '已定位' if root_located else '候选（未验证）')
 
 
 def _repair_reason(trace: dict[str, Any]) -> str:
