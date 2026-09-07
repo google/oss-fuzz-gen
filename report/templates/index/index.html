@@ -123,6 +123,17 @@ limitations under the License.
     </div>
     {% endif %}
 
+    {% for benchmark_id, repair in repair_reports.items() %}
+    {% if repair.status|lower in ['success', 'fixed'] and repair.repair_summary.pr_summary %}
+    <div class="border rounded-lg toc-section repair-pr-summary-card">
+        <div class="p-4 border-b repair-summary-heading">
+            <h2 class="text-lg font-bold">PR description summary · {{ repair.project }}</h2>
+        </div>
+        <p class="p-4">{{ repair.repair_summary.pr_summary }}</p>
+    </div>
+    {% endif %}
+    {% endfor %}
+
     <div class="border rounded-lg toc-section">
         <button @click="benchmarkOpen = !benchmarkOpen"
                 class="w-full p-4 flex justify-between items-center">
@@ -142,10 +153,12 @@ limitations under the License.
                             <th data-sorted="asc">Benchmark</th>
                             <th>Status</th>
                             <th data-sort-number>Build Rate</th>
+                            {% if not fix_build_mode %}
                             <th data-sort-number>Crash Rate</th>
                             <th data-sort-number>Bugs</th>
                             <th data-sort-number>Program Counter Coverage</th>
                             <th data-sort-number>Line Coverage Diff</th>
+                            {% endif %}
                         </tr>
                     </thead>
                     <tbody>
@@ -160,10 +173,12 @@ limitations under the License.
                             </td>
                             <td data-sort-value="{{ benchmark.status }}">{{ benchmark.status }}</td>
                             <td data-sort-value="{{ benchmark.result.build_success_rate|percent }}">{{ benchmark.result.build_success_rate|percent}}</td>
+                            {% if not fix_build_mode %}
                             <td data-sort-value="{{ benchmark.result.crash_rate|percent }}"><a href="benchmark/{{ benchmark.id|urlencode }}/crash.json"> {{ benchmark.result.crash_rate|percent }} </a></td>
                             <td data-sort-value="{{ benchmark.result.found_bug }}">{{ benchmark.result.found_bug }}</td>
                             <td data-sort-value="{{ benchmark.result.max_coverage |percent }}">{{ benchmark.result.max_coverage |percent }}</td>
                             <td data-sort-value="{{ benchmark.result.max_line_coverage_diff|percent }}"><a href="{{ benchmark.result.max_coverage_diff_report | cov_report_link }}">{{ benchmark.result.max_line_coverage_diff|percent }}</a></td>
+                            {% endif %}
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -174,6 +189,7 @@ limitations under the License.
 
     </div>
 
+    {% if not fix_build_mode %}
     <div class="border rounded-lg toc-section">
         <button @click="projectOpen = !projectOpen"
                 class="w-full p-4 flex justify-between items-center">
@@ -714,6 +730,7 @@ limitations under the License.
             </div>
         </div>
     </div>
+    {% endif %}
 </div>
 
 <button class="toc-toggle" id="tocToggle">

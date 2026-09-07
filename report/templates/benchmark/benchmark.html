@@ -76,6 +76,13 @@ limitations under the License.
         <p>{{ repair_report.repair_summary.reason }}</p>
     </div>
 
+    {% if repair_report.repair_summary.pr_summary %}
+    <div class="repair-pr-summary">
+        <span class="repair-step-label">PR description summary</span>
+        <p>{{ repair_report.repair_summary.pr_summary }}</p>
+    </div>
+    {% endif %}
+
     {% set trace_nodes = repair_report.trace.nodes if repair_report.trace and repair_report.trace.nodes else [] %}
     {% if trace_nodes %}
     <details class="repair-evidence-section">

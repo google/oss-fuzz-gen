@@ -355,7 +355,8 @@ class GenerateReport:
         shared_css_content=shared_css_content,
         base_js_content=base_js_content,
         unified_data=unified_data,
-        repair_reports=repair_reports)
+        repair_reports=repair_reports,
+        fix_build_mode=bool(repair_reports))
     self._write('index.html', rendered)
 
   def _write_index_json(self, benchmarks: List[Benchmark]):
@@ -388,6 +389,7 @@ class GenerateReport:
                                   benchmark_js_content=benchmark_js_content,
                                   shared_css_content=shared_css_content,
                                   base_js_content=base_js_content,
+                                  fix_build_mode=bool(repair_reports),
                                   **common_data)
     self._write(f'benchmark/{benchmark.id}/index.html', rendered)
 
@@ -427,7 +429,8 @@ class GenerateReport:
           "accumulated_results": self._results.get_macro_insights([benchmark]),
           "time_results": time_results,
           "unified_data": unified_data,
-          "repair_report": repair_reports.get(benchmark.id)
+          "repair_report": repair_reports.get(benchmark.id),
+          "fix_build_mode": bool(repair_reports)
       }
       logs_parser = LogsParser(logs)
       agent_sections = logs_parser.get_agent_sections()

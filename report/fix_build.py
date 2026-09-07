@@ -142,6 +142,9 @@ def _project_record(project_dir: Path) -> dict[str, Any]:
       trace_error = f'{type(error).__name__}: {error}'
   stats = _patch_stats([(str(path.relative_to(project_dir)), _read_text(path))
                         for path in patch_files])
+  initial_errors = _key_build_errors(
+      _read_remote_log(str(metadata.get('fuzzing_build_error_log', ''))))
+  validation_summary = _validation_summary(trace)
   upstream_url = str(metadata.get('software_repo_url', ''))
   status = str(
       metadata.get('fix_result') or
@@ -171,9 +174,12 @@ def _project_record(project_dir: Path) -> dict[str, Any]:
           'intermediate':
               intermediate,
           'initial_errors':
-              _key_build_errors(
-                  _read_remote_log(
-                      str(metadata.get('fuzzing_build_error_log', '')))),
+              initial_errors,
+          'pr_summary':
+              _pr_summary(
+                  metadata.get('project') or project_dir.name,
+                  str(metadata.get('fix_result', '')), initial_errors,
+                  root_cause_explanation, trace_reason, validation_summary),
           'reason':
               trace_reason or '修复理由未在账本中提供。',
       },
@@ -209,6 +215,42 @@ def _project_record(project_dir: Path) -> dict[str, Any]:
       'source_dir':
           str(project_dir),
   }
+
+
+def _validation_summary(trace: dict[str, Any]) -> list[str]:
+  """Returns final validation results recorded by the repair agent."""
+  nodes = trace.get('nodes', [])
+  if not isinstance(nodes, list):
+    return []
+  for node in reversed(nodes):
+    if not isinstance(node, dict):
+      continue
+    validation = node.get('validation', {})
+    if not isinstance(validation, dict):
+      continue
+    report = validation.get('validation_report_after', {})
+    if isinstance(report, dict):
+      return [f'{name}: {value}' for name, value in report.items()]
+  return []
+
+
+def _pr_summary(project: str, status: str, initial_errors: list[str],
+                root_cause: str, repair_reason: str,
+                validation: list[str]) -> str:
+  """Builds an evidence-backed, one-paragraph PR description summary."""
+  if status.lower() not in ('success', 'fixed'):
+    return ''
+  failure = (' '.join(initial_errors) if initial_errors else
+             'The original build error was not available in the report.')
+  repair = repair_reason or root_cause or 'the documented repair strategy'
+  validation_text = (' '.join(
+      item for item in validation
+      if item.lower().startswith('step') and 'pass' in item.lower()) or
+                     'the final validation result recorded by the agent')
+  return (f"{project}'s original OSS-Fuzz build failed with this error: "
+          f"{failure} The repair succeeded by applying the documented "
+          f"repair strategy: {repair} Final validation evidence recorded by "
+          f"the repair agent reports: {validation_text}.")
 
 
 def _pre(value: str) -> str:
