@@ -133,6 +133,7 @@ def _project_record(project_dir: Path) -> dict[str, Any]:
     root_status = '已定位'
   elif root_location in ('false', 'no', 'failure'):
     root_status = '未验证'
+  root_cause_explanation = _root_cause_explanation(trace, root_cause)
   trace_reason = ''
   if not trace_error:
     try:
@@ -165,6 +166,8 @@ def _project_record(project_dir: Path) -> dict[str, Any]:
               root_cause,
           'root_status':
               root_status,
+          'root_cause_explanation':
+              root_cause_explanation,
           'intermediate':
               intermediate,
           'initial_errors':
@@ -257,13 +260,10 @@ def _trace_summary(trace: dict[str, Any]) -> tuple[str, str, str]:
       problem = (semantic_memory.get('unsolved_problems', '') if isinstance(
           semantic_memory, dict) else '')
       if problem and problem != 'N/A':
-        intermediate.append(str(problem))
-        if not candidate_root_cause:
+        if _is_build_evidence(str(problem)):
+          intermediate.append(str(problem))
+        if not candidate_root_cause and _is_build_evidence(str(problem)):
           candidate_root_cause = str(problem)
-      if not root_cause:
-        strategy = str(action.get('repair_strategy', ''))
-        if strategy:
-          root_cause = strategy.split('Reasoning:', 1)[0].strip()
     if isinstance(validation, dict):
       report = validation.get('validation_report_after', {})
       if isinstance(report, dict) and any(
@@ -274,6 +274,43 @@ def _trace_summary(trace: dict[str, Any]) -> tuple[str, str, str]:
     root_cause = candidate_root_cause
   return (root_cause, ' → '.join(intermediate[-2:]),
           '已定位' if root_located else '候选（未验证）')
+
+
+def _is_build_evidence(text: str) -> bool:
+  """Returns whether trace text describes a build or validation problem."""
+  excluded = ('git apply', 'patch.diff failed', 'patch application',
+              'patch mismatch', 'context mismatch', 'orchestration',
+              'no message in response', 'rollback', 'agent error')
+  return bool(
+      text.strip()) and not any(item in text.lower() for item in excluded)
+
+
+def _root_cause_explanation(trace: dict[str, Any], root_cause: str) -> str:
+  """Returns a short explanation based only on trace-provided evidence."""
+  nodes = trace.get('nodes', [])
+  if not isinstance(nodes, list):
+    return root_cause
+  explanations = []
+  for node in reversed(nodes):
+    if not isinstance(node, dict):
+      continue
+    memory = node.get('semantic_memory', {})
+    if isinstance(memory, dict):
+      reflection = str(memory.get('reflection_analysis', '')).strip()
+      if reflection and reflection != 'N/A' and _is_build_evidence(reflection):
+        explanations.append(reflection)
+    action = node.get('action_and_intent', {})
+    if isinstance(action, dict):
+      strategy = str(action.get('repair_strategy', '')).strip()
+      if 'Reasoning:' in strategy:
+        reasoning = strategy.split('Reasoning:', 1)[1].strip()
+        if _is_build_evidence(reasoning):
+          explanations.append(reasoning)
+    if explanations:
+      break
+  explanation = explanations[0] if explanations else root_cause
+  sentences = re.split(r'(?<=[.!?])\s+', explanation)
+  return ' '.join(sentences[:5]).strip() or '根因说明未提供。'
 
 
 def _repair_reason(trace: dict[str, Any]) -> str:

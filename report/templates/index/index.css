@@ -274,3 +274,15 @@
     align-items: center !important;
     justify-content: center !important;
 }
+.repair-inline-patch {
+    max-height: 20rem;
+    max-width: 36rem;
+    overflow: auto;
+    padding: .75rem;
+    border-radius: .4rem;
+    background: #0f172a;
+    color: #e2e8f0;
+    font-size: .75rem;
+    line-height: 1.4;
+    white-space: pre;
+}
