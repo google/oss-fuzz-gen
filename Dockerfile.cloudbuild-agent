@@ -36,7 +36,11 @@ WORKDIR /workspace/ofg
 
 # Copy the requirements file
 COPY requirements.txt /workspace/ofg/
+COPY fix_build_agent/requirements.txt /workspace/ofg/fix_build_agent/
 
 # Install Python dependencies
 RUN pip3.11 install --ignore-installed -r /workspace/ofg/requirements.txt && \
+    python3.11 -m venv /opt/fix-build-agent-venv && \
+    /opt/fix-build-agent-venv/bin/pip install \
+    --ignore-installed -r /workspace/ofg/fix_build_agent/requirements.txt && \
     ln -sf /usr/bin/python3.11 /usr/bin/python3

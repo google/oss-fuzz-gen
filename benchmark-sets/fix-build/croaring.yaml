@@ -1,0 +1,13 @@
+project: croaring
+language: c
+error_time: "2025-10-29"
+oss_fuzz_sha: 85471aec5b8fba9232bbf77daca0a8895378bcf6
+fuzzing_build_error_log: https://oss-fuzz-build-logs.storage.googleapis.com/log-189de54d-cb21-45e9-8c8f-37c767da42a3.txt
+software_repo_url: https://github.com/RoaringBitmap/CRoaring
+software_sha: 8711167f6c06f663ef2163875f2704bd44355cb5
+engine: libfuzzer
+sanitizer: address
+architecture: x86_64
+base_image_digest: 71425dd88e177abd8d71f351fe6148e8b6a93695aeb109a8b6fb2c7c002c9e65
+root_cause_commit: 8711167f6c06f663ef2163875f2704bd44355cb5
+root_cause_workspace: UPSTREAM

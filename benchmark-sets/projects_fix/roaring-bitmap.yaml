@@ -1,0 +1,13 @@
+project: roaring-bitmap
+language: jvm
+error_time: '2026-05-28'
+oss-fuzz_sha: 766921e2cb58c43875ea5ee23eb35851a68b9294
+fuzzing_build_error_log: https://oss-fuzz-build-logs.storage.googleapis.com/log-6ca1d6a9-45c1-42b8-9932-e5d34425ca7b.txt
+software_repo_url: https://github.com/RoaringBitmap/RoaringBitmap
+software_sha: a3231dc619b1a78dd1b67e90f984eafa7e993ce6
+engine: libfuzzer
+sanitizer: address
+architecture: x86_64
+base_image_digest: 2603b2d46ff5d785f624020bf7060b8420312d3c3e7446f27af61bf28b64730c
+error_category: RC10
+fixed_state: 'no'

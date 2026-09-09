@@ -1,0 +1,13 @@
+project: ruby
+language: c++
+error_time: '2026-07-30'
+oss-fuzz_sha: 08682bfc14e31d12fcc94b52b4805d7994fb70fd
+fuzzing_build_error_log: https://oss-fuzz-build-logs.storage.googleapis.com/log-3bc6955f-dedf-4483-ba8a-35b6f13f01d0.txt
+software_repo_url: https://github.com/ruby/ruby
+software_sha: e15f28c57debedd44bd45bc3aae811fee338e6c2
+engine: afl
+sanitizer: address
+architecture: x86_64
+base_image_digest: 8b4a73d83374b298a0a771eeec9a1d44ceff3416a678b7d7946303389d022aca
+error_category: RC13
+fixed_state: 'no'

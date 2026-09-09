@@ -1,0 +1,289 @@
+{
+  "expert_guidelines": [
+    {
+      "id": "GL_001",
+      "category": "discovery",
+      "keywords": ["path verification", "ls", "file existence"],
+      "guideline": "Before any read_file_content or apply_patch, you MUST ls the parent directory to confirm the exact filename and path.",
+      "target_files": ["*"]
+    },
+    {
+      "id": "GL_002",
+      "category": "c_cpp_build_system",
+      "keywords": ["link order", "static library", "LDFLAGS"],
+      "guideline": "Static libraries MUST be listed after the object files that use them (e.g., 'main.o -lfoo' instead of '-lfoo main.o'). Incorrect order results in 'undefined reference' errors.",
+      "error_type": "Linkage",
+      "target_files": ["build.sh", "Makefile", "CMakeLists.txt"]
+    },
+    {
+      "id": "GL_003",
+      "category": "patching_integrity",
+      "keywords": ["minimal edit", "functional code", "hallucination"],
+      "guideline": "Prioritize 1-line fixes over large rewrites. Stripping comments and non-essential logic from REPLACEMENT blocks to ensure the patch is minimal and precise.",
+      "target_files": ["*.c", "*.cpp", "*.h", "*.swift"]
+    },
+    {
+      "id": "GL_004",
+      "category": "dependency_management",
+      "keywords": ["apt-get", "missing package", "install"],
+      "guideline": "Always combine 'apt-get update' and 'apt-get install -y' in a single RUN instruction in Dockerfile to ensure atomic execution and prevent cache mismatch.",
+      "error_type": "Infrastructure",
+      "target_files": ["Dockerfile"]
+    },
+    {
+      "id": "GL_005",
+      "category": "patching_integrity",
+      "keywords": ["fatal build errors", "warnings", "minimal changes"],
+      "guideline": "Distinguish between fatal build errors (e.g., CMake Error) and non-fatal warnings; only fix fatal errors to maintain minimal changes.",
+      "error_type": "Compilation",
+      "target_files": ["build.sh", "Makefile", "CMakeLists.txt"]
+    },
+    {
+      "id": "GL_006",
+      "category": "docker_infrastructure",
+      "keywords": ["before code download", "Dockerfile", "source code changes"],
+      "guideline": "If the error occurs before code download, investigate Dockerfile configuration rather than source code changes.",
+      "error_type": "Infrastructure",
+      "target_files": ["Dockerfile"]
+    },
+    {
+      "id": "GL_007",
+      "category": "discovery",
+      "keywords": ["build success", "fuzz targets", "exit code"],
+      "guideline": "Build success must be verified by checking if the number of generated fuzz targets is greater than zero, not just the exit code.",
+      "error_type": "Quality",
+      "target_files": ["build.sh"]
+    },
+    {
+      "id": "GL_008",
+      "category": "docker_infrastructure",
+      "keywords": ["remote code", "local mounts", "COPY instructions"],
+      "guideline": "If Dockerfile pulls remote code, you must use local mounts or modify COPY instructions to make local source changes effective.",
+      "error_type": "Infrastructure",
+      "target_files": ["Dockerfile"]
+    },
+    {
+      "id": "GL_009",
+      "category": "docker_infrastructure",
+      "keywords": ["COPY source path", "build context", "host paths"],
+      "guideline": "The source path for COPY in Dockerfile is relative to the build context (usually projects/<name>/), not arbitrary host paths.",
+      "error_type": "Infrastructure",
+      "target_files": ["Dockerfile"]
+    },
+    {
+      "id": "GL_010",
+      "category": "discovery",
+      "keywords": ["path discovery", "directory structure", "ls", "find"],
+      "guideline": "Path Discovery & Verification Principle: Never assume fixed directory structures or relative paths. The source code location varies significantly between 'Standard' and 'Source' build modes. Before attempting to read or patch any file, you MUST use discovery tools (e.g., ls or find) to map the environment and verify the file's existence at its absolute path.",
+      "target_files": ["*"]
+    },
+    {
+      "id": "GL_011",
+      "category": "patching_integrity",
+      "keywords": ["complex escape characters", "line-number positioning", "patching method"],
+      "guideline": "For files with complex escape characters, prefer robust patching methods like line-number positioning or appending configuration over large text matching.",
+      "target_files": ["*"]
+    },
+    {
+      "id": "GL_012",
+      "category": "dependency_management",
+      "keywords": ["missing dependencies", "package manager", "build config"],
+      "guideline": "Handle missing dependencies by installing them via package manager or disabling the dependent feature in the build config.",
+      "error_type": "Compilation",
+      "target_files": ["Dockerfile", "build.sh"]
+    },
+    {
+      "id": "GL_013",
+      "category": "resource_management",
+      "keywords": ["timeouts", "build parameters", "network error"],
+      "guideline": "Prioritize increasing timeouts or optimizing build parameters for network/timeout errors over modifying source code.",
+      "error_type": "Infrastructure",
+      "target_files": ["Dockerfile", "build.sh"]
+    },
+    {
+      "id": "GL_014",
+      "category": "docker_infrastructure",
+      "keywords": ["non-interactive", "silent installation", "apt-get"],
+      "guideline": "Non-interactive principle: Use silent installation flags (e.g., -y); never rely on interactive input or pipes for confirmation.",
+      "error_type": "Infrastructure",
+      "target_files": ["Dockerfile"]
+    },
+    {
+      "id": "GL_015",
+      "category": "c_cpp_build_system",
+      "keywords": ["compilation errors", "API compatibility", "undefined reference"],
+      "guideline": "When handling compilation errors, consider both environment and API compatibility; 'undefined reference' often points to the latter.",
+      "error_type": "Compilation",
+      "target_files": ["*.c", "*.cpp", "build.sh"]
+    },
+    {
+      "id": "GL_016",
+      "category": "resource_management",
+      "keywords": ["environment changes", "build cache", "ccache"],
+      "guideline": "If environment changes do not take effect, consider clearing build cache and retrying.",
+      "target_files": ["Dockerfile", "build.sh"]
+    },
+    {
+      "id": "GL_017",
+      "category": "discovery",
+      "keywords": ["mount resources", "file state inside container", "ls"],
+      "guideline": "Do not assume the environment automatically mounts all resources; verify the actual file state inside the container using commands.",
+      "target_files": ["Dockerfile", "build.sh"]
+    },
+    {
+      "id": "GL_018",
+      "category": "discovery",
+      "keywords": ["target artifacts", "check existence", "validation"],
+      "guideline": "Always check for the existence of target artifacts before executing critical tasks.",
+      "error_type": "Quality",
+      "target_files": ["build.sh"]
+    },
+    {
+      "id": "GL_019",
+      "category": "resource_management",
+      "keywords": ["absolute paths", "symbolic links", "missing tools"],
+      "guideline": "For hardcoded absolute paths to missing tools, prioritize creating symbolic links to system tools over recompiling dependencies.",
+      "error_type": "Infrastructure",
+      "target_files": ["build.sh", "Dockerfile"]
+    },
+    {
+      "id": "GL_020",
+      "category": "resource_management",
+      "keywords": ["unexpected EOF", "network timeouts", "network fluctuation"],
+      "guideline": "Note that 'unexpected EOF' or network timeouts might stem from host network fluctuations rather than the build process itself.",
+      "error_type": "Infrastructure",
+      "target_files": ["Dockerfile", "build.sh"]
+    },
+    {
+      "id": "GL_021",
+      "category": "docker_infrastructure",
+      "keywords": ["directory mounting", "override directory", "volume"],
+      "guideline": "Local directory mounting (-v) will override any directory with the same name in the container image.",
+      "error_type": "Infrastructure",
+      "target_files": ["Dockerfile"]
+    },
+    {
+      "id": "GL_022",
+      "category": "dependency_management",
+      "keywords": ["missing libraries", "missing headers", "development packages", "dev"],
+      "guideline": "Missing libraries/headers during configuration often indicate missing development packages (-dev) in the Dockerfile.",
+      "error_type": "Compilation",
+      "target_files": ["Dockerfile"]
+    },
+    {
+      "id": "GL_023",
+      "category": "c_cpp_build_system",
+      "keywords": ["-Werror", "warnings", "-Wno-", "compilation fails"],
+      "guideline": "If compilation fails due to -Werror, precisely disable the specific warning using -Wno-... flags in build.sh.",
+      "error_type": "Compilation",
+      "target_files": ["build.sh", "Makefile", "CMakeLists.txt"]
+    },
+    {
+      "id": "GL_024",
+      "category": "patching_integrity",
+      "keywords": ["standard configuration fail", "invasive modification", "bypass"],
+      "guideline": "When standard configurations fail, consider forceful strategies like invasive modification or completely bypassing the problematic component.",
+      "target_files": ["*"]
+    },
+    {
+      "id": "GL_025",
+      "category": "c_cpp_build_system",
+      "keywords": ["command not found", "library not found", "syntax error", "undefined reference"],
+      "guideline": "Classify errors: 'command not found' or 'library not found' are Environment-level; 'syntax error' or 'undefined reference' are Code-level.",
+      "target_files": ["*"]
+    }
+  ],
+  "error_patterns": [
+    {
+      "id": "ERR_001",
+      "name": "WORKDIR_Conflict",
+      "keywords": ["WORKDIR", "/src", "mount conflict"],
+      "error_type": "Infrastructure",
+      "severity": "CRITICAL",
+      "pattern": "Cannot use local checkout with \"WORKDIR: /src\"",
+      "target_files": ["Dockerfile"],
+      "diagnosis": "The OSS-Fuzz source mount (/src) is overridden by a manual WORKDIR instruction, causing path resolution failure for the local checkout.",
+      "remediation": {
+        "action": "Remove or comment out 'WORKDIR /src' or 'WORKDIR SRC' in the Dockerfile.",
+        "rule": "After removal, ensure subsequent commands use absolute paths or start with 'cd SRC'."
+      },
+      "verification": "Step_2_Infra_Compliance"
+    },
+    {
+      "id": "ERR_002",
+      "name": "Swift_Package_Identity_Mismatch",
+      "keywords": ["identity", "src", "override identity", "Swift"],
+      "error_type": "Compilation",
+      "severity": "MAJOR",
+      "pattern": "identity 'src' doesn't match override's identity",
+      "target_files": ["Package.swift"],
+      "diagnosis": "Swift Package Manager expects package identity to match its directory structure in source mount mode.",
+      "remediation": {
+        "action": "Modify the Package.swift file directly to align the package identity with the directory name, or avoid re-initializing with mkdir.",
+        "rule": "Ensure the fuzzer remains a part of a buildable target without losing package scope."
+      },
+      "verification": "Step_2"
+    },
+    {
+      "id": "ERR_003",
+      "name": "Directory_Already_Exists",
+      "keywords": ["mkdir", "File exists", "idempotent"],
+      "error_type": "Infrastructure",
+      "severity": "MAJOR",
+      "pattern": "mkdir: cannot create directory '.*': File exists",
+      "target_files": ["build.sh"],
+      "diagnosis": "The build script attempts to create a directory that already exists, indicating non-idempotent script design.",
+      "remediation": {
+        "action": "Replace 'mkdir' with 'rm -rf <path> && mkdir -p <path>' to ensure a clean state.",
+        "rule": "Do not delete directories containing mounted source code."
+      },
+      "verification": "Step_2"
+    },
+    {
+      "id": "ERR_004",
+      "name": "Linker_ABI_Mismatch",
+      "keywords": ["adding symbols", "file format not recognized", "ABI mismatch"],
+      "error_type": "Linkage",
+      "severity": "MAJOR",
+      "pattern": "error adding symbols: file format not recognized",
+      "target_files": ["build.sh", "Makefile"],
+      "diagnosis": "An object file or library is incompatible with the compiler's ABI, or needs to be rebuilt with current compiler flags.",
+      "remediation": {
+        "action": "Add clean commands (e.g., 'make clean') and rebuild using provided compile flags.",
+        "rule": "Ensure no pre-compiled binaries are used directly from the host unless matching target ABI."
+      },
+      "verification": "Step_4"
+    },
+    {
+      "id": "ERR_005",
+      "name": "Undefined_Reference_Strict",
+      "keywords": ["undefined reference", "symbol missing", "linker"],
+      "error_type": "Linkage",
+      "severity": "MAJOR",
+      "pattern": "undefined reference to `.*'",
+      "exclude_pattern": "optional|ignored|fallback",
+      "target_files": ["build.sh", "Makefile"],
+      "diagnosis": "A required function symbol is missing during the linking stage. This is usually due to a missing '-l' flag or incorrect linking order of static libraries.",
+      "remediation": {
+        "action": "Identify the library containing the symbol and append it to LDFLAGS (e.g., -lprotobuf).",
+        "rule": "Ensure the library is placed at the end of the linking command to satisfy symbol resolution."
+      },
+      "verification": "Step_4_Engine_Control"
+    },
+    {
+      "id": "ERR_009",
+      "name": "Missing_Sanitizer_Audit",
+      "keywords": ["asan", "Sanitizer", "nm check"],
+      "error_type": "Quality",
+      "severity": "MINOR",
+      "pattern": "warning: missing asan symbols",
+      "target_files": ["build.sh"],
+      "diagnosis": "The binary was built successfully but lacks AddressSanitizer instrumentation, meaning CFLAGS/CXXFLAGS were likely ignored.",
+      "remediation": {
+        "action": "Ensure the build script (build.sh) passes 'CFLAGS' and 'CXXFLAGS' to the compiler/linker.",
+        "rule": "Do not hardcode optimization flags that might override OSS-Fuzz provided flags."
+      },
+      "verification": "Step_3_Sanitizer_Injection"
+    }
+  ]
+}

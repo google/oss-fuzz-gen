@@ -1,0 +1,13 @@
+project: scrypt
+language: rust
+error_time: '2026-05-28'
+oss-fuzz_sha: 766921e2cb58c43875ea5ee23eb35851a68b9294
+fuzzing_build_error_log: https://oss-fuzz-build-logs.storage.googleapis.com/log-c8f39677-7447-4118-92db-ed46865b7213.txt
+software_repo_url: https://github.com/RustCrypto/password-hashes
+software_sha: b2cef1796b73cd4a288a93877d1be7a28218535a
+engine: libfuzzer
+sanitizer: address
+architecture: x86_64
+base_image_digest: 5573b2aa8015e955d40711bfded795ae6b62ace68989592636253fc49acfdd41
+error_category: RC9
+fixed_state: 'no'

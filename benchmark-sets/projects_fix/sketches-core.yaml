@@ -1,0 +1,13 @@
+project: sketches-core
+language: jvm
+error_time: '2026-05-28'
+oss-fuzz_sha: 766921e2cb58c43875ea5ee23eb35851a68b9294
+fuzzing_build_error_log: https://oss-fuzz-build-logs.storage.googleapis.com/log-0262cd64-bdc5-47f2-b30b-34afa5ecfdfe.txt
+software_repo_url: https://github.com/DataSketches/sketches-core
+software_sha: 395c4ea8c8c33f3de9165bf0eafde9b169bfadf7
+engine: libfuzzer
+sanitizer: address
+architecture: x86_64
+base_image_digest: 2603b2d46ff5d785f624020bf7060b8420312d3c3e7446f27af61bf28b64730c
+error_category: RC10
+fixed_state: 'no'

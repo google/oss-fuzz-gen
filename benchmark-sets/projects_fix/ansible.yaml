@@ -1,0 +1,13 @@
+project: ansible
+language: python
+error_time: '2026-05-28'
+oss-fuzz_sha: 766921e2cb58c43875ea5ee23eb35851a68b9294
+fuzzing_build_error_log: https://oss-fuzz-build-logs.storage.googleapis.com/log-0250954e-4d16-4687-aad1-5bebb6c99661.txt
+software_repo_url: https://github.com/ansible/ansible
+software_sha: ba219096559cf69b1ac7f66bd05c97348ad0a4a4
+engine: libfuzzer
+sanitizer: address
+architecture: x86_64
+base_image_digest: 93139d20607776cd96924d125c2dae83778aa46e4f828bfca9e1cf686ee01a17
+error_category: RC12
+fixed_state: 'no'

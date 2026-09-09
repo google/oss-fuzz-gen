@@ -1,10 +1,12 @@
 {
+  "venv": ".venv",
   "exclude": [
     "results/",
     "results-*/",
     "oss-fuzz/",
     "oss-fuzz-data/",
     "benchmark-sets/split_benchmarks/",
+    "fix_build_agent/",
     "venv/",
     ".venv/",
     "requirements.txt",

@@ -35,10 +35,11 @@ for file in $CHANGED_PY; do
     fi
 done
 
-# Type Check and lint all Python code.
+# Type Check and lint all Python code. Pyright expects the directory containing
+# the virtualenv, not the virtualenv itself; the repository root contains .venv.
 pyright "$GIT_ROOT" \
     --project="$GIT_ROOT/.pyrightconfig.json" \
-    --venvpath="$VIRTUAL_ENV"
+    --venvpath="$GIT_ROOT"
 
 # Check and remove trailing spaces.
 ## Exclude Markdown which allows trailing spaces.

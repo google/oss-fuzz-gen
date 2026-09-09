@@ -1,0 +1,13 @@
+project: dragonfly
+language: go
+error_time: '2026-05-28'
+oss-fuzz_sha: 766921e2cb58c43875ea5ee23eb35851a68b9294
+fuzzing_build_error_log: https://oss-fuzz-build-logs.storage.googleapis.com/log-345ea23c-77c4-416d-910f-1ec9ba03de34.txt
+software_repo_url: https://github.com/dragonflyoss/Dragonfly
+software_sha: 552db456c1dd766ab28fb8ee2f749c045a0472fd
+engine: libfuzzer
+sanitizer: address
+architecture: x86_64
+base_image_digest: 76095f62d0ccf6e4905debf0c6921ad3d8dd0f259dea97f6e07e76c494fd2299
+error_category: RC12
+fixed_state: 'no'

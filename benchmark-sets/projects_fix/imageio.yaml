@@ -1,0 +1,13 @@
+project: imageio
+language: python
+error_time: '2026-05-28'
+oss-fuzz_sha: 766921e2cb58c43875ea5ee23eb35851a68b9294
+fuzzing_build_error_log: https://oss-fuzz-build-logs.storage.googleapis.com/log-f16e8999-b744-4df8-b66b-a64536e01c90.txt
+software_repo_url: https://github.com/imageio/imageio
+software_sha: c7f8249472f63d6b3c0b8cc9fae823714931c36e
+engine: libfuzzer
+sanitizer: address
+architecture: x86_64
+base_image_digest: 83f71ce9be06c344b56676e092c2447404fdad18a1453d18be28ce93ba3ef018
+error_category: RC12
+fixed_state: 'no'

@@ -1,0 +1,13 @@
+project: ossf-scorecard
+language: go
+error_time: '2026-05-28'
+oss-fuzz_sha: 766921e2cb58c43875ea5ee23eb35851a68b9294
+fuzzing_build_error_log: https://oss-fuzz-build-logs.storage.googleapis.com/log-a98fdeb2-e6f9-44a5-ac44-8fac72474076.txt
+software_repo_url: https://github.com/ossf/scorecard
+software_sha: 916bfc57fa7431467a33a5a013cba3f8a0c1ec50
+engine: libfuzzer
+sanitizer: address
+architecture: x86_64
+base_image_digest: 76095f62d0ccf6e4905debf0c6921ad3d8dd0f259dea97f6e07e76c494fd2299
+error_category: RC12
+fixed_state: 'no'

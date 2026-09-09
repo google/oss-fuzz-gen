@@ -1,0 +1,13 @@
+project: go-ldap
+language: go
+error_time: '2026-05-28'
+oss-fuzz_sha: 766921e2cb58c43875ea5ee23eb35851a68b9294
+fuzzing_build_error_log: https://oss-fuzz-build-logs.storage.googleapis.com/log-242903c4-d28f-441f-bd75-346dc3a3e4b4.txt
+software_repo_url: https://github.com/go-ldap/ldap.git
+software_sha: e6320040345e692f3f73534aaf39f6ede6a195dd
+engine: libfuzzer
+sanitizer: address
+architecture: x86_64
+base_image_digest: eb5c93a296510c9d159cd9091e72d6a2e00aef974f13785237f4fbecacc7ad4a
+error_category: RC12
+fixed_state: 'no'

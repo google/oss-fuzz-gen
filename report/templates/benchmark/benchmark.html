@@ -31,6 +31,138 @@ limitations under the License.
 
 <h1 class="text-2xl mb-6 prettify-benchmark-name">{{ benchmark.id }}</h1>
 
+{% if repair_report %}
+<section class="toc-section repair-detail-card">
+    <div class="repair-detail-header">
+        <div>
+            <p class="repair-eyebrow">External build-fix agent</p>
+            <h2 class="text-xl font-bold">Repair evidence</h2>
+        </div>
+        <span class="repair-status {{ 'repair-status-success' if repair_report.status|lower in ['success', 'fixed'] else 'repair-status-failed' }}">{{ repair_report.status }}</span>
+    </div>
+
+    {% if repair_report.trace_error %}
+    <div class="repair-warning">
+        <strong>Repair trace unavailable</strong>
+        <code>{{ repair_report.trace_error }}</code>
+        <p>The basic repair result was still loaded from input.yaml and result.txt.</p>
+    </div>
+    {% endif %}
+
+    {% if repair_report.metadata %}
+    <details class="repair-evidence-section" open>
+        <summary>Project metadata</summary>
+        <dl class="repair-metadata-grid">
+            {% for key, value in repair_report.metadata.items() %}
+            <dt>{{ key }}</dt><dd><code>{{ value }}</code></dd>
+            {% endfor %}
+        </dl>
+    </details>
+    {% endif %}
+
+    <div class="repair-chain">
+        <div class="repair-chain-step">
+            <span class="repair-step-label">Initial build failure</span>
+            {% if repair_report.repair_summary.initial_errors %}
+            <ul class="repair-evidence-list">
+                {% for error in repair_report.repair_summary.initial_errors %}<li><code>{{ error }}</code></li>{% endfor %}
+            </ul>
+            {% else %}<p class="repair-muted">Original build error unavailable.</p>{% endif %}
+        </div>
+        <div class="repair-chain-connector">→</div>
+        <div class="repair-chain-step">
+            <span class="repair-step-label">Build-failure evolution</span>
+            {% if repair_report.repair_summary.intermediate %}<p>{{ repair_report.repair_summary.intermediate }}</p>{% else %}<p class="repair-muted">No intermediate failure recorded.</p>{% endif %}
+        </div>
+        <div class="repair-chain-connector">→</div>
+        <div class="repair-chain-step repair-chain-root">
+            <span class="repair-step-label">Root cause</span>
+            {% if repair_report.repair_summary.root_status == 'Verified' %}
+            <p>{{ repair_report.repair_summary.root_cause_explanation or repair_report.repair_summary.root_cause }}</p>
+            {% else %}<p class="repair-muted">Unverified</p>{% endif %}
+        </div>
+    </div>
+
+    <div class="repair-reason">
+        <span class="repair-step-label">Why the patch works</span>
+        <p>{{ repair_report.repair_summary.reason }}</p>
+    </div>
+
+    {% if repair_report.repair_summary.pr_summary %}
+    <div class="repair-pr-summary">
+        <span class="repair-step-label">PR description summary</span>
+        <p>{{ repair_report.repair_summary.pr_summary }}</p>
+    </div>
+    {% endif %}
+
+    {% set trace_nodes = repair_report.trace.nodes if repair_report.trace and repair_report.trace.nodes else [] %}
+    {% if trace_nodes %}
+    <details class="repair-evidence-section">
+        <summary>Validation results</summary>
+        {% set latest_node = trace_nodes[-1] %}
+        {% set validation = latest_node.validation if latest_node.validation else {} %}
+        {% set validation_after = validation.validation_report_after if validation.validation_report_after else {} %}
+        <div class="repair-validation-grid">
+            {% for name, result in validation_after.items() %}
+            <div><span>{{ name }}</span><strong class="{% if 'pass' in result|string|lower %}repair-pass{% elif 'fail' in result|string|lower %}repair-fail{% else %}repair-neutral{% endif %}">{{ result }}</strong></div>
+            {% endfor %}
+        </div>
+    </details>
+    <details class="repair-evidence-section">
+        <summary>Repair trace ({{ trace_nodes|length }} trace nodes)</summary>
+        {% for node in trace_nodes %}
+        <div class="repair-trace-node">
+            <h3>Node {{ node.node_id|default(loop.index0) }} · {{ node.identification.node_status|default('unknown') }}</h3>
+            <dl class="repair-trace-grid">
+                <dt>Timestamp</dt><dd>{{ node.identification.timestamp|default('unknown') }}</dd>
+                <dt>Parent</dt><dd>{{ node.parent_id|default('unknown') }}</dd>
+                <dt>Rollback</dt><dd>{{ node.identification.should_rollback|default(false) }} ({{ node.identification.rollback_type|default('NONE') }})</dd>
+                <dt>Target file</dt><dd><code>{{ node.action_and_intent.target_file|default('N/A') }}</code></dd>
+                <dt>Strategy</dt><dd>{{ node.action_and_intent.repair_strategy|default('N/A') }}</dd>
+            </dl>
+        </div>
+        {% endfor %}
+    </details>
+    {% endif %}
+
+    <details class="repair-evidence-section">
+        <summary>Original OSS-Fuzz build log</summary>
+        <pre class="repair-log-block">{{ repair_report.original_build_log|default('Original build log unavailable.') }}</pre>
+    </details>
+    <details class="repair-evidence-section">
+        <summary>External build-fix agent log</summary>
+        <pre class="repair-log-block">{{ repair_report.run_log|default('Agent run log unavailable.') }}</pre>
+    </details>
+
+    <div class="repair-metrics">
+        <div><span>Upstream → downstream</span><strong>{{ repair_report.metrics.upstream_repo }} → {{ repair_report.metrics.downstream_repo }}</strong></div>
+        <div><span>Files changed</span><strong>{{ repair_report.metrics.files_changed }}</strong></div>
+        <div><span>Lines changed</span><strong>{{ repair_report.metrics.lines_changed }}</strong></div>
+        <div><span>Tokens in / out</span><strong>{{ repair_report.metrics.input_tokens }} / {{ repair_report.metrics.output_tokens }}</strong></div>
+        <div><span>Time cost</span><strong>{{ repair_report.metrics.time_cost }}</strong></div>
+        <div><span>Attempts / repairs</span><strong>{{ repair_report.metrics.attempt_rounds }} / {{ repair_report.metrics.repair_rounds }}</strong></div>
+    </div>
+
+    {% if repair_report.patches %}
+    <details class="repair-patches" open>
+        <summary>Patch diff</summary>
+        {% for name, patch in repair_report.patches %}
+        <div class="repair-patch-block"><p>{{ name }}</p><pre>{{ patch }}</pre></div>
+        {% endfor %}
+    </details>
+    {% endif %}
+
+    {% if repair_report.fixed_files %}
+    <details class="repair-evidence-section">
+        <summary>Fixed files</summary>
+        {% for name, content in repair_report.fixed_files %}
+        <div class="repair-patch-block"><p>{{ name }}</p><pre class="repair-log-block">{{ content }}</pre></div>
+        {% endfor %}
+    </details>
+    {% endif %}
+</section>
+{% endif %}
+
 <div class="toc-section">
     <h2 class="text-lg mb-4">Samples</h2>
     <table class="sortable-table">

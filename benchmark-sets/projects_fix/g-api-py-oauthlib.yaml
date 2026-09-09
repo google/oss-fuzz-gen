@@ -1,0 +1,13 @@
+project: g-api-py-oauthlib
+language: python
+error_time: '2026-05-28'
+oss-fuzz_sha: 766921e2cb58c43875ea5ee23eb35851a68b9294
+fuzzing_build_error_log: https://oss-fuzz-build-logs.storage.googleapis.com/log-a616176b-f211-4686-8060-57118704d368.txt
+software_repo_url: https://github.com/googleapis/google-auth-library-python-oauthlib
+software_sha: 7b39937441082ccac02d7dbf8e445a38c8b31331
+engine: libfuzzer
+sanitizer: address
+architecture: x86_64
+base_image_digest: 83f71ce9be06c344b56676e092c2447404fdad18a1453d18be28ce93ba3ef018
+error_category: RC12
+fixed_state: 'no'
