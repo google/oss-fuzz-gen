@@ -150,6 +150,7 @@ def _project_record(project_dir: Path) -> dict[str, Any]:
       metadata.get('fix_result') or
       ('Success' if 'SUCCESS' in result_text.upper() else 'Unknown'))
   project = str(metadata.get('project') or project_dir.name)
+  original_failure_cause = _original_failure_cause(trace, root_cause)
   record = {
       'project':
           project,
@@ -177,7 +178,7 @@ def _project_record(project_dir: Path) -> dict[str, Any]:
           'initial_errors':
               initial_errors,
           'pr_summary':
-              _pr_summary(project, status, root_cause_explanation, trace),
+              _pr_summary(project, status, original_failure_cause, trace),
           'reason':
               trace_reason or '修复理由未在账本中提供。',
       },
@@ -213,8 +214,8 @@ def _project_record(project_dir: Path) -> dict[str, Any]:
       'source_dir':
           str(project_dir),
   }
-  record['failure_chain_text'] = _failure_chain_text(record)
-  record['patch_text'] = _patch_text(record)
+  record['failure_chain_html'] = _failure_chain_html(record)
+  record['patch_html'] = _patch_html(record)
   return record
 
 
@@ -226,12 +227,36 @@ def _pr_summary(project: str, status: str, root_cause: str,
   method, reasoning = _repair_details(trace)
   sentences = [f"Resolves {project}'s OSS-Fuzz build failure."]
   if root_cause:
-    sentences.append(_sentence_text(root_cause, 2))
+    sentences.append(_sentence_text(root_cause, 1))
   if method:
-    sentences.append(f'The fix {_lowercase_first(_sentence_text(method, 2))}')
-  if reasoning and reasoning.lower() not in ' '.join(sentences).lower():
-    sentences.append(_sentence_text(reasoning, 2))
-  return ' '.join(_ensure_period(sentence) for sentence in sentences)
+    method_sentences = _split_sentences(method)[:2]
+    method_sentences[0] = f'The fix {_lowercase_first(method_sentences[0])}'
+    sentences.extend(method_sentences)
+  effect = _concise_build_evidence(reasoning)
+  if effect and effect.lower() not in ' '.join(sentences).lower():
+    sentences.append(_split_sentences(effect)[-1])
+  return ' '.join(_ensure_period(sentence) for sentence in sentences[:5])
+
+
+def _original_failure_cause(trace: dict[str, Any], fallback: str) -> str:
+  """Extracts the original build cause from the earliest trace evidence."""
+  nodes = trace.get('nodes', [])
+  if not isinstance(nodes, list):
+    return fallback
+  for node in nodes:
+    if not isinstance(node, dict):
+      continue
+    memory = node.get('semantic_memory', {})
+    if not isinstance(memory, dict):
+      continue
+    reflection = _concise_build_evidence(
+        str(memory.get('reflection_analysis', '')))
+    if reflection:
+      return _sentence_text(reflection, 2)
+    problem = _concise_build_evidence(str(memory.get('unsolved_problems', '')))
+    if problem:
+      return _sentence_text(problem, 2)
+  return fallback
 
 
 def _repair_details(trace: dict[str, Any]) -> tuple[str, str]:
@@ -255,16 +280,22 @@ def _repair_details(trace: dict[str, Any]) -> tuple[str, str]:
 
 def _clean_prose(text: str) -> str:
   """Converts trace list formatting into compact prose."""
+  text = text.replace('\\r\\n', ' ').replace('\\n', ' ')
   text = re.sub(r'(^|\n)\s*\d+[.)]\s*', r'\1', text)
+  text = re.sub(r'(^|\s)[.]+(?=\s|$)', ' ', text)
   return re.sub(r'\s+', ' ', text).strip()
 
 
 def _sentence_text(text: str, limit: int) -> str:
   """Returns at most ``limit`` non-empty sentences from trace evidence."""
-  sentences = [
+  return ' '.join(_split_sentences(text)[:limit])
+
+
+def _split_sentences(text: str) -> list[str]:
+  """Splits prose into non-empty sentences while retaining punctuation."""
+  return [
       part.strip() for part in re.split(r'(?<=[.!?])\s+', text) if part.strip()
   ]
-  return ' '.join(sentences[:limit])
 
 
 def _ensure_period(text: str) -> str:
@@ -281,7 +312,8 @@ def _lowercase_first(text: str) -> str:
 def _failure_chain_text(record: dict[str, Any]) -> str:
   """Formats one project's build-failure evidence as plain text."""
   summary = record['repair_summary']
-  initial = '\n'.join(f'- {error}' for error in summary['initial_errors'])
+  initial = '\n'.join(f'- {_expand_escaped_newlines(error)}'
+                      for error in summary['initial_errors'])
   initial = initial or 'Unavailable'
   intermediate = summary[
       'intermediate'] or 'No build-failure evolution recorded.'
@@ -295,13 +327,47 @@ def _failure_chain_text(record: dict[str, Any]) -> str:
           f'Root cause\n{root}\n')
 
 
-def _patch_text(record: dict[str, Any]) -> str:
-  """Formats every archived patch for one project as plain text."""
+def _expand_escaped_newlines(text: str) -> str:
+  """Expands escaped newlines found in archived Cloud Build log lines."""
+  return text.replace('\\r\\n', '\n').replace('\\n', '\n')
+
+
+def _evidence_document(title: str, content: str, code: bool = False) -> str:
+  """Creates a minimal standalone HTML document preserving source layout."""
+  white_space = 'pre' if code else 'pre-wrap'
+  return f'''<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{html.escape(title)}</title>
+  <style>
+    body {{ margin: 0; padding: 2rem; background: #f8fafc;
+           color: #0f172a; font: 14px/1.55 ui-monospace, monospace; }}
+    main {{ max-width: 1100px; margin: auto; }}
+    h1 {{ font: 600 1.35rem/1.3 system-ui, sans-serif; }}
+    pre {{ overflow: auto; padding: 1.25rem; border: 1px solid #cbd5e1;
+           border-radius: .5rem; background: #fff;
+           white-space: {white_space}; overflow-wrap: anywhere; }}
+  </style>
+</head>
+<body><main><h1>{html.escape(title)}</h1><pre><code>{html.escape(content)}</code></pre></main></body>
+</html>'''
+
+
+def _failure_chain_html(record: dict[str, Any]) -> str:
+  """Formats a build failure chain as a readable standalone page."""
+  return _evidence_document(f"{record['project']} build failure chain",
+                            _failure_chain_text(record))
+
+
+def _patch_html(record: dict[str, Any]) -> str:
+  """Formats archived patches as syntax-preserving code blocks."""
   patches = record['patches']
-  if not patches:
-    return 'Patch unavailable.\n'
-  return '\n\n'.join(
-      f'File: {name}\n\n{content.rstrip()}' for name, content in patches) + '\n'
+  content = ('\n\n'.join(
+      f'File: {name}\n\n{patch.rstrip()}' for name, patch in patches)
+             if patches else 'Patch unavailable.')
+  return _evidence_document(f"{record['project']} repair patch", content, True)
 
 
 def _pre(value: str) -> str:
@@ -385,22 +451,24 @@ def _is_empty_evidence(value: Any) -> bool:
 def _is_build_evidence(text: str) -> bool:
   """Returns whether trace text describes a build or validation problem."""
   excluded = ('git apply', 'patch.diff failed', 'patch application',
-              'patch mismatch', 'context mismatch', 'orchestration',
-              'no message in response', 'rollback', 'agent error')
-  return bool(
-      text.strip()) and not any(item in text.lower() for item in excluded)
+              'patch-based repair', 'brittle patch', 'patch mismatch',
+              'context mismatch', 'orchestration', 'no message in response',
+              'rollback', 'agent error')
+  normalized = text.lower().replace('`', '').replace('*', '')
+  return bool(text.strip()) and not any(item in normalized for item in excluded)
 
 
 def _concise_build_evidence(text: str) -> str:
   """Keeps concise causal build evidence and removes repair-process text."""
-  if _is_empty_evidence(text) or not _is_build_evidence(text):
+  if _is_empty_evidence(text):
     return ''
   sentences = []
   process_terms = ('previous repair attempt', 'repair direction', 'next round',
                    'self-validation', 'reflection indicates', 'must prioritize',
                    'close in on the goal')
   for sentence in re.split(r'(?<=[.!?])\s+', _clean_prose(text)):
-    if sentence and not any(term in sentence.lower() for term in process_terms):
+    if (sentence and _is_build_evidence(sentence) and
+        not any(term in sentence.lower() for term in process_terms)):
       sentences.append(sentence)
   return _ensure_period(' '.join(sentences[:2])) if sentences else ''
 

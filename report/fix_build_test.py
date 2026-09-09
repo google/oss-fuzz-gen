@@ -48,7 +48,8 @@ class FixBuildReportTest(unittest.TestCase):
             },
             'semantic_memory': {
                 'unsolved_problems':
-                    ('The patch.diff failed to apply due to context mismatch.'),
+                    ('The `patch.diff` failed to apply due to context '
+                     'mismatch.'),
                 'reflection_analysis': 'None',
             },
         }]
@@ -63,14 +64,40 @@ class FixBuildReportTest(unittest.TestCase):
     self.assertNotEqual(root_cause, 'None')
 
   def test_pr_summary_describes_cause_and_fix(self):
+    """PR text should contain the cause and fix without validation chatter."""
     root_cause, _, _ = fix_build._trace_summary(self.trace)
+    root_cause = fix_build._original_failure_cause(self.trace, root_cause)
 
     summary = fix_build._pr_summary('bind9', 'Success', root_cause, self.trace)
 
     self.assertIn("Resolves bind9's OSS-Fuzz build failure", summary)
     self.assertIn('-Dnamed-lto=disabled', summary)
+    self.assertNotIn('patch.diff', summary)
     self.assertNotIn('Final validation', summary)
     self.assertNotIn('step_1', summary)
+    self.assertLessEqual(len(fix_build._split_sentences(summary)), 5)
+
+  def test_evidence_html_preserves_layout_and_escapes_patch(self):
+    """Standalone evidence pages should preserve and safely render layout."""
+    record = {
+        'project': 'bind9',
+        'patches': [('config_fix.patch', '-old\n+new <value>')],
+        'repair_summary': {
+            'initial_errors': ['first\\nsecond'],
+            'intermediate': 'Configuration failed.',
+            'root_status': 'Unverified',
+            'root_cause_explanation': '',
+            'root_cause': '',
+        },
+    }
+
+    failure_html = fix_build._failure_chain_html(record)
+    patch_html = fix_build._patch_html(record)
+
+    self.assertIn('first\nsecond', failure_html)
+    self.assertIn('white-space: pre-wrap', failure_html)
+    self.assertIn('white-space: pre', patch_html)
+    self.assertIn('&lt;value&gt;', patch_html)
 
 
 if __name__ == '__main__':

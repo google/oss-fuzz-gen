@@ -332,17 +332,17 @@ class GenerateReport:
 
   def _write_repair_evidence(self,
                              repair_reports: dict[str, dict[str, Any]]) -> None:
-    """Writes plain-text repair evidence without blocking HTML generation."""
+    """Writes standalone repair evidence without blocking report generation."""
     for benchmark_id, record in repair_reports.items():
       encoded_id = urllib.parse.quote(benchmark_id, safe='')
       evidence_dir = f'evidence/{benchmark_id}'
       try:
-        self._write(f'{evidence_dir}/failure-chain.txt',
-                    record['failure_chain_text'])
-        self._write(f'{evidence_dir}/patch.txt', record['patch_text'])
+        self._write(f'{evidence_dir}/failure-chain.html',
+                    record['failure_chain_html'])
+        self._write(f'{evidence_dir}/patch.html', record['patch_html'])
         record['failure_chain_url'] = (
-            f'evidence/{encoded_id}/failure-chain.txt')
-        record['patch_url'] = f'evidence/{encoded_id}/patch.txt'
+            f'evidence/{encoded_id}/failure-chain.html')
+        record['patch_url'] = f'evidence/{encoded_id}/patch.html'
       except Exception as error:  # pylint: disable=broad-exception-caught
         logging.error('Failed to write repair evidence for %s: %s',
                       benchmark_id, error)

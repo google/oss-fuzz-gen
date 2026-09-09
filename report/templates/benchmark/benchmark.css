@@ -148,6 +148,23 @@
     font-weight: 700;
 }
 
+.repair-metadata-grid {
+    display: grid;
+    grid-template-columns: minmax(10rem, auto) minmax(0, 1fr);
+    gap: .4rem 1rem;
+    margin-top: .75rem;
+}
+
+.repair-metadata-grid dt {
+    color: #64748b;
+    font-weight: 600;
+}
+
+.repair-metadata-grid dd {
+    margin: 0;
+    overflow-wrap: anywhere;
+}
+
 .repair-validation-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));

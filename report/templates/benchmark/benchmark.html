@@ -49,6 +49,17 @@ limitations under the License.
     </div>
     {% endif %}
 
+    {% if repair_report.metadata %}
+    <details class="repair-evidence-section" open>
+        <summary>Project metadata</summary>
+        <dl class="repair-metadata-grid">
+            {% for key, value in repair_report.metadata.items() %}
+            <dt>{{ key }}</dt><dd><code>{{ value }}</code></dd>
+            {% endfor %}
+        </dl>
+    </details>
+    {% endif %}
+
     <div class="repair-chain">
         <div class="repair-chain-step">
             <span class="repair-step-label">Initial build failure</span>
