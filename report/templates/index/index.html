@@ -79,39 +79,17 @@ limitations under the License.
                         <td><a class="font-semibold" href="benchmark/{{ benchmark_id|urlencode }}/index.html">{{ repair.project }}</a></td>
                         <td><span class="repair-status {{ 'repair-status-success' if repair.status|lower in ['success', 'fixed'] else 'repair-status-failed' }}">{{ repair.status }}</span></td>
                         <td class="repair-chain-cell">
-                            <details>
-                                <summary>View failure chain</summary>
-                                <div class="repair-chain-popover">
-                                    <strong>Initial build error</strong>
-                                    {% if repair.repair_summary.initial_errors %}
-                                    <ul>
-                                        {% for error in repair.repair_summary.initial_errors %}<li><code>{{ error }}</code></li>{% endfor %}
-                                    </ul>
-                                    {% else %}<p>Initial build error unavailable</p>{% endif %}
-                                    <strong>Intermediate evolution</strong>
-                                    {% if repair.repair_summary.intermediate %}<p>{{ repair.repair_summary.intermediate }}</p>{% else %}<p>No intermediate failure recorded.</p>{% endif %}
-                                    <strong>Root cause</strong>
-                                    {% if repair.repair_summary.root_cause_explanation %}<p>{{ repair.repair_summary.root_cause_explanation }}</p>{% elif repair.repair_summary.root_cause %}<p>{{ repair.repair_summary.root_cause }}</p>{% else %}<p>Root cause not verified.</p>{% endif %}
-                                    <small>{{ repair.repair_summary.root_status }}</small>
-                                    {% if repair.trace_error %}
-                                    <strong>Repair trace status</strong>
-                                    <p>Unavailable: <code>{{ repair.trace_error }}</code></p>
-                                    {% endif %}
-                                </div>
-                            </details>
+                            {% if repair.failure_chain_url %}
+                            <a href="{{ repair.failure_chain_url }}" target="_blank" rel="noopener">View failure chain</a>
+                            {% else %}Unavailable{% endif %}
                         </td>
                         <td><code>{{ repair.metrics.upstream_repo }}</code> → <code>{{ repair.metrics.downstream_repo }}</code></td>
                         <td>{{ repair.metrics.files_changed }} / {{ repair.metrics.lines_changed }}</td>
                         <td>{{ repair.metrics.input_tokens }} / {{ repair.metrics.output_tokens }}</td>
                         <td>{{ repair.metrics.time_cost }}</td>
                         <td>
-                            {% if repair.patches %}
-                            <details>
-                                <summary>View patch</summary>
-                                {% for name, patch in repair.patches %}
-                                <p><code>{{ name }}</code></p><pre class="repair-inline-patch">{{ patch }}</pre>
-                                {% endfor %}
-                            </details>
+                            {% if repair.patches and repair.patch_url %}
+                            <a href="{{ repair.patch_url }}" target="_blank" rel="noopener">View patch</a>
                             {% else %}Unavailable{% endif %}
                         </td>
                         <td>{{ repair.metrics.repair_rounds }}</td>

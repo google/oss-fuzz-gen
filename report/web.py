@@ -275,6 +275,7 @@ class GenerateReport:
 
     unified_data = self._build_unified_data(benchmarks, projects)
     repair_reports = self._load_repair_reports()
+    self._write_repair_evidence(repair_reports)
 
     self._write_index_html(benchmarks, accumulated_results, time_results,
                            projects, samples_with_bugs, coverage_language_gains,
@@ -328,6 +329,24 @@ class GenerateReport:
       record = fix_build_report._project_record(project_dir)
       reports[project_dir.name] = record
     return reports
+
+  def _write_repair_evidence(self,
+                             repair_reports: dict[str, dict[str, Any]]) -> None:
+    """Writes plain-text repair evidence without blocking HTML generation."""
+    for benchmark_id, record in repair_reports.items():
+      encoded_id = urllib.parse.quote(benchmark_id, safe='')
+      evidence_dir = f'evidence/{benchmark_id}'
+      try:
+        self._write(f'{evidence_dir}/failure-chain.txt',
+                    record['failure_chain_text'])
+        self._write(f'{evidence_dir}/patch.txt', record['patch_text'])
+        record['failure_chain_url'] = (
+            f'evidence/{encoded_id}/failure-chain.txt')
+        record['patch_url'] = f'evidence/{encoded_id}/patch.txt'
+      except Exception as error:  # pylint: disable=broad-exception-caught
+        logging.error('Failed to write repair evidence for %s: %s',
+                      benchmark_id, error)
+        record['evidence_error'] = f'{type(error).__name__}: {error}'
 
   def _write_index_html(self, benchmarks: List[Benchmark],
                         accumulated_results: AccumulatedResult,

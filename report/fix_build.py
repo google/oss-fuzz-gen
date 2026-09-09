@@ -128,11 +128,11 @@ def _project_record(project_dir: Path) -> dict[str, Any]:
     root_cause, intermediate, root_status = _trace_summary(trace)
   except Exception as error:  # pylint: disable=broad-exception-caught
     trace_error = trace_error or f'{type(error).__name__}: {error}'
-    root_cause, intermediate, root_status = '', '', '未验证'
+    root_cause, intermediate, root_status = '', '', 'Unverified'
   if root_location in ('true', 'yes', 'success'):
-    root_status = '已定位'
+    root_status = 'Verified'
   elif root_location in ('false', 'no', 'failure'):
-    root_status = '未验证'
+    root_status = 'Unverified'
   root_cause_explanation = _root_cause_explanation(trace, root_cause)
   trace_reason = ''
   if not trace_error:
@@ -140,18 +140,19 @@ def _project_record(project_dir: Path) -> dict[str, Any]:
       trace_reason = _repair_reason(trace)
     except Exception as error:  # pylint: disable=broad-exception-caught
       trace_error = f'{type(error).__name__}: {error}'
-  stats = _patch_stats([(str(path.relative_to(project_dir)), _read_text(path))
-                        for path in patch_files])
+  patches = [(str(path.relative_to(project_dir)), _read_text(path))
+             for path in patch_files]
+  stats = _patch_stats(patches)
   initial_errors = _key_build_errors(
       _read_remote_log(str(metadata.get('fuzzing_build_error_log', ''))))
-  validation_summary = _validation_summary(trace)
   upstream_url = str(metadata.get('software_repo_url', ''))
   status = str(
       metadata.get('fix_result') or
       ('Success' if 'SUCCESS' in result_text.upper() else 'Unknown'))
-  return {
+  project = str(metadata.get('project') or project_dir.name)
+  record = {
       'project':
-          metadata.get('project') or project_dir.name,
+          project,
       'status':
           status,
       'metadata':
@@ -176,10 +177,7 @@ def _project_record(project_dir: Path) -> dict[str, Any]:
           'initial_errors':
               initial_errors,
           'pr_summary':
-              _pr_summary(
-                  metadata.get('project') or project_dir.name,
-                  str(metadata.get('fix_result', '')), initial_errors,
-                  root_cause_explanation, trace_reason, validation_summary),
+              _pr_summary(project, status, root_cause_explanation, trace),
           'reason':
               trace_reason or '修复理由未在账本中提供。',
       },
@@ -208,49 +206,102 @@ def _project_record(project_dir: Path) -> dict[str, Any]:
           _read_text(run_log_path) if run_log_path else '',
       'original_build_log':
           _read_remote_log(str(metadata.get('fuzzing_build_error_log', ''))),
-      'patches': [(str(path.relative_to(project_dir)), _read_text(path))
-                  for path in patch_files],
+      'patches':
+          patches,
       'fixed_files': [(str(path.relative_to(project_dir)), _read_text(path))
                       for path in fixed_files],
       'source_dir':
           str(project_dir),
   }
+  record['failure_chain_text'] = _failure_chain_text(record)
+  record['patch_text'] = _patch_text(record)
+  return record
 
 
-def _validation_summary(trace: dict[str, Any]) -> list[str]:
-  """Returns final validation results recorded by the repair agent."""
-  nodes = trace.get('nodes', [])
-  if not isinstance(nodes, list):
-    return []
-  for node in reversed(nodes):
-    if not isinstance(node, dict):
-      continue
-    validation = node.get('validation', {})
-    if not isinstance(validation, dict):
-      continue
-    report = validation.get('validation_report_after', {})
-    if isinstance(report, dict):
-      return [f'{name}: {value}' for name, value in report.items()]
-  return []
-
-
-def _pr_summary(project: str, status: str, initial_errors: list[str],
-                root_cause: str, repair_reason: str,
-                validation: list[str]) -> str:
+def _pr_summary(project: str, status: str, root_cause: str,
+                trace: dict[str, Any]) -> str:
   """Builds an evidence-backed, one-paragraph PR description summary."""
   if status.lower() not in ('success', 'fixed'):
     return ''
-  failure = (' '.join(initial_errors) if initial_errors else
-             'The original build error was not available in the report.')
-  repair = repair_reason or root_cause or 'the documented repair strategy'
-  validation_text = (' '.join(
-      item for item in validation
-      if item.lower().startswith('step') and 'pass' in item.lower()) or
-                     'the final validation result recorded by the agent')
-  return (f"{project}'s original OSS-Fuzz build failed with this error: "
-          f"{failure} The repair succeeded by applying the documented "
-          f"repair strategy: {repair} Final validation evidence recorded by "
-          f"the repair agent reports: {validation_text}.")
+  method, reasoning = _repair_details(trace)
+  sentences = [f"Resolves {project}'s OSS-Fuzz build failure."]
+  if root_cause:
+    sentences.append(_sentence_text(root_cause, 2))
+  if method:
+    sentences.append(f'The fix {_lowercase_first(_sentence_text(method, 2))}')
+  if reasoning and reasoning.lower() not in ' '.join(sentences).lower():
+    sentences.append(_sentence_text(reasoning, 2))
+  return ' '.join(_ensure_period(sentence) for sentence in sentences)
+
+
+def _repair_details(trace: dict[str, Any]) -> tuple[str, str]:
+  """Extracts the final repair method and its evidence-backed rationale."""
+  nodes = trace.get('nodes', [])
+  if not isinstance(nodes, list):
+    return '', ''
+  for node in reversed(nodes):
+    action = node.get('action_and_intent', {}) if isinstance(node, dict) else {}
+    if not isinstance(action, dict):
+      continue
+    strategy = str(action.get('repair_strategy', '')).strip()
+    if not strategy or strategy == 'N/A':
+      continue
+    parts = strategy.split('Reasoning:', 1)
+    method = re.sub(r'^Method:\s*', '', parts[0], flags=re.IGNORECASE).strip()
+    reasoning = parts[1].strip() if len(parts) == 2 else ''
+    return _clean_prose(method), _clean_prose(reasoning)
+  return '', ''
+
+
+def _clean_prose(text: str) -> str:
+  """Converts trace list formatting into compact prose."""
+  text = re.sub(r'(^|\n)\s*\d+[.)]\s*', r'\1', text)
+  return re.sub(r'\s+', ' ', text).strip()
+
+
+def _sentence_text(text: str, limit: int) -> str:
+  """Returns at most ``limit`` non-empty sentences from trace evidence."""
+  sentences = [
+      part.strip() for part in re.split(r'(?<=[.!?])\s+', text) if part.strip()
+  ]
+  return ' '.join(sentences[:limit])
+
+
+def _ensure_period(text: str) -> str:
+  """Ensures generated PR prose has sentence-ending punctuation."""
+  text = text.strip()
+  return text if not text or text[-1] in '.!?' else f'{text}.'
+
+
+def _lowercase_first(text: str) -> str:
+  """Lowercases the first prose character after an optional code marker."""
+  return text[:1].lower() + text[1:] if text else text
+
+
+def _failure_chain_text(record: dict[str, Any]) -> str:
+  """Formats one project's build-failure evidence as plain text."""
+  summary = record['repair_summary']
+  initial = '\n'.join(f'- {error}' for error in summary['initial_errors'])
+  initial = initial or 'Unavailable'
+  intermediate = summary[
+      'intermediate'] or 'No build-failure evolution recorded.'
+  if summary['root_status'] == 'Verified':
+    root = summary['root_cause_explanation'] or summary['root_cause']
+    root = root or 'Verified, but no description was recorded.'
+  else:
+    root = 'Unverified'
+  return (f"Project: {record['project']}\n\nInitial build error\n"
+          f'{initial}\n\nBuild-failure evolution\n{intermediate}\n\n'
+          f'Root cause\n{root}\n')
+
+
+def _patch_text(record: dict[str, Any]) -> str:
+  """Formats every archived patch for one project as plain text."""
+  patches = record['patches']
+  if not patches:
+    return 'Patch unavailable.\n'
+  return '\n\n'.join(
+      f'File: {name}\n\n{content.rstrip()}' for name, content in patches) + '\n'
 
 
 def _pre(value: str) -> str:
@@ -295,27 +346,40 @@ def _trace_summary(trace: dict[str, Any]) -> tuple[str, str, str]:
     action_root_commit = (action.get('root_cause_commit_sha') if isinstance(
         action, dict) else None)
     if isinstance(action, dict):
-      if action_root_commit not in ('', 'N/A', None):
+      if not _is_empty_evidence(action_root_commit):
         root_located = True
-        root_cause = str(action_root_commit)
       semantic_memory = node.get('semantic_memory', {})
       problem = (semantic_memory.get('unsolved_problems', '') if isinstance(
           semantic_memory, dict) else '')
       if problem and problem != 'N/A':
-        if _is_build_evidence(str(problem)):
-          intermediate.append(str(problem))
-        if not candidate_root_cause and _is_build_evidence(str(problem)):
-          candidate_root_cause = str(problem)
+        problem = _concise_build_evidence(str(problem))
+        if problem:
+          intermediate.append(problem)
+          candidate_root_cause = candidate_root_cause or problem
+      reflection = (semantic_memory.get('reflection_analysis', '')
+                    if isinstance(semantic_memory, dict) else '')
+      reflection = _concise_build_evidence(str(reflection))
+      if reflection:
+        intermediate.append(reflection)
+        candidate_root_cause = candidate_root_cause or reflection
     if isinstance(validation, dict):
       report = validation.get('validation_report_after', {})
       if isinstance(report, dict) and any(
           str(value).startswith('pass') for value in report.values()):
         root_located = root_located or bool(
-            action_root_commit not in ('', 'N/A', None))
+            not _is_empty_evidence(action_root_commit))
   if not root_cause:
     root_cause = candidate_root_cause
-  return (root_cause, ' → '.join(intermediate[-2:]),
-          '已定位' if root_located else '候选（未验证）')
+  intermediate = list(dict.fromkeys(intermediate))
+  return (root_cause, ' '.join(intermediate[-3:]),
+          'Verified' if root_located else 'Unverified')
+
+
+def _is_empty_evidence(value: Any) -> bool:
+  """Returns whether a trace field contains only a missing-value marker."""
+  return value is None or str(value).strip().lower() in {
+      '', 'n/a', 'none', 'null', 'unknown'
+  }
 
 
 def _is_build_evidence(text: str) -> bool:
@@ -325,6 +389,20 @@ def _is_build_evidence(text: str) -> bool:
               'no message in response', 'rollback', 'agent error')
   return bool(
       text.strip()) and not any(item in text.lower() for item in excluded)
+
+
+def _concise_build_evidence(text: str) -> str:
+  """Keeps concise causal build evidence and removes repair-process text."""
+  if _is_empty_evidence(text) or not _is_build_evidence(text):
+    return ''
+  sentences = []
+  process_terms = ('previous repair attempt', 'repair direction', 'next round',
+                   'self-validation', 'reflection indicates', 'must prioritize',
+                   'close in on the goal')
+  for sentence in re.split(r'(?<=[.!?])\s+', _clean_prose(text)):
+    if sentence and not any(term in sentence.lower() for term in process_terms):
+      sentences.append(sentence)
+  return _ensure_period(' '.join(sentences[:2])) if sentences else ''
 
 
 def _root_cause_explanation(trace: dict[str, Any], root_cause: str) -> str:
@@ -339,20 +417,22 @@ def _root_cause_explanation(trace: dict[str, Any], root_cause: str) -> str:
     memory = node.get('semantic_memory', {})
     if isinstance(memory, dict):
       reflection = str(memory.get('reflection_analysis', '')).strip()
-      if reflection and reflection != 'N/A' and _is_build_evidence(reflection):
+      reflection = _concise_build_evidence(reflection)
+      if reflection:
         explanations.append(reflection)
     action = node.get('action_and_intent', {})
     if isinstance(action, dict):
       strategy = str(action.get('repair_strategy', '')).strip()
       if 'Reasoning:' in strategy:
         reasoning = strategy.split('Reasoning:', 1)[1].strip()
-        if _is_build_evidence(reasoning):
+        reasoning = _concise_build_evidence(reasoning)
+        if reasoning:
           explanations.append(reasoning)
     if explanations:
       break
   explanation = explanations[0] if explanations else root_cause
   sentences = re.split(r'(?<=[.!?])\s+', explanation)
-  return ' '.join(sentences[:5]).strip() or '根因说明未提供。'
+  return ' '.join(sentences[:5]).strip()
 
 
 def _repair_reason(trace: dict[str, Any]) -> str:

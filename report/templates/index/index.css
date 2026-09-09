@@ -112,42 +112,15 @@
 }
 
 .repair-chain-cell {
-    min-width: 18rem;
-    max-width: 34rem;
-    white-space: normal;
-    line-height: 1.45;
+    min-width: 9rem;
+    white-space: nowrap;
 }
 
-.repair-chain-cell details {
-    white-space: normal;
-}
-
-.repair-chain-popover {
-    margin-top: .5rem;
-    padding: .75rem;
-    border: 1px solid var(--border-color, #dadce0);
-    border-radius: .5rem;
-    background: var(--card-background, #fff);
-    text-align: left;
-}
-
-.repair-chain-popover ul {
-    margin: .35rem 0 .75rem 1.25rem;
-}
-
-.repair-chain-popover p {
-    margin: .35rem 0 .75rem;
-}
-
-.repair-chain-popover strong {
-    display: block;
-    margin-top: .5rem;
-}
-
-.repair-arrow, .repair-chain-connector {
+.repair-chain-cell a,
+.repair-summary-card td a {
     color: #2563eb;
-    font-weight: 700;
-    margin: 0 0.35rem;
+    font-weight: 600;
+    text-decoration: underline;
 }
 
 .dark-mode .repair-summary-card {
@@ -274,19 +247,6 @@
     align-items: center !important;
     justify-content: center !important;
 }
-.repair-inline-patch {
-    max-height: 20rem;
-    max-width: 36rem;
-    overflow: auto;
-    padding: .75rem;
-    border-radius: .4rem;
-    background: #0f172a;
-    color: #e2e8f0;
-    font-size: .75rem;
-    line-height: 1.4;
-    white-space: pre;
-}
-
 .repair-pr-summary-card {
     border-color: #bbf7d0;
     background: #f0fdf4;

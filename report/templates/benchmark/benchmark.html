@@ -60,14 +60,15 @@ limitations under the License.
         </div>
         <div class="repair-chain-connector">→</div>
         <div class="repair-chain-step">
-            <span class="repair-step-label">Intermediate evolution</span>
+            <span class="repair-step-label">Build-failure evolution</span>
             {% if repair_report.repair_summary.intermediate %}<p>{{ repair_report.repair_summary.intermediate }}</p>{% else %}<p class="repair-muted">No intermediate failure recorded.</p>{% endif %}
         </div>
         <div class="repair-chain-connector">→</div>
         <div class="repair-chain-step repair-chain-root">
             <span class="repair-step-label">Root cause</span>
-            {% if repair_report.repair_summary.root_cause_explanation %}<p>{{ repair_report.repair_summary.root_cause_explanation }}</p>{% elif repair_report.repair_summary.root_cause %}<p>{{ repair_report.repair_summary.root_cause }}</p>{% else %}<p class="repair-muted">Root cause not verified</p>{% endif %}
-            <small>{{ repair_report.repair_summary.root_status }}</small>
+            {% if repair_report.repair_summary.root_status == 'Verified' %}
+            <p>{{ repair_report.repair_summary.root_cause_explanation or repair_report.repair_summary.root_cause }}</p>
+            {% else %}<p class="repair-muted">Unverified</p>{% endif %}
         </div>
     </div>
 
