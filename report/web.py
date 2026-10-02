@@ -25,10 +25,12 @@ import traceback
 import urllib.parse
 from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
+from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 import jinja2
 
+from report import fix_build as fix_build_report
 from report.common import (AccumulatedResult, Benchmark, FileSystem, Project,
                            Results, Sample, Target)
 from report.export import CSVExporter
@@ -256,7 +258,7 @@ class GenerateReport:
       results, targets = self._results.get_results(benchmark_id)
       benchmark = self._results.match_benchmark(benchmark_id, results, targets)
       benchmarks.append(benchmark)
-      samples = self._results.get_samples(results, targets)
+      samples = self._results.get_samples(benchmark.id, results, targets)
       prompt = self._results.get_prompt(benchmark.id)
 
       for sample in samples:
@@ -272,20 +274,22 @@ class GenerateReport:
     time_results = self.read_timings()
 
     unified_data = self._build_unified_data(benchmarks, projects)
+    repair_reports = self._load_repair_reports()
+    self._write_repair_evidence(repair_reports)
 
     self._write_index_html(benchmarks, accumulated_results, time_results,
                            projects, samples_with_bugs, coverage_language_gains,
-                           unified_data)
+                           unified_data, repair_reports)
 
     # Second pass: write all benchmark-specific pages
     for benchmark_id in self._results.list_benchmark_ids():
       results, targets = self._results.get_results(benchmark_id)
       benchmark = self._results.match_benchmark(benchmark_id, results, targets)
-      samples = self._results.get_samples(results, targets)
+      samples = self._results.get_samples(benchmark_id, results, targets)
       prompt = self._results.get_prompt(benchmark.id)
 
       self._write_benchmark_index(benchmark, samples, time_results, prompt,
-                                  unified_data)
+                                  unified_data, repair_reports)
       self._write_benchmark_crash(benchmark, samples)
 
       for sample in samples:
@@ -293,7 +297,8 @@ class GenerateReport:
         self._copy_and_set_coverage_report(benchmark, sample)
         crash_info = self._get_crash_info_from_run_logs(benchmark.id, sample)
         self._write_benchmark_sample(benchmark, sample, sample_targets,
-                                     crash_info, time_results, unified_data)
+                                     crash_info, time_results, unified_data,
+                                     repair_reports)
 
     self._write_index_json(benchmarks)
     self._write_unified_json(unified_data)
@@ -313,12 +318,43 @@ class GenerateReport:
     with FileSystem(full_path).open('w', encoding='utf-8') as f:
       f.write(content)
 
+  def _load_repair_reports(self) -> dict[str, dict[str, Any]]:
+    """Loads external build-repair artifacts from each benchmark directory."""
+    reports = {}
+    # These helpers are intentionally kept private because they are shared
+    # with the standalone repair report collector.
+    # pylint: disable=protected-access
+    for project_dir in fix_build_report._find_project_dirs(
+        Path(self.results_dir)):
+      record = fix_build_report._project_record(project_dir)
+      reports[project_dir.name] = record
+    return reports
+
+  def _write_repair_evidence(self,
+                             repair_reports: dict[str, dict[str, Any]]) -> None:
+    """Writes standalone repair evidence without blocking report generation."""
+    for benchmark_id, record in repair_reports.items():
+      encoded_id = urllib.parse.quote(benchmark_id, safe='')
+      evidence_dir = f'evidence/{benchmark_id}'
+      try:
+        self._write(f'{evidence_dir}/failure-chain.html',
+                    record['failure_chain_html'])
+        self._write(f'{evidence_dir}/patch.html', record['patch_html'])
+        record['failure_chain_url'] = (
+            f'evidence/{encoded_id}/failure-chain.html')
+        record['patch_url'] = f'evidence/{encoded_id}/patch.html'
+      except Exception as error:  # pylint: disable=broad-exception-caught
+        logging.error('Failed to write repair evidence for %s: %s',
+                      benchmark_id, error)
+        record['evidence_error'] = f'{type(error).__name__}: {error}'
+
   def _write_index_html(self, benchmarks: List[Benchmark],
                         accumulated_results: AccumulatedResult,
                         time_results: dict[str, Any], projects: list[Project],
                         samples_with_bugs: list[dict[str, Any]],
                         coverage_language_gains: dict[str,
-                                                      Any], unified_data: dict):
+                                                      Any], unified_data: dict,
+                        repair_reports: dict[str, dict[str, Any]]):
     """Generate the report index.html and write to filesystem."""
     index_css_content = self._read_static_file('index/index.css')
     index_js_content = self._read_static_file('index/index.js')
@@ -337,7 +373,9 @@ class GenerateReport:
         index_js_content=index_js_content,
         shared_css_content=shared_css_content,
         base_js_content=base_js_content,
-        unified_data=unified_data)
+        unified_data=unified_data,
+        repair_reports=repair_reports,
+        fix_build_mode=bool(repair_reports))
     self._write('index.html', rendered)
 
   def _write_index_json(self, benchmarks: List[Benchmark]):
@@ -347,7 +385,8 @@ class GenerateReport:
 
   def _write_benchmark_index(self, benchmark: Benchmark, samples: List[Sample],
                              time_results: dict[str, Any],
-                             prompt: Optional[str], unified_data: dict):
+                             prompt: Optional[str], unified_data: dict,
+                             repair_reports: dict[str, dict[str, Any]]):
     """Generate the benchmark index.html and write to filesystem."""
     benchmark_css_content = self._read_static_file('benchmark/benchmark.css')
     benchmark_js_content = self._read_static_file('benchmark/benchmark.js')
@@ -357,7 +396,8 @@ class GenerateReport:
     common_data = {
         "accumulated_results": self._results.get_macro_insights([benchmark]),
         "time_results": time_results,
-        "unified_data": unified_data
+        "unified_data": unified_data,
+        "repair_report": repair_reports.get(benchmark.id)
     }
 
     rendered = self._jinja.render('benchmark/benchmark.html',
@@ -368,6 +408,7 @@ class GenerateReport:
                                   benchmark_js_content=benchmark_js_content,
                                   shared_css_content=shared_css_content,
                                   base_js_content=base_js_content,
+                                  fix_build_mode=bool(repair_reports),
                                   **common_data)
     self._write(f'benchmark/{benchmark.id}/index.html', rendered)
 
@@ -387,7 +428,8 @@ class GenerateReport:
 
   def _write_benchmark_sample(self, benchmark: Benchmark, sample: Sample,
                               sample_targets: List[Target], crash_info: dict,
-                              time_results: dict[str, Any], unified_data: dict):
+                              time_results: dict[str, Any], unified_data: dict,
+                              repair_reports: dict[str, dict[str, Any]]):
     """Generate the sample page and write to filesystem."""
     try:
       # Ensure all required variables are available
@@ -405,7 +447,9 @@ class GenerateReport:
       common_data = {
           "accumulated_results": self._results.get_macro_insights([benchmark]),
           "time_results": time_results,
-          "unified_data": unified_data
+          "unified_data": unified_data,
+          "repair_report": repair_reports.get(benchmark.id),
+          "fix_build_mode": bool(repair_reports)
       }
       logs_parser = LogsParser(logs)
       agent_sections = logs_parser.get_agent_sections()
@@ -488,7 +532,7 @@ class GenerateReport:
 
     for benchmark in benchmarks:
       results, targets = self._results.get_results(benchmark.id)
-      samples = self._results.get_samples(results, targets)
+      samples = self._results.get_samples(benchmark.id, results, targets)
       samples_data = []
 
       benchmark_metrics = {

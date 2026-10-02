@@ -1,0 +1,13 @@
+project: checkstyle
+language: jvm
+error_time: '2026-05-28'
+oss-fuzz_sha: 766921e2cb58c43875ea5ee23eb35851a68b9294
+fuzzing_build_error_log: https://oss-fuzz-build-logs.storage.googleapis.com/log-7d00db82-6395-4b34-ba7f-261c91488c57.txt
+software_repo_url: https://github.com/checkstyle/checkstyle
+software_sha: b2bdb16487046bcde47f616aa6d294f2c774858a
+engine: libfuzzer
+sanitizer: address
+architecture: x86_64
+base_image_digest: faf82f89d369787259f5168c1ff95c42048a0beb7b9cf80d2ffe88c1b261c68d
+error_category: RC9
+fixed_state: 'no'

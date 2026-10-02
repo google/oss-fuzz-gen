@@ -1,0 +1,13 @@
+project: graphql-java
+language: jvm
+error_time: '2026-08-20'
+oss-fuzz_sha: 6a50925a5bd8e1bbc3b3b4d07e063cb817c10c83
+fuzzing_build_error_log: https://oss-fuzz-build-logs.storage.googleapis.com/log-c5311270-d57f-4d68-892f-4057e9661388.txt
+software_repo_url: https://github.com/graphql-java/graphql-java
+software_sha: 7509805d86584a1b72e5d4ca4e7d1b135de2d084
+engine: libfuzzer
+sanitizer: address
+architecture: x86_64
+base_image_digest: cc3c3da52c2f48d7a6caf1d5736ab8ec8cb213f4345329b33cb6e497780b1ed0
+error_category: RC12
+fixed_state: 'no'

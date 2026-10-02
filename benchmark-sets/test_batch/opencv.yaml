@@ -1,0 +1,13 @@
+project: opencv
+language: c++
+error_time: '2026-08-20'
+oss-fuzz_sha: 6a50925a5bd8e1bbc3b3b4d07e063cb817c10c83
+fuzzing_build_error_log: https://oss-fuzz-build-logs.storage.googleapis.com/log-bed665db-444c-431b-88c3-bb5789d0d574.txt
+software_repo_url: https://github.com/opencv/opencv.git
+software_sha: f918ba8849279b03e28139e02854b53523fada55
+engine: afl
+sanitizer: address
+architecture: x86_64
+base_image_digest: 8b4a73d83374b298a0a771eeec9a1d44ceff3416a678b7d7946303389d022aca
+error_category: RC13
+fixed_state: 'no'

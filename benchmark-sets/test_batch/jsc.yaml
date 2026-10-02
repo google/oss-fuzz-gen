@@ -1,0 +1,13 @@
+project: jsc
+language: c++
+error_time: '2026-08-22'
+oss-fuzz_sha: ee971a87480daf63a41aa1700409f9c575e8caa4
+fuzzing_build_error_log: https://oss-fuzz-build-logs.storage.googleapis.com/log-1ff4c75a-d2e4-4e29-84c2-109e4d720f3b.txt
+software_repo_url: https://github.com/WebKit/WebKit.git
+software_sha: 2cba6521075d9a3a968a4a00f5e352f6e578c61f
+engine: libfuzzer
+sanitizer: address
+architecture: x86_64
+base_image_digest: 8b4a73d83374b298a0a771eeec9a1d44ceff3416a678b7d7946303389d022aca
+error_category: RC14
+fixed_state: 'no'

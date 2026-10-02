@@ -1,0 +1,13 @@
+project: time
+language: go
+error_time: '2026-08-14'
+oss-fuzz_sha: 1671dec36453cdf32bbde283fab9dc005ac2bf2d
+fuzzing_build_error_log: https://oss-fuzz-build-logs.storage.googleapis.com/log-323c0e95-057a-4a61-ae68-dfa8a8003838.txt
+software_repo_url: https://github.com/facebook/time.git
+software_sha: 974c3bd1c14130157df6fc313f6365fbc0875a4e
+engine: libfuzzer
+sanitizer: address
+architecture: x86_64
+base_image_digest: e5e5ecf4fb18a2f47bf0462c37e35728e8f6023ee4b7ff8bc5f903e6acba46da
+error_category: RC13
+fixed_state: 'no'

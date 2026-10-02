@@ -1,0 +1,13 @@
+project: html5lib-python
+language: python
+error_time: '2026-02-09'
+oss-fuzz_sha: 4a96094d3e3d9efad421ee9e4a7e4d4c78526e9c
+fuzzing_build_error_log: https://oss-fuzz-build-logs.storage.googleapis.com/log-ef4bb32b-0d50-48af-994f-84415ce6e25f.txt
+software_repo_url: https://github.com/html5lib/html5lib-python
+software_sha: fd4f032bc090d44fb11a84b352dad7cbee0a4745
+engine: libfuzzer
+sanitizer: address
+architecture: x86_64
+base_image_digest: c5fd81433b8ceec0335387187152e856e401fa09e859ba778008e63be14d0701
+error_category: RC9
+fixed_state: 'no'

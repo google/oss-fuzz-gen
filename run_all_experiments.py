@@ -33,6 +33,7 @@ from data_prep import introspector
 from experiment import benchmark as benchmarklib
 from experiment import evaluator, oss_fuzz_checkout, textcov
 from experiment.workdir import WorkDirs
+from experimental.build_fixer import pre_repair
 from llm_toolkit import models, prompt_builder
 
 logger = logging.getLogger(__name__)
@@ -52,6 +53,8 @@ TEMPERATURE: float = run_one_experiment.TEMPERATURE
 RESULTS_DIR: str = run_one_experiment.RESULTS_DIR
 JSON_REPORT = 'report.json'
 TIME_STAMP_FMT = '%Y-%m-%d %H:%M:%S'
+BUNDLED_FIX_BUILD_AGENT_DIR = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)), 'fix_build_agent')
 
 WORK_DIR = ''
 
@@ -105,11 +108,11 @@ def prepare_experiment_targets(
     if args.generate_benchmarks:
       generate_benchmarks(args)
 
-    benchmark_yamls = [
+    benchmark_yamls = sorted([
         os.path.join(args.benchmarks_directory, file)
         for file in os.listdir(args.benchmarks_directory)
         if file.endswith('.yaml') or file.endswith('yml')
-    ]
+    ])
   experiment_configs = []
   for benchmark_file in benchmark_yamls:
     experiment_configs.extend(benchmarklib.Benchmark.from_yaml(benchmark_file))
@@ -117,10 +120,30 @@ def prepare_experiment_targets(
   return experiment_configs
 
 
+def _model_result_family(model_name: str) -> str:
+  """Returns the result directory family for a model."""
+  # Use the requested provider, rather than ambient credentials, to keep
+  # results from separate model runs in the correct directory.
+  normalized_name = (model_name or '').lower()
+  if 'deepseek' in normalized_name or normalized_name == 'openai_compatible':
+    return 'deepseek'
+  if 'gemini' in normalized_name:
+    return 'gemini'
+  return re.sub(r'[^A-Za-z0-9_.-]+', '-', model_name or 'default').strip('-')
+
+
+def _fix_build_project_work_dir(args, benchmark: benchmarklib.Benchmark) -> str:
+  safe_project = re.sub(r'[^A-Za-z0-9_.-]+', '-', benchmark.project).strip('-')
+  return os.path.join(args.work_dir, f'output-{safe_project}-build')
+
+
 def run_experiments(benchmark: benchmarklib.Benchmark, args) -> Result:
   """Runs an experiment based on the |benchmark| config."""
   try:
-    work_dirs = WorkDirs(os.path.join(args.work_dir, f'output-{benchmark.id}'))
+    work_dir = (_fix_build_project_work_dir(args, benchmark)
+                if args.fix_build_agent else os.path.join(
+                    args.work_dir, f'output-{benchmark.id}'))
+    work_dirs = WorkDirs(work_dir)
     args.work_dirs = work_dirs
     model = models.LLM.setup(
         ai_binary=args.ai_binary,
@@ -177,6 +200,13 @@ def parse_args() -> argparse.Namespace:
                       default='',
                       help='A gcloud bucket to store experiment files.')
   parser.add_argument('-b', '--benchmarks-directory', type=str)
+  parser.add_argument(
+      '--fix-build-benchmarks-directory',
+      type=str,
+      default='',
+      help=('Directory containing project metadata YAML files for '
+            '--fix-build-agent runs. This is a clearer alias for '
+            '--benchmarks-directory in build repair mode.'))
   parser.add_argument('-y',
                       '--benchmark-yaml',
                       type=str,
@@ -251,6 +281,80 @@ def parse_args() -> argparse.Namespace:
                       action='store_true',
                       default=False,
                       help='Enables agent enhancement.')
+  parser.add_argument('--fix-build-agent',
+                      action='store_true',
+                      default=False,
+                      help='Enables OSS-Fuzz project build repair mode.')
+  parser.add_argument(
+      '--fix-build-acquire-and-extract',
+      action='store_true',
+      default=False,
+      help=('Runs the opt-in predecessor: acquire recent OSS-Fuzz build logs, '
+            'extract repair metadata, then generate benchmark inputs. This '
+            'replaces the static repair benchmark inputs.'))
+  parser.add_argument(
+      '--fix-build-acquire-logs',
+      action='store_true',
+      default=False,
+      help=('Acquires OSS-Fuzz build logs only. Without '
+            '--pre-repair-project, scans all currently failing projects.'))
+  parser.add_argument(
+      '--fix-build-reproduce-and-extract',
+      action='store_true',
+      default=False,
+      help=('Extracts repair metadata from selected acquired logs and writes '
+            'benchmark YAML files. Historical build reproduction is opt-in.'))
+  parser.add_argument(
+      '--pre-repair-verify-reproduction',
+      action='store_true',
+      default=False,
+      help=('Also performs the expensive historical build reproduction and '
+            'records Vertex comparison evidence. This never gates complete '
+            'metadata.'))
+  parser.add_argument('--pre-repair-log-dir',
+                      type=str,
+                      default='',
+                      help=('Existing acquired-log directory for '
+                            '--fix-build-reproduce-and-extract.'))
+  parser.add_argument(
+      '--pre-repair-project',
+      action='append',
+      default=[],
+      help=('Restricts log acquisition and/or reproduction to one OSS-Fuzz '
+            'project. May be specified multiple times.'))
+  parser.add_argument(
+      '--pre-repair-acquisition-mode',
+      choices=('key', 'all'),
+      default='key',
+      help=('Log acquisition scope. "key" keeps projects whose latest seven '
+            'build records contain both success and failure; "all" attempts '
+            'every currently failing project and includes its last successful '
+            'build when available.'))
+  parser.add_argument(
+      '--full-fix-build-agent',
+      action='store_true',
+      default=False,
+      help=('Runs the bundled full fix_build_agent workflow instead of the '
+            'compact integrated build-script fixer.'))
+  parser.add_argument(
+      '--external-fix-build-agent-path',
+      type=str,
+      default='',
+      help=('Path to a fix_build_agent checkout. This is optional when '
+            '--full-fix-build-agent is used because oss-fuzz-gen includes a '
+            'bundled fix_build_agent directory.'))
+  parser.add_argument(
+      '--fix-build-optimize-patch',
+      action='store_true',
+      default=False,
+      help=('Runs the optional post-success patch optimizer in the full '
+            'fix-build-agent workflow.'))
+  parser.add_argument(
+      '--fix-build-optimization-max-iterations',
+      type=int,
+      default=3,
+      help=('Maximum accepted patch-optimization iterations for each '
+            'successfully repaired project.'))
   parser.add_argument('--custom-pipeline', type=str, default='')
   parser.add_argument('-mr',
                       '--max-round',
@@ -259,11 +363,75 @@ def parse_args() -> argparse.Namespace:
                       help='Max trial round for agents.')
 
   args = parser.parse_args()
+  if args.fix_build_benchmarks_directory:
+    assert args.fix_build_agent, (
+        '--fix-build-benchmarks-directory requires --fix-build-agent.')
+    assert not args.benchmarks_directory, (
+        'Use only one of --fix-build-benchmarks-directory and '
+        '--benchmarks-directory.')
+    args.benchmarks_directory = args.fix_build_benchmarks_directory
+
   if args.num_samples:
     assert args.num_samples > 0, '--num-samples must take a positive integer.'
 
   if args.temperature:
     assert 2 >= args.temperature >= 0, '--temperature must be within 0 and 2.'
+
+  if args.full_fix_build_agent:
+    assert args.fix_build_agent, (
+        '--full-fix-build-agent requires --fix-build-agent.')
+    if not args.external_fix_build_agent_path:
+      args.external_fix_build_agent_path = BUNDLED_FIX_BUILD_AGENT_DIR
+
+  if args.fix_build_acquire_and_extract:
+    assert args.fix_build_agent and args.full_fix_build_agent, (
+        '--fix-build-acquire-and-extract requires --fix-build-agent and '
+        '--full-fix-build-agent.')
+    assert args.model.lower().startswith('vertex_ai_'), (
+        '--fix-build-acquire-and-extract requires a Vertex AI model because '
+        'the reproduction verifier uses Vertex ADC.')
+    # Preserve the prior combined flag while exposing each phase separately.
+    args.fix_build_acquire_logs = True
+    args.fix_build_reproduce_and_extract = True
+
+  if args.fix_build_reproduce_and_extract:
+    assert args.model.lower().startswith('vertex_ai_'), (
+        '--fix-build-reproduce-and-extract requires a Vertex AI model '
+        'because the error classifier uses Vertex ADC.')
+  if args.pre_repair_verify_reproduction:
+    assert args.fix_build_reproduce_and_extract, (
+        '--pre-repair-verify-reproduction requires '
+        '--fix-build-reproduce-and-extract.')
+  if args.pre_repair_log_dir:
+    assert args.fix_build_reproduce_and_extract, (
+        '--pre-repair-log-dir requires --fix-build-reproduce-and-extract.')
+    assert not args.fix_build_acquire_logs, (
+        '--pre-repair-log-dir cannot be combined with '
+        '--fix-build-acquire-logs; the latter already produces the input.')
+  if (args.fix_build_reproduce_and_extract and not args.fix_build_acquire_logs):
+    assert args.pre_repair_log_dir, (
+        '--fix-build-reproduce-and-extract requires --pre-repair-log-dir '
+        'unless --fix-build-acquire-logs is also set.')
+  if args.pre_repair_project:
+    assert (args.fix_build_acquire_logs or
+            args.fix_build_reproduce_and_extract), (
+                '--pre-repair-project requires a pre-repair phase.')
+  if args.pre_repair_acquisition_mode != 'key':
+    assert args.fix_build_acquire_logs, (
+        '--pre-repair-acquisition-mode requires --fix-build-acquire-logs.')
+
+  if args.fix_build_optimize_patch:
+    assert args.fix_build_agent and args.full_fix_build_agent, (
+        '--fix-build-optimize-patch requires --fix-build-agent and '
+        '--full-fix-build-agent.')
+  assert args.fix_build_optimization_max_iterations >= 1, (
+      '--fix-build-optimization-max-iterations must be at least 1.')
+
+  if args.external_fix_build_agent_path:
+    assert args.fix_build_agent, (
+        '--external-fix-build-agent-path requires --fix-build-agent.')
+    assert os.path.isdir(args.external_fix_build_agent_path), (
+        '--external-fix-build-agent-path must be an existing directory.')
 
   benchmark_yaml = args.benchmark_yaml
   if benchmark_yaml:
@@ -275,11 +443,18 @@ def parse_args() -> argparse.Namespace:
   bench_dir = bool(args.benchmarks_directory)
   bench_gen = bool(args.generate_benchmarks)
   num_options = int(bench_yml) + int(bench_dir) + int(bench_gen)
-  assert num_options == 1, (
+  pre_repair_requested = (args.fix_build_acquire_logs or
+                          args.fix_build_reproduce_and_extract)
+  assert (num_options <= 1 if pre_repair_requested else num_options == 1), (
       'One and only one of --benchmark-yaml, --benchmarks-directory and '
       '--generate-benchmarks. --benchmark-yaml takes one benchmark YAML file, '
       '--benchmarks-directory takes: a directory of them and '
       '--generate-benchmarks generates them during analysis.')
+  if (args.fix_build_agent and args.fix_build_acquire_logs and
+      not args.fix_build_reproduce_and_extract):
+    assert num_options == 1, (
+        'A repair run after --fix-build-acquire-logs needs either '
+        '--fix-build-reproduce-and-extract or one static benchmark input.')
 
   # Validate templates.
   assert os.path.isdir(args.template_directory), (
@@ -522,10 +697,15 @@ def _process_total_coverage_gain() -> dict[str, dict[str, Any]]:
   return coverage_gain
 
 
-def main():
+def main() -> int:
   global WORK_DIR
 
   args = parse_args()
+  user_supplied_work_dir = any(
+      arg in ('-w', '--work-dir') or arg.startswith('--work-dir=')
+      for arg in sys.argv[1:])
+  if args.fix_build_agent and not user_supplied_work_dir:
+    args.work_dir = RESULTS_DIR
   _setup_logging(args.log_level, is_cloud=args.cloud_experiment_name != '')
   logger.info('Starting experiments on PR branch')
 
@@ -535,19 +715,80 @@ def main():
                      time.strftime(TIME_STAMP_FMT, time.gmtime(start)))
   # Add num_samples to report.json
   add_to_json_report(args.work_dir, 'num_samples', args.num_samples)
+  add_to_json_report(args.work_dir, 'fix_build_agent', args.fix_build_agent)
 
   # Set introspector endpoint before performing any operations to ensure the
   # right API endpoint is used throughout.
   introspector.set_introspector_endpoints(args.introspector_endpoint)
 
-  run_one_experiment.prepare(args.oss_fuzz_dir)
+  acquisition_only = (args.fix_build_acquire_logs and
+                      not args.fix_build_reproduce_and_extract and
+                      not args.fix_build_agent)
+  if not acquisition_only:
+    run_one_experiment.prepare(args.oss_fuzz_dir)
+
+  acquired_log_dir = ''
+  generated_dir = ''
+  if args.fix_build_acquire_logs:
+    try:
+      acquired_log_dir = str(
+          pre_repair.run_log_acquisition(args.work_dir, args.pre_repair_project,
+                                         args.pre_repair_acquisition_mode))
+    except Exception as error:
+      logger.error('Pre-repair log acquisition failed: %s', error)
+      traceback.print_exc()
+      add_to_json_report(args.work_dir, 'pre_repair_acquisition_status',
+                         'failed')
+      return 1
+    add_to_json_report(args.work_dir, 'pre_repair_acquisition_status',
+                       'completed')
+    add_to_json_report(args.work_dir, 'pre_repair_acquired_log_directory',
+                       acquired_log_dir)
+
+  if args.fix_build_reproduce_and_extract:
+    log_directory = acquired_log_dir or args.pre_repair_log_dir
+    try:
+      generated_dir = str(
+          pre_repair.run_reproduction_and_extraction(
+              args.work_dir,
+              oss_fuzz_checkout.OSS_FUZZ_DIR,
+              args.model,
+              log_directory,
+              args.pre_repair_project,
+              verify_reproduction=args.pre_repair_verify_reproduction))
+    except Exception as error:
+      logger.error('Pre-repair reproduction and extraction failed: %s', error)
+      traceback.print_exc()
+      add_to_json_report(args.work_dir, 'pre_repair_extraction_status',
+                         'failed')
+      return 1
+    args.benchmark_yaml = ''
+    args.benchmarks_directory = generated_dir
+    add_to_json_report(args.work_dir, 'pre_repair_extraction_status',
+                       'completed')
+    add_to_json_report(args.work_dir, 'pre_repair_benchmark_directory',
+                       generated_dir)
+
+  if ((args.fix_build_acquire_logs or args.fix_build_reproduce_and_extract) and
+      not args.fix_build_agent):
+    end = time.time()
+    add_to_json_report(args.work_dir, 'completion_time',
+                       time.strftime(TIME_STAMP_FMT, time.gmtime(end)))
+    add_to_json_report(args.work_dir, 'total_run_time',
+                       str(timedelta(seconds=end - start)))
+    return 0
 
   experiment_targets = prepare_experiment_targets(args)
+  if args.fix_build_agent:
+    oss_fuzz_checkout.ENABLE_CACHING = False
+  num_exp = NUM_EXP
+  if args.fix_build_agent and args.full_fix_build_agent:
+    num_exp = 1
   if oss_fuzz_checkout.ENABLE_CACHING:
     oss_fuzz_checkout.prepare_cached_images(experiment_targets)
 
   logger.info('Running %s experiment(s) in parallels of %s.',
-              len(experiment_targets), str(NUM_EXP))
+              len(experiment_targets), str(num_exp))
 
   # Set global variables that are updated throughout experiment runs.
   WORK_DIR = args.work_dir
@@ -558,14 +799,14 @@ def main():
   coverage_gains_process.start()
 
   experiment_results = []
-  if NUM_EXP == 1:
+  if num_exp == 1:
     for target_benchmark in experiment_targets:
       result = run_experiments(target_benchmark, args)
       _print_experiment_result(result)
       experiment_results.append(result)
   else:
     experiment_tasks = []
-    with Pool(NUM_EXP, maxtasksperchild=1) as p:
+    with Pool(num_exp, maxtasksperchild=1) as p:
       for target_benchmark in experiment_targets:
         experiment_task = p.apply_async(run_experiments,
                                         (target_benchmark, args),
@@ -595,6 +836,7 @@ def main():
 
   coverage_gain_dict = _process_total_coverage_gain()
   _print_experiment_results(experiment_results, coverage_gain_dict)
+  return 0
 
 
 if __name__ == '__main__':

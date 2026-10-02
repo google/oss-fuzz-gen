@@ -1,0 +1,13 @@
+project: publicsuffix-list
+language: go
+error_time: '2026-05-28'
+oss-fuzz_sha: 766921e2cb58c43875ea5ee23eb35851a68b9294
+fuzzing_build_error_log: https://oss-fuzz-build-logs.storage.googleapis.com/log-b237a9c5-f5ae-41ec-bbe7-927b74034387.txt
+software_repo_url: https://github.com/publicsuffix/list
+software_sha: d61ebea91366dabf4c14e3a17e197d3c9558947e
+engine: libfuzzer
+sanitizer: address
+architecture: x86_64
+base_image_digest: eb5c93a296510c9d159cd9091e72d6a2e00aef974f13785237f4fbecacc7ad4a
+error_category: RC12
+fixed_state: 'no'

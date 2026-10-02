@@ -28,10 +28,12 @@ class ProjectContainerTool(BaseTool):
   def __init__(self,
                benchmark: Benchmark,
                name: str = '',
-               project_name: str = '') -> None:
+               project_name: str = '',
+               image_name: str = '') -> None:
     super().__init__(benchmark, name)
     self.project_name = project_name or benchmark.project
-    self.image_name = self._prepare_project_image(self.project_name)
+    self.image_name = image_name or self._prepare_project_image(
+        self.project_name)
     self.container_id = self._start_docker_container()
     self.build_script_path = '/src/build.sh'
     self._backup_default_build_script()

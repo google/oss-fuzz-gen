@@ -1,0 +1,278 @@
+.repair-detail-card {
+    margin-bottom: 2rem;
+    padding: 1.25rem;
+    border: 1px solid #dbeafe;
+    border-radius: 0.75rem;
+    background: linear-gradient(135deg, #f8fbff 0%, #ffffff 60%, #f0fdf4 100%);
+}
+
+.repair-eyebrow, .repair-step-label {
+    color: #64748b;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.repair-chain {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr);
+    align-items: stretch;
+    gap: 0.75rem;
+    margin-top: 1.25rem;
+}
+
+.repair-chain-step {
+    min-width: 0;
+    padding: 1rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.6rem;
+    background: rgba(255, 255, 255, 0.8);
+}
+
+.repair-chain-step p, .repair-reason p {
+    margin-top: 0.5rem;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+
+.repair-chain-connector {
+    display: flex;
+    align-items: center;
+    font-size: 1.25rem;
+}
+
+.repair-chain-root {
+    border-color: #bbf7d0;
+}
+
+.repair-chain-root small {
+    color: #64748b;
+}
+
+.repair-evidence-list {
+    margin-top: 0.5rem;
+    padding-left: 1.1rem;
+    list-style: disc;
+}
+
+.repair-evidence-list li {
+    margin-bottom: 0.35rem;
+    overflow-wrap: anywhere;
+}
+
+.repair-muted {
+    color: #64748b;
+}
+
+.repair-warning {
+    margin: 1rem 0;
+    padding: .75rem 1rem;
+    border: 1px solid #f59e0b;
+    border-radius: .5rem;
+    background: #fffbeb;
+    color: #92400e;
+}
+
+.repair-warning strong, .repair-warning code, .repair-warning p {
+    display: block;
+    margin: .25rem 0;
+}
+
+.repair-reason {
+    margin-top: 1rem;
+    padding: 1rem;
+    border-left: 4px solid #60a5fa;
+    background: #eff6ff;
+}
+
+.repair-pr-summary {
+    margin-top: 1rem;
+    padding: 1rem;
+    border-left: 4px solid #22c55e;
+    background: #f0fdf4;
+}
+
+.repair-pr-summary p {
+    margin-top: .5rem;
+    line-height: 1.6;
+}
+
+.repair-metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+    gap: 0.75rem;
+    margin-top: 1rem;
+}
+
+.repair-metrics div {
+    padding: 0.8rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.5rem;
+    background: rgba(255, 255, 255, 0.75);
+}
+
+.repair-metrics span, .repair-metrics strong {
+    display: block;
+}
+
+.repair-metrics span {
+    color: #64748b;
+    font-size: 0.75rem;
+}
+
+.repair-metrics strong {
+    margin-top: 0.25rem;
+    overflow-wrap: anywhere;
+}
+
+.repair-patches {
+    margin-top: 1rem;
+    border-top: 1px solid #dbeafe;
+    padding-top: 1rem;
+}
+
+.repair-patches summary {
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.repair-evidence-section {
+    margin-top: 1rem;
+    border-top: 1px solid #dbeafe;
+    padding-top: 1rem;
+}
+
+.repair-evidence-section summary {
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.repair-metadata-grid {
+    display: grid;
+    grid-template-columns: minmax(10rem, auto) minmax(0, 1fr);
+    gap: .4rem 1rem;
+    margin-top: .75rem;
+}
+
+.repair-metadata-grid dt {
+    color: #64748b;
+    font-weight: 600;
+}
+
+.repair-metadata-grid dd {
+    margin: 0;
+    overflow-wrap: anywhere;
+}
+
+.repair-validation-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+    gap: .6rem;
+    margin-top: .75rem;
+}
+
+.repair-validation-grid div {
+    padding: .7rem;
+    border: 1px solid #e2e8f0;
+    border-radius: .5rem;
+}
+
+.repair-validation-grid span,
+.repair-validation-grid strong {
+    display: block;
+}
+
+.repair-validation-grid span {
+    color: #64748b;
+    font-size: .75rem;
+}
+
+.repair-pass { color: #15803d; }
+.repair-fail { color: #b91c1c; }
+.repair-neutral { color: #a16207; }
+
+.repair-trace-node {
+    margin-top: .75rem;
+    padding: .8rem;
+    border: 1px solid #e2e8f0;
+    border-radius: .5rem;
+}
+
+.repair-trace-node h3 {
+    margin-bottom: .5rem;
+    font-weight: 700;
+}
+
+.repair-trace-grid {
+    display: grid;
+    grid-template-columns: minmax(7rem, auto) 1fr;
+    gap: .35rem .75rem;
+}
+
+.repair-trace-grid dt {
+    color: #64748b;
+    font-size: .8rem;
+}
+
+.repair-trace-grid dd {
+    margin: 0;
+    overflow-wrap: anywhere;
+}
+
+.repair-log-block {
+    max-height: 28rem;
+    overflow: auto;
+    margin-top: .75rem;
+    padding: 1rem;
+    border-radius: .5rem;
+    background: #0f172a;
+    color: #e2e8f0;
+    font-size: .78rem;
+    line-height: 1.45;
+    white-space: pre-wrap;
+}
+
+.repair-patch-block p {
+    margin: 1rem 0 0.35rem;
+    color: #475569;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.repair-patch-block pre {
+    max-height: 28rem;
+    overflow: auto;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    background: #0f172a;
+    color: #e2e8f0;
+    font-size: 0.78rem;
+    line-height: 1.45;
+    white-space: pre;
+}
+
+@media (max-width: 900px) {
+    .repair-chain {
+        grid-template-columns: 1fr;
+    }
+
+    .repair-chain-connector {
+        justify-content: center;
+        transform: rotate(90deg);
+    }
+}
+
+.dark-mode .repair-detail-card {
+    border-color: #1e3a5f;
+    background: linear-gradient(135deg, #172033 0%, #292929 60%, #13251b 100%);
+}
+
+.dark-mode .repair-chain-step, .dark-mode .repair-metrics div {
+    border-color: #3d4a5c;
+    background: rgba(41, 41, 41, 0.75);
+}
+
+.dark-mode .repair-reason {
+    background: #172033;
+}

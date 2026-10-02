@@ -1,0 +1,13 @@
+project: opentelemetry-go-contrib
+language: go
+error_time: '2026-08-27'
+oss-fuzz_sha: e004f85123eab0ba61ba5371c857239f97c1df27
+fuzzing_build_error_log: https://oss-fuzz-build-logs.storage.googleapis.com/log-27a20e48-f96b-4824-9bf4-860fbd641f56.txt
+software_repo_url: https://github.com/open-telemetry/opentelemetry-go-contrib
+software_sha: 61fefc42863b02880b20caf4e9884c42193dc3e3
+engine: libfuzzer
+sanitizer: address
+architecture: x86_64
+base_image_digest: e5e5ecf4fb18a2f47bf0462c37e35728e8f6023ee4b7ff8bc5f903e6acba46da
+error_category: RC13
+fixed_state: 'no'

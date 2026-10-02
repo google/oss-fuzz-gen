@@ -94,6 +94,13 @@ class Benchmark:
     functions = data.get('functions', [])
 
     test_files = data.get('test_files', [])
+    metadata = {
+        key: value for key, value in data.items() if key not in {
+            'project', 'language', 'target_path', 'target_name', 'functions',
+            'test_files', 'use_context', 'use_project_examples',
+            'cppify_headers', 'commit'
+        }
+    }
     if test_files:
       for test_file in test_files:
         max_len = os.pathconf('/', 'PC_NAME_MAX') - len('output-')
@@ -114,6 +121,7 @@ class Benchmark:
                 data['target_path'],
                 data.get('target_name', ''),
                 test_file_path=test_file_path,
+                metadata=metadata,
             ))
 
     if functions:
@@ -141,7 +149,26 @@ class Benchmark:
                 cppify_headers=cppify_headers,
                 commit=commit,
                 use_context=use_context,
-                function_dict=function))
+                function_dict=function,
+                metadata=metadata))
+
+    if not functions and not test_files:
+      max_len = os.pathconf('/', 'PC_NAME_MAX') - len('output-')
+      truncated_id = project_name[:max_len]
+      benchmarks.append(
+          cls(truncated_id.lower(),
+              data['project'],
+              data.get('language', ''),
+              '',
+              '',
+              '', [],
+              data.get('target_path', ''),
+              data.get('target_name', ''),
+              use_project_examples=use_project_examples,
+              cppify_headers=cppify_headers,
+              commit=commit,
+              use_context=use_context,
+              metadata=metadata))
 
     return benchmarks
 
@@ -160,7 +187,8 @@ class Benchmark:
                use_context=False,
                commit=None,
                function_dict: Optional[dict] = None,
-               test_file_path: str = ''):
+               test_file_path: str = '',
+               metadata: Optional[dict[str, Any]] = None):
     self.id = benchmark_id
     self.project = project
     self.language = language
@@ -169,6 +197,7 @@ class Benchmark:
     self.return_type = return_type
     self.params = params
     self.function_dict = function_dict
+    self.metadata = metadata or {}
     self.target_path = target_path
     self._preferred_target_name = preferred_target_name
     self.use_project_examples = use_project_examples

@@ -1,0 +1,11 @@
+project: bind9
+language: c
+error_time: "2025-11-28"
+oss_fuzz_sha: efba8534530bb3d25992da845e74006f96e46873
+fuzzing_build_error_log: https://oss-fuzz-build-logs.storage.googleapis.com/log-8ed4ca2b-07c5-4a40-bef8-720e715babfb.txt
+software_repo_url: https://gitlab.isc.org/isc-projects/bind9.git
+software_sha: d441e14cbf7f56619b3381e170cc2db24be5b48d
+engine: libfuzzer
+sanitizer: address
+architecture: x86_64
+base_image_digest: f51f7e08f410e2d4453693bb0cae3f6bdc53470e8b6bf33ae10fd98757f4e35c

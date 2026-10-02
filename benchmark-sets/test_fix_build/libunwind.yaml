@@ -1,0 +1,13 @@
+project: libunwind
+language: c
+error_time: '2026-08-30'
+oss-fuzz_sha: 461f5c9696f361a10633538dd74cf62825e3dc61
+fuzzing_build_error_log: https://oss-fuzz-build-logs.storage.googleapis.com/log-4d46a3ff-db50-45f2-ac15-c5dc483a9c97.txt
+software_repo_url: https://github.com/libunwind/libunwind
+software_sha: 54326ba759d82bdefa117a6d6fd8350a04787559
+engine: afl
+sanitizer: address
+architecture: x86_64
+base_image_digest: 8b4a73d83374b298a0a771eeec9a1d44ceff3416a678b7d7946303389d022aca
+error_category: RC14
+fixed_state: 'no'

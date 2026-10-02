@@ -110,6 +110,10 @@ Your task is to fix the build.sh script so that the project can be built success
 This is an **interactive process**. You must request commands to be run inside the Docker container to discover this information.
 
 You are limited to **{MAX_DISCOVERY_ROUND} discovery rounds**, so plan efficiently.
+When you have enough evidence for a plausible fix, output `<bash>` immediately
+instead of continuing to inspect the project. If you are in the final discovery
+round, you must output a complete `<bash>` build script and must not request
+more `<command>` tags.
 
 Your result must only contain these XML tags. **NOTHING MORE**.
 - `<command></command>` – Use to request shell commands that will be executed in the container. You may include multiple semicolon-separated commands per tag, or use multiple tags.
@@ -137,6 +141,21 @@ The target codebase must be build from scratch, meaning you should not install t
 If the build script does not unconditionally install the target codebase then the build script is not correct.
 Make sure to install the target codebase and avoid using packages already in installed in the Docker image.
 Avoid using `pip install .` and always use `python3 -m pip install .` instead.
+Some Python projects build Rust extensions through maturin or setuptools-rust.
+If Cargo is missing or a `/usr/local/bin/cargo` wrapper points to a missing
+toolchain, install a usable Rust toolchain in the build script and ensure PATH
+selects that toolchain before running `python3 -m pip install .`. If OSS-Fuzz
+injects Rust sanitizer flags that require nightly Rust, either use a compatible
+nightly toolchain or clear/adjust `RUSTFLAGS` for Python package installation
+when that is necessary for a successful fuzzer build.
+'''
+
+FINAL_BUILD_SCRIPT_REQUIRED = '''
+You have reached the final response opportunity for this repair attempt.
+Use the command output already collected and return one complete build script.
+Your response must contain exactly one XML tag:
+<bash></bash>
+Do not request more <command> tags.
 '''
 
 LLM_RETRY = '''

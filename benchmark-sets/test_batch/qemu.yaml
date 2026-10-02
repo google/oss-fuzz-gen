@@ -1,0 +1,13 @@
+project: qemu
+language: c
+error_time: '2026-09-04'
+oss-fuzz_sha: 9c5538b28ec64362a9a6d17ed4aefb624d54732c
+fuzzing_build_error_log: https://oss-fuzz-build-logs.storage.googleapis.com/log-c0d78d53-0af7-4f51-8b60-3395a8d60c52.txt
+software_repo_url: https://git.qemu.org/git/qemu.git
+software_sha: 99e54ab5e7a6efc945af6d5661842155d1f3fc7a
+engine: libfuzzer
+sanitizer: address
+architecture: x86_64
+base_image_digest: 8b4a73d83374b298a0a771eeec9a1d44ceff3416a678b7d7946303389d022aca
+error_category: RC3
+fixed_state: 'no'

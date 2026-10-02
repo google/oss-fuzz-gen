@@ -1,0 +1,13 @@
+project: bls-signatures
+language: c++
+error_time: '2026-05-28'
+oss-fuzz_sha: 766921e2cb58c43875ea5ee23eb35851a68b9294
+fuzzing_build_error_log: https://oss-fuzz-build-logs.storage.googleapis.com/log-f3a44937-5c83-4d7b-9bf1-aaaa6db6ba00.txt
+software_repo_url: https://github.com/MozillaSecurity/cryptofuzz
+software_sha: 75e52bea13eefd6fee276468a92ae7e47f1f209a
+engine: afl
+sanitizer: address
+architecture: x86_64
+base_image_digest: 35767be864a85d01496cda483b869e50f1e62730e27e6ce37ff2304aa1242be1
+error_category: RC13
+fixed_state: 'no'
