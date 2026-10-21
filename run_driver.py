@@ -34,7 +34,8 @@ def parse_args():
     global NUM_TRIALS, APPROACHES, RUN_TIMEOUT, POOL_SIZE
     parser = argparse.ArgumentParser()
     parser.add_argument("-p", "--project", type=str, required=True)
-    parser.add_argument("-a", "--approach", type=str, choices=APPROACHES, nargs="+")
+    parser.add_argument("-a", "--approach", type=str, nargs="+",
+                        help=f"Harness dirs in fuzzing_trials/target_src/<project>/ (default: {APPROACHES})")
     parser.add_argument("-ft", "--fuzz-timeout", type=int)
     parser.add_argument("-nt", "--num-trials", type=int)
     parser.add_argument("-ps", "--pool-size", type=int)
@@ -53,6 +54,15 @@ def parse_args():
 
     if args.approach:
         APPROACHES = args.approach
+
+    project_src = os.path.join(RUNNER_DIR, "fuzzing_trials", "target_src", args.project)
+    missing = [a for a in APPROACHES if not os.path.isdir(os.path.join(project_src, a))]
+    if missing:
+        parser.error(f"no harness dir for approach(es) {missing} in {project_src}")
+    hyphenated = [a for a in APPROACHES if "-" in a]
+    if hyphenated:
+        parser.error(f"approach names {hyphenated} contain '-', which breaks parsing of "
+                     "output-<project>-<approach>-<trial> result dirs")
 
     if args.num_trials:
         NUM_TRIALS = args.num_trials
