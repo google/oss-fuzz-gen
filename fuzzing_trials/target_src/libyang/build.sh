@@ -15,8 +15,6 @@
 #
 ################################################################################
 
-git checkout 8a07083d78dbb779fe449d6b1fc17ccfda733cf9
-
 mkdir build && cd build
 cmake -DBUILD_SHARED_LIBS=OFF -DENABLE_TOOLS=OFF ..
 make
@@ -31,7 +29,7 @@ if [ "$SANITIZER" = "address" ]; then
   CXXFLAGS="$CXXFLAGS -O0"
 fi
 
-static_pcre=($(find /src/pcre2 -name "libpcre2-8.a"))
+static_pcre=($(find /src/pcre2-10.44 -name "libpcre2-8.a"))
 
 for fuzzer in lyd_parse_mem_xml; do
   $CC $CFLAGS -o ${fuzzer}.o -r /src/synthesized_driver/*.c* -I./libyang -I./compat
