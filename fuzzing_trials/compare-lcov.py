@@ -80,7 +80,8 @@ def find_cov_report_for_dir(base_dir: Path, report_subdir: str, pattern: str = "
         return None
     matches = list(cov_dir.rglob(pattern))
     print(matches, report_subdir, base_dir)
-    assert len(matches) == 1
+    if len(matches) != 1:
+        return None
     return matches[0]
 
 def collect_cov_for_tool(appr: str, trial_dirs: Iterable[Path], baseline: bool = False) -> Dict[int, Set[str]]:
@@ -269,6 +270,17 @@ def summarize_pre_vs_post(pre_results_by_tool: Dict[str, Dict[int, Set[str]]], p
 
     print(spreadsheet_str)
 
+LEGACY_TOOLS = ["bluebird_ofg", "ofg", "bluebird_promefuzz", "promefuzz", "ogharn"]
+
+def summarize_totals(results_by_tool: Dict[str, Dict[int, Set[str]]]):
+    """
+    Print per-trial total branch coverage for each tool, plus the union across trials.
+    """
+    for tool in sorted(results_by_tool):
+        trial_map = results_by_tool[tool]
+        per_trial = "  ".join(f"t{t}={len(trial_map[t])}" for t in sorted(trial_map))
+        print(f"{tool:>40}  {per_trial}  union={len(union_all(trial_map))}")
+
 # --- high-level compare that user requested --------------------------------
 
 def compare_pre_post_for_all_tools(pre_all: Dict[str, Dict[int, Set[str]]],
@@ -300,30 +312,31 @@ def main() -> None:
     if not results_dir.exists():
         print(f"ERROR: results dir {results_dir} does not exist", file=sys.stderr)
         sys.exit(2)
-    BENCHMARK_NAME = results_dir.name.split("results-")[-1]
-    
-
-    all_dirs = list(results_dir.iterdir())
-    bluebird_ofg_dirs = [p for p in all_dirs if "bluebird_ofg" in p.name]
-    bluebird_promefuzz_dirs = [p for p in all_dirs if "bluebird_promefuzz" in p.name]
-    ofg_dirs = [p for p in all_dirs if "ofg" in p.name and "bluebird_ofg" not in p.name]
-    ogharn_dirs = [p for p in all_dirs if "ogharn" in p.name]
-    promefuzz_dirs = [p for p in all_dirs if "promefuzz" in p.name and "bluebird_promefuzz" not in p.name]
-
-    tool_dirs = {
-        "bluebird_ofg": bluebird_ofg_dirs,
-        "bluebird_promefuzz": bluebird_promefuzz_dirs,
-        "ofg": ofg_dirs,
-        "ogharn": ogharn_dirs,
-        "promefuzz": promefuzz_dirs,
-    }
+    # Trial dirs are named output-<benchmark>-<approach>-<trial>. The benchmark
+    # may contain '-' (e.g. libjpeg-turbo) but the approach never does.
+    tool_dirs: Dict[str, List[Path]] = {}
+    for p in results_dir.iterdir():
+        if not p.is_dir() or not p.name.startswith("output-"):
+            continue
+        parts = p.name[len("output-"):].rsplit("-", 2)
+        if len(parts) != 3:
+            print(f"WARNING: unexpected directory name '{p.name}' - skipping", file=sys.stderr)
+            continue
+        BENCHMARK_NAME = parts[0]
+        tool_dirs.setdefault(parts[1], []).append(p)
 
     # process post-fuzzing and pre-fuzzing (baseline)
     post_results_by_tool = process_and_report(tool_dirs, baseline=False)
     # pre_results_by_tool = process_and_report(tool_dirs, baseline=True)
 
-    print("\nPOST-FUZZING SUMMARY")
-    summarize_tools(post_results_by_tool)
+    if any(t in LEGACY_TOOLS for t in post_results_by_tool):
+        print("\nPOST-FUZZING SUMMARY")
+        summarize_tools(post_results_by_tool)
+
+    other_results = {t: r for t, r in post_results_by_tool.items() if t not in LEGACY_TOOLS}
+    if other_results:
+        print("\nTOTAL COVERAGE (branches hit)")
+        summarize_totals(other_results)
     
     # print("\nSUBTRACTED BASELINE COVERAGE")
     # summarize_pre_vs_post(pre_results_by_tool, post_results_by_tool)
