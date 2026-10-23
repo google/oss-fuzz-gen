@@ -18,7 +18,7 @@ from memory_helper.cloudsql import (knn_search_error_full_with_norm,
                                     maybe_register_fix_episode,
                                     random_search_error_full_with_norm,
                                     update_stats_from_buffer)
-from memory_helper.errors import (ERROR_SIGNATURE, classify_error, find_anchor)
+from memory_helper.errors import ERROR_SIGNATURE, classify_error, find_anchor
 from results import BuildResult, Result
 
 MAX_CANDIDATES = 5
@@ -113,7 +113,6 @@ class MemoryPrototyper(Prototyper):
         num_samples=1,  # Required by base __init__, but ignored by logic
         temperature=0.0  # Required by base __init__, but ignored by logic
     )
-
 
   def chat_llm(self, *args, **kwargs) -> str:
     """Wrapper around Prototyper.chat_llm that also caches raw responses.
@@ -882,8 +881,8 @@ class MemoryPrototyper(Prototyper):
     if mode == "random-1":
       candidate_ranks: List[Optional[int]] = [None] * len(candidates)
     elif mode == "tr-5":
-      candidate_ranks = ([1] + [None] * (len(candidates) - 1)
-                         if candidates else [])
+      candidate_ranks = ([1] + [None] *
+                         (len(candidates) - 1) if candidates else [])
     else:
       candidate_ranks = list(range(1, len(candidates) + 1))
     ranks_by_id = {
@@ -892,36 +891,51 @@ class MemoryPrototyper(Prototyper):
         if rank is not None
     }
     record = {
-        "memory_selection_mode": mode,
-        "retrieval_scope": scope_names.get(project_filter, project_filter),
-        "query_benchmark": getattr(bench, "id", ""),
-        "query_project": getattr(bench, "project", ""),
-        "eligible_count": eligible_count,
-        "retrieved_count": len(candidates),
-        "candidate_ranks": candidate_ranks,
+        "memory_selection_mode":
+            mode,
+        "retrieval_scope":
+            scope_names.get(project_filter, project_filter),
+        "query_benchmark":
+            getattr(bench, "id", ""),
+        "query_project":
+            getattr(bench, "project", ""),
+        "eligible_count":
+            eligible_count,
+        "retrieved_count":
+            len(candidates),
+        "candidate_ranks":
+            candidate_ranks,
         "candidate_ids": [candidate.get("id") for candidate in candidates],
-        "cosine_distances": [candidate.get("distance")
-                             for candidate in candidates],
-        "candidate_projects": [candidate.get("project")
-                               for candidate in candidates],
-        "confidence_levels": [candidate.get("confidence_level")
-                              for candidate in candidates],
-        "planner_called": planner_called,
-        "planner_accepted": planner_accepted,
+        "cosine_distances": [
+            candidate.get("distance") for candidate in candidates
+        ],
+        "candidate_projects": [
+            candidate.get("project") for candidate in candidates
+        ],
+        "confidence_levels": [
+            candidate.get("confidence_level") for candidate in candidates
+        ],
+        "planner_called":
+            planner_called,
+        "planner_accepted":
+            planner_accepted,
         "injected_ids": [candidate.get("id") for candidate in selected],
-        "injected_ranks": [ranks_by_id.get(str(candidate.get("id")))
-                           for candidate in selected],
-        "selected_candidate_id": (selected[0].get("id")
-                                  if planner_called and selected else None),
-        "selected_candidate_rank": (
-            ranks_by_id.get(str(selected[0].get("id")))
-            if planner_called and selected else None),
-        "memory_cutoff": getattr(self.args,
-                                 "memory_created_before_or_on", None),
-        "memory_random_seed": getattr(self.args, "memory_random_seed", 0),
-        "effective_random_seed": effective_random_seed,
+        "injected_ranks": [
+            ranks_by_id.get(str(candidate.get("id"))) for candidate in selected
+        ],
+        "selected_candidate_id":
+            (selected[0].get("id") if planner_called and selected else None),
+        "selected_candidate_rank": (ranks_by_id.get(str(selected[0].get("id")))
+                                    if planner_called and selected else None),
+        "memory_cutoff":
+            getattr(self.args, "memory_created_before_or_on", None),
+        "memory_random_seed":
+            getattr(self.args, "memory_random_seed", 0),
+        "effective_random_seed":
+            effective_random_seed,
     }
-    logger.info("MEMORY_ABLATION %s", json.dumps(record, sort_keys=True),
+    logger.info("MEMORY_ABLATION %s",
+                json.dumps(record, sort_keys=True),
                 trial=build_result.trial)
 
   def _format_reference_solutions(
@@ -957,9 +971,8 @@ class MemoryPrototyper(Prototyper):
     # top-1 modes. The plural wrapper is only needed for multiple references.
     if len(references) == 1:
       return _one(references[0])
-    return ("\n<reference_solutions>\n" +
-            "".join(_one(reference, rank)
-                    for rank, reference in enumerate(references, 1)) +
+    return ("\n<reference_solutions>\n" + "".join(
+        _one(reference, rank) for rank, reference in enumerate(references, 1)) +
             "</reference_solutions>\n")
 
   # -------------------- KNN + stats + planner wiring --------------------
@@ -1021,13 +1034,13 @@ class MemoryPrototyper(Prototyper):
       base_seed = getattr(self.args, "memory_random_seed", 0)
       benchmark_id = getattr(bench, "id", "") or current_project
       seed_material = f"{base_seed}\0{benchmark_id}\0{query_text}".encode()
-      query_seed = int.from_bytes(hashlib.sha256(seed_material).digest()[:4],
-                                  "big") & 0x7fffffff
+      query_seed = int.from_bytes(
+          hashlib.sha256(seed_material).digest()[:4], "big") & 0x7fffffff
 
     if selection_mode == "random-1":
       normalized, hits, eligible_count = random_search_error_full_with_norm(
           query_text,
-          random_seed=query_seed,
+          random_seed=query_seed if query_seed is not None else 0,
           trial=build_result.trial,
           created_before_or_on=created_before_or_on,
           include_project=include_project,
@@ -1038,8 +1051,7 @@ class MemoryPrototyper(Prototyper):
     else:
       normalized, hits = knn_search_error_full_with_norm(
           query_text,
-          top_k=(1 if selection_mode == "tr-5"
-                 else MAX_CANDIDATES),
+          top_k=(1 if selection_mode == "tr-5" else MAX_CANDIDATES),
           trial=build_result.trial,
           embedder=self.text_embedding_model,
           created_before_or_on=created_before_or_on,
@@ -1073,7 +1085,9 @@ class MemoryPrototyper(Prototyper):
       self._last_raw_error_text = query_text
       self._last_normalized_error = normalized
       selected: List[Dict[str, Any]] = []
-      self._log_memory_ablation(build_result, hits, selected,
+      self._log_memory_ablation(build_result,
+                                hits,
+                                selected,
                                 eligible_count=eligible_count,
                                 planner_called=False,
                                 planner_accepted=None,
@@ -1131,28 +1145,35 @@ class MemoryPrototyper(Prototyper):
     # to avoid duplicating what is already in <CURRENT_ERROR>. It focuses on
     # metadata + richer context.
     context: Dict[str, str] = {
-        "project": current_project,
-        "language": getattr(bench, "language", "") or "",
-        "target_name": getattr(bench, "target_name", "") or "",
-        "function_signature": function_signature,
+        "project":
+            current_project,
+        "language":
+            getattr(bench, "language", "") or "",
+        "target_name":
+            getattr(bench, "target_name", "") or "",
+        "function_signature":
+            function_signature,
         # Only include compile_log when it adds context beyond CURRENT_ERROR.
         # If compile_err was non-empty it was used as the query — CURRENT_ERROR
         # already carries the normalised form of that same text, so adding the
         # raw log here would be pure noise.  When only compile_log was available
         # (compile_err is empty) we include it as supplementary raw context.
-        **({"compile_log": self.smart_truncate_log(
-            query_text, max_chars=2000, raw_err_text=compile_err
-        )} if not compile_err.strip() else {}),
-        "fuzz_target": fuzz_target_source[:3000],
+        **({
+            "compile_log":
+                self.smart_truncate_log(query_text,
+                                        max_chars=2000,
+                                        raw_err_text=compile_err)
+        } if not compile_err.strip() else {}),
+        "fuzz_target":
+            fuzz_target_source[:3000],
         # Show a descriptive label when no custom build script was generated,
         # so the planner knows the project uses its default OSS-Fuzz build script.
-        "build_script": (
-            build_script_source[:3000]
-            if build_script_source.strip()
-            else "Build script reuses `/src/build.bk.sh` "
-                 "(project's default OSS-Fuzz build script)."
-        ),
-        "prototyper_failure_prompt": prototyper_failure_prompt,
+        "build_script":
+            (build_script_source[:3000] if build_script_source.strip() else
+             "Build script reuses `/src/build.bk.sh` "
+             "(project's default OSS-Fuzz build script)."),
+        "prototyper_failure_prompt":
+            prototyper_failure_prompt,
     }
 
     planner_called = selection_mode in ("planner", "tr-5")
@@ -1175,7 +1196,9 @@ class MemoryPrototyper(Prototyper):
     else:
       raise ValueError(f"Unsupported memory selection mode: {selection_mode}")
 
-    self._log_memory_ablation(build_result, hits, selected,
+    self._log_memory_ablation(build_result,
+                              hits,
+                              selected,
                               eligible_count=eligible_count,
                               planner_called=planner_called,
                               planner_accepted=planner_accepted,
@@ -1198,8 +1221,8 @@ class MemoryPrototyper(Prototyper):
       )
     first = selected[0]
     self._last_attempted_entry_id = str(first["id"])
-    self._last_attempted_project_match = (
-        (first.get("project") or "") == current_project)
+    self._last_attempted_project_match = ((first.get("project") or
+                                           "") == current_project)
 
     build_result.chat_history.setdefault("MemoryPlanner", "")
     if planner_called:
@@ -1293,8 +1316,9 @@ class MemoryPrototyper(Prototyper):
     try:
       _, references = self._maybe_get_memory_references(build_result)
     except Exception as e:
-      logger.error(
-          "***** failed to get memory plan, error: %s*****", e, trial=build_result.trial)
+      logger.error("***** failed to get memory plan, error: %s*****",
+                   e,
+                   trial=build_result.trial)
       references = []
     extra_hints = self._format_reference_solutions(references)
 

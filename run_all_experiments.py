@@ -266,8 +266,9 @@ def parse_args() -> argparse.Namespace:
       '--memory-online-update',
       action=argparse.BooleanOptionalAction,
       default=True,
-      help=('Allow error-memory agents to update Cloud SQL entries and stats '
-            'during a run. Use --no-memory-online-update for read-only memory.'))
+      help=(
+          'Allow error-memory agents to update Cloud SQL entries and stats '
+          'during a run. Use --no-memory-online-update for read-only memory.'))
   parser.add_argument('--memory-project-filter',
                       type=str,
                       choices=['all', 'exclude-current', 'only-current'],
@@ -283,8 +284,7 @@ def parse_args() -> argparse.Namespace:
                       help=('Only retrieve memory entries created on or before '
                             'this date or timestamp (YYYY-MM-DD or ISO-8601).'))
   parser.add_argument('--memory-selection-mode',
-                      choices=['planner', 'random-1', 'top-1', 'top-5',
-                               'tr-5'],
+                      choices=['planner', 'random-1', 'top-1', 'top-5', 'tr-5'],
                       default='planner',
                       help=('How eligible error-memory entries are selected '
                             'and injected. The default preserves the existing '

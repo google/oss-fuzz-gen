@@ -32,6 +32,7 @@ import anthropic
 import openai
 import tiktoken
 import vertexai
+from anthropic.lib.vertex import AnthropicVertex
 from google.api_core.exceptions import (GoogleAPICallError, InternalServerError,
                                         InvalidArgument, ResourceExhausted,
                                         ServiceUnavailable, TooManyRequests)
@@ -576,7 +577,7 @@ class Claude(LLM):
                                     'europe-west1').split(',')
     project_id = os.getenv('GOOGLE_CLOUD_PROJECT', 'oss-fuzz')
     region = random.sample(vertex_ai_locations, 1)[0]
-    client = anthropic.AnthropicVertex(region=region, project_id=project_id)
+    client = AnthropicVertex(region=region, project_id=project_id)
 
     completion = self.with_retry_on_error(
         lambda: client.messages.create(max_tokens=self._max_output_tokens,
@@ -936,13 +937,13 @@ class GeminiV1D5Chat(GeminiV1D5):
                    config: dict[str, Any]) -> Any:
     """Generates chat response."""
     logger.info('%s generating response with config: %s', self.name, config)
-    previous_history_len = len(client._history) if hasattr(client, '_history') else 0
+    previous_history_len = len(client._history) if hasattr(client,
+                                                           '_history') else 0
     try:
-      response = client.send_message(
-          prompt,
-          stream=False,
-          generation_config=config,
-          safety_settings=self.safety_config)
+      response = client.send_message(prompt,
+                                     stream=False,
+                                     generation_config=config,
+                                     safety_settings=self.safety_config)
       return response.text
     except Exception as e:
       if hasattr(client, '_history'):

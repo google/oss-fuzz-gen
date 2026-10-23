@@ -124,8 +124,8 @@ class VertexEmbeddingModel(VertexAIModel):
 
   def _embed_single_text(self, text: str) -> list[float]:
     """Wraps the Vertex AI call. Returns vector or raises exception."""
-    import vertexai
     import google.cloud.aiplatform.initializer as initializer
+    import vertexai
 
     # 1. Save current global location (e.g., 'global' for Gemini 3.1)
     prev_location = initializer.global_config.location

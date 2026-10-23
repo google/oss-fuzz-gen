@@ -137,11 +137,11 @@ def normalize_err_text(stderr: str,
       cut = snap if snap != -1 else overflow
       focused = f"...(truncated {cut} chars)...\n" + focused[cut:]
 
-
   return focused
 
 
-def normalize_err_text_fallback(stderr: str, max_chars: int = DEFAULT_NORM_MAX_CHARS) -> str:
+def normalize_err_text_fallback(stderr: str,
+                                max_chars: int = DEFAULT_NORM_MAX_CHARS) -> str:
   """Find normalized error text fallback"""
   if not stderr:
     return ""

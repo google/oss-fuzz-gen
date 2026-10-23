@@ -32,47 +32,56 @@ from google.genai import errors, types
 import logger
 import utils
 
+
 def patch_gemini_thought_signature():
-    try:
-        from google.adk.models.google_llm import Gemini
-        from google.genai import types
+  try:
+    from google.adk.models.google_llm import Gemini
+    from google.genai import types
 
-        orig_preprocess = Gemini._preprocess_request
-        async def patched_preprocess(self, llm_request):
-            await orig_preprocess(self, llm_request)
-            if getattr(llm_request, 'contents', None) is None:
-                return
+    orig_preprocess = getattr(Gemini, "_preprocess_request")
 
-            needs_flattening = False
-            for content in llm_request.contents:
-                if getattr(content, 'parts', None) is None:
-                    continue
-                if any(getattr(p, 'function_call', None) and not getattr(p, 'thought_signature', None) for p in content.parts):
-                    needs_flattening = True
-                    break
+    async def patched_preprocess(self, llm_request):
+      await orig_preprocess(self, llm_request)
+      if getattr(llm_request, 'contents', None) is None:
+        return
 
-            if needs_flattening:
-                for content in llm_request.contents:
-                    if getattr(content, 'parts', None) is None:
-                        continue
-                    new_parts = []
-                    for p in content.parts:
-                        if getattr(p, 'function_call', None):
-                            new_parts.append(types.Part(
-                                text=f"Model called tool `{p.function_call.name}` with parameters: {p.function_call.args}"
-                            ))
-                        elif getattr(p, 'function_response', None):
-                            new_parts.append(types.Part(
-                                text=f"Tool `{p.function_response.name}` returned result: {p.function_response.response}"
-                            ))
-                        else:
-                            new_parts.append(p)
-                    content.parts = new_parts
+      needs_flattening = False
+      for content in llm_request.contents:
+        if getattr(content, 'parts', None) is None:
+          continue
+        if any(
+            getattr(p, 'function_call', None) and
+            not getattr(p, 'thought_signature', None) for p in content.parts):
+          needs_flattening = True
+          break
 
-        Gemini._preprocess_request = patched_preprocess
-    except Exception as e:
-        import logging
-        logging.getLogger(__name__).warning("Failed to patch Gemini: %s", e)
+      if needs_flattening:
+        for content in llm_request.contents:
+          if getattr(content, 'parts', None) is None:
+            continue
+          new_parts = []
+          for p in content.parts:
+            if getattr(p, 'function_call', None):
+              new_parts.append(
+                  types.Part(
+                      text=
+                      f"Model called tool `{p.function_call.name}` with parameters: {p.function_call.args}"
+                  ))
+            elif getattr(p, 'function_response', None):
+              new_parts.append(
+                  types.Part(
+                      text=
+                      f"Tool `{p.function_response.name}` returned result: {p.function_response.response}"
+                  ))
+            else:
+              new_parts.append(p)
+          content.parts = new_parts
+
+    setattr(Gemini, "_preprocess_request", patched_preprocess)
+  except Exception as e:
+    import logging
+    logging.getLogger(__name__).warning("Failed to patch Gemini: %s", e)
+
 
 patch_gemini_thought_signature()
 

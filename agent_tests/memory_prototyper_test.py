@@ -1,33 +1,17 @@
 """Focused tests for error-memory selection ablations."""
 
+import argparse
 import sys
-import types
 import unittest
 from types import SimpleNamespace
+from typing import cast
 from unittest import mock
-
-# Keep these unit tests independent of optional Cloud SQL client dependencies.
-# All database operations are mocked below.
-try:
-  import pymysql  # pylint: disable=unused-import
-except ImportError:
-  sys.modules["pymysql"] = types.ModuleType("pymysql")
-
-try:
-  from google.cloud.sql import connector as _connector  # pylint: disable=unused-import
-except ImportError:
-  sql_module = types.ModuleType("google.cloud.sql")
-  connector_module = types.ModuleType("google.cloud.sql.connector")
-  connector_module.Connector = mock.Mock
-  connector_module.IPTypes = SimpleNamespace(PUBLIC="PUBLIC")
-  sql_module.connector = connector_module
-  sys.modules["google.cloud.sql"] = sql_module
-  sys.modules["google.cloud.sql.connector"] = connector_module
 
 import run_all_experiments
 from agent import memory_prototyper as memory_module
 from agent.memory_prototyper import MemoryPrototyper
 from memory_helper import cloudsql
+from results import BuildResult
 
 
 def _hit(entry_id: int, project: str = "other") -> dict:
@@ -45,14 +29,14 @@ def _hit(entry_id: int, project: str = "other") -> dict:
 
 def _agent(mode: str, *, seed: int = 7, scope: str = "all"):
   agent = MemoryPrototyper.__new__(MemoryPrototyper)
-  agent.args = SimpleNamespace(
+  agent.args = argparse.Namespace(
       memory_selection_mode=mode,
       memory_random_seed=seed,
       memory_project_filter=scope,
       memory_model_filter=None,
       memory_created_before_or_on="2026-01-02T03:04:05Z",
   )
-  agent.text_embedding_model = object()
+  agent.text_embedding_model = mock.Mock()
   agent._online_update_enabled = False
   agent._stats_buffer = {}
   agent._chat_blocks = []
@@ -66,7 +50,7 @@ def _agent(mode: str, *, seed: int = 7, scope: str = "all"):
   return agent
 
 
-def _result(project: str = "current"):
+def _result(project: str = "current", *, success: bool = False):
   bench = SimpleNamespace(
       id="current-target",
       project=project,
@@ -74,17 +58,20 @@ def _result(project: str = "current"):
       target_name="target",
       function_signature="void target()",
   )
-  return SimpleNamespace(
-      compile_error="undefined reference",
-      compile_log="compile log",
-      benchmark=bench,
-      trial=1,
-      fuzz_target_source="fuzz source",
-      build_script_source="build source",
-      binary_exists=False,
-      compiles=False,
-      chat_history={},
-  )
+  return cast(
+      BuildResult,
+      SimpleNamespace(
+          compile_error="undefined reference",
+          compile_log="compile log",
+          benchmark=bench,
+          trial=1,
+          fuzz_target_source="fuzz source",
+          build_script_source="build source",
+          binary_exists=False,
+          compiles=False,
+          success=success,
+          chat_history={},
+      ))
 
 
 class MemorySelectionTest(unittest.TestCase):
@@ -102,8 +89,7 @@ class MemorySelectionTest(unittest.TestCase):
   def test_cli_accepts_tr_5(self):
     argv = [
         "run_all_experiments.py", "--benchmarks-directory",
-        "benchmark-sets/balanced", "--memory-selection-mode",
-        "tr-5"
+        "benchmark-sets/balanced", "--memory-selection-mode", "tr-5"
     ]
     with mock.patch.object(sys, "argv", argv):
       args = run_all_experiments.parse_args()
@@ -113,7 +99,8 @@ class MemorySelectionTest(unittest.TestCase):
     agent = _agent("planner")
     hits = [_hit(i) for i in range(1, 6)]
     agent._llm_choose_action_plan = mock.Mock(return_value=hits[2])
-    with mock.patch.object(memory_module, "knn_search_error_full_with_norm",
+    with mock.patch.object(memory_module,
+                           "knn_search_error_full_with_norm",
                            return_value=("normalized", hits)):
       _, selected = agent._maybe_get_memory_references(_result())
     agent._llm_choose_action_plan.assert_called_once()
@@ -123,7 +110,8 @@ class MemorySelectionTest(unittest.TestCase):
     agent = _agent("top-1")
     hits = [_hit(i) for i in range(1, 6)]
     agent._llm_choose_action_plan = mock.Mock()
-    with mock.patch.object(memory_module, "knn_search_error_full_with_norm",
+    with mock.patch.object(memory_module,
+                           "knn_search_error_full_with_norm",
                            return_value=("normalized", hits)):
       _, selected = agent._maybe_get_memory_references(_result())
     agent._llm_choose_action_plan.assert_not_called()
@@ -133,12 +121,12 @@ class MemorySelectionTest(unittest.TestCase):
     agent = _agent("top-5")
     hits = [_hit(i) for i in range(1, 6)]
     agent._llm_choose_action_plan = mock.Mock()
-    with mock.patch.object(memory_module, "knn_search_error_full_with_norm",
+    with mock.patch.object(memory_module,
+                           "knn_search_error_full_with_norm",
                            return_value=("normalized", hits)):
       _, selected = agent._maybe_get_memory_references(_result())
     agent._llm_choose_action_plan.assert_not_called()
-    self.assertEqual([1, 2, 3, 4, 5],
-                     [entry["id"] for entry in selected])
+    self.assertEqual([1, 2, 3, 4, 5], [entry["id"] for entry in selected])
     prompt = agent._format_reference_solutions(selected)
     self.assertLess(prompt.index('rank="1"'), prompt.index('rank="5"'))
     self.assertEqual(5, prompt.count("<reference_solution rank="))
@@ -147,12 +135,15 @@ class MemorySelectionTest(unittest.TestCase):
     agent = _agent("top-5")
     hits = [_hit(i) for i in range(1, 4)]
     agent._llm_choose_action_plan = mock.Mock()
-    with mock.patch.object(memory_module, "knn_search_error_full_with_norm",
+    with mock.patch.object(memory_module,
+                           "knn_search_error_full_with_norm",
                            return_value=("normalized", hits)):
       _, selected = agent._maybe_get_memory_references(_result())
     self.assertEqual([1, 2, 3], [entry["id"] for entry in selected])
-    self.assertEqual(3, agent._format_reference_solutions(selected).count(
-        "<reference_solution rank="))
+    self.assertEqual(
+        3,
+        agent._format_reference_solutions(selected).count(
+            "<reference_solution rank="))
 
   def test_random_1_is_single_deterministic_and_not_knn(self):
     agent = _agent("random-1", seed=123)
@@ -203,8 +194,8 @@ class MemorySelectionTest(unittest.TestCase):
     self.assertEqual([11], [entry["id"] for entry in selected])
 
   def test_cutoff_and_project_filters_are_forwarded_unchanged(self):
-    for scope, expected in (("all", (None, None)),
-                            ("only-current", ("current", None)),
+    for scope, expected in (("all", (None, None)), ("only-current", ("current",
+                                                                     None)),
                             ("exclude-current", (None, "current"))):
       agent = _agent("top-1", scope=scope)
       agent._llm_choose_action_plan = mock.Mock()
@@ -215,15 +206,13 @@ class MemorySelectionTest(unittest.TestCase):
       ) as search:
         agent._maybe_get_memory_references(_result())
       kwargs = search.call_args.kwargs
-      self.assertEqual(expected, (kwargs["include_project"],
-                                  kwargs["exclude_project"]))
-      self.assertEqual("2026-01-02T03:04:05Z",
-                       kwargs["created_before_or_on"])
+      self.assertEqual(expected,
+                       (kwargs["include_project"], kwargs["exclude_project"]))
+      self.assertEqual("2026-01-02T03:04:05Z", kwargs["created_before_or_on"])
 
   def test_read_only_disables_confidence_2_and_3_writes(self):
     agent = _agent("planner")
-    successful = _result()
-    successful.success = True
+    successful = _result(success=True)
     with mock.patch.object(memory_module,
                            "maybe_register_fix_episode") as register, \
          mock.patch.object(memory_module,
@@ -248,8 +237,7 @@ class MemorySelectionTest(unittest.TestCase):
     cursor = mock.MagicMock()
     cursor.fetchone.return_value = (9,)
     cursor.fetchall.return_value = [
-        (10, "other", "linker", "fn", "build", "fuzz", "patch",
-         "fix", 3),
+        (10, "other", "linker", "fn", "build", "fuzz", "patch", "fix", 3),
     ]
     connection = mock.MagicMock()
     connection.cursor.return_value.__enter__.return_value = cursor
@@ -262,14 +250,13 @@ class MemorySelectionTest(unittest.TestCase):
                                cloudsql,
                                "_prepare_normalized",
                                return_value=("raw", "normalized")):
-      normalized, rows, eligible = (
-          cloudsql.random_search_error_full_with_norm(
-              "error",
-              random_seed=123,
-              trial=1,
-              limit=4,
-              exclude_ids=[1],
-          ))
+      normalized, rows, eligible = (cloudsql.random_search_error_full_with_norm(
+          "error",
+          random_seed=123,
+          trial=1,
+          limit=4,
+          exclude_ids=[1],
+      ))
 
     self.assertEqual("normalized", normalized)
     self.assertEqual(9, eligible)
@@ -278,6 +265,31 @@ class MemorySelectionTest(unittest.TestCase):
     self.assertIn("id NOT IN (%s)", select_sql)
     self.assertIn("LIMIT %s", select_sql)
     self.assertEqual((2, 3, 1, 123, 4), select_params)
+
+
+class CloudSqlConnectionTest(unittest.TestCase):
+  """Connections must either be usable or fail before yielding."""
+
+  def test_connection_is_closed_when_caller_fails(self):
+    connection = mock.Mock()
+    with mock.patch.object(cloudsql, '_DB_USER', 'test-user'), \
+         mock.patch.object(cloudsql.pymysql, 'connect', return_value=connection):
+      with self.assertRaisesRegex(ValueError, 'query failed'):
+        with cloudsql.cloud_sql_connect_smart() as actual:
+          self.assertIs(actual, connection)
+          raise ValueError('query failed')
+    connection.close.assert_called_once_with()
+
+  def test_missing_fallback_connection_is_not_yielded(self):
+    connector = mock.Mock()
+    connector.connect.return_value = None
+    with mock.patch.object(cloudsql, '_DB_USER', 'test-user'), \
+         mock.patch.object(cloudsql, '_CONNECTOR', connector), \
+         mock.patch.object(cloudsql.pymysql, 'connect', side_effect=OSError('no proxy')):
+      with self.assertRaisesRegex(ConnectionError, 'not established'):
+        with cloudsql.cloud_sql_connect_smart():
+          self.fail('A missing connection must not be yielded')
+    self.assertEqual(3, connector.connect.call_count)
 
 
 if __name__ == "__main__":
