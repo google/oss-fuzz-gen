@@ -1,0 +1,21 @@
+functions:
+- name: validate
+  params:
+  - name: this
+    type: 'bool '
+  - name: subject
+    type: 'bool '
+  - name: issuer
+    type: 'bool '
+  - name: pathlen
+    type: int
+  - name: anchor
+    type: bool
+  - name: auth
+    type: 'bool '
+  return_type: bool
+  signature: bool validate(private_constraints_validator_t *, certificate_t *, certificate_t *, u_int, bool, auth_cfg_t *)
+language: c++
+project: strongswan
+target_name: fuzz_ids
+target_path: /src/strongswan/fuzz/fuzz_ids.c

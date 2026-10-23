@@ -1,0 +1,15 @@
+functions:
+- name: nxt_http_application_handler
+  params:
+  - name: task
+    type: 'bool '
+  - name: r
+    type: 'bool '
+  - name: action
+    type: 'bool '
+  return_type: void
+  signature: nxt_http_action_t * nxt_http_application_handler(nxt_task_t *, nxt_http_request_t *, nxt_http_action_t *)
+language: c
+project: unit
+target_name: fuzz_http_controller
+target_path: /src/unit/fuzzing/nxt_http_controller_fuzz.c

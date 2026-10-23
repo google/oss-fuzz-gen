@@ -260,10 +260,10 @@ class CloudBuilder:
                 'name': 'gcr.io/cloud-builders/gcloud',
                 'entrypoint': 'bash',
                 'args': [
-                    '-c', f'gcloud storage cp {experiment_url}'
+                    '-c', f'gcloud storage cp {experiment_url} '
                     '/tmp/ofg-exp.tar.gz && '
                     f'mkdir -p /workspace/host/{experiment_path} && '
-                    f'tar -xzf /tmp/ofg-exp.tar.gz'
+                    f'tar -xzf /tmp/ofg-exp.tar.gz '
                     f'-C /workspace/host/{experiment_path}'
                 ],
                 'allowFailure': True,
@@ -582,6 +582,7 @@ class CloudBuilder:
 
     # Step 4: Download new result dill.
     cloud_build_log = ''
+    cloud_build_final_status = 'CANCELLED'
     new_result_dill = os.path.join(dill_dir, new_result_filename)
     try:
       cloud_build_final_status = self._wait_for_build(build_id)
@@ -600,9 +601,20 @@ class CloudBuilder:
     cloud_build_log += self._get_build_log(build_id)
 
     # Step 5: Deserialize dilld file.
-    result = utils.deserialize_from_dill(new_result_dill)
+    if cloud_build_final_status == 'SUCCESS' and os.path.exists(
+        new_result_dill):
+      result = utils.deserialize_from_dill(new_result_dill)
+      if not result:
+        cloud_build_log += (
+            f'Failed to deserialize from dill {new_result_dill}. '
+            'The result file may be corrupted.\n')
+    else:
+      result = None
+      cloud_build_log += (f'New result not available from dill '
+                          f'{new_result_dill} because Cloud Build was '
+                          f'{cloud_build_final_status}.\n')
+
     if not result:
-      cloud_build_log += f'Failed to deserialize from dill {new_result_dill}.\n'
       last_result = result_history[-1]
       result = Result(benchmark=last_result.benchmark,
                       trial=last_result.trial,

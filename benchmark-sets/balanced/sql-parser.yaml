@@ -1,0 +1,19 @@
+functions:
+- name: _ZN4hsql15SelectStatementD2Ev
+  params:
+  - name: this
+    type: 'bool '
+  return_type: void
+  signature: void hsql::SelectStatement::~SelectStatement(struct SelectStatement *)
+- name: _ZN4hsql15SQLParserResultC2EOS0_
+  params:
+  - name: this
+    type: 'bool '
+  - name: moved
+    type: 'bool '
+  return_type: void
+  signature: void hsql::SQLParserResult::SQLParserResult(DW_TAG_rvalue_reference_typeSQLParserResult)
+language: c++
+project: sql-parser
+target_name: fuzz_sql_parse
+target_path: /src/sql-parser/fuzz_sql_parse.cpp

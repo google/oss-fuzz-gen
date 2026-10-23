@@ -1,0 +1,15 @@
+functions:
+- name: lzma_lzma_encoder_init
+  params:
+  - name: next
+    type: 'bool '
+  - name: allocator
+    type: 'bool '
+  - name: filters
+    type: 'bool '
+  return_type: int
+  signature: lzma_ret lzma_lzma_encoder_init(lzma_next_coder *, const lzma_allocator *, const lzma_filter_info *)
+language: c++
+project: xz
+target_name: fuzz_decode_alone
+target_path: /src/xz/tests/ossfuzz/fuzz_decode_alone.c

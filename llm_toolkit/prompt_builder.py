@@ -632,11 +632,12 @@ class PrototyperFixerTemplateBuilder(PrototyperTemplateBuilder):
                build_result: BuildResult,
                compile_log: str,
                template_dir: str = DEFAULT_TEMPLATE_DIR,
-               initial: Any = None):
+               initial: Any = None,
+               template_name: str = 'prototyper-fixing.txt'):
     super().__init__(model, benchmark, template_dir, initial)
     # Load templates.
     self.priming_template_file = self._find_template(self.agent_templare_dir,
-                                                     'prototyper-fixing.txt')
+                                                     template_name)
     self.build_result = build_result
     self.compile_log = compile_log
 

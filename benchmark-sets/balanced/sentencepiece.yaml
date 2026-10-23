@@ -1,0 +1,15 @@
+functions:
+- name: _ZN13sentencepiece12SelfTestData14_InternalParseEPKcPN6google8protobuf8internal12ParseContextE
+  params:
+  - name: this
+    type: 'bool '
+  - name: ptr
+    type: 'bool '
+  - name: ctx
+    type: 'bool '
+  return_type: void
+  signature: const char * sentencepiece::SelfTestData::_InternalParse(const char *, ParseContext *)
+language: c++
+project: sentencepiece
+target_name: sample_encode_fuzzer
+target_path: /src/sample_encode_fuzzer.cc

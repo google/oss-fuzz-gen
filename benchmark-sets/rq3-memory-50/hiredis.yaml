@@ -1,0 +1,23 @@
+functions:
+- name: redisvCommand
+  params:
+  - name: c
+    type: 'bool '
+  - name: format
+    type: 'bool '
+  - name: ap
+    type: 'bool '
+  return_type: void
+  signature: void * redisvCommand(redisContext *, const char *, struct __va_list_tag *)
+- name: redisCommand
+  params:
+  - name: c
+    type: 'bool '
+  - name: format
+    type: 'bool '
+  return_type: void
+  signature: void * redisCommand(redisContext *, const char *, void)
+language: c
+project: hiredis
+target_name: format_command_fuzzer
+target_path: /src/hiredis/fuzzing/format_command_fuzzer.c
