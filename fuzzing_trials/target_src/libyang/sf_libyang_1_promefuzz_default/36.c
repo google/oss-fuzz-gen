@@ -1,158 +1,81 @@
 // This fuzz driver is generated for library libyang, aiming to fuzz the following functions:
-// lyd_dup_single at tree_data.c:2510:1 in tree_data.h
-// ly_ctx_destroy at context.c:1503:1 in context.h
-// lyd_new_term at tree_data_new.c:742:1 in tree_data.h
-// ly_ctx_destroy at context.c:1503:1 in context.h
-// lyd_merge_siblings at tree_data.c:2850:1 in tree_data.h
-// ly_ctx_destroy at context.c:1503:1 in context.h
-// ly_ctx_destroy at context.c:1503:1 in context.h
 // ly_ctx_new at context.c:278:1 in context.h
 // ly_ctx_destroy at context.c:1503:1 in context.h
-// ly_ctx_destroy at context.c:1503:1 in context.h
-// lyd_insert_after at tree_data.c:1164:1 in tree_data.h
-// ly_ctx_destroy at context.c:1503:1 in context.h
-// lyd_dup_siblings_to_ctx at tree_data.c:2547:1 in tree_data.h
-// ly_ctx_destroy at context.c:1503:1 in context.h
-// lyd_leafref_link_node_tree at tree_data.c:3904:1 in tree_data.h
-// ly_ctx_destroy at context.c:1503:1 in context.h
+// lyd_parse_op at tree_data.c:352:1 in parser_data.h
+// lyd_free_all at tree_data_free.c:311:1 in tree_data.h
+// lyd_free_all at tree_data_free.c:311:1 in tree_data.h
 #include <stdint.h>
 #include <stddef.h>
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include "libyang.h"
+#include <libyang.h>
+#include <parser_data.h>
+#include <tree_data.h>
 
-static struct lys_module *create_dummy_module(struct ly_ctx *ctx) {
-    struct lys_module *module = (struct lys_module *)malloc(sizeof(struct lys_module));
-    if (!module) {
+static struct ly_ctx *create_context() {
+    struct ly_ctx *ctx = NULL;
+    if (ly_ctx_new(NULL, 0, &ctx) != LY_SUCCESS) {
         return NULL;
     }
-    memset(module, 0, sizeof *module);
-    module->ctx = ctx;
-    module->name = "dummy_module";
-    return module;
+    return ctx;
 }
 
-static struct lyd_node *create_dummy_node(struct lys_module *module) {
-    struct lyd_node *node = (struct lyd_node *)malloc(sizeof(struct lyd_node));
-    if (!node) {
-        return NULL;
+static void free_context(struct ly_ctx *ctx) {
+    if (ctx) {
+        ly_ctx_destroy(ctx);
     }
-    memset(node, 0, sizeof *node);
-    struct lysc_node *schema = (struct lysc_node *)malloc(sizeof(struct lysc_node));
-    if (!schema) {
-        free(node);
-        return NULL;
-    }
-    memset(schema, 0, sizeof *schema);
-    schema->module = module;
-    node->schema = schema;
-    return node;
 }
 
-static void free_dummy_node(struct lyd_node *node) {
-    if (node) {
-        free((void *)node->schema);
-        free(node);
+static struct ly_in *create_input(const uint8_t *Data, size_t Size) {
+    struct ly_in *in = NULL;
+    char *data_copy = (char *)malloc(Size + 1);
+    if (!data_copy) {
+        return NULL;
+    }
+    memcpy(data_copy, Data, Size);
+    data_copy[Size] = '\0';
+    if (ly_in_new_memory(data_copy, &in) != LY_SUCCESS) {
+        free(data_copy);
+        return NULL;
+    }
+    // Transfer ownership of data_copy to libyang, so do not free it manually.
+    return in;
+}
+
+static void free_input(struct ly_in *in) {
+    if (in) {
+        ly_in_free(in, 1);  // Pass 1 to also free the memory buffer
     }
 }
 
 int LLVMFuzzerTestOneInput_36(const uint8_t *Data, size_t Size) {
-    if (Size < 1) {
+    struct ly_ctx *ctx = create_context();
+    if (!ctx) {
         return 0;
     }
 
-    struct ly_ctx *ctx = NULL;
-    if (ly_ctx_new(NULL, 0, &ctx) != LY_SUCCESS) {
+    struct ly_in *in = create_input(Data, Size);
+    if (!in) {
+        free_context(ctx);
         return 0;
     }
 
-    struct lys_module *module = create_dummy_module(ctx);
-    if (!module) {
-        ly_ctx_destroy(ctx);
-        return 0;
-    }
+    struct lyd_node *tree = NULL, *op = NULL;
+    struct lyd_node *parent = NULL;  // Assuming no parent for RPC/notification
+    LYD_FORMAT format = LYD_XML;    // Default format
+    enum lyd_type data_type = LYD_TYPE_RPC_NETCONF;  // Example data type
+    uint32_t parse_options = 0;
 
-    struct lyd_node *sibling = create_dummy_node(module);
-    struct lyd_node *node = create_dummy_node(module);
-    if (!sibling || !node) {
-        free_dummy_node(sibling);
-        free_dummy_node(node);
-        free(module);
-        ly_ctx_destroy(ctx);
-        return 0;
-    }
+    // Call the target function
+    lyd_parse_op(ctx, parent, in, format, data_type, parse_options, &tree, &op);
 
-    // Fuzzing lyd_insert_after
-    LY_ERR err = lyd_insert_after(sibling, node);
-    if (err != LY_SUCCESS && err != LY_EINVAL) {
-        free_dummy_node(sibling);
-        free_dummy_node(node);
-        free(module);
-        ly_ctx_destroy(ctx);
-        return 0;
-    }
+    // Clean up
+    lyd_free_all(tree);
+    lyd_free_all(op);
+    free_input(in);
+    free_context(ctx);
 
-    struct lyd_node *dup_node = NULL;
-    // Fuzzing lyd_dup_siblings_to_ctx
-    err = lyd_dup_siblings_to_ctx(sibling, ctx, NULL, 0, &dup_node);
-    if (err != LY_SUCCESS && err != LY_EINVAL) {
-        free_dummy_node(sibling);
-        free_dummy_node(node);
-        free(module);
-        ly_ctx_destroy(ctx);
-        return 0;
-    }
-    free_dummy_node(dup_node);
-
-    // Fuzzing lyd_leafref_link_node_tree
-    err = lyd_leafref_link_node_tree(sibling);
-    if (err != LY_SUCCESS && err != LY_EINVAL) {
-        free_dummy_node(sibling);
-        free_dummy_node(node);
-        free(module);
-        ly_ctx_destroy(ctx);
-        return 0;
-    }
-
-    // Fuzzing lyd_dup_single
-    err = lyd_dup_single(sibling, NULL, 0, &dup_node);
-    if (err != LY_SUCCESS && err != LY_EINVAL) {
-        free_dummy_node(sibling);
-        free_dummy_node(node);
-        free(module);
-        ly_ctx_destroy(ctx);
-        return 0;
-    }
-    free_dummy_node(dup_node);
-
-    // Fuzzing lyd_new_term
-    struct lyd_node *term_node = NULL;
-    err = lyd_new_term(NULL, module, "dummy_name", (const char *)Data, 0, &term_node);
-    if (err != LY_SUCCESS && err != LY_EINVAL) {
-        free_dummy_node(sibling);
-        free_dummy_node(node);
-        free(module);
-        ly_ctx_destroy(ctx);
-        return 0;
-    }
-    free_dummy_node(term_node);
-
-    // Fuzzing lyd_merge_siblings
-    err = lyd_merge_siblings(&sibling, node, 0);
-    if (err != LY_SUCCESS && err != LY_EINVAL) {
-        free_dummy_node(sibling);
-        free_dummy_node(node);
-        free(module);
-        ly_ctx_destroy(ctx);
-        return 0;
-    }
-
-    // Cleanup
-    free_dummy_node(sibling);
-    free_dummy_node(node);
-    free(module);
-    ly_ctx_destroy(ctx);
     return 0;
 }
     #ifdef INC_MAIN

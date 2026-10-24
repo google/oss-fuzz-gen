@@ -1,15 +1,13 @@
 // This fuzz driver is generated for library libyang, aiming to fuzz the following functions:
 // ly_ctx_new at context.c:278:1 in context.h
-// ly_ctx_get_module_implemented at context.c:1009:1 in context.h
 // ly_ctx_load_module at context.c:239:1 in context.h
-// lyd_new_inner at tree_data_new.c:446:1 in tree_data.h
-// lyd_new_opaq at tree_data_new.c:878:1 in tree_data.h
-// lyd_new_path at tree_data_new.c:1777:1 in tree_data.h
-// lyd_new_term at tree_data_new.c:742:1 in tree_data.h
-// lyd_new_implicit_all at tree_data_new.c:2010:1 in tree_data.h
-// lyd_new_any at tree_data_new.c:749:1 in tree_data.h
-// lyd_free_all at tree_data_free.c:311:1 in tree_data.h
 // ly_ctx_destroy at context.c:1503:1 in context.h
+// lyd_dup_single at tree_data.c:2510:1 in tree_data.h
+// lyd_new_any at tree_data_new.c:749:1 in tree_data.h
+// lyd_new_opaq at tree_data_new.c:878:1 in tree_data.h
+// lyd_any_copy_value at tree_data_new.c:320:1 in tree_data.h
+// lyd_new_term at tree_data_new.c:742:1 in tree_data.h
+// lyd_new_path at tree_data_new.c:1777:1 in tree_data.h
 #include <stdint.h>
 #include <stddef.h>
 #include <string.h>
@@ -18,7 +16,8 @@
 #include "tree_data.h"
 #include "libyang.h"
 
-static struct ly_ctx *create_context() {
+// Dummy context to use for lyd_node
+static struct ly_ctx *create_dummy_ctx() {
     struct ly_ctx *ctx = NULL;
     if (ly_ctx_new(NULL, 0, &ctx) != LY_SUCCESS) {
         return NULL;
@@ -26,62 +25,90 @@ static struct ly_ctx *create_context() {
     return ctx;
 }
 
-static struct lys_module *create_module(struct ly_ctx *ctx, const char *name) {
-    struct lys_module *module = NULL;
-    const char *features[] = {NULL};
-    module = ly_ctx_get_module_implemented(ctx, name);
-    if (!module) {
-        module = ly_ctx_load_module(ctx, name, NULL, features);
+static struct lyd_node *create_dummy_node(struct ly_ctx *ctx) {
+    struct lyd_node *node = (struct lyd_node *)malloc(sizeof(struct lyd_node));
+    if (node) {
+        memset(node, 0, sizeof(struct lyd_node));
+        node->schema = (const struct lysc_node *)ctx;  // Just a placeholder to avoid NULL dereference
     }
-    return module;
-}
-
-static struct lyd_node *create_node() {
-    struct lyd_node *node = NULL;
     return node;
 }
 
+static struct lys_module *create_dummy_module(struct ly_ctx *ctx) {
+    // Assuming ly_ctx_load_module is available to create a module
+    return ly_ctx_load_module(ctx, "dummy_module", NULL, NULL);
+}
+
+static void free_dummy_node(struct lyd_node *node) {
+    if (node) {
+        free(node);
+    }
+}
+
+static void free_dummy_ctx(struct ly_ctx *ctx) {
+    if (ctx) {
+        ly_ctx_destroy(ctx);
+    }
+}
+
 int LLVMFuzzerTestOneInput_56(const uint8_t *Data, size_t Size) {
-    if (Size < 1) {
+    // Prepare dummy context, parent, and module
+    struct ly_ctx *ctx = create_dummy_ctx();
+    struct lyd_node *parent = create_dummy_node(ctx);
+    struct lys_module *module = create_dummy_module(ctx);
+
+    if (!ctx || !parent || !module) {
+        free_dummy_ctx(ctx);
+        free_dummy_node(parent);
         return 0;
     }
 
-    struct ly_ctx *ctx = create_context();
-    if (!ctx) {
+    // Prepare a buffer for the value
+    char *value = (char *)malloc(Size + 1);
+    if (!value) {
+        free_dummy_ctx(ctx);
+        free_dummy_node(parent);
         return 0;
     }
+    memcpy(value, Data, Size);
+    value[Size] = '\0';
 
-    struct lys_module *module = create_module(ctx, "test-module");
-    struct lyd_node *parent = create_node();
-    struct lyd_node *node = NULL;
-    const char *name = "test-node";
-    const char *value = "test-value";
-    const char *path = "/test-module:test-node";
-    uint32_t options = 0;
-    uint32_t implicit_options = 0;
-    ly_bool output = 0;
+    // Fuzz lyd_dup_single
+    struct lyd_node *dup = NULL;
+    lyd_dup_single(parent, NULL, 0, &dup);
+    free_dummy_node(dup);
 
-    // Fuzzing lyd_new_inner
-    lyd_new_inner(parent, module, name, output, &node);
+    // Fuzz lyd_new_any
+    struct lyd_node *any_node = NULL;
+    lyd_new_any(parent, module, "any_name", NULL, value, 0, 0, &any_node);
+    free_dummy_node(any_node);
 
-    // Fuzzing lyd_new_opaq
-    lyd_new_opaq(parent, ctx, name, value, NULL, "test-module", &node);
+    // Fuzz lyd_new_opaq
+    struct lyd_node *opaq_node = NULL;
+    lyd_new_opaq(parent, ctx, "opaq_name", value, NULL, "module_name", &opaq_node);
+    free_dummy_node(opaq_node);
 
-    // Fuzzing lyd_new_path
-    lyd_new_path(parent, ctx, path, value, options, &node);
+    // Fuzz lyd_any_copy_value
+    struct lyd_node *target_node = create_dummy_node(ctx);
+    if (target_node) {
+        lyd_any_copy_value(target_node, NULL, value, 0);
+        free_dummy_node(target_node);
+    }
 
-    // Fuzzing lyd_new_term
-    lyd_new_term(parent, module, name, value, options, &node);
+    // Fuzz lyd_new_term
+    struct lyd_node *term_node = NULL;
+    lyd_new_term(parent, module, "term_name", value, 0, &term_node);
+    free_dummy_node(term_node);
 
-    // Fuzzing lyd_new_implicit_all
-    lyd_new_implicit_all(&parent, ctx, implicit_options, &node);
-
-    // Fuzzing lyd_new_any
-    lyd_new_any(parent, module, name, NULL, value, 0, options, &node);
+    // Fuzz lyd_new_path
+    struct lyd_node *path_node = NULL;
+    lyd_new_path(parent, ctx, "/dummy/path", value, 0, &path_node);
+    free_dummy_node(path_node);
 
     // Cleanup
-    lyd_free_all(parent);
-    ly_ctx_destroy(ctx);
+    free(value);
+    free_dummy_ctx(ctx);
+    free_dummy_node(parent);
 
     return 0;
 }

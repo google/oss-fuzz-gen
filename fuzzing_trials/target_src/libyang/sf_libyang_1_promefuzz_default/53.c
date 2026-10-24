@@ -1,108 +1,151 @@
 // This fuzz driver is generated for library libyang, aiming to fuzz the following functions:
-// ly_ctx_new at context.c:278:1 in context.h
-// lys_parse_mem at tree_schema.c:2872:1 in parser_schema.h
 // lyd_free_all at tree_data_free.c:311:1 in tree_data.h
-// ly_ctx_destroy at context.c:1503:1 in context.h
-// ly_ctx_destroy at context.c:1503:1 in context.h
-// lyd_new_inner at tree_data_new.c:446:1 in tree_data.h
-// lyd_new_opaq at tree_data_new.c:878:1 in tree_data.h
-// lyd_new_path at tree_data_new.c:1777:1 in tree_data.h
 // lyd_new_term at tree_data_new.c:742:1 in tree_data.h
-// lyd_new_implicit_all at tree_data_new.c:2010:1 in tree_data.h
-// lyd_new_any at tree_data_new.c:749:1 in tree_data.h
+// lyd_free_all at tree_data_free.c:311:1 in tree_data.h
+// lyd_find_path at tree_data.c:3700:1 in tree_data.h
+// lyd_dup_siblings at tree_data.c:2535:1 in tree_data.h
+// lyd_free_all at tree_data_free.c:311:1 in tree_data.h
+// lyd_eval_xpath3 at tree_data.c:3463:1 in tree_data.h
+// lyd_change_meta at tree_data_new.c:1224:1 in tree_data.h
+// lyd_trim_xpath at tree_data.c:3581:1 in tree_data.h
 #include <stdint.h>
 #include <stddef.h>
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <stdint.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
 #include "tree_data.h"
-#include "libyang.h"
 
-static struct ly_ctx *create_dummy_context() {
-    struct ly_ctx *ctx = NULL;
-    if (ly_ctx_new(NULL, 0, &ctx) != LY_SUCCESS) {
-        return NULL;
+static void fuzz_lyd_find_path(const uint8_t *Data, size_t Size) {
+    struct lyd_node *ctx_node = NULL; // Assuming a valid context node is available
+    char *path = strndup((const char *)Data, Size);
+    ly_bool output = 0;
+    struct lyd_node *match = NULL;
+
+    if (!path) {
+        return;
     }
-    return ctx;
+
+    LY_ERR ret = lyd_find_path(ctx_node, path, output, &match);
+    if (ret == LY_SUCCESS) {
+        // Handle success case if needed
+    }
+
+    free(path);
 }
 
-static struct lys_module *create_dummy_module(struct ly_ctx *ctx) {
-    // Create a dummy module for testing
-    const char *yang_data = "module dummy_module {namespace \"urn:dummy\";prefix dm;}";
-    struct lys_module *module = NULL;
-    if (lys_parse_mem(ctx, yang_data, LYS_IN_YANG, &module) != LY_SUCCESS) {
-        return NULL;
+static void fuzz_lyd_dup_siblings(const uint8_t *Data, size_t Size) {
+    struct lyd_node *node = NULL; // Assuming a valid node is available
+    struct lyd_node *parent = NULL;
+    uint32_t options = 0;
+    struct lyd_node *dup = NULL;
+
+    LY_ERR ret = lyd_dup_siblings(node, parent, options, &dup);
+    if (ret == LY_SUCCESS) {
+        // Handle success case if needed
     }
-    return module;
+
+    // Assuming cleanup is needed for dup
+    if (dup) {
+        lyd_free_all(dup);
+    }
 }
 
-static struct lyd_node *create_dummy_node(struct ly_ctx *ctx) {
-    // Create a dummy node for testing
+static void fuzz_lyd_eval_xpath3(const uint8_t *Data, size_t Size) {
+    struct lyd_node *ctx_node = NULL; // Assuming a valid context node is available
+    struct lys_module *cur_mod = NULL; // Assuming a valid module is available
+    char *xpath = strndup((const char *)Data, Size);
+    LY_VALUE_FORMAT format = 0;
+    void *prefix_data = NULL;
+    struct lyxp_var *vars = NULL;
+    ly_bool result;
+
+    if (!xpath) {
+        return;
+    }
+
+    LY_ERR ret = lyd_eval_xpath3(ctx_node, cur_mod, xpath, format, prefix_data, vars, &result);
+    if (ret == LY_SUCCESS) {
+        // Handle success case if needed
+    }
+
+    free(xpath);
+}
+
+static void fuzz_lyd_change_meta(const uint8_t *Data, size_t Size) {
+    struct lyd_meta *meta = NULL; // Assuming a valid metadata is available
+    char *val_str = strndup((const char *)Data, Size);
+
+    if (!val_str) {
+        return;
+    }
+
+    LY_ERR ret = lyd_change_meta(meta, val_str);
+    if (ret == LY_SUCCESS) {
+        // Handle success case if needed
+    }
+
+    free(val_str);
+}
+
+static void fuzz_lyd_trim_xpath(const uint8_t *Data, size_t Size) {
+    struct lyd_node *tree = NULL; // Assuming a valid tree is available
+    char *xpath = strndup((const char *)Data, Size);
+    struct lyxp_var *vars = NULL;
+
+    if (!xpath) {
+        return;
+    }
+
+    LY_ERR ret = lyd_trim_xpath(&tree, xpath, vars);
+    if (ret == LY_SUCCESS) {
+        // Handle success case if needed
+    }
+
+    // Assuming cleanup is needed for tree
+    if (tree) {
+        lyd_free_all(tree);
+    }
+
+    free(xpath);
+}
+
+static void fuzz_lyd_new_term(const uint8_t *Data, size_t Size) {
+    struct lyd_node *parent = NULL; // Assuming a valid parent node is available
+    struct lys_module *module = NULL; // Assuming a valid module is available
+    char *name = "dummy_name";
+    char *value = strndup((const char *)Data, Size);
+    uint32_t options = 0;
     struct lyd_node *node = NULL;
-    const char *xml_data = "<dummy xmlns=\"urn:dummy\"/>";
-    if (lyd_parse_data_mem(ctx, xml_data, LYD_XML, 0, LYD_VALIDATE_PRESENT, &node) != LY_SUCCESS) {
-        return NULL;
-    }
-    return node;
-}
 
-static void cleanup(struct ly_ctx *ctx, struct lyd_node *node) {
-    lyd_free_all(node);
-    ly_ctx_destroy(ctx);
+    if (!value) {
+        return;
+    }
+
+    LY_ERR ret = lyd_new_term(parent, module, name, value, options, &node);
+    if (ret == LY_SUCCESS) {
+        // Handle success case if needed
+    }
+
+    // Assuming cleanup is needed for node
+    if (node) {
+        lyd_free_all(node);
+    }
+
+    free(value);
 }
 
 int LLVMFuzzerTestOneInput_53(const uint8_t *Data, size_t Size) {
-    struct ly_ctx *ctx = create_dummy_context();
-    if (!ctx) {
-        return 0;
-    }
+    fuzz_lyd_find_path(Data, Size);
+    fuzz_lyd_dup_siblings(Data, Size);
+    fuzz_lyd_eval_xpath3(Data, Size);
+    fuzz_lyd_change_meta(Data, Size);
+    fuzz_lyd_trim_xpath(Data, Size);
+    fuzz_lyd_new_term(Data, Size);
 
-    struct lys_module *module = create_dummy_module(ctx);
-    if (!module) {
-        ly_ctx_destroy(ctx);
-        return 0;
-    }
-
-    struct lyd_node *parent = create_dummy_node(ctx);
-    struct lyd_node *node = NULL;
-
-    if (Size < 1) {
-        cleanup(ctx, parent);
-        return 0;
-    }
-
-    // Use a portion of the input data as a name and value
-    char *name = (char *)malloc(Size + 1);
-    char *value = (char *)malloc(Size + 1);
-
-    if (name && value) {
-        memcpy(name, Data, Size);
-        name[Size] = '\0';
-        memcpy(value, Data, Size);
-        value[Size] = '\0';
-
-        // Fuzz lyd_new_inner
-        lyd_new_inner(parent, module, name, 0, &node);
-
-        // Fuzz lyd_new_opaq
-        lyd_new_opaq(parent, ctx, name, value, NULL, "dummy_module", &node);
-
-        // Fuzz lyd_new_path
-        lyd_new_path(parent, ctx, name, value, 0, &node);
-
-        // Fuzz lyd_new_term
-        lyd_new_term(parent, module, name, value, 0, &node);
-
-        // Fuzz lyd_new_implicit_all
-        lyd_new_implicit_all(&parent, ctx, 0, &node);
-
-        // Fuzz lyd_new_any
-        lyd_new_any(parent, module, name, NULL, value, 0, 0, &node);
-    }
-
-    free(name);
-    free(value);
-    cleanup(ctx, parent);
     return 0;
 }
     #ifdef INC_MAIN
