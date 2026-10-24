@@ -1,0 +1,36 @@
+#include <stdio.h>
+#include <stdarg.h>
+#include <string.h>
+#include <stdlib.h>
+#include <stdint.h>
+#include <zlib.h>
+
+int LLVMFuzzerTestOneInput_9(char *fuzzData, size_t size)
+{
+	
+
+   Bytef* compressvar0[256];
+	sprintf(compressvar0, "/tmp/a50hz");
+   uLongf compressvaruLongfsize = sizeof(compressvar0);
+   Bytef* uncompressvar0[256];
+	sprintf(uncompressvar0, "/tmp/n8iyj");
+   uLongf uncompressvaruLongfsize = sizeof(uncompressvar0);
+   char* zErrorval1 = zError(0);
+	if(!zErrorval1){
+		fprintf(stderr, "err");
+		exit(0);	}
+   int compressval1 = compress(compressvar0, &compressvaruLongfsize, fuzzData, size);
+	if((int)compressval1 < 0){
+		fprintf(stderr, "err");
+		exit(0);	}
+   int uncompressval1 = uncompress(uncompressvar0, &uncompressvaruLongfsize, compressvar0, compressvaruLongfsize);
+	if((int)uncompressval1 < 0){
+		fprintf(stderr, "err");
+		exit(0);	}
+   gzFile gzdopenval1 = gzdopen(uncompressval1, compressvar0);
+   int gzflushval1 = gzflush(gzdopenval1, 1);
+	if((int)gzflushval1 < 0){
+		fprintf(stderr, "err");
+		exit(0);	}
+   return 0;
+}

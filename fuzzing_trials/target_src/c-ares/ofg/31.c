@@ -1,0 +1,96 @@
+#include <ares.h>
+#include <sys/select.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <stdlib.h>
+#include <string.h> // Include for memcpy
+#include <arpa/nameser.h> // Include for ns_c_in and ns_t_a
+
+// Define the fuzzing entry point
+int LLVMFuzzerTestOneInput_31(const uint8_t *data, size_t size) {
+  ares_channel channel;
+  int status;
+  struct ares_options options;
+  int optmask = 0;
+
+  /* Initialize ares library */
+  status = ares_library_init(ARES_LIB_INIT_ALL);
+  if (status != ARES_SUCCESS) {
+    return 0;
+  }
+
+  /* Initialize ares channel */
+  status = ares_init_options(&channel, &options, optmask);
+  if (status != ARES_SUCCESS) {
+    ares_library_cleanup();
+    return 0;
+  }
+
+  /* Create and initialize fd_sets */
+  fd_set read_fds;
+  fd_set write_fds;
+  FD_ZERO(&read_fds);
+  FD_ZERO(&write_fds);
+
+  /* Call the function under test */
+  if (size > 0) {
+    // Simulate some input processing if size is greater than 0
+    char *query = (char *)malloc(size + 1);
+    if (query) {
+      memcpy(query, data, size);
+      query[size] = '\0'; // Null-terminate the string
+
+      // Example usage of ares_query, replace with the actual function you want to test
+      ares_query(channel, query, ns_c_in, ns_t_a, NULL, NULL);
+
+      free(query);
+    }
+  }
+
+  ares_process(channel, &read_fds, &write_fds);
+
+  /* Cleanup */
+  ares_destroy(channel);
+  ares_library_cleanup();
+
+  return 0;
+}
+#ifdef INC_MAIN
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
+int main(int argc, char *argv[])
+{
+    FILE *f;
+    uint8_t *data = NULL;
+    long size;
+
+    if(argc < 2)
+        exit(0);
+
+    f = fopen(argv[1], "rb");
+    if(f == NULL)
+        exit(0);
+
+    fseek(f, 0, SEEK_END);
+
+    size = ftell(f);
+    rewind(f);
+
+    if(size < 1 + 1)
+        exit(0);
+
+    data = (uint8_t *)malloc((size_t)size);
+    if(data == NULL)
+        exit(0);
+
+    if(fread(data, (size_t)size, 1, f) != 1)
+        exit(0);
+
+    LLVMFuzzerTestOneInput_31(data + 1, (size_t)(size - 1));
+
+    free(data);
+    fclose(f);
+    return 0;
+}
+#endif

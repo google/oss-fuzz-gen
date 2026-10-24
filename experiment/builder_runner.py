@@ -116,11 +116,15 @@ class BuilderRunner:
                benchmark: Benchmark,
                work_dirs: WorkDirs,
                run_timeout: int = RUN_TIMEOUT,
-               fixer_model_name: str = DefaultModel.name):
+               fixer_model_name: str = DefaultModel.name,
+               use_afl_engine: bool = False,
+               approach: str = ""):
     self.benchmark = benchmark
     self.work_dirs = work_dirs
     self.run_timeout = run_timeout
     self.fixer_model_name = fixer_model_name
+    self.use_afl_engine = use_afl_engine
+    self.approach = approach
 
   def _libfuzzer_args(self) -> list[str]:
     return [
@@ -468,6 +472,7 @@ class BuilderRunner:
     return ParseResult(cov_pcs, total_pcs, crashes, '', '',
                        SemanticCheckResult(SemanticCheckResult.NO_SEMANTIC_ERR))
 
+
   def _copy_crash_file(self, outdir: str, artifact_dir: str,
                        run_result: RunResult) -> None:
     """Copies the first crash file to the artifact directory."""
@@ -525,8 +530,25 @@ class BuilderRunner:
     project_target_name = os.path.basename(self.benchmark.target_path)
     benchmark_log_path = self.work_dirs.build_logs_target(
         benchmark_target_name, iteration, trial)
+
+    fuzzing_engine = "afl"
+    sanitizer = "address"
     build_result.succeeded = self.build_target_local(generated_project,
-                                                     benchmark_log_path)
+                                                     benchmark_log_path, sanitizer=sanitizer,
+                                                     fuzzing_engine=fuzzing_engine)
+    if not build_result.succeeded:
+        errors = code_fixer.extract_error_message(benchmark_log_path,
+                                                  project_target_name, language)
+        build_result.errors = errors
+        return build_result, None
+
+
+    if self.use_afl_engine:
+      fuzzing_engine = "afl"
+      sanitizer = "none"
+      build_result.succeeded = self.build_target_local(generated_project,
+                                                      benchmark_log_path, sanitizer=sanitizer,
+                                                      fuzzing_engine=fuzzing_engine)
     if not build_result.succeeded:
       errors = code_fixer.extract_error_message(benchmark_log_path,
                                                 project_target_name, language)
@@ -539,42 +561,65 @@ class BuilderRunner:
 
     run_log_path = os.path.join(self.work_dirs.run_logs, f'{trial:02d}.log')
     self.run_target_local(generated_project, benchmark_target_name,
-                          run_log_path)
+                          run_log_path, fuzzing_engine, sanitizer)
     artifact_dir = self.work_dirs.artifact(benchmark_target_name, iteration,
                                            trial)
+
+    driver_base_path = os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR, "build", "out", generated_project)
+    shutil.copy(os.path.join(driver_base_path, "fuzz_driver_address"), os.path.join(artifact_dir, "asan_driver"))
+    shutil.copy(os.path.join(driver_base_path, "fuzz_driver_none"), os.path.join(artifact_dir, "fuzz_driver"))
+
     outdir = get_build_artifact_dir(generated_project, 'out')
-    self._copy_crash_file(outdir, artifact_dir, run_result)
+
+    if not self.use_afl_engine:
+      self._copy_crash_file(outdir, artifact_dir, run_result)
+
+    # _, _ = (self.get_coverage_local(
+    #     generated_project, benchmark_target_name, gathering_baseline=True))
 
     run_result.coverage, run_result.coverage_summary = (self.get_coverage_local(
         generated_project, benchmark_target_name))
 
     run_result.log_path = run_log_path
 
-    # Parse libfuzzer logs to get fuzz target runtime details.
-    with open(run_log_path, 'rb') as f:
-      # In many case JVM/python projects won't have much cov
-      # difference in short running. Adding the flag for JVM/python
-      # projects to temporary skip the checking of coverage change.
-      # Also skipping for rust projects in initial implementation.
-      flag = not self.benchmark.language in ['jvm', 'python', 'rust']
-      run_result.cov_pcs, run_result.total_pcs, \
-        run_result.crashes, run_result.crash_info, \
-          run_result.artifact_name, run_result.semantic_check = \
-            self._parse_libfuzzer_logs(f, project_name, flag)
+    # # Parse libfuzzer logs to get fuzz target runtime details.
+    # with open(run_log_path, 'rb') as f:
+    #   # In many case JVM/python projects won't have much cov
+    #   # difference in short running. Adding the flag for JVM/python
+    #   # projects to temporary skip the checking of coverage change.
+    #   # Also skipping for rust projects in initial implementation.
+    #   flag = not self.benchmark.language in ['jvm', 'python', 'rust']
+    #   run_result.cov_pcs, run_result.total_pcs, \
+    #     run_result.crashes, run_result.crash_info, \
+    #       run_result.artifact_name, run_result.semantic_check = \
+    #         self._parse_libfuzzer_logs(f, project_name, flag)
 
     return build_result, run_result
 
   def run_target_local(self, generated_project: str, benchmark_target_name: str,
-                       log_path: str):
+                       log_path: str, engine: str, sanitizer: str):
     """Runs a target in the fixed target directory."""
     # If target name is not overridden, use the basename of the target path
     # in the Dockerfile.
     logger.info('Running %s', generated_project)
     corpus_dir = self.work_dirs.corpus(benchmark_target_name)
     command = [
-        'python3', 'infra/helper.py', 'run_fuzzer', '--corpus-dir', corpus_dir,
-        generated_project, self.benchmark.target_name, '--'
-    ] + self._libfuzzer_args()
+        'python3',
+        'infra/helper.py',
+        'run_fuzzer',
+        "--base-image-tag",
+        "custom",
+        '--corpus-dir',
+        corpus_dir,
+        "--engine",
+        engine,
+        "--sanitizer",
+        sanitizer,
+        f"--runtime_limit",
+        str(self.run_timeout),
+        generated_project,
+        self.benchmark.target_name
+    ]
 
     with open(log_path, 'w') as f:
       proc = sp.Popen(command,
@@ -590,15 +635,12 @@ class BuilderRunner:
         logger.info('%s timed out during fuzzing.', generated_project)
         # Try continuing and parsing the logs even in case of timeout.
 
-    if proc.returncode != 0:
-      logger.info('********** Failed to run %s. **********', generated_project)
-    else:
-      logger.info('Successfully run %s.', generated_project)
-
   def build_target_local(self,
                          generated_project: str,
                          log_path: str,
-                         sanitizer: str = 'address') -> bool:
+                         sanitizer: str = 'address',
+                         fuzzing_engine: str = 'libfuzzer',
+                         env: dict[str, str] = {}) -> bool:
     """Builds a target with OSS-Fuzz."""
 
     logger.info('Building %s with %s', generated_project, sanitizer)
@@ -637,6 +679,10 @@ class BuilderRunner:
 
     outdir = get_build_artifact_dir(generated_project, 'out')
     workdir = get_build_artifact_dir(generated_project, 'work')
+    additional_env = []
+    for key, value in env.items():
+      additional_env.append("-e")
+      additional_env.append(f"{key}={value}")
     command = [
         'docker',
         'run',
@@ -647,15 +693,20 @@ class BuilderRunner:
         'linux/amd64',
         '-i',
         '-e',
-        'FUZZING_ENGINE=libfuzzer',
-        '-e',
         f'SANITIZER={sanitizer}',
         '-e',
         'ARCHITECTURE=x86_64',
         '-e',
         f'PROJECT_NAME={generated_project}',
         '-e',
+        "RUN_FUZZER_MODE=interactive",
+        '-e',
+        f'FUZZING_ENGINE={fuzzing_engine}',
+        '-e',
         f'FUZZING_LANGUAGE={self.benchmark.language}',
+        '-e',
+        f'APPROACH={self.approach}',
+        ] + additional_env + [
         '-v',
         f'{outdir}:/out',
         '-v',
@@ -671,7 +722,8 @@ class BuilderRunner:
     post_build_command = []
 
     # Cleanup mounted dirs.
-    pre_build_command.extend(['rm', '-rf', '/out/*', '/work/*', '&&'])
+    if not self.use_afl_engine:
+      pre_build_command.extend(['rm', '-rf', '/out/*', '/work/*', '&&'])
 
     if self.benchmark.commit:
       # TODO(metzman): Try to use build_specified_commit here.
@@ -682,7 +734,7 @@ class BuilderRunner:
         pre_build_command.extend(
             ['git', '-C', repo, 'checkout', commit, '-f', '&&'])
 
-    post_build_command.extend(['&&', 'chmod', '777', '-R', '/out/*'])
+    post_build_command.extend(['&&', 'chmod', '777', '-R', '/out'])
 
     build_command = pre_build_command + ['compile'] + post_build_command
     build_bash_command = ['-c', ' '.join(build_command)]
@@ -750,23 +802,34 @@ class BuilderRunner:
 
   def get_coverage_local(
       self, generated_project: str,
-      benchmark_target_name: str) -> tuple[Optional[textcov.Textcov], Any]:
+      benchmark_target_name: str,
+      gathering_baseline: bool = False) -> tuple[Optional[textcov.Textcov], Any]:
     """Builds the generate project with coverage sanitizer, runs OSS-Fuzz
     coverage extraction and then returns the generated coverage reports, in
     the form of the text coverage as well as the summary.json."""
     sample_id = os.path.splitext(benchmark_target_name)[0]
+    if gathering_baseline:
+      sample_id = sample_id + "_baseline_cov"
     log_path = os.path.join(self.work_dirs.build_logs,
                             f'{sample_id}-coverage.log')
     logger.info('Building project for coverage')
+    additional_env = {"BASELINE_COV": "1"} if gathering_baseline else {}
     built_coverage = self.build_target_local(generated_project,
                                              log_path,
-                                             sanitizer='coverage')
+                                             sanitizer='coverage',
+                                             env=additional_env)
     if not built_coverage:
       logger.info('Failed to make coverage build for %s', generated_project)
       return None, None
 
     logger.info('Extracting coverage')
     corpus_dir = self.work_dirs.corpus(benchmark_target_name)
+    if self.use_afl_engine and not gathering_baseline:
+      corpus_dir = os.path.join("build", "out", generated_project, f"{self.benchmark.target_name}_afl_none_out", "default", "queue")
+      afl_dir = os.path.join(oss_fuzz_checkout.OSS_FUZZ_DIR, "build", "out", generated_project, f"{self.benchmark.target_name}_afl_none_out",)
+      afl_dest = self.work_dirs.afl_output
+      shutil.copytree(afl_dir, afl_dest, dirs_exist_ok=True)
+
     command = [
         'python3',
         'infra/helper.py',
@@ -775,12 +838,15 @@ class BuilderRunner:
         corpus_dir,
         '--fuzz-target',
         self.benchmark.target_name,
+        "-e", 
+        "AFL_COV=1",
+        "--base-image-tag",
+        "custom",
         '--no-serve',
         '--port',
         '',
         generated_project,
-    ]
-
+      ]
     try:
       sp.run(command,
              capture_output=True,
@@ -792,6 +858,7 @@ class BuilderRunner:
                   generated_project, e.stdout, e.stderr)
       return None, None
 
+    logger.info('Finished collecting coverage for %s', generated_project)
     # Get the local text coverage, which includes the specific lines
     # exercised in the target project.
     local_textcov = self._extract_local_textcoverage_data(generated_project)
@@ -800,15 +867,26 @@ class BuilderRunner:
     # the coverage can be displayed in the result HTML page.
     coverage_report = os.path.join(
         get_build_artifact_dir(generated_project, 'out'), 'report')
+
     destination_coverage = self.work_dirs.code_coverage_report(
-        benchmark_target_name)
+        benchmark_target_name) 
+
+    if gathering_baseline:
+      destination_coverage = destination_coverage + "_baseline"
+
     shutil.copytree(coverage_report, destination_coverage, dirs_exist_ok=True)
+
+    lcov_report = os.path.join(
+        get_build_artifact_dir(generated_project, 'out'), 'lcov_reports', f"{self.benchmark.target_name}.lcov_total")
+
+    shutil.copy(lcov_report, destination_coverage)
 
     textcov_dir = os.path.join(get_build_artifact_dir(generated_project, 'out'),
                                'textcov_reports')
     dst_textcov = os.path.join(
         self.work_dirs.code_coverage_report(benchmark_target_name), 'textcov')
     shutil.copytree(textcov_dir, dst_textcov, dirs_exist_ok=True)
+
 
     coverage_summary = os.path.join(
         get_build_artifact_dir(generated_project, 'out'), 'report', 'linux',
@@ -850,7 +928,7 @@ class CloudBuilderRunner(BuilderRunner):
 
     for attempt_id in range(1, CLOUD_EXP_MAX_ATTEMPT + 1):
       try:
-        sp.run(*args, check=True, **kwargs)
+        proc = sp.run(*args, stdout=sp.PIPE, stderr=sp.PIPE, check=True, **kwargs)
         return True
       except sp.CalledProcessError as e:
         # Replace \n for single log entry on cloud.
@@ -933,7 +1011,13 @@ class CloudBuilderRunner(BuilderRunner):
     reproducer_name = f'{uid}.reproducer'
     reproducer_path = f'gs://{self.experiment_bucket}/{reproducer_name}'
 
-    logger.info('Servie account key: %s',
+    afl_output_name = f'{uid}-afl-output'
+    afl_output_path = f'gs://{self.experiment_bucket}/{afl_output_name}'
+
+    fuzz_driver_storage_name = f'{uid}-fuzz-drivers'
+    fuzz_driver_storage_path = f'gs://{self.experiment_bucket}/{fuzz_driver_storage_name}'
+
+    logger.info('Service account key: %s',
                 os.environ.get('GOOGLE_APPLICATION_CREDENTIALS'))
     command = [
         f'./{oss_fuzz_checkout.VENV_DIR}/bin/python3',
@@ -949,28 +1033,17 @@ class CloudBuilderRunner(BuilderRunner):
         f'--real_project={project_name}',
     ]
 
-    # TODO(dongge): Reenable caching when build script is not modified.
-    # Current caching is not applicable when OFG modifies the build script,
-    # There is no simple way to check if the build script has been modified,
-    # but this feature should be added later.
-    # and fails to build the project (particularly with coverage sanitizer).
-    # if oss_fuzz_checkout.ENABLE_CACHING and (
-    #     oss_fuzz_checkout.is_image_cached(project_name, 'address') and
-    #     oss_fuzz_checkout.is_image_cached(project_name, 'coverage')):
-    #   logger.info('Using cached image for %s', project_name)
-    #   command.append('--use_cached_image')
-
-    #   # Overwrite the Dockerfile to be caching friendly
-    #   # We hardcode 'address' here, but this is irrelevant and will be
-    #   # overridden later via a Docker argument.
-    #   oss_fuzz_checkout.rewrite_project_to_cached_project(
-    #       project_name, generated_project, 'address')
-    #   oss_fuzz_checkout.prepare_build(project_name, 'address',
-    #                                   generated_project)
+    if self.use_afl_engine:
+      command.append(f'--upload_afl={afl_output_path}')
+      command.append(f'--upload_drivers={fuzz_driver_storage_path}')
+      command.append("--use_afl")
+      command.append("--run_timeout")
+      command.append(f"{self.run_timeout}")
+    else:
+      command += ['--'] + self._libfuzzer_args()
 
     if cloud_build_tags:
       command += ['--tags'] + cloud_build_tags
-    command += ['--'] + self._libfuzzer_args()
 
     logger.info('Command: %s', command)
 
@@ -980,12 +1053,20 @@ class CloudBuilderRunner(BuilderRunner):
       return build_result, None
 
     logger.info('Evaluated %s on cloud.', os.path.realpath(target_path))
+    logger.info('Results stored in bucket: %s.', self.experiment_bucket)
 
     storage_client = storage.Client()
     bucket = storage_client.bucket(self.experiment_bucket)
 
     build_result.log_path = build_log_path
 
+    # Gather:
+    # - build log
+    # - run log
+    # - afl output directory
+    # - Drivers compiled with and without asan
+
+    # Downloading build_log_path
     generated_target_name = os.path.basename(target_path)
     with open(
         self.work_dirs.build_logs_target(generated_target_name, iteration,
@@ -999,9 +1080,7 @@ class CloudBuilderRunner(BuilderRunner):
         logger.warning('Cannot find cloud build log of %s: %s',
                        os.path.realpath(target_path), build_log_name)
 
-    # TODO(Dongge): Split Builder and Runner:
-    # Set build_result.succeeded based on existence of fuzz target binary.
-    # Separate the rest lines into an independent function.
+    # Gather run log path
     run_log_path = os.path.join(self.work_dirs.run_logs, f'{trial:02d}.log')
     with open(run_log_path, 'wb') as f:
       blob = bucket.blob(run_log_name)
@@ -1014,45 +1093,63 @@ class CloudBuilderRunner(BuilderRunner):
         logger.warning('Cannot find cloud run log of %s: %s',
                        os.path.realpath(target_path), run_log_name)
 
-    if not build_result.succeeded:
-      errors = code_fixer.extract_error_message(
-          self.work_dirs.build_logs_target(generated_target_name, iteration,
-                                           trial),
-          os.path.basename(self.benchmark.target_path), language)
-      build_result.errors = errors
-      logger.info('Cloud evaluation of %s indicates a failure: %s',
-                  os.path.realpath(target_path), errors)
-      return build_result, None
-    logger.info('Cloud evaluation of %s indicates a success.',
-                os.path.realpath(target_path))
 
-    corpus_dir = self.work_dirs.corpus(generated_target_name)
-    with open(os.path.join(corpus_dir, 'corpus.zip'), 'wb') as f:
-      blob = bucket.blob(corpus_name)
-      if blob.exists():
-        blob.download_to_file(f)
+    # Collect afl output
+    afl_output_local = self.work_dirs.afl_output
+    prefix = afl_output_name  
+    afl_output_blobs = list(bucket.list_blobs(prefix=prefix))
+    if len(afl_output_blobs) > 0:
+      logger.info('Downloading afl out directory of %s: %s to %s',
+                    os.path.realpath(target_path), afl_output_name, afl_output_local)
+      for blob in afl_output_blobs:
+        relative_path = os.path.relpath(blob.name, prefix)
+        local_path = os.path.join(afl_output_local, relative_path)
 
-    code_coverage_report_dir = self.work_dirs.code_coverage_report(
-        generated_target_name)
-    report_prefix = f'{coverage_name}/report/linux/'
-    blobs = bucket.list_blobs(prefix=report_prefix)
+        os.makedirs(os.path.dirname(local_path), exist_ok=True)
 
-    for blob in blobs:
-      if blob.name.endswith('/'):
-        continue
+        blob.download_to_filename(local_path)
+    else:
+      logger.warning('Cannot find afl output in %s: %s',
+                os.path.realpath(target_path), afl_output_name)
 
-      # Get the relative path within report/linux/
-      relative_path = blob.name[len(report_prefix):]
-      local_path = os.path.join(code_coverage_report_dir, 'report', 'linux',
-                                relative_path)
-      os.makedirs(os.path.dirname(local_path), exist_ok=True)
 
-      blob.download_to_filename(local_path)
+    # code_coverage_report_dir = self.work_dirs.code_coverage_report(
+    #     generated_target_name)
+    # report_prefix = f'{coverage_name}/report/linux/'
+    # blobs = bucket.list_blobs(prefix=report_prefix)
 
-    run_result = RunResult(corpus_path=corpus_path,
-                           coverage_report_path=coverage_path,
-                           reproducer_path=reproducer_path,
-                           log_path=run_log_path)
+    # for blob in blobs:
+    #   if blob.name.endswith('/'):
+    #     continue
+
+    #   # Get the relative path within report/linux/
+    #   relative_path = blob.name[len(report_prefix):]
+    #   local_path = os.path.join(code_coverage_report_dir, 'report', 'linux',
+    #                             relative_path)
+    #   os.makedirs(os.path.dirname(local_path), exist_ok=True)
+
+    #   blob.download_to_filename(local_path)
+
+    # lcov_report_name = f'{coverage_name}/lcov_reports/{self.benchmark.target_name}.lcov_total'
+    # local_lcov_report_path = os.path.join(code_coverage_report_dir, f"{self.benchmark.target_name}.lcov_total")
+    # with open(local_lcov_report_path, 'wb') as f:
+    #   blob = bucket.blob(lcov_report_name)
+    #   if blob.exists():
+    #     build_result.succeeded = True
+    #     logger.info('Downloading cloud lcov log of %s: %s to %s',
+    #                 os.path.realpath(target_path), lcov_report_name, f)
+    #     blob.download_to_file(f)
+    #   else:
+    #     logger.warning('Cannot find cloud run log of %s: %s',
+    #                    os.path.realpath(target_path), lcov_report_name)
+
+    # For our purposes, we don't care about constructing the run result
+
+    # The rest of the code below is related to runresults which we don't care about in the context of 
+    # run_result = RunResult(corpus_path=corpus_path,
+    #                        coverage_report_path=coverage_path,
+    #                        reproducer_path=reproducer_path,
+    #                        log_path=run_log_path)
 
     #     blob = bucket.blob(f'{coverage_name}/report/linux/summary.json')
     # if blob.exists():
@@ -1065,81 +1162,110 @@ class CloudBuilderRunner(BuilderRunner):
     #   with open(coverage_summary_file, 'wb') as f:
     #     blob.download_to_file(f)
 
-    # # Load the coverage summary
-    # with open(coverage_summary_file, 'r') as f:
-    #   run_result.coverage_summary = json.load(f)
+    # # # Load the coverage summary
+    # # with open(coverage_summary_file, 'r') as f:
+    # #   run_result.coverage_summary = json.load(f)
 
     # summary.json is already downloaded as part of the bulk download above
-    coverage_summary_file = os.path.join(
-        self.work_dirs.code_coverage_report(generated_target_name),
-        'report/linux/summary.json')
+    # coverage_summary_file = os.path.join(
+    #     self.work_dirs.code_coverage_report(generated_target_name),
+    #     'report/linux/summary.json')
 
-    # Load the coverage summary if it exists
-    if os.path.exists(coverage_summary_file):
-      with open(coverage_summary_file, 'r') as f:
-        run_result.coverage_summary = json.load(f)
+    # # Load the coverage summary if it exists
+    # if os.path.exists(coverage_summary_file):
+    #   with open(coverage_summary_file, 'r') as f:
+    #     run_result.coverage_summary = json.load(f)
 
-    target_basename = os.path.basename(self.benchmark.target_path)
+    # target_basename = os.path.basename(self.benchmark.target_path)
 
-    # Load coverage reports.
-    textcov_blob_path = self._get_cloud_textcov_path(coverage_name)
-    if self.benchmark.language == 'jvm':
-      blob = bucket.blob(textcov_blob_path)
-      if blob.exists():
-        with blob.open() as f:
-          run_result.coverage = textcov.Textcov.from_jvm_file(f)
-        self._copy_textcov_to_workdir(bucket, textcov_blob_path,
-                                      generated_target_name)
-    elif self.benchmark.language == 'python':
-      blob = bucket.blob(textcov_blob_path)
-      if blob.exists():
-        with blob.open() as f:
-          run_result.coverage = textcov.Textcov.from_python_file(f)
-        self._copy_textcov_to_workdir(bucket, textcov_blob_path,
-                                      generated_target_name)
-    elif self.benchmark.language == 'rust':
-      blob = bucket.blob(textcov_blob_path)
-      if blob.exists():
-        with blob.open() as f:
-          run_result.coverage = textcov.Textcov.from_rust_file(f)
-        self._copy_textcov_to_workdir(bucket, textcov_blob_path,
-                                      generated_target_name)
-    else:
-      # C/C++
-      blob = bucket.blob(textcov_blob_path)
-      if blob.exists():
-        with blob.open('rb') as f:
-          run_result.coverage = textcov.Textcov.from_file(
-              f,
-              ignore_function_patterns=[
-                  # Don't include other functions defined in the target code.
-                  re.compile(r'^' + re.escape(target_basename) + ':')
-              ])
-        self._copy_textcov_to_workdir(bucket, textcov_blob_path,
-                                      generated_target_name)
+    # # Load coverage reports.
+    # textcov_blob_path = self._get_cloud_textcov_path(coverage_name)
+    # if self.benchmark.language == 'jvm':
+    #   blob = bucket.blob(textcov_blob_path)
+    #   if blob.exists():
+    #     with blob.open() as f:
+    #       run_result.coverage = textcov.Textcov.from_jvm_file(f)
+    #     self._copy_textcov_to_workdir(bucket, textcov_blob_path,
+    #                                   generated_target_name)
+    # elif self.benchmark.language == 'python':
+    #   blob = bucket.blob(textcov_blob_path)
+    #   if blob.exists():
+    #     with blob.open() as f:
+    #       run_result.coverage = textcov.Textcov.from_python_file(f)
+    #     self._copy_textcov_to_workdir(bucket, textcov_blob_path,
+    #                                   generated_target_name)
+    # elif self.benchmark.language == 'rust':
+    #   blob = bucket.blob(textcov_blob_path)
+    #   if blob.exists():
+    #     with blob.open() as f:
+    #       run_result.coverage = textcov.Textcov.from_rust_file(f)
+    #     self._copy_textcov_to_workdir(bucket, textcov_blob_path,
+    #                                   generated_target_name)
+    # else:
+    #   # C/C++
+    #   blob = bucket.blob(textcov_blob_path)
+    #   if blob.exists():
+    #     with blob.open('rb') as f:
+    #       run_result.coverage = textcov.Textcov.from_file(
+    #           f,
+    #           ignore_function_patterns=[
+    #               # Don't include other functions defined in the target code.
+    #               re.compile(r'^' + re.escape(target_basename) + ':')
+    #           ])
+    #     self._copy_textcov_to_workdir(bucket, textcov_blob_path,
+    #                                   generated_target_name)
 
-    # Parse libfuzzer logs to get fuzz target runtime details.
-    with open(run_log_path, 'rb') as f:
-      run_result.cov_pcs, run_result.total_pcs, \
-        run_result.crashes, run_result.crash_info, \
-          run_result.artifact_name, run_result.semantic_check = \
-            self._parse_libfuzzer_logs(f, project_name)
+    # # Parse libfuzzer logs to get fuzz target runtime details.
+    # with open(run_log_path, 'rb') as f:
+    #   run_result.cov_pcs, run_result.total_pcs, \
+    #     run_result.crashes, run_result.crash_info, \
+    #       run_result.artifact_name, run_result.semantic_check = \
+    #         self._parse_libfuzzer_logs(f, project_name)
 
-    artifact_dir = self.work_dirs.artifact(generated_target_name, iteration,
-                                           trial)
-    blobs = list(bucket.list_blobs(prefix=f'{reproducer_name}/artifacts/'))
-    if blobs:
-      blob = blobs[0]
-      artifact_path = os.path.join(artifact_dir, os.path.basename(blob.name))
-      # TOOD: Some try-catch here.
-      blob.download_to_filename(artifact_path)
-      run_result.artifact_path = artifact_path
-    else:
-      logger.warning('Cloud evaluation of %s failed to downlod artifact:%s',
-                     os.path.realpath(target_path),
-                     f'{reproducer_name}/artifacts/')
+    # artifact_dir = self.work_dirs.artifact(generated_target_name, iteration,
+    #                                        trial)
 
-    return build_result, run_result
+    # asan_build_path = f"{fuzz_driver_storage_name}/asan_driver"
+    # fuzz_build_path =  f"{fuzz_driver_storage_name}/fuzz_driver"
+
+    # with open(os.path.join(artifact_dir, "asan_driver"), "wb") as f:
+    #   blob = bucket.blob(asan_build_path)
+    #   if blob.exists():
+    #     build_result.succeeded = True
+    #     logger.info('Downloading asan driver of %s: %s to %s',
+    #                 os.path.realpath(target_path), asan_build_path, f)
+    #     blob.download_to_file(f)
+    #   else:
+    #     logger.warning('Cannot find asan driver of %s: %s',
+    #                    os.path.realpath(target_path), asan_build_path)
+
+    # with open(os.path.join(artifact_dir, "fuzz_driver"), "wb") as f:
+    #   blob = bucket.blob(fuzz_build_path)
+    #   if blob.exists():
+    #     build_result.succeeded = True
+    #     logger.info('Downloading fuzz driver of %s: %s to %s',
+    #                 os.path.realpath(target_path), fuzz_build_path, f)
+    #     blob.download_to_file(f)
+    #   else:
+    #     logger.warning('Cannot find fuzz driver of %s: %s',
+    #                    os.path.realpath(target_path), fuzz_build_path)
+
+
+    # blobs = list(bucket.list_blobs(prefix=f'{reproducer_name}/'))
+
+    # blobs = list(bucket.list_blobs(prefix=f'{reproducer_name}/artifacts/'))
+    # if blobs:
+    #   blob = blobs[0]
+    #   artifact_path = os.path.join(artifact_dir, os.path.basename(blob.name))
+    #   # TOOD: Some try-catch here.
+    #   blob.download_to_filename(artifact_path)
+    #   run_result.artifact_path = artifact_path
+    # else:
+    #   logger.warning('Cloud evaluation of %s failed to downlod artifact:%s',
+    #                  os.path.realpath(target_path),
+    #                  f'{reproducer_name}/artifacts/')
+
+    return build_result, None
 
   def _copy_textcov_to_workdir(self, bucket, textcov_blob_path: str,
                                generated_target_name: str) -> None:

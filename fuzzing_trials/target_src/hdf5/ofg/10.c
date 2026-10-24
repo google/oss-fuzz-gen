@@ -1,0 +1,58 @@
+#include <stdint.h>
+#include <stddef.h>
+#include <hdf5.h>
+
+int LLVMFuzzerTestOneInput_10(const uint8_t *data, size_t size) {
+    // Declare and initialize variables for H5Dread_chunk2 parameters
+    hid_t dset_id = 1; // Example dataset ID, should be a valid ID in real scenarios
+    hid_t dxpl_id = 2; // Example dataset transfer property list ID, should be valid
+    hsize_t offset[3] = {0, 0, 0}; // Example offset, adjust dimensions as needed
+    uint32_t filters = 0; // Example filters, adjust as needed
+    void *buf = (void *)data; // Use input data as buffer
+    size_t buf_size = size; // Buffer size from input size
+
+    // Call the function-under-test
+    herr_t result = H5Dread_chunk2(dset_id, dxpl_id, offset, &filters, buf, &buf_size);
+
+    // Return 0 to indicate successful execution of the fuzzer
+    return 0;
+}
+#ifdef INC_MAIN
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
+int main(int argc, char *argv[])
+{
+    FILE *f;
+    uint8_t *data = NULL;
+    long size;
+
+    if(argc < 2)
+        exit(0);
+
+    f = fopen(argv[1], "rb");
+    if(f == NULL)
+        exit(0);
+
+    fseek(f, 0, SEEK_END);
+
+    size = ftell(f);
+    rewind(f);
+
+    if(size < 2 + 1)
+        exit(0);
+
+    data = (uint8_t *)malloc((size_t)size);
+    if(data == NULL)
+        exit(0);
+
+    if(fread(data, (size_t)size, 1, f) != 1)
+        exit(0);
+
+    LLVMFuzzerTestOneInput_10(data + 2, (size_t)(size - 2));
+
+    free(data);
+    fclose(f);
+    return 0;
+}
+#endif

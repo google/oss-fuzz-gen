@@ -1,0 +1,60 @@
+#include <stdint.h>
+#include <stddef.h>
+
+extern "C" {
+    // Assuming the function is defined in an external C library
+    const char * sf_version_string();
+}
+
+extern "C" int LLVMFuzzerTestOneInput_49(const uint8_t *data, size_t size) {
+    // Call the function-under-test
+    const char *version = sf_version_string();
+
+    // Optional: Use the version string in some way to ensure it is accessed
+    if (version != nullptr) {
+        // For example, print the version string for debugging purposes
+        // (In actual fuzzing, you might not print to avoid cluttering the output)
+        // printf("Version: %s\n", version);
+    }
+
+    return 0;
+}
+#ifdef INC_MAIN
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
+int main(int argc, char *argv[])
+{
+    FILE *f;
+    uint8_t *data = NULL;
+    long size;
+
+    if(argc < 2)
+        exit(0);
+
+    f = fopen(argv[1], "rb");
+    if(f == NULL)
+        exit(0);
+
+    fseek(f, 0, SEEK_END);
+
+    size = ftell(f);
+    rewind(f);
+
+    if(size < 1 + 1)
+        exit(0);
+
+    data = (uint8_t *)malloc((size_t)size);
+    if(data == NULL)
+        exit(0);
+
+    if(fread(data, (size_t)size, 1, f) != 1)
+        exit(0);
+
+    LLVMFuzzerTestOneInput_49(data + 1, (size_t)(size - 1));
+
+    free(data);
+    fclose(f);
+    return 0;
+}
+#endif

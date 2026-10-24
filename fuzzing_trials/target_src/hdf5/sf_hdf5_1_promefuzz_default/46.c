@@ -1,0 +1,105 @@
+// This fuzz driver is generated for library hdf5, aiming to fuzz the following functions:
+// H5Fcreate at H5F.c:638:1 in H5Fpublic.h
+// H5Gcreate2 at H5G.c:222:1 in H5Gpublic.h
+// H5Fclose at H5F.c:1027:1 in H5Fpublic.h
+// H5Grefresh at H5G.c:992:1 in H5Gpublic.h
+// H5Gget_info_by_idx at H5G.c:795:1 in H5Gpublic.h
+// H5Gget_info_by_name at H5G.c:688:1 in H5Gpublic.h
+// H5Gcreate2 at H5G.c:222:1 in H5Gpublic.h
+// H5Gclose at H5G.c:864:1 in H5Gpublic.h
+// H5Gget_info at H5G.c:582:1 in H5Gpublic.h
+// H5Gflush at H5G.c:954:1 in H5Gpublic.h
+// H5Gclose at H5G.c:864:1 in H5Gpublic.h
+#include <stdint.h>
+#include <stddef.h>
+#include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <H5Gpublic.h>
+#include <H5Fpublic.h>
+#include <H5Ppublic.h>
+
+static hid_t create_dummy_group() {
+    hid_t file_id = H5Fcreate("./dummy_file", H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT);
+    if (file_id < 0) return H5I_INVALID_HID;
+
+    hid_t group_id = H5Gcreate2(file_id, "dummy_group", H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
+    H5Fclose(file_id);
+    return group_id;
+}
+
+int LLVMFuzzerTestOneInput_46(const uint8_t *Data, size_t Size) {
+    if (Size < 1) return 0;
+
+    hid_t group_id = create_dummy_group();
+    if (group_id == H5I_INVALID_HID) return 0;
+
+    // Fuzz H5Grefresh
+    herr_t status = H5Grefresh(group_id);
+
+    // Fuzz H5Gget_info_by_idx
+    H5G_info_t ginfo;
+    status = H5Gget_info_by_idx(group_id, ".", H5_INDEX_NAME, H5_ITER_NATIVE, 0, &ginfo, H5P_DEFAULT);
+
+    // Prepare name buffer for H5Gget_info_by_name
+    char name[256];
+    snprintf(name, sizeof(name), "group_%zu", Size % 100);
+
+    // Fuzz H5Gget_info_by_name
+    status = H5Gget_info_by_name(group_id, name, &ginfo, H5P_DEFAULT);
+
+    // Fuzz H5Gcreate2
+    hid_t new_group_id = H5Gcreate2(group_id, name, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
+    if (new_group_id != H5I_INVALID_HID) {
+        H5Gclose(new_group_id);
+    }
+
+    // Fuzz H5Gget_info
+    status = H5Gget_info(group_id, &ginfo);
+
+    // Fuzz H5Gflush
+    status = H5Gflush(group_id);
+
+    H5Gclose(group_id);
+    return 0;
+}
+    #ifdef INC_MAIN
+    #include <stdio.h>
+    #include <stdlib.h>
+    #include <stdint.h>
+    int main(int argc, char *argv[])
+    {
+        FILE *f;
+        uint8_t *data = NULL;
+        long size;
+
+        if(argc < 2)
+            exit(0);
+
+        f = fopen(argv[1], "rb");
+        if(f == NULL)
+            exit(0);
+
+        fseek(f, 0, SEEK_END);
+
+        size = ftell(f);
+        rewind(f);
+
+        if(size < 1 + 1)
+            exit(0);
+
+        data = (uint8_t *)malloc((size_t)size);
+        if(data == NULL)
+            exit(0);
+
+        if(fread(data, (size_t)size, 1, f) != 1)
+            exit(0);
+
+        LLVMFuzzerTestOneInput_46(data + 1, (size_t)(size - 1));
+
+        free(data);
+        fclose(f);
+        return 0;
+    }
+    #endif
+    

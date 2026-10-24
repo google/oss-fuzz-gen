@@ -29,6 +29,9 @@ import rust_demangler
 logger = logging.getLogger(__name__)
 
 # No spaces at the beginning, and ends with a ":".
+BRANCH_PATTERN = re.compile(r'Branch\s*\(\s*(?P<line>\d+)\s*:\s*(?P<col>\d+)\s*\)')
+BRANCH_TAKEN = re.compile(r'True\s*:\s*(?P<true>[^,\]]+)')
+BRANCH_NOT_TAKEN = re.compile(r'False\s*:\s*(?P<false>[^\]]+)')
 FUNCTION_PATTERN = re.compile(r'^([^\s].*):$')
 LINE_PATTERN = re.compile(r'^\s*\d+\|\s*([\d\.a-zA-Z]+)\|(.*)')
 
@@ -63,7 +66,7 @@ def _discard_fuzz_target_lines(covreport_content: str) -> str:
   # 'LLVMFuzzerTestOneInput'(C/C++) or 'fuzz_target' (Rust).
   project_file_contents = [
       sec for sec in covreport_content.split('\n\n')
-      if 'LLVMFuzzerTestOneInput' not in sec or 'fuzz_target' not in sec
+      if 'LLVMFuzzerTestOneInput' not in sec and 'fuzz_target' not in sec
   ]
   return '\n\n'.join(project_file_contents)
 
@@ -97,6 +100,12 @@ def _parse_hitcount(data: str) -> float:
 
   raise ValueError(f'Suffix {data[-1]} is not supported')
 
+@dataclasses.dataclass(frozen=True)
+class Branch:
+  line: int
+  col: int
+  hit: bool
+  outcome: literal["TAKEN", "NOT_TAKEN"]
 
 @dataclasses.dataclass
 class Line:
@@ -176,6 +185,7 @@ class Textcov:
   # Function name -> Function object.
   # For JVM / C / C++ / Rust
   functions: dict[str, Function] = dataclasses.field(default_factory=dict)
+  branches: set[Branch] = dataclasses.field(default_factory=set)
   # File name -> File object.
   # For Python
   files: dict[str, File] = dataclasses.field(default_factory=dict)
@@ -250,6 +260,25 @@ class Textcov:
         # ignored function.
         continue
 
+      match = BRANCH_PATTERN.search(line)
+      if match:
+        lineno = int(match.group('line')); 
+        col = int(match.group('col'))
+        taken_count = BRANCH_TAKEN.search(line).group('true') if BRANCH_TAKEN.search(line) else None
+        not_taken_count = BRANCH_NOT_TAKEN.search(line).group('false') if BRANCH_NOT_TAKEN.search(line) else None
+        if taken_count is None or not_taken_count is None:
+          continue
+
+        taken_branch_hit = True if taken_count != "0" else False
+        not_taken_branch_hit = True if not_taken_count != "0" else False
+
+        # Count the case where the branch is taken and not taken
+        b1 = Branch(lineno, col, taken_branch_hit, "TAKEN")
+        b2 = Branch(lineno, col, not_taken_branch_hit, "NOT_TAKEN")
+        textcov.branches.add(b1)
+        textcov.branches.add(b2)
+
+
       match = LINE_PATTERN.match(line)
       if match:
         hit_count = _parse_hitcount(match.group(1))
@@ -263,6 +292,7 @@ class Textcov:
                                                        hit_count=hit_count)
 
         continue
+      
     return textcov
 
   @classmethod
@@ -493,6 +523,16 @@ class Textcov:
         if function.name in self.functions:
           self.functions[function.name].subtract_covered_lines(
               function, self.language)
+
+  @property
+  def covered_branches(self):
+    return set([b for b in self.branches if b.hit])
+
+  def unique_branches_against(self, *other_textcovs):
+    """Return set of branch outcomes covered here but not in any other_textcovs."""
+    other_sets = (o.covered_branches for o in other_textcovs)
+
+    return self.covered_branches.difference(*other_sets)
 
   @property
   def covered_lines(self):
