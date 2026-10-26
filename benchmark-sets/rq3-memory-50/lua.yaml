@@ -1,0 +1,15 @@
+functions:
+- name: checkstack
+  params:
+  - name: L
+    type: 'bool '
+  - name: L1
+    type: 'bool '
+  - name: n
+    type: int
+  return_type: void
+  signature: void checkstack(lua_State *, lua_State *, int)
+language: c
+project: lua
+target_name: lua_stringtonumber_test
+target_path: /src/testdir/tests/capi/lua_stringtonumber_test.c

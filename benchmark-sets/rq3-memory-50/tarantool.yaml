@@ -1,0 +1,15 @@
+functions:
+- name: port_sql_dump_lua
+  params:
+  - name: port
+    type: 'bool '
+  - name: L
+    type: 'bool '
+  - name: mode
+    type: int
+  return_type: void
+  signature: void port_sql_dump_lua(struct port *, struct lua_State *, DW_TAG_enumeration_typeport_dump_lua_mode)
+language: c
+project: tarantool
+target_name: http_parser_fuzzer
+target_path: /src/tarantool/test/fuzz/http_parser_fuzzer.c

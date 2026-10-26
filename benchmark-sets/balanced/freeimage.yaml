@@ -1,0 +1,15 @@
+functions:
+- name: _ZN7Imf_2_29InputFileC2EPKci
+  params:
+  - name: this
+    type: 'bool '
+  - name: fileName
+    type: 'bool '
+  - name: numThreads
+    type: int
+  return_type: void
+  signature: void Imf_2_2::InputFile::InputFile(const char *, int)
+language: c++
+project: freeimage
+target_name: load_from_memory_fuzzer
+target_path: /src/load_from_memory_fuzzer.cc

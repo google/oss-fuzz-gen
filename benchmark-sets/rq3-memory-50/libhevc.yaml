@@ -1,0 +1,15 @@
+functions:
+- name: add_picture_to_stack
+  params:
+  - name: rate_control_api
+    type: 'bool '
+  - name: i4_enc_pic_id
+    type: int
+  - name: i4_rc_in_pic
+    type: int
+  return_type: void
+  signature: void add_picture_to_stack(rate_control_api_t *, WORD32, WORD32)
+language: c++
+project: libhevc
+target_name: hevc_dec_fuzzer
+target_path: /src/libhevc/fuzzer/hevc_dec_fuzzer.cpp

@@ -1,0 +1,29 @@
+functions:
+- name: x86_cpuid_copy_from_buffer
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: int
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: int x86_cpuid_copy_from_buffer(struct cpu_policy *, const xen_cpuid_leaf_t *, uint32_t, uint32_t *, uint32_t *)
+- name: x86_cpuid_copy_to_buffer
+  params:
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  - name: ''
+    type: 'bool '
+  return_type: int
+  signature: int x86_cpuid_copy_to_buffer(const struct cpu_policy *, xen_cpuid_leaf_t *, uint32_t *)
+language: c
+project: xen
+target_name: x86_instruction_emulator
+target_path: /src/xen/tools/fuzz/x86_instruction_emulator/fuzz-emul.c
