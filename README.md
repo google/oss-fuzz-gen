@@ -1,4 +1,9 @@
-# A Framework for Fuzz Target Generation and Evaluation
+## **This repository is no longer being maintained.**
+
+<br>
+<br>
+
+## A Framework for Fuzz Target Generation and Evaluation
 
 This framework generates fuzz targets for real-world `C`/`C++/Java/Python` projects with
 various Large Language Models (LLM) and benchmarks them via the
@@ -39,21 +44,21 @@ for 160 C/C++ projects. The maximum line coverage increase is 29% from the exist
 
 Note that these reports are not public as they may contain undisclosed vulnerabilities.
 
-## Usage
+### Usage
 
 Check our detailed [usage guide](./USAGE.md) for instructions on how to run this framework and generate reports based on the results.
 
-## Independent Agent Execution and Evaluation
+### Independent Agent Execution and Evaluation
 You can also execute or evaluate individual agents without running full experiments, using the integrated agent execution framework.
 See the [framework's documentation](./agent_tests/readme.md) for detailed instructions on how to run individual agents or sequence of agents.
 
-## Collaborations
+### Collaborations
 Interested in research or open-source community collaborations?
 Please feel free to create an issue or email us: oss-fuzz-team@google.com.
 
 <img src="images/Collaboration.png" width="200" height="200">
 
-## Bugs Discovered
+### Bugs Discovered
 
 So far, we have reported 30 new bugs/vulnerabilities found by automatically generated targets built
 by this framework:
@@ -92,7 +97,7 @@ by this framework:
 
 These bugs could only have been discovered with newly generated targets. They were not reachable with existing OSS-Fuzz targets.
 
-## Current top coverage improvements by project
+### Current top coverage improvements by project
 
 | Project | Total coverage gain	| Total relative gain	| OSS-Fuzz-gen total covered lines | OSS-Fuzz-gen new covered lines | Existing covered lines | Total project lines |
 | --------| ------------------- | ------------------- | -------------------------------- | ------------------------------ | ---------------------- | ------------------- |
@@ -124,5 +129,5 @@ These bugs could only have been discovered with newly generated targets. They we
 
 \* Additional code from the project-under-test maybe included when compiling the new fuzz targets and result in high percentage gains.
 
-## Citing This Work
+### Citing This Work
 Please click on the _'Cite this repository'_ button located on the right-hand side of this GitHub page for citation details.
