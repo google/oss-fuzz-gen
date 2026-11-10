@@ -79,6 +79,46 @@ export AZURE_OPENAI_API_VERSION='<your-azure-api-version>' # default is '2024-02
 To distinguish between the two ways of accessing OpenAI models, you need to add `-azure` to the model name **when using OpenAI on Azure**. For example, `gpt-3.5-turbo-azure` will use OpenAI on Azure, while `gpt-3.5-turbo` will use OpenAI on OpenAI.
 
 
+#### OrcaRouter
+
+[OrcaRouter](https://www.orcarouter.ai) is an OpenAI-compatible AI gateway that
+routes many providers behind one endpoint. Models are addressed through the
+`orcarouter/` namespace, and every entry point that takes `--model` accepts
+them.
+
+Create an API key in the [OrcaRouter console](https://www.orcarouter.ai/console/api-keys)
+and export it as an environment variable (the same way `OPENAI_API_KEY` is
+used):
+```bash
+export ORCA_KEY='<your-orcarouter-api-key>'
+```
+
+Then list the models your key can reach. The selector is generated from the
+gateway's live catalog, and falls back to a small verified seed if the gateway
+is unreachable (the list says which source was used):
+```bash
+python -m llm_toolkit.orcarouter list-models --capability chat
+```
+Use one of the printed names, for example:
+```bash
+./run_all_experiments.py --model=orcarouter/deepseek/deepseek-v4-pro \
+    --benchmarks-directory='./benchmark-sets/comparison'
+```
+
+`orcarouter/orcacyber-zero` (OrcaCyber Zero) is the recommended model for this
+project's security workload: it is intended for security teams that have
+completed business verification and is served for authorized security work,
+where general-purpose gateways often refuse such requests. It requires that
+verified access; without it, use `orcarouter/fusion` or any other model from
+the catalog.
+
+Inference is sent to `https://api.orcarouter.ai/v1`. `ORCA_API_BASE_URL`,
+`ORCA_AUTH_BASE_URL` and the shared `ORCA_BASE_URL` point the client at a
+self-hosted deployment (HTTPS is required outside loopback). Keys are only read
+from the environment: they are never accepted on the command line, logged, or
+included in error messages.
+
+
 ## Running experiments
 To generate and evaluate the fuzz targets in a benchmark set via *local* experiments:
 ```bash

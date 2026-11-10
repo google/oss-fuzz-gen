@@ -51,6 +51,23 @@ NUM_SAMPLES: int = 1
 TEMPERATURE: float = 0.4
 
 
+def _create_provider_model(
+    name: str,
+    ai_binary: str,
+    max_tokens: int,
+    num_samples: int,
+    temperature: float,
+    temperature_list: Optional[list[float]],
+) -> Optional['LLM']:
+  """Creates a model for providers with a data-driven model namespace.
+
+  Providers such as OrcaRouter expose a catalog instead of a fixed class per
+  model. `llm_toolkit.orcarouter` is imported at the end of this module.
+  """
+  return orcarouter.create_model(name, ai_binary, max_tokens, num_samples,
+                                 temperature, temperature_list)
+
+
 class LLM:
   """Base LLM."""
 
@@ -62,6 +79,11 @@ class LLM:
   MAX_INPUT_TOKEN: int = sys.maxsize
 
   _max_attempts = 5  # Maximum number of attempts to get prediction response
+
+  @property
+  def api_model_name(self) -> str:
+    """Model id sent to the provider API, if it differs from |name|."""
+    return self.name
 
   def __init__(
       self,
@@ -112,6 +134,12 @@ class LLM:
             temperature,
             temperature_list,
         )
+
+    provider_model = _create_provider_model(name, ai_binary, max_tokens,
+                                            num_samples, temperature,
+                                            temperature_list)
+    if provider_model is not None:
+      return provider_model
 
     raise ValueError(f'Bad model type {name}')
 
@@ -330,7 +358,7 @@ class GPT(LLM):
 
     completion = self.with_retry_on_error(
         lambda: client.chat.completions.create(messages=self.messages,
-                                               model=self.name,
+                                               model=self.api_model_name,
                                                n=self.num_samples,
                                                temperature=self.temperature),
         [openai.OpenAIError])
@@ -354,7 +382,7 @@ class GPT(LLM):
 
     result = self.with_retry_on_error(
         lambda: client.responses.create(
-            model=self.name, input=self.messages, tools=tools),
+            model=self.api_model_name, input=self.messages, tools=tools),
         [openai.OpenAIError])
     return result
 
@@ -370,7 +398,7 @@ class GPT(LLM):
 
     completion = self.with_retry_on_error(
         lambda: client.chat.completions.create(messages=prompt.get(),
-                                               model=self.name,
+                                               model=self.api_model_name,
                                                n=self.num_samples,
                                                temperature=self.temperature),
         [openai.OpenAIError])
@@ -389,7 +417,7 @@ class GPT(LLM):
 
     completion = self.with_retry_on_error(
         lambda: client.chat.completions.create(messages=prompt.get(),
-                                               model=self.name,
+                                               model=self.api_model_name,
                                                n=self.num_samples,
                                                temperature=self.temperature),
         [openai.OpenAIError])
@@ -474,7 +502,7 @@ class ChatGPT(GPT):
     completion = self.with_retry_on_error(
         lambda: client.chat.completions.create(
             messages=self.conversation_history,
-            model=self.name,
+            model=self.api_model_name,
             n=self.num_samples,
             temperature=self.temperature), [openai.OpenAIError])
 
@@ -1123,3 +1151,8 @@ class AIBinaryModel(GoogleModel):
 
 
 DefaultModel = GeminiV1D5
+
+# Imported last: `llm_toolkit.orcarouter` imports this module to build on `GPT`,
+# and the import registers OrcaRouter's models in `all_llm_names`, which every
+# entry point uses to advertise the supported models.
+from llm_toolkit import orcarouter  # pylint: disable=wrong-import-position
