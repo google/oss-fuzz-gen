@@ -103,6 +103,13 @@ class LLM:
       return AIBinaryModel(name, ai_binary, max_tokens, num_samples,
                            temperature)
 
+    if name == 'ollama' or name == 'ollama/':
+      raise ValueError('Use --model ollama/<tag>')
+    if name.startswith('ollama/'):
+      instance = Ollama(ai_binary, max_tokens, num_samples, temperature, temperature_list)
+      instance.name = name
+      return instance
+
     for subcls in cls.all_llm_subclasses():
       if getattr(subcls, 'name', None) == name:
         return subcls(
@@ -238,7 +245,7 @@ class GPT(LLM):
 
   def get_model(self) -> Any:
     """Returns the underlying model instance."""
-    # Placeholder: No suitable implementation/usage yet.
+    return self.name
 
   def get_chat_client(self, model: Any) -> Any:
     """Returns a new chat session."""
@@ -330,7 +337,7 @@ class GPT(LLM):
 
     completion = self.with_retry_on_error(
         lambda: client.chat.completions.create(messages=self.messages,
-                                               model=self.name,
+                                               model=self.get_model(),
                                                n=self.num_samples,
                                                temperature=self.temperature),
         [openai.OpenAIError])
@@ -354,7 +361,7 @@ class GPT(LLM):
 
     result = self.with_retry_on_error(
         lambda: client.responses.create(
-            model=self.name, input=self.messages, tools=tools),
+            model=self.get_model(), input=self.messages, tools=tools),
         [openai.OpenAIError])
     return result
 
@@ -370,7 +377,7 @@ class GPT(LLM):
 
     completion = self.with_retry_on_error(
         lambda: client.chat.completions.create(messages=prompt.get(),
-                                               model=self.name,
+                                               model=self.get_model(),
                                                n=self.num_samples,
                                                temperature=self.temperature),
         [openai.OpenAIError])
@@ -389,7 +396,7 @@ class GPT(LLM):
 
     completion = self.with_retry_on_error(
         lambda: client.chat.completions.create(messages=prompt.get(),
-                                               model=self.name,
+                                               model=self.get_model(),
                                                n=self.num_samples,
                                                temperature=self.temperature),
         [openai.OpenAIError])
@@ -474,7 +481,7 @@ class ChatGPT(GPT):
     completion = self.with_retry_on_error(
         lambda: client.chat.completions.create(
             messages=self.conversation_history,
-            model=self.name,
+            model=self.get_model(),
             n=self.num_samples,
             temperature=self.temperature), [openai.OpenAIError])
 
@@ -541,6 +548,21 @@ class AzureGPT4o(AzureGPT):
   """Azure's GPTi-4 model."""
 
   name = 'gpt-4o-azure'
+
+
+class Ollama(GPT):
+  """Ollama via OpenAI-compatible endpoint. Use with --model ollama/<tag>."""
+
+  name = 'ollama' # Set at instance level in setup()
+
+  def get_model(self) -> str:
+    """Returns the model tag sent to the Ollama API (the part after `ollama/`)."""
+    return self.name.split('/', 1)[1]
+
+  def _get_client(self):
+    """Returns the Ollama client."""
+    return openai.OpenAI(api_key=os.getenv('OPENAI_API_KEY', 'dummy key'), # dummy key
+                         base_url=os.getenv('OLLAMA_BASE_URL', 'http://localhost:11434/v1')) # ollama default endpoint
 
 
 class Claude(LLM):

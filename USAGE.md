@@ -78,6 +78,19 @@ export AZURE_OPENAI_API_VERSION='<your-azure-api-version>' # default is '2024-02
 > Tip: 
 To distinguish between the two ways of accessing OpenAI models, you need to add `-azure` to the model name **when using OpenAI on Azure**. For example, `gpt-3.5-turbo-azure` will use OpenAI on Azure, while `gpt-3.5-turbo` will use OpenAI on OpenAI.
 
+#### Ollama (experimental)
+
+[Ollama](https://ollama.com) exposes an OpenAI-compatible API for self-hosted models.
+
+Pull a model on Ollama and pass it with the `ollama/<tag>` syntax, where `<tag>` is the exact tag served by Ollama.
+For example, `ollama/gemma4:latest`.
+
+The default endpoint is `http://localhost:11434/v1`.
+If the Ollama instance is reachable at a different URL, set it as an ENV variable:
+```bash
+export OLLAMA_BASE_URL='<your-ollama-base-url>'
+```
+
 
 ## Running experiments
 To generate and evaluate the fuzz targets in a benchmark set via *local* experiments:
@@ -114,6 +127,7 @@ the model is supported by way of Vertex AI:
 14. `gpt-4o`
 15. `gpt-4o-azure`
 16. `gpt-4-azure`
+17. `ollama/<tag>`
 
 Experiments can also be run on Google Cloud using Google Cloud Build. You can
 do this by passing
