@@ -387,17 +387,14 @@ def parse_args() -> argparse.Namespace:
     assert args.fix_build_agent and args.full_fix_build_agent, (
         '--fix-build-acquire-and-extract requires --fix-build-agent and '
         '--full-fix-build-agent.')
-    assert args.model.lower().startswith('vertex_ai_'), (
-        '--fix-build-acquire-and-extract requires a Vertex AI model because '
-        'the reproduction verifier uses Vertex ADC.')
     # Preserve the prior combined flag while exposing each phase separately.
     args.fix_build_acquire_logs = True
     args.fix_build_reproduce_and_extract = True
 
   if args.fix_build_reproduce_and_extract:
-    assert args.model.lower().startswith('vertex_ai_'), (
-        '--fix-build-reproduce-and-extract requires a Vertex AI model '
-        'because the error classifier uses Vertex ADC.')
+    assert (args.model.lower().startswith('vertex_ai_') or
+            args.model.lower() in ('openai_compatible', 'deepseek')), (
+                'Pre-repair extraction requires Vertex or openai_compatible.')
   if args.pre_repair_verify_reproduction:
     assert args.fix_build_reproduce_and_extract, (
         '--pre-repair-verify-reproduction requires '

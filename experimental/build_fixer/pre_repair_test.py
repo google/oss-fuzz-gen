@@ -28,6 +28,33 @@ from experimental.build_fixer import pre_repair
 
 class PreRepairSelectionTest(unittest.TestCase):
 
+  def test_compatible_classifier_uses_configured_gateway_without_adc(self):
+    for model in ('deepseek/deepseek-chat', 'openai/qwen3.6-35b-a3b'):
+      with self.subTest(model=model), mock.patch.dict(
+          os.environ, {
+              'OPENAI_COMPATIBLE_MODEL': model,
+              'OPENAI_COMPATIBLE_BASE_URL': 'http://localhost:8000/v1',
+              'OPENAI_COMPATIBLE_API_KEY': 'test-key',
+          },
+          clear=True), mock.patch('openai.OpenAI') as client:
+        result = client.return_value.chat.completions.create.return_value
+        result.choices = [
+            mock.Mock(message=mock.Mock(
+                content='{"error_category": "RC3", "matches": true}'))
+        ]
+        self.assertEqual(
+            pre_repair._vertex_classify('openai_compatible', 'build failed'),
+            'RC3')
+        self.assertTrue(
+            pre_repair._vertex_match('openai_compatible', 'original',
+                                     'reproduced')['matches'])
+        client.assert_called_with(api_key='test-key',
+                                  base_url='http://localhost:8000/v1',
+                                  timeout=60,
+                                  max_retries=0)
+        kwargs = client.return_value.chat.completions.create.call_args.kwargs
+        self.assertEqual(kwargs['model'], model.split('/', 1)[1])
+
   def test_key_project_requires_success_and_error_in_latest_seven(self):
     self.assertTrue(
         pre_repair._is_key_project(['error', 'error', 'success', 'error']))
@@ -73,7 +100,9 @@ class PreRepairSelectionTest(unittest.TestCase):
         pre_repair, '_status_projects',
         return_value=[status]), mock.patch.object(pre_repair,
                                                   '_download') as download:
-      report = pre_repair.acquire_logs(Path(temp_dir), ['airflow'], 'all')
+      report = pre_repair.acquire_logs(Path(temp_dir), ['airflow'],
+                                       'all',
+                                       now=dt.date(2026, 9, 23))
     self.assertEqual(len(report['downloaded']), 2)
     self.assertEqual(report['failure_project_count'], 1)
     self.assertNotIn('failure_projects', report)
@@ -96,7 +125,8 @@ class PreRepairSelectionTest(unittest.TestCase):
         return_value=statuses), mock.patch.object(pre_repair,
                                                   '_download') as download:
       report = pre_repair.acquire_logs(Path(temp_dir), ['tint', 'airflow'],
-                                       'all')
+                                       'all',
+                                       now=dt.date(2026, 9, 23))
 
     self.assertEqual(report['skipped_projects']['tint'],
                      pre_repair.BLACKLIST_REASON)
@@ -203,7 +233,9 @@ class PreRepairSelectionTest(unittest.TestCase):
         pre_repair, '_status_projects',
         return_value=[status]), mock.patch.object(pre_repair,
                                                   '_download') as download:
-      report = pre_repair.acquire_logs(Path(temp_dir), ['airflow'], 'all')
+      report = pre_repair.acquire_logs(Path(temp_dir), ['airflow'],
+                                       'all',
+                                       now=dt.date(2026, 9, 23))
 
     self.assertEqual([item['file'] for item in report['downloaded']],
                      ['2026_03_23 success', '2026_09_15 error'])

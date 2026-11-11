@@ -42,7 +42,7 @@ from vertexai.preview.generative_models import (ChatSession, GenerationResponse,
                                                 GenerativeModel)
 from vertexai.preview.language_models import CodeGenerationModel
 
-from llm_toolkit import prompts
+from llm_toolkit import compatible_api, prompts
 from utils import retryable  # pylint: disable=no-name-in-module
 
 logger = logging.getLogger(__name__)
@@ -467,15 +467,13 @@ class OpenAICompatible(GPT):
   ):
     super().__init__(ai_binary, max_tokens, num_samples, temperature,
                      temperature_list)
-    self.api_model = os.getenv('OPENAI_COMPATIBLE_MODEL',
-                               os.getenv('DEEPSEEK_MODEL', 'deepseek-chat'))
+    self.api_model = compatible_api.resolve_config()['api_model']
 
   def _get_client(self):
     """Returns an OpenAI-compatible client."""
-    api_key = (os.getenv('OPENAI_COMPATIBLE_API_KEY') or
-               os.getenv('DEEPSEEK_API_KEY') or os.getenv('API_KEY'))
-    base_url = (os.getenv('OPENAI_COMPATIBLE_BASE_URL') or
-                os.getenv('DEEPSEEK_BASE_URL') or 'https://api.deepseek.com')
+    config = compatible_api.resolve_config()
+    api_key = config['api_key']
+    base_url = config['api_base']
     if not api_key:
       raise ValueError(
           'Set OPENAI_COMPATIBLE_API_KEY, DEEPSEEK_API_KEY, or API_KEY for '

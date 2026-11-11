@@ -39,6 +39,8 @@ from typing import Any, Iterable
 
 import yaml
 
+from llm_toolkit import compatible_api
+
 LOG_ROOT_NAME = 'acquired_logs'
 ACQUISITION_MODES = ('key', 'all')
 KEY_RECENT_BUILD_COUNT = 7
@@ -48,9 +50,18 @@ BUILD_LOG_ROOT = 'https://oss-fuzz-build-logs.storage.googleapis.com'
 OSS_FUZZ_UPSTREAM_URL = 'https://github.com/google/oss-fuzz.git'
 LOGGER = logging.getLogger(__name__)
 PRE_REPAIR_PROJECT_BLACKLIST = frozenset({
+    'aspectj',
+    'bad_example',
+    'bc-java-wycheproof',
+    'bignum-fuzzer',
     'commons-validator',
+    'ecc-diff-fuzzer',
+    'fuzztest-example',
+    'java-example',
     'libmediaart',
     'protoreflect',
+    'spidermonkey-ufi',
+    'testing-native-go-fuzzing',
     'tint',
 })
 BLACKLIST_REASON = 'project is blacklisted from pre-repair'
@@ -741,9 +752,24 @@ def _vertex_model_name(model: str) -> str:
                      model.removeprefix('vertex_ai/').replace('_', '-'))
 
 
-def _vertex_match(model: str, original_tail: str,
-                  reproduced_tail: str) -> dict[str, Any]:
-  """Uses Vertex to decide whether reproduction errors are equivalent."""
+def _model_completion(model: str, prompt: str) -> str:
+  """Routes pre-repair classification through Vertex or a compatible API."""
+  if model.lower() in ('openai_compatible', 'deepseek'):
+    import openai
+    config = compatible_api.resolve_config()
+    if not config['api_key']:
+      raise PreRepairError('OpenAI-compatible API key is not configured')
+    client = openai.OpenAI(api_key=config['api_key'],
+                           base_url=config['api_base'],
+                           timeout=60,
+                           max_retries=0)
+    response = client.chat.completions.create(model=config['api_model'],
+                                              messages=[{
+                                                  'role': 'user',
+                                                  'content': prompt
+                                              }],
+                                              max_tokens=2048)
+    return response.choices[0].message.content or ''
   from google import genai
   from google.auth import default
   _, project_id = default()
@@ -752,45 +778,39 @@ def _vertex_match(model: str, original_tail: str,
   location = (os.getenv('VERTEX_LOCATION') or
               os.getenv('VERTEX_AI_LOCATIONS', 'global').split(',')[0])
   client = genai.Client(vertexai=True, project=project_id, location=location)
+  response = client.models.generate_content(model=_vertex_model_name(model),
+                                            contents=prompt)
+  return response.text or ''
+
+
+def _vertex_match(model: str, original_tail: str,
+                  reproduced_tail: str) -> dict[str, Any]:
+  """Compares reproduction errors using the configured model provider."""
   original_excerpt = original_tail[-12000:]
   reproduced_excerpt = reproduced_tail[-12000:]
   prompt = ('Compare these two OSS-Fuzz build failure tails. Reply only JSON '
             'with keys matches (boolean) and error_category (RC1..RC25). '
             'Treat incidental paths, timestamps, and line numbers as equal.\n'
             f'ORIGINAL:\n{original_excerpt}\nREPRODUCED:\n{reproduced_excerpt}')
-  response = client.models.generate_content(model=_vertex_model_name(model),
-                                            contents=prompt)
-  text = response.text or ''
+  text = _model_completion(model, prompt)
   match = re.search(r'\{.*\}', text, re.DOTALL)
   if not match:
-    raise PreRepairError(
-        'Vertex reproduction classifier returned non-JSON output')
+    raise PreRepairError('Reproduction classifier returned non-JSON output')
   parsed = json.loads(match.group(0))
   if not isinstance(parsed.get('matches'), bool):
-    raise PreRepairError(
-        'Vertex reproduction classifier omitted boolean matches')
+    raise PreRepairError('Reproduction classifier omitted boolean matches')
   category = str(parsed.get('error_category') or 'RC17')
   return {'matches': parsed['matches'], 'error_category': category}
 
 
 def _vertex_classify(model: str, log_tail: str) -> str:
   """Classifies one original OSS-Fuzz failure without reproducing it."""
-  from google import genai
-  from google.auth import default
-  _, project_id = default()
-  if not project_id:
-    raise PreRepairError('Vertex ADC did not provide a Google Cloud project')
-  location = (os.getenv('VERTEX_LOCATION') or
-              os.getenv('VERTEX_AI_LOCATIONS', 'global').split(',')[0])
-  client = genai.Client(vertexai=True, project=project_id, location=location)
   prompt = ('Classify this OSS-Fuzz build failure. Reply only JSON with key '
             'error_category whose value is RC1..RC25.\n'
             f'BUILD FAILURE:\n{log_tail[-12000:]}')
-  response = client.models.generate_content(model=_vertex_model_name(model),
-                                            contents=prompt)
-  match = re.search(r'\{.*\}', response.text or '', re.DOTALL)
+  match = re.search(r'\{.*\}', _model_completion(model, prompt), re.DOTALL)
   if not match:
-    raise PreRepairError('Vertex error classifier returned non-JSON output')
+    raise PreRepairError('Error classifier returned non-JSON output')
   parsed = json.loads(match.group(0))
   return str(parsed.get('error_category') or 'RC17')
 

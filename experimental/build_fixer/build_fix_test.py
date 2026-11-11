@@ -16,10 +16,43 @@
 import unittest
 
 from experimental.build_fixer.build_fix import _fix_build_agent_model_config
+from llm_toolkit import compatible_api
 
 
 class FixBuildAgentModelConfigTest(unittest.TestCase):
   """Tests model configuration for the build-fix agent."""
+
+  def test_sdk_and_agent_share_gateway_configuration(self):
+    for model, expected in (('deepseek-chat', 'deepseek/deepseek-chat'),
+                            ('deepseek/deepseek-chat',
+                             'deepseek/deepseek-chat'),
+                            ('qwen3.6-35b-a3b', 'openai/qwen3.6-35b-a3b'),
+                            ('openai/qwen3.6-35b-a3b',
+                             'openai/qwen3.6-35b-a3b')):
+      with self.subTest(model=model):
+        env = {
+            'OPENAI_COMPATIBLE_MODEL': model,
+            'OPENAI_COMPATIBLE_BASE_URL': 'http://localhost:8000/v1',
+            'OPENAI_COMPATIBLE_API_KEY': 'local-key',
+            'FIX_BUILD_AGENT_MODEL': 'stale-model',
+            'API_KEY': 'stale-key',
+        }
+        config = compatible_api.resolve_config(env)
+        agent = _fix_build_agent_model_config('openai_compatible', env)
+        self.assertEqual(agent['model'], expected)
+        self.assertEqual(config['api_model'], expected.split('/', 1)[1])
+        self.assertEqual(agent['api_base'], config['api_base'])
+        self.assertEqual(agent['api_key'], 'local-key')
+
+  def test_legacy_deepseek_environment_still_supported(self):
+    config = compatible_api.resolve_config({
+        'DEEPSEEK_MODEL': 'deepseek-chat',
+        'DEEPSEEK_BASE_URL': 'https://api.deepseek.com',
+        'DEEPSEEK_API_KEY': 'legacy-key',
+    })
+    self.assertEqual(config['model'], 'deepseek/deepseek-chat')
+    self.assertEqual(config['api_model'], 'deepseek-chat')
+    self.assertEqual(config['api_key'], 'legacy-key')
 
   def test_deepseek_uses_openai_compatible_settings(self):
     """Maps DeepSeek to OpenAI-compatible settings."""
@@ -38,6 +71,17 @@ class FixBuildAgentModelConfigTest(unittest.TestCase):
         'gpt-4o', {'OPENAI_API_KEY': 'openai-test-key'})
     self.assertEqual(config['model'], 'openai/gpt-4o')
     self.assertEqual(config['api_key'], 'openai-test-key')
+
+  def test_qwen_preserves_openai_provider(self):
+    for model in ('qwen3.6-35b-a3b', 'openai/qwen3.6-35b-a3b'):
+      config = _fix_build_agent_model_config(
+          'openai_compatible', {
+              'OPENAI_COMPATIBLE_MODEL': model,
+              'OPENAI_COMPATIBLE_BASE_URL': 'https://gateway.example/v1',
+              'OPENAI_COMPATIBLE_API_KEY': 'test-key',
+          })
+      self.assertEqual(config['model'], 'openai/qwen3.6-35b-a3b')
+      self.assertEqual(config['api_base'], 'https://gateway.example/v1')
 
   def test_azure_requires_deployment_and_maps_endpoint(self):
     """Requires Azure deployment settings and maps the endpoint."""

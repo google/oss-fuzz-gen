@@ -35,7 +35,7 @@ from experiment import oss_fuzz_checkout
 from experiment.benchmark import Benchmark
 from experiment.workdir import WorkDirs
 from experimental.build_fixer import templates
-from llm_toolkit import models
+from llm_toolkit import compatible_api, models
 from llm_toolkit.models import LLM
 from llm_toolkit.prompts import Prompt
 from results import BuildResult, Result
@@ -126,25 +126,8 @@ def _fix_build_agent_model_config(
     return default
 
   if lower in ('openai_compatible', 'deepseek') or 'deepseek' in lower:
-    model = first('FIX_BUILD_AGENT_MODEL',
-                  'OPENAI_COMPATIBLE_MODEL',
-                  'DEEPSEEK_MODEL',
-                  default='deepseek-chat')
-    if not model.startswith('deepseek/'):
-      model = f'deepseek/{model}'
-    return {
-        'model':
-            model,
-        'api_base':
-            first('FIX_BUILD_AGENT_API_BASE',
-                  'OPENAI_COMPATIBLE_BASE_URL',
-                  'DEEPSEEK_BASE_URL',
-                  default='https://api.deepseek.com'),
-        'api_key':
-            first('API_KEY', 'OPENAI_COMPATIBLE_API_KEY', 'DEEPSEEK_API_KEY'),
-        'auth':
-            'api_key',
-    }
+    config = compatible_api.resolve_config(env)
+    return {key: value for key, value in config.items() if key != 'api_model'}
 
   if lower in ('gpt-3.5-turbo-azure', 'gpt-4-azure',
                'gpt-4o-azure') or ('azure' in lower):

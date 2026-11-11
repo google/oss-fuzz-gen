@@ -62,6 +62,14 @@ class ModelResultFamilyTest(unittest.TestCase):
     self.assertEqual(args.pre_repair_project, ['cups-filters', 'qemu'])
     self.assertEqual(args.pre_repair_acquisition_mode, 'key')
 
+  def test_pre_repair_accepts_compatible_gateway(self):
+    with mock.patch.object(sys, 'argv', [
+        'run_all_experiments.py', '--fix-build-acquire-logs',
+        '--fix-build-reproduce-and-extract', '--model', 'openai_compatible'
+    ]):
+      args = parse_args()
+    self.assertTrue(args.fix_build_reproduce_and_extract)
+
   def test_all_log_acquisition_mode(self):
     with mock.patch.object(sys, 'argv', [
         'run_all_experiments.py', '--fix-build-acquire-logs',
