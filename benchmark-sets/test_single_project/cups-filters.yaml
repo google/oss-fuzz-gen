@@ -1,0 +1,13 @@
+project: cups-filters
+language: c++
+error_time: '2026-08-24'
+oss-fuzz_sha: 17e83eec7e625ad9eceff66fb58331a622a7b81e
+fuzzing_build_error_log: https://oss-fuzz-build-logs.storage.googleapis.com/log-8ec65776-6db5-4c21-aeb0-677994f7b6ae.txt
+software_repo_url: https://github.com/OpenPrinting/cups-filters.git
+software_sha: dce9940269ab3aa9e67030ed056a8c2d7232f04d
+engine: libfuzzer
+sanitizer: address
+architecture: x86_64
+base_image_digest: feb9e59248ce2de645388db04986b84d668692e7723eca6104f935494866d679
+error_category: RC13
+fixed_state: 'no'
