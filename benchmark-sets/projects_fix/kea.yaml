@@ -1,0 +1,13 @@
+project: kea
+language: c++
+error_time: '2026-08-07'
+oss-fuzz_sha: 8915eb6238a087e20fc092780464d0793bd6be09
+fuzzing_build_error_log: https://oss-fuzz-build-logs.storage.googleapis.com/log-678bd122-6b35-410f-9e1d-4af1bc1b0303.txt
+software_repo_url: https://gitlab.isc.org/isc-projects/kea
+software_sha: c749332f44550a5fe3d4c83f16c5ba35d5281460
+engine: libfuzzer
+sanitizer: address
+architecture: x86_64
+base_image_digest: feb9e59248ce2de645388db04986b84d668692e7723eca6104f935494866d679
+error_category: RC14
+fixed_state: 'no'

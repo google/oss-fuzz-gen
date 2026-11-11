@@ -1,0 +1,13 @@
+project: bazel-rules-fuzzing-test
+language: c++
+error_time: '2025-12-30'
+oss-fuzz_sha: e9d36924052c7af1d5bd82071760c1eb114e898b
+fuzzing_build_error_log: https://oss-fuzz-build-logs.storage.googleapis.com/log-8b0f371c-c0ba-4acd-b14b-103ac46e7767.txt
+software_repo_url: https://github.com/bazelbuild/rules_fuzzing.git
+software_sha: 7a7159c2952e3eddfaae3fc273c8d0e7b0423151
+engine: afl
+sanitizer: address
+architecture: x86_64
+base_image_digest: c099d3d710d12d5d9a39498463ff10973977d1c7a85e9a0fbe00c7f0a0fa9fb8
+error_category: RC13
+fixed_state: 'no'

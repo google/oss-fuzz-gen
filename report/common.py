@@ -399,6 +399,8 @@ class Results:
     """Gets the targets of benchmark |benchmark| with trial ID |trial| from
     the OFG version 2 (LLM agents)."""
     fuzz_target_dir = os.path.join(self._results_dir, benchmark, 'fuzz_targets')
+    if not FileSystem(fuzz_target_dir).isdir():
+      return Target(code='')
     files = sorted(FileSystem(fuzz_target_dir).listdir())
 
     fuzz_target_code = ''
@@ -420,12 +422,12 @@ class Results:
                   fixer_prompt=None,
                   build_script_code=build_script_code)
 
-  def get_samples(self, results: list[evaluator.Result],
+  def get_samples(self, benchmark: str, results: list[evaluator.Result],
                   targets: list[str]) -> list[Sample]:
     """Gets the samples and their status of the given benchmark |bnmk|."""
     samples = []
 
-    for i, sample_id in enumerate(self._sample_ids(targets)):
+    for i, sample_id in enumerate(self._sample_ids(benchmark, targets)):
       status = 'Running'
       result = evaluator.Result()
       if results[i]:
@@ -460,7 +462,7 @@ class Results:
     results = []
     status_dir = os.path.join(self._results_dir, benchmark, 'status')
 
-    for sample_id in self._sample_ids(targets):
+    for sample_id in self._sample_ids(benchmark, targets):
       results_path = os.path.join(status_dir, sample_id, 'result.json')
       if not FileSystem(results_path).exists():
         results.append(None)
@@ -488,7 +490,7 @@ class Results:
     if len(benchmarks) == 1:
       benchmark = benchmarks[0]
       results, targets = self.get_results(benchmark.id)
-      samples = self.get_samples(results, targets)
+      samples = self.get_samples(benchmark.id, results, targets)
 
       for sample in samples:
         if sample.result and sample.result.finished:
@@ -650,7 +652,15 @@ class Results:
 
     return Target(code, fixer_prompt)
 
-  def _sample_ids(self, target_paths: list[str]):
+  def _sample_ids(self, benchmark: str, target_paths: list[str]):
+    """Returns sample IDs from targets or status files."""
+    if not target_paths:
+      status_dir = os.path.join(self._results_dir, benchmark, 'status')
+      if FileSystem(status_dir).isdir():
+        for sample_id in sorted(FileSystem(status_dir).listdir()):
+          if FileSystem(os.path.join(status_dir, sample_id)).isdir():
+            yield sample_id
+        return
     for target in target_paths:
       yield os.path.splitext(os.path.basename(target))[0]
 

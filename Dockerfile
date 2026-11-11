@@ -30,6 +30,8 @@ RUN apt-get update && \
     gnupg \
     curl \
     wget2 \
+    chromium \
+    chromium-driver \
     clang-format && \
     python3 -m venv /venv
 # Install gcloud cli.

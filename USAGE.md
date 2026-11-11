@@ -75,7 +75,7 @@ export AZURE_OPENAI_ENDPOINT='<your-azure-endpoint>'
 export AZURE_OPENAI_API_VERSION='<your-azure-api-version>' # default is '2024-02-01'
 ```
 
-> Tip: 
+> Tip:
 To distinguish between the two ways of accessing OpenAI models, you need to add `-azure` to the model name **when using OpenAI on Azure**. For example, `gpt-3.5-turbo-azure` will use OpenAI on Azure, while `gpt-3.5-turbo` will use OpenAI on OpenAI.
 
 
@@ -119,6 +119,125 @@ Experiments can also be run on Google Cloud using Google Cloud Build. You can
 do this by passing
 `--cloud <experiment-name> --cloud-experiment-bucket <bucket>`,
 where `<bucket>` is the name of a Google Cloud Storage bucket your Google Cloud project.
+
+### Fixing OSS-Fuzz project build failures
+
+Project-level OSS-Fuzz build repair experiments can be run with
+`--fix-build-agent`. This mode uses project-level benchmark YAML files, such as
+the examples in [`benchmark-sets/fix-build`](./benchmark-sets/fix-build), and
+does not require `functions`, `target_name`, or `target_path`.
+
+```bash
+./run_all_experiments.py \
+    --fix-build-agent \
+    --fix-build-benchmarks-directory=./benchmark-sets/fix-build \
+    --oss-fuzz-dir=./oss-fuzz
+```
+
+Use `--benchmark-yaml=<file>` for one project, or
+`--fix-build-benchmarks-directory=<dir>` for a batch run. In directory mode,
+each `*.yaml` file is loaded as one project-level repair target and receives its
+own output directory.
+Bundled full `fix_build_agent` batch runs are executed sequentially because the
+vendored agent uses a stateful workspace under `fix_build_agent/`.
+
+When `--work-dir` is not provided, fix-build results are written under
+`results-fix-build/<model-family>/<project>/`. For example, DeepSeek-backed
+`openai_compatible` runs are stored under
+`results-fix-build/deepseek/<project>/`.
+
+By default this uses the integrated OSS-Fuzz build fixer. The integrated fixer is
+a compact build-script repair loop. To run the bundled full `fix_build_agent`
+workflow, including its upstream checkout, OSS-Fuzz checkout, root-cause
+localization, rollback, reflection, and expert-knowledge mechanisms, pass:
+
+```bash
+./run_all_experiments.py \
+    --fix-build-agent \
+    --full-fix-build-agent \
+    --fix-build-benchmarks-directory=./benchmark-sets/fix-build \
+    --oss-fuzz-dir=./oss-fuzz
+```
+
+The full workflow is vendored in [`fix_build_agent`](./fix_build_agent). It
+inherits credentials from the oss-fuzz-gen process. For
+DeepSeek/OpenAI-compatible runs, `OPENAI_COMPATIBLE_API_KEY`,
+`OPENAI_COMPATIBLE_BASE_URL`, and `OPENAI_COMPATIBLE_MODEL` are forwarded to the
+bundled agent as `API_KEY`, `FIX_BUILD_AGENT_API_BASE`, and
+`FIX_BUILD_AGENT_MODEL`. Agent logs, trace ledgers, archives, and final
+reports are copied into
+`results-fix-build/<model-family>/<project>/`.
+
+To test a separate checkout during development, pass
+`--external-fix-build-agent-path=/path/to/fix_build_agent` together with
+`--fix-build-agent`.
+
+#### API-key model adapters
+
+In addition to the built-in OpenAI, Azure OpenAI, and Vertex AI model names,
+local experiments can use API-key based adapters.
+
+For Gemini API / Google AI Studio keys:
+
+```bash
+export GEMINI_API_KEY=<your-api-key>
+
+./run_all_experiments.py \
+    --fix-build-agent \
+    --model=gemini_api_key_2_5_flash \
+    --fix-build-benchmarks-directory=./benchmark-sets/fix-build \
+    --oss-fuzz-dir=./oss-fuzz
+```
+
+Available Gemini API-key model names:
+
+- `gemini_api_key`
+- `gemini_api_key_2_5_flash`
+- `gemini_api_key_2_5_pro`
+- `gemini_api_key_2_5_flash_lite`
+
+`gemini_api_key` defaults to `gemini-2.5-flash`. Override it with:
+
+```bash
+export GEMINI_MODEL=<gemini-model-name>
+```
+
+For OpenAI-compatible providers, including DeepSeek:
+
+```bash
+export OPENAI_COMPATIBLE_API_KEY=<your-api-key>
+export OPENAI_COMPATIBLE_BASE_URL=https://api.deepseek.com
+export OPENAI_COMPATIBLE_MODEL=deepseek-chat
+
+./run_all_experiments.py \
+    --fix-build-agent \
+    --model=openai_compatible \
+    --fix-build-benchmarks-directory=./benchmark-sets/fix-build \
+    --oss-fuzz-dir=./oss-fuzz
+```
+
+For DeepSeek specifically, the adapter also accepts:
+
+```bash
+export DEEPSEEK_API_KEY=<your-api-key>
+export DEEPSEEK_BASE_URL=https://api.deepseek.com
+export DEEPSEEK_MODEL=deepseek-chat
+```
+
+The full repair agent also maps the original oss-fuzz-gen providers. Use
+`OPENAI_API_KEY` for OpenAI, `AZURE_OPENAI_API_KEY`,
+`AZURE_OPENAI_ENDPOINT`, and `AZURE_OPENAI_DEPLOYMENT_NAME` for Azure OpenAI,
+and Application Default Credentials for Vertex AI Gemini or Claude on Vertex:
+
+```bash
+export GOOGLE_APPLICATION_CREDENTIALS=/path/to/service-account.json
+export GOOGLE_CLOUD_PROJECT=<project-id>
+export VERTEX_AI_LOCATIONS=us-central1
+```
+
+These provider paths are covered by offline configuration tests. Live calls
+still require the corresponding provider project, permissions, quotas, and
+credentials.
 
 ### Benchmarks
 
@@ -281,4 +400,3 @@ pip install pip-tools  # Required to re-generate requirements.txt from requireme
 pip-compile requirements.in > requirements.txt
 pip install -r requirements.txt
 ```
-

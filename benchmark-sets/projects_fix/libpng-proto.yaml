@@ -1,0 +1,13 @@
+project: libpng-proto
+language: c++
+error_time: '2026-05-28'
+oss-fuzz_sha: 766921e2cb58c43875ea5ee23eb35851a68b9294
+fuzzing_build_error_log: https://oss-fuzz-build-logs.storage.googleapis.com/log-f85add1d-f5cb-42c6-b8c6-ba1dca0cf5b5.txt
+software_repo_url: https://github.com/glennrp/libpng.git
+software_sha: 92c853c34e41570504baa48b8a8169e53b188324
+engine: libfuzzer
+sanitizer: address
+architecture: x86_64
+base_image_digest: 5dd2745ce77683d5e57e5acd17fa666001a9f76b32ea452becdf50dc5d58bb2c
+error_category: RC12
+fixed_state: 'no'

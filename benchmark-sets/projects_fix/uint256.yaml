@@ -1,0 +1,13 @@
+project: uint256
+language: go
+error_time: '2026-05-28'
+oss-fuzz_sha: 766921e2cb58c43875ea5ee23eb35851a68b9294
+fuzzing_build_error_log: https://oss-fuzz-build-logs.storage.googleapis.com/log-3f61cd26-39e8-492b-8522-b65003c5a014.txt
+software_repo_url: https://github.com/holiman/uint256.git
+software_sha: 087f4b32f2343e615f960026d3ce0c30429ecd7d
+engine: libfuzzer
+sanitizer: address
+architecture: x86_64
+base_image_digest: eb5c93a296510c9d159cd9091e72d6a2e00aef974f13785237f4fbecacc7ad4a
+error_category: RC13
+fixed_state: 'no'

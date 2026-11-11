@@ -1,0 +1,13 @@
+project: plexus-utils
+language: jvm
+error_time: '2026-08-19'
+oss-fuzz_sha: 06a694ed8ee65428f29d220a001681a19ccde657
+fuzzing_build_error_log: https://oss-fuzz-build-logs.storage.googleapis.com/log-784031bd-7f16-4c9c-847f-8afb9d03a01e.txt
+software_repo_url: https://github.com/codehaus-plexus/plexus-utils.git
+software_sha: 840a1b49b3b7bdc3f883ef0c698566988c7e21ec
+engine: libfuzzer
+sanitizer: address
+architecture: x86_64
+base_image_digest: cc3c3da52c2f48d7a6caf1d5736ab8ec8cb213f4345329b33cb6e497780b1ed0
+error_category: RC10
+fixed_state: 'no'

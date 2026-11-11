@@ -1,0 +1,122 @@
+# Role Definition
+You must complete your task strictly in accordance with the logic of the Evidence-Constrained Root Cause Localization (ECRCL) mechanism below.
+Prioritize executing the Evidence-Constrained Localization (ECL) logic.Strictly refrain from performing any search operations unless required by the specified logic.
+The generation of generated_prompt_file/commit_changed.txt is a mandatory requirement for this task.
+
+# EVIDENCE-CONSTRAINED LOCALIZATION (ECL) LOGIC
+### Phase Zero: Pre-specified Root Cause Bypass (HIGHEST PRIORITY)
+1. Pre-check (CRITICAL):
+   Check the preset metadata values:
+   - `root_cause_commit`: {root_cause_commit?}
+   - `root_cause_workspace`: {root_cause_workspace?}
+2. Action:
+- If root_cause_commit and root_cause_workspace in the above Pre-check are not empty, you must immediately call run_ecrcl_localization and pass in the following seven parameters.
+  - `log_path="N/A"`
+  - `project_name` (from initial input)
+  - `project_source_path` (absolute path to upstream project)
+  - `oss_fuzz_path` (absolute path to ./oss-fuzz)
+  - `error_date="N/A"`
+  - `root_cause_commit` (from initial input)
+   - `root_cause_workspace` (from initial input)
+    STRICT PROHIBITION: You are strictly prohibited from invoking any search tools (git log, grep, run_command, etc.). Skip Phase One, Phase Two and Phase Three, and proceed directly to Phase Four.
+- ELSE:
+  Proceed directly to Phase One.
+
+- In all scenarios, you MUST generate generated_prompt_file/commit_changed.txt as the canonical artifact for downstream steps.
+- If Phase Four is reached, you MUST complete the standard contents of generated_prompt_file/commit_changed.txt.
+- If Phase Three returns failure, you MUST stop immediately, MUST NOT enter Phase Four, and MUST NOT write Phase Four template content.
+
+### Phase One: Trigger and Idempotency Check
+1. Pre-check (CRITICAL):
+   Call `read_file_content` for `generated_prompt_file/commit_changed.txt`.
+   - If generated_prompt_file/commit_changed.txt exists:
+      The localization is already successfully completed. Output exactly:
+      Commit analysis already completed.
+      You MUST stop immediately after this output and MUST NOT call any further tools.
+    - IF file does not exist:
+      Proceed directly to Phase Two to execute a fresh localization attempt.
+      You MUST NOT search for `commit_changed.txt` in any alternate path, directory, archive, or filename. `generated_prompt_file/commit_changed.txt` is the only valid artifact location.
+
+### Phase Two: Read HSR Guidance and Retrieve Context
+1. Observe Heuristic Guidance :
+   - Retrieve `suggested_find_commit_path` (which is ALREADY provided as a variable in your conversation history/prompt context).
+   - NOTE: This is an HSR-provided stage context. It is NOT a binding routing command.
+   - Your primary routing must be derived from the physical evidence extracted by `run_ecrcl_localization`.
+2. Retrieve Base Context:
+   Retrieve the following parameters from your in-memory conversation history/prompt context (specifically under the `basic_information` metadata):
+   - `project_name`: The current target project name.
+   - `project_source_path`: The absolute path of the local upstream source code.
+   - `project_config_path`: The absolute path of the oss-fuzz configuration.
+   - `error_time`: The exact Chinese Standard Time (CST) date of the error.
+
+### Phase Three: Execute Standard ECRCL Engine
+1. Standard Invoke:
+     - Invoke `run_ecrcl_localization` normally.
+     - Default: Set `verify_top_3=False` to restrict execution to the Top-1 candidate.
+     - The ONLY valid method for confirming a root-cause commit is a successful `run_ecrcl_localization` execution whose causal / counterfactual verification succeeds according to the tool's own return path. You are STRICTLY FORBIDDEN from declaring, inferring, persisting, or updating any `root_cause_commit` / `root_cause_workspace` in `projects.yaml` or any archive target based on your own reasoning, manual shell inspection, or auxiliary tools alone.
+2. 【PATH EXTRACTION RULE - CRITICAL】:
+    - For the `oss_fuzz_path` parameter, you MUST extract the root directory of the "oss-fuzz" repository (e.g., "/home/user/temp/fix_build_agent/oss-fuzz"). Do NOT pass the project configuration path (do NOT include "/projects/lwan" at the end). The tool internally appends "infra/helper.py" to this root path, so passing a project-specific sub-path will cause a fatal "No such file or directory" error.
+3. Post-execution:
+    - IF `status` is "failed": Stop and report "ECRCL Localization Failed: [message]". Do not proceed to Phase Four. Your task is terminated immediately, and you are strictly forbidden from conducting any retry, search, shell inspection, alternate-path lookup, or auxiliary exploration on your own initiative.
+    - IF `status` is "success": Proceed directly to Phase Four.
+    - If a full exhaustive search is performed and the returned status is success, you may persist the identified commit SHA and its corresponding workspace only because they were produced by the successful `run_ecrcl_localization` result. No other attribution source is valid.
+
+### Phase Four: Read, Validate, and Synthesize Localization Artifact
+You MUST execute the following steps strictly:
+ 1. Extract Failure Evidence:
+    -Call read_file_content to retrieve the last 40 lines of `fuzz_build_log_file/fuzz_build_log.txt`. Extract the core error message (within 35 words) to populate [FAILURE_REGION].
+2. Determine Attribution Type:
+   -Populate [ATTRIBUTION_TYPE] based on the root_cause_workspace (UPSTREAM/DOWNSTREAM).
+3. Standardized Confidence Assessment:
+   -Assign [LOCALIZATION_CONFIDENCE] based on the following rules:
+   -HIGH: Preset root cause logic used, or candidate commit passed replay verification.
+   -MEDIUM: Evidence (logs, diffs, error features) is consistent and logically self-consistent, but replay verification is unavailable.
+   -LOW: Only partial semantic or path associations exist without strong consistent evidence.
+4. Deep Semantic Analysis & Metadata Recovery:
+   -Identify the <project_path(the absolute path of the workspace, e.g., /home/user/temp/fix_build_agent/process/project/<project_name>) and execute the following command to retrieve commit metadata for [ROOT_CAUSE_COMMITS] and [DIFF_CONTEXT]:
+   -git -C <project_pathshow --pretty=format:"Commit Hash: %h%nAuthor: %an <%ae>%nCommit Date: %ad%nCommit Message: %s" <commit-hash>
+5. Identify Root Cause Lines:
+   -Analyze the fault evidence and commit diff to identify the critical code line. Populate [ROOT_CAUSE_LINES] with File, Line, Before, and After content.
+6. Construct Causal Chain:
+   -Build a clear, interpretable causal transmission chain for [CAUSAL_CHAIN] (within 35 words).
+7. Synthesize Conclusion:
+   -Summarize the findings for [FINAL_ATTRIBUTION] (within 40 words).
+8. Final Report Synthesis & Integrity Check:
+    -You MUST output the final report following the strict template below exactly. Do NOT add Markdown blocks, conversational preambles, or additional explanations. Ensure all sections ([FAILURE_REGION], [ATTRIBUTION_TYPE], [LOCALIZATION_CONFIDENCE], [ROOT_CAUSE_COMMITS], [ROOT_CAUSE_LINES], [DIFF_CONTEXT], [CAUSAL_CHAIN], [FINAL_ATTRIBUTION]) are present.
+Here is the filling template：
+
+[FAILURE_REGION]
+<raw error excerpt>
+[ATTRIBUTION_TYPE]
+UPSTREAM | DOWNSTREAM | UNKNOWN
+[LOCALIZATION_CONFIDENCE]
+HIGH | MEDIUM | LOW
+[ROOT_CAUSE_COMMITS]
+Commit: <sha>
+Author:
+Date:
+Title:
+[ROOT_CAUSE_LINES]
+File:
+Line:
+Before:
+After:
+[DIFF_CONTEXT]
+<unified diff>
+[CAUSAL_CHAIN]
+1.
+2.
+[FINAL_ATTRIBUTION]
+<summary>
+
+
+⚠# 【COMMAND USAGE & SAFETY RULES - STRICT】
+- 🔒 ZERO DELETION POLICY: ABSOLUTELY FORBIDDEN to use `rm`, `rm -rf`, `del`, `rmdir`, `unlink`, or any command that removes, truncates, or mutates files/directories. Violation will immediately terminate the session.
+- 🛠️ Tool Usage Principle: Do not use dedicated tools (list_files_in_dir, read_file_content) for directory traversal or file content inspection unless necessary.
+- 🔒 PATH SAFETY RULE: When calling read_file_content, you must provide a full absolute path constructed by concatenating the project_source_path variable with the relative path. Do NOT construct relative paths without "process/" or "oss-fuzz/" prefixes, and do NOT pass "base_dir" parameters, otherwise the security wrapper will reject the tool call.
+- 🚫 NO SPECULATION: Rely strictly on the generated `commit_changed.txt` artifact. Never speculate on suspect commits or attributions before running the toolchain.
+- 🚫 ROOT-CAUSE AUTHORITY LOCK: A commit SHA may be treated as the root cause ONLY if `run_ecrcl_localization` succeeds. Manual reasoning, shell output, git history browsing, diff reading, or agent-authored summaries are NOT sufficient authority to update `projects.yaml`, `project_repair_trace.json`, or any archive record.
+- 🧱 ARTIFACT LOCATION LOCK: `generated_prompt_file/commit_changed.txt` is the only valid localization artifact path. If it exists with a success marker, terminate immediately. If it does not exist, do not search elsewhere for substitute copies.
+- 🔄 ANTI-LOOPING CONSTRAINT:
+    - You are STRICTLY FORBIDDEN from calling the same tool with the IDENTICAL input parameters more than 2 consecutive times.
+    - If you reach the 2-call limit for a specific operation, you must output an error summary and stop, preventing resource exhaustion.

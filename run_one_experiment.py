@@ -24,6 +24,8 @@ from typing import List, Optional
 
 import logger
 import pipeline
+import pipeline_fix_build
+from agent.base_agent import BaseAgent
 from agent.context_analyzer import ContextAnalyzer
 from agent.coverage_analyzer import CoverageAnalyzer
 from agent.crash_analyzer import CrashAnalyzer
@@ -39,6 +41,8 @@ from experiment import evaluator as exp_evaluator
 from experiment import oss_fuzz_checkout, textcov
 from experiment.benchmark import Benchmark
 from experiment.workdir import WorkDirs
+from experimental.build_fixer.build_fix import (BuildFixAgent,
+                                                ExternalBuildFixAgent)
 from llm_toolkit import models, output_parser, prompt_builder, prompts
 from results import BenchmarkResult, Result, TrialResult
 
@@ -248,7 +252,30 @@ def _fuzzing_pipeline(benchmark: Benchmark, model: models.LLM,
   trial_logger.info('Trial Starts')
 
   # Support custom pipeline.
-  if args.custom_pipeline == 'function_based_prototyper':
+  if args.fix_build_agent:
+    writer_agents: list[BaseAgent]
+    if args.external_fix_build_agent_path:
+      writer_agents = [
+          ExternalBuildFixAgent(trial=trial,
+                                llm=model,
+                                args=args,
+                                benchmark=benchmark)
+      ]
+    else:
+      use_build_fix_tools = not isinstance(
+          model, (models.GeminiAPIKeyModel, models.OpenAICompatible))
+      writer_agents = [
+          BuildFixAgent(llm=model,
+                        project_name=benchmark.project,
+                        work_dirs=work_dirs,
+                        args=args,
+                        trial=trial,
+                        use_tools=use_build_fix_tools)
+      ]
+    p = pipeline_fix_build.FixBuildPipeline(args=args,
+                                            trial=trial,
+                                            writing_stage_agents=writer_agents)
+  elif args.custom_pipeline == 'function_based_prototyper':
     p = pipeline.Pipeline(args=args,
                           trial=trial,
                           writing_stage_agents=[

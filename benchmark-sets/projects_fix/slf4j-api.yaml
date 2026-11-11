@@ -1,0 +1,13 @@
+project: slf4j-api
+language: jvm
+error_time: '2026-08-08'
+oss-fuzz_sha: b465453d0d19713c47a84ff92485b9910116fd75
+fuzzing_build_error_log: https://oss-fuzz-build-logs.storage.googleapis.com/log-6bd5bfc2-6a9e-4c57-a03b-0f2d905458ec.txt
+software_repo_url: https://github.com/qos-ch/slf4j.git
+software_sha: 6e66c3f419a05467ca5b9212256e91d171cd99e0
+engine: libfuzzer
+sanitizer: address
+architecture: x86_64
+base_image_digest: cc3c3da52c2f48d7a6caf1d5736ab8ec8cb213f4345329b33cb6e497780b1ed0
+error_category: RC13
+fixed_state: 'no'

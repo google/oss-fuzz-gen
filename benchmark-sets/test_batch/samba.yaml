@@ -1,0 +1,13 @@
+project: samba
+language: c
+error_time: '2026-09-04'
+oss-fuzz_sha: 404549db4c8a840ed40cb2a485c218b93c17af61
+fuzzing_build_error_log: https://oss-fuzz-build-logs.storage.googleapis.com/log-a76cbc9a-9310-4659-abce-df5d63d4e0af.txt
+software_repo_url: https://gitlab.com/samba-team/samba
+software_sha: 8fd1e3196c45b6863514eeb406f585ae87789526
+engine: libfuzzer
+sanitizer: address
+architecture: x86_64
+base_image_digest: feb9e59248ce2de645388db04986b84d668692e7723eca6104f935494866d679
+error_category: RC13
+fixed_state: 'no'

@@ -1,0 +1,13 @@
+project: espeak-ng
+language: c++
+error_time: "2023-04-03"
+oss_fuzz_sha: e9d36924052c7af1d5bd82071760c1eb114e898b
+fuzzing_build_error_log: https://oss-fuzz-build-logs.storage.googleapis.com/log-55ee4d54-bda3-46a2-9566-7f611c1a041c.txt
+software_repo_url: https://github.com/espeak-ng/espeak-ng
+software_sha: 12b58fbcb211024d6883b2028206bf94fab4f349
+engine: afl
+sanitizer: address
+architecture: x86_64
+base_image_digest: c099d3d710d12d5d9a39498463ff10973977d1c7a85e9a0fbe00c7f0a0fa9fb8
+root_cause_commit: 96c1ca91808505026b4eef283124ca1d62b2f534
+root_cause_workspace: UPSTREAM

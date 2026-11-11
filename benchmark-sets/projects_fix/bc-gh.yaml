@@ -1,0 +1,13 @@
+project: bc-gh
+language: c
+error_time: '2026-05-28'
+oss-fuzz_sha: 766921e2cb58c43875ea5ee23eb35851a68b9294
+fuzzing_build_error_log: https://oss-fuzz-build-logs.storage.googleapis.com/log-a349925b-8d7c-4905-a57c-2fed09035b37.txt
+software_repo_url: https://github.com/gavinhoward/bc.git
+software_sha: 8292c1b5e37aea7aca6fba0782c7ee6c937d3723
+engine: afl
+sanitizer: address
+architecture: x86_64
+base_image_digest: 6ba6323d5b54de6c1e9c50061a307fc573e2c362562e308f366bfef893f97783
+error_category: RC12
+fixed_state: 'no'

@@ -202,6 +202,13 @@ class CloudBuilder:
                            new_experiment_filename: str) -> str:
     """Requests Cloud Build to execute the operation."""
 
+    # The experiment directory is mounted into the agent container as
+    # /experiment from /workspace/host/experiment. Convert the container path
+    # before using it in Cloud Build steps outside that container.
+    experiment_relative_path = os.path.relpath(experiment_path, '/experiment')
+    experiment_host_path = os.path.join('/workspace/host/experiment',
+                                        experiment_relative_path)
+
     # Used for injecting additional OSS-Fuzz project integrations not in
     # upstream OSS-Fuzz.
     oss_fuzz_data_dir = ''
@@ -260,11 +267,11 @@ class CloudBuilder:
                 'name': 'gcr.io/cloud-builders/gcloud',
                 'entrypoint': 'bash',
                 'args': [
-                    '-c', f'gcloud storage cp {experiment_url}'
+                    '-c', f'gcloud storage cp {experiment_url} '
                     '/tmp/ofg-exp.tar.gz && '
-                    f'mkdir -p /workspace/host/{experiment_path} && '
-                    f'tar -xzf /tmp/ofg-exp.tar.gz'
-                    f'-C /workspace/host/{experiment_path}'
+                    f'mkdir -p {experiment_host_path} && '
+                    f'tar -xzf /tmp/ofg-exp.tar.gz '
+                    f'-C {experiment_host_path}'
                 ],
                 'allowFailure': True,
             },
@@ -293,27 +300,31 @@ class CloudBuilder:
             },
             # Step 4: Prepare OSS-Fuzz repo.
             {
-                'name': 'gcr.io/cloud-builders/gcloud',
-                'entrypoint': 'bash',
+                'name':
+                    'gcr.io/cloud-builders/gcloud',
+                'entrypoint':
+                    'bash',
                 'args': [
-                    '-c', f'test -n "{oss_fuzz_data_url}" && '
+                    '-c', f'if test -n "{oss_fuzz_data_url}"; then '
                     f'gcloud storage cp {oss_fuzz_data_url} '
                     '/tmp/oss-fuzz-data.tar.gz && '
-                    f'mkdir {oss_fuzz_data_dir} && '
-                    f'tar -xzf /tmp/oss-fuzz-data.tar.gz -C {oss_fuzz_data_dir}'
+                    f'mkdir -p {oss_fuzz_data_dir} && '
+                    f'tar -xzf /tmp/oss-fuzz-data.tar.gz -C {oss_fuzz_data_dir}; '
+                    'fi'
                 ],
-                'allowFailure': True,
             },
             {
-                'name': 'gcr.io/cloud-builders/gcloud',
-                'entrypoint': 'bash',
+                'name':
+                    'gcr.io/cloud-builders/gcloud',
+                'entrypoint':
+                    'bash',
                 'args': [
-                    '-c', f'test -n "{data_dir_url}" && '
+                    '-c', f'if test -n "{data_dir_url}"; then '
                     f'gcloud storage cp {data_dir_url} /tmp/data-dir.tar.gz && '
-                    f'mkdir {target_data_dir} && '
-                    f'tar -xzf /tmp/data-dir.tar.gz -C {target_data_dir}'
+                    f'mkdir -p {target_data_dir} && '
+                    f'tar -xzf /tmp/data-dir.tar.gz -C {target_data_dir}; '
+                    'fi'
                 ],
-                'allowFailure': True,
             },
             {
                 'name':
@@ -357,6 +368,9 @@ class CloudBuilder:
                     '-e',
                     'GOOGLE_CLOUD_LOCATION=' +
                     os.getenv("GOOGLE_CLOUD_LOCATION", "global"),
+                    '-e',
+                    'VERTEXAI_LOCATION=' +
+                    os.getenv("GOOGLE_CLOUD_LOCATION", "global"),
                     '--network=cloudbuild',
                     '-e',
                     'DOCKER_API_VERSION=1.41',
@@ -394,15 +408,15 @@ class CloudBuilder:
             {
                 'name': 'bash',
                 'dir': '/workspace',
-                'args': ['ls', '-R', f'/workspace/host/{experiment_path}']
+                'args': ['ls', '-R', experiment_host_path]
             },
             {
                 'name': 'gcr.io/cloud-builders/gcloud',
                 'entrypoint': 'bash',
                 'args': [
-                    '-c', f'test -d /workspace/host/{experiment_path} && '
+                    '-c', f'test -d {experiment_host_path} && '
                     f'tar -czf /tmp/{new_experiment_filename} '
-                    f'-C /workspace/host/{experiment_path} . && '
+                    f'-C {experiment_host_path} . && '
                     f'gcloud storage cp /tmp/{new_experiment_filename} '
                     f'gs://{self.bucket_name}/{new_experiment_filename}'
                 ],
@@ -469,7 +483,12 @@ class CloudBuilder:
     try:
       bucket = self.storage_client.bucket(self.bucket_name)
       blob = bucket.blob(log_file_uri)
-      log_content = self._extract_chat_history(blob.download_as_text())
+      raw_log = blob.download_as_text()
+      log_content = self._extract_chat_history(raw_log)
+      if not log_content:
+        # Preserve diagnostics even when the build fails before the agent
+        # writes its normal chat-history markers.
+        log_content = raw_log[-16 * 1024:]
       logging.warning(log_content)
       return log_content
     except NotFound as e:
@@ -582,6 +601,7 @@ class CloudBuilder:
 
     # Step 4: Download new result dill.
     cloud_build_log = ''
+    cloud_build_final_status = ''
     new_result_dill = os.path.join(dill_dir, new_result_filename)
     try:
       cloud_build_final_status = self._wait_for_build(build_id)
@@ -598,6 +618,14 @@ class CloudBuilder:
       cloud_build_log += f'Cloud build {build_id} cancled: {e}.\n'
 
     cloud_build_log += self._get_build_log(build_id)
+
+    if cloud_build_final_status != 'SUCCESS':
+      # A failed build cannot produce new_result.pkl. Return the original
+      # result with the complete diagnostic instead of attempting to
+      # deserialize a file that does not exist.
+      last_result = result_history[-1]
+      last_result.chat_history = {agent.name: cloud_build_log}
+      return last_result
 
     # Step 5: Deserialize dilld file.
     result = utils.deserialize_from_dill(new_result_dill)

@@ -474,15 +474,17 @@ tbody tr:nth-child(odd) {
                     {{accumulated_results.total_runs}}
                 </p>
                 <p><span class="font-medium">Successful Builds:</span> {{accumulated_results.compiles}}</p>
-                {% if accumulated_results.total_runs > 0 %}
+                {% if accumulated_results.total_runs > 0 and not fix_build_mode %}
                     <p><span class="font-medium">Average Coverage:</span> {{accumulated_results.total_coverage |percent }}%</p>
                 {% endif %}
             </div>
             <div class="space-y-2">
-                {% if accumulated_results.total_runs > 0 %}
+                {% if accumulated_results.total_runs > 0 and not fix_build_mode %}
                     <p><span class="font-medium">Average Line Coverage Diff:</span> {{accumulated_results.average_line_coverage_diff |percent }}%</p>
                 {% endif %}
-                <p><span class="font-medium">Crashes:</span> {{accumulated_results.crashes}}</p>
+                {% if not fix_build_mode %}
+                    <p><span class="font-medium">Crashes:</span> {{accumulated_results.crashes}}</p>
+                {% endif %}
                 <p><span class="font-medium">Model:</span> <strong>{{model}}</strong></p>
             </div>
         </div>

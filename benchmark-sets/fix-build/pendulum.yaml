@@ -1,0 +1,15 @@
+project: pendulum
+language: python
+error_time: "2023-10-01"
+oss_fuzz_sha: 4a96094d3e3d9efad421ee9e4a7e4d4c78526e9c
+fuzzing_build_error_log: https://oss-fuzz-build-logs.storage.googleapis.com/log-a0ae2eef-d1ce-4510-b32b-53372a36cfa9.txt
+software_repo_url: https://github.com/sdispater/pendulum
+software_sha: 0a88aece8ece78e44c6a9dac1d9db661cfdfbee0
+engine: libfuzzer
+sanitizer: address
+architecture: x86_64
+base_image_digest: c5fd81433b8ceec0335387187152e856e401fa09e859ba778008e63be14d0701
+error_category: RC9
+root_cause_commit: 5c01d00c52142b16934a6c3e2f191c42dd8bfb24
+root_cause_workspace: UPSTREAM
+fixed_state: "no"
