@@ -41,16 +41,15 @@ def deserialize_from_dill(dill_path: Any) -> Any:
       obj = dill.load(f)
     logging.info('Deserialized %s to %s', dill_path, obj)
     return obj
-  except FileNotFoundError as e:
-    logging.error('Failed to deserialize %s: File does not exist: %s',
-                  dill_path, e)
+  except Exception as e:
+    logging.error('Failed to deserialize %s: %s', dill_path, e)
     return None
 
 
 def _default_retry_delay_fn(e: Exception, n: int):
-  """Delays retry by a random seconds between 1 to 2 minutes."""
+  """Delays retry by a random seconds between 2 and 4 minutes."""
   del e, n
-  return random.uniform(60, 120)
+  return random.uniform(120, 240)
 
 
 def retryable(exceptions=None,

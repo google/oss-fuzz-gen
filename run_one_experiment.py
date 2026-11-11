@@ -30,6 +30,8 @@ from agent.crash_analyzer import CrashAnalyzer
 from agent.enhancer import Enhancer
 from agent.function_analyzer import FunctionAnalyzer
 from agent.function_based_prototyper import FunctionToolPrototyper
+from agent.memory_enhancer import MemoryEnhancer
+from agent.memory_prototyper import MemoryPrototyper
 from agent.one_prompt_enhancer import OnePromptEnhancer
 from agent.one_prompt_prototyper import OnePromptPrototyper
 from agent.prototyper import Prototyper
@@ -267,16 +269,25 @@ def _fuzzing_pipeline(benchmark: Benchmark, model: models.LLM,
   elif args.agent:
 
     writer_agents = []
-    if 'gemini' in args.model or 'vertex' in args.model:
+    if (('gemini' in args.model or 'vertex' in args.model) and
+        not getattr(args, 'no_function_analyzer', False)):
       writer_agents.append(
           FunctionAnalyzer(trial=trial,
                            llm=model,
                            args=args,
                            benchmark=benchmark))
-    writer_agents += [
-        Prototyper(trial=trial, llm=model, args=args),
-        Enhancer(trial=trial, llm=model, args=args)
-    ]
+    if getattr(args, "use_error_memory", False):
+      logger.info("[INFO] Using MemoryPrototyper with error memory enabled.",
+                  trial=trial)
+      writer_agents += [
+          MemoryPrototyper(trial=trial, llm=model, args=args),
+          MemoryEnhancer(trial=trial, llm=model, args=args)
+      ]
+    else:
+      writer_agents += [
+          Prototyper(trial=trial, llm=model, args=args),
+          Enhancer(trial=trial, llm=model, args=args)
+      ]
     p = pipeline.Pipeline(args=args,
                           trial=trial,
                           writing_stage_agents=writer_agents,
@@ -295,7 +306,8 @@ def _fuzzing_pipeline(benchmark: Benchmark, model: models.LLM,
                           ])
   else:
     writer_agents = []
-    if 'gemini' in args.model or 'vertex' in args.model:
+    if (('gemini' in args.model or 'vertex' in args.model) and
+        not getattr(args, 'no_function_analyzer', False)):
       writer_agents.append(
           FunctionAnalyzer(trial=trial,
                            llm=model,

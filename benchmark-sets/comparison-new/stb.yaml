@@ -1,0 +1,17 @@
+"functions":
+- "name": "stbi_zlib_decode_noheader_buffer"
+  "params":
+  - "name": "obuffer"
+    "type": "bool"
+  - "name": "olen"
+    "type": "int"
+  - "name": "ibuffer"
+    "type": "bool"
+  - "name": "ilen"
+    "type": "int"
+  "return_type": "int"
+  "signature": "int stbi_zlib_decode_noheader_buffer(char *, int, const char *, int)"
+"language": "c++"
+"project": "stb"
+"target_name": "stb_png_read_fuzzer"
+"target_path": "/src/stb/tests/stbi_read_fuzzer.c"

@@ -1,0 +1,27 @@
+"functions":
+- "name": "lwan_init"
+  "params":
+  - "name": "l"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void lwan_init(struct lwan *)"
+- "name": "lwan_process_request"
+  "params":
+  - "name": "l"
+    "type": "bool "
+  - "name": "request"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void lwan_process_request(struct lwan *, struct lwan_request *)"
+- "name": "lwan_response"
+  "params":
+  - "name": "request"
+    "type": "bool "
+  - "name": "status"
+    "type": "int"
+  "return_type": "void"
+  "signature": "void lwan_response(struct lwan_request *, DW_TAG_enumeration_typelwan_http_status)"
+"language": "c++"
+"project": "lwan"
+"target_name": "pattern_fuzzer"
+"target_path": "/src/lwan/src/bin/fuzz/pattern_fuzzer.cc"

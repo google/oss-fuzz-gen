@@ -1,0 +1,13 @@
+"functions":
+- "name": "kg_get_defcred"
+  "params":
+  - "name": "minor_status"
+    "type": "bool"
+  - "name": "cred"
+    "type": "bool"
+  "return_type": "int"
+  "signature": "OM_uint32 kg_get_defcred(OM_uint32 *, gss_cred_id_t *)"
+"language": "c"
+"project": "krb5"
+"target_name": "fuzz_ndr"
+"target_path": "/src/krb5/src/tests/fuzzing/fuzz_ndr.c"

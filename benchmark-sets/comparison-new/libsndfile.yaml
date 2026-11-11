@@ -1,0 +1,15 @@
+"functions":
+- "name": "psf_calc_max_all_channels"
+  "params":
+  - "name": "psf"
+    "type": "bool"
+  - "name": "peaks"
+    "type": "bool"
+  - "name": "normalize"
+    "type": "int"
+  "return_type": "int"
+  "signature": "int psf_calc_max_all_channels(SF_PRIVATE *, double *, int)"
+"language": "c"
+"project": "libsndfile"
+"target_name": "sndfile_fuzzer"
+"target_path": "/src/libsndfile/ossfuzz/sndfile_fuzzer.cc"

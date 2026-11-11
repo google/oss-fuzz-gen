@@ -1,0 +1,17 @@
+"functions":
+- "name": "UnmarshalToPublic"
+  "params":
+  - "name": "tOut"
+    "type": "bool"
+  - "name": "tIn"
+    "type": "bool"
+  - "name": "derivation"
+    "type": "BOOL"
+  - "name": "labelContext"
+    "type": "bool"
+  "return_type": "int"
+  "signature": "TPM_RC UnmarshalToPublic(TPMT_PUBLIC *, TPM2B_TEMPLATE *, BOOL, TPMS_DERIVE *)"
+"language": "c++"
+"project": "ibmswtpm2"
+"target_name": "fuzz_tpm_server"
+"target_path": "/src/ibmswtpm2/src/fuzzer.cc"

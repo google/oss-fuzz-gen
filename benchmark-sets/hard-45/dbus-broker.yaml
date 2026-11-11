@@ -1,0 +1,21 @@
+"functions":
+- "name": "log_appendf"
+  "params":
+  - "name": "log"
+    "type": "bool "
+  - "name": "format"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void log_appendf(Log *, const char *, void)"
+- "name": "log_appends"
+  "params":
+  - "name": "log"
+    "type": "bool "
+  - "name": "string"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void log_appends(Log *, const char *)"
+"language": "c"
+"project": "dbus-broker"
+"target_name": "fuzz-message"
+"target_path": "/src/fuzz-message.c"

@@ -1,0 +1,21 @@
+"functions":
+- "name": "_ZN3grk20CodeStreamDecompress15decompressTilesEv"
+  "params":
+  - "name": ""
+    "type": "bool "
+  "return_type": "bool"
+  "signature": "bool grk::CodeStreamDecompress::decompressTiles()"
+- "name": "_ZN3grk18CodeStreamCompress4initEP16_grk_cparametersPNS_8GrkImageE"
+  "params":
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  - "name": ""
+    "type": "bool "
+  "return_type": "bool"
+  "signature": "bool grk::CodeStreamCompress::init(grk_cparameters *, GrkImage *)"
+"language": "c++"
+"project": "grok"
+"target_name": "grk_decompress_fuzzer"
+"target_path": "/src/grok/tests/fuzzers/grk_decompress_fuzzer.cpp"

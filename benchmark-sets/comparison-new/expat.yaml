@@ -1,0 +1,17 @@
+"functions":
+- "name": "entityValueProcessor"
+  "params":
+  - "name": "parser"
+    "type": "bool"
+  - "name": "s"
+    "type": "bool"
+  - "name": "end"
+    "type": "bool"
+  - "name": "nextPtr"
+    "type": "bool"
+  "return_type": "void"
+  "signature": "enum XML_Error entityValueProcessor(XML_Parser, const char *, const char *, const char **)"
+"language": "c++"
+"project": "expat"
+"target_name": "xml_parsebuffer_fuzzer_UTF-8"
+"target_path": "/src/expat/expat/fuzz/xml_parsebuffer_fuzzer.c"

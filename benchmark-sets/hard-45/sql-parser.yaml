@@ -1,0 +1,19 @@
+"functions":
+- "name": "_ZN4hsql15SelectStatementD2Ev"
+  "params":
+  - "name": "this"
+    "type": "bool "
+  "return_type": "void"
+  "signature": "void hsql::SelectStatement::~SelectStatement(struct SelectStatement *)"
+- "name": "_ZN4hsql9SQLParser14parseSQLStringERKNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEEPNS_15SQLParserResultE"
+  "params":
+  - "name": "sql"
+    "type": "bool "
+  - "name": "result"
+    "type": "bool "
+  "return_type": "bool"
+  "signature": "bool hsql::SQLParser::parseSQLString(const string &, SQLParserResult *)"
+"language": "c++"
+"project": "sql-parser"
+"target_name": "fuzz_sql_parse"
+"target_path": "/src/sql-parser/fuzz_sql_parse.cpp"

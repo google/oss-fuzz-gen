@@ -1,0 +1,17 @@
+"functions":
+- "name": "re_regexec"
+  "params":
+  - "name": "prog"
+    "type": "bool "
+  - "name": "sp"
+    "type": "bool "
+  - "name": "sub"
+    "type": "bool "
+  - "name": "eflags"
+    "type": "int"
+  "return_type": "int"
+  "signature": "int re_regexec(Reprog *, const char *, Resub *, int)"
+"language": "c++"
+"project": "librdkafka"
+"target_name": "fuzz_regex"
+"target_path": "/src/librdkafka/tests/fuzzers/fuzz_regex.c"
