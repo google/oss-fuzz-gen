@@ -1,0 +1,7149 @@
+enums: []
+function_pointers:
+- name: gf_isom_on_block_out
+  return_type: GF_Err
+  signature: void *usr_data, u8 *block, u32 block_size, void *sample_cbk_data, u32
+    sample_cbk_magic
+- name: gf_isom_on_block_patch
+  return_type: GF_Err
+  signature: void *usr_data, u8 *block, u32 block_size, u64 block_offset, Bool is_insert
+- name: gf_isom_on_last_block_start
+  return_type: void
+  signature: void *usr_data
+functions:
+- name: GF_OPT_ENUM
+  params: []
+  return_type: auto
+  signature: GF_OPT_ENUM(name, ...)
+- name: gf_isom_get_meta_type
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: Bool
+  - name: ''
+    type: u32
+  return_type: u32
+  signature: GF_EXPORT gf_isom_get_meta_type(GF_ISOFile *file, Bool root_meta, u32
+    track_num)
+- name: gf_isom_has_meta_xml
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: Bool
+  - name: ''
+    type: u32
+  return_type: u32
+  signature: GF_EXPORT gf_isom_has_meta_xml(GF_ISOFile *file, Bool root_meta, u32
+    track_num)
+- name: gf_isom_extract_meta_xml
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: Bool
+  - name: ''
+    type: u32
+  - name: ''
+    type: char*
+  - name: ''
+    type: Bool*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_extract_meta_xml(GF_ISOFile *file, Bool root_meta,
+    u32 track_num, char *outName, Bool *is_binary)
+- name: gf_isom_get_meta_item_count
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: Bool
+  - name: ''
+    type: u32
+  return_type: u32
+  signature: GF_EXPORT gf_isom_get_meta_item_count(GF_ISOFile *file, Bool root_meta,
+    u32 track_num)
+- name: gf_isom_get_meta_item_info
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: Bool
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u32*
+  - name: ''
+    type: Bool*
+  - name: ''
+    type: const char**
+  - name: ''
+    type: const char**
+  - name: ''
+    type: const char**
+  - name: ''
+    type: const char**
+  - name: ''
+    type: const char**
+  return_type: GF_Err
+  signature: "GF_EXPORT gf_isom_get_meta_item_info(GF_ISOFile *file, Bool root_meta,\
+    \ u32 track_num, u32 item_num,\n                                  u32 *itemID,\
+    \ u32 *type, u32 *protection_scheme, u32 *protection_scheme_version, Bool *is_self_reference,\n\
+    \                                  const char **item_name, const char **item_mime_type,\
+    \ const char **item_encoding,\n                                  const char **item_url,\
+    \ const char **item_urn)"
+- name: gf_isom_get_meta_item_flags
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: Bool
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  return_type: u32
+  signature: GF_EXPORT gf_isom_get_meta_item_flags(GF_ISOFile *file, Bool root_meta,
+    u32 track_num, u32 item_num)
+- name: gf_isom_get_meta_item_by_id
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: Bool
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  return_type: u32
+  signature: GF_EXPORT gf_isom_get_meta_item_by_id(GF_ISOFile *file, Bool root_meta,
+    u32 track_num, u32 item_ID)
+- name: gf_isom_extract_meta_item
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: Bool
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: const char*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_extract_meta_item(GF_ISOFile *file, Bool root_meta,
+    u32 track_num, u32 item_id, const char *dump_file_name)
+- name: gf_isom_extract_meta_item_mem
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: Bool
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u8**
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u32*
+  - name: ''
+    type: const char**
+  - name: ''
+    type: Bool
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_extract_meta_item_mem(GF_ISOFile *file, Bool root_meta,
+    u32 track_num, u32 item_id, u8 **out_data, u32 *out_size, u32 *out_alloc_size,
+    const char **out_mime, Bool use_annex_b)
+- name: gf_isom_extract_meta_item_get_cenc_info
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: Bool
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: Bool*
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u32*
+  - name: ''
+    type: const u8**
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u8**
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u32*
+  return_type: GF_Err
+  signature: "GF_EXPORT gf_isom_extract_meta_item_get_cenc_info(GF_ISOFile *file,\
+    \ Bool root_meta, u32 track_num, u32 item_id, Bool *is_protected,\n\tu32 *skip_byte_block,\
+    \ u32 *crypt_byte_block, const u8 **key_info, u32 *key_info_size, u32 *aux_info_type_param,\n\
+    \tu8 **cenc_sai_data, u32 *cenc_sai_data_size, u32 *cenc_sai_alloc_size)"
+- name: gf_isom_get_meta_primary_item_id
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: Bool
+  - name: ''
+    type: u32
+  return_type: u32
+  signature: GF_EXPORT gf_isom_get_meta_primary_item_id(GF_ISOFile *file, Bool root_meta,
+    u32 track_num)
+- name: gf_isom_set_meta_type
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: Bool
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_set_meta_type(GF_ISOFile *file, Bool root_meta, u32
+    track_num, u32 metaType)
+- name: gf_isom_remove_meta_xml
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: Bool
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_remove_meta_xml(GF_ISOFile *file, Bool root_meta, u32
+    track_num)
+- name: gf_isom_set_meta_xml
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: Bool
+  - name: ''
+    type: u32
+  - name: ''
+    type: char*
+  - name: ''
+    type: unsigned char*
+  - name: ''
+    type: u32
+  - name: ''
+    type: Bool
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_set_meta_xml(GF_ISOFile *file, Bool root_meta, u32
+    track_num, char *XMLFileName, unsigned char *data, u32 data_size, Bool IsBinaryXML)
+- name: gf_isom_get_meta_image_props
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: Bool
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: GF_ImageItemProperties*
+  - name: ''
+    type: GF_List*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_get_meta_image_props(GF_ISOFile *file, Bool root_meta,
+    u32 track_num, u32 item_id, GF_ImageItemProperties *prop, GF_List *unmapped_props)
+- name: gf_isom_meta_get_next_item_id
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: Bool
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_meta_get_next_item_id(GF_ISOFile *file, Bool root_meta,
+    u32 track_num, u32 *item_id)
+- name: gf_isom_add_meta_item
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: Bool
+  - name: ''
+    type: u32
+  - name: ''
+    type: Bool
+  - name: ''
+    type: char*
+  - name: ''
+    type: const char*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: const char*
+  - name: ''
+    type: const char*
+  - name: ''
+    type: const char*
+  - name: ''
+    type: const char*
+  - name: ''
+    type: GF_ImageItemProperties*
+  return_type: GF_Err
+  signature: "GF_EXPORT gf_isom_add_meta_item(GF_ISOFile *file, Bool root_meta, u32\
+    \ track_num, Bool self_reference, char *resource_path, const char *item_name,\
+    \ u32 item_id, u32 item_type,\n                             const char *mime_type,\
+    \ const char *content_encoding, const char *URL, const char *URN,\n          \
+    \                   GF_ImageItemProperties *image_props)"
+- name: gf_isom_add_meta_item2
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: Bool
+  - name: ''
+    type: u32
+  - name: ''
+    type: Bool
+  - name: ''
+    type: char*
+  - name: ''
+    type: const char*
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u32
+  - name: ''
+    type: const char*
+  - name: ''
+    type: const char*
+  - name: ''
+    type: const char*
+  - name: ''
+    type: const char*
+  - name: ''
+    type: GF_ImageItemProperties*
+  return_type: GF_Err
+  signature: "GF_EXPORT gf_isom_add_meta_item2(GF_ISOFile *file, Bool root_meta, u32\
+    \ track_num, Bool self_reference, char *resource_path, const char *item_name,\
+    \ u32 *io_item_id, u32 item_type,\n                              const char *mime_type,\
+    \ const char *content_encoding, const char *URL, const char *URN,\n          \
+    \                    GF_ImageItemProperties *image_props)"
+- name: gf_isom_add_meta_item_memory
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: Bool
+  - name: ''
+    type: u32
+  - name: ''
+    type: const char*
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u32
+  - name: ''
+    type: const char*
+  - name: ''
+    type: const char*
+  - name: ''
+    type: GF_ImageItemProperties*
+  - name: ''
+    type: char*
+  - name: ''
+    type: u32
+  - name: ''
+    type: GF_List*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_add_meta_item_memory(GF_ISOFile *file, Bool root_meta,
+    u32 track_num, const char *item_name, u32 *item_id, u32 item_type, const char
+    *mime_type, const char *content_encoding, GF_ImageItemProperties *image_props,
+    char *data, u32 data_len, GF_List *item_extent_refs)
+- name: gf_isom_add_meta_item_sample_ref
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: Bool
+  - name: ''
+    type: u32
+  - name: ''
+    type: const char*
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u32
+  - name: ''
+    type: const char*
+  - name: ''
+    type: const char*
+  - name: ''
+    type: GF_ImageItemProperties*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_add_meta_item_sample_ref(GF_ISOFile *file, Bool root_meta,
+    u32 track_num, const char *item_name, u32 *item_id, u32 item_type, const char
+    *mime_type, const char *content_encoding, GF_ImageItemProperties *image_props,
+    u32 tk_id, u32 sample_num)
+- name: gf_isom_remove_meta_item
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: Bool
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: Bool
+  - name: ''
+    type: const char*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_remove_meta_item(GF_ISOFile *file, Bool root_meta,
+    u32 track_num, u32 item_id, Bool keep_refs, const char *keep_props)
+- name: gf_isom_set_meta_primary_item
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: Bool
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_set_meta_primary_item(GF_ISOFile *file, Bool root_meta,
+    u32 track_num, u32 item_id)
+- name: gf_isom_meta_add_item_ref
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: Bool
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u64*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_meta_add_item_ref(GF_ISOFile *file, Bool root_meta,
+    u32 track_num, u32 from_id, u32 to_id, u32 type, u64 *ref_index)
+- name: gf_isom_meta_add_item_group
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: Bool
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_meta_add_item_group(GF_ISOFile *file, Bool root_meta,
+    u32 track_num, u32 item_id, u32 group_id, u32 group_type)
+- name: gf_isom_meta_get_item_ref_count
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: Bool
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  return_type: u32
+  signature: GF_EXPORT gf_isom_meta_get_item_ref_count(GF_ISOFile *file, Bool root_meta,
+    u32 track_num, u32 from_id, u32 type)
+- name: gf_isom_meta_item_has_ref
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: Bool
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  return_type: u32
+  signature: GF_EXPORT gf_isom_meta_item_has_ref(GF_ISOFile *file, Bool root_meta,
+    u32 track_num, u32 to_id, u32 type)
+- name: gf_isom_meta_get_item_ref_id
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: Bool
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  return_type: u32
+  signature: GF_EXPORT gf_isom_meta_get_item_ref_id(GF_ISOFile *file, Bool root_meta,
+    u32 track_num, u32 from_id, u32 type, u32 ref_idx)
+- name: gf_isom_find_od_id_for_track
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  return_type: u32
+  signature: GF_EXPORT gf_isom_find_od_id_for_track(GF_ISOFile *file, u32 track)
+- name: gf_isom_get_num_supported_boxes
+  params: []
+  return_type: u32
+  signature: GF_EXPORT gf_isom_get_num_supported_boxes()
+- name: gf_isom_dump_supported_box
+  params:
+  - name: ''
+    type: u32
+  - name: ''
+    type: FILE*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_dump_supported_box(u32 idx, FILE * trace)
+- name: gf_isom_get_supported_box_type
+  params:
+  - name: ''
+    type: u32
+  return_type: u32
+  signature: GF_EXPORT gf_isom_get_supported_box_type(u32 idx)
+- name: gf_isom_can_access_movie
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: GF_ISOOpenMode
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_can_access_movie(GF_ISOFile *movie, GF_ISOOpenMode
+    Mode)
+- name: gf_isom_add_track_to_root_od
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_add_track_to_root_od(GF_ISOFile *movie, u32 trackNumber)
+- name: gf_isom_remove_root_od
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_remove_root_od(GF_ISOFile *movie)
+- name: gf_isom_remove_track_from_root_od
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_remove_track_from_root_od(GF_ISOFile *movie, u32 trackNumber)
+- name: gf_isom_set_creation_time
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u64
+  - name: ''
+    type: u64
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_set_creation_time(GF_ISOFile *movie, u64 ctime, u64
+    mtime)
+- name: gf_isom_set_track_creation_time
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u64
+  - name: ''
+    type: u64
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_set_track_creation_time(GF_ISOFile *movie,u32 trackNumber,
+    u64 ctime, u64 mtime)
+- name: gf_isom_set_media_creation_time
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u64
+  - name: ''
+    type: u64
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_set_media_creation_time(GF_ISOFile *movie,u32 trackNumber,
+    u64 ctime, u64 mtime)
+- name: gf_isom_set_track_enabled
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: Bool
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_set_track_enabled(GF_ISOFile *movie, u32 trackNumber,
+    Bool enableTrack)
+- name: gf_isom_set_track_flags
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: GF_ISOMTrackFlagOp
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_set_track_flags(GF_ISOFile *movie, u32 trackNumber,
+    u32 flags, GF_ISOMTrackFlagOp op)
+- name: gf_isom_set_media_language
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: char*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_set_media_language(GF_ISOFile *movie, u32 trackNumber,
+    char *code)
+- name: gf_isom_add_desc_to_root_od
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: const GF_Descriptor*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_add_desc_to_root_od(GF_ISOFile *movie, const GF_Descriptor
+    *theDesc)
+- name: gf_isom_set_timescale
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_set_timescale(GF_ISOFile *movie, u32 timeScale)
+- name: gf_isom_set_pl_indication
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: GF_ISOProfileLevelType
+  - name: ''
+    type: u8
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_set_pl_indication(GF_ISOFile *movie, GF_ISOProfileLevelType
+    PL_Code, u8 ProfileLevel)
+- name: gf_isom_set_root_od_id
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_set_root_od_id(GF_ISOFile *movie, u32 OD_ID)
+- name: gf_isom_set_root_od_url
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: const char*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_set_root_od_url(GF_ISOFile *movie, const char *url_string)
+- name: gf_isom_load_extra_boxes
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u8*
+  - name: ''
+    type: u32
+  - name: ''
+    type: Bool
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_load_extra_boxes(GF_ISOFile *movie, u8 *moov_boxes,
+    u32 moov_boxes_size, Bool udta_only)
+- name: gf_isom_new_track_from_template
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: GF_ISOTrackID
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u8*
+  - name: ''
+    type: u32
+  - name: ''
+    type: Bool
+  return_type: u32
+  signature: GF_EXPORT gf_isom_new_track_from_template(GF_ISOFile *movie, GF_ISOTrackID
+    trakID, u32 MediaType, u32 TimeScale, u8 *tk_box, u32 tk_box_size, Bool udta_only)
+- name: gf_isom_set_track_stsd_templates
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u8*
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_set_track_stsd_templates(GF_ISOFile *movie, u32 trackNumber,
+    u8 *stsd_data, u32 stsd_data_size)
+- name: gf_isom_new_track
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: GF_ISOTrackID
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  return_type: u32
+  signature: GF_EXPORT gf_isom_new_track(GF_ISOFile *movie, GF_ISOTrackID trakID,
+    u32 MediaType, u32 TimeScale)
+- name: gf_isom_new_external_track
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: GF_ISOTrackID
+  - name: ''
+    type: GF_ISOTrackID
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: const char*
+  return_type: u32
+  signature: GF_EXPORT gf_isom_new_external_track(GF_ISOFile *movie, GF_ISOTrackID
+    trakID, GF_ISOTrackID refTrakID, u32 MediaType, u32 TimeScale, const char *uri)
+- name: gf_isom_force_track_duration
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u64
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_force_track_duration(GF_ISOFile *movie, u32 trackNumber,
+    u64 dur)
+- name: gf_isom_remove_stream_description
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_remove_stream_description(GF_ISOFile *movie, u32 trackNumber,
+    u32 StreamDescriptionIndex)
+- name: gf_isom_new_mpeg4_description
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: const GF_ESD*
+  - name: ''
+    type: const char*
+  - name: ''
+    type: const char*
+  - name: ''
+    type: u32*
+  return_type: GF_Err
+  signature: "GF_EXPORT gf_isom_new_mpeg4_description(GF_ISOFile *movie,\n       \
+    \                              u32 trackNumber,\n                            \
+    \         const GF_ESD *esd,\n                                     const char\
+    \ *URLname,\n                                     const char *URNname,\n     \
+    \                                u32 *outDescriptionIndex)"
+- name: gf_isom_add_sample
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: const GF_ISOSample*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_add_sample(GF_ISOFile *movie, u32 trackNumber, u32
+    StreamDescriptionIndex, const GF_ISOSample *sample)
+- name: gf_isom_add_sample_shadow
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: GF_ISOSample*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_add_sample_shadow(GF_ISOFile *movie, u32 trackNumber,
+    GF_ISOSample *sample)
+- name: gf_isom_append_sample_data
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u8*
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_append_sample_data(GF_ISOFile *movie, u32 trackNumber,
+    u8 *data, u32 data_size)
+- name: gf_isom_add_sample_reference
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: GF_ISOSample*
+  - name: ''
+    type: u64
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_add_sample_reference(GF_ISOFile *movie, u32 trackNumber,
+    u32 StreamDescriptionIndex, GF_ISOSample *sample, u64 dataOffset)
+- name: gf_isom_set_last_sample_duration
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_set_last_sample_duration(GF_ISOFile *movie, u32 trackNumber,
+    u32 duration)
+- name: gf_isom_patch_last_sample_duration
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u64
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_patch_last_sample_duration(GF_ISOFile *movie, u32 trackNumber,
+    u64 next_dts)
+- name: gf_isom_set_last_sample_duration_ex
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_set_last_sample_duration_ex(GF_ISOFile *movie, u32
+    trackNumber, u32 dur_num, u32 dur_den)
+- name: gf_isom_update_sample
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: GF_ISOSample*
+  - name: ''
+    type: Bool
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_update_sample(GF_ISOFile *movie, u32 trackNumber, u32
+    sampleNumber, GF_ISOSample *sample, Bool data_only)
+- name: gf_isom_update_sample_reference
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: GF_ISOSample*
+  - name: ''
+    type: u64
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_update_sample_reference(GF_ISOFile *movie, u32 trackNumber,
+    u32 sampleNumber, GF_ISOSample *sample, u64 data_offset)
+- name: gf_isom_remove_sample
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_remove_sample(GF_ISOFile *movie, u32 trackNumber, u32
+    sampleNumber)
+- name: gf_isom_set_final_name
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: char*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_set_final_name(GF_ISOFile *movie, char *filename)
+- name: gf_isom_add_desc_to_description
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: const GF_Descriptor*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_add_desc_to_description(GF_ISOFile *movie, u32 trackNumber,
+    u32 StreamDescriptionIndex, const GF_Descriptor *theDesc)
+- name: gf_isom_change_mpeg4_description
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: const GF_ESD*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_change_mpeg4_description(GF_ISOFile *movie, u32 trackNumber,
+    u32 StreamDescriptionIndex, const GF_ESD *newESD)
+- name: gf_isom_set_visual_info
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_set_visual_info(GF_ISOFile *movie, u32 trackNumber,
+    u32 StreamDescriptionIndex, u32 Width, u32 Height)
+- name: gf_isom_set_visual_bit_depth
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u16
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_set_visual_bit_depth(GF_ISOFile *movie, u32 trackNumber,
+    u32 StreamDescriptionIndex, u16 bitDepth)
+- name: gf_isom_set_pixel_aspect_ratio
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: s32
+  - name: ''
+    type: s32
+  - name: ''
+    type: Bool
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_set_pixel_aspect_ratio(GF_ISOFile *movie, u32 trackNumber,
+    u32 StreamDescriptionIndex, s32 hSpacing, s32 vSpacing, Bool force_par)
+- name: gf_isom_set_visual_color_info
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u16
+  - name: ''
+    type: u16
+  - name: ''
+    type: u16
+  - name: ''
+    type: Bool
+  - name: ''
+    type: u8*
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_set_visual_color_info(GF_ISOFile *movie, u32 trackNumber,
+    u32 StreamDescriptionIndex, u32 colour_type, u16 colour_primaries, u16 transfer_characteristics,
+    u16 matrix_coefficients, Bool full_range_flag, u8 *icc_data, u32 icc_size)
+- name: gf_isom_set_dolby_vision_profile
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: GF_DOVIDecoderConfigurationRecord*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_set_dolby_vision_profile(GF_ISOFile* movie, u32 trackNumber,
+    u32 StreamDescriptionIndex, GF_DOVIDecoderConfigurationRecord *dvcc)
+- name: gf_isom_set_high_dynamic_range_info
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: GF_MasteringDisplayColourVolumeInfo*
+  - name: ''
+    type: GF_ContentLightLevelInfo*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_set_high_dynamic_range_info(GF_ISOFile* movie, u32
+    trackNumber, u32 StreamDescriptionIndex, GF_MasteringDisplayColourVolumeInfo*
+    mdcv, GF_ContentLightLevelInfo* clli)
+- name: gf_isom_set_clean_aperture
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: s32
+  - name: ''
+    type: u32
+  - name: ''
+    type: s32
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_set_clean_aperture(GF_ISOFile *movie, u32 trackNumber,
+    u32 StreamDescriptionIndex, u32 cleanApertureWidthN, u32 cleanApertureWidthD,
+    u32 cleanApertureHeightN, u32 cleanApertureHeightD, s32 horizOffN, u32 horizOffD,
+    s32 vertOffN, u32 vertOffD)
+- name: gf_isom_update_aperture_info
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: Bool
+  return_type: GF_Err
+  signature: GF_Err gf_isom_update_aperture_info(GF_ISOFile *movie, u32 trackNumber,
+    Bool remove)
+- name: gf_isom_set_image_sequence_coding_constraints
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: Bool
+  - name: ''
+    type: Bool
+  - name: ''
+    type: Bool
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_set_image_sequence_coding_constraints(GF_ISOFile *movie,
+    u32 trackNumber, u32 StreamDescriptionIndex, Bool remove, Bool all_ref_pics_intra,
+    Bool intra_pred_used, u32 max_ref_per_pic)
+- name: gf_isom_set_image_sequence_alpha
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: Bool
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_set_image_sequence_alpha(GF_ISOFile *movie, u32 trackNumber,
+    u32 StreamDescriptionIndex, Bool remove)
+- name: gf_isom_set_audio_info
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u8
+  - name: ''
+    type: GF_AudioSampleEntryImportMode
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_set_audio_info(GF_ISOFile *movie, u32 trackNumber,
+    u32 StreamDescriptionIndex, u32 sampleRate, u32 nbChannels, u8 bitsPerSample,
+    GF_AudioSampleEntryImportMode asemode)
+- name: gf_isom_set_audio_layout
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: GF_AudioChannelLayout*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_set_audio_layout(GF_ISOFile *movie, u32 trackNumber,
+    u32 sampleDescriptionIndex, GF_AudioChannelLayout *layout)
+- name: gf_isom_set_storage_mode
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: GF_ISOStorageMode
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_set_storage_mode(GF_ISOFile *movie, GF_ISOStorageMode
+    storageMode)
+- name: gf_isom_enable_compression
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: GF_ISOCompressMode
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_enable_compression(GF_ISOFile *file, GF_ISOCompressMode
+    compress_mode, u32 compress_flags)
+- name: gf_isom_force_64bit_chunk_offset
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: Bool
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_force_64bit_chunk_offset(GF_ISOFile *file, Bool set_on)
+- name: gf_isom_set_edit
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u64
+  - name: ''
+    type: u64
+  - name: ''
+    type: u64
+  - name: ''
+    type: GF_ISOEditType
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_set_edit(GF_ISOFile *movie, u32 trackNumber, u64 EditTime,
+    u64 EditDuration, u64 MediaTime, GF_ISOEditType EditMode)
+- name: gf_isom_set_edit_with_rate
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u64
+  - name: ''
+    type: u64
+  - name: ''
+    type: u64
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_set_edit_with_rate(GF_ISOFile *movie, u32 trackNumber,
+    u64 EditTime, u64 EditDuration, u64 MediaTime, u32 media_rate)
+- name: gf_isom_remove_edits
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_remove_edits(GF_ISOFile *movie, u32 trackNumber)
+- name: gf_isom_remove_edit
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_remove_edit(GF_ISOFile *movie, u32 trackNumber, u32
+    seg_index)
+- name: gf_isom_append_edit
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u64
+  - name: ''
+    type: u64
+  - name: ''
+    type: GF_ISOEditType
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_append_edit(GF_ISOFile *movie, u32 trackNumber, u64
+    EditDuration, u64 MediaTime, GF_ISOEditType EditMode)
+- name: gf_isom_modify_edit
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u64
+  - name: ''
+    type: u64
+  - name: ''
+    type: GF_ISOEditType
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_modify_edit(GF_ISOFile *movie, u32 trackNumber, u32
+    seg_index, u64 EditDuration, u64 MediaTime, GF_ISOEditType EditMode)
+- name: gf_isom_remove_track
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_remove_track(GF_ISOFile *movie, u32 trackNumber)
+- name: gf_isom_set_copyright
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: const char*
+  - name: ''
+    type: char*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_set_copyright(GF_ISOFile *movie, const char *threeCharCode,
+    char *notice)
+- name: gf_isom_add_track_kind
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: const char*
+  - name: ''
+    type: const char*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_add_track_kind(GF_ISOFile *movie, u32 trackNumber,
+    const char *schemeURI, const char *value)
+- name: gf_isom_remove_track_kind
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: const char*
+  - name: ''
+    type: const char*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_remove_track_kind(GF_ISOFile *movie, u32 trackNumber,
+    const char *schemeURI, const char *value)
+- name: gf_isom_add_chapter
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u64
+  - name: ''
+    type: char*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_add_chapter(GF_ISOFile *movie, u32 trackNumber, u64
+    timestamp, char *name)
+- name: gf_isom_remove_chapter
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_remove_chapter(GF_ISOFile *movie, u32 trackNumber,
+    u32 index)
+- name: gf_isom_set_interleave_time
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_set_interleave_time(GF_ISOFile *movie, u32 InterleaveTime)
+- name: gf_isom_use_compact_size
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: Bool
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_use_compact_size(GF_ISOFile *movie, u32 trackNumber,
+    Bool CompactionOn)
+- name: gf_isom_disable_brand_rewrite
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: Bool
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_disable_brand_rewrite(GF_ISOFile *movie, Bool do_disable)
+- name: gf_isom_set_brand_info
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_set_brand_info(GF_ISOFile *movie, u32 MajorBrand, u32
+    MinorVersion)
+- name: gf_isom_modify_alternate_brand
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: Bool
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_modify_alternate_brand(GF_ISOFile *movie, u32 Brand,
+    Bool AddIt)
+- name: gf_isom_reset_alt_brands_ex
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: Bool
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_reset_alt_brands_ex(GF_ISOFile *movie, Bool leave_empty)
+- name: gf_isom_reset_alt_brands
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_reset_alt_brands(GF_ISOFile *movie)
+- name: gf_isom_remove_user_data_item
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u8*
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_remove_user_data_item(GF_ISOFile *movie, u32 trackNumber,
+    u32 UserDataType, bin128 UUID, u32 UserDataIndex)
+- name: gf_isom_remove_user_data
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u8*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_remove_user_data(GF_ISOFile *movie, u32 trackNumber,
+    u32 UserDataType, bin128 UUID)
+- name: gf_isom_add_user_data
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u8*
+  - name: ''
+    type: u8*
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_add_user_data(GF_ISOFile *movie, u32 trackNumber, u32
+    UserDataType, bin128 UUID, u8 *data, u32 DataLength)
+- name: gf_isom_add_user_data_boxes
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u8*
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_add_user_data_boxes(GF_ISOFile *movie, u32 trackNumber,
+    u8 *data, u32 DataLength)
+- name: gf_isom_clone_pl_indications
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: GF_ISOFile*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_clone_pl_indications(GF_ISOFile *orig, GF_ISOFile *dest)
+- name: gf_isom_get_raw_user_data
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u8**
+  - name: ''
+    type: u32*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_get_raw_user_data(GF_ISOFile *file, u8 **output, u32
+    *output_size)
+- name: gf_isom_get_track_template
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u8**
+  - name: ''
+    type: u32*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_get_track_template(GF_ISOFile *file, u32 track, u8
+    **output, u32 *output_size)
+- name: gf_isom_get_trex_template
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u8**
+  - name: ''
+    type: u32*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_get_trex_template(GF_ISOFile *file, u32 track, u8 **output,
+    u32 *output_size)
+- name: gf_isom_get_stsd_template
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u8**
+  - name: ''
+    type: u32*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_get_stsd_template(GF_ISOFile *file, u32 track, u32
+    stsd_idx, u8 **output, u32 *output_size)
+- name: gf_isom_clone_track
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: GF_ISOTrackCloneFlags
+  - name: ''
+    type: u32*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_clone_track(GF_ISOFile *orig_file, u32 orig_track,
+    GF_ISOFile *dest_file, GF_ISOTrackCloneFlags flags, u32 *dest_track)
+- name: gf_isom_clone_sample_description
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: const char*
+  - name: ''
+    type: const char*
+  - name: ''
+    type: u32*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_clone_sample_description(GF_ISOFile *the_file, u32
+    trackNumber, GF_ISOFile *orig_file, u32 orig_track, u32 orig_desc_index, const
+    char *URLname, const char *URNname, u32 *outDescriptionIndex)
+- name: gf_isom_new_generic_sample_description
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: const char*
+  - name: ''
+    type: const char*
+  - name: ''
+    type: GF_GenericSampleDescription*
+  - name: ''
+    type: u32*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_new_generic_sample_description(GF_ISOFile *movie, u32
+    trackNumber, const char *URLname, const char *URNname, GF_GenericSampleDescription
+    *udesc, u32 *outDescriptionIndex)
+- name: gf_isom_set_track_reference
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: GF_ISOTrackID
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_set_track_reference(GF_ISOFile *the_file, u32 trackNumber,
+    u32 referenceType, GF_ISOTrackID ReferencedTrackID)
+- name: gf_isom_purge_track_reference
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_purge_track_reference(GF_ISOFile *the_file, u32 trackNumber)
+- name: gf_isom_remove_track_references
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_remove_track_references(GF_ISOFile *the_file, u32 trackNumber)
+- name: gf_isom_remove_track_reference
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_remove_track_reference(GF_ISOFile *isom_file, u32 trackNumber,
+    u32 ref_type)
+- name: gf_isom_set_track_id
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: GF_ISOTrackID
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_set_track_id(GF_ISOFile *movie, u32 trackNumber, GF_ISOTrackID
+    trackID)
+- name: gf_isom_rewrite_track_dependencies
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_rewrite_track_dependencies(GF_ISOFile *movie, u32 trackNumber)
+- name: gf_isom_shift_cts_offset
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: s32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_shift_cts_offset(GF_ISOFile *the_file, u32 trackNumber,
+    s32 offset_shift)
+- name: gf_isom_set_cts_packing
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: Bool
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_set_cts_packing(GF_ISOFile *the_file, u32 trackNumber,
+    Bool unpack)
+- name: gf_isom_set_track_matrix
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: s32*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_set_track_matrix(GF_ISOFile *the_file, u32 trackNumber,
+    s32 matrix[9])
+- name: gf_isom_set_track_layout_info
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: s32
+  - name: ''
+    type: s32
+  - name: ''
+    type: s16
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_set_track_layout_info(GF_ISOFile *the_file, u32 trackNumber,
+    u32 width, u32 height, s32 translation_x, s32 translation_y, s16 layer)
+- name: gf_isom_set_media_timescale
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_set_media_timescale(GF_ISOFile *the_file, u32 trackNumber,
+    u32 newTS, u32 new_tsinc, u32 force_rescale_type)
+- name: gf_isom_is_same_sample_description
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  return_type: Bool
+  signature: GF_EXPORT gf_isom_is_same_sample_description(GF_ISOFile *f1, u32 tk1,
+    u32 sdesc_index1, GF_ISOFile *f2, u32 tk2, u32 sdesc_index2)
+- name: gf_isom_estimate_size
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  return_type: u64
+  signature: GF_EXPORT gf_isom_estimate_size(GF_ISOFile *movie)
+- name: gf_isom_set_track_interleaving_group
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_set_track_interleaving_group(GF_ISOFile *movie, u32
+    trackNumber, u32 GroupID)
+- name: gf_isom_set_track_priority_in_group
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_set_track_priority_in_group(GF_ISOFile *movie, u32
+    trackNumber, u32 Priority)
+- name: gf_isom_hint_max_chunk_size
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_hint_max_chunk_size(GF_ISOFile *movie, u32 trackNumber,
+    u32 maxChunkSize)
+- name: gf_isom_hint_max_chunk_duration
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_hint_max_chunk_duration(GF_ISOFile *movie, u32 trackNumber,
+    u32 maxChunkDur)
+- name: gf_isom_set_extraction_slc
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: const GF_SLConfig*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_set_extraction_slc(GF_ISOFile *the_file, u32 trackNumber,
+    u32 StreamDescriptionIndex, const GF_SLConfig *slConfig)
+- name: gf_isom_get_track_group
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  return_type: u32
+  signature: GF_EXPORT gf_isom_get_track_group(GF_ISOFile *file, u32 track_number,
+    u32 track_group_type)
+- name: gf_isom_make_interleave_ex
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: GF_Fraction*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_make_interleave_ex(GF_ISOFile *file, GF_Fraction *fTimeInSec)
+- name: gf_isom_make_interleave
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: Double
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_make_interleave(GF_ISOFile *file, Double TimeInSec)
+- name: gf_isom_set_handler_name
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: const char*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_set_handler_name(GF_ISOFile *the_file, u32 trackNumber,
+    const char *nameUTF8)
+- name: gf_isom_set_media_type
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_set_media_type(GF_ISOFile *movie, u32 trackNumber,
+    u32 new_type)
+- name: gf_isom_set_media_subtype
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_set_media_subtype(GF_ISOFile *movie, u32 trackNumber,
+    u32 sampleDescriptionIndex, u32 new_type)
+- name: gf_isom_remove_uuid
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u8*
+  return_type: GF_Err
+  signature: GF_Err gf_isom_remove_uuid(GF_ISOFile *movie, u32 trackNumber, bin128
+    UUID)
+- name: gf_isom_add_uuid
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u8*
+  - name: ''
+    type: const u8*
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_add_uuid(GF_ISOFile *movie, u32 trackNumber, bin128
+    UUID, const u8 *data, u32 data_size)
+- name: gf_isom_apple_set_tag_ex
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: GF_ISOiTunesTag
+  - name: ''
+    type: const u8*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u64
+  - name: ''
+    type: u32
+  - name: ''
+    type: const char*
+  - name: ''
+    type: const char*
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_apple_set_tag_ex(GF_ISOFile *mov, GF_ISOiTunesTag tag,
+    const u8 *data, u32 data_len, u64 int_val, u32 int_val2, const char *in_cust_name,
+    const char *in_cust_mean, u32 locale)
+- name: gf_isom_apple_set_tag
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: GF_ISOiTunesTag
+  - name: ''
+    type: const u8*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u64
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_apple_set_tag(GF_ISOFile *mov, GF_ISOiTunesTag tag,
+    const u8 *data, u32 data_len, u64 int_val, u32 int_val2)
+- name: gf_isom_wma_set_tag
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: char*
+  - name: ''
+    type: char*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_wma_set_tag(GF_ISOFile *mov, char *name, char *value)
+- name: gf_isom_set_qt_key
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: GF_QT_UDTAKey*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_set_qt_key(GF_ISOFile *movie, GF_QT_UDTAKey *key)
+- name: gf_isom_set_alternate_group_id
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_set_alternate_group_id(GF_ISOFile *movie, u32 trackNumber,
+    u32 groupId)
+- name: gf_isom_set_track_switch_parameter
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: Bool
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_set_track_switch_parameter(GF_ISOFile *movie, u32 trackNumber,
+    u32 trackRefGroup, Bool is_switch_group, u32 *switchGroupID, u32 *criteriaList,
+    u32 criteriaListCount)
+- name: gf_isom_reset_track_switch_parameter
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: Bool
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_reset_track_switch_parameter(GF_ISOFile *movie, u32
+    trackNumber, Bool reset_all_group)
+- name: gf_isom_reset_switch_parameters
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_reset_switch_parameters(GF_ISOFile *movie)
+- name: gf_isom_add_subsample
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u8
+  - name: ''
+    type: u32
+  - name: ''
+    type: Bool
+  return_type: GF_Err
+  signature: GF_Err gf_isom_add_subsample(GF_ISOFile *movie, u32 track, u32 sampleNumber,
+    u32 flags, u32 subSampleSize, u8 priority, u32 reserved, Bool discardable)
+- name: gf_isom_set_rvc_config
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u16
+  - name: ''
+    type: char*
+  - name: ''
+    type: u8*
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_set_rvc_config(GF_ISOFile *movie, u32 track, u32 sampleDescriptionIndex,
+    u16 rvc_predefined, char *mime, u8 *data, u32 size)
+- name: gf_isom_add_sample_group_info
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: void*
+  - name: ''
+    type: u32
+  - name: ''
+    type: Bool
+  - name: ''
+    type: u32*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_add_sample_group_info(GF_ISOFile *movie, u32 track,
+    u32 grouping_type, void *data, u32 data_size, Bool is_default, u32 *sampleGroupDescriptionIndex)
+- name: gf_isom_set_sample_group_description
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: void*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_Err gf_isom_set_sample_group_description(GF_ISOFile *movie, u32 track,
+    u32 sample_number, u32 grouping_type, u32 grouping_type_parameter, void *data,
+    u32 data_size, u32 sgpd_flags)
+- name: gf_isom_remove_sample_group
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_remove_sample_group(GF_ISOFile *movie, u32 track, u32
+    grouping_type)
+- name: gf_isom_add_sample_info
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_add_sample_info(GF_ISOFile *movie, u32 track, u32 sample_number,
+    u32 grouping_type, u32 sampleGroupDescriptionIndex, u32 grouping_type_parameter)
+- name: gf_isom_set_sample_rap_group
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: Bool
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_set_sample_rap_group(GF_ISOFile *movie, u32 track,
+    u32 sample_number, Bool is_rap, u32 num_leading_samples)
+- name: gf_isom_fragment_set_sample_rap_group
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: GF_ISOTrackID
+  - name: ''
+    type: u32
+  - name: ''
+    type: Bool
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_Err gf_isom_fragment_set_sample_rap_group(GF_ISOFile *movie, GF_ISOTrackID
+    trackID, u32 sample_number_in_frag, Bool is_rap, u32 num_leading_samples)
+- name: gf_isom_set_sample_av1_switch_frame_group
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: Bool
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_set_sample_av1_switch_frame_group(GF_ISOFile *movie,
+    u32 track, u32 sample_number, Bool is_switch_Frame)
+- name: gf_isom_fragment_set_sample_av1_switch_frame_group
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: GF_ISOTrackID
+  - name: ''
+    type: u32
+  - name: ''
+    type: Bool
+  return_type: GF_Err
+  signature: GF_Err gf_isom_fragment_set_sample_av1_switch_frame_group(GF_ISOFile
+    *movie, GF_ISOTrackID trackID, u32 sample_number_in_frag, Bool is_switch_Frame)
+- name: gf_isom_set_sample_roll_group
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: GF_ISOSampleRollType
+  - name: ''
+    type: s16
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_set_sample_roll_group(GF_ISOFile *movie, u32 track,
+    u32 sample_number, GF_ISOSampleRollType roll_type, s16 roll_distance)
+- name: gf_isom_fragment_set_sample_roll_group
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: GF_ISOTrackID
+  - name: ''
+    type: u32
+  - name: ''
+    type: GF_ISOSampleRollType
+  - name: ''
+    type: s16
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_fragment_set_sample_roll_group(GF_ISOFile *movie, GF_ISOTrackID
+    trackID, u32 sample_number_in_frag, GF_ISOSampleRollType roll_type, s16 roll_distance)
+- name: gf_isom_set_sample_cenc_group
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u8
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u8*
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_set_sample_cenc_group(GF_ISOFile *movie, u32 track,
+    u32 sample_number, u8 isEncrypted, u32 crypt_byte_block, u32 skip_byte_block,
+    u8 *key_info, u32 key_info_size)
+- name: gf_isom_set_sample_cenc_default_group
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_set_sample_cenc_default_group(GF_ISOFile *movie, u32
+    track, u32 sample_number)
+- name: gf_isom_set_ctts_v1
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_set_ctts_v1(GF_ISOFile *file, u32 track, u32 ctts_shift)
+- name: gf_isom_set_composition_offset_mode
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: Bool
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_set_composition_offset_mode(GF_ISOFile *file, u32 track,
+    Bool use_negative_offsets)
+- name: gf_isom_set_sample_flags
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_Err gf_isom_set_sample_flags(GF_ISOFile *file, u32 track, u32 sampleNumber,
+    u32 isLeading, u32 dependsOn, u32 dependedOn, u32 redundant)
+- name: gf_isom_copy_sample_info
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_copy_sample_info(GF_ISOFile *dst, u32 dst_track, GF_ISOFile
+    *src, u32 src_track, u32 sampleNumber)
+- name: gf_isom_text_set_display_flags
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: GF_TextFlagsMode
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_text_set_display_flags(GF_ISOFile *file, u32 track,
+    u32 desc_index, u32 flags, GF_TextFlagsMode op_type)
+- name: gf_isom_update_duration
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_update_duration(GF_ISOFile *movie)
+- name: gf_isom_update_edit_list_duration
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_update_edit_list_duration(GF_ISOFile *file, u32 track)
+- name: gf_isom_clone_pssh
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: Bool
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_clone_pssh(GF_ISOFile *output, GF_ISOFile *input, Bool
+    in_moof)
+- name: gf_isom_set_track_group
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: Bool
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_set_track_group(GF_ISOFile *file, u32 track_number,
+    u32 track_group_id, u32 group_type, Bool do_add)
+- name: gf_isom_set_nalu_length_field
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_set_nalu_length_field(GF_ISOFile *file, u32 track,
+    u32 StreamDescriptionIndex, u32 nalu_size_length)
+- name: gf_isom_set_sample_group_in_traf
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_set_sample_group_in_traf(GF_ISOFile *file)
+- name: gf_isom_set_progress_callback
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: void (*)(void*, u64, u64)
+  - name: ''
+    type: void*
+  return_type: void
+  signature: GF_EXPORT gf_isom_set_progress_callback(GF_ISOFile *file, void (*progress_cbk)(void
+    *udta, u64 nb_done, u64 nb_total), void *progress_cbk_udta)
+- name: gf_isom_update_video_sample_entry_fields
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u16
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u16
+  - name: ''
+    type: const char*
+  - name: ''
+    type: s16
+  return_type: GF_Err
+  signature: GF_Err gf_isom_update_video_sample_entry_fields(GF_ISOFile *file, u32
+    track, u32 stsd_idx, u16 revision, u32 vendor, u32 temporalQ, u32 spatialQ, u32
+    horiz_res, u32 vert_res, u16 frames_per_sample, const char *compressor_name, s16
+    color_table_index)
+- name: gf_isom_update_sample_description_from_template
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u8*
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_update_sample_description_from_template(GF_ISOFile
+    *file, u32 track, u32 sampleDescriptionIndex, u8 *data, u32 size)
+- name: gf_isom_apply_box_patch
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: GF_ISOTrackID
+  - name: ''
+    type: const char*
+  - name: ''
+    type: Bool
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_apply_box_patch(GF_ISOFile *file, GF_ISOTrackID globalTrackID,
+    const char *box_patch_filename, Bool for_fragments)
+- name: gf_isom_set_track_magic
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u64
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_set_track_magic(GF_ISOFile *movie, u32 trackNumber,
+    u64 magic)
+- name: gf_isom_set_track_index
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: void (*)(void*, u32, u32)
+  - name: ''
+    type: void*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_set_track_index(GF_ISOFile *movie, u32 trackNumber,
+    u32 index, void (*track_num_changed)(void *udta, u32 old_track_num, u32 new_track_num),
+    void *udta)
+- name: gf_isom_set_ipod_compatible
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_set_ipod_compatible(GF_ISOFile *the_file, u32 trackNumber)
+- name: gf_isom_is_inplace_rewrite
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  return_type: Bool
+  signature: GF_EXPORT gf_isom_is_inplace_rewrite(GF_ISOFile *movie)
+- name: gf_isom_disable_inplace_rewrite
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  return_type: void
+  signature: GF_EXPORT gf_isom_disable_inplace_rewrite(GF_ISOFile *movie)
+- name: gf_isom_set_y3d_info
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: GF_ISOM_Y3D_Info*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_set_y3d_info(GF_ISOFile *movie, u32 trackNumber, u32
+    sampleDescriptionIndex, GF_ISOM_Y3D_Info *info)
+- name: gf_isom_fragment_set_sample_aux_info
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u8*
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_Err gf_isom_fragment_set_sample_aux_info(GF_ISOFile *movie, u32 trackID,
+    u32 sample_number_in_frag, u32 aux_type, u32 aux_info, u8 *data, u32 size)
+- name: gf_isom_add_sample_aux_info
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u8*
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_Err gf_isom_add_sample_aux_info(GF_ISOFile *file, u32 track, u32 sampleNumber,
+    u32 aux_type, u32 aux_info, u8 *data, u32 size)
+- name: gf_isom_set_mpegh_compatible_profiles
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: const u32*
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_set_mpegh_compatible_profiles(GF_ISOFile *movie, u32
+    trackNumber, u32 sampleDescIndex, const u32 *profiles, u32 nb_compat_profiles)
+- name: gf_isom_set_sample_references
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: s32
+  - name: ''
+    type: u32
+  - name: ''
+    type: s32*
+  return_type: GF_Err
+  signature: GF_Err gf_isom_set_sample_references(GF_ISOFile *file, u32 track, u32
+    sampleNumber, s32 refID, u32 nb_refs, s32 *refs)
+- name: gf_isom_xml_subtitle_sample_add_text
+  params: []
+  return_type: GF_Err
+  signature: GF_Err gf_isom_xml_subtitle_sample_add_text(GF_GenericSubtitleSample
+    *samp, char *text_data, u32 text_len)
+- name: gf_isom_xml_subtitle_to_sample
+  params: []
+  return_type: GF_ISOSample
+  signature: GF_ISOSample *gf_isom_xml_subtitle_to_sample(GF_GenericSubtitleSample
+    *samp)
+- name: gf_isom_new_xml_subtitle_sample
+  params: []
+  return_type: GF_GenericSubtitleSample
+  signature: GF_GenericSubtitleSample *gf_isom_new_xml_subtitle_sample()
+- name: gf_isom_xml_subtitle_reset
+  params: []
+  return_type: GF_Err
+  signature: GF_Err gf_isom_xml_subtitle_reset(GF_GenericSubtitleSample *samp)
+- name: gf_isom_delete_xml_subtitle_sample
+  params: []
+  return_type: GF_EXPORT
+  signature: GF_EXPORT gf_isom_delete_xml_subtitle_sample(GF_GenericSubtitleSample
+    * samp)
+- name: gf_isom_dump
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: FILE*
+  - name: ''
+    type: Bool
+  - name: ''
+    type: Bool
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_dump(GF_ISOFile *mov, FILE * trace, Bool skip_init,
+    Bool skip_samples)
+- name: gf_isom_dump_hint_sample
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: FILE*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_dump_hint_sample(GF_ISOFile *the_file, u32 trackNumber,
+    u32 SampleNum, FILE * trace)
+- name: gf_isom_text_dump
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: FILE*
+  - name: ''
+    type: GF_TextDumpType
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_text_dump(GF_ISOFile *the_file, u32 track, FILE *dump,
+    GF_TextDumpType dump_type)
+- name: gf_isom_dump_ismacryp_protection
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: FILE*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_dump_ismacryp_protection(GF_ISOFile *the_file, u32
+    trackNumber, FILE * trace)
+- name: gf_isom_dump_ismacryp_sample
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: FILE*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_dump_ismacryp_sample(GF_ISOFile *the_file, u32 trackNumber,
+    u32 SampleNum, FILE * trace)
+- name: gf_isom_refresh_size_info
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_refresh_size_info(GF_ISOFile *file, u32 trackNumber)
+- name: gf_isom_ismacryp_new_sample
+  params: []
+  return_type: GF_ISMASample *
+  signature: GF_ISMASample *gf_isom_ismacryp_new_sample()
+- name: gf_isom_ismacryp_delete_sample
+  params:
+  - name: ''
+    type: GF_ISMASample*
+  return_type: void
+  signature: GF_EXPORT gf_isom_ismacryp_delete_sample(GF_ISMASample *samp)
+- name: gf_isom_ismacryp_sample_from_data
+  params:
+  - name: ''
+    type: u8*
+  - name: ''
+    type: u32
+  - name: ''
+    type: Bool
+  - name: ''
+    type: u8
+  - name: ''
+    type: u8
+  return_type: GF_ISMASample *
+  signature: GF_ISMASample *gf_isom_ismacryp_sample_from_data(u8 *data, u32 dataLength,
+    Bool use_selective_encryption, u8 KI_length, u8 IV_length)
+- name: gf_isom_is_media_encrypted
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  return_type: u32
+  signature: GF_EXPORT gf_isom_is_media_encrypted(GF_ISOFile *the_file, u32 trackNumber,
+    u32 sampleDescriptionIndex)
+- name: gf_isom_is_ismacryp_media
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  return_type: Bool
+  signature: GF_EXPORT gf_isom_is_ismacryp_media(GF_ISOFile *the_file, u32 trackNumber,
+    u32 sampleDescriptionIndex)
+- name: gf_isom_is_omadrm_media
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  return_type: Bool
+  signature: GF_EXPORT gf_isom_is_omadrm_media(GF_ISOFile *the_file, u32 trackNumber,
+    u32 sampleDescriptionIndex)
+- name: gf_isom_get_ismacryp_info
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u32*
+  - name: ''
+    type: const char**
+  - name: ''
+    type: const char**
+  - name: ''
+    type: Bool*
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u32*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_get_ismacryp_info(GF_ISOFile *the_file, u32 trackNumber,
+    u32 sampleDescriptionIndex, u32 *outOriginalFormat, u32 *outSchemeType, u32 *outSchemeVersion,
+    const char **outSchemeURI, const char **outKMS_URI, Bool *outSelectiveEncryption,
+    u32 *outIVLength, u32 *outKeyIndicationLength)
+- name: gf_isom_get_omadrm_info
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u32*
+  - name: ''
+    type: const char**
+  - name: ''
+    type: const char**
+  - name: ''
+    type: const char**
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u64*
+  - name: ''
+    type: u32*
+  - name: ''
+    type: Bool*
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u32*
+  return_type: GF_Err
+  signature: "GF_EXPORT gf_isom_get_omadrm_info(GF_ISOFile *the_file, u32 trackNumber,\
+    \ u32 sampleDescriptionIndex, u32 *outOriginalFormat,\n                      \
+    \         u32 *outSchemeType, u32 *outSchemeVersion,\n                       \
+    \        const char **outContentID, const char **outRightsIssuerURL, const char\
+    \ **outTextualHeaders, u32 *outTextualHeadersLen, u64 *outPlaintextLength, u32\
+    \ *outEncryptionType, Bool *outSelectiveEncryption, u32 *outIVLength, u32 *outKeyIndicationLength)"
+- name: gf_isom_change_ismacryp_protection
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: char*
+  - name: ''
+    type: char*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_change_ismacryp_protection(GF_ISOFile *the_file, u32
+    trackNumber, u32 sampleDescriptionIndex, char *scheme_uri, char *kms_uri)
+- name: gf_isom_set_ismacryp_protection
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: char*
+  - name: ''
+    type: char*
+  - name: ''
+    type: Bool
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: "GF_EXPORT gf_isom_set_ismacryp_protection(GF_ISOFile *the_file, u32\
+    \ trackNumber, u32 desc_index, u32 scheme_type,\n                            \
+    \           u32 scheme_version, char *scheme_uri, char *kms_URI,\n           \
+    \                            Bool selective_encryption, u32 KI_length, u32 IV_length)"
+- name: gf_isom_set_oma_protection
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: char*
+  - name: ''
+    type: char*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u64
+  - name: ''
+    type: char*
+  - name: ''
+    type: u32
+  - name: ''
+    type: Bool
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: "GF_EXPORT gf_isom_set_oma_protection(GF_ISOFile *the_file, u32 trackNumber,\
+    \ u32 desc_index,\n                                  char *contentID, char *kms_URI,\
+    \ u32 encryption_type, u64 plainTextLength, char *textual_headers, u32 textual_headers_len,\n\
+    \                                  Bool selective_encryption, u32 KI_length, u32\
+    \ IV_length)"
+- name: gf_isom_set_generic_protection
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: char*
+  - name: ''
+    type: char*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_set_generic_protection(GF_ISOFile *the_file, u32 trackNumber,
+    u32 desc_index, u32 scheme_type, u32 scheme_version, char *scheme_uri, char *kms_URI)
+- name: gf_isom_get_original_format_type
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_get_original_format_type(GF_ISOFile *the_file, u32
+    trackNumber, u32 sampleDescriptionIndex, u32 *outOriginalFormat)
+- name: gf_isom_is_cenc_media
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  return_type: Bool
+  signature: GF_EXPORT gf_isom_is_cenc_media(GF_ISOFile *the_file, u32 trackNumber,
+    u32 sampleDescriptionIndex)
+- name: gf_isom_get_cenc_info
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u32*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_get_cenc_info(GF_ISOFile *the_file, u32 trackNumber,
+    u32 sampleDescriptionIndex, u32 *outOriginalFormat, u32 *outSchemeType, u32 *outSchemeVersion)
+- name: gf_isom_set_cenc_protection
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u8*
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: "GF_EXPORT gf_isom_set_cenc_protection(GF_ISOFile *the_file, u32 trackNumber,\
+    \ u32 desc_index, u32 scheme_type,\n                                   u32 scheme_version,\
+    \ u32 default_IsEncrypted, u32 default_crypt_byte_block, u32 default_skip_byte_block,\n\
+    \t\t\t\t\t\t\t\t    u8 *key_info, u32 key_info_size)"
+- name: gf_isom_cenc_set_pssh
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u8*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: bin128*
+  - name: ''
+    type: u8*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_cenc_set_pssh(GF_ISOFile *file, bin128 systemID, u32
+    version, u32 KID_count, bin128 *KIDs, u8 *data, u32 len, u32 pssh_mode)
+- name: gf_isom_remove_cenc_senc_box
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_remove_cenc_senc_box(GF_ISOFile *the_file, u32 trackNumber)
+- name: gf_isom_remove_cenc_seig_sample_group
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_remove_cenc_seig_sample_group(GF_ISOFile *the_file,
+    u32 trackNumber)
+- name: gf_isom_cenc_allocate_storage
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_cenc_allocate_storage(GF_ISOFile *the_file, u32 trackNumber)
+- name: gf_isom_piff_allocate_storage
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u8
+  - name: ''
+    type: u8*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_piff_allocate_storage(GF_ISOFile *the_file, u32 trackNumber,
+    u32 AlgorithmID, u8 IV_size, bin128 KID)
+- name: gf_isom_track_cenc_add_sample_info
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u8*
+  - name: ''
+    type: u32
+  - name: ''
+    type: Bool
+  - name: ''
+    type: Bool
+  - name: ''
+    type: Bool
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_track_cenc_add_sample_info(GF_ISOFile *the_file, u32
+    trackNumber, u32 container_type, u8 *buf, u32 len, Bool use_subsamples, Bool use_saio_32bit,
+    Bool use_multikey)
+- name: gf_isom_cenc_get_sample_aux_info
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u8**
+  - name: ''
+    type: u32*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_cenc_get_sample_aux_info(GF_ISOFile *the_file, u32
+    trackNumber, u32 sampleNumber, u32 sampleDescIndex, u32 *container_type, u8 **out_buffer,
+    u32 *outSize)
+- name: gf_isom_cenc_get_default_info
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32*
+  - name: ''
+    type: Bool*
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u32*
+  - name: ''
+    type: const u8**
+  - name: ''
+    type: u32*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_cenc_get_default_info(GF_ISOFile *the_file, u32 trackNumber,
+    u32 sampleDescriptionIndex, u32 *container_type, Bool *default_IsEncrypted, u32
+    *crypt_byte_block, u32 *skip_byte_block, const u8 **key_info, u32 *key_info_size)
+- name: gf_isom_set_adobe_protection
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: Bool
+  - name: ''
+    type: char*
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_set_adobe_protection(GF_ISOFile *the_file, u32 trackNumber,
+    u32 desc_index, u32 scheme_type, u32 scheme_version, Bool is_selective_enc, char
+    *metadata, u32 len)
+- name: gf_isom_is_adobe_protection_media
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  return_type: Bool
+  signature: GF_EXPORT gf_isom_is_adobe_protection_media(GF_ISOFile *the_file, u32
+    trackNumber, u32 sampleDescriptionIndex)
+- name: gf_isom_get_adobe_protection_info
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u32*
+  - name: ''
+    type: const char**
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_get_adobe_protection_info(GF_ISOFile *the_file, u32
+    trackNumber, u32 sampleDescriptionIndex, u32 *outOriginalFormat, u32 *outSchemeType,
+    u32 *outSchemeVersion, const char **outMetadata)
+- name: gf_isom_iff_create_image_grid_item
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: Bool
+  - name: ''
+    type: u32
+  - name: ''
+    type: const char*
+  - name: ''
+    type: u32
+  - name: ''
+    type: GF_ImageItemProperties*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_iff_create_image_grid_item(GF_ISOFile *movie, Bool
+    root_meta, u32 meta_track_number, const char *item_name, u32 item_id, GF_ImageItemProperties
+    *image_props)
+- name: gf_isom_iff_create_image_overlay_item
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: Bool
+  - name: ''
+    type: u32
+  - name: ''
+    type: const char*
+  - name: ''
+    type: u32
+  - name: ''
+    type: GF_ImageItemProperties*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_iff_create_image_overlay_item(GF_ISOFile *movie, Bool
+    root_meta, u32 meta_track_number, const char *item_name, u32 item_id, GF_ImageItemProperties
+    *image_props)
+- name: gf_isom_iff_create_image_identity_item
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: Bool
+  - name: ''
+    type: u32
+  - name: ''
+    type: const char*
+  - name: ''
+    type: u32
+  - name: ''
+    type: GF_ImageItemProperties*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_iff_create_image_identity_item(GF_ISOFile *movie, Bool
+    root_meta, u32 meta_track_number, const char *item_name, u32 item_id, GF_ImageItemProperties
+    *image_props)
+- name: gf_isom_iff_create_image_item_from_track
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: Bool
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: const char*
+  - name: ''
+    type: u32
+  - name: ''
+    type: GF_ImageItemProperties*
+  - name: ''
+    type: GF_List*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_iff_create_image_item_from_track(GF_ISOFile *movie,
+    Bool root_meta, u32 meta_track_number, u32 imported_track, const char *item_name,
+    u32 item_id, GF_ImageItemProperties *image_props, GF_List *item_extent_refs)
+- name: gf_isom_setup_hint_track
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: GF_ISOHintFormat
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_setup_hint_track(GF_ISOFile *movie, u32 trackNumber,
+    GF_ISOHintFormat HintType)
+- name: gf_isom_new_hint_description
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: s32
+  - name: ''
+    type: s32
+  - name: ''
+    type: u8
+  - name: ''
+    type: u32*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_new_hint_description(GF_ISOFile *the_file, u32 trackNumber,
+    s32 HintTrackVersion, s32 LastCompatibleVersion, u8 Rely, u32 *HintDescriptionIndex)
+- name: gf_isom_rtp_set_timescale
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_rtp_set_timescale(GF_ISOFile *the_file, u32 trackNumber,
+    u32 HintDescriptionIndex, u32 TimeScale)
+- name: gf_isom_rtp_set_time_offset
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_rtp_set_time_offset(GF_ISOFile *the_file, u32 trackNumber,
+    u32 HintDescriptionIndex, u32 TimeOffset)
+- name: gf_isom_rtp_set_time_sequence_offset
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_rtp_set_time_sequence_offset(GF_ISOFile *the_file,
+    u32 trackNumber, u32 HintDescriptionIndex, u32 SequenceNumberOffset)
+- name: gf_isom_begin_hint_sample
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_begin_hint_sample(GF_ISOFile *the_file, u32 trackNumber,
+    u32 HintDescriptionIndex, u32 TransmissionTime)
+- name: gf_isom_end_hint_sample
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u8
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_end_hint_sample(GF_ISOFile *the_file, u32 trackNumber,
+    u8 IsRandomAccessPoint)
+- name: gf_isom_hint_blank_data
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u8
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_hint_blank_data(GF_ISOFile *the_file, u32 trackNumber,
+    u8 AtBegin)
+- name: gf_isom_hint_direct_data
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u8*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u8
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_hint_direct_data(GF_ISOFile *the_file, u32 trackNumber,
+    u8 *data, u32 dataLength, u8 AtBegin)
+- name: gf_isom_hint_sample_data
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: GF_ISOTrackID
+  - name: ''
+    type: u32
+  - name: ''
+    type: u16
+  - name: ''
+    type: u32
+  - name: ''
+    type: u8*
+  - name: ''
+    type: u8
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_hint_sample_data(GF_ISOFile *the_file, u32 trackNumber,
+    GF_ISOTrackID SourceTrackID, u32 SampleNumber, u16 DataLength, u32 offsetInSample,
+    u8 *extra_data, u8 AtBegin)
+- name: gf_isom_hint_sample_description_data
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: GF_ISOTrackID
+  - name: ''
+    type: u32
+  - name: ''
+    type: u16
+  - name: ''
+    type: u32
+  - name: ''
+    type: u8
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_hint_sample_description_data(GF_ISOFile *the_file,
+    u32 trackNumber, GF_ISOTrackID SourceTrackID, u32 StreamDescriptionIndex, u16
+    DataLength, u32 offsetInDescription, u8 AtBegin)
+- name: gf_isom_rtp_packet_set_flags
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u8
+  - name: ''
+    type: u8
+  - name: ''
+    type: u8
+  - name: ''
+    type: u8
+  - name: ''
+    type: u8
+  return_type: GF_Err
+  signature: "GF_EXPORT gf_isom_rtp_packet_set_flags(GF_ISOFile *the_file, u32 trackNumber,\n\
+    \                                    u8 PackingBit,\n                        \
+    \            u8 eXtensionBit,\n                                    u8 MarkerBit,\n\
+    \                                    u8 disposable_packet,\n                 \
+    \                   u8 IsRepeatedPacket)"
+- name: gf_isom_rtp_packet_begin
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: s32
+  - name: ''
+    type: u8
+  - name: ''
+    type: u8
+  - name: ''
+    type: u8
+  - name: ''
+    type: u8
+  - name: ''
+    type: u8
+  - name: ''
+    type: u8
+  - name: ''
+    type: u16
+  return_type: GF_Err
+  signature: "GF_EXPORT gf_isom_rtp_packet_begin(GF_ISOFile *the_file, u32 trackNumber,\n\
+    \                                s32 relativeTime,\n                         \
+    \       u8 PackingBit,\n                                u8 eXtensionBit,\n   \
+    \                             u8 MarkerBit,\n                                u8\
+    \ PayloadType,\n                                u8 B_frame,\n                \
+    \                u8 IsRepeatedPacket,\n                                u16 SequenceNumber)"
+- name: gf_isom_rtp_packet_set_offset
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: s32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_rtp_packet_set_offset(GF_ISOFile *the_file, u32 trackNumber,
+    s32 timeOffset)
+- name: gf_isom_sdp_add_track_line
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: const char*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_sdp_add_track_line(GF_ISOFile *the_file, u32 trackNumber,
+    const char *text)
+- name: gf_isom_sdp_clean_track
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_sdp_clean_track(GF_ISOFile *the_file, u32 trackNumber)
+- name: gf_isom_sdp_add_line
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: const char*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_sdp_add_line(GF_ISOFile *movie, const char *text)
+- name: gf_isom_sdp_clean
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_sdp_clean(GF_ISOFile *movie)
+- name: gf_isom_sdp_get
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: const char**
+  - name: ''
+    type: u32*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_sdp_get(GF_ISOFile *movie, const char **sdp, u32 *length)
+- name: gf_isom_sdp_track_get
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: const char**
+  - name: ''
+    type: u32*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_sdp_track_get(GF_ISOFile *the_file, u32 trackNumber,
+    const char **sdp, u32 *length)
+- name: gf_isom_get_payt_count
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  return_type: u32
+  signature: GF_EXPORT gf_isom_get_payt_count(GF_ISOFile *the_file, u32 trackNumber)
+- name: gf_isom_get_payt_info
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32*
+  return_type: const char *
+  signature: GF_EXPORT *gf_isom_get_payt_info(GF_ISOFile *the_file, u32 trackNumber,
+    u32 index, u32 *payID)
+- name: gf_isom_flac_config_get
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u8**
+  - name: ''
+    type: u32*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_flac_config_get(GF_ISOFile *the_file, u32 trackNumber,
+    u32 StreamDescriptionIndex, u8 **dsi, u32 *dsi_size)
+- name: gf_isom_truehd_config_get
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u32*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_truehd_config_get(GF_ISOFile *the_file, u32 trackNumber,
+    u32 StreamDescriptionIndex, u32 *format_info, u32 *peak_data_rate)
+- name: gf_isom_truehd_config_new
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: char*
+  - name: ''
+    type: char*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_truehd_config_new(GF_ISOFile *the_file, u32 trackNumber,
+    char *URLname, char *URNname, u32 format, u32 peak_rate, u32 *outDescriptionIndex)
+- name: gf_isom_opus_config_new
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: GF_OpusConfig*
+  - name: ''
+    type: char*
+  - name: ''
+    type: char*
+  - name: ''
+    type: u32*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_opus_config_new(GF_ISOFile *the_file, u32 trackNumber,
+    GF_OpusConfig *cfg, char *URLname, char *URNname, u32 *outDescriptionIndex)
+- name: gf_isom_opus_config_get
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u8**
+  - name: ''
+    type: u32*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_opus_config_get(GF_ISOFile *isom_file, u32 trackNumber,
+    u32 sampleDescriptionIndex, u8 **dsi, u32 *dsi_size)
+- name: gf_isom_opus_config_get_desc
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: GF_OpusConfig*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_opus_config_get_desc(GF_ISOFile *isom_file, u32 trackNumber,
+    u32 sampleDescriptionIndex, GF_OpusConfig *opcfg)
+- name: gf_isom_3gp_config_new
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: GF_3GPConfig*
+  - name: ''
+    type: const char*
+  - name: ''
+    type: const char*
+  - name: ''
+    type: u32*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_3gp_config_new(GF_ISOFile *the_file, u32 trackNumber,
+    GF_3GPConfig *cfg, const char *URLname, const char *URNname, u32 *outDescriptionIndex)
+- name: gf_isom_3gp_config_update
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: GF_3GPConfig*
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_3gp_config_update(GF_ISOFile *the_file, u32 trackNumber,
+    GF_3GPConfig *param, u32 DescriptionIndex)
+- name: gf_isom_ac3_config_new
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: GF_AC3Config*
+  - name: ''
+    type: const char*
+  - name: ''
+    type: const char*
+  - name: ''
+    type: u32*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_ac3_config_new(GF_ISOFile *the_file, u32 trackNumber,
+    GF_AC3Config *cfg, const char *URLname, const char *URNname, u32 *outDescriptionIndex)
+- name: gf_isom_ac3_config_update
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: GF_AC3Config*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_ac3_config_update(GF_ISOFile *the_file, u32 trackNumber,
+    u32 sampleDescriptionIndex, GF_AC3Config *cfg)
+- name: gf_isom_ac4_config_new
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: GF_AC4Config*
+  - name: ''
+    type: const char*
+  - name: ''
+    type: const char*
+  - name: ''
+    type: u32*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_ac4_config_new(GF_ISOFile *the_file, u32 trackNumber,
+    GF_AC4Config *cfg, const char *URLname, const char *URNname, u32 *outDescriptionIndex)
+- name: gf_isom_ac4_config_update
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: GF_AC4Config*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_ac4_config_update(GF_ISOFile *the_file, u32 trackNumber,
+    u32 sampleDescriptionIndex, GF_AC4Config *cfg)
+- name: gf_isom_flac_config_new
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u8*
+  - name: ''
+    type: u32
+  - name: ''
+    type: const char*
+  - name: ''
+    type: const char*
+  - name: ''
+    type: u32*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_flac_config_new(GF_ISOFile *the_file, u32 trackNumber,
+    u8 *metadata, u32 metadata_size, const char *URLname, const char *URNname, u32
+    *outDescriptionIndex)
+- name: gf_isom_new_mj2k_description
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: const char*
+  - name: ''
+    type: const char*
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u8*
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_new_mj2k_description(GF_ISOFile *the_file, u32 trackNumber,
+    const char *URLname, const char *URNname, u32 *outDescriptionIndex, u8 *dsi, u32
+    dsi_len)
+- name: gf_isom_get_dims_description
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: GF_DIMSDescription*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_get_dims_description(GF_ISOFile *movie, u32 trackNumber,
+    u32 descriptionIndex, GF_DIMSDescription *desc)
+- name: gf_isom_new_dims_description
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: GF_DIMSDescription*
+  - name: ''
+    type: const char*
+  - name: ''
+    type: const char*
+  - name: ''
+    type: u32*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_new_dims_description(GF_ISOFile *movie, u32 trackNumber,
+    GF_DIMSDescription *desc, const char *URLname, const char *URNname, u32 *outDescriptionIndex)
+- name: gf_isom_get_udts_config
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: GF_UDTSConfig*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_get_udts_config(GF_ISOFile *movie, u32 trackNumber,
+    u32 descriptionIndex, GF_UDTSConfig *cfg)
+- name: gf_isom_get_xml_metadata_description
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: const char**
+  - name: ''
+    type: const char**
+  - name: ''
+    type: const char**
+  return_type: GF_Err
+  signature: "GF_EXPORT gf_isom_get_xml_metadata_description(GF_ISOFile *file, u32\
+    \ track, u32 sampleDescription,\n        const char **_namespace, const char **schema_loc,\
+    \ const char **content_encoding)"
+- name: gf_isom_new_xml_metadata_description
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: const char*
+  - name: ''
+    type: const char*
+  - name: ''
+    type: const char*
+  - name: ''
+    type: u32*
+  return_type: GF_Err
+  signature: "GF_EXPORT gf_isom_new_xml_metadata_description(GF_ISOFile *movie, u32\
+    \ trackNumber,\n        const char *_namespace, const char *schema_loc, const\
+    \ char *content_encoding,\n        u32 *outDescriptionIndex)"
+- name: gf_isom_xml_subtitle_get_description
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: const char**
+  - name: ''
+    type: const char**
+  - name: ''
+    type: const char**
+  return_type: GF_Err
+  signature: "GF_EXPORT gf_isom_xml_subtitle_get_description(GF_ISOFile *the_file,\
+    \ u32 trackNumber, u32 StreamDescriptionIndex,\n        const char **xmlnamespace,\
+    \ const char **xml_schema_loc, const char **mimes)"
+- name: gf_isom_subtitle_get_mime
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  return_type: const char *
+  signature: GF_EXPORT *gf_isom_subtitle_get_mime(GF_ISOFile *the_file, u32 trackNumber,
+    u32 StreamDescriptionIndex)
+- name: gf_isom_subtitle_set_mime
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: const char*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_subtitle_set_mime(GF_ISOFile *the_file, u32 trackNumber,
+    u32 StreamDescriptionIndex, const char *codec_params)
+- name: gf_isom_new_xml_subtitle_description
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: const char*
+  - name: ''
+    type: const char*
+  - name: ''
+    type: const char*
+  - name: ''
+    type: u32*
+  return_type: GF_Err
+  signature: "GF_EXPORT gf_isom_new_xml_subtitle_description(GF_ISOFile  *movie, u32\
+    \ trackNumber,\n        const char *xmlnamespace, const char *xml_schema_loc,\
+    \ const char *mimes,\n        u32 *outDescriptionIndex)"
+- name: gf_isom_stxt_get_description
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: const char**
+  - name: ''
+    type: const char**
+  - name: ''
+    type: const char**
+  return_type: GF_Err
+  signature: "GF_EXPORT gf_isom_stxt_get_description(GF_ISOFile *the_file, u32 trackNumber,\
+    \ u32 StreamDescriptionIndex,\n                                    const char\
+    \ **mime, const char **encoding, const char **config)"
+- name: gf_isom_new_stxt_description
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: const char*
+  - name: ''
+    type: const char*
+  - name: ''
+    type: const char*
+  - name: ''
+    type: u32*
+  return_type: GF_Err
+  signature: "GF_EXPORT gf_isom_new_stxt_description(GF_ISOFile *movie, u32 trackNumber,\
+    \ u32 type,\n                                    const char *mime, const char\
+    \ *encoding, const char * config,\n                                    u32 *outDescriptionIndex)"
+- name: gf_isom_get_webvtt_config
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  return_type: const char *
+  signature: GF_EXPORT *gf_isom_get_webvtt_config(GF_ISOFile *file, u32 track, u32
+    index)
+- name: gf_isom_new_webvtt_description
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: const char*
+  - name: ''
+    type: const char*
+  - name: ''
+    type: u32*
+  - name: ''
+    type: const char*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_new_webvtt_description(GF_ISOFile *movie, u32 trackNumber,
+    const char *URLname, const char *URNname, u32 *outDescriptionIndex, const char
+    *config)
+- name: gf_isom_update_bitrate_ex
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: Bool
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_update_bitrate_ex(GF_ISOFile *movie, u32 trackNumber,
+    u32 sampleDescriptionIndex, u32 average_bitrate, u32 max_bitrate, u32 decode_buffer_size,
+    Bool forced_for_mpeg4)
+- name: gf_isom_update_bitrate
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_update_bitrate(GF_ISOFile *movie, u32 trackNumber,
+    u32 sampleDescriptionIndex, u32 average_bitrate, u32 max_bitrate, u32 decode_buffer_size)
+- name: gf_isom_tmcd_config_new
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: s32
+  - name: ''
+    type: Bool
+  - name: ''
+    type: Bool
+  - name: ''
+    type: u32*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_tmcd_config_new(GF_ISOFile *the_file, u32 trackNumber,
+    u32 fps_num, u32 fps_den, s32 frames_per_counter_tick, Bool is_drop, Bool is_counter,
+    u32 *outDescriptionIndex)
+- name: gf_isom_evte_config_new
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_evte_config_new(GF_ISOFile *the_file, u32 trackNumber,
+    u32 *outDescriptionIndex)
+- name: gf_isom_new_mpha_description
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: const char*
+  - name: ''
+    type: const char*
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u8*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_new_mpha_description(GF_ISOFile *movie, u32 trackNumber,
+    const char *URLname, const char *URNname, u32 *outDescriptionIndex, u8 *dsi, u32
+    dsi_size, u32 mha_subtype)
+- name: gf_isom_get_tmcd_config
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u32*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_get_tmcd_config(GF_ISOFile *movie, u32 trackNumber,
+    u32 descriptionIndex, u32 *tmcd_flags, u32 *tmcd_fps_num, u32 *tmcd_fps_den, u32
+    *tmcd_fpt)
+- name: gf_isom_get_pcm_config
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u32*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_get_pcm_config(GF_ISOFile *movie, u32 trackNumber,
+    u32 descriptionIndex, u32 *flags, u32 *pcm_size)
+- name: gf_isom_get_lpcm_config
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: Double*
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u32*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_get_lpcm_config(GF_ISOFile *movie, u32 trackNumber,
+    u32 descriptionIndex, Double *sample_rate, u32 *nb_channels, u32 *flags, u32 *pcm_size)
+- name: gf_isom_set_write_callback
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: gf_isom_on_block_out
+  - name: ''
+    type: gf_isom_on_block_patch
+  - name: ''
+    type: gf_isom_on_last_block_start
+  - name: ''
+    type: void*
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: "GF_EXPORT gf_isom_set_write_callback(GF_ISOFile *mov,\n\t\t\tgf_isom_on_block_out\
+    \ on_block_out,\n\t\t\tgf_isom_on_block_patch on_block_patch,\n\t\t\tgf_isom_on_last_block_start\
+    \ on_last_block_start,\n \t\t\tvoid *usr_data,\n \t\t\tu32 block_size)"
+- name: gf_isom_get_text_description
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: GF_TextSampleDescriptor**
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_get_text_description(GF_ISOFile *movie, u32 trackNumber,
+    u32 descriptionIndex, GF_TextSampleDescriptor **out_desc)
+- name: gf_isom_new_text_description
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: GF_TextSampleDescriptor*
+  - name: ''
+    type: const char*
+  - name: ''
+    type: const char*
+  - name: ''
+    type: u32*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_new_text_description(GF_ISOFile *movie, u32 trackNumber,
+    GF_TextSampleDescriptor *desc, const char *URLname, const char *URNname, u32 *outDescriptionIndex)
+- name: gf_isom_text_add_text
+  params:
+  - name: ''
+    type: GF_TextSample*
+  - name: ''
+    type: char*
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_text_add_text(GF_TextSample *samp, char *text_data,
+    u32 text_len)
+- name: gf_isom_text_add_style
+  params:
+  - name: ''
+    type: GF_TextSample*
+  - name: ''
+    type: GF_StyleRecord*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_text_add_style(GF_TextSample *samp, GF_StyleRecord
+    *rec)
+- name: gf_isom_text_add_highlight
+  params:
+  - name: ''
+    type: GF_TextSample*
+  - name: ''
+    type: u16
+  - name: ''
+    type: u16
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_text_add_highlight(GF_TextSample *samp, u16 start_char,
+    u16 end_char)
+- name: gf_isom_text_set_highlight_color
+  params:
+  - name: ''
+    type: GF_TextSample*
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_text_set_highlight_color(GF_TextSample *samp, u32 argb)
+- name: gf_isom_text_add_karaoke
+  params:
+  - name: ''
+    type: GF_TextSample*
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_text_add_karaoke(GF_TextSample *samp, u32 start_time)
+- name: gf_isom_text_set_karaoke_segment
+  params:
+  - name: ''
+    type: GF_TextSample*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u16
+  - name: ''
+    type: u16
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_text_set_karaoke_segment(GF_TextSample *samp, u32 end_time,
+    u16 start_char, u16 end_char)
+- name: gf_isom_text_set_scroll_delay
+  params:
+  - name: ''
+    type: GF_TextSample*
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_text_set_scroll_delay(GF_TextSample *samp, u32 scroll_delay)
+- name: gf_isom_text_add_hyperlink
+  params:
+  - name: ''
+    type: GF_TextSample*
+  - name: ''
+    type: char*
+  - name: ''
+    type: char*
+  - name: ''
+    type: u16
+  - name: ''
+    type: u16
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_text_add_hyperlink(GF_TextSample *samp, char *URL,
+    char *altString, u16 start_char, u16 end_char)
+- name: gf_isom_text_set_box
+  params:
+  - name: ''
+    type: GF_TextSample*
+  - name: ''
+    type: s16
+  - name: ''
+    type: s16
+  - name: ''
+    type: s16
+  - name: ''
+    type: s16
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_text_set_box(GF_TextSample *samp, s16 top, s16 left,
+    s16 bottom, s16 right)
+- name: gf_isom_text_add_blink
+  params:
+  - name: ''
+    type: GF_TextSample*
+  - name: ''
+    type: u16
+  - name: ''
+    type: u16
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_text_add_blink(GF_TextSample *samp, u16 start_char,
+    u16 end_char)
+- name: gf_isom_text_set_wrap
+  params:
+  - name: ''
+    type: GF_TextSample*
+  - name: ''
+    type: u8
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_text_set_wrap(GF_TextSample *samp, u8 wrap_flags)
+- name: gf_isom_text_set_forced
+  params:
+  - name: ''
+    type: GF_TextSample*
+  - name: ''
+    type: Bool
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_text_set_forced(GF_TextSample *samp, Bool is_forced)
+- name: gf_isom_text_sample_write_bs
+  params:
+  - name: ''
+    type: const GF_TextSample*
+  - name: ''
+    type: GF_BitStream*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_text_sample_write_bs(const GF_TextSample *samp, GF_BitStream
+    *bs)
+- name: gf_isom_text_sample_size
+  params:
+  - name: ''
+    type: GF_TextSample*
+  return_type: u32
+  signature: u32 gf_isom_text_sample_size(GF_TextSample *samp)
+- name: gf_isom_text_reset_styles
+  params:
+  - name: ''
+    type: GF_TextSample*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_text_reset_styles(GF_TextSample *samp)
+- name: gf_isom_text_reset
+  params:
+  - name: ''
+    type: GF_TextSample*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_text_reset(GF_TextSample *samp)
+- name: gf_isom_delete_text_sample
+  params:
+  - name: ''
+    type: GF_TextSample*
+  return_type: void
+  signature: GF_EXPORT gf_isom_delete_text_sample(GF_TextSample * tx_samp)
+- name: gf_isom_text_get_encoded_tx3g
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u8**
+  - name: ''
+    type: u32*
+  return_type: GF_Err
+  signature: GF_Err gf_isom_text_get_encoded_tx3g(GF_ISOFile *file, u32 track, u32
+    sidx, u32 sidx_offset, u8 **tx3g, u32 *tx3g_size)
+- name: gf_isom_set_forced_text
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_set_forced_text(GF_ISOFile *file, u32 track, u32 stsd_idx,
+    u32 flags)
+- name: gf_isom_avc_config_new
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: GF_AVCConfig*
+  - name: ''
+    type: const char*
+  - name: ''
+    type: const char*
+  - name: ''
+    type: u32*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_avc_config_new(GF_ISOFile *the_file, u32 trackNumber,
+    GF_AVCConfig *cfg, const char *URLname, const char *URNname, u32 *outDescriptionIndex)
+- name: gf_isom_avc_set_inband_config
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: Bool
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_avc_set_inband_config(GF_ISOFile *the_file, u32 trackNumber,
+    u32 DescriptionIndex, Bool keep_xps)
+- name: gf_isom_avc_config_update
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: GF_AVCConfig*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_avc_config_update(GF_ISOFile *the_file, u32 trackNumber,
+    u32 DescriptionIndex, GF_AVCConfig *cfg)
+- name: gf_isom_svc_config_update
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: GF_AVCConfig*
+  - name: ''
+    type: Bool
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_svc_config_update(GF_ISOFile *the_file, u32 trackNumber,
+    u32 DescriptionIndex, GF_AVCConfig *cfg, Bool is_add)
+- name: gf_isom_mvc_config_update
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: GF_AVCConfig*
+  - name: ''
+    type: Bool
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_mvc_config_update(GF_ISOFile *the_file, u32 trackNumber,
+    u32 DescriptionIndex, GF_AVCConfig *cfg, Bool is_add)
+- name: gf_isom_svc_config_del
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_Err gf_isom_svc_config_del(GF_ISOFile *the_file, u32 trackNumber,
+    u32 DescriptionIndex)
+- name: gf_isom_mvc_config_del
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_Err gf_isom_mvc_config_del(GF_ISOFile *the_file, u32 trackNumber,
+    u32 DescriptionIndex)
+- name: gf_isom_svc_config_new
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: GF_AVCConfig*
+  - name: ''
+    type: const char*
+  - name: ''
+    type: const char*
+  - name: ''
+    type: u32*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_svc_config_new(GF_ISOFile *the_file, u32 trackNumber,
+    GF_AVCConfig *cfg, const char *URLname, const char *URNname, u32 *outDescriptionIndex)
+- name: gf_isom_mvc_config_new
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: GF_AVCConfig*
+  - name: ''
+    type: const char*
+  - name: ''
+    type: const char*
+  - name: ''
+    type: u32*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_mvc_config_new(GF_ISOFile *the_file, u32 trackNumber,
+    GF_AVCConfig *cfg, const char *URLname, const char *URNname, u32 *outDescriptionIndex)
+- name: gf_isom_hevc_config_new
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: GF_HEVCConfig*
+  - name: ''
+    type: const char*
+  - name: ''
+    type: const char*
+  - name: ''
+    type: u32*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_hevc_config_new(GF_ISOFile *the_file, u32 trackNumber,
+    GF_HEVCConfig *cfg, const char *URLname, const char *URNname, u32 *outDescriptionIndex)
+- name: gf_isom_vvc_config_new
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: GF_VVCConfig*
+  - name: ''
+    type: const char*
+  - name: ''
+    type: const char*
+  - name: ''
+    type: u32*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_vvc_config_new(GF_ISOFile *the_file, u32 trackNumber,
+    GF_VVCConfig *cfg, const char *URLname, const char *URNname, u32 *outDescriptionIndex)
+- name: gf_isom_vp_config_new
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: GF_VPConfig*
+  - name: ''
+    type: const char*
+  - name: ''
+    type: const char*
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_vp_config_new(GF_ISOFile *the_file, u32 trackNumber,
+    GF_VPConfig *cfg, const char *URLname, const char *URNname, u32 *outDescriptionIndex,
+    u32 vpx_type)
+- name: gf_isom_av1_config_new
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: GF_AV1Config*
+  - name: ''
+    type: const char*
+  - name: ''
+    type: const char*
+  - name: ''
+    type: u32*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_av1_config_new(GF_ISOFile *the_file, u32 trackNumber,
+    GF_AV1Config *cfg, const char *URLname, const char *URNname, u32 *outDescriptionIndex)
+- name: gf_isom_avs3v_config_new
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: GF_AVS3VConfig*
+  - name: ''
+    type: const char*
+  - name: ''
+    type: const char*
+  - name: ''
+    type: u32*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_avs3v_config_new(GF_ISOFile *the_file, u32 trackNumber,
+    GF_AVS3VConfig *cfg, const char *URLname, const char *URNname, u32 *outDescriptionIndex)
+- name: gf_isom_iamf_config_new
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: GF_IAConfig*
+  - name: ''
+    type: const char*
+  - name: ''
+    type: const char*
+  - name: ''
+    type: u32*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_iamf_config_new(GF_ISOFile *the_file, u32 trackNumber,
+    GF_IAConfig *cfg, const char *URLname, const char *URNname, u32 *outDescriptionIndex)
+- name: gf_isom_hevc_config_update
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: GF_HEVCConfig*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_hevc_config_update(GF_ISOFile *the_file, u32 trackNumber,
+    u32 DescriptionIndex, GF_HEVCConfig *cfg)
+- name: gf_isom_hevc_set_inband_config
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: Bool
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_hevc_set_inband_config(GF_ISOFile *the_file, u32 trackNumber,
+    u32 DescriptionIndex, Bool keep_xps)
+- name: gf_isom_lhvc_force_inband_config
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_lhvc_force_inband_config(GF_ISOFile *the_file, u32
+    trackNumber, u32 DescriptionIndex)
+- name: gf_isom_hevc_set_tile_config
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: GF_HEVCConfig*
+  - name: ''
+    type: Bool
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_hevc_set_tile_config(GF_ISOFile *the_file, u32 trackNumber,
+    u32 DescriptionIndex, GF_HEVCConfig *cfg, Bool is_base_track)
+- name: gf_isom_lhvc_config_update
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: GF_HEVCConfig*
+  - name: ''
+    type: GF_ISOMLHEVCTrackType
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_lhvc_config_update(GF_ISOFile *the_file, u32 trackNumber,
+    u32 DescriptionIndex, GF_HEVCConfig *cfg, GF_ISOMLHEVCTrackType track_type)
+- name: gf_isom_vvc_set_inband_config
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: Bool
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_vvc_set_inband_config(GF_ISOFile *the_file, u32 trackNumber,
+    u32 DescriptionIndex, Bool keep_xps)
+- name: gf_isom_vvc_config_update
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: GF_VVCConfig*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_vvc_config_update(GF_ISOFile *the_file, u32 trackNumber,
+    u32 DescriptionIndex, GF_VVCConfig *cfg)
+- name: gf_isom_set_movie_duration
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u64
+  - name: ''
+    type: Bool
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_set_movie_duration(GF_ISOFile *movie, u64 duration,
+    Bool remove_mehd)
+- name: gf_isom_finalize_for_fragment
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: Bool
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_finalize_for_fragment(GF_ISOFile *movie, u32 media_segment_type,
+    Bool mvex_after_tracks)
+- name: gf_isom_change_track_fragment_defaults
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: GF_ISOTrackID
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u8
+  - name: ''
+    type: u8
+  - name: ''
+    type: u16
+  - name: ''
+    type: u8
+  return_type: GF_Err
+  signature: "GF_Err gf_isom_change_track_fragment_defaults(GF_ISOFile *movie, GF_ISOTrackID\
+    \ TrackID,\n        u32 DefaultSampleDescriptionIndex,\n        u32 DefaultSampleDuration,\n\
+    \        u32 DefaultSampleSize,\n        u8 DefaultSampleIsSync,\n        u8 DefaultSamplePadding,\n\
+    \        u16 DefaultDegradationPriority,\n        u8 force_traf_flags)"
+- name: gf_isom_setup_track_fragment
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: GF_ISOTrackID
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u8
+  - name: ''
+    type: u8
+  - name: ''
+    type: u16
+  - name: ''
+    type: Bool
+  return_type: GF_Err
+  signature: "GF_EXPORT gf_isom_setup_track_fragment(GF_ISOFile *movie, GF_ISOTrackID\
+    \ TrackID,\n                                    u32 DefaultSampleDescriptionIndex,\n\
+    \                                    u32 DefaultSampleDuration,\n            \
+    \                        u32 DefaultSampleSize,\n                            \
+    \        u8 DefaultSampleSyncFlags,\n                                    u8 DefaultSamplePadding,\n\
+    \                                    u16 DefaultDegradationPriority,\n       \
+    \                             Bool force_traf_flags)"
+- name: gf_isom_enable_traf_inherit
+  params: []
+  return_type: GF_EXPORT
+  signature: GF_EXPORT gf_isom_enable_traf_inherit(GF_ISOFile *movie, GF_ISOTrackID
+    TrackID, GF_ISOTrackID BaseTrackID)
+- name: gf_isom_setup_track_fragment_template
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: GF_ISOTrackID
+  - name: ''
+    type: u8*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u8
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_setup_track_fragment_template(GF_ISOFile *movie, GF_ISOTrackID
+    TrackID, u8 *boxes, u32 boxes_size, u8 force_traf_flags)
+- name: gf_isom_set_fragment_option
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: GF_ISOTrackID
+  - name: ''
+    type: GF_ISOTrackFragmentOption
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_set_fragment_option(GF_ISOFile *movie, GF_ISOTrackID
+    TrackID, GF_ISOTrackFragmentOption Code, u32 Param)
+- name: gf_isom_allocate_sidx
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: s32
+  - name: ''
+    type: Bool
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u32*
+  - name: ''
+    type: Bool
+  return_type: GF_Err
+  signature: GF_Err gf_isom_allocate_sidx(GF_ISOFile *movie, s32 subsegs_per_sidx,
+    Bool daisy_chain_sidx, u32 nb_segs, u32 *frags_per_segment, u32 *start_range,
+    u32 *end_range, Bool use_ssix)
+- name: gf_isom_flush_fragments
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: Bool
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_flush_fragments(GF_ISOFile *movie, Bool last_segment)
+- name: gf_isom_close_segment
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: s32
+  - name: ''
+    type: GF_ISOTrackID
+  - name: ''
+    type: u64
+  - name: ''
+    type: s32
+  - name: ''
+    type: u64
+  - name: ''
+    type: Bool
+  - name: ''
+    type: Bool
+  - name: ''
+    type: Bool
+  - name: ''
+    type: Bool
+  - name: ''
+    type: u32
+  - name: ''
+    type: u64*
+  - name: ''
+    type: u64*
+  - name: ''
+    type: u64*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_close_segment(GF_ISOFile *movie, s32 subsegments_per_sidx,
+    GF_ISOTrackID referenceTrackID, u64 ref_track_decode_time, s32 ts_shift, u64 ref_track_next_cts,
+    Bool daisy_chain_sidx, Bool use_ssix, Bool last_segment, Bool close_segment_handle,
+    u32 segment_marker_4cc, u64 *index_start_range, u64 *index_end_range, u64 *out_seg_size)
+- name: gf_isom_start_segment
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: const char*
+  - name: ''
+    type: Bool
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_start_segment(GF_ISOFile *movie, const char *SegName,
+    Bool memory_mode)
+- name: gf_isom_set_fragment_reference_time
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: GF_ISOTrackID
+  - name: ''
+    type: u64
+  - name: ''
+    type: u64
+  - name: ''
+    type: Bool
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_set_fragment_reference_time(GF_ISOFile *movie, GF_ISOTrackID
+    reference_track_ID, u64 ntp, u64 timestamp, Bool at_mux)
+- name: gf_isom_set_traf_mss_timeext
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: GF_ISOTrackID
+  - name: ''
+    type: u64
+  - name: ''
+    type: u64
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_set_traf_mss_timeext(GF_ISOFile *movie, GF_ISOTrackID
+    reference_track_ID, u64 ntp_in_track_timescale, u64 traf_duration_in_track_timescale)
+- name: gf_isom_start_fragment
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: GF_ISOStartFragmentFlags
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_start_fragment(GF_ISOFile *movie, GF_ISOStartFragmentFlags
+    flags)
+- name: gf_isom_fragment_add_sample
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: GF_ISOTrackID
+  - name: ''
+    type: const GF_ISOSample*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u8
+  - name: ''
+    type: u16
+  - name: ''
+    type: Bool
+  return_type: GF_Err
+  signature: "GF_EXPORT gf_isom_fragment_add_sample(GF_ISOFile *movie, GF_ISOTrackID\
+    \ TrackID, const GF_ISOSample *sample, u32 DescIndex,\n                      \
+    \             u32 Duration, u8 PaddingBits, u16 DegradationPriority, Bool redundant_coding)"
+- name: gf_isom_fragment_set_cenc_sai
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: GF_ISOTrackID
+  - name: ''
+    type: u8*
+  - name: ''
+    type: u32
+  - name: ''
+    type: Bool
+  - name: ''
+    type: Bool
+  - name: ''
+    type: Bool
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_fragment_set_cenc_sai(GF_ISOFile *output, GF_ISOTrackID
+    TrackID, u8 *sai_b, u32 sai_b_size, Bool use_subsamples, Bool use_saio_32bit,
+    Bool use_multikey)
+- name: gf_isom_fragment_append_data
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: GF_ISOTrackID
+  - name: ''
+    type: u8*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u8
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_fragment_append_data(GF_ISOFile *movie, GF_ISOTrackID
+    TrackID, u8 *data, u32 data_size, u8 PaddingBits)
+- name: gf_isom_fragment_add_subsample
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: GF_ISOTrackID
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u8
+  - name: ''
+    type: u32
+  - name: ''
+    type: Bool
+  return_type: GF_Err
+  signature: GF_Err gf_isom_fragment_add_subsample(GF_ISOFile *movie, GF_ISOTrackID
+    TrackID, u32 flags, u32 subSampleSize, u8 priority, u32 reserved, Bool discardable)
+- name: gf_isom_set_fragment_original_duration
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: GF_ISOTrackID
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_Err gf_isom_set_fragment_original_duration(GF_ISOFile *movie, GF_ISOTrackID
+    TrackID, u32 orig_dur, u32 elapsed_dur)
+- name: gf_isom_fragment_set_sample_flags
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: GF_ISOTrackID
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_Err gf_isom_fragment_set_sample_flags(GF_ISOFile *movie, GF_ISOTrackID
+    trackID, u32 is_leading, u32 dependsOn, u32 dependedOn, u32 redundant)
+- name: gf_isom_set_traf_base_media_decode_time
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: GF_ISOTrackID
+  - name: ''
+    type: u64
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_set_traf_base_media_decode_time(GF_ISOFile *movie,
+    GF_ISOTrackID TrackID, u64 decode_time)
+- name: gf_isom_enable_mfra
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_enable_mfra(GF_ISOFile *file)
+- name: gf_isom_set_next_moof_number
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  return_type: void
+  signature: GF_EXPORT gf_isom_set_next_moof_number(GF_ISOFile *movie, u32 value)
+- name: gf_isom_get_next_moof_number
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  return_type: u32
+  signature: GF_EXPORT gf_isom_get_next_moof_number(GF_ISOFile *movie)
+- name: gf_isom_is_track_fragmented
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: GF_ISOTrackID
+  return_type: Bool
+  signature: GF_EXPORT gf_isom_is_track_fragmented(GF_ISOFile *movie, GF_ISOTrackID
+    TrackID)
+- name: gf_isom_is_fragmented
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  return_type: Bool
+  signature: GF_EXPORT gf_isom_is_fragmented(GF_ISOFile *movie)
+- name: gf_isom_fragment_add_sample_references
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: GF_ISOTrackID
+  - name: ''
+    type: s32
+  - name: ''
+    type: u32
+  - name: ''
+    type: s32*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_fragment_add_sample_references(GF_ISOFile *movie, GF_ISOTrackID
+    TrackID, s32 refID, u32 nb_refs, s32 *refs)
+- name: gf_isom_last_error
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_last_error(GF_ISOFile *the_file)
+- name: gf_isom_get_mode
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  return_type: u8
+  signature: GF_EXPORT gf_isom_get_mode(GF_ISOFile *the_file)
+- name: gf_isom_freeze_order
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_freeze_order(GF_ISOFile *file)
+- name: gf_isom_set_inplace_padding
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_set_inplace_padding(GF_ISOFile *file, u32 padding)
+- name: gf_isom_sample_del
+  params:
+  - name: ''
+    type: GF_ISOSample**
+  return_type: void
+  signature: GF_EXPORT gf_isom_sample_del(GF_ISOSample **samp)
+- name: gf_isom_probe_file_range
+  params:
+  - name: ''
+    type: const char*
+  - name: ''
+    type: u64
+  - name: ''
+    type: u64
+  return_type: u32
+  signature: GF_EXPORT gf_isom_probe_file_range(const char *fileName, u64 start_range,
+    u64 end_range)
+- name: gf_isom_probe_file
+  params:
+  - name: ''
+    type: const char*
+  return_type: u32
+  signature: GF_EXPORT gf_isom_probe_file(const char *fileName)
+- name: gf_isom_probe_data
+  params:
+  - name: ''
+    type: const u8*
+  - name: ''
+    type: u32
+  return_type: u32
+  signature: GF_EXPORT gf_isom_probe_data(const u8*inBuf, u32 inSize)
+- name: gf_isom_open_progressive_ex
+  params:
+  - name: ''
+    type: const char*
+  - name: ''
+    type: u64
+  - name: ''
+    type: u64
+  - name: ''
+    type: Bool
+  - name: ''
+    type: GF_ISOFile**
+  - name: ''
+    type: u64*
+  - name: ''
+    type: u32*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_open_progressive_ex(const char *fileName, u64 start_range,
+    u64 end_range, Bool enable_frag_bounds, GF_ISOFile **the_file, u64 *BytesMissing,
+    u32 *outBoxType)
+- name: gf_isom_open_progressive
+  params:
+  - name: ''
+    type: const char*
+  - name: ''
+    type: u64
+  - name: ''
+    type: u64
+  - name: ''
+    type: Bool
+  - name: ''
+    type: GF_ISOFile**
+  - name: ''
+    type: u64*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_open_progressive(const char *fileName, u64 start_range,
+    u64 end_range, Bool enable_frag_bounds, GF_ISOFile **the_file, u64 *BytesMissing)
+- name: gf_isom_open
+  params:
+  - name: ''
+    type: const char*
+  - name: ''
+    type: GF_ISOOpenMode
+  - name: ''
+    type: const char*
+  return_type: GF_ISOFile *
+  signature: GF_EXPORT *gf_isom_open(const char *fileName, GF_ISOOpenMode OpenMode,
+    const char *tmp_dir)
+- name: gf_isom_close
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_close(GF_ISOFile *movie)
+- name: gf_isom_disable_odf_conversion
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: Bool
+  return_type: void
+  signature: GF_EXPORT gf_isom_disable_odf_conversion(GF_ISOFile *movie, Bool disable)
+- name: gf_isom_get_track_count
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  return_type: u32
+  signature: GF_EXPORT gf_isom_get_track_count(GF_ISOFile *movie)
+- name: gf_isom_get_track_by_id
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: GF_ISOTrackID
+  return_type: u32
+  signature: GF_EXPORT gf_isom_get_track_by_id(GF_ISOFile *the_file, GF_ISOTrackID
+    trackID)
+- name: gf_isom_has_movie
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  return_type: Bool
+  signature: GF_EXPORT gf_isom_has_movie(GF_ISOFile *file)
+- name: gf_isom_has_segment
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u32*
+  return_type: Bool
+  signature: GF_EXPORT gf_isom_has_segment(GF_ISOFile *file, u32 *brand, u32 *version)
+- name: gf_isom_segment_get_fragment_count
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  return_type: u32
+  signature: GF_EXPORT gf_isom_segment_get_fragment_count(GF_ISOFile *file)
+- name: gf_isom_segment_get_track_fragment_count
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  return_type: u32
+  signature: GF_EXPORT gf_isom_segment_get_track_fragment_count(GF_ISOFile *file,
+    u32 moof_index)
+- name: gf_isom_segment_get_track_fragment_decode_time
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u64*
+  return_type: u32
+  signature: GF_EXPORT gf_isom_segment_get_track_fragment_decode_time(GF_ISOFile *file,
+    u32 moof_index, u32 traf_index, u64 *decode_time)
+- name: gf_isom_segment_get_fragment_size
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32*
+  return_type: u64
+  signature: GF_EXPORT gf_isom_segment_get_fragment_size(GF_ISOFile *file, u32 moof_index,
+    u32 *moof_size)
+- name: gf_isom_get_timescale
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  return_type: u32
+  signature: GF_EXPORT gf_isom_get_timescale(GF_ISOFile *movie)
+- name: gf_isom_get_duration
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  return_type: u64
+  signature: GF_EXPORT gf_isom_get_duration(GF_ISOFile *movie)
+- name: gf_isom_get_original_duration
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  return_type: u64
+  signature: GF_EXPORT gf_isom_get_original_duration(GF_ISOFile *movie)
+- name: gf_isom_get_creation_time
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u64*
+  - name: ''
+    type: u64*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_get_creation_time(GF_ISOFile *movie, u64 *creationTime,
+    u64 *modificationTime)
+- name: gf_isom_get_track_creation_time
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u64*
+  - name: ''
+    type: u64*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_get_track_creation_time(GF_ISOFile *movie, u32 trackNumber,
+    u64 *creationTime, u64 *modificationTime)
+- name: gf_isom_is_track_in_root_od
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  return_type: u8
+  signature: GF_EXPORT gf_isom_is_track_in_root_od(GF_ISOFile *movie, u32 trackNumber)
+- name: gf_isom_is_track_enabled
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  return_type: u8
+  signature: GF_EXPORT gf_isom_is_track_enabled(GF_ISOFile *the_file, u32 trackNumber)
+- name: gf_isom_get_track_flags
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  return_type: u32
+  signature: GF_EXPORT gf_isom_get_track_flags(GF_ISOFile *the_file, u32 trackNumber)
+- name: gf_isom_get_track_duration
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  return_type: u64
+  signature: GF_EXPORT gf_isom_get_track_duration(GF_ISOFile *movie, u32 trackNumber)
+- name: gf_isom_get_track_duration_orig
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  return_type: u64
+  signature: GF_EXPORT gf_isom_get_track_duration_orig(GF_ISOFile *movie, u32 trackNumber)
+- name: gf_isom_get_media_language
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: char**
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_get_media_language(GF_ISOFile *the_file, u32 trackNumber,
+    char **lang)
+- name: gf_isom_get_track_kind_count
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  return_type: u32
+  signature: GF_EXPORT gf_isom_get_track_kind_count(GF_ISOFile *the_file, u32 trackNumber)
+- name: gf_isom_get_track_kind
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: char**
+  - name: ''
+    type: char**
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_get_track_kind(GF_ISOFile *the_file, u32 trackNumber,
+    u32 index, char **scheme, char **value)
+- name: gf_isom_get_reference_count
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  return_type: s32
+  signature: GF_EXPORT gf_isom_get_reference_count(GF_ISOFile *movie, u32 trackNumber,
+    u32 referenceType)
+- name: gf_isom_get_reference
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_get_reference(GF_ISOFile *movie, u32 trackNumber, u32
+    referenceType, u32 referenceIndex, u32 *refTrack)
+- name: gf_isom_get_reference_ID
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: GF_ISOTrackID*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_get_reference_ID(GF_ISOFile *movie, u32 trackNumber,
+    u32 referenceType, u32 referenceIndex, GF_ISOTrackID *refTrackID)
+- name: gf_isom_has_track_reference
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: GF_ISOTrackID
+  return_type: u32
+  signature: GF_EXPORT gf_isom_has_track_reference(GF_ISOFile *movie, u32 trackNumber,
+    u32 referenceType, GF_ISOTrackID refTrackID)
+- name: gf_isom_is_track_referenced
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  return_type: u32
+  signature: GF_EXPORT gf_isom_is_track_referenced(GF_ISOFile *movie, u32 trackNumber,
+    u32 referenceType)
+- name: gf_isom_get_media_time
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u64*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_get_media_time(GF_ISOFile *the_file, u32 trackNumber,
+    u32 movieTime, u64 *MediaTime)
+- name: gf_isom_get_sample_description_index
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u64
+  return_type: u32
+  signature: GF_EXPORT gf_isom_get_sample_description_index(GF_ISOFile *movie, u32
+    trackNumber, u64 for_time)
+- name: gf_isom_get_sample_description_count
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  return_type: u32
+  signature: GF_EXPORT gf_isom_get_sample_description_count(GF_ISOFile *the_file,
+    u32 trackNumber)
+- name: gf_isom_get_esd
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  return_type: GF_ESD *
+  signature: GF_EXPORT *gf_isom_get_esd(GF_ISOFile *movie, u32 trackNumber, u32 StreamDescriptionIndex)
+- name: gf_isom_get_media_duration
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  return_type: u64
+  signature: GF_EXPORT gf_isom_get_media_duration(GF_ISOFile *movie, u32 trackNumber)
+- name: gf_isom_get_media_original_duration
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  return_type: u64
+  signature: GF_EXPORT gf_isom_get_media_original_duration(GF_ISOFile *movie, u32
+    trackNumber)
+- name: gf_isom_get_media_timescale
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  return_type: u32
+  signature: GF_EXPORT gf_isom_get_media_timescale(GF_ISOFile *the_file, u32 trackNumber)
+- name: gf_isom_get_copyright_count
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  return_type: u32
+  signature: GF_EXPORT gf_isom_get_copyright_count(GF_ISOFile *mov)
+- name: gf_isom_get_copyright
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: const char**
+  - name: ''
+    type: const char**
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_get_copyright(GF_ISOFile *mov, u32 Index, const char
+    **threeCharCode, const char **notice)
+- name: gf_isom_get_chapter_count
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  return_type: u32
+  signature: GF_EXPORT gf_isom_get_chapter_count(GF_ISOFile *movie, u32 trackNumber)
+- name: gf_isom_get_chapter
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u64*
+  - name: ''
+    type: const char**
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_get_chapter(GF_ISOFile *movie, u32 trackNumber, u32
+    Index, u64 *chapter_time, const char **name)
+- name: gf_isom_get_media_type
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  return_type: u32
+  signature: GF_EXPORT gf_isom_get_media_type(GF_ISOFile *movie, u32 trackNumber)
+- name: gf_isom_is_track_encrypted
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  return_type: Bool
+  signature: GF_EXPORT gf_isom_is_track_encrypted(GF_ISOFile *the_file, u32 trackNumber)
+- name: gf_isom_get_media_subtype
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  return_type: u32
+  signature: GF_EXPORT gf_isom_get_media_subtype(GF_ISOFile *the_file, u32 trackNumber,
+    u32 DescriptionIndex)
+- name: gf_isom_get_mpeg4_subtype
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  return_type: u32
+  signature: GF_EXPORT gf_isom_get_mpeg4_subtype(GF_ISOFile *the_file, u32 trackNumber,
+    u32 DescriptionIndex)
+- name: gf_isom_get_handler_name
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: const char**
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_get_handler_name(GF_ISOFile *the_file, u32 trackNumber,
+    const char **outName)
+- name: gf_isom_check_data_reference
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_check_data_reference(GF_ISOFile *the_file, u32 trackNumber,
+    u32 StreamDescriptionIndex)
+- name: gf_isom_get_data_reference
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: const char**
+  - name: ''
+    type: const char**
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_get_data_reference(GF_ISOFile *the_file, u32 trackNumber,
+    u32 StreamDescriptionIndex, const char **outURL, const char **outURN)
+- name: gf_isom_get_sample_count
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  return_type: u32
+  signature: GF_EXPORT gf_isom_get_sample_count(GF_ISOFile *the_file, u32 trackNumber)
+- name: gf_isom_get_constant_sample_size
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  return_type: u32
+  signature: GF_EXPORT gf_isom_get_constant_sample_size(GF_ISOFile *the_file, u32
+    trackNumber)
+- name: gf_isom_get_constant_sample_duration
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  return_type: u32
+  signature: GF_EXPORT gf_isom_get_constant_sample_duration(GF_ISOFile *the_file,
+    u32 trackNumber)
+- name: gf_isom_enable_raw_pack
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  return_type: Bool
+  signature: GF_EXPORT gf_isom_enable_raw_pack(GF_ISOFile *the_file, u32 trackNumber,
+    u32 pack_num_samples)
+- name: gf_isom_has_time_offset
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  return_type: u32
+  signature: GF_EXPORT gf_isom_has_time_offset(GF_ISOFile *the_file, u32 trackNumber)
+- name: gf_isom_get_cts_to_dts_shift
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  return_type: s64
+  signature: GF_EXPORT gf_isom_get_cts_to_dts_shift(GF_ISOFile *the_file, u32 trackNumber)
+- name: gf_isom_has_sync_shadows
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  return_type: Bool
+  signature: GF_EXPORT gf_isom_has_sync_shadows(GF_ISOFile *the_file, u32 trackNumber)
+- name: gf_isom_has_sample_dependency
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  return_type: Bool
+  signature: GF_EXPORT gf_isom_has_sample_dependency(GF_ISOFile *the_file, u32 trackNumber)
+- name: gf_isom_get_sample_flags
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u32*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_get_sample_flags(GF_ISOFile *the_file, u32 trackNumber,
+    u32 sampleNumber, u32 *isLeading, u32 *dependsOn, u32 *dependedOn, u32 *redundant)
+- name: gf_isom_get_sample_duration
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  return_type: u32
+  signature: GF_EXPORT gf_isom_get_sample_duration(GF_ISOFile *the_file, u32 trackNumber,
+    u32 sampleNumber)
+- name: gf_isom_get_sample_size
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  return_type: u32
+  signature: GF_EXPORT gf_isom_get_sample_size(GF_ISOFile *the_file, u32 trackNumber,
+    u32 sampleNumber)
+- name: gf_isom_get_max_sample_size
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  return_type: u32
+  signature: GF_EXPORT gf_isom_get_max_sample_size(GF_ISOFile *the_file, u32 trackNumber)
+- name: gf_isom_get_avg_sample_size
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  return_type: u32
+  signature: GF_EXPORT gf_isom_get_avg_sample_size(GF_ISOFile *the_file, u32 trackNumber)
+- name: gf_isom_get_max_sample_delta
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  return_type: u32
+  signature: GF_EXPORT gf_isom_get_max_sample_delta(GF_ISOFile *the_file, u32 trackNumber)
+- name: gf_isom_get_avg_sample_delta
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  return_type: u32
+  signature: GF_EXPORT gf_isom_get_avg_sample_delta(GF_ISOFile *the_file, u32 trackNumber)
+- name: gf_isom_get_max_sample_cts_offset
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  return_type: u32
+  signature: GF_EXPORT gf_isom_get_max_sample_cts_offset(GF_ISOFile *the_file, u32
+    trackNumber)
+- name: gf_isom_get_sample_sync
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  return_type: Bool
+  signature: GF_EXPORT gf_isom_get_sample_sync(GF_ISOFile *the_file, u32 trackNumber,
+    u32 sampleNumber)
+- name: gf_isom_get_sample_dts
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  return_type: u64
+  signature: GF_EXPORT gf_isom_get_sample_dts(GF_ISOFile *the_file, u32 trackNumber,
+    u32 sampleNumber)
+- name: gf_isom_is_self_contained
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  return_type: Bool
+  signature: GF_EXPORT gf_isom_is_self_contained(GF_ISOFile *the_file, u32 trackNumber,
+    u32 sampleDescriptionIndex)
+- name: gf_isom_get_sample_from_dts
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u64
+  return_type: u32
+  signature: GF_EXPORT gf_isom_get_sample_from_dts(GF_ISOFile *the_file, u32 trackNumber,
+    u64 dts)
+- name: gf_isom_get_sample_for_media_time
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u64
+  - name: ''
+    type: u32*
+  - name: ''
+    type: GF_ISOSearchMode
+  - name: ''
+    type: GF_ISOSample**
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u64*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_get_sample_for_media_time(GF_ISOFile *the_file, u32
+    trackNumber, u64 desiredTime, u32 *StreamDescriptionIndex, GF_ISOSearchMode SearchMode,
+    GF_ISOSample **sample, u32 *SampleNum, u64 *data_offset)
+- name: gf_isom_get_sample_for_movie_time
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u64
+  - name: ''
+    type: u32*
+  - name: ''
+    type: GF_ISOSearchMode
+  - name: ''
+    type: GF_ISOSample**
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u64*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_get_sample_for_movie_time(GF_ISOFile *the_file, u32
+    trackNumber, u64 movieTime, u32 *StreamDescriptionIndex, GF_ISOSearchMode SearchMode,
+    GF_ISOSample **sample, u32 *sampleNumber, u64 *data_offset)
+- name: gf_isom_get_missing_bytes
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  return_type: u64
+  signature: GF_EXPORT gf_isom_get_missing_bytes(GF_ISOFile *the_file, u32 trackNumber)
+- name: gf_isom_set_sample_padding
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_set_sample_padding(GF_ISOFile *the_file, u32 trackNumber,
+    u32 padding_bytes)
+- name: gf_isom_get_edit_list_type
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: s64*
+  return_type: Bool
+  signature: GF_EXPORT gf_isom_get_edit_list_type(GF_ISOFile *the_file, u32 trackNumber,
+    s64 *mediaOffset)
+- name: gf_isom_get_edits_count
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  return_type: u32
+  signature: GF_EXPORT gf_isom_get_edits_count(GF_ISOFile *the_file, u32 trackNumber)
+- name: gf_isom_get_edit
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u64*
+  - name: ''
+    type: u64*
+  - name: ''
+    type: u64*
+  - name: ''
+    type: GF_ISOEditType*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_get_edit(GF_ISOFile *the_file, u32 trackNumber, u32
+    SegmentIndex, u64 *EditTime, u64 *SegmentDuration, u64 *MediaTime, GF_ISOEditType
+    *EditMode)
+- name: gf_isom_has_sync_points
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  return_type: u8
+  signature: GF_EXPORT gf_isom_has_sync_points(GF_ISOFile *the_file, u32 trackNumber)
+- name: gf_isom_get_sync_point_count
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  return_type: u32
+  signature: GF_EXPORT gf_isom_get_sync_point_count(GF_ISOFile *the_file, u32 trackNumber)
+- name: gf_isom_get_brand_info
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u32*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_get_brand_info(GF_ISOFile *movie, u32 *brand, u32 *minorVersion,
+    u32 *AlternateBrandsCount)
+- name: gf_isom_get_alternate_brand
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_get_alternate_brand(GF_ISOFile *movie, u32 BrandIndex,
+    u32 *brand)
+- name: gf_isom_get_brands
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  return_type: const u32 *
+  signature: GF_EXPORT *gf_isom_get_brands(GF_ISOFile *movie)
+- name: gf_isom_get_sample_padding_bits
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u8*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_get_sample_padding_bits(GF_ISOFile *the_file, u32 trackNumber,
+    u32 sampleNumber, u8 *NbBits)
+- name: gf_isom_has_padding_bits
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  return_type: Bool
+  signature: GF_EXPORT gf_isom_has_padding_bits(GF_ISOFile *the_file, u32 trackNumber)
+- name: gf_isom_get_udta_count
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  return_type: u32
+  signature: GF_EXPORT gf_isom_get_udta_count(GF_ISOFile *movie, u32 trackNumber)
+- name: gf_isom_get_udta_type
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32*
+  - name: ''
+    type: bin128*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_get_udta_type(GF_ISOFile *movie, u32 trackNumber, u32
+    udta_idx, u32 *UserDataType, bin128 *UUID)
+- name: gf_isom_get_user_data_count
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u8*
+  return_type: u32
+  signature: GF_EXPORT gf_isom_get_user_data_count(GF_ISOFile *movie, u32 trackNumber,
+    u32 UserDataType, bin128 UUID)
+- name: gf_isom_get_user_data
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u8*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u8**
+  - name: ''
+    type: u32*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_get_user_data(GF_ISOFile *movie, u32 trackNumber, u32
+    UserDataType, bin128 UUID, u32 UserDataIndex, u8 **userData, u32 *userDataSize)
+- name: gf_isom_delete
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  return_type: void
+  signature: GF_EXPORT gf_isom_delete(GF_ISOFile *movie)
+- name: gf_isom_get_chunks_infos
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u32*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_get_chunks_infos(GF_ISOFile *movie, u32 trackNumber,
+    u32 *dur_min, u32 *dur_avg, u32 *dur_max, u32 *size_min, u32 *size_avg, u32 *size_max)
+- name: gf_isom_get_fragment_defaults
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u8*
+  - name: ''
+    type: u16*
+  return_type: GF_Err
+  signature: "GF_EXPORT gf_isom_get_fragment_defaults(GF_ISOFile *the_file, u32 trackNumber,\n\
+    \                                     u32 *defaultDuration, u32 *defaultSize,\
+    \ u32 *defaultDescriptionIndex,\n                                     u32 *defaultRandomAccess,\
+    \ u8 *defaultPadding, u16 *defaultDegradationPriority)"
+- name: gf_isom_refresh_fragmented
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u64*
+  - name: ''
+    type: const char*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_refresh_fragmented(GF_ISOFile *movie, u64 *MissingBytes,
+    const char *new_location)
+- name: gf_isom_set_single_moof_mode
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: Bool
+  return_type: void
+  signature: GF_EXPORT gf_isom_set_single_moof_mode(GF_ISOFile *movie, Bool mode)
+- name: gf_isom_reset_data_offset
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u64*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_reset_data_offset(GF_ISOFile *movie, u64 *top_box_start)
+- name: gf_isom_get_current_top_box_offset
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u64*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_get_current_top_box_offset(GF_ISOFile *movie, u64 *current_top_box_offset)
+- name: gf_isom_set_removed_bytes
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u64
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_set_removed_bytes(GF_ISOFile *movie, u64 bytes_removed)
+- name: gf_isom_purge_samples
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  return_type: GF_Err
+  signature: GF_Err gf_isom_purge_samples(GF_ISOFile *the_file, u32 trackNumber, u32
+    nb_samples)
+- name: gf_isom_reset_tables
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: Bool
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_reset_tables(GF_ISOFile *movie, Bool reset_sample_count)
+- name: gf_isom_release_segment
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: Bool
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_release_segment(GF_ISOFile *movie, Bool reset_tables)
+- name: gf_isom_open_segment
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: const char*
+  - name: ''
+    type: u64
+  - name: ''
+    type: u64
+  - name: ''
+    type: GF_ISOSegOpenMode
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_open_segment(GF_ISOFile *movie, const char *fileName,
+    u64 start_range, u64 end_range, GF_ISOSegOpenMode flags)
+- name: gf_isom_text_set_streaming_mode
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: Bool
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_text_set_streaming_mode(GF_ISOFile *movie, Bool do_convert)
+- name: gf_isom_get_visual_info
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u32*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_get_visual_info(GF_ISOFile *movie, u32 trackNumber,
+    u32 StreamDescriptionIndex, u32 *Width, u32 *Height)
+- name: gf_isom_get_visual_bit_depth
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u16*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_get_visual_bit_depth(GF_ISOFile* movie, u32 trackNumber,
+    u32 StreamDescriptionIndex, u16* bitDepth)
+- name: gf_isom_get_audio_info
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u32*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_get_audio_info(GF_ISOFile *movie, u32 trackNumber,
+    u32 StreamDescriptionIndex, u32 *SampleRate, u32 *Channels, u32 *bitsPerSample)
+- name: gf_isom_get_audio_layout
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: GF_AudioChannelLayout*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_get_audio_layout(GF_ISOFile *movie, u32 trackNumber,
+    u32 StreamDescriptionIndex, GF_AudioChannelLayout *layout)
+- name: gf_isom_get_pixel_aspect_ratio
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u32*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_get_pixel_aspect_ratio(GF_ISOFile *movie, u32 trackNumber,
+    u32 StreamDescriptionIndex, u32 *hSpacing, u32 *vSpacing)
+- name: gf_isom_get_color_info
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u16*
+  - name: ''
+    type: u16*
+  - name: ''
+    type: u16*
+  - name: ''
+    type: Bool*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_get_color_info(GF_ISOFile *movie, u32 trackNumber,
+    u32 StreamDescriptionIndex, u32 *colour_type, u16 *colour_primaries, u16 *transfer_characteristics,
+    u16 *matrix_coefficients, Bool *full_range_flag)
+- name: gf_isom_get_icc_profile
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: Bool*
+  - name: ''
+    type: const u8**
+  - name: ''
+    type: u32*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_get_icc_profile(GF_ISOFile *movie, u32 trackNumber,
+    u32 StreamDescriptionIndex, Bool *icc_restricted, const u8 **icc, u32 *icc_size)
+- name: gf_isom_get_filename
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  return_type: const char *
+  signature: GF_EXPORT *gf_isom_get_filename(GF_ISOFile *movie)
+- name: gf_isom_get_pl_indication
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: GF_ISOProfileLevelType
+  return_type: u8
+  signature: GF_EXPORT gf_isom_get_pl_indication(GF_ISOFile *movie, GF_ISOProfileLevelType
+    PL_Code)
+- name: gf_isom_get_track_matrix
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_get_track_matrix(GF_ISOFile *the_file, u32 trackNumber,
+    u32 matrix[9])
+- name: gf_isom_get_track_layout_info
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u32*
+  - name: ''
+    type: s32*
+  - name: ''
+    type: s32*
+  - name: ''
+    type: s16*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_get_track_layout_info(GF_ISOFile *movie, u32 trackNumber,
+    u32 *width, u32 *height, s32 *translation_x, s32 *translation_y, s16 *layer)
+- name: gf_isom_get_media_data_size
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  return_type: u64
+  signature: GF_EXPORT gf_isom_get_media_data_size(GF_ISOFile *movie, u32 trackNumber)
+- name: gf_isom_get_first_mdat_start
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  return_type: u64
+  signature: GF_EXPORT gf_isom_get_first_mdat_start(GF_ISOFile *movie)
+- name: gf_isom_get_unused_box_bytes
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  return_type: u64
+  signature: GF_EXPORT gf_isom_get_unused_box_bytes(GF_ISOFile *movie)
+- name: gf_isom_set_default_sync_track
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  return_type: void
+  signature: GF_EXPORT gf_isom_set_default_sync_track(GF_ISOFile *movie, u32 trackNumber)
+- name: gf_isom_is_single_av
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  return_type: Bool
+  signature: GF_EXPORT gf_isom_is_single_av(GF_ISOFile *file)
+- name: gf_isom_is_JPEG2000
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  return_type: Bool
+  signature: GF_EXPORT gf_isom_is_JPEG2000(GF_ISOFile *mov)
+- name: gf_isom_guess_specification
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  return_type: u32
+  signature: GF_EXPORT gf_isom_guess_specification(GF_ISOFile *file)
+- name: gf_isom_apple_get_tag
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: GF_ISOiTunesTag
+  - name: ''
+    type: const u8**
+  - name: ''
+    type: u32*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_apple_get_tag(GF_ISOFile *mov, GF_ISOiTunesTag tag,
+    const u8 **data, u32 *data_len)
+- name: gf_isom_apple_enum_tag_ex
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: GF_ISOiTunesTag*
+  - name: ''
+    type: const u8**
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u64*
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u32*
+  - name: ''
+    type: const char**
+  - name: ''
+    type: const char**
+  - name: ''
+    type: u32*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_apple_enum_tag_ex(GF_ISOFile *mov, u32 idx, GF_ISOiTunesTag
+    *out_tag, const u8 **data, u32 *data_len, u64 *out_int_val, u32 *out_int_val2,
+    u32 *out_flags, const char **out_mean, const char **out_name, u32 *out_locale)
+- name: gf_isom_apple_enum_tag
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: GF_ISOiTunesTag*
+  - name: ''
+    type: const u8**
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u64*
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u32*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_apple_enum_tag(GF_ISOFile *mov, u32 idx, GF_ISOiTunesTag
+    *out_tag, const u8 **data, u32 *data_len, u64 *out_int_val, u32 *out_int_val2,
+    u32 *out_flags)
+- name: gf_isom_enum_udta_keys
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: GF_QT_UDTAKey*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_enum_udta_keys(GF_ISOFile *mov, u32 idx, GF_QT_UDTAKey
+    *okey)
+- name: gf_isom_wma_enum_tag
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: char**
+  - name: ''
+    type: const u8**
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u32*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_wma_enum_tag(GF_ISOFile *mov, u32 idx, char **out_tag,
+    const u8 **data, u32 *data_len, u32 *version, u32 *data_type)
+- name: gf_isom_get_track_switch_group_count
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u32*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_get_track_switch_group_count(GF_ISOFile *movie, u32
+    trackNumber, u32 *alternateGroupID, u32 *nb_groups)
+- name: gf_isom_get_track_switch_parameter
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u32*
+  return_type: const u32 *
+  signature: GF_EXPORT *gf_isom_get_track_switch_parameter(GF_ISOFile *movie, u32
+    trackNumber, u32 group_index, u32 *switchGroupID, u32 *criteriaListSize)
+- name: gf_isom_get_next_alternate_group_id
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  return_type: u32
+  signature: GF_EXPORT gf_isom_get_next_alternate_group_id(GF_ISOFile *movie)
+- name: gf_isom_sample_get_subsamples_buffer
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32*
+  return_type: u8 *
+  signature: GF_EXPORT *gf_isom_sample_get_subsamples_buffer(GF_ISOFile *movie, u32
+    track, u32 sampleNumber, u32 *osize)
+- name: gf_isom_sample_has_subsamples
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  return_type: u32
+  signature: GF_EXPORT gf_isom_sample_has_subsamples(GF_ISOFile *movie, u32 track,
+    u32 sampleNumber, u32 flags)
+- name: gf_isom_sample_get_subsample
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u8*
+  - name: ''
+    type: u32*
+  - name: ''
+    type: Bool*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_sample_get_subsample(GF_ISOFile *movie, u32 track,
+    u32 sampleNumber, u32 flags, u32 subSampleNumber, u32 *size, u8 *priority, u32
+    *reserved, Bool *discardable)
+- name: gf_isom_get_rvc_config
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u16*
+  - name: ''
+    type: u8**
+  - name: ''
+    type: u32*
+  - name: ''
+    type: const char**
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_get_rvc_config(GF_ISOFile *movie, u32 track, u32 sampleDescriptionIndex,
+    u16 *rvc_predefined, u8 **data, u32 *size, const char **mime)
+- name: gf_isom_moov_first
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  return_type: Bool
+  signature: GF_EXPORT gf_isom_moov_first(GF_ISOFile *movie)
+- name: gf_isom_reset_fragment_info
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: Bool
+  return_type: void
+  signature: GF_EXPORT gf_isom_reset_fragment_info(GF_ISOFile *movie, Bool keep_sample_count)
+- name: gf_isom_reset_seq_num
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  return_type: void
+  signature: GF_EXPORT gf_isom_reset_seq_num(GF_ISOFile *movie)
+- name: gf_isom_reset_sample_count
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  return_type: void
+  signature: GF_EXPORT gf_isom_reset_sample_count(GF_ISOFile *movie)
+- name: gf_isom_has_cenc_sample_group
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: Bool*
+  - name: ''
+    type: Bool*
+  return_type: Bool
+  signature: GF_EXPORT gf_isom_has_cenc_sample_group(GF_ISOFile *the_file, u32 trackNumber,
+    Bool *has_selective, Bool *has_roll)
+- name: gf_isom_get_sample_rap_roll_info
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: Bool*
+  - name: ''
+    type: GF_ISOSampleRollType*
+  - name: ''
+    type: s32*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_get_sample_rap_roll_info(GF_ISOFile *the_file, u32
+    trackNumber, u32 sample_number, Bool *is_rap, GF_ISOSampleRollType *roll_type,
+    s32 *roll_distance)
+- name: gf_isom_get_sample_to_group_info
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_get_sample_to_group_info(GF_ISOFile *the_file, u32
+    trackNumber, u32 sample_number, u32 grouping_type, u32 grouping_type_param, u32
+    *sampleGroupDescIndex)
+- name: gf_isom_enum_sample_group
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u8**
+  - name: ''
+    type: u32*
+  return_type: GF_Err
+  signature: GF_Err gf_isom_enum_sample_group(GF_ISOFile *the_file, u32 trackNumber,
+    u32 sample_number, u32 *sgrp_idx, u32 *sgrp_type, u32 *sgrp_flags, u32 *sgrp_parameter,
+    u8 **sgrp_data, u32 *sgrp_size)
+- name: gf_isom_get_sample_group_info
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32*
+  - name: ''
+    type: const u8**
+  - name: ''
+    type: u32*
+  return_type: Bool
+  signature: GF_EXPORT gf_isom_get_sample_group_info(GF_ISOFile *the_file, u32 trackNumber,
+    u32 sample_description_index, u32 grouping_type, u32 *default_index, const u8
+    **data, u32 *size)
+- name: gf_isom_get_fragmented_duration
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  return_type: u64
+  signature: GF_EXPORT gf_isom_get_fragmented_duration(GF_ISOFile *movie)
+- name: gf_isom_get_fragments_count
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: Bool
+  return_type: u32
+  signature: GF_EXPORT gf_isom_get_fragments_count(GF_ISOFile *movie, Bool segments_only)
+- name: gf_isom_get_fragmented_samples_info
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: GF_ISOTrackID
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u64*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_get_fragmented_samples_info(GF_ISOFile *movie, GF_ISOTrackID
+    trackID, u32 *nb_samples, u64 *duration)
+- name: gf_isom_set_nalu_extract_mode
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: GF_ISONaluExtractMode
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_set_nalu_extract_mode(GF_ISOFile *the_file, u32 trackNumber,
+    GF_ISONaluExtractMode nalu_extract_mode)
+- name: gf_isom_get_composition_offset_shift
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  return_type: s32
+  signature: GF_EXPORT gf_isom_get_composition_offset_shift(GF_ISOFile *file, u32
+    track)
+- name: gf_isom_needs_layer_reconstruction
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  return_type: Bool
+  signature: GF_EXPORT gf_isom_needs_layer_reconstruction(GF_ISOFile *file)
+- name: gf_isom_keep_utc_times
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: Bool
+  return_type: void
+  signature: GF_EXPORT gf_isom_keep_utc_times(GF_ISOFile *file, Bool keep_utc)
+- name: gf_isom_has_keep_utc_times
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  return_type: Bool
+  signature: GF_EXPORT gf_isom_has_keep_utc_times(GF_ISOFile *file)
+- name: gf_isom_get_pssh_count
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  return_type: u32
+  signature: GF_EXPORT gf_isom_get_pssh_count(GF_ISOFile *file)
+- name: gf_isom_get_pssh_info
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u8*
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u32*
+  - name: ''
+    type: const bin128**
+  - name: ''
+    type: const u8**
+  - name: ''
+    type: u32*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_get_pssh_info(GF_ISOFile *file, u32 pssh_index, bin128
+    SystemID, u32 *version, u32 *KID_count, const bin128 **KIDs, const u8 **private_data,
+    u32 *private_data_size)
+- name: gf_isom_get_sample_cenc_info
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: Bool*
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u32*
+  - name: ''
+    type: const u8**
+  - name: ''
+    type: u32*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_get_sample_cenc_info(GF_ISOFile *movie, u32 track,
+    u32 sample_number, Bool *IsEncrypted, u32 *crypt_byte_block, u32 *skip_byte_block,
+    const u8 **key_info, u32 *key_info_size)
+- name: gf_isom_get_last_producer_time_box
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: GF_ISOTrackID*
+  - name: ''
+    type: u64*
+  - name: ''
+    type: u64*
+  - name: ''
+    type: Bool
+  return_type: Bool
+  signature: GF_EXPORT gf_isom_get_last_producer_time_box(GF_ISOFile *file, GF_ISOTrackID
+    *refTrackID, u64 *ntp, u64 *timestamp, Bool reset_info)
+- name: gf_isom_get_current_tfdt
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  return_type: u64
+  signature: GF_EXPORT gf_isom_get_current_tfdt(GF_ISOFile *the_file, u32 trackNumber)
+- name: gf_isom_get_smooth_next_tfdt
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  return_type: u64
+  signature: GF_EXPORT gf_isom_get_smooth_next_tfdt(GF_ISOFile *the_file, u32 trackNumber)
+- name: gf_isom_is_smooth_streaming_moov
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  return_type: Bool
+  signature: GF_EXPORT gf_isom_is_smooth_streaming_moov(GF_ISOFile *the_file)
+- name: gf_isom_get_tile_info
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u32*
+  - name: ''
+    type: Bool*
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u32*
+  return_type: Bool
+  signature: GF_EXPORT gf_isom_get_tile_info(GF_ISOFile *file, u32 trackNumber, u32
+    sample_description_index, u32 *default_sample_group_index, u32 *id, u32 *independent,
+    Bool *full_picture, u32 *x, u32 *y, u32 *w, u32 *h)
+- name: gf_isom_set_byte_offset
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: s64
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_set_byte_offset(GF_ISOFile *file, s64 byte_offset)
+- name: gf_isom_get_nalu_length_field
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  return_type: u32
+  signature: GF_EXPORT gf_isom_get_nalu_length_field(GF_ISOFile *file, u32 track,
+    u32 StreamDescriptionIndex)
+- name: gf_isom_is_video_handler_type
+  params:
+  - name: ''
+    type: u32
+  return_type: Bool
+  signature: GF_EXPORT gf_isom_is_video_handler_type(u32 mtype)
+- name: gf_isom_get_bitrate
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u32*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_get_bitrate(GF_ISOFile *movie, u32 trackNumber, u32
+    sampleDescIndex, u32 *average_bitrate, u32 *max_bitrate, u32 *decode_buffer_size)
+- name: gf_isom_enable_traf_map_templates
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  return_type: void
+  signature: void gf_isom_enable_traf_map_templates(GF_ISOFile *movie)
+- name: gf_isom_sample_is_fragment_start
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: GF_ISOFragmentBoundaryInfo*
+  return_type: Bool
+  signature: GF_EXPORT gf_isom_sample_is_fragment_start(GF_ISOFile *movie, u32 trackNumber,
+    u32 sampleNum, GF_ISOFragmentBoundaryInfo *frag_info)
+- name: gf_isom_get_root_sidx_offsets
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u64*
+  - name: ''
+    type: u64*
+  return_type: Bool
+  signature: GF_EXPORT gf_isom_get_root_sidx_offsets(GF_ISOFile *movie, u64 *start,
+    u64 *end)
+- name: gf_isom_get_jp2_config
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u8**
+  - name: ''
+    type: u32*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_get_jp2_config(GF_ISOFile *movie, u32 trackNumber,
+    u32 sampleDesc, u8 **out_dsi, u32 *out_size)
+- name: gf_isom_get_track_magic
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  return_type: u64
+  signature: GF_EXPORT gf_isom_get_track_magic(GF_ISOFile *movie, u32 trackNumber)
+- name: gf_isom_get_file_offset_for_time
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: Double
+  - name: ''
+    type: u64*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_get_file_offset_for_time(GF_ISOFile *movie, Double
+    start_time, u64 *max_offset)
+- name: gf_isom_get_sidx_duration
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u64*
+  - name: ''
+    type: u32*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_get_sidx_duration(GF_ISOFile *movie, u64 *sidx_dur,
+    u32 *sidx_timescale)
+- name: gf_isom_get_mpegh_compatible_profiles
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32*
+  return_type: const u8 *
+  signature: GF_EXPORT *gf_isom_get_mpegh_compatible_profiles(GF_ISOFile *movie, u32
+    trackNumber, u32 sampleDescIndex, u32 *nb_compat_profiles)
+- name: gf_isom_get_y3d_info
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: GF_ISOM_Y3D_Info*
+  return_type: GF_Err
+  signature: GF_Err gf_isom_get_y3d_info(GF_ISOFile *movie, u32 trackNumber, u32 sampleDescriptionIndex,
+    GF_ISOM_Y3D_Info *info)
+- name: gf_isom_get_chunk_count
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  return_type: u32
+  signature: GF_EXPORT gf_isom_get_chunk_count(GF_ISOFile *movie, u32 trackNumber)
+- name: gf_isom_get_chunk_info
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u64*
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u32*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_get_chunk_info(GF_ISOFile *movie, u32 trackNumber,
+    u32 chunk_num, u64 *chunk_offset, u32 *first_sample_num, u32 *sample_per_chunk,
+    u32 *sample_desc_idx, u32 *cache_1, u32 *cache_2)
+- name: gf_isom_get_clean_aperture
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u32*
+  - name: ''
+    type: s32*
+  - name: ''
+    type: u32*
+  - name: ''
+    type: s32*
+  - name: ''
+    type: u32*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_get_clean_aperture(GF_ISOFile *movie, u32 trackNumber,
+    u32 StreamDescriptionIndex, u32 *cleanApertureWidthN, u32 *cleanApertureWidthD,
+    u32 *cleanApertureHeightN, u32 *cleanApertureHeightD, s32 *horizOffN, u32 *horizOffD,
+    s32 *vertOffN, u32 *vertOffD)
+- name: gf_isom_enum_track_group
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u32*
+  return_type: Bool
+  signature: GF_EXPORT gf_isom_enum_track_group(GF_ISOFile *file, u32 track_number,
+    u32 *idx, u32 *track_group_type, u32 *track_group_id)
+- name: gf_isom_enum_sample_aux_data
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u8**
+  - name: ''
+    type: u32*
+  return_type: GF_Err
+  signature: GF_Err gf_isom_enum_sample_aux_data(GF_ISOFile *the_file, u32 trackNumber,
+    u32 sample_number, u32 *sai_idx, u32 *sai_type, u32 *sai_parameter, u8 **sai_data,
+    u32 *sai_size)
+- name: gf_isom_is_external_track
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: GF_ISOTrackID*
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u32*
+  - name: ''
+    type: const char**
+  return_type: Bool
+  signature: GF_EXPORT gf_isom_is_external_track(GF_ISOFile *the_file, u32 trackNumber,
+    GF_ISOTrackID *tkid, u32 *type, u32 *flags, const char **location)
+- name: gf_isom_get_min_negative_cts_offset
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: GF_ISOMMinNegCtsQuery
+  return_type: s32
+  signature: GF_EXPORT gf_isom_get_min_negative_cts_offset(GF_ISOFile *the_file, u32
+    trackNumber, GF_ISOMMinNegCtsQuery query_mode)
+- name: gf_isom_switch_source
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: const char*
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_switch_source(GF_ISOFile *the_file, const char *new_file)
+- name: gf_isom_get_sample_references
+  params:
+  - name: ''
+    type: GF_ISOFile*
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32
+  - name: ''
+    type: u32*
+  - name: ''
+    type: u32*
+  - name: ''
+    type: const u32**
+  return_type: GF_Err
+  signature: GF_EXPORT gf_isom_get_sample_references(GF_ISOFile *the_file, u32 trackNumber,
+    u32 sampleNumber, u32 *ID, u32 *nb_refs, const u32 **refs)
+language: c
+macros:
+- GF_ISOM_MAC_TIME_OFFSET
+- GF_ISOM_FRAG_DEF_IS_SYNC
+- GF_ISOM_FRAG_USE_SYNC_TABLE
+project: gpac
+target_name: fuzz_m2ts_probe
+target_path: /src/gpac/testsuite/oss-fuzzers/fuzz_m2ts_probe.c
+typedefs:
+- datatype: u32
+  name: GF_ISOTrackID
+- datatype: _generic_subtitle_sample
+  name: GF_GenericSubtitleSample
+- datatype: __tag_isom
+  name: GF_ISOFile
+- datatype: _3gpp_text_sample
+  name: GF_TextSample

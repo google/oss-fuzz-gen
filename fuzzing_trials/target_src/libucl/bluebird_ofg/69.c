@@ -1,0 +1,76 @@
+#include <sys/stat.h>
+#include <string.h>
+#include <stdint.h>
+#include <stddef.h>
+#include "ucl.h"
+
+int LLVMFuzzerTestOneInput_69(const uint8_t *data, size_t size) {
+    // Ensure the size is sufficient for the test
+    if (size < 3) {
+        return 0;
+    }
+
+    // Initialize the UCL parser
+    struct ucl_parser *parser = ucl_parser_new(0);
+    if (parser == NULL) {
+        return 0;
+    }
+
+    // Parse the input data as UCL
+    ucl_parser_add_chunk(parser, data, size);
+    const ucl_object_t *root_obj = ucl_parser_get_object(parser);
+
+    // Prepare a path and delimiter for the lookup function
+    const char *path = (const char *)data;
+    char delimiter = (char)data[size - 1];
+
+    // Call the function-under-test
+    const ucl_object_t *result = ucl_object_lookup_path_char(root_obj, path, delimiter);
+
+    // Cleanup
+    if (root_obj != NULL) {
+        ucl_object_unref(root_obj);
+    }
+    ucl_parser_free(parser);
+
+    return 0;
+}
+#ifdef INC_MAIN
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
+int main(int argc, char *argv[])
+{
+    FILE *f;
+    uint8_t *data = NULL;
+    long size;
+
+    if(argc < 2)
+        exit(0);
+
+    f = fopen(argv[1], "rb");
+    if(f == NULL)
+        exit(0);
+
+    fseek(f, 0, SEEK_END);
+
+    size = ftell(f);
+    rewind(f);
+
+    if(size < 1 + 1)
+        exit(0);
+
+    data = (uint8_t *)malloc((size_t)size);
+    if(data == NULL)
+        exit(0);
+
+    if(fread(data, (size_t)size, 1, f) != 1)
+        exit(0);
+
+    LLVMFuzzerTestOneInput_69(data + 1, (size_t)(size - 1));
+
+    free(data);
+    fclose(f);
+    return 0;
+}
+#endif

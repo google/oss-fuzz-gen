@@ -1,0 +1,68 @@
+#include <stdint.h>
+#include <stdlib.h>
+#include <string.h>
+#include <htslib/hts.h>
+
+int LLVMFuzzerTestOneInput_258(const uint8_t *data, size_t size) {
+    // Ensure size is sufficient to initialize htsFormat
+    if (size < sizeof(htsFormat)) {
+        return 0;
+    }
+
+    // Allocate memory for htsFormat and copy data into it
+    htsFormat *format = (htsFormat *)malloc(sizeof(htsFormat));
+    if (format == NULL) {
+        return 0;
+    }
+    memcpy(format, data, sizeof(htsFormat));
+
+    // Call the function under test
+    char *description = hts_format_description(format);
+
+    // Free allocated memory
+    if (description != NULL) {
+        free(description);
+    }
+    free(format);
+
+    return 0;
+}
+#ifdef INC_MAIN
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
+int main(int argc, char *argv[])
+{
+    FILE *f;
+    uint8_t *data = NULL;
+    long size;
+
+    if(argc < 2)
+        exit(0);
+
+    f = fopen(argv[1], "rb");
+    if(f == NULL)
+        exit(0);
+
+    fseek(f, 0, SEEK_END);
+
+    size = ftell(f);
+    rewind(f);
+
+    if(size < 2 + 1)
+        exit(0);
+
+    data = (uint8_t *)malloc((size_t)size);
+    if(data == NULL)
+        exit(0);
+
+    if(fread(data, (size_t)size, 1, f) != 1)
+        exit(0);
+
+    LLVMFuzzerTestOneInput_258(data + 2, (size_t)(size - 2));
+
+    free(data);
+    fclose(f);
+    return 0;
+}
+#endif

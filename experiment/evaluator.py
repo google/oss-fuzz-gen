@@ -305,6 +305,48 @@ class Evaluator:
     return generated_project_path
 
   @staticmethod
+  def create_ossfuzz_project_batched_harness(benchmark: Benchmark,
+                             name: str,
+                             target_dir: str,
+                             build_script_path: str = '') -> str:
+    """Creates an OSS-Fuzz project with the generated target. The new project
+    will replicate an existing project to |name| but replace its fuzz target
+    and build script with the new |target_file| and |build_script_path|."""
+    logger.info('target file: %s', target_dir)
+    generated_project_path = oss_fuzz_checkout.create_ossfuzz_project(
+        benchmark, name)
+
+    # Copy generated fuzzers to generated_project_path
+    shutil.copytree(
+        target_dir,
+        os.path.join(generated_project_path, "synthesized_driver"))
+
+    # Add additional statement in dockerfile to overwrite with generated fuzzer
+    with open(os.path.join(generated_project_path, 'Dockerfile'), 'a') as f:
+      f.write(f'\nCOPY synthesized_driver '
+              f'{"/src/synthesized_driver"}\n')
+
+    if not build_script_path or os.path.getsize(build_script_path) == 0:
+      # Return the generated project path to the caller.
+      return generated_project_path
+
+    # Copy generated build script to generated_project_path
+    shutil.copyfile(
+        build_script_path,
+        os.path.join(generated_project_path,
+                     os.path.basename('agent-build.sh')))
+
+    # Add additional statement in dockerfile to overwrite with generated
+    # build script
+    with open(os.path.join(generated_project_path, 'Dockerfile'), 'a') as f:
+      f.write('\nRUN cp /src/build.sh /src/build.bk.sh\n')
+    with open(os.path.join(generated_project_path, 'Dockerfile'), 'a') as f:
+      f.write('\nCOPY agent-build.sh /src/build.sh\n')
+
+    # Return the generated project path to the caller.
+    return generated_project_path
+
+  @staticmethod
   def create_ossfuzz_project_with_gdb(benchmark: Benchmark,
                                       name: str,
                                       target_file: str,
